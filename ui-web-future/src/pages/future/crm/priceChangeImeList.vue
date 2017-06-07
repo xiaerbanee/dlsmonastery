@@ -46,26 +46,26 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('priceChangeImeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="ime" :label="$t('priceChangeImeList.ime')" sortable width="150"></el-table-column>
-        <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" ></el-table-column>
-        <el-table-column prop="productName" :label="$t('priceChangeImeList.type')" ></el-table-column>
-        <el-table-column prop="areaName" :label="$t('priceChangeImeList.areaName')"></el-table-column>
-        <el-table-column prop="officeName" :label="$t('priceChangeImeList.officeName')"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('priceChangeImeList.shopName')" ></el-table-column>
-        <el-table-column prop="priceChangeName"  :label="$t('priceChangeImeList.priceChangeName')"></el-table-column>
-        <el-table-column prop="auditDate" :label="$t('priceChangeImeList.auditDate')"></el-table-column>
-        <el-table-column prop="isCheck"  :label="$t('priceChangeImeList.isCheck')"width="120">
+        <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" sortable></el-table-column>
+        <el-table-column column-key="productId" prop="productName" :label="$t('priceChangeImeList.type')" sortable></el-table-column>
+        <el-table-column column-key="areaId" prop="areaName" :label="$t('priceChangeImeList.areaName')" sortable></el-table-column>
+        <el-table-column column-key="officeId" prop="officeName" :label="$t('priceChangeImeList.officeName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('priceChangeImeList.shopName')" sortable></el-table-column>
+        <el-table-column column-key="priceChangeId" prop="priceChangeName"  :label="$t('priceChangeImeList.priceChangeName')" sortable></el-table-column>
+        <el-table-column prop="auditDate" :label="$t('priceChangeImeList.auditDate')" sortable></el-table-column>
+        <el-table-column prop="isCheck"  :label="$t('priceChangeImeList.isCheck')"width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.isCheck ? 'primary' : 'danger'">{{scope.row.isCheck | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="image" :label="$t('priceChangeImeList.image')"></el-table-column>
-        <el-table-column prop="status"  :label="$t('priceChangeImeList.status')"width="120">
+        <el-table-column prop="image" :label="$t('priceChangeImeList.image')" sortable></el-table-column>
+        <el-table-column prop="status"  :label="$t('priceChangeImeList.status')"width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('priceChangeImeList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('priceChangeImeList.createdBy')"></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('priceChangeImeList.createdBy')" sortable></el-table-column>
         <el-table-column  :label="$t('priceChangeImeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
@@ -95,6 +95,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           priceChangeName:'',
           status:'',
           officeId:'',
@@ -134,7 +135,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

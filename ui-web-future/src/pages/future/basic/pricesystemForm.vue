@@ -117,7 +117,6 @@
           this.filterPricesystemDetailList = this.pricesystemDetailList;
         });
       }
-      console.log(this.isCreate +'abcd');
       this.isInit = true;
     }
   }

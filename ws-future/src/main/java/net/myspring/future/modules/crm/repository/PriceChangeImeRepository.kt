@@ -74,7 +74,8 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
         val sb = StringBuilder("""
         SELECT
             depot.office_id officeId,
-            t2. NAME priceChangeName,
+            depot.area_id areaId,
+            t2.name priceChangeName,
             productIme.ime ime,
             productIme.product_id productId,
             t1.*

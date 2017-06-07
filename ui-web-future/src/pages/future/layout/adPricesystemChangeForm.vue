@@ -82,7 +82,7 @@
         var that = this;
         this.submitDisabled = true;
         this.inputForm.data = new Array();
-        let list = this.table.getData();
+        let list = this.table.getTableData();
         for(var item in list){
           if(!this.table.isEmptyRow(item)){
             this.inputForm.data.push(list[item]);
@@ -97,8 +97,8 @@
        });
       },search() {
         this.formVisible = false;
-        this.getData();
-      },getData(){
+        this.getTableData();
+      },getTableData(){
           util.copyValue(this.formData,this.submitData);
           axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.submitData}).then((response)=>{
             this.settings.data = response.data;
@@ -106,27 +106,27 @@
           });
       },initPage(){
 
-    }, created(){
-      axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
-        this.adPricesystem = response.data;
-        for(let key in this.adPricesystem){
-          this.settings.colHeaders.push(this.adPricesystem[key].name);
-          this.settings.columns.push({
-            type:"numeric",
-            width:300
-          })
-        }
-      })
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
-          this.getData();
+          this.getTableData();
         });
+        axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
+          this.adPricesystem = response.data;
+          for(let key in this.adPricesystem){
+            this.settings.colHeaders.push(this.adPricesystem[key].name);
+            this.settings.columns.push({
+              type:"numeric",
+              width:300
+            })
+          }
+        })
       }
         this.isInit = true;
+
       }
     }
   }

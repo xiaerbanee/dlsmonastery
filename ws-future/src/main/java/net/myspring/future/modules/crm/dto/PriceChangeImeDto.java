@@ -19,8 +19,11 @@ public class PriceChangeImeDto extends AuditDto<PriceChangeIme> {
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
     private String officeId;
-    @CacheInput(inputKey = "depots",inputInstance = "officeId",outputInstance = "name")
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
+    private String areaName;
     private Boolean isCheck;
     private String productImeId;
     private String ime;
@@ -30,6 +33,22 @@ public class PriceChangeImeDto extends AuditDto<PriceChangeIme> {
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
     private String status;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     public String getStatus() {
         return status;
