@@ -239,20 +239,21 @@ util.getFormItems = function (component, formItems){
 };
 
 
-util.getFormItemValueLabel = function (formItem){
-  if(!formItem){
+util.getComponentValueLabel = function (component){
+  if(!component){
     return null;
   }
   let value = null;
-  if(formItem.$options.componentName === "ElSelect") {
-    value = formItem.selectedLabel;
-  }else if(formItem.$options.componentName === "DateRangePicker"){
-    value = formItem.innerDateRange;
-  }else if(formItem.$options.componentName === "ElInput"){
-    value = formItem.value;
-  }else  if(formItem.$children){
-    for(let child of formItem.$children){
-      value = util.getFormItemValueLabel(child);
+  console.log(component);
+  if(component.$options.componentName === "ElSelect") {
+    value = component.selectedLabel;
+  }else if(component.$options.componentName === "DateRangePicker"){
+    value = component.innerDateRange;
+  }else if(component.$options.componentName === "ElInput"){
+    value = component.value;
+  }else  if(component.$children){
+    for(let child of component.$children){
+      value = util.getComponentValueLabel(child);
     }
   }
   return value;
@@ -268,7 +269,7 @@ util.getSearchText = function (root){
   let tmp = [];
 
   for(let item of formItems){
-    let eachValueLabel = util.getFormItemValueLabel(item);
+    let eachValueLabel = util.getComponentValueLabel(item);
     if(eachValueLabel){
       tmp.push([item.label, eachValueLabel]);
     }

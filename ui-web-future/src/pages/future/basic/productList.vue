@@ -59,7 +59,7 @@
         <el-table-column column-key="productTypeId" prop="productTypeName" :label="$t('productList.productType')" sortable></el-table-column>
         <el-table-column prop="hasIme"  :label="$t('productList.hasIme')" sortable>
           <template scope="scope">
-            <el-tag :type="scope.row.hasIme =='1' ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
+            <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="allowOrder" :label="$t('productList.allowOrder')" sortable>
