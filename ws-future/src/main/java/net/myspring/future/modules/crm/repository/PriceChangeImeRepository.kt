@@ -100,8 +100,8 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
             }
 
         }
-        if(priceChangeImeQuery.image != null){
-            if(priceChangeImeQuery.image == true){
+        if(priceChangeImeQuery.hasImage != null){
+            if(priceChangeImeQuery.hasImage == true){
                 sb.append(""" and  t1.image is not null  """)
             }else{
                 sb.append(""" and t1.image is null  """)

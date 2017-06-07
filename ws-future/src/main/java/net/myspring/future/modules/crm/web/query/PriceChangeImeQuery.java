@@ -8,7 +8,7 @@ import java.util.List;
 public class PriceChangeImeQuery {
     private String status;
     private Boolean isCheck;
-    private Boolean image;
+    private Boolean hasImage;
     private String shopId;
     private String ime;
     private String officeId;
@@ -25,12 +25,12 @@ public class PriceChangeImeQuery {
         this.statusList = statusList;
     }
 
-    public Boolean getImage() {
-        return image;
+    public Boolean getHasImage() {
+        return hasImage;
     }
 
-    public void setImage(Boolean image) {
-        this.image = image;
+    public void setHasImage(Boolean hasImage) {
+        this.hasImage = hasImage;
     }
 
     public String getStatus() {

@@ -42,7 +42,7 @@
             submitData:{
               id:'',
               name:'',
-              totalPriceType:'按数量',
+              totalPriceType:'',
               price:'',
               remarks:''
             },
