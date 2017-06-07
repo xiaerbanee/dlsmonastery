@@ -14,7 +14,7 @@
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.demoPhoneType.label" :label-width="formLabelWidth">
@@ -80,7 +80,7 @@
           createdDate:'',
         },formLabel:{
           ime:{label: this.$t('demoPhoneList.ime')},
-          shopName:{label: this.$t('demoPhoneList.shopName')},
+          shopId:{label: this.$t('demoPhoneList.shopName')},
           demoPhoneType:{label: this.$t('demoPhoneList.demoPhoneType')},
           createdDate:{label: this.$t('demoPhoneList.createdDate')},
         },
