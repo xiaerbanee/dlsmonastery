@@ -910,7 +910,7 @@ export default {
     billQty: "开单数",
     returnQty: "退货数",
     shippedQty: "已发货数",
-    waitShipQty: "待发货数",
+    leftQty: "待发货数",
     shipQty: "发货数",
   },
   goodsOrderSign: {
