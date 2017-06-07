@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/4/21.
@@ -23,8 +24,12 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getSameAreaByOfficeId")
     List<String> getSameAreaByOfficeId(@RequestParam(value = "officeId") String officeId);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeIds")
+    List<String> getChildOfficeIds(@RequestParam(value = "officeId") String officeId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeMap")
+    Map<String,List<String>> getChildOfficeMap(@RequestParam(value = "officeId") String officeId);
+
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findById")
     List<OfficeDto> findById(@RequestParam(value = "id")String id);
-
-
 }
