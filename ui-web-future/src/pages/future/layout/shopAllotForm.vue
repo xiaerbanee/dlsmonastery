@@ -44,7 +44,12 @@
 
     },
       data(){
+        return this.getData();
+      },
+      methods:{
+        getData(){
           return{
+            isInit:false,
             isCreate:(this.$route.query.id==null || this.$route.query.id==''),
             submitDisabled:false,
             productName:'',
@@ -64,10 +69,9 @@
               toShopId: [{ required: true, message: this.$t('shopAllotForm.prerequisiteMessage')}]
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -78,13 +82,13 @@
                 this.submitDisabled = false;
                 if(response.data.success) {
                   if (this.isCreate) {
-                    form.resetFields();
+                    Object.assign(this.$data, this.getData());
                   } else {
                     this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
                   }
                 }
               }).catch(() => {
-                  this.submitDisabled = false;
+                  that.submitDisabled = false;
               });
             }
           })
@@ -133,22 +137,19 @@
           }
         }
         this.filterShopAllotDetailList = tempList;
-      },initPage(){
-          if(this.$route.query.id){
-            axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
-              this.setShopAllotDetailList(response.data);
-            });
-          }
-          axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.shopAllot = response.data;
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        if(this.$route.query.id){
+          axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
+            this.setShopAllotDetailList(response.data);
           });
         }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+        axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.shopAllot = response.data;
+        });
       }
+      this.isInit = true;
     }
   }
 </script>
