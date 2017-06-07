@@ -64,4 +64,10 @@ public class GoodsOrderShipController {
     }
 
 
+
+    @RequestMapping(value = "ship")
+    public RestResponse ship(GoodsOrderShipForm goodsOrderShipForm) {
+         goodsOrderShipService.ship(goodsOrderShipForm);
+         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+    }
 }

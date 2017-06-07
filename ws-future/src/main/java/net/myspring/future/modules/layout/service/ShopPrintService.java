@@ -91,7 +91,7 @@ public class ShopPrintService {
     public void audit(ShopPrintForm shopPrintForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 
-        activitiCompleteForm.setPass(shopPrintForm.getPass()=="1"?true:false);
+        activitiCompleteForm.setPass(shopPrintForm.getPass());
         activitiCompleteForm.setComment(shopPrintForm.getPassRemarks());
 
         ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());

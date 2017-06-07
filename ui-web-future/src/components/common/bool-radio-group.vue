@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-radio-group v-model="innerBool" @change="onChange">
-      <el-radio :label=1>{{$t('depotForm.true')}}</el-radio>
-      <el-radio :label=0>{{$t('depotForm.false')}}</el-radio>
+      <el-radio :label=true>{{$t('depotForm.true')}}</el-radio>
+      <el-radio :label=false>{{$t('depotForm.false')}}</el-radio>
     </el-radio-group>
   </div>
 </template>
@@ -11,7 +11,7 @@
     props: ['value'],
     data() {
       return {
-        innerBool:0
+        innerBool:false
       }
     },
     methods:{
@@ -19,13 +19,7 @@
         this.$emit('input', newVal);
         return true;
       },setValue(val) {
-        if(util.isNotBlank(val)){
-            if(val==true){
-              this.innerBool=1
-            }else if(val==false){
-              this.innerBool=0
-            }
-        }
+        this.innerBool=val
       }
     },created () {
       this.setValue(this.value);

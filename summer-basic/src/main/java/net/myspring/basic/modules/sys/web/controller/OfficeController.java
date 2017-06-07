@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.modules.sys.domain.Office;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "sys/office")
@@ -135,5 +137,24 @@ public class OfficeController {
             officeIds=officeService.getSameAreaByOfficeId(officeId);
         }
         return officeIds;
+    }
+
+    @RequestMapping(value = "getChildOfficeIds")
+    public List<String> getChildOfficeIds(String officeId){
+        List<String> officeIds=Lists.newArrayList();
+        if(StringUtils.isNotBlank(officeId)){
+            List<Office> officeList = officeService.findByParentIdsLike(officeId);
+            officeIds=CollectionUtil.extractToList(officeList,"id");
+        }
+        return officeIds;
+    }
+
+    @RequestMapping(value = "getChildOfficeMap")
+    public Map<String,List<String>> getNextLevelOfficeMap(String officeId){
+        Map<String,List<String>> map= Maps.newHashMap();
+        if(StringUtils.isNotBlank(officeId)){
+            map = officeService.getChildOfficeMap(officeId);
+        }
+        return map;
     }
 }

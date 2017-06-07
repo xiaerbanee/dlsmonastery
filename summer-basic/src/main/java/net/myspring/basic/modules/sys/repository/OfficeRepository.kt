@@ -30,6 +30,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @CachePut(key="#p0.id")
     fun save(office: Office): Office
 
+    fun findByParentId(parentId: String):MutableList<Office>
+
     @Cacheable
     override fun findOne(id: String): Office
 

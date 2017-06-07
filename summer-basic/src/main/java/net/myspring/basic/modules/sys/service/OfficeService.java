@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -116,6 +118,22 @@ public class OfficeService {
     public OfficeRuleDto findTopOfficeRule(){
         OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
         return BeanUtil.map(topOfficeRule,OfficeRuleDto.class);
+    }
+
+    public Map<String,List<String>> getChildOfficeMap(String officeId){
+        Map<String,List<String>> map= Maps.newHashMap();
+        List<Office> officeList=officeRepository.findByParentId(officeId);
+        List<Office> childOfficeList=officeRepository.findByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
+        for(Office office:childOfficeList){
+            String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
+            if(StringUtils.isNotBlank(key)){
+                if(map.containsKey(key)){
+                    map.put(key,Lists.newArrayList());
+                }
+                map.get(key).add(office.getId());
+            }
+        }
+        return map;
     }
 
     public RestResponse check(OfficeForm officeForm) {
@@ -248,5 +266,14 @@ public class OfficeService {
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(ids);
         List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
         return officeDtoList;
+    }
+
+    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
+        for(Office office:officeList){
+            if(parentIds.contains(office.getId())){
+                return office.getId();
+            }
+        }
+        return null;
     }
 }
