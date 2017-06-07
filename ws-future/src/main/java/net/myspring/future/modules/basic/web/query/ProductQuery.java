@@ -17,10 +17,10 @@ public class ProductQuery extends BaseQuery {
     private String name;  //名称
     private String code;  //编码
     private String type;
-    private String hasIme;  //包含串码
-    private String allowBill;  //允许开单
+    private Boolean hasIme;  //包含串码
+    private Boolean allowBill;  //允许开单
     private String productTypeId; //产品型号
-    private String allowOrder;  //允许开单
+    private Boolean allowOrder;  //允许开单
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
     private List<String> netTypeList = Lists.newArrayList();
@@ -32,6 +32,30 @@ public class ProductQuery extends BaseQuery {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Boolean getHasIme() {
+        return hasIme;
+    }
+
+    public void setHasIme(Boolean hasIme) {
+        this.hasIme = hasIme;
+    }
+
+    public Boolean getAllowBill() {
+        return allowBill;
+    }
+
+    public void setAllowBill(Boolean allowBill) {
+        this.allowBill = allowBill;
+    }
+
+    public Boolean getAllowOrder() {
+        return allowOrder;
+    }
+
+    public void setAllowOrder(Boolean allowOrder) {
+        this.allowOrder = allowOrder;
     }
 
     public List<String> getNetTypeList() {
@@ -74,21 +98,6 @@ public class ProductQuery extends BaseQuery {
         this.type = type;
     }
 
-    public String getHasIme() {
-        return hasIme;
-    }
-
-    public void setHasIme(String hasIme) {
-        this.hasIme = hasIme;
-    }
-
-    public String getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(String allowBill) {
-        this.allowBill = allowBill;
-    }
 
     public String getProductTypeId() {
         return productTypeId;
@@ -98,13 +107,6 @@ public class ProductQuery extends BaseQuery {
         this.productTypeId = productTypeId;
     }
 
-    public String getAllowOrder() {
-        return allowOrder;
-    }
-
-    public void setAllowOrder(String allowOrder) {
-        this.allowOrder = allowOrder;
-    }
 
     public String getOutGroupName() {
         return outGroupName;

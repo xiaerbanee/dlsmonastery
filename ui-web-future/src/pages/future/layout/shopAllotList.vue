@@ -136,10 +136,7 @@
 
       pageRequest() {
         this.pageLoading = true;
-
-
         util.copyValue(this.formData,this.submitData);
-
         util.setQuery("shopAllotList",this.submitData);
         axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
           this.page = response.data;

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable clearable @change="handleChange" :disabled="disabled" >
-      <el-option v-for="(value,key) in itemList"  :key="key" :label="key | bool2str" :value="value"></el-option>
+      <el-option v-for="item in itemList"  :key="item" :label="item | bool2str" :value="item"></el-option>
     </el-select>
   </div>
 </template>
@@ -11,14 +11,16 @@
     data() {
       return {
         innerId: this.value,
-        itemList:{"true": "1","false":"0"}
+        itemList:[true, false],
       };
     },methods:{
       handleChange(newVal) {
+        console.log(newVal);
         this.$emit('input', newVal);
       },
       setValue(val){
-        if(this.innerId == val || val=="") {
+
+        if(this.innerId === val) {
           return;
         }
         this.innerId=val;
@@ -27,9 +29,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
           this.setValue(newVal);
-        }
       }
     }
   };

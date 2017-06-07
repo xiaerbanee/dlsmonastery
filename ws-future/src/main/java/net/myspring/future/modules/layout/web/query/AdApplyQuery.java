@@ -19,12 +19,12 @@ public class AdApplyQuery extends BaseQuery {
     private String productName;
     private Boolean isBilled;
 
-    public Boolean getBilled() {
+    public Boolean getIsBilled() {
         return isBilled;
     }
 
-    public void setBilled(Boolean billed) {
-        isBilled = billed;
+    public void setIsBilled(Boolean isBilled) {
+        this.isBilled = isBilled;
     }
 
     public String getShopId() {

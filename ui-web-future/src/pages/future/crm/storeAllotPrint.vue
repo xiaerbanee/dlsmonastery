@@ -6,7 +6,7 @@
       <div class="span4">
       出货单号{{storeAllot.formatId}}
       </div>
-      <div class="span4">
+      <div class="span3">
         财务单号 ：{{storeAllot.outCode}}
       </div>
       <div class="span3">
@@ -18,7 +18,7 @@
         收货单位：{{storeAllot.toStoreName}}
       </div>
       <div class="span10">
-        摘要：{{storeAllot.summary}}
+        摘要：{{storeAllot.toStoreContator}}，{{storeAllot.toStoreMobilePhone}}，{{storeAllot.toStoreAddress}}，{{storeAllot.remarks}}
       </div>
     </div>
     <table class="table table-bordered">
@@ -30,7 +30,7 @@
         <td>备注</td>
       </tr>
       <tr v-for="item in storeAllotDetailList">
-        <td>{{item.productName}}</td>
+        <td class="span3">{{item.productName}}</td>
         <td>套</td>
         <td>{{item.billQty}}</td>
         <td></td>
@@ -38,7 +38,7 @@
       <tr>
         <td>合计</td>
         <td></td>
-        <td>{{storeAllot.totalBillQty}}</td>
+        <td>{{totalBillQty}}</td>
         <td></td>
       </tr>
       </tbody>
@@ -57,33 +57,40 @@
   export default{
     data(){
       return{
-        storeAllot:{},
+        storeAllot : {},
         storeAllotDetailList:[],
+        totalBillQty : 0,
       }
-    },methods:{
+    }, methods:{
 
-      getStoreAllotDetailList() {
+      findDetailList() {
        return axios.get('/api/ws/future/crm/storeAllot/findDetailList', {params: {storeAllotId: this.$route.query.id}});
+      },
+      print() {
+        return axios.get('/api/ws/future/crm/storeAllot/print', {params: {id: this.$route.query.id}});
       }
     },
-    mounted() {
-      setTimeout("window.print()",2000);
-    },
+
     created(){
 
-      axios.all([()=>axios.get('/api/ws/future/crm/storeAllot/findDetailList', {params: {storeAllotId: this.$route.query.id}}), ()=> axios.get('/api/ws/future/crm/storeAllot/findDto' , {params: {id: this.$route.query.id}})])
-        .then(axios.spread(function (acct, perms) {
-          // Both requests are now complete
+      axios.all([this.findDetailList(), this.print()])
+        .then(axios.spread( (findDetailListRes, printRes) => {
+          this.storeAllotDetailList = findDetailListRes.data;
+          this.storeAllot = printRes.data;
+
+          let result = 0;
+          if(this.storeAllotDetailList){
+            for(let storeAllotDetail of this.storeAllotDetailList){
+              result += storeAllotDetail.billQty;
+            }
+          }
+          this.totalBillQty = result;
+
+          this.$nextTick(()=>{
+            window.print();
+            this.$router.push({ name: 'storeAllotList'});
+          });
         }));
-
-      axios.get('/api/ws/future/crm/storeAllot/findDetailList', {params: {storeAllotId: this.$route.query.id}}).then((response)=>{
-        this.storeAllotDetailList = response.data;
-      });
-
-      axios.get('/api/ws/future/crm/storeAllot/findDto' , {params: {id: this.$route.query.id}}).then((response)=>{
-        this.storeAllot = response.data;
-      });
-
     }
   }
 </script>
