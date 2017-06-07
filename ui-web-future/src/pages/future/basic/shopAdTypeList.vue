@@ -38,6 +38,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -72,8 +73,12 @@
           this.page = response.data;
           this.pageLoading = false;
         })
-      },
-      sortChange(column) {
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+
+      },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();

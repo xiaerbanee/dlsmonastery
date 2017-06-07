@@ -409,7 +409,8 @@ export default {
     filter: "saring",
     selectKeyShow20time: "请输入关键词,显示前20条",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    inputImeLast6:"请输入串码后(>=6)位"
   },
   demoPhoneList: {
     demoPhoneList: "demo mesin",
