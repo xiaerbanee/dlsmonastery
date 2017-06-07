@@ -44,29 +44,33 @@
     },
 
       data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            inputProperty:{},
-            shopGoodsDeposit:{},
-            submitData:{
-              id:'',
-              shopId:'',
-              bankId:"",
-              amount:"",
-              departMent:"",
-              remarks:'',
+        return this.getData();
+      },
+    methods:{
+      getData(){
+        return {
+            isInit: false,
+            isCreate: this.$route.query.id == null,
+            submitDisabled: false,
+            inputProperty: {},
+            shopGoodsDeposit: {},
+            submitData: {
+              id: '',
+              shopId: '',
+              bankId: "",
+              amount: "",
+              departMent: "",
+              remarks: '',
             },
 
             rules: {
-              shopId: [{ required: true, message: this.$t('shopGoodsDepositForm.prerequisiteMessage')}],
-              bankId: [{ required: true, message: this.$t('shopGoodsDepositForm.prerequisiteMessage')}],
+              shopId: [{required: true, message: this.$t('shopGoodsDepositForm.prerequisiteMessage')}],
+              bankId: [{required: true, message: this.$t('shopGoodsDepositForm.prerequisiteMessage')}],
             },
-          }
-      },
-      methods:{
+          };
+        },
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -76,13 +80,13 @@
                 this.submitDisabled = false;
                 if(response.data.success) {
                   if (this.isCreate) {
-                    form.resetFields();
+                    Object.assign(this.$data, this.getData());
                   } else {
                     this.$router.push({name: 'shopGoodsDepositList', query: util.getQuery("shopGoodsDepositList")})
                   }
                 }
               }).catch(() => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           })
@@ -100,12 +104,12 @@
           this.inputProperty = response.data;
         });
     },activated () {
-        if(!this.$route.query.headClick) {
-
+        if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/crm/shopGoodsDeposit/findDto',{params: {id: this.$route.query.id}}).then((response)=>{
             this.shopGoodsDeposit = response.data;
           });
         }
+      this.isInit = true;
     }
   }
 </script>

@@ -73,53 +73,58 @@
       productSelect
     },
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        alertError:false,
-        error:"",
-        productName:"",
-        adGoodsOrderDetails:[],
-        remoteLoading:false,
-        isAdShop:false,
-        pageLoading:'',
-        inputForm:{},
-        expressOrderDto:{
-            id:'',
-          expressCompanyId:'',
-          address:'',
-          contator:'',
-          mobilePhone:'',
-        },
-        submitData:{
-          id:this.$route.query.id,
-          outShopId:'',
-          shopId:'',
-          employeeId:'',
+      return this.getData();
+    },
+    methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          alertError:false,
+          error:"",
+          productName:"",
+          adGoodsOrderDetails:[],
+          remoteLoading:false,
+          isAdShop:false,
+          pageLoading:'',
+          inputForm:{},
           expressOrderDto:{
-            id:"",
+            id:'',
             expressCompanyId:'',
             address:'',
             contator:'',
             mobilePhone:'',
           },
-          remarks:'',
-          adGoodsOrderDetails:[],
-        },
-        rules: {
-          outShopId:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-          employeeId:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-          address:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-          contator:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-          mobilePhone:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}]
-        },
-        rules:{},
-        totalQty:'',
-        totalPrice:''
-      }
-    },
-    methods:{
+          submitData:{
+            id:this.$route.query.id,
+            outShopId:'',
+            shopId:'',
+            employeeId:'',
+            expressOrderDto:{
+              id:"",
+              expressCompanyId:'',
+              address:'',
+              contator:'',
+              mobilePhone:'',
+            },
+            remarks:'',
+            adGoodsOrderDetails:[],
+          },
+          rules: {
+            outShopId:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            employeeId:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            address:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            contator:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            mobilePhone:[{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}]
+          },
+          rules:{},
+          totalQty:'',
+          totalPrice:''
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -138,10 +143,8 @@
             axios.post('/api/ws/future/layout/adGoodsOrder/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(this.isCreate){
-                  form.resetFields();
-                } else {
+                Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
                   this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
                 }
               }else{
@@ -151,7 +154,7 @@
               }
 
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -195,23 +198,25 @@
       this.totalQty=totalQty;
       this.totalPrice=totalPrice;
     },initPage(){
-        axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
-          this.inputForm =response.data;
-        this.shopChange();
-        if(response.data.expressOrderDto!=null){
-          this.expressOrderDto=response.data.expressOrderDto;
-        }
-      })
-        axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
-          this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
-      })
+
       }
     },created(){
       this.initPage();
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+        axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params:{id:this.$route.query.id}}).then((response)=> {
+          this.inputForm =response.data;
+          this.shopChange();
+          if(response.data.expressOrderDto!=null){
+            this.expressOrderDto=response.data.expressOrderDto;
+          }
+        })
+        axios.get('/api/ws/future/layout/adGoodsOrder/getForm',{params:{id:this.$route.query.id}}).then((response)=>{
+          this.adGoodsOrderDetails = response.data.adGoodsOrderDetails;
+        })
       }
+      this.isInit = true;
     }
   }
 </script>

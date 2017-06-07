@@ -24,7 +24,7 @@ public class SQLServerDialect extends Dialect {
         if(pageable.getSort() != null) {
             sb.append(getOrder(pageable.getSort()));
         }
-        sb.append(" OFFSET ").append(":offset").append(" ROWS FETCH NEXT ").append(":pageSize").append(" ROWS ONLY");
+        sb.append(" OFFSET ").append(pageable.getOffset()).append(" ROWS FETCH NEXT ").append(pageable.getPageSize()).append(" ROWS ONLY");
         return sb.toString();
     }
 

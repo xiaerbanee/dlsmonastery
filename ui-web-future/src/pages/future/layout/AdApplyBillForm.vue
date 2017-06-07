@@ -53,45 +53,48 @@
   export default{
     components:{expressCompanySelect,depotSelect},
     data(){
-      return{
-        submitDisabled:false,
-        productOrShopName:"",
-        applyQtys:"",
-        leftQtys:"",
-        confirmQtys:"",
-        inputForm:{},
-        submitData:{
-          billType:'',
-          billDate:'',
-          expressCompanyId:'',
-          billRemarks:'',
-          billQtys:[],
-          adApplyList:[],
-        },
-        rules: {
-          billType: [{ required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
-          billDate: [{ required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
-          expressCompanyId: [{ required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
-        },
-        remoteLoading:false
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return {
+          isInit: false,
+          submitDisabled: false,
+          productOrShopName: "",
+          applyQtys: "",
+          leftQtys: "",
+          confirmQtys: "",
+          inputForm: {},
+          submitData: {
+            billType: '',
+            billDate: '',
+            expressCompanyId: '',
+            billRemarks: '',
+            billQtys: [],
+            adApplyList: [],
+          },
+          rules: {
+            billType: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
+            billDate: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
+            expressCompanyId: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
+          },
+          remoteLoading: false
+        };
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/crm/adApply/billSave',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'adApplyList',query:util.getQuery("adApplyList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -123,18 +126,15 @@
             }
           }
         }
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getBillForm').then((response) =>{
           this.inputForm = response.data;
-      });
+        });
       }
-    },created () {
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

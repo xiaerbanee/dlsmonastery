@@ -40,32 +40,37 @@
   export default{
     components:{depotSelect},
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        shopDisabled:false,
-        remoteLoading:false,
-        formProperty:{},
-        fileList:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          shopId:'',
-          imageType:'',
-          imageSize:'',
-          image:'',
-          remarks:''
-        },
-        rules: {
-          shopName: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
-          imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
-          imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
-        },
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          shopDisabled:false,
+          remoteLoading:false,
+          formProperty:{},
+          fileList:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            shopId:'',
+            imageType:'',
+            imageSize:'',
+            image:'',
+            remarks:''
+          },
+          rules: {
+            shopName: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
+            imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
+            imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
+          },
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -77,14 +82,14 @@
               this.submitDisabled = false;
               if(response.data.success) {
                 if (this.isCreate) {
-                  form.resetFields();
+                  Object.assign(this.$data, this.getData());
                   this.fileList = [];
                 } else {
                   this.$router.push({name: 'shopImageList', query: util.getQuery("shopImageList")})
                 }
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         })
@@ -94,30 +99,29 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage(){
-          axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-            if(this.inputForm.id != null){
-              this.shopDisabled = true;
-            }else{
-              this.shopDisabled = false;
-            }
-            if(this.inputForm.image != null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-                this.fileList= response.data;
-              });
-            }else{
-              this.fileList = [];
-            }
-          });
-          axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-            this.formProperty = response.data;
-          });
       }
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          if(this.inputForm.id != null){
+            this.shopDisabled = true;
+          }else{
+            this.shopDisabled = false;
+          }
+          if(this.inputForm.image != null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+              this.fileList= response.data;
+            });
+          }else{
+            this.fileList = [];
+          }
+        });
+        axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
+          this.formProperty = response.data;
+        });
       }
+      this.isInit = true;
     }
   }
 </script>

@@ -26,55 +26,59 @@
   export default{
     components:{productSelect},
     data(){
-      return{
-        formData:{},
-        submitData:{
-          productId:'',
-        },
-        formLabel:{
-          productName:{label:this.$t('adPricesystemChangeForm.productName')},
-          productCode:{label:this.$t('adPricesystemChangeForm.productCode')}
-        },
-        inputForm:{
-            data:''
-        },
-        rules:{},
-        productTypes:[],
-        adPricesystem:{},
-        formVisible: false,
-        submitDisabled:false,
-        table:null,
-        settings: {
-          colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet')],
-          rowHeaders:true,
-          autoColumnSize:true,
-          allowInsertRow:false,
-          maxRows:10000,
-          columns: [{
-            readOnly: true,
-            width:100
-          },{
-            readOnly: true,
-            width:150
-          },{
-            readOnly: true,
-            width:300
-          },{
-            type:"numeric",
-            width:150
-          },{
-            type:"numeric",
-            width:150
-          }]
-        },
-      }
-
+      return this.getData();
     },
     mounted () {
       this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          formData:{},
+          submitData:{
+            productId:'',
+          },
+          formLabel:{
+            productName:{label:this.$t('adPricesystemChangeForm.productName')},
+            productCode:{label:this.$t('adPricesystemChangeForm.productCode')}
+          },
+          inputForm:{
+            data:''
+          },
+          rules:{},
+          productTypes:[],
+          adPricesystem:{},
+          formVisible: false,
+          submitDisabled:false,
+          table:null,
+          settings: {
+            colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet')],
+            rowHeaders:true,
+            autoColumnSize:true,
+            allowInsertRow:false,
+            maxRows:10000,
+            columns: [{
+              readOnly: true,
+              width:100
+            },{
+              readOnly: true,
+              width:150
+            },{
+              readOnly: true,
+              width:300
+            },{
+              type:"numeric",
+              width:150
+            },{
+              type:"numeric",
+              width:150
+            }]
+          },
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         this.inputForm.data = new Array();
         let list = this.table.getData();
@@ -88,7 +92,7 @@
           this.$message(response.data.message);
           this.submitDisabled = false;
         }).catch(function () {
-         this.submitDisabled = false;
+         that.submitDisabled = false;
        });
       },search() {
         this.formVisible = false;
@@ -119,7 +123,6 @@
         }
       })
     },activated () {
-
       if(!this.$route.query.headClick) {
         this.initPage();
       }

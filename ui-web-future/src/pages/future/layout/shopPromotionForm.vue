@@ -72,45 +72,50 @@
   export default{
     components:{depotSelect},
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        shopDisabled:false,
-        formProperty:{},
-        fileList1:[],
-        fileList2:[],
-        fileList3:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          shopId:'',
-          activityDate:'',
-          activityType:'',
-          amount:'',
-          dayAmount:'',
-          salerComment:'',
-          materialComment:'',
-          comment:'',
-          phone:'',
-          activityImage1:'',
-          activityImage2:'',
-          activityImage3:'',
-          remarks:''
-        },
-        rules: {
-          shopId: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
-          activityDate: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
-          activityType: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
-          amount: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPromotionForm.inputLegalValue')}],
-          dayAmount: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPromotionForm.inputLegalValue')}],
-          phone: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
-        },
-        remoteLoading:false,
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
-      }
+      return this.getData();
     },
     methods: {
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          shopDisabled:false,
+          formProperty:{},
+          fileList1:[],
+          fileList2:[],
+          fileList3:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            shopId:'',
+            activityDate:'',
+            activityType:'',
+            amount:'',
+            dayAmount:'',
+            salerComment:'',
+            materialComment:'',
+            comment:'',
+            phone:'',
+            activityImage1:'',
+            activityImage2:'',
+            activityImage3:'',
+            remarks:''
+          },
+          rules: {
+            shopId: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
+            activityDate: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
+            activityType: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
+            amount: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPromotionForm.inputLegalValue')}],
+            dayAmount: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPromotionForm.inputLegalValue')}],
+            phone: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
+          },
+          remoteLoading:false,
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         this.inputForm.activityDate = util.formatLocalDate(this.inputForm.activityDate)
@@ -125,7 +130,7 @@
               this.submitDisabled = false;
               if(response.data.success) {
                 if (this.isCreate) {
-                  form.resetFields();
+                  Object.assign(this.$data, this.getData());
                   this.fileList1 = [];
                   this.fileList2 = [];
                   this.fileList3 = [];
@@ -134,7 +139,7 @@
                 }
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         })
@@ -158,48 +163,45 @@
         this.fileList3 = fileList;
       }, findOne(){
 
-      },initPage(){
-          axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-            if(response.data.shopId!=null){
-              this.shopDisabled = true;
-            }else {
-              this.shopDisabled=false;
-            }
-
-            if(this.inputForm.activityImage1 !=null) {
-                console.log(this.fileList1);
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-                this.fileList1= response.data;
-              });
-            }else {
-              this.fileList1=[];
-            }
-            if(this.inputForm.activityImage2 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-                this.fileList2= response.data;
-              });
-            }else {
-              this.fileList2=[];
-            }
-            if(this.inputForm.activityImage3 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-                this.fileList3= response.data;
-              });
-            }else {
-              this.fileList3=[];
-            }
-          });
-          axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
-            this.formProperty = response.data;
-          });
-        }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
       }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          if(response.data.shopId!=null){
+            this.shopDisabled = true;
+          }else {
+            this.shopDisabled=false;
+          }
+
+          if(this.inputForm.activityImage1 !=null) {
+            console.log(this.fileList1);
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
+              this.fileList1= response.data;
+            });
+          }else {
+            this.fileList1=[];
+          }
+          if(this.inputForm.activityImage2 !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
+              this.fileList2= response.data;
+            });
+          }else {
+            this.fileList2=[];
+          }
+          if(this.inputForm.activityImage3 !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
+              this.fileList3= response.data;
+            });
+          }else {
+            this.fileList3=[];
+          }
+        });
+        axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
+          this.formProperty = response.data;
+        });
+      }
+      this.isInit = true;
     }
   }
 </script>

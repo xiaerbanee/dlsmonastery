@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.common.query.BaseQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class BdCustomerQuery extends BaseQuery {
     private String customerGroup;
-    private List<String> customerIdList;
+    private List<String> customerIdList = Lists.newArrayList();
 
     public List<String> getCustomerIdList() {
         return customerIdList;

@@ -56,7 +56,7 @@
           <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
           <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
-          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')"></el-table-column>
+          <el-table-column prop="leftQty" :label="$t('goodsOrderShip.leftQty')"></el-table-column>
         </el-table>
       </el-form>
     </div>
@@ -140,6 +140,13 @@
               this.$refs.mediaSuccess.play();
             }
           }
+          //设置发货数和待发货数
+          for(var index in this.inputForm.goodsOrderDetailList) {
+            var item = this.inputForm.goodsOrderDetailList[index];
+            item.shipQty = 0;
+            item.leftQty = 1;
+          }
+
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {
