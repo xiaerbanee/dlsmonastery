@@ -41,11 +41,11 @@
               <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="showSummary(true)">{{$t('goodsOrderShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="summary(true)">{{$t('goodsOrderShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
           <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
             <template scope="scope">
@@ -100,8 +100,7 @@
             imeStr:'',
             shipRemarks:''
           },
-          rules: {},
-          pageLoading:false,
+          rules: {}
         }
       },
       formSubmit() {
@@ -126,10 +125,8 @@
         }
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
-        this.pageLoading = true;
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
           this.shipResult = response.data;
-          this.pageLoading = false;
           //错误信息
           var errorMsg = "";
           for(var index in this.shipResult.restResponse.errors) {
@@ -139,18 +136,20 @@
           if(util.isNotBlank(errorMsg)) {
             this.$refs.mediaNotify.play();
           } else {
-            if(util.isBlank(this.warnMsg)) {
+            if(util.isBlank(this.shipResult.warnMsg)) {
               this.$refs.mediaSuccess.play();
             }
           }
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {
-              if(util.isBlank(this.warnMsg)) {
+              if(util.isBlank(this.shipResult.warnMsg)) {
                 this.formSubmit();
               } else {
                 if (confirm("还有货品未发送完，确认保存？")) {
                   this.formSubmit();
+                } else {
+                  this.submitDisabled = false;
                 }
               }
             } else {
