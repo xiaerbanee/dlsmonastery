@@ -99,13 +99,10 @@
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if (response.data.success) {
-                if (this.isCreate) {
-                  Object.assign(this.$data, this.getData());
-                  this.fileList = [];
-                } else {
-                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
+                if (!this.isCreate) {
+                    this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
                 }
               }
             }).catch(function () {
@@ -123,6 +120,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(tihs.$data, this.getData());
         axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
           if(this.isCreate){

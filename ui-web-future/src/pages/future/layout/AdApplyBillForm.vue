@@ -129,6 +129,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getBillForm').then((response) =>{
           this.inputForm = response.data;

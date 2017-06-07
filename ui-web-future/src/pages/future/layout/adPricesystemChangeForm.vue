@@ -27,6 +27,7 @@
     components:{productSelect},
     data(){
       return this.getData();
+
     },
     mounted () {
       this.table = new Handsontable(this.$refs["handsontable"], this.settings)
@@ -90,7 +91,7 @@
        this.inputForm.data = JSON.stringify(this.inputForm.data);
        axios.post('/api/ws/future/layout/adPricesystemChange/save',qs.stringify({data:this.inputForm.data},{allowDots:true})).then((response)=> {
           this.$message(response.data.message);
-          this.submitDisabled = false;
+         Object.assign(this.$data, this.getData());
         }).catch(function () {
          that.submitDisabled = false;
        });
@@ -104,13 +105,7 @@
             this.table.loadData(this.settings.data);
           });
       },initPage(){
-        axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
-          this.formData=response.data;
-          util.copyValue(this.$route.query,this.formData);
-          this.getData();
-        });
 
-      }
     }, created(){
       axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
         this.adPricesystem = response.data;
@@ -123,8 +118,15 @@
         }
       })
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+        axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
+          this.formData=response.data;
+          util.copyValue(this.$route.query,this.formData);
+          this.getData();
+        });
+      }
+        this.isInit = true;
       }
     }
   }

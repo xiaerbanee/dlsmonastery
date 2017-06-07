@@ -79,11 +79,9 @@
               this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success) {
                   if (this.isCreate) {
-                    Object.assign(this.$data, this.getData());
-                  } else {
                     this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
                   }
                 }
@@ -139,7 +137,8 @@
         this.filterShopAllotDetailList = tempList;
       }
     },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
+      if(!this.$route.query.headClick || this.isInit) {
+        Object.assign(this.$data, this.getData());
         if(this.$route.query.id){
           axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
             this.setShopAllotDetailList(response.data);
