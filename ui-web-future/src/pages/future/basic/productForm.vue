@@ -119,9 +119,7 @@
           if (valid) {
               util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/basic/product/save', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
                 this.$message(response.data.message);
-              }
             Object.assign(this.$data, this.getData());
               if(!this.isCreate){
                 this.$router.push({name:'productList',query:util.getQuery("productList")})
@@ -150,6 +148,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           this.inputForm.hasIme = response.data.hasIme?1:0;

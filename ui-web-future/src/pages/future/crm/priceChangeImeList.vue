@@ -19,10 +19,10 @@
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
                 <product-select v-model="formData.productId"></product-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.isCheck.label" :label-width="formLabelWidth">
@@ -107,10 +107,10 @@
           priceChangeName:{label:this.$t('priceChangeImeList.priceChangeName')},
           status:{label:this.$t('priceChangeImeList.status')},
           officeId:{label:this.$t('priceChangeImeList.officeName'),value:''},
-          productName:{label:this.$t('priceChangeImeList.type')},
-          shopName:{label:this.$t('priceChangeImeList.shopName')},
+          productId:{label:this.$t('priceChangeImeList.type')},
+          shopId:{label:this.$t('priceChangeImeList.shopName')},
           isCheck:{label:this.$t('priceChangeImeList.isCheck'),value:''},
-          image:{label:this.$t('priceChangeImeList.image'),value:''},
+          hasImage:{label:this.$t('priceChangeImeList.image'),value:''},
           ime:{label:this.$t('priceChangeImeList.ime')},
         },
         formLabelWidth: '120px',
@@ -121,11 +121,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
-        this.formLabel.image.value = util.bool2str(this.formData.image);
-        this.formLabel.officeId.value = util.getLabel(this.formData.officeId, this.formData.officeId);
+        this.formLabel.hasImage.value = util.bool2str(this.formData.hasImage);
 
         util.copyValue(this.formData,this.submitData);
-        console.log(this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);
         axios.get('/api/ws/future/crm/priceChangeIme',{params:this.submitData}).then((response) => {
           this.page = response.data;

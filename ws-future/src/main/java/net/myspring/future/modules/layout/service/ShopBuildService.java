@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class ShopBuildService {
 
     @Autowired
@@ -60,6 +62,7 @@ public class ShopBuildService {
         if(StringUtils.isNotBlank(id)){
             ShopBuild shopBuild = shopBuildRepository.findOne(id);
             shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
+            cacheUtils.initCacheInput(shopBuildDto);
             cacheUtils.initCacheInput(shopBuildDto);
         }
         return shopBuildDto;

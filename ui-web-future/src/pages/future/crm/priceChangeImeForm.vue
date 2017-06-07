@@ -120,11 +120,13 @@
         }
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
             this.formProperty=response.data;
           });
         }
         this.isInit = true;
+        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       }
     }
 </script>

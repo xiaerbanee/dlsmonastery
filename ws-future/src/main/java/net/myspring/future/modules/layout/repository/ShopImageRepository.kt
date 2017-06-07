@@ -26,7 +26,7 @@ interface ShopImageRepositoryCustom{
     fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto>
 }
 
-class ShopImageRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopImageRepositoryCustom{
+class ShopImageRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopImageRepositoryCustom{
 
     override fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto> {
         val sb = StringBuilder("""
