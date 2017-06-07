@@ -71,13 +71,10 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
-  import boolSelect from 'components/common/bool-select'
 
   export default{
     components:{
       accountSelect,
-      boolSelect,
-
     },
     data() {
       return {

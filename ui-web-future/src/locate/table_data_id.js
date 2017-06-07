@@ -275,6 +275,8 @@ export default {
       storeAllotForm: "transfer gudang besar",
       storeAllotList: "transfer gudang besar",
       storeAllotShip: "alokasi gudang besar",
+      storeAllotShipPrint: "大库调拨快递单打印",
+      storeAllotPrint: "大库调拨出库单打印",
       dutySignAddList:"补签申请",
       companyList: '公司管理',
       companyForm: '公司管理编辑',

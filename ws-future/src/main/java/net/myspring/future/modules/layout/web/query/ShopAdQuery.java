@@ -18,7 +18,7 @@ public class ShopAdQuery extends BaseQuery{
     private String shopId;
     private String officeId;
     private String shopAdTypeId;
-    private String specialArea;
+    private Boolean specialArea;
     private String createdBy;
     private String createdDate;
     private String processStatus;
@@ -56,11 +56,11 @@ public class ShopAdQuery extends BaseQuery{
         this.shopAdTypeId = shopAdTypeId;
     }
 
-    public String getSpecialArea() {
+    public Boolean getSpecialArea() {
         return specialArea;
     }
 
-    public void setSpecialArea(String specialArea) {
+    public void setSpecialArea(Boolean specialArea) {
         this.specialArea = specialArea;
     }
 

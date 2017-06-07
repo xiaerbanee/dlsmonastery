@@ -109,6 +109,23 @@ public class StoreAllotController {
 
     }
 
+    @RequestMapping(value = "print")
+    public StoreAllotDto print(String id) {
+
+        if(StringUtils.isBlank(id)){
+            throw new ServiceException("不存在对应的大库调拨记录");
+        }
+        return storeAllotService.print(id);
+    }
+
+    @RequestMapping(value = "shipPrint")
+    public StoreAllotDto shipPrint(String id) {
+        if(StringUtils.isBlank(id)){
+            throw new ServiceException("不存在对应的大库调拨记录");
+        }
+        return storeAllotService.shipPrint(id);
+    }
+
     @RequestMapping(value = "findStoreAllotForFastAllot")
     public StoreAllotDto findStoreAllotForFastAllot() {
 
