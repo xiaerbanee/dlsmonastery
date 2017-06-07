@@ -123,23 +123,25 @@
         that.pageLoading = true;
         util.getQuery("customerReceive");
         util.setQuery("customerReceive",that.formData);
-        that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
-        util.copyValue(that.formData,that.submitData);
-        axios.get('/api/global/cloud/kingdee/bdCustomer?'+qs.stringify(that.submitData)).then((response) => {
-            that.customerPage = response.data;
+        if(that.formData.dateRange) {
+          that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
+          util.copyValue(that.formData, that.submitData);
+          axios.get('/api/global/cloud/kingdee/bdCustomer?' + qs.stringify(that.submitData)).then((response) => {
             let customerIdList = new Array();
             let customers = response.data.content;
-            for (let item in customers){
+            for (let item in customers) {
               customerIdList.push(customers[item].fcustId);
             }
             that.submitData.customerIdList = customerIdList;
-            if(that.submitData.customerIdList.length !== 0){
-              axios.get('/api/global/cloud/report/customerReceive/list?'+qs.stringify(that.submitData)).then((response) => {
+            if (that.submitData.customerIdList.length !== 0) {
+              axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(that.submitData)).then((response) => {
                 this.summary = response.data;
               });
             }
-          this.pageLoading = false;
-        })
+            that.customerPage = response.data;
+            this.pageLoading = false;
+          })
+        }
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;

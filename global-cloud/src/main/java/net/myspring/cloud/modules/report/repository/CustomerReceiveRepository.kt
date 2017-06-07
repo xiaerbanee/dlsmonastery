@@ -21,7 +21,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
 
     fun findEndShouldGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto> {
         var paramMap = HashMap<String, Any>()
-        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("dateEnd", dateEnd.toString())
         paramMap.put("customerIdList", customerIdList)
         return namedParameterJdbcTemplate.query("""
             SELECT
@@ -63,7 +63,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
              WHERE
                 t4.FNAME = '标准销售出库单'
                 and t2.FDATE < :dateEnd
-                and t2.FCUSTOMERID in :customerIdList
+                and t2.FCUSTOMERID in (:customerIdList)
                 UNION ALL
              SELECT
                 t2.FCONTACTUNIT AS customerId,
