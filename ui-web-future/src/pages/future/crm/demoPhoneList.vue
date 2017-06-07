@@ -17,7 +17,7 @@
               <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.demoPhoneType.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.demoPhoneTypeId.label" :label-width="formLabelWidth">
                 <demo-phone-type v-model = "formData.demoPhoneTypeId"></demo-phone-type>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
@@ -81,7 +81,7 @@
         },formLabel:{
           ime:{label: this.$t('demoPhoneList.ime')},
           shopId:{label: this.$t('demoPhoneList.shopName')},
-          demoPhoneType:{label: this.$t('demoPhoneList.demoPhoneType')},
+          demoPhoneTypeId:{label: this.$t('demoPhoneList.demoPhoneType')},
           createdDate:{label: this.$t('demoPhoneList.createdDate')},
         },
         formProperty:{},
