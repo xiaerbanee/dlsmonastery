@@ -13,6 +13,7 @@ public class GoodsOrderQuery extends BaseQuery {
     private List<String> netTypeList;
     private String businessId;
     private String businessIds;
+    private List<String> businessIdList;
 
 
 
@@ -41,6 +42,8 @@ public class GoodsOrderQuery extends BaseQuery {
     private LocalDateTime createdDateStart;
 
     private String expressCodes;
+    private List<String> expresscodeList;
+
     private String expressCode;
     private String status;
     private List<String> statusList;
@@ -261,7 +264,19 @@ public class GoodsOrderQuery extends BaseQuery {
         return createdDateEnd;
     }
 
+    public List<String> getExpresscodeList() {
+        return expresscodeList;
+    }
 
+    public void setExpresscodeList(List<String> expresscodeList) {
+        this.expresscodeList = expresscodeList;
+    }
 
+    public List<String> getBusinessIdList() {
+        return businessIdList;
+    }
 
+    public void setBusinessIdList(List<String> businessIdList) {
+        this.businessIdList = businessIdList;
+    }
 }

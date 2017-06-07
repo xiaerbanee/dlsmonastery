@@ -8,6 +8,7 @@ import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     //门店所在区域
     private String shopAreaName;
     private String businessId;
-    private LocalDateTime billDate;
+    private LocalDate billDate;
     private LocalDateTime shipDate;
     private String status;
     private String shopId;
@@ -46,6 +47,26 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private Boolean enabled;
 
     private String  rebateRuleRemarks;
+
+    private String expressOrderId;
+
+    public Boolean getUseTicket() {
+        return isUseTicket;
+    }
+
+    public void setUseTicket(Boolean useTicket) {
+        isUseTicket = useTicket;
+    }
+
+    private Boolean isUseTicket;
+
+    public String getExpressOrderId() {
+        return expressOrderId;
+    }
+
+    public void setExpressOrderId(String expressOrderId) {
+        this.expressOrderId = expressOrderId;
+    }
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
@@ -83,11 +104,11 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
         this.businessId = businessId;
     }
 
-    public LocalDateTime getBillDate() {
+    public LocalDate getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(LocalDateTime billDate) {
+    public void setBillDate(LocalDate billDate) {
         this.billDate = billDate;
     }
 

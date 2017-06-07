@@ -121,11 +121,6 @@
         if(this.isCreate){
           this.shopDisabled = false;
         }
-        if(response.data.specialArea == true){
-          this.inputForm.specialArea = 1;
-        }else{
-          this.inputForm.specialArea = 0;
-        }
         if(this.inputForm.attachment !=null) {
           axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
             this.fileList= response.data;

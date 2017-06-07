@@ -899,7 +899,7 @@ export default {
     expressCodes: "快递单号",
     shopName: "门店",
     remarks: "备注",
-    redictView: "连续发货",
+    continueShip: "连续发货",
     imeStr: "串码",
     shipRemarks: "发货备注",
     save: "保存",
@@ -910,7 +910,7 @@ export default {
     billQty: "开单数",
     returnQty: "退货数",
     shippedQty: "已发货数",
-    waitShipQty: "待发货数",
+    leftQty: "待发货数",
     shipQty: "发货数",
   },
   goodsOrderSign: {

@@ -19,6 +19,9 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     @CacheInput(inputKey = "depots",inputInstance = "toStoreId",outputInstance = "name")
     private String toStoreName;
     private String toStoreId;
+    private String toStoreContator;
+    private String toStoreMobilePhone;
+    private String toStoreAddress;
 
 
     private String businessId;
@@ -30,8 +33,53 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private String shipType;
 
     private String expressOrderExpressCodes;
+    private String expressOrderOutPrintDate;
+    private String expressOrderExpressPrintDate;
+
+
+
     private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
     private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();
+
+    public String getExpressOrderOutPrintDate() {
+        return expressOrderOutPrintDate;
+    }
+
+    public void setExpressOrderOutPrintDate(String expressOrderOutPrintDate) {
+        this.expressOrderOutPrintDate = expressOrderOutPrintDate;
+    }
+
+    public String getExpressOrderExpressPrintDate() {
+        return expressOrderExpressPrintDate;
+    }
+
+    public void setExpressOrderExpressPrintDate(String expressOrderExpressPrintDate) {
+        this.expressOrderExpressPrintDate = expressOrderExpressPrintDate;
+    }
+
+    public String getToStoreContator() {
+        return toStoreContator;
+    }
+
+    public void setToStoreContator(String toStoreContator) {
+        this.toStoreContator = toStoreContator;
+    }
+
+    public String getToStoreMobilePhone() {
+        return toStoreMobilePhone;
+    }
+
+    public void setToStoreMobilePhone(String toStoreMobilePhone) {
+        this.toStoreMobilePhone = toStoreMobilePhone;
+    }
+
+    public String getToStoreAddress() {
+        return toStoreAddress;
+    }
+
+    public void setToStoreAddress(String toStoreAddress) {
+        this.toStoreAddress = toStoreAddress;
+    }
 
     public String getShipType() {
         return shipType;
@@ -48,6 +96,8 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     public void setExpressCompanyId(String expressCompanyId) {
         this.expressCompanyId = expressCompanyId;
     }
+
+
 
     public String getFormatId() {
         return IdUtils.getFormatId(businessId, FormatterConstant.STORE_ALLOT);
@@ -153,6 +203,13 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     }
 
 
+    public boolean getPrint(){
+        return expressOrderOutPrintDate != null;
+    }
+
+    public boolean getShipPrint(){
+        return expressOrderExpressPrintDate != null;
+    }
 
 
 }

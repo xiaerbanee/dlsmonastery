@@ -51,30 +51,30 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
-        <el-table-column prop="code" :label="$t('productList.code')"></el-table-column>
-        <el-table-column prop="netType" :label="$t('productList.netType')"></el-table-column>
-        <el-table-column prop="outId" label="outId"></el-table-column>
-        <el-table-column prop="outGroupId" :label="$t('productList.outGroupId')"></el-table-column>
-        <el-table-column prop="outGroupName"  :label="$t('productList.outGroupName')"></el-table-column>
-        <el-table-column prop="productTypeName" :label="$t('productList.productType')"></el-table-column>
-        <el-table-column prop="hasIme"  :label="$t('productList.hasIme')">
+        <el-table-column prop="code" :label="$t('productList.code')" sortable></el-table-column>
+        <el-table-column prop="netType" :label="$t('productList.netType')" sortable></el-table-column>
+        <el-table-column prop="outId" label="outId" sortable></el-table-column>
+        <el-table-column prop="outGroupId" :label="$t('productList.outGroupId')" sortable></el-table-column>
+        <el-table-column prop="outGroupName"  :label="$t('productList.outGroupName')" sortable></el-table-column>
+        <el-table-column column-key="productTypeId" prop="productTypeName" :label="$t('productList.productType')" sortable></el-table-column>
+        <el-table-column prop="hasIme"  :label="$t('productList.hasIme')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="allowOrder" :label="$t('productList.allowOrder')">
+        <el-table-column prop="allowOrder" :label="$t('productList.allowOrder')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.allowOrder ? 'primary' : 'danger'">{{scope.row.allowOrder | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="allowBill" :label="$t('productList.allowBill')">
+        <el-table-column prop="allowBill" :label="$t('productList.allowBill')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.allowBill ? 'primary' : 'danger'">{{scope.row.allowBill | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="image" :label="$t('productList.image')"></el-table-column>
+        <el-table-column prop="image" :label="$t('productList.image')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('productList.remarks')"></el-table-column>
-        <el-table-column prop="locked" :label="$t('productList.locked')" >
+        <el-table-column prop="locked" :label="$t('productList.locked')" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
@@ -104,6 +104,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:'',
           type:'',
           hasIme:'',
@@ -146,7 +147,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

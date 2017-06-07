@@ -28,7 +28,12 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js'
     export default{
       data(){
+        return this.getData()
+      },
+      methods:{
+        getData() {
           return{
+            isInit:false,
             submitDisabled:false,
             table:null,
             settings: {
@@ -88,15 +93,14 @@
       mounted () {
         this.table = new Handsontable(this.$refs["handsontable"], this.settings)
       },
-      methods:{
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
                 this.inputForm.imeUploadList=new Array();
                 let list=this.table.getData()
-                console.log(list);
                 for(var item in list){
                   if(!this.table.isEmptyRow(item)){
                     this.inputForm.imeUploadList.push(list[item]);
@@ -105,26 +109,22 @@
                 /*this.inputForm.imeUploadList = JSON.stringify(this.inputForm.imeUploadList);*/
                 axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
-                  form.resetFields();
-                  this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
                 }).catch(function () {
-                  this.submitDisabled = false;
+                  that.submitDisabled = false;
                 });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage(){
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
             this.formProperty=response.data;
           });
         }
-      },created() {
-        this.initPage();
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

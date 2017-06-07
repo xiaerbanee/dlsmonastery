@@ -27,26 +27,31 @@
 <script>
   export default{
     data(){
-      return{
-        submitDisabled:false,
-        inputForm:{},
-        inputProperty:{},
-        submitData:{
-          id:'',
-          category:'',
-          sort:'',
-          value:'',
-          remarks:''
-        },
-        rules: {
-          category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
-          sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],
-          value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}]
-        }
-      }
+      return this.getData()
     },
     methods:{
+      getData() {
+        return{
+          isInit:false,
+          submitDisabled:false,
+          inputForm:{},
+          inputProperty:{},
+          submitData:{
+            id:'',
+            category:'',
+            sort:'',
+            value:'',
+            remarks:''
+          },
+          rules: {
+            category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
+            sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],
+            value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}]
+          }
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -54,20 +59,21 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(this.inputForm.create){
-                form.resetFields();
-              } else {
+              Object.assign(this.$data, this.getData());
+              if(!this.inputForm.create){
                 this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         });
@@ -75,12 +81,7 @@
           this.inputProperty = response.data;
         });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

@@ -107,60 +107,65 @@
         officeSelect
     },
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        employeeForm:{},
-        accountForm:{},
-        inputProperty:{},
-        employeeSubmitData:{
-          id:'',
-          accountId:"",
-          name:'',
-          education:'',
-          code:'',
-          salary:'',
-          bankNumber:'',
-          bankName:'',
-          entryDate:'',
-          regularDate:'',
-          leaveDate:'',
-          school:'',
-          mobilePhone:'',
-          idcard:'',
-          birthday:'',
-          sex:"",
-          originId:'',
-          salerName:'',
-        },
-        accountSubmitData:{
-          id:"",
-          loginName:'',
-          employeeId:"",
-          officeId:"",
-          leaderId:'',
-          positionId:"",
-          type:"主账号",
-          officeIdList:'',
-        },
-        remoteLoading:false,
-        employeeRules: {
-          name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          salary: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          idcard: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          entryDate: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-        },
-        accountRules: {
-          loginName: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          officeId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-          positionId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-        },
-        loading:false
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          employeeForm:{},
+          accountForm:{},
+          inputProperty:{},
+          employeeSubmitData:{
+            id:'',
+            accountId:"",
+            name:'',
+            education:'',
+            code:'',
+            salary:'',
+            bankNumber:'',
+            bankName:'',
+            entryDate:'',
+            regularDate:'',
+            leaveDate:'',
+            school:'',
+            mobilePhone:'',
+            idcard:'',
+            birthday:'',
+            sex:"",
+            originId:'',
+            salerName:'',
+          },
+          accountSubmitData:{
+            id:"",
+            loginName:'',
+            employeeId:"",
+            officeId:"",
+            leaderId:'',
+            positionId:"",
+            type:"主账号",
+            officeIdList:'',
+          },
+          remoteLoading:false,
+          employeeRules: {
+            name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            mobilePhone: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            salary: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            idcard: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            entryDate: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          },
+          accountRules: {
+            loginName: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            officeId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            positionId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+          },
+          loading:false
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var employeeForm = this.$refs["employeeForm"];
         var accountForm = this.$refs["accountForm"];
@@ -176,43 +181,41 @@
                 util.copyValue(this.employeeForm,this.employeeSubmitData);
                 axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
                   this.$message("员工"+response.data.message);
-                  this.accountForm.employeeId=response.data.extra.employeeId;
-                  util.copyValue(this.accountForm,this.accountSubmitData);
-                  console.log(this.accountSubmitData)
-                  axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
-                    this.$message("账户"+response.data.message);
-                  });
-                  employeeForm.resetFields();
-                  this.submitDisabled = false;
-                  if(!this.isCreate){
-                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
-                  }
-                }).catch(function () {
-                  this.submitDisabled = false;
+                this.accountForm.employeeId=response.data.extra.employeeId;
+                util.copyValue(this.accountForm,this.accountSubmitData);
+                console.log(this.accountSubmitData)
+                axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
+                  this.$message("账户"+response.data.message);
+              });
+                Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
+                  this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+                }
+              }).catch(function () {
+                  that.submitDisabled = false;
                 });
               }
             })
           }else{
             this.submitDisabled = false;
-          }
-        })
-      },initPage() {
-        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.employeeForm=response.data;
-          this.employeeForm.sex=response.data.sex=="男"?1:0;
-          axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
-            this.accountForm=response.data;
-          })
-        })
-        axios.get('/api/basic/hr/employee/getForm').then((response)=>{
-          this.inputProperty=response.data
-          console.log(this.inputProperty)
-        })
+      }
+      })
       }
     },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.employeeForm=response.data;
+        this.employeeForm.sex=response.data.sex=="男"?1:0;
+        axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+          this.accountForm=response.data;
+      })
+      })
+        axios.get('/api/basic/hr/employee/getForm').then((response)=>{
+          this.inputProperty=response.data
+        console.log(this.inputProperty)
+      })
       }
+      this.isInit = true;
     }
   }
 </script>

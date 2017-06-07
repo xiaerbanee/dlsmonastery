@@ -2,22 +2,27 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
 public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
 
-
-    private String productName;
     private String productId;
-    private Boolean productHasIme;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
+    private Boolean hasIme;
     private BigDecimal price;
     private Integer qty;
+    private Integer returnQty;
     private Integer billQty;
 
     private Integer areaQty;
-    private Boolean productAllowOrder;
-    private Boolean productAllowBill;
+    private Boolean allowOrder;
+    private Boolean allowBill;
+
+    //发货信息
+    private Integer shippedQty;
 
 
     public Integer getBillQty() {
@@ -28,20 +33,20 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.billQty = billQty;
     }
 
-    public Boolean getProductAllowOrder() {
-        return productAllowOrder;
+    public Boolean getAllowOrder() {
+        return allowOrder;
     }
 
-    public void setProductAllowOrder(Boolean productAllowOrder) {
-        this.productAllowOrder = productAllowOrder;
+    public void setAllowOrder(Boolean allowOrder) {
+        this.allowOrder = allowOrder;
     }
 
-    public Boolean getProductAllowBill() {
-        return productAllowBill;
+    public Boolean getAllowBill() {
+        return allowBill;
     }
 
-    public void setProductAllowBill(Boolean productAllowBill) {
-        this.productAllowBill = productAllowBill;
+    public void setAllowBill(Boolean allowBill) {
+        this.allowBill = allowBill;
     }
 
     public Integer getAreaQty() {
@@ -52,20 +57,12 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.areaQty = areaQty;
     }
 
-    public Boolean getProductHasIme() {
-        return productHasIme;
+    public Boolean getHasIme() {
+        return hasIme;
     }
 
-    public void setProductHasIme(Boolean productHasIme) {
-        this.productHasIme = productHasIme;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setHasIme(Boolean hasIme) {
+        this.hasIme = hasIme;
     }
 
     public String getProductId() {
@@ -76,6 +73,13 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.productId = productId;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public BigDecimal getPrice() {
         return price;
@@ -93,5 +97,25 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
         this.qty = qty;
     }
 
+    public Integer getReturnQty() {
+        if(returnQty==null) {
+            returnQty = 0 ;
+        }
+        return returnQty;
+    }
 
+    public void setReturnQty(Integer returnQty) {
+        this.returnQty = returnQty;
+    }
+
+    public Integer getShippedQty() {
+        if(shippedQty==null) {
+            shippedQty = 0 ;
+        }
+        return shippedQty;
+    }
+
+    public void setShippedQty(Integer shippedQty) {
+        this.shippedQty = shippedQty;
+    }
 }

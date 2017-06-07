@@ -220,6 +220,67 @@ util.getIdList = function (array) {
   return idList;
 }
 
+util.getFormItems = function (component, formItems){
+
+  if(!component){
+    return formItems;
+  }
+  if(component.$options.componentName === "ElFormItem"){
+    formItems.push(component);
+
+    return formItems;
+  }else if(component.$children){
+    for(let child of component.$children){
+
+      util.getFormItems(child, formItems);
+    }
+  }
+  return formItems;
+};
+
+
+util.getComponentValueLabel = function (component){
+  if(!component){
+    return null;
+  }
+  let value = null;
+  console.log(component);
+  if(component.$options.componentName === "ElSelect") {
+    value = component.selectedLabel;
+  }else if(component.$options.componentName === "DateRangePicker"){
+    value = component.innerDateRange;
+  }else if(component.$options.componentName === "ElInput"){
+    value = component.value;
+  }else  if(component.$children){
+    for(let child of component.$children){
+      value = util.getComponentValueLabel(child);
+    }
+  }
+  return value;
+
+};
+
+util.getSearchText = function (root){
+
+  console.log("getSearchText");
+  let formItems = [];
+  util.getFormItems(root, formItems);
+
+  let tmp = [];
+
+  for(let item of formItems){
+    let eachValueLabel = util.getComponentValueLabel(item);
+    if(eachValueLabel){
+      tmp.push([item.label, eachValueLabel]);
+    }
+
+  }
+  return tmp;
+}
+
+
+
+
 util.getLabel = function (array, id, labelColumn) {
   if (labelColumn == null) {
     labelColumn = "name";
@@ -236,6 +297,20 @@ util.getLabel = function (array, id, labelColumn) {
   } else {
     return labelObj[labelColumn];
   }
+}
+
+util.getLabelList = function (array, labelColumn) {
+  if (labelColumn == null) {
+    labelColumn = "name";
+  }
+  let list=new Array();
+  if (array != null && array.length > 0) {
+    for (var index in array) {
+      var obj = array[index];
+      list.push(obj[labelColumn])
+    }
+  }
+  return list;
 }
 
 util.getFolderFileIdStr = function (array) {

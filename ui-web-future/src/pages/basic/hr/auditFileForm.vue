@@ -40,30 +40,35 @@
 <script>
   export default{
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        formProperty:{},
-        fileList:[],
-        processTypeList:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          processTypeName:'',
-          title:'',
-          content:'',
-          remarks:'',
-          attachment:''
-        },
-        rules: {
-          processTypeName: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
-          title: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
-        },
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          formProperty:{},
+          fileList:[],
+          processTypeList:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            processTypeName:'',
+            title:'',
+            content:'',
+            remarks:'',
+            attachment:''
+          },
+          rules: {
+            processTypeName: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
+            title: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
+          },
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -76,15 +81,14 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-              form.resetFields();
-              this.submitDisabled = false;
+              Object.assign(this.$data,this.getData());
               if(this.isCreate){
                 this.fileList = [];
               } else {
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -97,7 +101,9 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !!this.isInit) {
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
@@ -105,10 +111,7 @@
           this.processTypeList = response.data;
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

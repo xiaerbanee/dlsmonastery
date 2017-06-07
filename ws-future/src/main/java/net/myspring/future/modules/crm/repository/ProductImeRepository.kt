@@ -5,7 +5,9 @@ import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.dto.ProductImeForReportScoreDto
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
+import net.myspring.future.modules.crm.dto.ProductImeSaleReportDto
 import net.myspring.future.modules.crm.web.query.ProductImeQuery
+import net.myspring.future.modules.crm.web.query.ProductImeSaleReportQuery
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -59,13 +61,114 @@ interface ProductImeRepositoryCustom{
 
     fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
-
     fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate,   companyId :String) : MutableList<ProductImeForReportScoreDto>
 
+    fun findBaokaSaleReport(productImeSaleReportQuery: ProductImeSaleReportQuery) : MutableList<ProductImeSaleReportDto>
 
+    fun findSaleReport(productImeSaleReportQuery: ProductImeSaleReportQuery) : MutableList<ProductImeSaleReportDto>
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
+    override fun findSaleReport(productImeSaleReportQuery: ProductImeSaleReportQuery): MutableList<ProductImeSaleReportDto> {
+        val sb = StringBuilder()
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" select t2.area_id as 'officeId',count(t1.id) """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" select t2.office_id,count(t1.id) """)
+        }
+        sb.append("""
+            FROM
+            crm_product_ime_sale t1
+            LEFT JOIN crm_depot t2 ON t1.shop_id = t2.id
+            LEFT JOIN crm_product_ime t3 on t1.product_ime_id = t3.id
+            LEFT JOIN crm_product t4 on t3.product_id=t4.id
+            LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
+            LEFT JOIN crm_depot_shop t6 on t2.depot_shop_id=t6.id
+            WHERE
+            AND t1.enabled = 1
+            AND t1.is_back = 0
+            AND t3.enabled = 1
+    """)
+        if(productImeSaleReportQuery.dateStart!=null){
+            sb.append(""" and t1.created_date>=:dateStart """)
+        }
+        if(productImeSaleReportQuery.dateEnd!=null){
+            sb.append(""" and t1.created_date<=:dateEnd """)
+        }
+        if (productImeSaleReportQuery.scoreType) {
+            sb.append(""" and t5.score_type=1 """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.townType)) {
+            sb.append(""" t6.town_type=:townType """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
+            sb.append(""" t6.area_type=:areaType """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
+            sb.append(""" t5.id in (:productTypeIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIdList)) {
+            sb.append(""" t2.office_id in (:officeIdList) """)
+        }
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" group by t2.area_id """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType)&&productImeSaleReportQuery.sumType=="型号") {
+            sb.append(""" group by t5.id """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeSaleReportQuery), BeanPropertyRowMapper(ProductImeSaleReportDto::class.java))
+    }
+
+    override fun findBaokaSaleReport(productImeSaleReportQuery: ProductImeSaleReportQuery): MutableList<ProductImeSaleReportDto> {
+        val sb = StringBuilder()
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" select t2.area_id as 'officeId',count(t1.id) """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" select t2.office_id,count(t1.id) """)
+        }
+        sb.append("""
+            FROM
+                crm_product_ime t1
+            LEFT JOIN crm_depot t2 ON t1.depot_id = t2.id
+            LEFT JOIN crm_product t3 ON t1.product_id = t3.id
+            LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id
+            left join crm_depot_shop t5 on t2.depot_shop_id=t5.id
+            where t1.enabled=1
+            and t2.enabled=1
+    """)
+        if(productImeSaleReportQuery.dateStart!=null){
+            sb.append(""" and t1.retail_date>=:dateStart """)
+        }
+        if(productImeSaleReportQuery.dateEnd!=null){
+            sb.append(""" and t1.retail_date<=:dateEnd """)
+        }
+        if (productImeSaleReportQuery.scoreType) {
+            sb.append(""" and t4.score_type=1 """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.townType)) {
+            sb.append(""" t5.town_type=:townType """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
+            sb.append(""" t5.area_type=:areaType """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
+            sb.append(""" t4.id in (:productTypeIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIdList)) {
+            sb.append(""" t2.office_id in (:officeIdList) """)
+        }
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId)) {
+            sb.append(""" group by t2.area_id """)
+        }
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType)&&productImeSaleReportQuery.sumType=="型号") {
+            sb.append(""" group by t4.id """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeSaleReportQuery), BeanPropertyRowMapper(ProductImeSaleReportDto::class.java))
+    }
+
+
     override fun findForReportScore(dateStart: LocalDate, dateEnd: LocalDate, companyId: String): MutableList<ProductImeForReportScoreDto> {
 
         val params = HashMap<String, Any>()
@@ -85,9 +188,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             WHERE
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
+                AND depot.enabled = 1
                 AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.product_type_id = type.id
+                AND product.enabled = 1
+                AND type.enabled = 1
                 AND t1.retail_date IS NOT NULL
                 AND t1.retail_date >= :dateStart
                 AND t1.retail_date < :dateEnd
@@ -167,10 +273,11 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND depot.enabled = 1
                 AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
+                AND product.enabled =  1
                 AND t1.ime in (:imeList)
             ) validProductIme
-            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id
+            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
                 """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
     }
 
@@ -182,8 +289,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             ime.*
         FROM
             crm_product_ime ime
-            LEFT JOIN crm_product_ime_sale sale ON ime.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON ime.product_ime_upload_id = upload.id
+            LEFT JOIN crm_product_ime_sale sale ON ime.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON ime.product_ime_upload_id = upload.id AND upload.enabled = 1
         WHERE
             ime.enabled = 1
             AND ime.id = :productImeId
@@ -257,10 +364,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 			t1.*
 		FROM
 			crm_product_ime t1
-            LEFT JOIN crm_depot depot ON t1.depot_id = depot.id
-            LEFT JOIN crm_product product ON t1.product_id = product.id
-            LEFT JOIN crm_product_ime_sale sale ON t1.product_ime_sale_id = sale.id
-            LEFT JOIN crm_product_ime_upload upload ON t1.product_ime_upload_id = upload.id
+            LEFT JOIN crm_depot depot ON t1.depot_id = depot.id AND depot.enabled = 1
+            LEFT JOIN crm_product product ON t1.product_id = product.id AND product.enabled = 1
+            LEFT JOIN crm_product_ime_sale sale ON t1.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON t1.product_ime_upload_id = upload.id AND upload.enabled = 1
 		WHERE
 			t1.enabled = 1
 		    AND t1.company_id = :companyId

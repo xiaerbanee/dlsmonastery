@@ -29,7 +29,7 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
     private ExpressOrderDto expressOrderDto;
     private String employeeId;
 
-    private String pass;
+    private Boolean pass;
     private String passRemarks;
 
     private List<AdGoodsOrderDetailDto> adGoodsOrderDetails;
@@ -146,11 +146,11 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
         this.employeeId = employeeId;
     }
 
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

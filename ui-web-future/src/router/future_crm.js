@@ -5,6 +5,8 @@ const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/fut
 const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaInput.vue')));
 const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
 const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
+const afterSaleAreaFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaFleeInput.vue')));
+
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
 const bankInDetail = r => require.ensure([], () => r(require('pages/future/crm/bankInDetail.vue')));
@@ -63,6 +65,8 @@ const dataReportList = r => require.ensure([], () => r(require('pages/future/crm
 const storeAllotList = r => require.ensure([], () => r(require('pages/future/crm/storeAllotList.vue')));
 const storeAllotForm = r => require.ensure([], () => r(require('pages/future/crm/storeAllotForm.vue')));
 const storeAllotShip= r => require.ensure([], () => r(require('pages/future/crm/storeAllotShip.vue')));
+const storeAllotPrint= r => require.ensure([], () => r(require('pages/future/crm/storeAllotPrint.vue')));
+const storeAllotShipPrint= r => require.ensure([], () => r(require('pages/future/crm/storeAllotShipPrint.vue')));
 const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/crm/storeAllotDetail.vue')));
 
 
@@ -75,6 +79,7 @@ let routes = [
   {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
   {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
+  {path:'/future/crm/afterSaleAreaFleeInput',component:afterSaleAreaFleeInput,name:'afterSaleAreaFleeInput'},
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},
   {path:'/future/crm/bankInDetail',component:bankInDetail,name:'bankInDetail',meta: {menu:"bankInList"}},
@@ -135,6 +140,8 @@ let routes = [
   {path:'/future/crm/storeAllotList',component:storeAllotList,name:'storeAllotList'},
   {path:'/future/crm/storeAllotForm',component:storeAllotForm,name:'storeAllotForm',meta: {menu:"storeAllotList",keepAlive:true}},
   {path:'/future/crm/storeAllotShip',component:storeAllotShip,name:'storeAllotShip',meta: {menu:"storeAllotList"}},
+  {path:'/future/crm/storeAllotPrint',component:storeAllotPrint,name:'storeAllotPrint',meta: {hidden: true}},
+  {path:'/future/crm/storeAllotShipPrint',component:storeAllotShipPrint,name:'storeAllotShipPrint',meta: {hidden: true}},
   {path:'/future/crm/storeAllotDetail',component:storeAllotDetail,name:'storeAllotDetail',meta: {menu:"storeAllotList"}},
 
 ];

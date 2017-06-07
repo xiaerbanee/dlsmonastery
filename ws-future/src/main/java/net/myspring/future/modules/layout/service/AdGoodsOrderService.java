@@ -218,7 +218,7 @@ public class AdGoodsOrderService {
     public void audit(AdGoodsOrderForm adGoodsOrderForm) {
         if(!adGoodsOrderForm.isCreate()) {
             ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
-            activitiCompleteForm.setPass(adGoodsOrderForm.getPass().equalsIgnoreCase("1") ? true : false);
+            activitiCompleteForm.setPass(adGoodsOrderForm.getPass());
             activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
 
             activitiCompleteForm.setProcessTypeId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessTypeId());

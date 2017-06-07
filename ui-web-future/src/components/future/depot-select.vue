@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" placeholder="请输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" placeholder="请输入关键字" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
@@ -48,6 +48,10 @@
         })
       }, handleChange(newVal) {
         this.$emit('input', newVal);
+        this.$nextTick(()=>{
+          this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
+        });
+
       },setValue(val) {
         this.innerId=val;
         let idStr=this.innerId;
@@ -62,6 +66,10 @@
         axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('selectedTextChange', this.$refs.select.selectedLabel);
+          });
+
         })
       }
     },created () {

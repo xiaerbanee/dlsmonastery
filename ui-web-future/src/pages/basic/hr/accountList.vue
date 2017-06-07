@@ -48,8 +48,8 @@
         <el-table-column prop="employeeStatus" :label="$t('accountList.employeeStatus')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('accountList.edit')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('accountList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:account:edit'">{{$t('accountList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:account:delete'">{{$t('accountList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

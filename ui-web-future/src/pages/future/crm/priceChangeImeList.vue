@@ -28,8 +28,8 @@
               <el-form-item :label="formLabel.isCheck.label" :label-width="formLabelWidth">
                 <bool-select v-model="formData.isCheck"></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.image.label" :label-width="formLabelWidth">
-                <bool-select v-model="formData.image"></bool-select>
+              <el-form-item :label="formLabel.hasImage.label" :label-width="formLabelWidth">
+                <bool-select v-model="formData.hasImage"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
@@ -101,7 +101,7 @@
           productId:'',
           shopId:'',
           isCheck:'',
-          image:null,
+          hasImage:'',
           ime:''
         },formLabel:{
           priceChangeName:{label:this.$t('priceChangeImeList.priceChangeName')},
@@ -123,12 +123,7 @@
         this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
         this.formLabel.image.value = util.bool2str(this.formData.image);
         this.formLabel.officeId.value = util.getLabel(this.formData.officeId, this.formData.officeId);
-        if(this.formData.image!=null){
-          this.formData.image = this.formData.image ==1?true:false;
-        }
-        if(this.formData.isCheck!=null){
-          this.formData.isCheck = this.formData.isCheck ==1?true:false;
-        }
+
         util.copyValue(this.formData,this.submitData);
         console.log(this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);

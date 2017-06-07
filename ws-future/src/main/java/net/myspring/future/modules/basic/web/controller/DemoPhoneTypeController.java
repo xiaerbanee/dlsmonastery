@@ -44,9 +44,13 @@ public class DemoPhoneTypeController {
     }
 
     @RequestMapping(value = "getForm")
-    public DemoPhoneTypeForm findOne(DemoPhoneTypeForm demoPhoneTypeForm){
-        demoPhoneTypeForm=demoPhoneTypeService.getForm(demoPhoneTypeForm);
-        return demoPhoneTypeForm;
+    public DemoPhoneTypeForm getForm(DemoPhoneTypeForm demoPhoneTypeForm){
+        return demoPhoneTypeService.getForm(demoPhoneTypeForm);
+    }
+
+    @RequestMapping(value = "findOne")
+    public DemoPhoneTypeDto findOne(String id){
+        return demoPhoneTypeService.findOne(id);
     }
 
     @RequestMapping(value = "getQuery")

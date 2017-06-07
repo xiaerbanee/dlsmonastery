@@ -21,6 +21,10 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "taskPoint")
     private BigDecimal officeTaskPoint;
 
+    public String getOfficeTaskPointString() {
+        return officeTaskPoint +"000%";
+    }
+
     public BigDecimal getOfficeTaskPoint() {
         return officeTaskPoint;
     }

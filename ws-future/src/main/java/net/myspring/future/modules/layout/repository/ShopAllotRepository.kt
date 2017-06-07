@@ -14,13 +14,10 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
+
 interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotRepositoryCustom{
 
     @Query("""
@@ -49,12 +46,11 @@ class ShopAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sum(t2.qty * t2.return_price) returnTotalPrice,
             t1.*
         FROM
-            crm_shop_allot t1,
-            crm_shop_allot_detail t2
+            crm_shop_allot t1
+            LEFT JOIN crm_shop_allot_detail t2 ON t1.id = t2.shop_allot_id
         WHERE
             t1.enabled = 1
         AND t1.id = :id
-        AND t1.id = t2.shop_allot_id
         GROUP BY
             t1.id
           """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ShopAllotDto::class.java))
@@ -96,11 +92,11 @@ class ShopAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""   AND t1.audit_date < :auditDateEnd """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(shopAllotQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopAllotDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(shopAllotQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ShopAllotDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
 
     }

@@ -28,16 +28,17 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAdTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('shopAdTypeList.name')" sortable ></el-table-column>
-        <el-table-column prop="totalPriceType" :label="$t('shopAdTypeList.totalPriceType')"></el-table-column>
-        <el-table-column prop="price" :label="$t('shopAdTypeList.price')"></el-table-column>
+        <el-table-column prop="totalPriceType" :label="$t('shopAdTypeList.totalPriceType')" sortable></el-table-column>
+        <el-table-column prop="price" :label="$t('shopAdTypeList.price')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopAdTypeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('shopAdTypeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:shopAdType:edit'" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button>
-            <el-button size="small"  v-permit="'crm:shopAdType:delete'" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:shopAdType:edit'"><el-button size="small" @click.native="itemEdit(scope.row.id)">{{$t('shopAdTypeList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:shopAdType:delete'"><el-button size="small" @click.native="itemDelete(scope.row.id)">{{$t('shopAdTypeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -54,6 +55,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:'',
           totalPriceType:'',
         },
@@ -71,9 +73,13 @@
           this.page = response.data;
           this.pageLoading = false;
         })
-      },
-      sortChange(column) {
-        this.formData.order=util.getSort(column);
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },

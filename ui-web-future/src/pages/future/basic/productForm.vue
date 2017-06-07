@@ -77,7 +77,12 @@
       productTypeSelect
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         formProperty:{},
@@ -106,8 +111,8 @@
         headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -117,14 +122,12 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'productList',query:util.getQuery("productList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -144,26 +147,23 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-        this.inputForm.hasIme = response.data.hasIme?1:0;
-        this.inputForm.allowOrder = response.data.allowOrder?1:0;
-        this.inputForm.allowBill = response.data.allowBill?1:0;
-        if(response.data.productType != null){
-          this.productTypeList = new Array(response.data.productType)
-        }
-      });
+          this.inputForm.hasIme = response.data.hasIme?1:0;
+          this.inputForm.allowOrder = response.data.allowOrder?1:0;
+          this.inputForm.allowBill = response.data.allowBill?1:0;
+          if(response.data.productType != null){
+            this.productTypeList = new Array(response.data.productType)
+          }
+        });
         axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
           this.formProperty = response.data;
-      });
+        });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

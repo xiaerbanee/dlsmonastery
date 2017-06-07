@@ -1,7 +1,6 @@
 package net.myspring.common.enums;
 
 import com.google.common.collect.Lists;
-import net.myspring.util.collection.CollectionUtil;
 
 import java.util.List;
 
@@ -9,18 +8,22 @@ import java.util.List;
  * Created by liuj on 2016/12/31.
  */
 public enum AuditTypeEnum {
-    APPLYING,
-    PASSED,
-    NOT_PASS;
+    APPLY("申请中"), PASS("已通过"), NOT_PASS("未通过");
+    private String value;
 
-    private static List<String> list= Lists.newArrayList();
+    AuditTypeEnum(String value) {
+        this.value = value;
+    }
 
-    public static List<String> getList(){
-        if(CollectionUtil.isEmpty(list)){
-            for(AuditTypeEnum auditTypeEnum:AuditTypeEnum.values()){
-                list.add(auditTypeEnum.name());
-            }
+    public static List<String> getValues() {
+        List<String> values = Lists.newArrayList();
+        for(AuditTypeEnum auditTypeEnum: AuditTypeEnum.values()) {
+            values.add(auditTypeEnum.getValue());
         }
-        return list;
+        return values;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

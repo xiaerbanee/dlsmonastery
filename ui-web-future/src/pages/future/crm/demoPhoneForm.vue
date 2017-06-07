@@ -3,17 +3,17 @@
     <head-tab active="demoPhoneForm"></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('demoPhoneForm.productType')" prop="productType">
+        <el-form-item :label="$t('demoPhoneForm.productType')" prop="demoPhoneTypeId">
           <demo-phone-type v-model = "inputForm.demoPhoneTypeId"></demo-phone-type>
         </el-form-item>
-        <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shop">
+        <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shopId">
           <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.employeeName')" prop="employeeId">
           <employee-select v-model="inputForm.employeeId"></employee-select>
         </el-form-item>
-        <el-form-item :label="$t('demoPhoneForm.productIme')" prop="productIme">
-          <el-select v-model="inputForm.productImeId" clearable filterable remote :placeholder="$t('demoPhoneForm.inputWord')" :remote-method="remoteProductIme" :loading="remoteLoading">
+        <el-form-item :label="$t('demoPhoneForm.productIme')" prop="productImeId">
+          <el-select v-model="inputForm.productImeId" clearable filterable remote :placeholder="$t('demoPhoneForm.inputImeLast6')" :remote-method="remoteProductIme" :loading="remoteLoading">
             <el-option v-for="productIme in productImes" :key="productIme.id" :label="productIme.ime" :value="productIme.id"></el-option>
           </el-select>
         </el-form-item>
@@ -38,7 +38,12 @@
         demoPhoneType
     },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -52,15 +57,16 @@
           remarks:'',
         },
         rules: {
+          shopId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
+          productImeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -68,14 +74,12 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'demoPhoneList',query:util.getQuery("demoPhoneList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -91,17 +95,14 @@
         } else {
           this.productImes = [];
         }
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

@@ -9,7 +9,7 @@ import java.util.List;
  * Created by admin on 2017/2/27.
  */
 public enum EmployeeStatusEnum {
-    JOB,NOT_IN_JOB;
+    在职,离职;
 
     private static List<String> list= Lists.newArrayList();
 

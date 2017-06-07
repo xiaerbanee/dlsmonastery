@@ -6,33 +6,30 @@ import net.myspring.future.modules.layout.domain.ShopAllot;
 
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
+
 public class ShopAllotViewOrAuditForm extends BaseForm<ShopAllot> {
 
 
-    private String syn;
-    private String pass;
+    private Boolean syn;
+    private Boolean pass;
     private String auditRemarks;
 
 
     private List<ShopAllotDetailForm> shopAllotDetailList = Lists.newArrayList();
 
-
-    public String getSyn() {
+    public Boolean getSyn() {
         return syn;
     }
 
-    public void setSyn(String syn) {
+    public void setSyn(Boolean syn) {
         this.syn = syn;
     }
 
-    public String getPass() {
+    public Boolean getPass() {
         return pass;
     }
 
-    public void setPass(String pass) {
+    public void setPass(Boolean pass) {
         this.pass = pass;
     }
 

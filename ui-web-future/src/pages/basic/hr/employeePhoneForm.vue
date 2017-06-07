@@ -46,60 +46,68 @@
   export default{
     components:{productSelect,depotSelect},
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        formProperty:{},
-        inputForm:{
-          id:this.$route.query.id,
-          employeeName:'',
-          depotId:'',
-          depositAmount:'',
-          uploadTime:'',
-          productId:'',
-          jobPrice:'',
-          retailPrice:'',
-          imeStr:'',
-          status:''
-        },
-        remoteLoading:false,
-        depots:[],
-        products:[],
-        formLabelWidth: '120px',
-        rules: {
-          depot: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
-          depositAmount: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
-          uploadTime: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
-          product: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
-          jobPrice: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
-          retailPrice: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
-        }
-      }
+      return this.getData;
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          formProperty:{},
+          inputForm:{
+            id:this.$route.query.id,
+            employeeName:'',
+            depotId:'',
+            depositAmount:'',
+            uploadTime:'',
+            productId:'',
+            jobPrice:'',
+            retailPrice:'',
+            imeStr:'',
+            status:''
+          },
+          remoteLoading:false,
+          depots:[],
+          products:[],
+          formLabelWidth: '120px',
+          rules: {
+            depot: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
+            depositAmount: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
+            uploadTime: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
+            product: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
+            jobPrice: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
+            retailPrice: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneForm.inputLegalValue')}],
+          }
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-          this.inputForm.uploadTime=util.formatLocalDateTime(this.inputForm.uploadTime)
+            this.inputForm.uploadTime=util.formatLocalDateTime(this.inputForm.uploadTime)
             axios.get('/api/basic/hr/employeePhone/save',{params:this.inputForm}).then((response)=> {
               this.$message(response.data.message);
-              form.resetFields();
-              this.submitDisabled = false;
-              if(!this.isCreate){
-                this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
-              }
-            }).catch(function () {
-              this.submitDisabled = false;
+            Object.assign(this.$data, this.getData());
+            if(!this.isCreate){
+              this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
+            }
+          }).catch(function () {
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
-          }
-        })
+      }
+      })
       },initPage() {
-        axios.get('/api/basic/hr/employeePhone/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
+
+      }
+    },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
+          axios.get('/api/basic/hr/employeePhone/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
           if(response.data.depot!=null){
             this.depots=new Array(response.data.depot)
           }
@@ -108,10 +116,7 @@
           }
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

@@ -12,8 +12,11 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
+import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
+import net.myspring.future.modules.crm.dto.ProductImeSaleReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeSaleReportQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -106,6 +109,12 @@ public class ProductImeController {
     @RequestMapping(value = "stockReport")
     public Page stockReport(Pageable pageable,ProductImeStockReportQuery productImeStockReportQuery){
         return productImeService.stockReport(pageable,productImeStockReportQuery);
+    }
+
+
+    @RequestMapping(value = "saleReport")
+    public List<ProductImeSaleReportDto> saleReport(ProductImeSaleReportQuery productImeSaleReportQuery){
+        return productImeService.saleReport(productImeSaleReportQuery);
     }
 
 }

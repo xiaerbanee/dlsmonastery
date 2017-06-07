@@ -30,6 +30,8 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @CachePut(key="#p0.id")
     fun save(office: Office): Office
 
+    fun findByParentId(parentId: String):MutableList<Office>
+
     @Cacheable
     override fun findOne(id: String): Office
 
@@ -77,7 +79,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         and (t1.parentIds like %?1% or t1.id=?2)
         and t1.officeRuleId=?2
      """)
-    fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): Office
+    fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): MutableList<Office>
 
     @Query("""
         SELECT t
@@ -126,6 +128,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
           where t1.office_rule_id=t2.id
           and t2.name = :officeRuleName
           and t1.enabled =1
+          ORDER BY t1.task_point DESC
         """,Collections.singletonMap("officeRuleName",officeRuleName),BeanPropertyRowMapper(Office::class.java))
     }
     override fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>? {

@@ -53,69 +53,77 @@
           officeSelect
       },
     data(){
-      var checkLoginName=(rule, value, callback)=>{
-        if (!value) {
-          return callback(new Error('必填信息'));
-        }else {
+      return this.getData();
+    },
+    methods:{
+      getData(){
+        var checkLoginName=(rule, value, callback)=>{
+          if (!value) {
+            return callback(new Error('必填信息'));
+          }else {
             axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.$route.query.id).then((response)=>{
               if(response.data.success){
                 return callback();
               }else {
                 return callback(new Error(response.data.message));
               }
-          })
+            })
+          }
+        };
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          multiple:true,
+          submitDisabled:false,
+          inputProperty:{},
+          inputForm:{},
+          submitData:{
+            id:'',
+            employeeId:'',
+            loginName:'',
+            officeId:"",
+            leaderId:'',
+            positionId:"",
+            outId:'',
+            outPassword:'',
+            remarks:'',
+            type:"",
+          },
+          radio:'1',
+          remoteLoading:false,
+          rules: {
+            employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
+            loginName: [{ required: true,validator: checkLoginName}],
+            officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
+            positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
+          }
         }
-      };
-      return{
-        isCreate:this.$route.query.id==null,
-        multiple:true,
-        submitDisabled:false,
-        inputProperty:{},
-        inputForm:{},
-        submitData:{
-          id:'',
-          employeeId:'',
-          loginName:'',
-          officeId:"",
-          leaderId:'',
-          positionId:"",
-          outId:'',
-          outPassword:'',
-          remarks:'',
-          type:"",
-        },
-        rules: {
-          employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
-          loginName: [{ required: true,validator: checkLoginName,trigger: 'blur'}],
-          officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage'),trigger: 'blur'}],
-          positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage'),trigger: 'blur'}],
-        },
-        radio:'1',
-        remoteLoading:false
-      }
-    },
-    methods:{
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
+        console.log("form"+form);
         form.validate((valid) => {
           if (valid) {
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/basic/hr/account/save',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-              form.resetFields();
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if(!this.isCreate){
                 this.$router.push({name:'accountList',query:util.getQuery("accountList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },initPage() {
+      }
+    },activated () {
+      /*alert("$route.query.headClick :"+this.$route.query.headClick);*/
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
@@ -123,10 +131,7 @@
           this.inputProperty=response.data;
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

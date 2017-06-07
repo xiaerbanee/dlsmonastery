@@ -52,6 +52,9 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table { margin-bottom: 50px;}
+</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'
@@ -60,7 +63,12 @@
       depotSelect,
     },
       data(){
+        return this.getData()
+      },
+    methods:{
+      getData() {
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             imeAllot:{},
@@ -79,8 +87,8 @@
             errMsg:''
           }
       },
-      methods:{
         formSubmit(){
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -88,16 +96,14 @@
               this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                  if (this.isCreate) {
-                    form.resetFields();
-                  } else {
+                  if (!this.isCreate) {
                     this.$router.push({name: 'imeAllotList', query: util.getQuery("imeAllotList")})
                   }
                 }
               }).catch(()=>{
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           });
@@ -127,17 +133,14 @@
             }
             this.productQtyList = tmpList;
           });
-        },initPage(){
+        }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
             this.imeAllot=response.data;
           });
         }
-      },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
       }
   }
 </script>

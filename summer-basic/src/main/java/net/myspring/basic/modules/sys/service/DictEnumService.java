@@ -50,6 +50,14 @@ public class DictEnumService {
         return dictEnumDtoList;
     }
 
+    public  List<DictEnumDto> findByCategoryList(List<String> categoryList){
+        List<DictEnum> dictEnumList=dictEnumRepository.findByCategoryIn(categoryList);
+        List<DictEnumDto> dictEnumDtoList= BeanUtil.map(dictEnumList,DictEnumDto.class);
+        cacheUtils.initCacheInput(dictEnumDtoList);
+        return dictEnumDtoList;
+    }
+
+
     public String findByValue(String value){
         DictEnum dictEnum = dictEnumRepository.findByValue(value);
         if(dictEnum!=null){

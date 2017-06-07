@@ -35,6 +35,4 @@ class ProcessFlowRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         AND t2.name =:processTypeName
           """, Collections.singletonMap("processTypeName", processTypeName), BeanPropertyRowMapper(ProcessFlow::class.java))
     }
-
-
 }

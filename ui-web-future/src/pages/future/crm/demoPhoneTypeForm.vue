@@ -7,18 +7,16 @@
           <el-input  v-model.number="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.productType')" prop="productTypeIdList">
-          <el-select v-model="inputForm.productTypeIdList" multiple filterable remote :placeholder="$t('demoPhoneTypeForm.inputWord')" :remote-method="remoteProduct" :loading="remoteLoading" :clearable=true>
-            <el-option v-for="productType in productTypes" :key="productType.id" :label="productType.name" :value="productType.id"></el-option>
-          </el-select>
+          <product-type-select  v-model="inputForm.productTypeIdList" :multiple=true></product-type-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.limitQty')" prop="limitQty">
-          <el-input  v-model="inputForm.limitQty"></el-input>
+          <el-input  v-model="inputForm.limitQty" @blur="showQty"></el-input>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.applyEndDate')" prop="applyEndDate">
-          <el-date-picker v-model="inputForm.applyEndDate" :placeholder="$t('demoPhoneTypeForm.selectDate')"></el-date-picker>
+          <date-picker v-model="inputForm.applyEndDate" :placeholder="$t('demoPhoneTypeForm.selectDate')"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.renewEndDate')" prop="renewEndDate">
-          <el-date-picker v-model="inputForm.renewEndDate" :placeholder="$t('demoPhoneTypeForm.selectDate')"></el-date-picker>
+          <date-picker v-model="inputForm.renewEndDate" :placeholder="$t('demoPhoneTypeForm.selectDate')"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -26,12 +24,12 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('demoPhoneTypeForm.save')}}</el-button>
         </el-form-item>
-        <el-table :data="inputForm.demoPhoneTypeOfficeList"  style="margin-top:5px;"   stripe border>
+        <el-table :data="demoPhoneTypeOfficeDtos"  style="margin-top:5px;"   stripe border>
           <el-table-column prop="officeName" :label="$t('demoPhoneTypeForm.officeName')"></el-table-column>
-          <el-table-column prop="officeTaskPoint" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
+          <el-table-column prop="officeTaskPointString" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
           <el-table-column prop="qty" :label="$t('demoPhoneTypeForm.qty')">
             <template scope="scope">
-              <el-input  v-model="scope.row.qty"></el-input>
+              <el-input  v-model="scope.row.qty" @input="qtySum"></el-input>
             </template>
           </el-table-column>
         </el-table>
@@ -40,21 +38,32 @@
   </div>
 </template>
 <script>
+  import productTypeSelect from 'components/future/product-type-select'
   export default{
+    components:{
+      productTypeSelect
+    },
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         formProperty:{},
-        inputForm:{
+        inputForm:{},
+        demoPhoneTypeOfficeDtos:[],
+        submitData:{
           id:'',
           name:'',
-          productTypeIdList:[],
           limitQty:'',
           applyEndDate:'',
           renewEndDate:'',
           remarks:'',
-          demoPhoneTypeOfficeList:[]
+          demoPhoneTypeOfficeDtos:[],
+          productTypeIdList:[]
         },
         remoteLoading:false,
         productTypes:[],
@@ -66,27 +75,31 @@
         pickerDateOption:util.pickerDateOption
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-        this.inputForm.applyEndDate=util.formatLocalDate( this.inputForm.applyEndDate)
-        this.inputForm.renewEndDate=util.formatLocalDate( this.inputForm.renewEndDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
-                this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
-              }
-            }).catch(function () {
+            util.copyValue(this.inputForm,this.submitData);
+            let demoPhoneTypeOfficeList = new Array();
+            for(let key in this.demoPhoneTypeOfficeDtos){
+                if(this.demoPhoneTypeOfficeDtos[key].qty!=0&&this.demoPhoneTypeOfficeDtos[key].qty!=null){
+                    demoPhoneTypeOfficeList.push(this.demoPhoneTypeOfficeDtos[key]);
+                }
+            }
+            this.submitData.demoPhoneTypeOfficeDtos = demoPhoneTypeOfficeList;
+            axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+                this.$message(response.data.message);
+                Object.assign(this.$data, this.getData());
+                if(!this.isCreate){
+                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
+                }
+              }).catch(function () {
+                that.submitDisabled = false;
+              });
+            }else{
               this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },remoteProduct(query) {
@@ -97,23 +110,34 @@
             this.remoteLoading = false;
           });
         }
-      },initPage(){
-        axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-          this.inputForm.demoPhoneTypeOfficeList=response.data.demoPhoneTypeOfficeList;
-          this.inputForm.productTypeIdList=util.getIdList(response.data.productTypeList)
-          if(response.data.productTypeList!=null && response.data.productTypeList.length >0){
-            this.productTypes = response.data.productTypeList;
-            this.inputForm.productIdList = util.getIdList(this.products);
+      },showQty(){
+          let sum = this.inputForm.limitQty;
+          let realSum = 0;
+          for(let key in this.demoPhoneTypeOfficeDtos){
+              this.demoPhoneTypeOfficeDtos[key].qty = parseInt(sum*this.demoPhoneTypeOfficeDtos[key].officeTaskPoint/100);
           }
+
+          for(let key in this.demoPhoneTypeOfficeDtos){
+            realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+          }
+        this.inputForm.limitQty  = realSum;
+      },qtySum(){
+        let realSum = 0;
+        for(let key in this.demoPhoneTypeOfficeDtos){
+          realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+        }
+        this.inputForm.limitQty  = realSum;
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+        });
+        axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.demoPhoneTypeOfficeDtos = response.data.demoPhoneTypeOfficeDtos;
         });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

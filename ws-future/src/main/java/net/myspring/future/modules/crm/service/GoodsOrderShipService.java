@@ -14,6 +14,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.*;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
@@ -23,6 +24,8 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,6 +77,12 @@ public class GoodsOrderShipService {
      */
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
+        if (goodsOrderQuery.getExpressCodes() != null) {
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+        }
+        if (goodsOrderQuery.getBusinessIds() != null) {
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
+        }
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable,  goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -85,7 +94,7 @@ public class GoodsOrderShipService {
         Integer totalShippedQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             if (goodsOrderDetail.getBillQty() > 0 && productMap.get(goodsOrderDetail.getProductId()).getHasIme()) {
@@ -143,7 +152,7 @@ public class GoodsOrderShipService {
         }
         Map<String, Object> result = Maps.newHashMap();
         if (!totalShouldShipQty.equals(totalShippedQty)) {
-            result.put("warnMsg", "货品总开单数和实际发货数不一致");
+            result.put("warnMsg", "货品总开单数"+totalShouldShipQty+ ",和实际发货数"+totalShippedQty + "不一致");
         }
         Map<String, Integer> shipQtyMap = Maps.newHashMap();
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
@@ -301,4 +310,32 @@ public class GoodsOrderShipService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+
+    public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
+        String id = goodsOrderShipForm.getId();
+        GoodsOrder goodsOrder = null;
+        if(StringUtils.isNotBlank(id)) {
+            id = IdUtils.getId(id);
+            if(StringUtils.isNotBlank(id)) {
+                goodsOrder = goodsOrderRepository.findOne(id);
+            }
+        }
+        if(goodsOrder != null) {
+            GoodsOrderDto goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
+            cacheUtils.initCacheInput(goodsOrderDto);
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
+            List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+            cacheUtils.initCacheInput(goodsOrderDetailDtoList);
+
+            Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailDtoList,"productId"));
+            for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+                Product product = productMap.get(goodsOrderDetailDto.getProductId());
+                goodsOrderDetailDto.setHasIme(product.getHasIme());
+            }
+            goodsOrderShipForm.setStoreName(goodsOrderDto.getStoreName());
+            goodsOrderShipForm.setShopName(goodsOrderDto.getShopName());
+            goodsOrderShipForm.setGoodsOrderDetailList(goodsOrderDetailDtoList);
+        }
+        return goodsOrderShipForm;
+    }
 }

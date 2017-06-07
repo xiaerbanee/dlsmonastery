@@ -14,10 +14,10 @@
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.demoPhoneType.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.demoPhoneTypeId.label" :label-width="formLabelWidth">
                 <demo-phone-type v-model = "formData.demoPhoneTypeId"></demo-phone-type>
               </el-form-item>
               <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
@@ -32,11 +32,11 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('demoPhoneList.shopName')"></el-table-column>
-        <el-table-column prop="demoPhoneType" :label="$t('demoPhoneList.demoPhoneType')"></el-table-column>
-        <el-table-column prop="employeeName" :label="$t('demoPhoneList.employeeName')"></el-table-column>
-        <el-table-column prop="status" :label="$t('demoPhoneList.status')"></el-table-column>
+        <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('demoPhoneList.shopName')" sortable></el-table-column>
+        <el-table-column column-key="demoPhoneTypeId" prop="demoPhoneType" :label="$t('demoPhoneList.demoPhoneType')" sortable></el-table-column>
+        <el-table-column column-key="employeeId" prop="employeeName" :label="$t('demoPhoneList.employeeName')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('demoPhoneList.status')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('demoPhoneList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('demoPhoneList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('demoPhoneList.locked')" width="120">
@@ -73,14 +73,15 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           ime:'',
           shopId:'',
           demoPhoneTypeId:'',
           createdDate:'',
         },formLabel:{
           ime:{label: this.$t('demoPhoneList.ime')},
-          shopName:{label: this.$t('demoPhoneList.shopName')},
-          demoPhoneType:{label: this.$t('demoPhoneList.demoPhoneType')},
+          shopId:{label: this.$t('demoPhoneList.shopName')},
+          demoPhoneTypeId:{label: this.$t('demoPhoneList.demoPhoneType')},
           createdDate:{label: this.$t('demoPhoneList.createdDate')},
         },
         formProperty:{},
@@ -103,7 +104,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

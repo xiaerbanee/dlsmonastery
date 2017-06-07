@@ -29,7 +29,6 @@
                 <el-dropdown-item><div  @click="updateMsg(account.id,'上级')">{{$t('home.readerEdit')}}</div></el-dropdown-item>
                 <el-dropdown-item><div  @click="updateMsg(account.id,'转正')">{{$t('home.regularEdit')}}</div></el-dropdown-item>
                 <el-dropdown-item><div  @click="updateMsg(account.id,'离职')">{{$t('home.leaveEdit')}}</div></el-dropdown-item>
-
               </el-dropdown-menu>
             </el-dropdown>
           </div>

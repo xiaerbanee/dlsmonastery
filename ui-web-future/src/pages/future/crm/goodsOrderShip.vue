@@ -1,28 +1,22 @@
 <template>
   <div>
     <head-tab active="goodsOrderShip"></head-tab>
-    <el-row v-if="alertError">
-      <el-col :span="24">
-        <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>
-      </el-col>
-    </el-row>
     <div>
-      <el-form :model="shipForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
+      <audio ref="mediaNotify"><source :src="mediaNotify"  type="audio/ogg"></audio>
+      <audio ref="mediaSuccess"><source :src="mediaSuccess"  type="audio/ogg"></audio>
+      <su-alert  :text="shipResult.warnMsg"  type="warning"></su-alert>
+      <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.businessId')" prop="businessId">
               <el-input v-model="inputForm.formatId"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.storeName')" prop="storeId">
-              {{shipForm.store.name}}
+              {{inputForm.storeName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
-              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
-                         @paste="shipBoxAndIme"
-                         @keyup.enter="shipBoxAndIme"
-                         @keyup.delete="shipBoxAndIme"
-                         @keyup.backspace="shipBoxAndIme"
-                         @keyup.control="shipBoxAndIme">
+              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
@@ -31,152 +25,151 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.shopName')" prop="shopId">
-              {{shipForm.shop.name}}
+              {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.remarks')" prop="remarks">
-              {{shipForm.remarks}}
+              {{inputForm.remarks}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.redictView')" prop="redictView">
-              <bool-radio-group v-model="inputForm.redictView"></bool-radio-group>
+            <el-form-item :label="$t('goodsOrderShip.continueShip')" prop="continueShip">
+              <bool-radio-group v-model="continueShip"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
-              <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner"
-                        @paste="shipBoxAndIme"
-                        @keyup.enter="shipBoxAndIme"
-                        @keyup.delete="shipBoxAndIme"
-                        @keyup.backspace="shipBoxAndIme"
-                        @keyup.control="shipBoxAndIme">
+              <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner">
               </textarea>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
               <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="summary(true)">{{$t('goodsOrderShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
-          <el-table-column  prop="product.name" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
-          <el-table-column prop="product.hasIme" :label="$t('goodsOrderShip.hasIme')" >
+        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+          <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
+          <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
             <template scope="scope">
-              <el-tag :type="scope.row.product.hasIme ? 'primary' : 'danger'">{{scope.row.product.hasIme | bool2str}}</el-tag>
+              <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column prop="billQty"  :label="$t('goodsOrderShip.billQty')"></el-table-column>
           <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
-          <el-table-column prop="extendMap.waitShipQty" :label="$t('goodsOrderShip.waitShipQty')" ></el-table-column>
-          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')"></el-table-column>
+          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
+          <el-table-column prop="leftQty" :label="$t('goodsOrderShip.leftQty')"></el-table-column>
         </el-table>
       </el-form>
     </div>
   </div>
 </template>
 <script>
-  import depotSelect from 'components/future/depot-select'
-  import accountSelect from 'components/basic/account-select'
+  import mediaNotify from "assets/media/notify.mp3"
+  import mediaSuccess from "assets/media/success.mp3"
+  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
     components:{
-      depotSelect,
-      accountSelect,
+      boolRadioGroup
     },
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        alertError:false,
-        error:"",
-
-        shipForm:{
-          store:{name:''},
-          shop:{name:''},
-          remarks:'',
-        },
-        inputForm:{},
-        formProperty:{},
-        goodsOrder:{},
-        submitData:{
-          id:'',
-          businessId:'',
-          boxImeStr:'',
-          expressCodes:'',
-          redictView:'',
-          imeStr:'',
-          shipRemarks:'',
-          goodsOrderDetailList:[]
-        },
-        rules: {},
-        pageLoading:false,
+      return this.getData();
+    },watch: {
+      "inputForm.imeStr": function (oldVal,newVal) {
+          if(_.trim(oldVal) != _.trim(newVal)) {
+            this.summary(false);
+          }
+      },"inputForm.boxImeStr":function (oldVal,newVal) {
+        if(_.trim(oldVal) != _.trim(newVal)) {
+          this.summary(false);
+        }
       }
     },
     methods:{
-      formSubmit(){
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
-        form.validate((valid) => {
-          if (valid) {
-            axios.post('/api/crm/goodsOrder/ship',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
-              if(response.data.errors){
-                this.error=response.data.errors.id.message
-                this.alertError=true;
-                this.submitDisabled = false;
-              }else{
-                this.$message(response.data.message);
-                if(response.data.success){
-                    if(this.isCreate){
-                    form.resetFields();
-                    this.submitDisabled = false;
-                    } else {
-                    this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-                    }
+      getData() {
+        return{
+          mediaNotify: null,
+          mediaSuccess: null,
+          continueShip:false,
+          submitDisabled:false,
+          inputForm:{},
+          goodsOrder:{},
+          shipResult:{},
+          submitData:{
+            id:'',
+            boxImeStr:'',
+            expressCodes:'',
+            imeStr:'',
+            shipRemarks:''
+          },
+          rules: {}
+        }
+      },
+      formSubmit() {
+        var that = this;
+        util.copyValue(this.inputForm,this.submitData);
+        axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(this.submitData)).then((response)=> {
+          this.$message(response.data.message);
+          if(!this.continueShip){
+            Object.assign(this.$data, this.getData());
+            this.continueShip = true;
+          } else {
+            Object.assign(this.$data, this.getData());
+            this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip")})
+          }
+        }).catch(function () {
+          that.submitDisabled = false;
+        });
+      },
+      summary(isSubmit){
+        if(isSubmit) {
+          this.submitDisabled = true;
+        }
+        var boxImeStr=this.inputForm.boxImeStr;
+        var imeStr=this.inputForm.imeStr;
+        axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
+          this.shipResult = response.data;
+          //错误信息
+          var errorMsg = "";
+          for(var index in this.shipResult.restResponse.errors) {
+            errorMsg = errorMsg + this.shipResult.restResponse.errors[index].message + "<br/>";
+          }
+          this.shipResult.errorMsg = errorMsg;
+          if(util.isNotBlank(errorMsg)) {
+            this.$refs.mediaNotify.play();
+          } else {
+            if(util.isBlank(this.shipResult.warnMsg)) {
+              this.$refs.mediaSuccess.play();
+            }
+          }
+          //设置发货数和待发货数
+          for(var index in this.inputForm.goodsOrderDetailList) {
+            var item = this.inputForm.goodsOrderDetailList[index];
+            item.shipQty = 0;
+            item.leftQty = 1;
+          }
+
+          //如果提交表单
+          if(isSubmit) {
+            if(util.isBlank(errorMsg)) {
+              if(util.isBlank(this.shipResult.warnMsg)) {
+                this.formSubmit();
+              } else {
+                if (confirm("还有货品未发送完，确认保存？")) {
+                  this.formSubmit();
+                } else {
+                  this.submitDisabled = false;
                 }
               }
-            }).catch(function () {
+            } else {
+              alert("请先处理错误信息");
               this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
+            }
           }
-        })
-      },shipBoxAndIme(){
-        setTimeout(() => {
-          var boxImeStr=this.inputForm.boxImeStr;
-          var imeStr=this.inputForm.imeStr;
-          this.pageLoading = true;
-          axios.get('/api/crm/goodsOrder/shipBoxAndIme',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-             if(response.data.errors){
-                this.error=response.data.errors.id.message
-                this.alertError=true;
-                this.submitDisabled = false;
-              }else{
-                this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-                this.pageLoading = false;
-                this.alertError=false;
-              }
-          })
-        }, 500);
-
-      }, findOne(){
-        axios.get('/api/crm/goodsOrder/ship',{params: {id:this.$route.query.id}}).then((response)=>{
-          if(response.data.store){
-            this.shipForm.store.name = response.data.store.name;
-          }
-          this.shipForm.shop.name=response.data.shop.name;
-          this.shipForm.remarks=response.data.remarks;
-          this.inputForm.businessId=response.data.businessId;
-          this.inputForm.goodsOrderDetailList=response.data.goodsOrderDetailList;
-        })
+        });
       }
     },created(){
-      axios.get('/api/ws/future/crm/goodsOrder/getShipForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.formProperty = response.data;
+      axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.inputForm = response.data;
       });
-
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.goodsOrder = response.data;
-      });
-
     }
   }
 </script>

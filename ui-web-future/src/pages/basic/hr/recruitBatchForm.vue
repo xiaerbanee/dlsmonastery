@@ -36,42 +36,52 @@
 <script>
   export default{
     data(){
-      return{
-        isCreate:this.$route.query.ids==null,
-        submitDisabled:false,
-        formProperty:{},
-        nameList:"",
-        inputForm:{
-          ids:this.$route.query.ids,
-          applyPositionName:'',
-          applyFrom:'',
-          workArea:"",
-          workCategory:"",
-          education:'',
-          entryRealDate:""
-        },
-        rules: {
-        },
-        remoteLoading:false
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.ids==null,
+          submitDisabled:false,
+          formProperty:{},
+          nameList:"",
+          inputForm:{
+            ids:this.$route.query.ids,
+            applyPositionName:'',
+            applyFrom:'',
+            workArea:"",
+            workCategory:"",
+            education:'',
+            entryRealDate:""
+          },
+          rules: {
+          },
+          remoteLoading:false
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/basic/hr/recruit/update',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
+              Object.assign(this.$data, this.getData());
               this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
       },initPage() {
+
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
           this.formProperty=response.data;
         });
@@ -80,10 +90,7 @@
           this.nameList=response.data;
         });
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

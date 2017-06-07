@@ -43,7 +43,12 @@
         depotSelect
       },
       data(){
+        return this.getData();
+      },
+      methods:{
+        getData(){
           return{
+            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
@@ -69,28 +74,29 @@
               employeeId: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
+          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
               axios.get('/api/basic/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
             }
           })
-        },initPage() {
+        }
+      },activated () {
+        if(!this.$route.query.headClick || !this.isInit) {
           axios.get('/api/basic/hr/employeePhoneDeposit/getForm').then((response)=>{
             this.formProperty=response.data;
           });
@@ -106,10 +112,7 @@
             })
           }
         }
-      },activated () {
-        if(!this.$route.query.headClick) {
-          this.initPage();
-        }
+        this.isInit = true;
       }
     }
 </script>

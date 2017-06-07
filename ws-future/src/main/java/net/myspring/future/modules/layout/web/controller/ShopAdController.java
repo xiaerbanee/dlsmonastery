@@ -66,7 +66,7 @@ public class ShopAdController {
         if(message !=null){
             return new RestResponse("审批失败,原因："+message, ResponseCodeEnum.audited.name(),false);
         }else{
-            return new RestResponse("审批成功"+message, ResponseCodeEnum.audited.name());
+            return new RestResponse("审批成功", ResponseCodeEnum.audited.name());
         }
 
     }
@@ -77,7 +77,7 @@ public class ShopAdController {
         if(message !=null){
             return new RestResponse("批量审批部分失败,原因："+message, ResponseCodeEnum.audited.name(),false);
         }else{
-            return new RestResponse("批量审批成功"+message, ResponseCodeEnum.audited.name());
+            return new RestResponse("批量审批成功", ResponseCodeEnum.audited.name());
         }
     }
 

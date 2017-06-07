@@ -9,12 +9,30 @@ public class AccountChangeDto extends DataDto<AccountChange> {
 
     private String oldValue;
     private String newValue;
+    private String oldLabel;
+    private String newLabel;
     private String type;
     private String processStatus;
     private String areaId;
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
+
+    public String getOldLabel() {
+        return oldLabel;
+    }
+
+    public void setOldLabel(String oldLabel) {
+        this.oldLabel = oldLabel;
+    }
+
+    public String getNewLabel() {
+        return newLabel;
+    }
+
+    public void setNewLabel(String newLabel) {
+        this.newLabel = newLabel;
+    }
 
     public String getAreaId() {
         return areaId;

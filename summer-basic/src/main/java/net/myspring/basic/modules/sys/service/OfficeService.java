@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -33,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -102,7 +104,7 @@ public class OfficeService {
         if (!officeDto.isCreate()) {
             Office office = officeRepository.findOne(officeDto.getId());
             officeDto = BeanUtil.map(office, OfficeDto.class);
-            if (OfficeTypeEnum.SUPPORT.name().equals(office.getType())) {
+            if (OfficeTypeEnum.职能部门.name().equals(office.getType())) {
                 List<OfficeBusiness> businessOffices = officeBusinessRepository.findBusinessIdById(office.getId());
                 officeDto.setBusinessIdList(CollectionUtil.extractToList(businessOffices,"businessOfficeId"));
             }
@@ -118,9 +120,25 @@ public class OfficeService {
         return BeanUtil.map(topOfficeRule,OfficeRuleDto.class);
     }
 
+    public Map<String,List<String>> getChildOfficeMap(String officeId){
+        Map<String,List<String>> map= Maps.newHashMap();
+        List<Office> officeList=officeRepository.findByParentId(officeId);
+        List<Office> childOfficeList=officeRepository.findByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
+        for(Office office:childOfficeList){
+            String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
+            if(StringUtils.isNotBlank(key)){
+                if(map.containsKey(key)){
+                    map.put(key,Lists.newArrayList());
+                }
+                map.get(key).add(office.getId());
+            }
+        }
+        return map;
+    }
+
     public RestResponse check(OfficeForm officeForm) {
         Office parent = officeRepository.findOne(officeForm.getParentId());
-        if (OfficeTypeEnum.BUSINESS.name().equals(officeForm.getType())) {
+        if (OfficeTypeEnum.业务部门.name().equals(officeForm.getType())) {
             OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             OfficeRule officeRule = officeRuleRepository.findOne(officeForm.getOfficeRuleId());
             if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
@@ -139,7 +157,6 @@ public class OfficeService {
 
     public Office save(OfficeForm officeForm) {
         Office office;
-        officeForm.setOfficeIdList(StringUtils.getSplitList(officeForm.getOfficeIdStr(), CharConstant.COMMA));
         if(StringUtils.isNotBlank(officeForm.getParentId())){
             OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParentId(),officeRule.getId()));
@@ -167,7 +184,7 @@ public class OfficeService {
             }
         }
         List<OfficeBusiness> businessOfficeList = officeBusinessRepository.findAllBusinessIdById(office.getId());
-        if (OfficeTypeEnum.SUPPORT.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
+        if (OfficeTypeEnum.职能部门.name().equals(officeForm.getType())&&CollectionUtil.isNotEmpty(officeForm.getOfficeIdList())) {
             List<String> businessOfficeIdList = CollectionUtil.extractToList(businessOfficeList, "businessOfficeId");
             List<String> removeIdList = CollectionUtil.subtract(businessOfficeIdList, officeForm.getOfficeIdList());
             List<String> addIdList = CollectionUtil.subtract(officeForm.getOfficeIdList(), businessOfficeIdList);
@@ -249,5 +266,14 @@ public class OfficeService {
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(ids);
         List<OfficeDto> officeDtoList= BeanUtil.map(officeList,OfficeDto.class);
         return officeDtoList;
+    }
+
+    private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
+        for(Office office:officeList){
+            if(parentIds.contains(office.getId())){
+                return office.getId();
+            }
+        }
+        return null;
     }
 }

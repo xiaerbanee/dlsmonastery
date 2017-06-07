@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
-                <el-option v-for="item in inputProperty.officeTypeList" :key="item" :label="$t('OfficeRuleEnum.'+item)"  :value="item"></el-option>
+                <el-option v-for="item in inputProperty.officeTypeList" :key="item" :label="item"  :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
@@ -26,7 +26,7 @@
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
               <el-select v-model="inputForm.jointType" filterable>
-                <el-option v-for="item in inputProperty.jointTypeList" :key="item" :label="$t('JointTypeEnum.'+item)" :value="item"></el-option>
+                <el-option v-for="item in inputProperty.jointTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="机构级别" prop="jointLevel">
@@ -49,7 +49,7 @@
             </el-form-item>
           </el-col>
           <el-col :span = "10" v-show="treeData.length>0">
-            <el-form-item  label="授权" prop="businessOfficeStr">
+            <el-form-item  label="授权" prop="officeIdList">
               <el-tree
                 :data="treeData"
                 show-checkbox
@@ -76,46 +76,51 @@
       officeSelect,
       accountSelect
     },
-    data(){
-      return {
-        isCreate: this.$route.query.id == null,
-        multiple:true,
-        submitDisabled: false,
-        isBusiness:false,
-        inputProperty:{},
-        offices: [],
-        accountList: [],
-        inputForm: {},
-        submitData: {
-          id: this.$route.query.id,
-          parentId: '',
-          name: '',
-          officeRuleId: '',
-          type:"",
-          jointType: '',
-          point: '',
-          taskPoint: '',
-          sort: '',
-          officeIdStr:"",
-          leaderIdList:"",
-          jointLevel:"",
-        },
-        rules: {
-          name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
-          officeType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
-          jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
-        },
-        remoteLoading: false,
-        treeData:[],
-        checked:[],
-        defaultProps: {
-          label: 'label',
-          children: 'children'
-        }
-      };
+    data:function () {
+      return this.getData();
     },
     methods: {
+      getData(){
+        return {
+          isInit:false,
+          isCreate: this.$route.query.id == null,
+          multiple:true,
+          submitDisabled: false,
+          isBusiness:false,
+          inputProperty:{},
+          offices: [],
+          accountList: [],
+          inputForm: {},
+          submitData: {
+            id: this.$route.query.id,
+            parentId: '',
+            name: '',
+            officeRuleId: '',
+            type:"",
+            jointType: '',
+            point: '',
+            taskPoint: '',
+            sort: '',
+            officeIdList:"",
+            leaderIdList:"",
+            jointLevel:"",
+          },
+          rules: {
+            name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+            officeType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+            jointType: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
+          },
+          remoteLoading: false,
+          treeData:[],
+          checked:[],
+          defaultProps: {
+            label: 'label',
+            children: 'children'
+          }
+        };
+      },
       formSubmit(){
+        var that=this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -124,8 +129,7 @@
             axios.post('/api/basic/sys/office/save', qs.stringify(this.submitData)).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-                form.resetFields();
-                this.submitDisabled = false;
+                Object.assign(this.$data,this.getData());
                 if (!this.isCreate) {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
                 }
@@ -137,7 +141,7 @@
                 });
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           } else {
             this.submitDisabled = false;
@@ -152,26 +156,29 @@
             officeIdList.push(check[index])
           }
         }
-        this.inputForm.officeIdStr=officeIdList.join();
+        this.inputForm.officeIdList=officeIdList;
       },typeChange(evl){
           if(evl!=null&&evl=="SUPPORT"){
             this.isBusiness=false;
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
-              this.inputForm.officeIdStr = response.data.checked.join();
+              this.inputForm.officeIdList=this.checked
             })
           }else {
             this.treeData =new Array();
-            this.checked = new Array();
-            this.inputForm.officeIdStr = "";
+            this.inputForm.officeIdList=new Array();
             this.isBusiness=true;
           }
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data,this.getData());
         axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
           this.inputForm = response.data;
           if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
             this.checked=response.data.businessIdList
+            this.inputForm.officeIdList = response.data.businessIdList;
           }else {
             this.isBusiness=true;
           }
@@ -180,10 +187,7 @@
           this.inputProperty = response.data;
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

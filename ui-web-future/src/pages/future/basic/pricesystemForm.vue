@@ -15,8 +15,8 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
         </el-form-item>
-        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.input2Key')" style="width:200px;"></el-input>
-          <el-table :data="pricesystemDetailList"  style="margin-top:5px;"   stripe border >
+        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.inputKey')" style="width:200px;"></el-input>
+          <el-table :data="filterPricesystemDetailList"  style="margin-top:5px;"   stripe border >
             <el-table-column prop="productName" :label="$t('pricesystemForm.productName')"></el-table-column>
             <el-table-column prop="price":label="$t('pricesystemForm.price')" v-if="isCreate">
               <template scope="scope">
@@ -34,11 +34,17 @@
 <script>
   export default{
     data(){
+      return this.getData()
+    },
+    methods:{
+      getData() {
       return{
+        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productName:'',
         pricesystemDetailList:[],
+        filterPricesystemDetailList:[],
         inputForm:{},
         submitData:{
           id:'',
@@ -54,8 +60,8 @@
         }
       }
     },
-    methods:{
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -72,14 +78,12 @@
             this.submitData.enabled = true;
             axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+            Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -88,35 +92,31 @@
       },searchDetail(){
         var val=this.productName;
         var tempList=new Array();
-        for(var index in this.inputForm.pricesystemDetailList){
-          var detail=this.inputForm.pricesystemDetailList[index];
+        for(var index in this.filterPricesystemDetailList){
+          var detail=this.filterPricesystemDetailList[index];
           if(util.isNotBlank(detail.qty)){
             tempList.push(detail)
           }
         }
-        for(var index in this.inputForm.pricesystemDetailList){
-          var detail=this.inputForm.pricesystemDetailList[index];
-          if(util.contains(detail.productName,val) && util.isBlank(detail.qty)){
+        for(var index in this.pricesystemDetailList){
+          var detail=this.pricesystemDetailList[index];
+          if(util.contains(detail.productName,val)){
             tempList.push(detail)
           }
         }
         this.filterPricesystemDetailList = tempList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
-          console.log(this.inputForm)
-          this.searchDetail();
         });
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.pricesystemDetailList = response.data.pricesystemDetailList;
+          this.filterPricesystemDetailList = this.pricesystemDetailList;
         });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

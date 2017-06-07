@@ -100,7 +100,7 @@ public class BankInService {
         bankInRepository.logicDelete(id);
     }
 
-    public void batchAudit(String[] ids, String pass) {
+    public void batchAudit(String[] ids, boolean pass) {
         if(ids == null){
             return;
         }
@@ -110,7 +110,7 @@ public class BankInService {
             bankInAuditForm.setAuditRemarks("批量通过");
             bankInAuditForm.setId(id);
             bankInAuditForm.setPass(pass);
-            bankInAuditForm.setSyn("1");
+            bankInAuditForm.setSyn(true);
             bankInAuditForm.setBillDate(LocalDate.now());
 
             audit(bankInAuditForm);

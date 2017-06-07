@@ -45,7 +45,7 @@ let routes = [
   {path:'/basic/hr/accountList',component:accountList,name:'accountList'},
   {path:'/basic/hr/accountForm',component:accountForm,name:'accountForm',meta:{menu:"accountList",keepAlive:true}},
   {path:'/basic/hr/accountChangeList',component:accountChangeList,name:'accountChangeList'},
-  {path:'/basic/hr/accountChangeForm',component:accountChangeForm,name:'accountChangeForm',meta:{menu:"accountChangeList",keepAlive:true}},
+  {path:'/basic/hr/accountChangeForm',component:accountChangeForm,name:'accountChangeForm',meta:{menu:"accountChangeList",keepAlive:false}},
   {path:'/basic/hr/employeeList',component:employeeList,name:'employeeList'},
   {path:'/basic/hr/employeeForm',component:employeeForm,name:'employeeForm',meta: {menu:"employeeList",keepAlive:true}},
   {path:'/basic/hr/employeeEditForm',component:employeeEditForm,name:'employeeEditForm',meta: {menu:"employeeList",keepAlive:true}},

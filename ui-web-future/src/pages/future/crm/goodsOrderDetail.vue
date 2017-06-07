@@ -5,42 +5,42 @@
       <el-form :model="goodsOrder" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderDetail.businessId')" prop="businessId">
-              {{goodsOrder.formatId}}
+            <el-form-item :label="$t('goodsOrderDetail.businessId')+' : '" prop="businessId">
+              {{goodsOrder.businessId}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.storeName')" prop="storeId">
-              {{store.name}}
+            <el-form-item :label="$t('goodsOrderDetail.storeName')+' : '" prop="storeId">
+              {{goodsOrder.storeName}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.shopName')" prop="shopId">
-              {{shop.name}}
+            <el-form-item :label="$t('goodsOrderDetail.shopName')+' : '" prop="shopId">
+              {{goodsOrder.shopName}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.billDate')" prop="billDate">
+            <el-form-item :label="$t('goodsOrderDetail.billDate')+' : '" prop="billDate">
               {{goodsOrder.billDate}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.outCode')" prop="outCode">
+            <el-form-item :label="$t('goodsOrderDetail.outCode')+' : '" prop="outCode">
               {{goodsOrder.outCode}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.remarks')" prop="remarks">
+            <el-form-item :label="$t('goodsOrderDetail.remarks')+' : '" prop="remarks">
               {{goodsOrder.remarks}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderDetail.createdLoginName')" prop="createdBy">
+            <el-form-item :label="$t('goodsOrderDetail.createdLoginName')+' : '" prop="createdBy">
               {{goodsOrder.createdByName}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.createdDate')" prop="createdDate">
+            <el-form-item :label="$t('goodsOrderDetail.createdDate')+' : '" prop="createdDate">
               {{goodsOrder.createdDate}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.isUseTicket')" prop="isUseTicket">
+            <el-form-item :label="$t('goodsOrderDetail.isUseTicket')+' : '" prop="isUseTicket">
               {{goodsOrder.isUseTicket | bool2str}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.expressOrder')" prop="expressOrder">
-              {{expressOrder.expressCodes!=null?'':expressOrder.expressCodes}}
+            <el-form-item :label="$t('goodsOrderDetail.expressOrder')+' : '"  prop="expressOrder">
+              {{expressOrder.expressCodes? expressOrder.expressCodes :'' }}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.shipType')" prop="shipType">
+            <el-form-item :label="$t('goodsOrderDetail.shipType')+' : '" prop="shipType">
               {{goodsOrder.shipType}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderDetail.purchaseInfo')" prop="purchaseInfo">
+            <el-form-item :label="$t('goodsOrderDetail.purchaseInfo')+' : '" prop="purchaseInfo">
               {{goodsOrder.purchaseInfo}}
             </el-form-item>
           </el-col>
@@ -79,8 +79,8 @@
         inputForm:{},
         zmd:'',
         goodsOrder:{},
-        shop:{},
-        store:{},
+        /*shop:{},
+        store:{},*/
         expressOrder:{},
         goodsOrderDetailList:[],
         goodsOrderImeList:[],
@@ -112,24 +112,13 @@
           );
         }
     },created(){
-
-      axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+      axios.get('/api/ws/future/crm/goodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.goodsOrder = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findShopByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.shop = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findStoreByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.store = response.data;
+        this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
+        this.goodsOrderImeList = response.data.goodsOrderImeDtoList;
       });
       axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.expressOrder = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findDtoListByGoodsOrderIdForView',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.goodsOrderDetailList = response.data;
-      });
-      axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderImeDtoListByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-        this.goodsOrderImeList = response.data;
       });
     }
   }

@@ -32,7 +32,11 @@
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/basic/hr/position/findById?id=' + this.innerId).then((response)=>{
+        let idStr=this.innerId;
+        if(this.innerId instanceof Array){
+          idStr=this.innerId.join();
+        }
+        axios.get('/api/basic/hr/position/findByIds?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
         })

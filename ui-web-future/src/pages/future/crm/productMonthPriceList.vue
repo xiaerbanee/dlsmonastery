@@ -88,7 +88,7 @@
         this.$router.push({ name: 'productMonthPriceForm'})
       },itemAction:function(id,action){
         if(action==="edit") {
-          //this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
+          this.$router.push({ name: 'productMonthPriceForm', query: { id: id }})
         }
       }
     },created () {

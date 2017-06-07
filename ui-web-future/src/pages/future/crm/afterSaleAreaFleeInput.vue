@@ -4,8 +4,8 @@
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
     </el-row>
-    <div class="position:relative;margin-top:20px">
-      <el-form :model="formData">
+    <div class="position:relative;" style="margin-top:20px;margin-left:50px">
+      <el-form :model="formData" >
         <el-form-item label="类型" :label-width="formLabelWidth">
           <el-select v-model="type" placeholder="请选择" @change="onchange(type)">
             <el-option v-for="item in options" :key="item" :label="item" :value="item">
@@ -14,7 +14,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top:20px"></div>
+    <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top:10px;margin-left:50px"></div>
   </div>
 </template>
 <script>
@@ -23,68 +23,9 @@
   export default{
     data(){
       return {
-        formData: {
-          ime: '',
-        }, formLabel: {
-          ime: {label: '串码'},
-        },
         inputForm: {
           data: ''
         },
-        colHeaders:['窜货机串码','窜货机型号','窜货机门店','包装','内存','坏机来源','坏机所在库','替换机串码','替换机型号','返还金额','窜货机门店','联系人','手机号','地址','购买金额'],
-        columns: [{
-          data:"badProductImeId",
-          width:100
-        },{
-          data:"badProductId",
-          width:100
-        },{
-          data:"badDepotId",
-          readOnly: true,
-          width:100
-        },{
-          data:"badType",
-          width:100
-        },{
-          data:"packageStatus",
-          width:100
-        },{
-          data:"memory",
-          width:100,
-        },{
-          data:"fromDepotId",
-          width:100
-        },{
-          data:"toDepotId",
-          width:100
-        },{
-          data:"replaceProductImeId",
-          width:100
-        },{
-          data:"replaceProductId",
-          width:100
-        },{
-          data:"replaceAmount",
-          width:100
-        },{
-          data:"ime",
-          width:100
-        },{
-          data:"fleeShopName",
-          width:100
-        },{
-          data:"contact",
-          width:100
-        },{
-          data:"mobilePhone",
-          width:100
-        },{
-          data:"address",
-          width:100
-        },{
-          data:"buyAmount",
-          width:100
-        }],
         rules: {},
         type: '窜货机',
         options: ['售后机', '窜货机'],
@@ -93,15 +34,156 @@
         submitDisabled: false,
         table: null,
         settings: {
-          colHeaders: this.colHeaders,
+          colHeaders: ['窜货机串码', '窜货机型号', '窜货门店', '退机类型', '包装', '内存', '窜货机来源', '窜货机所在库', '替换机串码', '替换机型号', '返还金额','联系人','手机号','地址','购买金额'],
           rowHeaders: true,
           autoColumnSize: true,
           allowInsertRow: false,
           maxRows: 1000,
-          columns: this.columns,
+          columns: [{
+            data: "ime",
+            width: 100
+          }, {
+            data: "productName",
+            allowEmpty:false ,
+            strict: true,
+            badProductNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.badProductNames.indexOf(query) >= 0) {
+                process(that.badProductNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/product/search?name=' + query).then((response) => {
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.badProductNames.indexOf(productName) < 0) {
+                          that.badProductNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 100
+          }, {
+            data: "badDepotId",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            badDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.badDepotNames.indexOf(query) >= 0) {
+                process(that.badDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                    console.log(response.data)
+
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.badDepotNames.indexOf(productName) < 0) {
+                          that.badDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "badType",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            badDepotNames: [],
+            width: 100
+          }, {
+            data: "packageStatus",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            badDepotNames: [],
+            width: 100
+          }, {
+            data: "memory",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            badDepotNames: [],
+            width: 100
+          }, {
+            data: "fromDepotId",
+            width: 100
+          }, {
+            data: "toDepotId",
+            width: 100
+          }, {
+            data: "replaceProductImeId",
+            width: 100
+          }, {
+            data: "replaceProductId",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            replaceProductNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.replaceProductNames.indexOf(query) >= 0) {
+                process(that.replaceProductNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/product/search?name=' + query).then((response) => {
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.replaceProductNames.indexOf(productName) < 0) {
+                          that.replaceProductNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 100
+          }, {
+            data: "replaceAmount",
+            width: 100
+          },{
+            data:"contact",
+            width:100
+          },{
+            data:"mobilePhone",
+            width:100
+          },{
+            data:"address",
+            width:100
+          },{
+            data:"buyAmount",
+            width:100
+          }],
         },
       }
-
     },
     mounted () {
       this.onchange(this.type);
@@ -117,22 +199,28 @@
           }
         }
         this.inputForm.data = JSON.stringify(this.inputForm.data);
-        axios.post('/api/ws/future/crm/afterSale//save', qs.stringify({data: this.inputForm.data}, {allowDots: true})).then((response) => {
+        axios.post('/api/ws/future/crm/afterSale/save', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
           this.submitDisabled = false;
         }).catch(function () {
           this.submitDisabled = false;
         });
-      }, search() {
-        this.formVisible = false;
-        this.getData();
-      }
       }, onchange(type){
         if (this.type == '售后机') {
           this.$router.push({ name: 'afterSaleAreaInput'})
+        }else {
+          let categoryList=new Array();
+          categoryList.push("退机类型")
+          categoryList.push("内存")
+          categoryList.push("包装")
+          axios.get('/api/basic/sys/dictEnum/findByCategoryList',{params:{categoryList:categoryList}}).then((response)=> {
+            this.settings.columns[4].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
+            this.settings.columns[3].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
+            this.settings.columns[5].source=util.getLabelList(response.data.MEMORY,'value');
+            this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+          })
         }
       }
-    }, created(){
     }
   }
 </script>

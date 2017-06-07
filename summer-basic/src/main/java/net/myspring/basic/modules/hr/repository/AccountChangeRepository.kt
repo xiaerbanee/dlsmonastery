@@ -42,9 +42,6 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             and t1.account_id=account.id
             and account.office_id=office.id
         """)
-        if (CollectionUtil.isNotEmpty(accountChangeQuery.officeIds)) {
-            sb.append(" and office.id IN :officeIds ")
-        }
         if (accountChangeQuery.createdDate != null) {
             sb.append(" AND t1.created_date> :createdDateStart ")
         }
@@ -64,20 +61,6 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 )
             """)
         }
-        if (accountChangeQuery.officeId != null) {
-            sb.append("""
-                and t1.account_id  in(
-                select t2.id
-                from hr_account t2 ,sys_office office
-                where  t2.enabled=1
-                and t2.office_id=office.id
-                and (
-                    office.parent_ids like concat('%,',:officeId,',%')
-                  or office.id=:officeId
-                )
-                )
-            """)
-        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(accountChangeQuery), BeanPropertyRowMapper(AccountChangeDto::class.java))
@@ -93,13 +76,13 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 t2.office_id,
                 t2.leader_id,
                 t2.position_id,
-                t3.mobile_phone AS 'employee.mobilePhone',
-                t3.idcard AS 'employee.idcard',
-                t3.entry_date AS 'employee.entryDate',
-                t3.bank_number AS 'employee.bankNumber',
-                t3.salary AS 'employee.salary',
-                t3.regular_date AS 'employee.regularDate',
-                t3.leave_date AS 'employee.leaveDate'
+                t3.mobile_phone ,
+                t3.idcard,
+                t3.entry_date ,
+                t3.bank_number,
+                t3.salary,
+                t3.regular_date ,
+                t3.leave_date
             FROM
                 hr_account t2,
                 hr_employee t3

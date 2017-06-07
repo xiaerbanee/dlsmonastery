@@ -80,7 +80,7 @@ public class DutyController {
     private List<DutyDto> getDutyDtoList() {
         LocalDateTime dateStart = LocalDateTime.now().minusMonths(1);
         String leaderId = RequestUtils.getAccountId();
-        List<DutyDto> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLYING.toString(), dateStart);
+        List<DutyDto> list = dutyService.findByAuditable(leaderId, AuditTypeEnum.APPLY.getValue(), dateStart);
         return list;
     }
 }
