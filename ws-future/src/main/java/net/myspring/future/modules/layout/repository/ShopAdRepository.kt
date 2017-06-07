@@ -52,8 +52,11 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
-        if (StringUtils.isNotEmpty(shopAdQuery.specialArea)) {
-            sb.append("""  and t1.special_area = :specialArea """)
+        if (shopAdQuery.specialArea != null && shopAdQuery.specialArea) {
+            sb.append("""  and t1.special_area = 1 """)
+        }
+        if (shopAdQuery.specialArea != null && !shopAdQuery.specialArea) {
+            sb.append("""  and t1.special_area = 0 """)
         }
         if (shopAdQuery.ids != null) {
             sb.append("""  and t1.id in (:ids) """)
@@ -99,8 +102,11 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
-        if (StringUtils.isNotEmpty(shopAdQuery.specialArea)) {
-            sb.append("""  and t1.special_area = :specialArea """)
+        if (shopAdQuery.specialArea !=null && shopAdQuery.specialArea) {
+            sb.append("""  and t1.special_area = 1 """)
+        }
+        if (shopAdQuery.specialArea !=null && !shopAdQuery.specialArea) {
+            sb.append("""  and t1.special_area = 0 """)
         }
         if (shopAdQuery.ids != null) {
             sb.append("""  and t1.id in :ids """)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="pricesystemForm"></head-tab>
+    <head-tab active="pricesystemView"></head-tab>
 
 
   </div>

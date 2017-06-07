@@ -19,7 +19,7 @@ public class ProductDto extends DataDto<Product> {
     private String productTypeId;
     @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
-    private String hasIme;
+    private Boolean hasIme;
     private Boolean allowOrder;
     private Boolean allowBill;
     private String image;
@@ -135,11 +135,11 @@ public class ProductDto extends DataDto<Product> {
         this.productTypeName = productTypeName;
     }
 
-    public String getHasIme() {
+    public Boolean getHasIme() {
         return hasIme;
     }
 
-    public void setHasIme(String hasIme) {
+    public void setHasIme(Boolean hasIme) {
         this.hasIme = hasIme;
     }
 

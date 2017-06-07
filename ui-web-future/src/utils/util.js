@@ -220,7 +220,7 @@ util.getIdList = function (array) {
   return idList;
 }
 
-util.getFormItems = function getFormItems(component, formItems){
+util.getFormItems = function (component, formItems){
 
   if(!component){
     return formItems;
@@ -239,7 +239,7 @@ util.getFormItems = function getFormItems(component, formItems){
 };
 
 
-util.getFormItemValue = function getFormItemValue(formItem){
+util.getFormItemValueLabel = function (formItem){
   if(!formItem){
     return null;
   }
@@ -252,14 +252,14 @@ util.getFormItemValue = function getFormItemValue(formItem){
     value = formItem.value;
   }else  if(formItem.$children){
     for(let child of formItem.$children){
-      value = util.getFormItemValue(child);
+      value = util.getFormItemValueLabel(child);
     }
   }
   return value;
 
 };
 
-util.getSearchText = function getSearchText(root){
+util.getSearchText = function (root){
 
   console.log("getSearchText");
   let formItems = [];
@@ -268,9 +268,9 @@ util.getSearchText = function getSearchText(root){
   let tmp = [];
 
   for(let item of formItems){
-    let eachValue = util.getFormItemValue(item);
-    if(eachValue){
-      tmp.push([item.label, eachValue]);
+    let eachValueLabel = util.getFormItemValueLabel(item);
+    if(eachValueLabel){
+      tmp.push([item.label, eachValueLabel]);
     }
 
   }

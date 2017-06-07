@@ -45,7 +45,7 @@
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopPromotionList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')" sortable>
+        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopPromotion:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopPromotion:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button></div>
