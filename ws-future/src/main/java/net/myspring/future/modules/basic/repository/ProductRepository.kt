@@ -202,14 +202,23 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.code)) {
             sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
         }
-        if (StringUtils.isNotEmpty(productQuery.hasIme)) {
-            sb.append("""  and t1.has_ime = :hasIme """)
+        if (productQuery.hasIme != null && productQuery.hasIme) {
+            sb.append("""  and t1.has_ime = 1 """)
         }
-        if (StringUtils.isNotEmpty(productQuery.allowOrder)) {
-            sb.append("""  and t1.allow_order =:allowOrder """)
+        if (productQuery.hasIme != null && !productQuery.hasIme) {
+            sb.append("""  and t1.has_ime = 0 """)
         }
-        if (StringUtils.isNotEmpty(productQuery.allowBill)) {
-            sb.append("""  and t1.allow_bill =:allowBill """)
+        if (productQuery.allowOrder !=null && productQuery.allowOrder) {
+            sb.append("""  and t1.allow_order =1 """)
+        }
+        if (productQuery.allowOrder !=null && !productQuery.allowOrder) {
+            sb.append("""  and t1.allow_order =0 """)
+        }
+        if (productQuery.allowBill !=null && productQuery.allowBill ) {
+            sb.append("""  and t1.allow_bill = 1 """)
+        }
+        if (productQuery.allowBill !=null && !productQuery.allowBill ) {
+            sb.append("""  and t1.allow_bill = 0 """)
         }
         if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
             sb.append("""  and t1.product_type_id =:productTypeId """)
@@ -240,14 +249,23 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.code)) {
             sb.append("""  and t1.code LIKE CONCAT('%',:code,'%') """)
         }
-        if (StringUtils.isNotEmpty(productQuery.hasIme)) {
-            sb.append("""  and t1.has_ime = :hasIme """)
+        if (productQuery.hasIme != null && productQuery.hasIme) {
+            sb.append("""  and t1.has_ime = 1 """)
         }
-        if (StringUtils.isNotEmpty(productQuery.allowOrder)) {
-            sb.append("""  and t1.allow_order =:allowOrder """)
+        if (productQuery.hasIme != null && !productQuery.hasIme) {
+            sb.append("""  and t1.has_ime = 0 """)
         }
-        if (StringUtils.isNotEmpty(productQuery.allowBill)) {
-            sb.append("""  and t1.allow_bill =:allowBill """)
+        if (productQuery.allowOrder !=null && productQuery.allowOrder) {
+            sb.append("""  and t1.allow_order =1 """)
+        }
+        if (productQuery.allowOrder !=null && !productQuery.allowOrder) {
+            sb.append("""  and t1.allow_order =0 """)
+        }
+        if (productQuery.allowBill !=null && productQuery.allowBill ) {
+            sb.append("""  and t1.allow_bill = 1 """)
+        }
+        if (productQuery.allowBill !=null && !productQuery.allowBill ) {
+            sb.append("""  and t1.allow_bill = 0 """)
         }
         if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
             sb.append("""  and t1.product_type_id =:productTypeId """)

@@ -276,6 +276,8 @@ export default {
       storeAllotForm: "大库调拨编辑",
       storeAllotList: "大库调拨",
       storeAllotShip: "大库调拨发货",
+      storeAllotShipPrint: "大库调拨快递单打印",
+      storeAllotPrint: "大库调拨出库单打印",
       dutySignAddList:"补签申请",
       companyList: '公司管理',
       companyForm: '公司管理编辑',

@@ -50,13 +50,20 @@ class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             SELECT
                 t2.express_codes expressOrderExpressCodes,
                 t2.express_company_id,
+                t2.out_print_date expressOrderOutPrintDate,
+                t2.express_print_date expressOrderExpressPrintDate,
+                toStore.contator toStoreContator,
+                toStore.mobile_phone toStoreMobilePhone,
+                toStore.address toStoreAddress,
                 t1.*
             FROM
                 crm_store_allot t1
                 LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+                LEFT JOIN crm_depot toStore ON t1.to_store_id = toStore.id
             WHERE
                 t1.enabled = 1
                 AND t1.id =  :id
+
                 """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(StoreAllotDto::class.java))
     }
 
@@ -64,9 +71,17 @@ class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
         val sb = StringBuffer()
         sb.append("""
-        SELECT  t1.*
-        FROM  crm_store_allot t1
-        where t1.enabled=1
+        SELECT
+            t2.express_codes expressOrderExpressCodes,
+            t2.express_company_id,
+            t2.out_print_date expressOrderOutPrintDate,
+            t2.express_print_date expressOrderExpressPrintDate,
+            t1.*
+        FROM
+            crm_store_allot t1
+             LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+        WHERE
+            t1.enabled = 1
         """)
         if(StringUtils.isNotBlank(storeAllotQuery.remarks)){
             sb.append("""   and t1.remarks like concat('%', :remarks,'%')  """)
@@ -95,11 +110,11 @@ class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(storeAllotQuery.createdDateEnd != null){
             sb.append("""  and t1.created_date <  :createdDateEnd """)
         }
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(storeAllotQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(StoreAllotDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(storeAllotQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(StoreAllotDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
 
     }

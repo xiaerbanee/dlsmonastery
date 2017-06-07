@@ -45,13 +45,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -422,5 +426,33 @@ public class StoreAllotService {
 
     public Boolean getShowAllotType() {
         return getMergeStoreIds() != null;
+    }
+
+    public StoreAllotDto print(String id) {
+        StoreAllotDto storeAllotDto = findDto(id);
+
+        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
+            if(expressOrder != null && expressOrder.getOutPrintDate() == null){
+                expressOrder.setOutPrintDate(LocalDateTime.now());
+                expressOrderRepository.save(expressOrder);
+            }
+        }
+
+        return storeAllotDto;
+    }
+
+    public StoreAllotDto shipPrint(String id) {
+        StoreAllotDto storeAllotDto = findDto(id);
+
+        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
+            if(expressOrder != null && expressOrder.getExpressPrintDate() == null){
+                expressOrder.setExpressPrintDate(LocalDateTime.now());
+                expressOrderRepository.save(expressOrder);
+            }
+        }
+
+        return storeAllotDto;
     }
 }
