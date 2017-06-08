@@ -19,7 +19,7 @@
               <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('shopAdList.inputNotZeroPart')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
@@ -51,7 +51,7 @@
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
         <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
         <el-table-column column-key="officeId" prop="officeName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
-        <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopId"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
           <template scope="scope">
             <el-tag :type="scope.row.specialArea ? 'primary' : 'danger'">{{scope.row.specialArea | bool2str}}</el-tag>
@@ -119,7 +119,7 @@
         },formLabel:{
           officeId:{label:this.$t('shopAdList.areaName'),value:""},
           id:{label:this.$t('shopAdList.adCode'),value:""},
-          shopName:{label:this.$t('shopAdList.shopName')},
+          shopId:{label:this.$t('shopAdList.shopName')},
           processStatus:{label:this.$t('shopAdList.processStatus')},
           specialArea:{label:this.$t('shopAdList.specialArea'),value:''},
           shopAdTypeId:{label:this.$t('shopAdList.shopAdType'),value:''},
