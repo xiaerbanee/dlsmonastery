@@ -127,7 +127,7 @@ public class OfficeService {
         for(Office office:childOfficeList){
             String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
             if(StringUtils.isNotBlank(key)){
-                if(map.containsKey(key)){
+                if(!map.containsKey(key)){
                     map.put(key,Lists.newArrayList());
                 }
                 map.get(key).add(office.getId());
