@@ -17,6 +17,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/11.
  */
 public class SalOutStockDto {
+    //创建人
     private String creator;
     // 客户名称
     private String customerNumber;

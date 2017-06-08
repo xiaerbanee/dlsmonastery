@@ -91,6 +91,7 @@ export default {
       salOutStock:"销售出库单",
       salReturnStock:"销售退货单",
       stkMisDelivery:'其他出库',
+      cnJournalForCash:'现金存款日记账',
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
       customerReceive:"应收对账报表",
