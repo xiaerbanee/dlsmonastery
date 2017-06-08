@@ -79,13 +79,13 @@
           })
         }
       },activated () {
-      if (!this.$route.query.headClick || !this.isInit) {
+      if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/expressOrder/findDto', {params: {id: this.$route.query.id}}).then((response) = > {
+        axios.get('/api/ws/future/crm/expressOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
           this.expressOrder = response.data;
-      });
-        this.isInit = true;
+      })
       }
-    }
+      this.isInit = true;
+      }
     }
 </script>
