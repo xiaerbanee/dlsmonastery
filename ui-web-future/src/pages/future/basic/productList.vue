@@ -110,6 +110,7 @@
           hasIme:'',
           allowBill:'',
           productTypeId:'',
+          code:'',
           allowOrder:'',
           outGroupName:'',
           netType:'',
