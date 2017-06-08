@@ -30,12 +30,46 @@ public class ProductImeReportQuery {
     private boolean scoreType;
     //货品
     private List<String> productTypeIdList= Lists.newArrayList();
-
     private String officeId;
-
     private List<String> officeIdList=Lists.newArrayList();
-
     private List<String> depotIdList=Lists.newArrayList();
+
+    private List<String> sumTypeList=Lists.newArrayList();
+    private List<String> outTypeList=Lists.newArrayList();
+    private List<String> areaTypeList=Lists.newArrayList();
+    private List<String> townTypeList=Lists.newArrayList();
+
+    public List<String> getSumTypeList() {
+        return sumTypeList;
+    }
+
+    public void setSumTypeList(List<String> sumTypeList) {
+        this.sumTypeList = sumTypeList;
+    }
+
+    public List<String> getOutTypeList() {
+        return outTypeList;
+    }
+
+    public void setOutTypeList(List<String> outTypeList) {
+        this.outTypeList = outTypeList;
+    }
+
+    public List<String> getAreaTypeList() {
+        return areaTypeList;
+    }
+
+    public void setAreaTypeList(List<String> areaTypeList) {
+        this.areaTypeList = areaTypeList;
+    }
+
+    public List<String> getTownTypeList() {
+        return townTypeList;
+    }
+
+    public void setTownTypeList(List<String> townTypeList) {
+        this.townTypeList = townTypeList;
+    }
 
     public List<String> getDepotIdList() {
         return depotIdList;
