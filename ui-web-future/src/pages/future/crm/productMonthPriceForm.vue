@@ -97,6 +97,7 @@
         }
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data, this.getData());
           if(!this.isCreate){
             axios.get('/api/crm/productMonthPrice/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);

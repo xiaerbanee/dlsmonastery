@@ -408,6 +408,7 @@
       }
     },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/basic/depot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
         this.inputForm.doorHead = response.data.doorHead?1:0;
