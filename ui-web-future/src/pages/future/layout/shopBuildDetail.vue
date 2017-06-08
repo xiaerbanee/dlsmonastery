@@ -53,7 +53,7 @@
               {{inputForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview1" :disabled="true" :file-list="fileList1" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
               </el-upload>
               <el-dialog v-model="dialogVisible" size="tiny">
                 <img width="100%" :src="dialogImageUrl" alt="">

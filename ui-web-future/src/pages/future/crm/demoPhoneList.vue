@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="itemCollect" icon="document" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.collect')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('demoPhoneList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -112,6 +113,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'demoPhoneForm'})
+      },itemCollect(){
+        this.$router.push({ name: 'demoPhoneTypeOfficeList'})
       },itemAction:function(id,action){
         if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {

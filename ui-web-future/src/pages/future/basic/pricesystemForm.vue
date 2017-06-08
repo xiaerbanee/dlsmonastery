@@ -24,7 +24,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="price" :label="$t('pricesystemForm.price')" v-if="!isCreate"></el-table-column>
-            <el-table-column prop="sort" :label="$t('pricesystemForm.sort')"></el-table-column>
+            <el-table-column prop="sort" :label="$t('pricesystemForm.sort')" v-if="!isCreate"></el-table-column>
           </el-table>
       </el-form>
     </div>

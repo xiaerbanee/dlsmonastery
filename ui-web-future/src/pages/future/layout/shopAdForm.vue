@@ -11,7 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="!isCreate"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
               <el-input v-model="inputForm.length"></el-input>
@@ -59,7 +59,6 @@
       getData(){
         return{
           isInit:false,
-          shopDisabled:true,
           isCreate:this.$route.query.id==null,
           action:this.$route.query.action,
           submitDisabled:false,
@@ -120,12 +119,9 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(tihs.$data, this.getData());
+        Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-          if(this.isCreate){
-            this.shopDisabled = false;
-          }
           if(this.inputForm.attachment !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
               this.fileList= response.data;

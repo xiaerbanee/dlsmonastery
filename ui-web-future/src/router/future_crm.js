@@ -13,6 +13,7 @@ const bankInDetail = r => require.ensure([], () => r(require('pages/future/crm/b
 const depotDetailList  = r => require.ensure([], () => r(require('pages/future/crm/depotDetailList.vue')));
 const demoPhoneList= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneList.vue')));
 const demoPhoneForm= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneForm.vue')));
+const demoPhoneTypeOfficeList= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneTypeOfficeList.vue')));
 const demoPhoneTypeList= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneTypeList.vue')));
 const demoPhoneTypeForm= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneTypeForm.vue')));
 const expressList  = r => require.ensure([], () => r(require('pages/future/crm/expressList.vue')));
@@ -86,6 +87,7 @@ let routes = [
   {path:'/future/crm/depotDetailList',component:depotDetailList,name:'depotDetailList'},
   {path:'/future/crm/demoPhoneList',component:demoPhoneList,name:'demoPhoneList'},
   {path:'/future/crm/demoPhoneForm',component:demoPhoneForm,name:'demoPhoneForm',meta: {menu:"demoPhoneList",keepAlive:true}},
+  {path:'/future/crm/demoPhoneTypeOfficeList',component:demoPhoneTypeOfficeList,name:'demoPhoneTypeOfficeList'},
   {path:'/future/crm/demoPhoneTypeList',component:demoPhoneTypeList,name:'demoPhoneTypeList'},
   {path:'/future/crm/demoPhoneTypeForm',component:demoPhoneTypeForm,name:'demoPhoneTypeForm',meta: {menu:"demoPhoneTypeList",keepAlive:true}},
   {path:'/future/crm/expressList',component:expressList,name:'expressList'},

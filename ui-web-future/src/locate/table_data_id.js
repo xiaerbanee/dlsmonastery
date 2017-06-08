@@ -196,6 +196,7 @@ export default {
       demoPhoneList: "demo mesin",
       demoPhoneTypeForm: "formulir demo mesin",
       demoPhoneTypeList: "demo mesin",
+      demoPhoneTypeOfficeList:"demo mesin ringkasan",
       depotAccountDetail: "Akun Laporan Detail",
       depotAccountList: "akun laporan",
       depotChangeDetail: "Rincian penyesuaian gudang",

@@ -60,11 +60,10 @@ public class DemoPhoneService {
         demoPhoneRepository.logicDelete(id);
     }
 
-    public DemoPhone save(DemoPhoneForm demoPhoneForm) {
+    public void save(DemoPhoneForm demoPhoneForm) {
         DemoPhone demoPhone = BeanUtil.map(demoPhoneForm,DemoPhone.class);
         demoPhone.setStatus(AuditStatusEnum.已通过.name());
         demoPhoneRepository.save(demoPhone);
-        return demoPhone;
     }
 
     public String findSimpleExcelSheets(Workbook workbook, DemoPhoneQuery demoPhoneQuery) {
