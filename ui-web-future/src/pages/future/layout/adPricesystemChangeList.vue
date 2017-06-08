@@ -11,7 +11,7 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
                 <product-select v-model="formData.productId"></product-select>
               </el-form-item>
             </el-col>
@@ -50,7 +50,7 @@
           size:25,
           productId:''
         },formLabel:{
-          productName:{label:this.$t('adPricesystemChangeList.productName')}
+          productId:{label:this.$t('adPricesystemChangeList.productName')}
         },
         formProperty:{},
         formLabelWidth: '120px',
