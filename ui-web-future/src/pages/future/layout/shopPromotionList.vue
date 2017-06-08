@@ -19,7 +19,7 @@
                   <el-option v-for="type in formData.activityTypeList" :key="type" :label="type" :value="type"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
             </el-col>
@@ -76,7 +76,7 @@
         formLabel:{
           businessId:{label:this.$t('shopPromotionList.businessId'),value:""},
           activityType:{label:this.$t('shopPromotionList.activityType'),value:""},
-          shopName:{label:this.$t('shopPromotionList.shopName'),value:""},
+          shopId:{label:this.$t('shopPromotionList.shopName'),value:""},
         },
         formLabelWidth: '120px',
         formVisible: false,
