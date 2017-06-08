@@ -137,7 +137,7 @@
         this.filterShopAllotDetailList = tempList;
       }
     },activated () {
-      if(!this.$route.query.headClick || this.isInit) {
+      if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         if(this.$route.query.id){
           axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
