@@ -221,11 +221,4 @@ public class DepotService {
             depotRepository.save(depot);
         }
     }
-
-    public void setReportData(List<DepotDto> depotList){
-    }
-
-    public Page<DepotDto> findPage(Pageable pageable,DepotQuery depotQuery){
-        return null;
-    }
 }

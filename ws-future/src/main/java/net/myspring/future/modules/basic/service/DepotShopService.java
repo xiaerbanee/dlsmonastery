@@ -1,8 +1,13 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -10,6 +15,10 @@ import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotReportQuery;
+import net.myspring.future.modules.crm.dto.ProductImeReportDto;
+import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -17,6 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -98,6 +111,54 @@ public class DepotShopService {
 
     public void logicDelete(String id) {
         depotShopRepository.logicDelete(id);
+    }
+
+    public List<DepotShopDto> setReportData(List<DepotShopDto>  depotList,DepotReportQuery depotReportQuery){
+        depotReportQuery.setShopIdList(CollectionUtil.extractToList(depotList,"depotId"));
+        List<DepotReportDto> depotReportList=getProductImeReportList(depotReportQuery);
+        Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
+        for(DepotShopDto depotShopDto:depotList){
+            DepotReportDto depotReportDto=map.get(depotShopDto.getDepotId());
+            depotShopDto.setQty(depotReportDto.getQty());
+        }
+        setPercentage(depotList);
+        return depotList;
+    }
+
+    private List<DepotReportDto> getProductImeReportList(DepotReportQuery depotReportQuery){
+        List<DepotReportDto> depotReportList= Lists.newArrayList();
+        if(OutTypeEnum.电子报卡.name().equals(depotReportQuery.getOutType())){
+            if("销售报表".equals(depotReportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaSaleReport(depotReportQuery);
+            }else if("库存报表".equals(depotReportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaStoreReport(depotReportQuery);
+            }
+        }else {
+            if("销售报表".equals(depotReportQuery.getType())){
+                depotReportList=depotShopRepository.findSaleReport(depotReportQuery);
+            }else if("库存报表".equals(depotReportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaStoreReport(depotReportQuery);
+            }
+        }
+        return depotReportList;
+    }
+
+    private void setPercentage(List<DepotShopDto> depotShopList) {
+        Integer sum = 0;
+        for (DepotShopDto depotShopDto : depotShopList) {
+            sum= sum + depotShopDto.getQty();
+        }
+        for (DepotShopDto depotShopDto : depotShopList) {
+            depotShopDto.setPercent(division(sum,depotShopDto.getQty()));
+        }
+    }
+
+    private String division(Integer totalQty, Integer qty) {
+        if (qty == 0 || totalQty == 0) {
+            return "0.00";
+        }
+        BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
+        return percent.toString();
     }
 
 }

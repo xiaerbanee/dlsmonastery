@@ -4,10 +4,7 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.future.common.enums.InputTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportSumTypeEnum;
-import net.myspring.future.common.enums.TownTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -107,6 +104,15 @@ public class ProductImeController {
     @RequestMapping(value = "productImeReport")
     public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeSaleReportQuery){
         return productImeService.productImeReport(productImeSaleReportQuery);
+    }
+
+    @RequestMapping(value = "getReportQuery")
+    public ProductImeReportQuery getReportQuery(ProductImeReportQuery productImeSaleReportQuery){
+        productImeSaleReportQuery.setSumTypeList(SumTypeEnum.getList());
+        productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
+        productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
+        productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
+        return productImeSaleReportQuery;
     }
 
 }
