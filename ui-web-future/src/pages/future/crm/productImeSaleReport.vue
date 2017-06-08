@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="bankList"></head-tab>
+    <head-tab active="productImeSaleReport"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">{{$t('bankList.filter')}}</el-button>
@@ -21,22 +21,22 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="formLabel.sumType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.sumType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.sumTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.outType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.outType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+                <el-select v-model="formData.outType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.outTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+                <el-select v-model="formData.areaType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.areaTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.townType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.townType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+                <el-select v-model="formData.townType" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.townTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -44,12 +44,12 @@
                 <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="formLabel.scoreType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.scoreType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
-                  <el-option v-for="item in formData.scoreTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.scoreTypeList" :key="item" :label="item | bool2str" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.productIds.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.productIds" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+                <el-select v-model="formData.productIds" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.productIdsList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -81,12 +81,12 @@
           page:0,
           size:25,
           sort:"id,DESC",
-          sumType:'区域',
-          outType:'电子保卡',
-          areaType:'全部',
-          townType:'全部',
+          sumType:'',
+          outType:'',
+          areaType:'',
+          townType:'',
           dateRange:util.latestWeek(),
-          scoreType:'是',
+          scoreType:'',
           productIds:''
         },formLabel:{
           sumType:{label:"汇总"},
@@ -107,7 +107,8 @@
         this.pageLoading = true;
         util.setQuery("productImeSaleReport",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/crm/productIme/saleReport',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/productIme/productImeReport',{params:this.submitData}).then((response) => {
+            console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
       })
@@ -129,7 +130,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/productIme/saleReport').then((response) => {
+      axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response) => {
         this.formData = response.data;
         console.log(response.data)
       util.copyValue(this.$route.query, this.formData);
