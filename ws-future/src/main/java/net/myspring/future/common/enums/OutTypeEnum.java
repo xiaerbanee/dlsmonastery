@@ -7,7 +7,7 @@ import java.util.List;
 
 public enum  OutTypeEnum {
     电子报卡,
-    核销,
+    核销;
 
     private static List<String> list= Lists.newArrayList();
 

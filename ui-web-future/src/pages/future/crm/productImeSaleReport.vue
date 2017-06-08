@@ -12,7 +12,7 @@
             <el-dropdown-item command="按串码导出">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="primary" @click="saleReportGrid()" icon="search" v-permit="'crm:bank:view'">明细</el-button>
+        <el-button type="primary" @click="saleReportGrid()" icon="document" v-permit="'crm:bank:view'">明细</el-button>
 
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -60,12 +60,11 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" label="门店" sortable width="300"></el-table-column>
-        <el-table-column prop="code" label="数量"  sortable></el-table-column>
-        <el-table-column prop="accountNameStr" label="占比"></el-table-column>
+      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
+        <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
+        <el-table-column prop="qty" label="数量"  sortable></el-table-column>
+        <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -74,8 +73,7 @@
     data() {
       return {
         pageLoading: false,
-        pageHeight:600,
-        page:{},
+        page:[],
         formData:{},
         submitData:{
           page:0,
@@ -86,7 +84,8 @@
           areaType:'',
           townType:'',
           dateRange:util.latestWeek(),
-          productIds:''
+          productIds:'',
+          officeId:''
         },formLabel:{
           sumType:{label:"汇总"},
           outType:{label:"查看"},
@@ -98,7 +97,6 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
-        loading:false
       };
     },
     methods: {
@@ -106,14 +104,10 @@
         this.pageLoading = true;
         util.setQuery("productImeSaleReport",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/crm/productIme/productImeReport?type=销售',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/productIme/productImeReport?type=销售报表',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
       })
-      },pageChange(pageNumber,pageSize) {
-        this.formData.page = pageNumber;
-        this.formData.size = pageSize;
-        this.pageRequest();
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
@@ -121,14 +115,17 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },nextLevel(	row, event, column){
+          this.submitData.officeId=row.officeId;
+          this.pageRequest();
       },saleReportGrid(){
 
       },exportData(command) {
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response) => {
         this.formData = response.data;
+        console.log(this.formData)
       util.copyValue(this.$route.query, this.formData);
       this.pageRequest();
     })

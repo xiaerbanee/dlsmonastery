@@ -156,7 +156,7 @@ public class ProductImeReportQuery {
 
     public LocalDate getDateStart() {
         if(StringUtils.isNotBlank(getDateRange())) {
-            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[0]);
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
@@ -164,7 +164,7 @@ public class ProductImeReportQuery {
 
     public LocalDate getDateEnd() {
         if(StringUtils.isNotBlank(getDateRange())) {
-            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[1]).plusDays(1);
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
