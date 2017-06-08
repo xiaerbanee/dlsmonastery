@@ -19,6 +19,7 @@ import java.util.Map;
 public class DepotQuery extends BaseQuery {
     private String name;
     private String areaId;
+    private String officeId;
     private List<String> officeIdList= Lists.newArrayList();
     private List<String> depotIdList= Lists.newArrayList();
     //直营，代理
@@ -31,6 +32,14 @@ public class DepotQuery extends BaseQuery {
     private Boolean outIdIsNull;
 
     private String shipType;
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
 
     public String getAreaId() {
         return areaId;
