@@ -84,10 +84,11 @@
       }
     },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
-        axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-          this.inputForm = response.data;
-      });
-      }
+          Object.assign(this.$data, this.getData());
+          axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+            this.inputForm = response.data;
+          });
+        }
       this.isInit = true;
     }
   }

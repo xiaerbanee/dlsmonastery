@@ -50,7 +50,12 @@
           depotSelect,
         },
       data(){
+        return this.getData();
+      },
+      methods:{
+        getData(){
           return{
+            isInit:false,
             submitDisabled:false,
             inputProperty:{},
             shopDeposit:{},
@@ -79,10 +84,9 @@
               demoPhoneAmount: [{ type: 'number', message: this.$t('shopDepositForm.inputLegalValue')}]
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
-
+          var that = this;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -98,10 +102,10 @@
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(response.data.success) {
-                  form.resetFields();
+                  Object.assign(this.$data, this.getData());
                 }
               }).catch( () => {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
           })
@@ -114,8 +118,8 @@
             });
         }
       },activated () {
-        if(!this.$route.query.headClick) {
-
+        if(!this.$route.query.headClick || ! this.isInit) {
+          Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
             this.inputProperty = response.data;
           });
@@ -125,6 +129,7 @@
             this.shopDeposit = response.data;
           });
         }
+        this.isInit = true;
       }
     }
 </script>

@@ -59,7 +59,7 @@ public class ChainService {
         chainRepository.logicDelete(id);
     }
 
-    public Chain save(ChainForm chainForm) {
+    public void save(ChainForm chainForm) {
         Chain chain;
         if (chainForm.isCreate()) {
             chain = BeanUtil.map(chainForm, Chain.class);
@@ -82,6 +82,5 @@ public class ChainService {
             }
             depotRepository.save(depotList);
         }
-        return chain;
     }
 }

@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.report.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.CustomerReceiveEnum;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.*;
@@ -24,9 +25,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * 客户应收报表
  * Created by liuj on 2017/5/11.
  */
 @Service
+@KingdeeDataSource
 public class CustomerReceiveService {
     @Autowired
     private CustomerReceiveRepository customerReceiveRepository;

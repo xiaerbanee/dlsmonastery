@@ -153,7 +153,7 @@
           this.$router.push({ name: 'shopBuildDetail', query:{id: id}});
         }else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/crm/shopBuild/delete', {params: {id: id}}).then((response) => {
+            axios.get('/api/ws/future/layout/shopBuild/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
             })

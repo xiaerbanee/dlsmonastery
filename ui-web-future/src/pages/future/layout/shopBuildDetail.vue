@@ -53,12 +53,18 @@
               {{inputForm.processStatus}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设":on-change="handleChange1" :on-remove="handleRemove1"  :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
               </el-upload>
+              <el-dialog v-model="dialogVisible" size="tiny">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.confirmPhoto')" prop="confirmPhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2"  :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
               </el-upload>
+              <el-dialog v-model="dialogVisible" size="tiny">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.pass')"  v-if="action=='audit'">
               <bool-radio-group v-model="formProperty.pass"></bool-radio-group>
@@ -97,6 +103,8 @@
         },
         fileList1:[],
         fileList2:[],
+        dialogImageUrl:'',
+        dialogVisible:false
       }
     },
     methods:{
@@ -119,18 +127,12 @@
         })
       },
       handlePreview1(file) {
-        window.open(file.url);
-    },handleChange1(file, fileList) {
-        this.fileList1 = fileList;
-    },handleRemove1(file, fileList) {
-        this.fileList1 = fileList;
-    },handlePreview2(file) {
-        window.open(file.url);
-    },handleChange2(file, fileList) {
-        this.fileList2 = fileList;
-    },handleRemove2(file, fileList) {
-        this.fileList2 = fileList;
-    },
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },handlePreview2(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
     },created(){
       axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm=response.data;

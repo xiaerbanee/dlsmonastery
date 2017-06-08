@@ -53,39 +53,44 @@
   export default{
     components:{officeSelect,dictMapSelect},
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        officeDisabled:false,
-        formProperty:{},
-        printTypeContent:'',
-        fileList:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          officeId:'',
-          printType:'',
-          content:'',
-          qty:'',
-          address:'',
-          contator:'',
-          mobilePhone:'',
-          attachment:'',
-          remarks:''
-        },
-        rules: {
-          officeId: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
-          printType: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
-          qty: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
-          address: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
-          contator: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
-        },
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          officeDisabled:false,
+          formProperty:{},
+          printTypeContent:'',
+          fileList:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            officeId:'',
+            printType:'',
+            content:'',
+            qty:'',
+            address:'',
+            contator:'',
+            mobilePhone:'',
+            attachment:'',
+            remarks:''
+          },
+          rules: {
+            officeId: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+            printType: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+            qty: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
+            address: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+            contator: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+            mobilePhone: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
+          },
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -94,17 +99,14 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if(response.data.success) {
-                if (this.isCreate) {
-                  form.resetFields();
-                  this.fileList = [];
-                } else {
+                if (!this.isCreate) {
                   this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList")})
                 }
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         })
@@ -119,28 +121,26 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        if(this.inputForm.printType!=null){
-          this.typeChange();
-        }
-        if(this.inputForm.attachment !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-            this.fileList= response.data;
+          if(this.inputForm.printType!=null){
+            this.typeChange();
+          }
+          if(this.inputForm.attachment !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+              this.fileList= response.data;
+            });
+          }
         });
-        }
-      });
         if(!this.isCreate){
           this.officeDisabled = true;
         }
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
       }
   }
 </script>

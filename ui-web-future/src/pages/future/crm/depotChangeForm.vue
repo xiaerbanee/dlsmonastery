@@ -129,6 +129,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/crm/depotChange/getForm').then((response)=>{
           this.formProperty = response.data;
         });

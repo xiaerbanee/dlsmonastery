@@ -150,6 +150,7 @@
         }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response)=>{
             this.productImeUpload=response.data;
         });

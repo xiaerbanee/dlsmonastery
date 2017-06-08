@@ -21,7 +21,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
 
     fun findEndShouldGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto> {
         var paramMap = HashMap<String, Any>()
-        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("dateEnd", dateEnd.toString())
         paramMap.put("customerIdList", customerIdList)
         return namedParameterJdbcTemplate.query("""
             SELECT
@@ -36,7 +36,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_OTHERRECABLEENTRY t1
                 JOIN T_AR_OTHERRECABLE t2 ON t1.FID = t2.FID
             WHERE
-                t2.FDATE <:dateEnd
+                t2.FDATE < :dateEnd
                 and t2.FCONTACTUNIT in  (:customerIdList)
                 UNION ALL
             SELECT
@@ -49,7 +49,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 LEFT JOIN T_BAS_BILLTYPE_L t4 ON t4.FBILLTYPEID = t2.FBILLTYPEID
             WHERE
                 t4.FNAME = '标准销售退货单'
-                and t2.FDATE <:dateEnd
+                and t2.FDATE < :dateEnd
                 and t2.FRETCUSTID in  (:customerIdList)
                 UNION ALL
                 SELECT
@@ -62,8 +62,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 LEFT JOIN T_BAS_BILLTYPE_L t4 ON t2.FBILLTYPEID = t4.FBILLTYPEID
              WHERE
                 t4.FNAME = '标准销售出库单'
-                and t2.FDATE <:dateEnd
-                and t2.FCUSTOMERID in :customerIdList
+                and t2.FDATE < :dateEnd
+                and t2.FCUSTOMERID in (:customerIdList)
                 UNION ALL
              SELECT
                 t2.FCONTACTUNIT AS customerId,
@@ -72,7 +72,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_RECEIVEBILLENTRY t1
                 JOIN T_AR_RECEIVEBILL t2 ON t1.FID = t2.FID
              WHERE
-                t2.FDATE <:dateEnd
+                t2.FDATE < :dateEnd
                 and t2.FCONTACTUNIT in (:customerIdList)
                 UNION ALL
              SELECT
@@ -82,7 +82,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_REFUNDBILLENTRY t1
                 JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
              WHERE
-                t2.FDATE <:dateEnd
+                t2.FDATE < :dateEnd
                 and t2.FCONTACTUNIT in (:customerIdList)
                 ) temp
                 GROUP BY

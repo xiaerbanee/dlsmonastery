@@ -2,25 +2,22 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.future.common.enums.SaleSumTypeEnum;
+import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.future.common.enums.SumTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.dto.ProductImeSaleReportDto;
+import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeSaleReportQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -37,14 +34,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.Request;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -161,33 +153,33 @@ public class ProductImeService {
         return productImeList;
     }
 
-    public List<ProductImeSaleReportDto> saleReport(ProductImeSaleReportQuery productImeSaleReportQuery) {
-        List<ProductImeSaleReportDto> productImeSaleReportList=Lists.newArrayList();
-        productImeSaleReportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+    public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeReportQuery) {
+        productImeReportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
-        if(StringUtils.isNotBlank(productImeSaleReportQuery.getOfficeId())){
-            productImeSaleReportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(productImeSaleReportQuery.getOfficeId()));
-            childOfficeMap=officeClient.getChildOfficeMap(productImeSaleReportQuery.getOfficeId());
+        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())){
+            productImeReportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(productImeReportQuery.getOfficeId()));
+            childOfficeMap=officeClient.getChildOfficeMap(productImeReportQuery.getOfficeId());
         }
-        if("电子报卡".equals(productImeSaleReportQuery.getOutType())){
-            productImeSaleReportList=productImeRepository.findBaokaSaleReport(productImeSaleReportQuery);
-        }else {
-            productImeSaleReportList=productImeRepository.findSaleReport(productImeSaleReportQuery);
-        }
-        if(StringUtils.isNotBlank(productImeSaleReportQuery.getOfficeId())){
-            Map<String,ProductImeSaleReportDto> map=Maps.newHashMap();
-            for(ProductImeSaleReportDto productImeSaleReportDto:productImeSaleReportList){
+        List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(productImeReportQuery);
+        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(productImeReportQuery.getSumType())){
+            Map<String,ProductImeReportDto> map=Maps.newHashMap();
+            for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
                 String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
-                if(map.containsKey(key)){
-                    map.get(key).addQty(productImeSaleReportDto.getQty());
-                }else {
-                    ProductImeSaleReportDto productImeSaleReport=new ProductImeSaleReportDto(key,productImeSaleReportDto.getQty());
-                    map.put(key,productImeSaleReport);
+                if(StringUtils.isNotBlank(key)){
+                    if(map.containsKey(key)){
+                        map.get(key).addQty(1);
+                    }else {
+                        ProductImeReportDto productImeSaleReport=new ProductImeReportDto(key,1);
+                        map.put(key,productImeSaleReport);
+                    }
                 }
             }
-            cacheUtils.initCacheInput(map.values());
-            return Lists.newArrayList(map.values());
+            List<ProductImeReportDto> list=Lists.newArrayList(map.values());
+            setPercentage(list);
+            cacheUtils.initCacheInput(list);
+            return Lists.newArrayList(list);
         }else {
+            setPercentage(productImeSaleReportList);
             cacheUtils.initCacheInput(productImeSaleReportList);
             return productImeSaleReportList;
         }
@@ -204,7 +196,41 @@ public class ProductImeService {
         return null;
     }
 
-    public Page stockReport(Pageable pageable, ProductImeStockReportQuery productImeStockReportQuery) {
-        return null;
+    private List<ProductImeReportDto> getProductImeReportList(ProductImeReportQuery productImeReportQuery){
+        List<ProductImeReportDto> productImeReportList=Lists.newArrayList();
+        if(OutTypeEnum.电子报卡.name().equals(productImeReportQuery.getOutType())){
+            if("销售报表".equals(productImeReportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaSaleReport(productImeReportQuery);
+            }else if("库存报表".equals(productImeReportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaStoreReport(productImeReportQuery);
+            }
+        }else {
+            if("销售报表".equals(productImeReportQuery.getType())){
+                productImeReportList=productImeRepository.findSaleReport(productImeReportQuery);
+            }else if("库存报表".equals(productImeReportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaStoreReport(productImeReportQuery);
+            }
+        }
+        return productImeReportList;
     }
+
+    private void setPercentage(List<ProductImeReportDto> productImeReportList) {
+        Integer sum = 0;
+        for (ProductImeReportDto productImeReportDto : productImeReportList) {
+            sum= sum + productImeReportDto.getQty();
+        }
+        for (ProductImeReportDto productImeReportDto : productImeReportList) {
+            productImeReportDto.setPercent(division(sum,productImeReportDto.getQty()));
+        }
+    }
+
+    private String division(Integer totalQty, Integer qty) {
+        if (qty == 0 || totalQty == 0) {
+            return "0.00";
+        }
+        BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
+        return percent.toString();
+    }
+
+
 }

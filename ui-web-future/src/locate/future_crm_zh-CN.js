@@ -373,6 +373,7 @@ export default {
     selectKeyShow20time: "请输入关键词,显示前20条",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    inputImeLast6:"请输入串码后(>=6)位"
   },
   demoPhoneList: {
     demoPhoneList: "演示用机",
@@ -404,6 +405,17 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    collect:"汇总",
+  },
+  demoPhoneTypeOfficeList:{
+    demoPhoneTypeOfficeList:"演示机型汇总",
+    officeName:"办事处",
+    demoPhoneType:"演示机型",
+    qty:"数量",
+    realQty:"实际数量",
+    add:"添加",
+    filter:"过滤",
+    sure:"确定"
   },
   depotChangeForm: {
     depotChangeForm: "仓库调整编辑",

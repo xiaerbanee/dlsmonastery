@@ -441,7 +441,18 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    collect:"ringkasan",
+  },
+  demoPhoneTypeOfficeList:{
+    demoPhoneTypeOfficeList:"演示机型汇总",
+    officeName:"办事处",
+    demoPhoneType:"演示机型",
+    qty:"数量",
+    realQty:"实际数量",
+    add:"添加",
+    filter:"过滤",
+    sure:"确定"
   },
   depotAccountDetail: {
     depotAccountDetail: "Akun Laporan Detail",

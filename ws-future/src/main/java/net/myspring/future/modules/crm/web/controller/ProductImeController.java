@@ -4,19 +4,15 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.future.common.enums.InputTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportSumTypeEnum;
-import net.myspring.future.common.enums.TownTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
-import net.myspring.future.modules.crm.dto.ProductImeSaleReportDto;
+import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeSaleReportQuery;
+import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -105,16 +101,18 @@ public class ProductImeController {
         return productImeStockReportQuery;
     }
 
-
-    @RequestMapping(value = "stockReport")
-    public Page stockReport(Pageable pageable,ProductImeStockReportQuery productImeStockReportQuery){
-        return productImeService.stockReport(pageable,productImeStockReportQuery);
+    @RequestMapping(value = "productImeReport")
+    public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeSaleReportQuery){
+        return productImeService.productImeReport(productImeSaleReportQuery);
     }
 
-
-    @RequestMapping(value = "saleReport")
-    public List<ProductImeSaleReportDto> saleReport(ProductImeSaleReportQuery productImeSaleReportQuery){
-        return productImeService.saleReport(productImeSaleReportQuery);
+    @RequestMapping(value = "getReportQuery")
+    public ProductImeReportQuery getReportQuery(ProductImeReportQuery productImeSaleReportQuery){
+        productImeSaleReportQuery.setSumTypeList(SumTypeEnum.getList());
+        productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
+        productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
+        productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
+        return productImeSaleReportQuery;
     }
 
 }

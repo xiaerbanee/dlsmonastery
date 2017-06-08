@@ -2,12 +2,20 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.crm.domain.ProductImeSale;
+import net.myspring.future.modules.crm.dto.ProductImeReportDto;
+import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +37,10 @@ public class DepotController {
 
     @Autowired
     private DepotService depotService;
+    @Autowired
+    private OfficeClient officeClient;
+    @Autowired
+    private DepotShopService depotShopService;
 
     //直营门店查询(POP申请开单类型为配件赠品用这个)
     @RequestMapping(value = "directShop")
@@ -149,5 +161,4 @@ public class DepotController {
         depotService.synArea(depotQuery);
         return new RestResponse("同步成功",null);
     }
-
 }

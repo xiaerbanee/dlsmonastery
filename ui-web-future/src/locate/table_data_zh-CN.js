@@ -196,6 +196,7 @@ export default {
       demoPhoneList: "演示用机",
       demoPhoneTypeForm: "演示机型编辑",
       demoPhoneTypeList: "演示机型",
+      demoPhoneTypeOfficeList:"演示机型汇总",
       depotAccountDetail: "应收报表详细",
       depotAccountList: "应收报表",
       depotChangeDetail: "仓库调整详细",

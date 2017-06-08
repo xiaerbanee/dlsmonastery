@@ -47,6 +47,12 @@ util.currentDate = function () {
   var myDate = new Date();
   return myDate.toLocaleDateString();
 },
+  util.latestWeek = function () {
+    const end = new Date();
+    const start = new Date();
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    return util.formatDate(start,"yyyy-MM-dd")+" - "+util.formatDate(end,"yyyy-MM-dd");
+  }
 util.getSort = function (column) {
   let sort = '';
   if (column.prop == null) {
@@ -244,11 +250,11 @@ util.getComponentValueLabel = function (component){
     return null;
   }
   let value = null;
-  console.log(component);
+
   if(component.$options.componentName === "ElSelect") {
     value = component.selectedLabel;
-  }else if(component.$options.componentName === "DateRangePicker"){
-    value = component.innerDateRange;
+  }else if(component.$options.componentName === "ElDatePicker"){
+    value = component.displayValue;
   }else if(component.$options.componentName === "ElInput"){
     value = component.value;
   }else  if(component.$children){
