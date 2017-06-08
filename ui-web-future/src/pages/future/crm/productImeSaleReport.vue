@@ -3,7 +3,7 @@
     <head-tab active="productImeSaleReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">{{$t('bankList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -16,7 +16,7 @@
 
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog :title="$t('bankList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -86,7 +86,7 @@
           areaType:'',
           townType:'',
           dateRange:util.latestWeek(),
-          scoreType:'',
+          scoreType:null,
           productIds:''
         },formLabel:{
           sumType:{label:"汇总"},
@@ -126,18 +126,14 @@
       },saleReportGrid(){
 
       },exportData(command) {
-        console.log('-----》'+command);
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response) => {
         this.formData = response.data;
-        console.log(response.data)
       util.copyValue(this.$route.query, this.formData);
       this.pageRequest();
     })
-      this.pageRequest();
-
     }
   };
 </script>
