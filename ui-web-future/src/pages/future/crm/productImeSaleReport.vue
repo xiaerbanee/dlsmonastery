@@ -13,6 +13,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="saleReportGrid()" icon="document" v-permit="'crm:bank:view'">明细</el-button>
+        <el-button type="primary" @click="pre()"  v-permit="'crm:bank:view'">返回</el-button>
 
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -97,6 +98,7 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
+        officeIds:[]
       };
     },
     methods: {
@@ -116,8 +118,10 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-          this.submitData.officeId=row.officeId;
-          this.pageRequest();
+          console.log(row.officeId)
+          this.officeIds.push(row.officeId);
+        this.submitData.officeId=this.officeIds[this.officeIds.length-1];
+        this.pageRequest();
       },saleReportGrid(){
 
       },exportData(command) {
