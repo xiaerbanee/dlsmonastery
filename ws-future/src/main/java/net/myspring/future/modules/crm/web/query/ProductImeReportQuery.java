@@ -12,7 +12,9 @@ import java.util.List;
 /**
  * Created by wangzm on 2017/6/7.
  */
-public class ProductImeSaleReportQuery {
+public class ProductImeReportQuery {
+    //销售，库存
+    private String type;
     //区域，促销，型号
     private String sumType ;
     //电子保卡，核销
@@ -21,6 +23,7 @@ public class ProductImeSaleReportQuery {
     private String areaType;
     //日期范围
     private String dateRange;
+    private LocalDate date;
     //乡镇类型
     private String townType;
     //打分型号：是，否
@@ -31,6 +34,24 @@ public class ProductImeSaleReportQuery {
     private String officeId;
 
     private List<String> officeIdList=Lists.newArrayList();
+
+    private List<String> depotIdList=Lists.newArrayList();
+
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public List<String> getOfficeIdList() {
         return officeIdList;
@@ -109,18 +130,26 @@ public class ProductImeSaleReportQuery {
     }
 
     public LocalDate getDateStart() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(getDateRange())) {
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getDateEnd() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(getDateRange())) {
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[1]).plusDays(1);
         } else {
             return null;
         }
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

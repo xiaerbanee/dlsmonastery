@@ -7,21 +7,30 @@ import java.math.BigDecimal;
 /**
  * Created by wangzm on 2017/6/7.
  */
-public class ProductImeSaleReportDto {
+public class ProductImeReportDto {
+    private String id;
     private String officeId;
     private String productTypeId;
     private Integer qty;
-    private BigDecimal percent;
+    private String percent;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    @CacheInput(inputKey = "productType",inputInstance = "productTypeId",outputInstance = "name")
+    @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
 
-    public ProductImeSaleReportDto(){};
+public ProductImeReportDto(){}
 
-    public ProductImeSaleReportDto(String officeId,Integer qty){
+    public ProductImeReportDto(String officeId, Integer qty){
         this.officeId=officeId;
         this.qty=qty;
+    }
+
+        public String getId() {
+        return id;
+    };
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getOfficeId() {
@@ -48,11 +57,11 @@ public class ProductImeSaleReportDto {
         this.qty = qty;
     }
 
-    public BigDecimal getPercent() {
+    public String getPercent() {
         return percent;
     }
 
-    public void setPercent(BigDecimal percent) {
+    public void setPercent(String percent) {
         this.percent = percent;
     }
 
