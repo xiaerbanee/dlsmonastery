@@ -7,7 +7,6 @@ import net.myspring.basic.common.query.BaseQuery;
  */
 public class MenuCategoryQuery extends BaseQuery {
     private String name;
-    private  String sort;
 
     public String getName() {
         return name;
@@ -15,13 +14,5 @@ public class MenuCategoryQuery extends BaseQuery {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
     }
 }

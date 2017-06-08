@@ -18,7 +18,6 @@ public class DictEnumQuery extends BaseQuery {
     private String createdDate;
     private String category;
     private String value;
-    private List<String> categoryList= Lists.newArrayList();
 
     public String getCreatedDate() {
         return createdDate;
@@ -42,14 +41,6 @@ public class DictEnumQuery extends BaseQuery {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public List<String> getCategoryList() {
-        return categoryList;
-    }
-
-    public void setCategoryList(List<String> categoryList) {
-        this.categoryList = categoryList;
     }
 
     public LocalDate getCreatedDateStart() {

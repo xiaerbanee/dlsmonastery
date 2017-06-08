@@ -61,7 +61,7 @@ public class DictEnumController {
 
     @RequestMapping(value="getQuery")
     public  DictEnumQuery getQuery(DictEnumQuery dictEnumQuery){
-        dictEnumQuery.setCategoryList(dictEnumService.findDistinctCategory());
+        dictEnumQuery.getExtra().put("categoryList",dictEnumService.findDistinctCategory());
         return dictEnumQuery;
     }
 
