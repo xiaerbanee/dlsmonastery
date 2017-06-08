@@ -1,22 +1,16 @@
-package net.myspring.future.modules.crm.web.query;
+package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/6/7.
- */
-public class ProductImeReportQuery {
-    //销售，库存
+public class DepotReportQuery {
+
     private String type;
-    //区域，促销，型号
-    private String sumType ;
     //电子保卡，核销
     private String outType;
     //区域类型
@@ -32,43 +26,7 @@ public class ProductImeReportQuery {
     private List<String> productTypeIdList= Lists.newArrayList();
     private String officeId;
     private List<String> officeIdList=Lists.newArrayList();
-
-    private List<String> sumTypeList=Lists.newArrayList();
-    private List<String> outTypeList=Lists.newArrayList();
-    private List<String> areaTypeList=Lists.newArrayList();
-    private List<String> townTypeList=Lists.newArrayList();
-
-    public List<String> getSumTypeList() {
-        return sumTypeList;
-    }
-
-    public void setSumTypeList(List<String> sumTypeList) {
-        this.sumTypeList = sumTypeList;
-    }
-
-    public List<String> getOutTypeList() {
-        return outTypeList;
-    }
-
-    public void setOutTypeList(List<String> outTypeList) {
-        this.outTypeList = outTypeList;
-    }
-
-    public List<String> getAreaTypeList() {
-        return areaTypeList;
-    }
-
-    public void setAreaTypeList(List<String> areaTypeList) {
-        this.areaTypeList = areaTypeList;
-    }
-
-    public List<String> getTownTypeList() {
-        return townTypeList;
-    }
-
-    public void setTownTypeList(List<String> townTypeList) {
-        this.townTypeList = townTypeList;
-    }
+    private List<String> shopIdList=Lists.newArrayList();
 
     public String getType() {
         return type;
@@ -78,28 +36,12 @@ public class ProductImeReportQuery {
         this.type = type;
     }
 
-    public List<String> getOfficeIdList() {
-        return officeIdList;
+    public List<String> getShopIdList() {
+        return shopIdList;
     }
 
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getSumType() {
-        return sumType;
-    }
-
-    public void setSumType(String sumType) {
-        this.sumType = sumType;
+    public void setShopIdList(List<String> shopIdList) {
+        this.shopIdList = shopIdList;
     }
 
     public String getOutType() {
@@ -126,6 +68,14 @@ public class ProductImeReportQuery {
         this.dateRange = dateRange;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public String getTownType() {
         return townType;
     }
@@ -135,10 +85,6 @@ public class ProductImeReportQuery {
     }
 
     public boolean getScoreType() {
-        return scoreType;
-    }
-
-    public boolean isScoreType() {
         return scoreType;
     }
 
@@ -152,6 +98,22 @@ public class ProductImeReportQuery {
 
     public void setProductTypeIdList(List<String> productTypeIdList) {
         this.productTypeIdList = productTypeIdList;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
     }
 
     public LocalDate getDateStart() {
@@ -168,13 +130,5 @@ public class ProductImeReportQuery {
         } else {
             return null;
         }
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 }

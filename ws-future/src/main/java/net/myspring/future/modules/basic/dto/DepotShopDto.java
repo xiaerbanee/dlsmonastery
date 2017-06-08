@@ -36,8 +36,27 @@ public class DepotShopDto extends DataDto<DepotShop>{
     //面积大小
     private String shopArea;
 
-    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
     private String depotName;
+
+    private Integer qty;
+
+    private String percent;
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public String getPercent() {
+        return percent;
+    }
+
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 
     public String getDepotId() {
         return depotId;
