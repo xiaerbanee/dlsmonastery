@@ -5,36 +5,33 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAllot:edit'">{{$t('shopAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
-        <search-tag   :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <search-dialog ref="dialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
+      <search-dialog ref="searchDialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-
-              <el-form-item :label="formLabel.fromShopId.label" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.fromShopId"  @selectedTextChange="initSearchText"></depot-select>
+              <el-form-item :label="$t('shopAllotList.fromShop')" :label-width="formLabelWidth">
+                <depot-select  category="directShop" v-model="formData.fromShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.toShopId.label" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.toShopId"  @selectedTextChange="initSearchText"></depot-select>
+              <el-form-item :label="$t('shopAllotList.toShop')" :label-width="formLabelWidth">
+                <depot-select  category="directShop" v-model="formData.toShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-
-              <el-form-item :label="formLabel.auditDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.auditDateRange')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.auditDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.status')" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('shopAllotList.inputKey')">
-                  <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.businessId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.billCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.businessIds.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.billCode')" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('shopAllotList.multiEnterOrComma')"></el-input>
               </el-form-item>
             </el-col>
@@ -69,7 +66,6 @@
           </template>
         </el-table-column>
 
-
         <el-table-column prop="status" :label="$t('shopAllotList.status')" width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
@@ -99,32 +95,14 @@
 
   export default{
     components:{
-      depotSelect,
-
+      depotSelect
     },
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          fromShopId:"",
-          toShopId:"",
-          businessId:"",
-          businessIds:"",
-          status:"",
-          createdDateRange:'',
-          auditDateRange:'',
-        },formLabel:{
-          createdDateRange:{label: this.$t('shopAllotList.createdDate'),value:''},
-          auditDateRange:{label: this.$t('shopAllotList.auditDateRange'),value:''},
-          fromShopId:{label:this.$t('shopAllotList.fromShop'),value:''},
-          toShopId:{label:this.$t('shopAllotList.toShop'),value:''},
-          businessId:{label:this.$t('shopAllotList.billCode'),value:''},
-          businessIds:{label:this.$t('shopAllotList.billCode'),value:''},
-          status:{label:this.$t('shopAllotList.status'),value:''},
+        searchText:"",
+        formData:{
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -132,16 +110,20 @@
       };
     },
     methods: {
-
+      setSearchText(){
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopAllotList",this.submitData);
-        axios.get('/api/ws/future/crm/shopAllot',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopAllotList",submitData);
+        axios.get('/api/ws/future/crm/shopAllot',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         });
-        this.initSearchText();
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -171,13 +153,10 @@
               this.pageRequest();
             });
           }).catch(()=>{});
-
         }else if(action==="detail"){
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'view'}})
         }else if(action==="audit"){
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
-      },initSearchText(){
-          this.searchText = util.getSearchText(this.$refs.dialog);
       }
     },created () {
       let that = this;

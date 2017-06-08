@@ -51,7 +51,7 @@ util.currentDate = function () {
     const end = new Date();
     const start = new Date();
     start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-    return util.formatDate(start,"yyyy-MM-dd")+"-"+util.formatDate(end,"yyyy-MM-dd");
+    return util.formatDate(start,"yyyy-MM-dd")+" - "+util.formatDate(end,"yyyy-MM-dd");
   }
 util.getSort = function (column) {
   let sort = '';
@@ -227,17 +227,14 @@ util.getIdList = function (array) {
 }
 
 util.getFormItems = function (component, formItems){
-
   if(!component){
     return formItems;
   }
   if(component.$options.componentName === "ElFormItem"){
     formItems.push(component);
-
     return formItems;
   }else if(component.$children){
     for(let child of component.$children){
-
       util.getFormItems(child, formItems);
     }
   }
@@ -250,11 +247,10 @@ util.getComponentValueLabel = function (component){
     return null;
   }
   let value = null;
-
   if(component.$options.componentName === "ElSelect") {
     value = component.selectedLabel;
   }else if(component.$options.componentName === "ElDatePicker"){
-    value = component.displayValue;
+    value = component.value;
   }else if(component.$options.componentName === "ElInput"){
     value = component.value;
   }else  if(component.$children){
@@ -267,25 +263,23 @@ util.getComponentValueLabel = function (component){
 };
 
 util.getSearchText = function (root){
-
-  console.log("getSearchText");
   let formItems = [];
   util.getFormItems(root, formItems);
-
   let tmp = [];
-
   for(let item of formItems){
     let eachValueLabel = util.getComponentValueLabel(item);
-    if(eachValueLabel){
+    if(eachValueLabel && eachValueLabel!=""){
       tmp.push([item.label, eachValueLabel]);
     }
-
   }
-  return tmp;
+  var searchText= "";
+  if(tmp.length>0) {
+    for(let item of tmp) {
+        searchText = searchText + "&nbsp;<span class=\"el-tag el-tag--primary\">"  + item[0] + "：" + item[1] + "</span>"
+    }
+  }
+  return searchText;
 }
-
-
-
 
 util.getLabel = function (array, id, labelColumn) {
   if (labelColumn == null) {
@@ -365,6 +359,12 @@ util.isBlank = function (val) {
 
 util.isNotBlank = function (val) {
   return _.trim(val) != "";
+}
+
+util.deleteExtra= function (json) {
+  var newJson = JSON.parse(JSON.stringify(json));
+  delete newJson.extra;
+  return newJson;
 }
 
 export default util;

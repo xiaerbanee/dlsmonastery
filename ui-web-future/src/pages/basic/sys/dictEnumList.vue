@@ -5,21 +5,21 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:dictEnum:edit'">{{$t('dictEnumList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:dictEnum:view'">{{$t('dictEnumList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dictEnumList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dictEnumList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictEnumList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictEnumList.category')" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
-                  <el-option v-for="category in formData.categoryList" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictEnumList.value')" :label-width="formLabelWidth">
                 <el-input v-model="formData.value" auto-complete="off" :placeholder="$t('dictEnumList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -28,7 +28,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dictEnumList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dictEnumList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('dictEnumList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="category" :label="$t('dictEnumList.category')"></el-table-column>
@@ -53,26 +53,13 @@
   </div>
 </template>
 <script>
-
-  export default {
+  export default{
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          createdDate:'',
-        },
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          createdDate:'',
-          category:'',
-          value:''
-        },
-        formLabel:{
-          createdDate:{label: this.$t('dictEnumList.createdDate')},
-          category:{label: this.$t('dictEnumList.category')},
-          value:{label: this.$t('dictEnumList.value')}
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -80,14 +67,18 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("dictEnumList",this.submitData);
-        axios.get('/api/basic/sys/dictEnum?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dictEnumList",submitData);
+        axios.get('/api/basic/sys/dictEnum?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
-          console.log(response);
-          console.log(response.data);
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {

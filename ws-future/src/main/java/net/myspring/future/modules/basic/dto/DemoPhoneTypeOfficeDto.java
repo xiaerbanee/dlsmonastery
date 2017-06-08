@@ -12,34 +12,13 @@ import java.math.BigDecimal;
  */
 public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
     private Integer qty;
+    private Integer realQty;
     private String demoPhoneTypeId;
+    @CacheInput(inputKey = "demoPhoneTypes",inputInstance = "demoPhoneTypeId",outputInstance = "name")
+    private String demoPhoneTypeName;
     private String officeId;
-
     @CacheInput(inputKey = "offices", inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "taskPoint")
-    private BigDecimal officeTaskPoint;
-
-    public String getOfficeTaskPointString() {
-        return officeTaskPoint +"000%";
-    }
-
-    public BigDecimal getOfficeTaskPoint() {
-        return officeTaskPoint;
-    }
-
-    public void setOfficeTaskPoint(BigDecimal officeTaskPoint) {
-        this.officeTaskPoint = officeTaskPoint;
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
 
     public Integer getQty() {
         return qty;
@@ -47,6 +26,14 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getRealQty() {
+        return realQty;
+    }
+
+    public void setRealQty(Integer realQty) {
+        this.realQty = realQty;
     }
 
     public String getDemoPhoneTypeId() {
@@ -57,6 +44,14 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
         this.demoPhoneTypeId = demoPhoneTypeId;
     }
 
+    public String getDemoPhoneTypeName() {
+        return demoPhoneTypeName;
+    }
+
+    public void setDemoPhoneTypeName(String demoPhoneTypeName) {
+        this.demoPhoneTypeName = demoPhoneTypeName;
+    }
+
     public String getOfficeId() {
         return officeId;
     }
@@ -65,6 +60,11 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
         this.officeId = officeId;
     }
 
+    public String getOfficeName() {
+        return officeName;
+    }
 
-
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 }

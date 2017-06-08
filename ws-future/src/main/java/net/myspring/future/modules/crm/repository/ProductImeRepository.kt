@@ -555,7 +555,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(productImeQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeDto::class.java))
-
         return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }

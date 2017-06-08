@@ -91,6 +91,7 @@
         }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
             this.express = response.data;
         });

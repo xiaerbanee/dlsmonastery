@@ -4,7 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.future.common.enums.SaleSumTypeEnum;
+import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.future.common.enums.SumTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -17,7 +18,6 @@ import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -161,7 +161,7 @@ public class ProductImeService {
             childOfficeMap=officeClient.getChildOfficeMap(productImeReportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(productImeReportQuery);
-        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())&&SaleSumTypeEnum.区域.name().equals(productImeReportQuery.getSumType())){
+        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(productImeReportQuery.getSumType())){
             Map<String,ProductImeReportDto> map=Maps.newHashMap();
             for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
                 String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
@@ -198,7 +198,7 @@ public class ProductImeService {
 
     private List<ProductImeReportDto> getProductImeReportList(ProductImeReportQuery productImeReportQuery){
         List<ProductImeReportDto> productImeReportList=Lists.newArrayList();
-        if("电子报卡".equals(productImeReportQuery.getOutType())){
+        if(OutTypeEnum.电子报卡.name().equals(productImeReportQuery.getOutType())){
             if("销售报表".equals(productImeReportQuery.getType())){
                 productImeReportList=productImeRepository.findBaokaSaleReport(productImeReportQuery);
             }else if("库存报表".equals(productImeReportQuery.getType())){
@@ -231,4 +231,6 @@ public class ProductImeService {
         BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
         return percent.toString();
     }
+
+
 }
