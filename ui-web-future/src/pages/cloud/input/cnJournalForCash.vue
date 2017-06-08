@@ -65,23 +65,6 @@
                 }
               }
             }
-//            let data = table.getData();
-//            for (let i=0;i<data.length;i++){
-//              var otherTypeName = "";
-//              var accountNumberFor = "";
-//              if(datas[i][0]) {
-//                accountNumberFor = datas[i][0];
-//              }
-//              if(datas[i][7]) {
-//                otherTypeName = datas[i][7];
-//              }
-//              if(otherTypeName !== "" && accountNumberFor !== ""){
-//                if(otherTypeName !== '无'  && accountNumberFor !== otherCode[otherTypeName]){
-//                  $('#grid').handsontable('setDataAtCell', i, 7, '');
-//                  alert("其他类的代码前4位必须和对应科目的代码一致");
-//                }
-//              }
-//            }
           }
         },
         formData:{
