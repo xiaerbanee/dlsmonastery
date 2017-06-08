@@ -105,6 +105,7 @@
         }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/basic/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
             this.productType=response.data;
         });

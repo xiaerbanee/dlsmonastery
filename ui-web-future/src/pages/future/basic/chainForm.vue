@@ -70,8 +70,10 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
+          this.inputForm.depotIdList = response.data.depotIdList;
         });
       }
       this.isInit = true;

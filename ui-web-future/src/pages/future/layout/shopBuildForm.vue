@@ -60,39 +60,44 @@
       depotSelect
     },
     data(){
-      return {
-        isCreate: this.$route.query.id == null,
-        submitDisabled: false,
-        shopDisabled:false,
-        fileList: [],
-        fixtureContent:'',
-        inputForm: {},
-        submitData:{
-          id: '',
-          shopId: '',
-          shopType: '',
-          fixtureType: '',
-          oldContents:'',
-          newContents: '',
-          buildType: '',
-          applyAccountId: '',
-          content: '',
-          remarks: '',
-          scenePhoto: ''
-        },
-        rules: {
-          shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-          shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-          newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-          buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-          accountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-        },
-        remoteLoading:false,
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return {
+          isInit:false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
+          shopDisabled:false,
+          fileList: [],
+          fixtureContent:'',
+          inputForm: {},
+          submitData:{
+            id: '',
+            shopId: '',
+            shopType: '',
+            fixtureType: '',
+            oldContents:'',
+            newContents: '',
+            buildType: '',
+            applyAccountId: '',
+            content: '',
+            remarks: '',
+            scenePhoto: ''
+          },
+          rules: {
+            shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            accountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+          },
+          remoteLoading:false,
+          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -101,17 +106,14 @@
               util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
-                this.submitDisabled = false;
+                Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                  if (this.isCreate) {
-                    form.resetFields();
-                    this.fileList = [];
-                  } else {
+                  if (!this.isCreate) {
                     this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
                   }
                 }
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
           }
         })
@@ -126,27 +128,26 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage(){
-        axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        if(this.inputForm.id != null){
-          this.shopDisabled = true;
-        }
-        if(this.inputForm.fixtureType!=null){
-          this.shopChange();
-        }
-        if(this.inputForm.scenePhoto !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-            this.fileList= response.data;
-        });
-        }
-      });
       }
     },activated () {
-
-      if(!this.$route.query.headClick) {
-        this.initPage();
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+        axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          if(this.inputForm.id != null){
+            this.shopDisabled = true;
+          }
+          if(this.inputForm.fixtureType!=null){
+            this.shopChange();
+          }
+          if(this.inputForm.scenePhoto !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+              this.fileList= response.data;
+            });
+          }
+        });
       }
+      this.isInit = true;
     }
   }
 </script>

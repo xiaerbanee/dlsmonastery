@@ -373,6 +373,7 @@ export default {
     selectKeyShow20time: "请输入关键词,显示前20条",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    inputImeLast6:"请输入串码后(>=6)位"
   },
   demoPhoneList: {
     demoPhoneList: "演示用机",

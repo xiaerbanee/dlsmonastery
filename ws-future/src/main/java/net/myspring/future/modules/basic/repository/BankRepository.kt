@@ -21,7 +21,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.EntityManager
-import kotlin.collections.HashMap
 
 @CacheConfig(cacheNames = arrayOf("banks"))
 interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
