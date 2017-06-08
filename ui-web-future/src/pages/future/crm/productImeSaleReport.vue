@@ -86,7 +86,6 @@
           areaType:'',
           townType:'',
           dateRange:util.latestWeek(),
-          scoreType:null,
           productIds:''
         },formLabel:{
           sumType:{label:"汇总"},
@@ -107,8 +106,7 @@
         this.pageLoading = true;
         util.setQuery("productImeSaleReport",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/crm/productIme/productImeReport',{params:this.submitData}).then((response) => {
-            console.log(response.data)
+        axios.get('/api/ws/future/crm/productIme/productImeReport?type=销售',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
       })
