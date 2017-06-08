@@ -12,10 +12,10 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopAllotList.fromShop')" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.fromShopId"  @change="setSearchText"></depot-select>
+                <depot-select  category="directShop" v-model="formData.fromShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('shopAllotList.toShop')" :label-width="formLabelWidth">
-                <depot-select  category="directShop" v-model="formData.toShopId"  @change="setSearchText"></depot-select>
+                <depot-select  category="directShop" v-model="formData.toShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('shopAllotList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
