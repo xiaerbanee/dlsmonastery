@@ -30,6 +30,20 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("idList", idList), BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
+    fun findAll(): MutableList<BdDepartment> {
+        return namedParameterJdbcTemplate.query("""
+            select
+            t1.FDEPTID,
+            t1.FNUMBER,
+            t2.FFULLNAME as FNAME
+            from
+            T_BD_DEPARTMENT t1,
+            T_BD_DEPARTMENT_L t2
+            where
+            t1.FDEPTID = t2.FDEPTID
+        """, BeanPropertyRowMapper(BdDepartment::class.java))
+    }
+
     fun findByNameLike(name: String): MutableList<BdDepartment> {
         return namedParameterJdbcTemplate.query("""
             select

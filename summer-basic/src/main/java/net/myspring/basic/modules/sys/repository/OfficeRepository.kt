@@ -157,10 +157,13 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
                 sb.append(" or ");
             }
         }
+        sb.append(")");
         var paramMap = Maps.newHashMap<String,String>();
         for((index,value) in parentIdList.withIndex()) {
             paramMap.put("parentId" + index ,"%$value%");
         }
+        print(sb.toString())
+        print(paramMap)
         return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java))
     }
 

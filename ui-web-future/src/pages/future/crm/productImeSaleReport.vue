@@ -2,108 +2,137 @@
   <div>
     <head-tab active="productImeSaleReport"></head-tab>
     <div>
-      <el-form :model="reportScore" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item :label="$t('reportScoreForm.scoreDate')" prop="scoreDate">
-              <date-picker v-model="reportScore.scoreDate" ></date-picker>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyScore')" prop="companyScore">
-              <el-input v-model="reportScore.companyScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.companyMonthScore')" prop="companyMonthScore">
-              <el-input v-model="reportScore.companyMonthScore"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.cardQty')" prop="cardQty">
-              <el-input v-model="reportScore.cardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.monthCardQty')" prop="monthCardQty">
-              <el-input v-model="reportScore.monthCardQty"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.rank')" prop="rank">
-              <el-input v-model="reportScore.rank"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('reportScoreForm.remarks')" prop="remarks">
-              <el-input v-model="reportScore.remarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('reportScoreForm.save')}}</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-card class="box-card">
-              {{$t('reportScoreForm.productNames')}}： {{productTypeNames}}
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-form>
+      <el-row>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-dropdown  @command="exportData">
+          <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="按数量导出">按数量导出</el-dropdown-item>
+            <el-dropdown-item command="按合计导出">按合计导出</el-dropdown-item>
+            <el-dropdown-item command="按串码导出">按串码导出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-button type="primary" @click="saleReportGrid()" icon="search" v-permit="'crm:bank:view'">明细</el-button>
+
+        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+      </el-row>
+      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
+        <el-form :model="formData">
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="formLabel.sumType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.sumTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.outType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.outType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.outTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.areaTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.townType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.townType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.townTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.dateRange"></date-range-picker>
+              </el-form-item>
+              <el-form-item :label="formLabel.scoreType.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.scoreTypeList" :key="item" :label="item | bool2str" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="formLabel.productIds.label" :label-width="formLabelWidth">
+                <el-select v-model="formData.productIds" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.productIdsList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="search()">确定</el-button>
+        </div>
+      </el-dialog>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" stripe border>
+        <el-table-column fixed prop="name" label="门店" sortable width="300"></el-table-column>
+        <el-table-column prop="code" label="数量"  sortable></el-table-column>
+        <el-table-column prop="accountNameStr" label="占比"></el-table-column>
+      </el-table>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
 <script>
-    export default{
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            productTypeNames:'',
-            notScores:'',
-            reportScore:{},
-            submitData:{
-              scoreDate:'',
-              companyScore:"",
-              companyMonthScore:"",
-              cardQty:"",
-              monthCardQty:"",
-              rank:"",
-              remarks:''
-            },
-            rules: {
-              scoreDate: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              companyMonthScore: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              cardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              monthCardQty: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}],
-              rank: [{ required: true, message: this.$t('reportScoreForm.prerequisiteMessage')}]
-            }
-          }
-      },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.reportScore, this.submitData);
-              axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
-                  }
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            }else{
-              this.submitDisabled = false;
-            }
-          })
-        }
-      },created(){
+  export default {
+    data() {
+      return {
+        pageLoading: false,
+        pageHeight:600,
+        page:{},
+        formData:{},
+        submitData:{
+          page:0,
+          size:25,
+          sort:"id,DESC",
+          sumType:'',
+          outType:'',
+          areaType:'',
+          townType:'',
+          dateRange:util.latestWeek(),
+          productIds:''
+        },formLabel:{
+          sumType:{label:"汇总"},
+          outType:{label:"查看"},
+          areaType:{label:"区域类型"},
+          townType:{label:"乡镇"},
+          dateRange:{label:"日期"},
+          scoreType:{label:"打分型号"},
+          productIds:{label:"货品"}
+        },
+        formLabelWidth: '120px',
+        formVisible: false,
+        loading:false
+      };
+    },
+    methods: {
+      pageRequest() {
+        this.pageLoading = true;
+        util.setQuery("productImeSaleReport",this.formData);
+        util.copyValue(this.formData,this.submitData);
+        axios.get('/api/ws/future/crm/productIme/productImeReport?type=销售',{params:this.submitData}).then((response) => {
+          this.page = response.data;
+          this.pageLoading = false;
+      })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
+      },saleReportGrid(){
 
-        axios.get('/api/ws/future/crm/reportScore/getProductTypeNamesAndNotScores').then((response)=>{
-          this.productTypeNames = response.data.productTypeNames;
-          this.notScores = response.data.notScores;
-        });
-
-        //每日打分，只能新增和删除，不能修改
-        axios.get('/api/ws/future/crm/reportScore/findDto').then((response)=>{
-          this.reportScore=response.data;
-        })
+      },exportData(command) {
       }
+    },created () {
+      this.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response) => {
+        this.formData = response.data;
+      util.copyValue(this.$route.query, this.formData);
+      this.pageRequest();
+    })
     }
+  };
 </script>
+
