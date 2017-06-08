@@ -14,7 +14,6 @@ public class DictEnumForm extends BaseForm<DictEnum> {
     private Integer sort;
     private String category;
     private String value;
-    private List<String> categoryList= Lists.newArrayList();
 
     public String getRemarks() {
         return remarks;
@@ -46,13 +45,5 @@ public class DictEnumForm extends BaseForm<DictEnum> {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public List<String> getCategoryList() {
-        return categoryList;
-    }
-
-    public void setCategoryList(List<String> categoryList) {
-        this.categoryList = categoryList;
     }
 }

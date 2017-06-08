@@ -19,16 +19,6 @@ public class AdApplyBillForm extends BaseForm<AdApply> {
     private String storeId;
     private List<String> billTypes;
 
-    private List<AdApplyDto> adApplyDtos;
-
-    public List<AdApplyDto> getAdApplyDtos() {
-        return adApplyDtos;
-    }
-
-    public void setAdApplyDtos(List<AdApplyDto> adApplyDtos) {
-        this.adApplyDtos = adApplyDtos;
-    }
-
     public String getBillType() {
         return billType;
     }

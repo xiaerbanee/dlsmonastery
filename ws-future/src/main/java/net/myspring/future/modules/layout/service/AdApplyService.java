@@ -3,10 +3,12 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.DictEnumDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
@@ -15,9 +17,12 @@ import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,7 +39,6 @@ import java.util.Map;
 @Service
 @Transactional
 public class AdApplyService {
-
     @Autowired
     private AdApplyRepository adApplyRepository;
     @Autowired
@@ -50,9 +54,16 @@ public class AdApplyService {
         return page;
     }
 
-    public AdApply findOne(String id){
-        AdApply adApply = adApplyRepository.findOne(id);
-        return adApply;
+    public AdApplyDto findOne(String id){
+        AdApplyDto adApplyDto;
+        if(StringUtils.isBlank(id)){
+            adApplyDto = new AdApplyDto();
+        } else {
+            AdApply adApply= adApplyRepository.findOne(id);
+            adApplyDto = BeanUtil.map(adApply,AdApplyDto.class);
+            cacheUtils.initCacheInput(adApplyDto);
+        }
+        return adApplyDto;
     }
 
     public AdApplyForm getForm(AdApplyForm adApplyForm){
@@ -60,7 +71,6 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyForm.setBillTypes(billTypes);
-        adApplyForm.setProductDtos(findProductList(adApplyForm.getBillType()));
         return adApplyForm;
     }
 
@@ -75,12 +85,12 @@ public class AdApplyService {
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
             List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
+            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
             List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
+            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         return adApplyBillForm;
     }
@@ -118,16 +128,13 @@ public class AdApplyService {
     }
 
     public void save(AdApplyForm adApplyForm){
-        if(adApplyForm.getApplyQty()==null){
+        if(CollectionUtil.isEmpty(adApplyForm.getApplyQtys())){
             return;
         }
-        if(adApplyForm.getApplyQty().size()!=adApplyForm.getProductDtos().size()){
-            return;
-        }
-        for(int i = 0;i<adApplyForm.getApplyQty().size();i++){
-            String productId = adApplyForm.getProductDtos().get(i).getId();
-            String expiryDateRemarks = adApplyForm.getProductDtos().get(i).getExpiryDateRemarks();
-            Integer applyQty = adApplyForm.getApplyQty().get(i);
+        Map<String,Product> productMap = productRepository.findMap(adApplyForm.getProductIds());
+        for(int i = 0;i<adApplyForm.getApplyQtys().size();i++){
+            String productId = adApplyForm.getProductIds().get(i);
+            Integer applyQty = adApplyForm.getApplyQtys().get(i);
             if(applyQty!=null&&applyQty>0){
                 AdApply adApply = new AdApply();
                 adApply.setApplyQty(applyQty);
@@ -137,33 +144,9 @@ public class AdApplyService {
                 adApply.setShopId(adApplyForm.getShopId());
                 adApply.setProductId(productId);
                 adApply.setRemarks(adApplyForm.getRemarks());
-                adApply.setExpiryDateRemarks(expiryDateRemarks);
+                adApply.setExpiryDateRemarks(productMap.get(productId).getExpiryDateRemarks());
                 adApplyRepository.save(adApply);
             }
         }
     }
-
-    public Map<String,Object> findBillAdApplyMap(String billType){
-        return null;
-    }
-
-//    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
-//        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-//        List<AdApply> adApplyList = adApplyRepository.findByFilter(map);
-//        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.name", "门店"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.code", "物料编码"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "product.name", "物料名称"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "applyQty", "申请数"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "confirmQty", "确认数"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leftQty", "待开单数"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "created.loginName", "创建人"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-//        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("征订明细", adApplyList, simpleExcelColumnList);
-//        simpleExcelSheetList.add(simpleExcelSheet);
-//        return simpleExcelSheetList;
-//    }
 }

@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('dictEnumForm.category')" prop="category">
           <el-select v-model="inputForm.category" filterable :placeholder="$t('dictEnumForm.selectGroup')">
-            <el-option v-for="category in inputProperty.categoryList" :key="category" :label="category" :value="category"></el-option>
+            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dictEnumForm.sort')" prop="sort">
@@ -34,14 +34,8 @@
         return{
           isInit:false,
           submitDisabled:false,
-          inputForm:{},
-          inputProperty:{},
-          submitData:{
-            id:'',
-            category:'',
-            sort:'',
-            value:'',
-            remarks:''
+          inputForm:{
+            extra:{}
           },
           rules: {
             category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
@@ -56,8 +50,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/sys/dictEnum/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/dictEnum/save', util.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(!this.inputForm.create){
@@ -74,11 +67,11 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        });
         axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
-          this.inputProperty = response.data;
+          this.inputForm = response.data;
+          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
       this.isInit = true;

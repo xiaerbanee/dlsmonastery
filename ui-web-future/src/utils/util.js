@@ -361,4 +361,10 @@ util.isNotBlank = function (val) {
   return _.trim(val) != "";
 }
 
+util.stringify= function (json) {
+  var newJson = JSON.parse(JSON.stringify(json));
+  delete newJson.extra;
+  return qs.stringify(newJson, {allowDots:true});
+}
+
 export default util;

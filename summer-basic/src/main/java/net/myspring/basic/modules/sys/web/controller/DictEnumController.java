@@ -54,7 +54,7 @@ public class DictEnumController {
 
     @RequestMapping(value = "getForm")
     public DictEnumForm getForm(DictEnumForm dictEnumForm){
-        dictEnumForm.setCategoryList(dictEnumService.findDistinctCategory());
+        dictEnumForm.getExtra().put("categoryList",dictEnumService.findDistinctCategory());
         return dictEnumForm;
     }
 
