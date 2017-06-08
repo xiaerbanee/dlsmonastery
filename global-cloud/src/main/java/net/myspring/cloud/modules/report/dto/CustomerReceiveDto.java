@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
+ * 客户应收报表
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDto {

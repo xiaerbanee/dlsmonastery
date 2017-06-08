@@ -85,7 +85,7 @@
           outType:'电子保卡',
           areaType:'全部',
           townType:'全部',
-          dateRange:'2017-06-01~2017-06-08',
+          dateRange:util.latestWeek(),
           scoreType:'是',
           productIds:''
         },formLabel:{
