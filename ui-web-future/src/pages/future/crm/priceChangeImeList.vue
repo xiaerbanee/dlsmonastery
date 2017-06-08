@@ -19,17 +19,17 @@
               <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
                 <product-select v-model="formData.productId"></product-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.isCheck.label" :label-width="formLabelWidth">
                 <bool-select v-model="formData.isCheck"></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.image.label" :label-width="formLabelWidth">
-                <bool-select v-model="formData.image"></bool-select>
+              <el-form-item :label="formLabel.hasImage.label" :label-width="formLabelWidth">
+                <bool-select v-model="formData.hasImage"></bool-select>
               </el-form-item>
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
@@ -46,26 +46,26 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('priceChangeImeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="ime" :label="$t('priceChangeImeList.ime')" sortable width="150"></el-table-column>
-        <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" ></el-table-column>
-        <el-table-column prop="productName" :label="$t('priceChangeImeList.type')" ></el-table-column>
-        <el-table-column prop="areaName" :label="$t('priceChangeImeList.areaName')"></el-table-column>
-        <el-table-column prop="officeName" :label="$t('priceChangeImeList.officeName')"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('priceChangeImeList.shopName')" ></el-table-column>
-        <el-table-column prop="priceChangeName"  :label="$t('priceChangeImeList.priceChangeName')"></el-table-column>
-        <el-table-column prop="auditDate" :label="$t('priceChangeImeList.auditDate')"></el-table-column>
-        <el-table-column prop="isCheck"  :label="$t('priceChangeImeList.isCheck')"width="120">
+        <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" sortable></el-table-column>
+        <el-table-column column-key="productId" prop="productName" :label="$t('priceChangeImeList.type')" sortable></el-table-column>
+        <el-table-column column-key="areaId" prop="areaName" :label="$t('priceChangeImeList.areaName')" sortable></el-table-column>
+        <el-table-column column-key="officeId" prop="officeName" :label="$t('priceChangeImeList.officeName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('priceChangeImeList.shopName')" sortable></el-table-column>
+        <el-table-column column-key="priceChangeId" prop="priceChangeName"  :label="$t('priceChangeImeList.priceChangeName')" sortable></el-table-column>
+        <el-table-column prop="auditDate" :label="$t('priceChangeImeList.auditDate')" sortable></el-table-column>
+        <el-table-column prop="isCheck"  :label="$t('priceChangeImeList.isCheck')"width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.isCheck ? 'primary' : 'danger'">{{scope.row.isCheck | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="image" :label="$t('priceChangeImeList.image')"></el-table-column>
-        <el-table-column prop="status"  :label="$t('priceChangeImeList.status')"width="120">
+        <el-table-column prop="image" :label="$t('priceChangeImeList.image')" sortable></el-table-column>
+        <el-table-column prop="status"  :label="$t('priceChangeImeList.status')"width="120" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('priceChangeImeList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('priceChangeImeList.createdBy')"></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('priceChangeImeList.createdBy')" sortable></el-table-column>
         <el-table-column  :label="$t('priceChangeImeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
@@ -95,22 +95,23 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           priceChangeName:'',
           status:'',
           officeId:'',
           productId:'',
           shopId:'',
           isCheck:'',
-          image:null,
+          hasImage:'',
           ime:''
         },formLabel:{
           priceChangeName:{label:this.$t('priceChangeImeList.priceChangeName')},
           status:{label:this.$t('priceChangeImeList.status')},
           officeId:{label:this.$t('priceChangeImeList.officeName'),value:''},
-          productName:{label:this.$t('priceChangeImeList.type')},
-          shopName:{label:this.$t('priceChangeImeList.shopName')},
+          productId:{label:this.$t('priceChangeImeList.type')},
+          shopId:{label:this.$t('priceChangeImeList.shopName')},
           isCheck:{label:this.$t('priceChangeImeList.isCheck'),value:''},
-          image:{label:this.$t('priceChangeImeList.image'),value:''},
+          hasImage:{label:this.$t('priceChangeImeList.image'),value:''},
           ime:{label:this.$t('priceChangeImeList.ime')},
         },
         formLabelWidth: '120px',
@@ -121,11 +122,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
-        this.formLabel.image.value = util.bool2str(this.formData.image);
-        this.formLabel.officeId.value = util.getLabel(this.formData.officeId, this.formData.officeId);
+        this.formLabel.hasImage.value = util.bool2str(this.formData.hasImage);
 
         util.copyValue(this.formData,this.submitData);
-        console.log(this.submitData);
         util.setQuery("priceChangeImeList",this.submitData);
         axios.get('/api/ws/future/crm/priceChangeIme',{params:this.submitData}).then((response) => {
           this.page = response.data;
@@ -136,7 +135,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

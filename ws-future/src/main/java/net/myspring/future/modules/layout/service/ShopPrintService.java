@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional
 public class ShopPrintService {
 
     @Autowired
@@ -91,7 +91,7 @@ public class ShopPrintService {
     public void audit(ShopPrintForm shopPrintForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 
-        activitiCompleteForm.setPass(shopPrintForm.getPass()=="1"?true:false);
+        activitiCompleteForm.setPass(shopPrintForm.getPass());
         activitiCompleteForm.setComment(shopPrintForm.getPassRemarks());
 
         ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());

@@ -16,7 +16,7 @@
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.expressOrderToDepotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.expressOrderToDepotId"></depot-select>
+                <depot-select v-model="formData.expressOrderToDepotId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
@@ -25,7 +25,7 @@
                 <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.expressOrderFromDepotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.expressOrderFromDepotId" ></depot-select>
+                <depot-select v-model="formData.expressOrderFromDepotId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="formLabel.expressOrderExpressCompanyId.label" :label-width="formLabelWidth">
                 <express-company-select v-model="formData.expressOrderExpressCompanyId"></express-company-select>

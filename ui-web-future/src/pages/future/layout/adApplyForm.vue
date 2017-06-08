@@ -48,30 +48,35 @@
       depotSelect
     },
     data(){
-      return{
-        submitDisabled:false,
-        shopTypeLabel:'',
-        filterAdApplyList:[],
-        filterApplyQty:[],
-        productName:"",
-        shops:{},
-        inputForm:{},
-        submitData:{
-          billType:'',
-          productDtos:[],
-          applyQty:[],
-          shopId:'',
-          remarks:'',
-        },
-        rules: {
-          billType: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}],
-          shopId: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}]
-        },
-        remoteLoading:false
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          submitDisabled:false,
+          shopTypeLabel:'',
+          filterAdApplyList:[],
+          filterApplyQty:[],
+          productName:"",
+          shops:{},
+          inputForm:{},
+          submitData:{
+            billType:'',
+            productDtos:[],
+            applyQty:[],
+            shopId:'',
+            remarks:'',
+          },
+          rules: {
+            billType: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}],
+            shopId: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}]
+          },
+          remoteLoading:false
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -91,14 +96,12 @@
 
             axios.post('/api/ws/future/layout/adApply/save',qs.stringify(this.submitData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
+              Object.assign(this.$data, this.getData());
+              if(!this.isCreate){
                 this.$router.push({name:'adApplyList',query:util.getQuery("adApplyList")})
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -132,17 +135,19 @@
           this.submitDisabled = false;
           });
       },initPage(){
+
+      }
+    },created () {
+      this.initPage();
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getForm').then((response) =>{
           this.inputForm = response.data;
         });
       }
-    },created () {
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

@@ -31,12 +31,12 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lastModifiedByName" :label="$t('pricesystemList.lastModifiedBy')"></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('pricesystemList.lastModifiedDate')"></el-table-column>
+        <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('pricesystemList.lastModifiedBy')" sortable></el-table-column>
+        <el-table-column prop="lastModifiedDate" :label="$t('pricesystemList.lastModifiedDate')" sortable></el-table-column>
         <el-table-column fixed="right" :label="$t('pricesystemList.operation')" width="160">
           <template scope="scope">
-            <el-button size="small" v-permit="'crm:pricesystem:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('pricesystemList.edit')}}</el-button>
-            <el-button size="small" v-permit="'crm:pricesystem:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('pricesystemList.delete')}}</el-button>
+            <div class="action"  v-permit="'crm:pricesystem:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('pricesystemList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:pricesystem:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('pricesystemList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -53,6 +53,7 @@
         submitData:{
           page:0,
           size:25,
+          sort:"id,DESC",
           name:'',
         },formLabel:{
           name:{label:this.$t('pricesystemList.name')},
@@ -87,7 +88,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

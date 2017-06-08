@@ -85,7 +85,7 @@ public class PriceChangeImeService {
     public void audit(PriceChangeImeForm priceChangeImeForm){
         if(priceChangeImeForm.getPass()!=null) {
             PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
-            if (priceChangeImeForm.getPass().equalsIgnoreCase("1")) {
+            if (priceChangeImeForm.getPass()) {
                 priceChangeIme.setStatus(AuditStatusEnum.已通过.name());
             } else {
                 priceChangeIme.setStatus(AuditStatusEnum.未通过.name());

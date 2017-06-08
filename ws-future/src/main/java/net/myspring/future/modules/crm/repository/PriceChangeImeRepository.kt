@@ -74,7 +74,8 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
         val sb = StringBuilder("""
         SELECT
             depot.office_id officeId,
-            t2. NAME priceChangeName,
+            depot.area_id areaId,
+            t2.name priceChangeName,
             productIme.ime ime,
             productIme.product_id productId,
             t1.*
@@ -100,8 +101,8 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
             }
 
         }
-        if(priceChangeImeQuery.image != null){
-            if(priceChangeImeQuery.image == true){
+        if(priceChangeImeQuery.hasImage != null){
+            if(priceChangeImeQuery.hasImage == true){
                 sb.append(""" and  t1.image is not null  """)
             }else{
                 sb.append(""" and t1.image is null  """)

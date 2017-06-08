@@ -42,7 +42,7 @@
             submitData:{
               id:'',
               name:'',
-              totalPriceType:'按数量',
+              totalPriceType:'',
               price:'',
               remarks:''
             },
@@ -75,6 +75,7 @@
         }
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.formData = response.data;
         });

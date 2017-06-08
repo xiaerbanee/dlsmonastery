@@ -13,7 +13,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}{{isCreate}}</el-button>
         </el-form-item>
         <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.inputKey')" style="width:200px;"></el-input>
           <el-table :data="filterPricesystemDetailList"  style="margin-top:5px;"   stripe border >
@@ -24,7 +24,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="price" :label="$t('pricesystemForm.price')" v-if="!isCreate"></el-table-column>
-            <el-table-column prop="sort" :label="$t('pricesystemForm.sort')" v-if="!isCreate"></el-table-column>
+            <el-table-column prop="sort" :label="$t('pricesystemForm.sort')"></el-table-column>
           </el-table>
       </el-form>
     </div>
@@ -108,6 +108,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
         });

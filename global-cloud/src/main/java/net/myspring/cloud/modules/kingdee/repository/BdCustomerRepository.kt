@@ -4,6 +4,7 @@ import net.myspring.cloud.modules.kingdee.domain.BdCustomer
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery
 import net.myspring.common.dto.NameValueDto
 import net.myspring.util.repository.SQLServerDialect
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -138,7 +139,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
             t1.FCUSTID = t2.FCUSTID
             AND t1.FPRIMARYGROUP = t3.FID
             AND t3.FID = t4.FID
-            AND t2.FNAME like like concat('%',:name,'%')
+            AND t2.FNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
@@ -184,11 +185,16 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
             and t1.FFORBIDSTATUS = 'A'
             and t1.FDOCUMENTSTATUS = 'C'
         """);
+        if(bdCustomerQuery.customerIdList.size > 0){
+           sb.append(" and t1.FCUSTID in (:customerIdList) ")
+        }
+        if (StringUtils.isNotBlank(bdCustomerQuery.customerGroup)){
+            sb.append(" and t1.FPRIMARYGROUP = :customerGroup  ")
+        }
         var pageableSql = SQLServerDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = SQLServerDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(bdCustomerQuery), BeanPropertyRowMapper(BdCustomer::class.java));
         var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(bdCustomerQuery),Long::class.java);
         return PageImpl(list,pageable,count);
     }
-
 }

@@ -53,39 +53,44 @@
   export default{
     components:{depotSelect,boolRadioGroup},
     data(){
-      return{
-        shopDisabled:true,
-        isCreate:this.$route.query.id==null,
-        action:this.$route.query.action,
-        submitDisabled:false,
-        remoteLoading:false,
-        formProperty:{},
-        fileList:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          shopAdTypeId:'',
-          shopId:'',
-          length:'',
-          qty:'',
-          width:'',
-          content:'',
-          specialArea:'',
-          attachment:'',
-          remarks:''
-        },
-        rules: {
-          shopAdTypeId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-          shopId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-          length: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-          width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-          qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-        },
-        headers:{Authorization:'Bearer ' + this.$store.state.global.token.access_token}
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return{
+          isInit:false,
+          shopDisabled:true,
+          isCreate:this.$route.query.id==null,
+          action:this.$route.query.action,
+          submitDisabled:false,
+          remoteLoading:false,
+          formProperty:{},
+          fileList:[],
+          inputForm:{},
+          submitData:{
+            id:'',
+            shopAdTypeId:'',
+            shopId:'',
+            length:'',
+            qty:'',
+            width:'',
+            content:'',
+            specialArea:'',
+            attachment:'',
+            remarks:''
+          },
+          rules: {
+            shopAdTypeId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            shopId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            length: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+          },
+          headers:{Authorization:'Bearer ' + this.$store.state.global.token.access_token}
+        }
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -94,17 +99,14 @@
             util.copyValue(this.inputForm, this.submitData);
             axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
               if (response.data.success) {
-                if (this.isCreate) {
-                  form.resetFields();
-                  this.fileList = [];
-                } else {
-                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
+                if (!this.isCreate) {
+                    this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
                 }
               }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }
         });
@@ -115,33 +117,26 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      },initPage(){
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(tihs.$data, this.getData());
         axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        if(this.isCreate){
-          this.shopDisabled = false;
-        }
-        if(response.data.specialArea == true){
-          this.inputForm.specialArea = 1;
-        }else{
-          this.inputForm.specialArea = 0;
-        }
-        if(this.inputForm.attachment !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-            this.fileList= response.data;
+          if(this.isCreate){
+            this.shopDisabled = false;
+          }
+          if(this.inputForm.attachment !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+              this.fileList= response.data;
+            });
+          }
         });
-        }
-      });
         axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
           this.formProperty = response.data;
-      });
+        });
       }
-    },created(){
-      this.initPage();
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

@@ -373,6 +373,7 @@ export default {
     selectKeyShow20time: "请输入关键词,显示前20条",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    inputImeLast6:"请输入串码后(>=6)位"
   },
   demoPhoneList: {
     demoPhoneList: "演示用机",
@@ -899,7 +900,7 @@ export default {
     expressCodes: "快递单号",
     shopName: "门店",
     remarks: "备注",
-    redirectView: "连续发货",
+    continueShip: "连续发货",
     imeStr: "串码",
     shipRemarks: "发货备注",
     save: "保存",
@@ -910,7 +911,7 @@ export default {
     billQty: "开单数",
     returnQty: "退货数",
     shippedQty: "已发货数",
-    waitShipQty: "待发货数",
+    leftQty: "待发货数",
     shipQty: "发货数",
   },
   goodsOrderSign: {

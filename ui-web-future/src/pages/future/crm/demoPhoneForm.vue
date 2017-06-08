@@ -3,17 +3,17 @@
     <head-tab active="demoPhoneForm"></head-tab>
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('demoPhoneForm.productType')" prop="productType">
+        <el-form-item :label="$t('demoPhoneForm.productType')" prop="demoPhoneTypeId">
           <demo-phone-type v-model = "inputForm.demoPhoneTypeId"></demo-phone-type>
         </el-form-item>
-        <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shop">
+        <el-form-item :label="$t('demoPhoneForm.shopName')" prop="shopId">
           <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.employeeName')" prop="employeeId">
           <employee-select v-model="inputForm.employeeId"></employee-select>
         </el-form-item>
-        <el-form-item :label="$t('demoPhoneForm.productIme')" prop="productIme">
-          <el-select v-model="inputForm.productImeId" clearable filterable remote :placeholder="$t('demoPhoneForm.inputWord')" :remote-method="remoteProductIme" :loading="remoteLoading">
+        <el-form-item :label="$t('demoPhoneForm.productIme')" prop="productImeId">
+          <el-select v-model="inputForm.productImeId" clearable filterable remote :placeholder="$t('demoPhoneForm.inputImeLast6')" :remote-method="remoteProductIme" :loading="remoteLoading">
             <el-option v-for="productIme in productImes" :key="productIme.id" :label="productIme.ime" :value="productIme.id"></el-option>
           </el-select>
         </el-form-item>
@@ -57,8 +57,9 @@
           remarks:'',
         },
         rules: {
+          shopId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
+          productImeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],

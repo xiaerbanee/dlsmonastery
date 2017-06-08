@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAllot:edit'">{{$t('shopAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
-        <search-tag   :formLabel="searchText"></search-tag>
+        <search-tag   :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <search-dialog ref="dialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
         <el-form :model="formData">
@@ -106,7 +106,6 @@
       return {
         page:{},
         formData:{},
-        searchText:[],
         submitData:{
           page:0,
           size:25,

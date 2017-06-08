@@ -30,8 +30,8 @@
             <el-form-item :label="$t('goodsOrderShip.remarks')" prop="remarks">
               {{inputForm.remarks}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.redirectView')" prop="redictView">
-              <bool-radio-group v-model="inputForm.redirectView"></bool-radio-group>
+            <el-form-item :label="$t('goodsOrderShip.continueShip')" prop="continueShip">
+              <bool-radio-group v-model="continueShip"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
               <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner">
@@ -41,11 +41,11 @@
               <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="showSummary(true)">{{$t('goodsOrderShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="summary(true)">{{$t('goodsOrderShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
           <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
             <template scope="scope">
@@ -56,7 +56,7 @@
           <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
           <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
-          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')"></el-table-column>
+          <el-table-column prop="leftQty" :label="$t('goodsOrderShip.leftQty')"></el-table-column>
         </el-table>
       </el-form>
     </div>
@@ -71,25 +71,7 @@
       boolRadioGroup
     },
     data(){
-      return{
-        mediaNotify: mediaNotify,
-        mediaSuccess: mediaSuccess,
-        submitDisabled:false,
-        inputForm:{},
-        goodsOrder:{},
-        shipResult:{},
-        submitData:{
-          id:'',
-          businessId:'',
-          boxImeStr:'',
-          expressCodes:'',
-          redirectView:'',
-          imeStr:'',
-          shipRemarks:''
-        },
-        rules: {},
-        pageLoading:false,
-      }
+      return this.getData();
     },watch: {
       "inputForm.imeStr": function (oldVal,newVal) {
           if(_.trim(oldVal) != _.trim(newVal)) {
@@ -102,16 +84,49 @@
       }
     },
     methods:{
+      getData() {
+        return{
+          mediaNotify: null,
+          mediaSuccess: null,
+          continueShip:false,
+          submitDisabled:false,
+          inputForm:{},
+          goodsOrder:{},
+          shipResult:{},
+          submitData:{
+            id:'',
+            boxImeStr:'',
+            expressCodes:'',
+            imeStr:'',
+            shipRemarks:''
+          },
+          rules: {}
+        }
+      },
+      formSubmit() {
+        var that = this;
+        util.copyValue(this.inputForm,this.submitData);
+        axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(this.submitData)).then((response)=> {
+          this.$message(response.data.message);
+          if(!this.continueShip){
+            Object.assign(this.$data, this.getData());
+            this.continueShip = true;
+          } else {
+            Object.assign(this.$data, this.getData());
+            this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip")})
+          }
+        }).catch(function () {
+          that.submitDisabled = false;
+        });
+      },
       summary(isSubmit){
         if(isSubmit) {
           this.submitDisabled = true;
         }
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
-        this.pageLoading = true;
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
           this.shipResult = response.data;
-          this.pageLoading = false;
           //错误信息
           var errorMsg = "";
           for(var index in this.shipResult.restResponse.errors) {
@@ -121,18 +136,34 @@
           if(util.isNotBlank(errorMsg)) {
             this.$refs.mediaNotify.play();
           } else {
-            if(util.isBlank(this.warnMsg)) {
+            if(util.isBlank(this.shipResult.warnMsg)) {
               this.$refs.mediaSuccess.play();
             }
           }
+          //设置发货数和待发货数
+          for(var index in this.inputForm.goodsOrderDetailList) {
+            var item = this.inputForm.goodsOrderDetailList[index];
+            item.shipQty = 0;
+            item.leftQty = 1;
+          }
+
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {
+              if(util.isBlank(this.shipResult.warnMsg)) {
+                this.formSubmit();
+              } else {
+                if (confirm("还有货品未发送完，确认保存？")) {
+                  this.formSubmit();
+                } else {
+                  this.submitDisabled = false;
+                }
+              }
             } else {
               alert("请先处理错误信息");
+              this.submitDisabled = false;
             }
           }
-          this.submitDisabled = false;
         });
       }
     },created(){
