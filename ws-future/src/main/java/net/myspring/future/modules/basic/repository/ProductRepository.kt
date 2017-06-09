@@ -103,7 +103,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByName(name: String): Product
 
-    fun findByCompanyIdAndName(companyId : String, name: String): Product
+    fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product
 
     fun findByOutId(outId: String): Product
 
