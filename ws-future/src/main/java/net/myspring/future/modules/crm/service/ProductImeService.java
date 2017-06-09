@@ -231,6 +231,4 @@ public class ProductImeService {
         BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
         return percent.toString();
     }
-
-
 }

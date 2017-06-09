@@ -15,7 +15,6 @@ public class ProductImeReportDto {
     private String percent;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
 
 public ProductImeReportDto(){}
