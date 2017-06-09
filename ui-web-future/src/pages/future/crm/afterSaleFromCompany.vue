@@ -9,15 +9,10 @@
       <el-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData">
           <el-form-item :label="formLabel.productTypeId.label" :label-width="formLabelWidth">
-            <el-select v-model="formData.productTypeId"  clearable filterable remote :placeholder="$t('afterSaleFromCompany.inputWord')" :remote-method="remoteProductType" :loading="remoteLoading">
-              <el-option v-for="productType in productTypes" :key="productType.id"  :label="productType.name" :value="productType.id"></el-option>
-            </el-select>
+            <product-type-select v-model="formData.productTypeId"></product-type-select>
           </el-form-item>
           <el-form-item :label="formLabel.badProductIme.label" :label-width="formLabelWidth">
-            <el-input v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleFromCompany.likeSearch')"></el-input>
-          </el-form-item>
-          <el-form-item :label="formLabel.toStoreDateBTW.label" :label-width="formLabelWidth">
-            <el-date-picker v-model="formData.toStoreDate" type="daterange" align="right" :placeholder="$t('afterSaleFromCompany.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+            <el-input type="textarea" v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleFromCompany.likeSearch')"></el-input>
           </el-form-item>
           <el-form-item :label="formLabel.toCompanyDateBTW.label" :label-width="formLabelWidth">
           <el-date-picker v-model="formData.toCompanyDate" type="daterange" align="right" :placeholder="$t('afterSaleFromCompany.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
@@ -52,8 +47,11 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-
+  import productTypeSelect from 'components/future/product-type-select';
   export default{
+    components:{
+      productTypeSelect
+    },
         data(){
           return{
             formData:{

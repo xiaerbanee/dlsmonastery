@@ -105,7 +105,6 @@ public class DepotController {
 
     @RequestMapping(value = "getDepotAccountQuery")
     public DepotAccountQuery getDepotAccountQuery(DepotAccountQuery depotAccountQuery) {
-
         LocalDate now = LocalDate.now();
         LocalDate dutyDateStart = now.minusDays(30);
         depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(now));

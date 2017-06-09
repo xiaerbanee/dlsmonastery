@@ -40,8 +40,7 @@ public class DepotShopController {
     private AdPricesystemService adPricesystemService;
     @Autowired
     private PricesystemService pricesystemService;
-    @Autowired
-    private OfficeClient officeClient;
+
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotShopDto> list(Pageable pageable, DepotQuery depotShopQuery){
@@ -80,10 +79,6 @@ public class DepotShopController {
     @RequestMapping(value = "depotReport")
     public Page<DepotShopDto> depotReport(Pageable pageable, DepotReportQuery depotReportQuery){
         DepotQuery depotQuery=BeanUtil.map(depotReportQuery,DepotQuery.class);
-        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        if(StringUtils.isNotBlank(depotQuery.getOfficeId())){
-            depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
-        }
         Page<DepotShopDto> page=depotShopService.findPage(pageable,depotQuery);
         depotShopService.setReportData(page.getContent(), depotReportQuery);
         return page;

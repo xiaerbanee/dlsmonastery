@@ -53,7 +53,7 @@
         if(this.multiple && this.innerId){
           idStr=this.innerId.join();
         }
-        if(util.isBlank(idStr) || this.itemList.length>0) {
+        if(util.isBlank(idStr)) {
           return;
         }
         this.remoteLoading = true;
@@ -69,6 +69,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
+        console.log("setVal:" + newVal + "," + this.innerId + "," + this.itemList.length);
         this.setValue(newVal);
       }
     }

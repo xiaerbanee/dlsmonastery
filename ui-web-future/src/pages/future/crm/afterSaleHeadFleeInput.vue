@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="afterSaleAreaFleeInput"></head-tab>
+    <head-tab active="afterSaleHeadFleeInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
     </el-row>
@@ -45,7 +45,6 @@
             width: 100
           }, {
             data: "badProductName",
-            type: "autocomplete",
             allowEmpty:false ,
             strict: true,
             badProductNames: [],
@@ -141,7 +140,7 @@
               } else {
                 var productNames = new Array();
                 if (query.length >= 2) {
-                  axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                  axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
                     console.log(response.data)
 
                     if (response.data.length > 0) {
@@ -264,7 +263,7 @@
           }
         }
         this.inputForm.data = JSON.stringify(this.inputForm.data);
-        axios.post('/api/ws/future/crm/afterSale/save', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
+        axios.post('/api/ws/future/crm/afterSale/saveHead', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
           this.settings.data = [];
           this.table.loadData(this.settings.data);
@@ -274,7 +273,7 @@
         });
       }, onchange(type){
         if (this.type == '售后机') {
-          this.$router.push({ name: 'afterSaleAreaInput'})
+          this.$router.push({ name: 'afterSaleHeadInput'})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

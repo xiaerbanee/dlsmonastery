@@ -134,7 +134,6 @@ public class ProductImeController {
             productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
             productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
-
         }
         return productImeSaleReportQuery;
     }

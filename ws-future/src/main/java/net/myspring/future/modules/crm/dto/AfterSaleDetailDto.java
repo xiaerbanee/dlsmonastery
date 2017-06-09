@@ -9,7 +9,7 @@ import java.time.LocalDate;
 /**
  * Created by Lenovo on 2017/6/2.
  */
-public class AfterSaleDetailDto extends DataDto<AfterSaleDetail> {
+public class AfterSaleDetailDto{
     //售后节点：地区录入，总部录入，工厂录入(坏机返厂，好机返库)
     private String type;
     private String fromDepotId;

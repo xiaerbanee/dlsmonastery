@@ -51,16 +51,17 @@
         submitDisabled: false,
         table: null,
         settings: {
-          colHeaders: ['坏机串码', '坏机型号', '核销门店', '退机类型', '包装', '内存', '坏机来源', '坏机所在库', '替换机串码', '替换机型号', '返还金额'],
+          colHeaders: ['坏机串码', '坏机型号', '坏机门店', '退机类型', '包装', '内存', '坏机来源', '坏机所在库', '替换机串码', '替换机型号', '返还金额',"备注"],
           rowHeaders: true,
           autoColumnSize: true,
           allowInsertRow: false,
           maxRows: 1000,
           columns: [{
-            data: "ime",
+            data: "badProductIme",
             width: 100
           }, {
-            data: "productName",
+            type: "autocomplete",
+            data: "badProductName",
             allowEmpty:false ,
             strict: true,
             badProductNames: [],
@@ -90,7 +91,7 @@
             },
             width: 100
           }, {
-            data: "badDepotId",
+            data: "badDepotName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -103,8 +104,6 @@
                 var productNames = new Array();
                 if (query.length >= 2) {
                   axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
-                    console.log(response.data)
-
                     if (response.data.length > 0) {
                       for (var index in response.data) {
                         var productName = response.data[index].name;
@@ -127,33 +126,90 @@
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
-            badDepotNames: [],
             width: 100
           }, {
             data: "packageStatus",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
-            badDepotNames: [],
             width: 100
           }, {
             data: "memory",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
-            badDepotNames: [],
             width: 100
           }, {
-            data: "fromDepotId",
+            data: "fromDepotName",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            fromDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.fromDepotNames.indexOf(query) >= 0) {
+                process(that.fromDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                    console.log(response.data)
+
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.fromDepotNames.indexOf(productName) < 0) {
+                          that.fromDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "toDepotName",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            toDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.toDepotNames.indexOf(query) >= 0) {
+                process(that.toDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
+                    console.log(response.data)
+
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.toDepotNames.indexOf(productName) < 0) {
+                          that.toDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "replaceProductIme",
             width: 100
           }, {
-            data: "toDepotId",
-            width: 100
-          }, {
-            data: "replaceProductImeId",
-            width: 100
-          }, {
-            data: "replaceProductId",
+            data: "replaceProductName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -186,6 +242,9 @@
           }, {
             data: "replaceAmount",
             width: 100
+          }, {
+            data: "remarks",
+            width: 100
           }],
         },
       }
@@ -206,6 +265,8 @@
         this.inputForm.data = JSON.stringify(this.inputForm.data);
         axios.post('/api/ws/future/crm/afterSale/save', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
+          this.settings.data = [];
+          this.table.loadData(this.settings.data);
           this.submitDisabled = false;
         }).catch(function () {
           this.submitDisabled = false;

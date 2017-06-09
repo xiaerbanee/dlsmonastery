@@ -6,6 +6,10 @@ const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/
 const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
 const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
 const afterSaleAreaFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaFleeInput.vue')));
+const afterSaleHeadInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadInput.vue')));
+const afterSaleHeadFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadFleeInput.vue')));
+const afterSaleToCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleToCompany.vue')));
+const afterSaleFromCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleFromCompany.vue')));
 
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
@@ -79,10 +83,15 @@ let routes = [
   {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm',meta: {menu:"afterSaleList",keepAlive:true}},
   {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm',meta: {menu:"afterSaleList",keepAlive:true}},
   {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
-  {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
   {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
+  {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleAreaFleeInput',component:afterSaleAreaFleeInput,name:'afterSaleAreaFleeInput'},
+  {path:'/future/crm/afterSaleHeadInput',component:afterSaleHeadInput,name:'afterSaleHeadInput'},
+  {path:'/future/crm/afterSaleHeadFleeInput',component:afterSaleHeadFleeInput,name:'afterSaleHeadFleeInput'},
+  {path:'/future/crm/afterSaleToCompany',component:afterSaleToCompany,name:'afterSaleToCompany'},
+  {path:'/future/crm/afterSaleFromCompany',component:afterSaleFromCompany,name:'afterSaleFromCompany'},
+
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},
   {path:'/future/crm/bankInDetail',component:bankInDetail,name:'bankInDetail',meta: {menu:"bankInList"}},

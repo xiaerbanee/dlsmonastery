@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
@@ -42,8 +44,15 @@ public class DepotShopService {
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private OfficeClient officeClient;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery){
+        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        depotQuery.setDepotIdList(depotManager.filterDepotIds());
+        if(StringUtils.isNotBlank(depotQuery.getOfficeId())){
+            depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
+        }
         Page<DepotShopDto> page=depotShopRepository.findPage(pageable,depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

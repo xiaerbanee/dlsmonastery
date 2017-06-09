@@ -78,7 +78,6 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
                 crm_depot t1
             WHERE
              t1.enabled = 1
-
         """)
         if(StringUtils.isNotBlank(depotQuery.name)){
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
