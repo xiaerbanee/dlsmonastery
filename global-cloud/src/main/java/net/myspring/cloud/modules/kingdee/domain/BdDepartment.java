@@ -7,7 +7,11 @@ package net.myspring.cloud.modules.kingdee.domain;
 public class BdDepartment {
     private String FDeptId;
     private String FNumber;
-    private String FName;
+    private String FFullName;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFDeptId() {
         return FDeptId;
@@ -25,11 +29,27 @@ public class BdDepartment {
         this.FNumber = FNumber;
     }
 
-    public String getFName() {
-        return FName;
+    public String getFFullName() {
+        return FFullName;
     }
 
-    public void setFName(String FName) {
-        this.FName = FName;
+    public void setFFullName(String FFullName) {
+        this.FFullName = FFullName;
+    }
+
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
     }
 }

@@ -72,4 +72,9 @@ public class FolderFileController {
         List<FolderFileDto> folderFileDtoList = folderFileService.findByIds(idList);
         return folderFileDtoList;
     }
+
+    @RequestMapping(value = "/getQuery")
+    public FolderFileQuery getQuery(FolderFileQuery folderFileQuery) {
+        return folderFileQuery ;
+    }
 }

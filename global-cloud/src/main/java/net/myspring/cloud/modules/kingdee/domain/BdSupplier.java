@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.kingdee.domain;
 /**
  * Created by lihx on 2017/4/11.
  */
-public class BdSupplier {
+public class BdSupplier{
     private String FSupplierId;
     private String FNumber;
     private String FName;

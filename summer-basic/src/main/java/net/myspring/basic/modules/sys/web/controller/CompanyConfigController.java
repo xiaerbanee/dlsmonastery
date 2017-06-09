@@ -62,4 +62,9 @@ public class CompanyConfigController {
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
     }
+
+    @RequestMapping(value="getQuery")
+    public CompanyConfigQuery getQuery(CompanyConfigQuery companyConfigQuery){
+        return companyConfigQuery;
+    }
 }

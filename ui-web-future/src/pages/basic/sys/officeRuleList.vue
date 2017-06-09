@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  >{{$t('officeRuleList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('officeRuleList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span  v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('officeRuleList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('officeRuleList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('officeRuleList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('officeRuleList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('officeRuleList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeRuleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('officeRuleList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('officeRuleList.name')" ></el-table-column>
@@ -50,24 +50,26 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          name:"",
-        },formLabel:{
-          name:{label:"名称"},
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("officeRuleList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/officeRule?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("officeRuleList",submitData);
+        axios.get('/api/basic/sys/officeRule?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -98,9 +100,12 @@
       }
     },created () {
       var that = this;
-      this.pageHeight = window.outerHeight -320;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/officeRule/getQuery').then((response) =>{
+        that.formData=response.data;
       util.copyValue(that.$route.query,that.formData);
       that.pageRequest();
+    });
     }
   };
 </script>

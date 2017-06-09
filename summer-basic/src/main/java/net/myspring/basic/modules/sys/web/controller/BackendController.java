@@ -63,4 +63,14 @@ public class BackendController {
         }
         return backendDtoList;
     }
+
+    @RequestMapping(value = "getQuery")
+    public BackendQuery getQuery(BackendQuery backendQuery){
+        return backendQuery;
+    }
+
+    @RequestMapping(value = "getForm")
+    public BackendForm getQuery(BackendForm backendForm){
+        return backendForm;
+    }
 }

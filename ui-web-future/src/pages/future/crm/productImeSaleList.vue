@@ -29,7 +29,7 @@
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.ime" auto-complete="off"  :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
+                <el-input v-model="formData.ime" auto-complete="off"  :placeholder="$t('productImeSaleList.inputImeTail')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -99,7 +99,9 @@
         axios.get('/api/ws/future/crm/productImeSale?'+qs.stringify(this.submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        }).catch(()=>{
+          this.pageLoading = false;
+        });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -134,7 +136,7 @@
       }
     },created () {
 
-      const that = this;
+      let that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productImeSale/getQuery').then((response) =>{
         that.formData=response.data;

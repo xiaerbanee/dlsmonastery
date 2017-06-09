@@ -5,23 +5,23 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:menu:edit'">{{$t('menuList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:menu:view'">{{$t('menuList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.menuCategoryId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuList.menuCategoryId')" :label-width="formLabelWidth">
                 <el-select v-model="formData.menuCategoryId" filterable clearable>
-                  <el-option v-for="item in formData.menuCategoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.extra.menuCategoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuList.category')" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formData.categoryList"  :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.extra.categoryList"  :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('menuList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -30,7 +30,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('menuList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('menuList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('menuList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="name" :label="$t('menuList.name')" ></el-table-column>
@@ -71,28 +71,26 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          menuCategoryId:'',
-          category:"",
-          name:''
-        },formLabel:{
-          menuCategoryId:{label:this.$t('menuList.menuCategoryId')},
-          category:{label:this.$t('menuList.category')},
-          name:{label:this.$t('menuList.name')}
+        searchText:"",
+        formData:{
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("menuList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/menu?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("menuList",submitData);
+        axios.get('/api/basic/sys/menu?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
