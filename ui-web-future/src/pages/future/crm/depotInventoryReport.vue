@@ -13,7 +13,6 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
-        <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
@@ -42,7 +41,6 @@
               </el-form-item>
             </el-col>
               <el-col :span="12">
-
               <el-form-item label="日期" :label-width="formLabelWidth">
                 <date-picker v-model="formData.date"></date-picker>
               </el-form-item>
@@ -61,7 +59,7 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
+      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange"  stripe border>
         <el-table-column fixed prop="depotName" label="门店" sortable width="300"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
@@ -117,14 +115,6 @@
         this.pageRequest();
       },search() {
         this.formVisible = false;
-        this.pageRequest();
-      },nextLevel(	row, event, column){
-        this.officeIds.push(row.officeId);
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
-        this.pageRequest();
-      },preLevel(){
-        this.officeIds.pop();
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },saleReportGrid(){
 

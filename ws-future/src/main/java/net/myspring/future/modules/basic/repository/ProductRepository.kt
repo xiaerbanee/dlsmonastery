@@ -65,6 +65,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
             t.enabled = 1
         AND
             t.name LIKE concat( '%', ?1,'%')
+        AND t.hasIme=1
     """)
     fun findByNameLike(name: String): MutableList<Product>
 
@@ -77,6 +78,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
             t.enabled = 1
         AND
             t.code LIKE concat( '%', ?1,'%')
+        AND t.hasIme=1
     """)
     fun findByCodeLike(code: String): MutableList<Product>
 

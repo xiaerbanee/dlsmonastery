@@ -45,13 +45,11 @@
               </el-form-item>
               <el-form-item label="打分型号" :label-width="formLabelWidth">
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
-                  <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value " :value="key"></el-option>
+                  <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str " :value="key"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <el-select v-model="formData.productIds" clearable filterable placeholder="请选择">
-                  <el-option v-for="item in formData.extra.productIdsList" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
+                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -69,7 +67,12 @@
   </div>
 </template>
 <script>
+  import productSelect from 'components/future/product-select'
+
   export default {
+    components:{
+      productSelect
+    },
     data() {
       return {
         page:[],
@@ -122,6 +125,7 @@
     },created () {
       axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
+        console.log(this.formData.scoreType)
       util.copyValue(this.$route.query, this.formData);
       this.pageRequest();
     })
