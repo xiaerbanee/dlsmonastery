@@ -52,14 +52,6 @@
           fileList:[],
           processTypeList:[],
           inputForm:{},
-          submitData:{
-            id:'',
-            processTypeName:'',
-            title:'',
-            content:'',
-            remarks:'',
-            attachment:''
-          },
           rules: {
             processTypeName: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
             title: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
@@ -76,8 +68,7 @@
           console.log( this.fileList)
           if (valid) {
             this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -104,6 +95,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !!this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })

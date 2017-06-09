@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-tab active="productImeChange"></head-tab>
-    <search-dialog :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" zindex="1500">
+    <search-dialog :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" zIndex="1500">
       <el-form >
         <el-row :gutter="4">
           <el-col :span="12">
@@ -91,12 +91,8 @@
         };
       },
       search() {
-        this.searchFormVisible = false;
-
-        console.log("123231")
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes?'+qs.stringify(this.imeStr)).then((response) => {
-          let ht = this.$refs.handsontable.handsontable('getInstance');
-          ht.loadData(response.data);
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
+          this.table.loadData(response.data);
         })
       },
       formSubmit(){
@@ -129,8 +125,6 @@
 
           }
         })
-      },search(){
-
       }
     },
     activated() {
