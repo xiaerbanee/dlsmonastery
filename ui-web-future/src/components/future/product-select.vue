@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:null,
+        innerId:this.value,
         itemList : [],
         remoteLoading:false,
       };
@@ -53,7 +53,7 @@
         if(this.multiple && this.innerId){
           idStr=this.innerId.join();
         }
-        if(util.isBlank(idStr) || this.itemList.length>0) {
+        if(util.isBlank(idStr)) {
           return;
         }
         this.remoteLoading = true;

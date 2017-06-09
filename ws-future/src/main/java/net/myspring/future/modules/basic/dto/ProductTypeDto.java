@@ -1,7 +1,9 @@
 package net.myspring.future.modules.basic.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.ProductType;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -119,5 +121,9 @@ public class ProductTypeDto extends DataDto<ProductType> {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<String> getProductIdList() {
+        return StringUtils.getSplitList(productIds, CharConstant.COMMA);
     }
 }
