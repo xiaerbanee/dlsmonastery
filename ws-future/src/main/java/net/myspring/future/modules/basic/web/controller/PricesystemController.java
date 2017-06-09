@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "basic/pricesystem")
 public class PricesystemController {
@@ -52,5 +54,10 @@ public class PricesystemController {
     @RequestMapping(value = "getQuery")
     public PricesystemQuery getQuery(PricesystemQuery pricesystemQuery){
         return pricesystemQuery;
+    }
+
+    @RequestMapping(value = "filter")
+    public List<PricesystemDto> findFilter(){
+        return pricesystemService.findAllEnabled();
     }
 }

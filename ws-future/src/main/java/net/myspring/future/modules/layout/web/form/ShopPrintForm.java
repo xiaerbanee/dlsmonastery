@@ -21,24 +21,6 @@ public class ShopPrintForm extends BaseForm<ShopPrint> {
     private String createdBy;
 
     private LocalDateTime createdDate;
-    private Boolean pass;
-    private String passRemarks;
-
-    public Boolean getPass() {
-        return pass;
-    }
-
-    public void setPass(Boolean pass) {
-        this.pass = pass;
-    }
-
-    public String getPassRemarks() {
-        return passRemarks;
-    }
-
-    public void setPassRemarks(String passRemarks) {
-        this.passRemarks = passRemarks;
-    }
 
     public String getCreatedBy() {
         return createdBy;

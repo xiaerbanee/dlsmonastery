@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -68,6 +69,11 @@ public class LocalDateUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return localDate.format(formatter);
     }
+
+    public static LocalDate getFirstDayOfThisMonth(LocalDate localDate){
+        return localDate.withDayOfMonth(1);
+    }
+
 
 
 }

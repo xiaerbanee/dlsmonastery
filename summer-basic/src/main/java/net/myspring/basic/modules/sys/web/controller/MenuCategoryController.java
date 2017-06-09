@@ -59,4 +59,8 @@ public class MenuCategoryController {
         return menuCategoryForm;
     }
 
+    @RequestMapping(value = "getQuery")
+    public MenuCategoryQuery getQuery(MenuCategoryQuery menuCategoryQuery){
+        return menuCategoryQuery;
+    }
 }

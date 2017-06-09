@@ -1,5 +1,7 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
@@ -11,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -43,10 +44,9 @@ public class AdPricesystemChangeController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public String save(String data){
-
-
-        return null;
+    public RestResponse save(AdPricesystemChangeForm adPricesystemChangeForm){
+        adPricesystemChangeService.save(adPricesystemChangeForm.getData());
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
     @RequestMapping(value = "getQuery")
     public AdPricesystemChangeQuery getQuery(AdPricesystemChangeQuery adPricesystemChangeQuery){

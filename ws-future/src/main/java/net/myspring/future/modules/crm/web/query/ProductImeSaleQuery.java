@@ -57,6 +57,10 @@ public class ProductImeSaleQuery extends BaseQuery{
         this.ime = ime;
     }
 
+    public String getImeReverse(){
+        return StringUtils.reverse(ime);
+    }
+
     public LocalDate getCreatedDateStart() {
         if(StringUtils.isNotBlank(createdDateRange)) {
             return LocalDateUtils.parse(createdDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);

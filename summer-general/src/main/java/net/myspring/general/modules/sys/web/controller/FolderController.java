@@ -48,7 +48,7 @@ public class FolderController {
 
     @RequestMapping(value = "getForm")
     public FolderForm getForm(FolderForm folderForm){
-        folderForm.setFolderList(folderService.findAll(RequestUtils.getAccountId()));
+        folderForm.getExtra().put("folderList",folderService.findAll(RequestUtils.getAccountId()));
         return folderForm;
     }
 

@@ -33,13 +33,8 @@
             isInit:false,
             submitDisabled:false,
             isCreate:true,
-            inputForm:{},
-            submitData:{
-              id:'',
-              name:'',
-              code:'',
-              value:'',
-              remarks:''
+            inputForm:{
+                extra:{}
             },
             rules: {
               value: [{ required: true, message: this.$t('companyConfigForm.prerequisiteMessage')}]
@@ -52,11 +47,10 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/companyConfig/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/basic/sys/companyConfig/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
                   this.$router.push({name:'companyConfigList',query:util.getQuery("companyConfigList")})
                 }
               }).catch(function () {
@@ -70,9 +64,12 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data,this.getData());
-          this.isCreate=this.$route.query.id==null
-          axios.get('/api/basic/sys/companyConfig/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.isCreate=this.$route.query.id==null;
+          axios.get('/api/basic/sys/companyConfig/getForm').then((response)=> {
             this.inputForm = response.data;
+            axios.get('/api/basic/sys/companyConfig/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data,this.inputForm);
+            })
           })
         }
         this.isInit = true;

@@ -96,8 +96,11 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      util.copyValue(that.$route.query,that.formData);
-      that.pageRequest();
+      axios.get('/api/basic/sys/backend/getQuery').then((response) =>{
+          that.formData=response.data;
+          util.copyValue(that.$route.query,that.formData);
+          that.pageRequest();
+      });
     }
   };
 </script>

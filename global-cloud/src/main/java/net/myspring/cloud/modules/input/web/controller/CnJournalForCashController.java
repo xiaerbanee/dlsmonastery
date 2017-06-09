@@ -30,7 +30,6 @@ public class CnJournalForCashController {
 
     @RequestMapping(value = "form")
     public CnJournalForCashForm form (CnJournalForCashForm cnJournalForCashForm) {
-        String accountId = RequestUtils.getAccountId();
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         cnJournalForCashForm = cnJournalForCashService.getForm(cnJournalForCashForm,kingdeeBook);
         return cnJournalForCashForm;

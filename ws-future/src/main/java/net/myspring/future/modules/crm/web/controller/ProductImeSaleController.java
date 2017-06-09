@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
@@ -29,6 +30,11 @@ public class ProductImeSaleController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductImeSaleDto> list(Pageable pageable, ProductImeSaleQuery productImeSaleQuery){
+
+        if(StringUtils.isNotBlank(productImeSaleQuery.getIme())&&productImeSaleQuery.getIme().length()<6){
+            throw new ServiceException("请输入至少六位串码尾数");
+        }
+
         return productImeSaleService.findPage(pageable, productImeSaleQuery);
     }
 
@@ -70,12 +76,12 @@ public class ProductImeSaleController {
 
         List<String> imeList = productImeSaleForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+           throw new ServiceException("没有输入任何有效的串码");
         }
 
         String errMsg = productImeSaleService.checkForSale(imeList);
         if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException(errMsg);
         }
 
         productImeSaleService.sale(productImeSaleForm);
@@ -87,12 +93,12 @@ public class ProductImeSaleController {
     public RestResponse saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
         String errMsg = productImeSaleService.checkForSaleBack(imeList);
         if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException(errMsg);
         }
 
         productImeSaleService.saleBack(productImeSaleBackForm);
@@ -100,9 +106,11 @@ public class ProductImeSaleController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-
     @RequestMapping(value="export")
     public String export(ProductImeSaleQuery productImeSaleQuery) {
+        if(StringUtils.isNotBlank(productImeSaleQuery.getIme())&&productImeSaleQuery.getIme().length()<6){
+            throw new ServiceException("请输入至少六位串码尾数");
+        }
 
         return productImeSaleService.export(productImeSaleQuery);
     }

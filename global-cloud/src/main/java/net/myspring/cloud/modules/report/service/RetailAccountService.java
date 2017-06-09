@@ -48,7 +48,7 @@ public class RetailAccountService {
     public BdDepartment getAddDepartment() {
         BdDepartment department = new BdDepartment();
         department.setFNumber(DOUBLE_ZERO);
-        department.setFName(TOTAL_DEPARTMENT);
+        department.setFFullName(TOTAL_DEPARTMENT);
         return department;
     }
 
@@ -99,7 +99,7 @@ public class RetailAccountService {
                 while (tempStart.isBefore(end) || tempStart.equals(end)) {
                     int year = tempStart.getYear();
                     int month = tempStart.getMonthValue();
-                    String key = showEnum.getValue().getParent() + CharConstant.UNDER_LINE +showEnum.getValue().getChild()+CharConstant.UNDER_LINE + department.getFName() + CharConstant.UNDER_LINE + year + CharConstant.UNDER_LINE + month;
+                    String key = showEnum.getValue().getParent() + CharConstant.UNDER_LINE +showEnum.getValue().getChild()+CharConstant.UNDER_LINE + department.getFFullName() + CharConstant.UNDER_LINE + year + CharConstant.UNDER_LINE + month;
                     if (retailReportItemMap.containsKey(key)) {
                         item.add(retailReportItemMap.get(key).getAmount());
                         item.add(retailReportItemMap.get(key).getPercent());
@@ -110,7 +110,7 @@ public class RetailAccountService {
                     tempStart = tempStart.plusMonths(1);
                 }
                 //累计
-                String key2 = showEnum.getValue().getParent() + CharConstant.UNDER_LINE + showEnum.getValue().getChild() + CharConstant.UNDER_LINE + department.getFName();
+                String key2 = showEnum.getValue().getParent() + CharConstant.UNDER_LINE + showEnum.getValue().getChild() + CharConstant.UNDER_LINE + department.getFFullName();
                 if (sumRetailReportItemMap.containsKey(key2))  {
                     item.add(sumRetailReportItemMap.get(key2).getAmount());
                     item.add(sumRetailReportItemMap.get(key2).getPercent());

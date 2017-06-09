@@ -41,7 +41,7 @@ class DemoPhoneTypeOfficeRepositoryImpl @Autowired constructor(val namedParamete
         AND t1.demo_phone_type_id = t2.demo_phone_type_id
         """)
         if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.officeId)) {
-            sb.append("""  and t1.office_id =:officeId """)
+            sb.append("""  where t1.office_id =:officeId """)
         }
         sb.append(""" GROUP BY t1.id """)
 

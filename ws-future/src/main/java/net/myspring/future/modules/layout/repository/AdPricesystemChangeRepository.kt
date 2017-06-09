@@ -33,12 +33,13 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParamete
             SELECT
                 t1.*
             FROM
-                crm_ad_pricesystem_change t1
+                crm_ad_pricesystem_change t1,crm_product product
             WHERE
                 t1.enabled = 1
+                and t1.product_id = product.id
         """)
-        if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productId)) {
-            sb.append("""  and t1.product_id = :productId """)
+        if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productName)) {
+            sb.append("""  and product.name like CONCAT('%', :productName,'%')  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

@@ -17,6 +17,10 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String ime2;
     private String meid;
     private LocalDateTime retailDate;
+    private String companyId;
+    @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
+    private String companyName;
+
 
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "netType")
     private String productNetType;
@@ -61,6 +65,7 @@ public class ProductImeDto extends DataDto<ProductIme> {
     @CacheInput(inputKey = "depots",inputInstance = "productImeUploadShopId",outputInstance = "name")
     private String productImeUploadShopName;
     private String productImeUploadCreatedBy;
+    private String productImeUploadMonth;
     private String productImeUploadStatus;
     @CacheInput(inputKey = "accounts",inputInstance = "productImeUploadCreatedBy",outputInstance = "loginName")
     private String productImeUploadCreatedByName;
@@ -69,6 +74,30 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadEmployeeName;
     private LocalDateTime productImeUploadCreatedDate;
     private String productImeUploadId;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getProductImeUploadMonth() {
+        return productImeUploadMonth;
+    }
+
+    public void setProductImeUploadMonth(String productImeUploadMonth) {
+        this.productImeUploadMonth = productImeUploadMonth;
+    }
 
     public Boolean getProductTypeScoreType() {
         return productTypeScoreType;

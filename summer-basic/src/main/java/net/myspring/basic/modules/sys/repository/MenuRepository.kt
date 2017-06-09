@@ -102,11 +102,6 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
                     AND t1.name LIKE CONCAT('%',:name,'%')
                 """);
         }
-        if(menuQuery.sort!=null){
-            sql.append("""
-                    AND t1.sort =:sort
-                """);
-        }
         if(menuQuery.category!=null){
             sql.append("""
                     AND t1.category =:category

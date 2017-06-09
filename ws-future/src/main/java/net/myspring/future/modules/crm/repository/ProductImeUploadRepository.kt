@@ -52,6 +52,9 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         val sb = StringBuilder("""
         SELECT
             ime.ime productImeIme,
+            ime.product_id productImeProductId,
+            depot.office_id shopOfficeId,
+            depot.area_id shopAreaId,
             t1.*
         FROM
             crm_product_ime_upload t1,

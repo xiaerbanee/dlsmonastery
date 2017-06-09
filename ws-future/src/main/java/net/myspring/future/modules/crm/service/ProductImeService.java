@@ -34,6 +34,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -93,7 +94,9 @@ public class ProductImeService {
     }
 
     public ProductImeDto getProductImeDetail(String id) {
-        return productImeRepository.findProductImeDto(id);
+        ProductImeDto result = productImeRepository.findProductImeDto(id);
+        cacheUtils.initCacheInput(result);
+        return result;
     }
 
     public List<ProductImeHistoryDto> getProductImeHistoryList(String productImeId) {
@@ -114,47 +117,52 @@ public class ProductImeService {
         return productImeDtoList;
     }
 
-    public String export(ProductImeQuery productImeQuery) {
+    public String export( List<ProductImeDto> productImeDtoList) {
 
-            Workbook workbook = new SXSSFWorkbook(10000);
-            List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "boxIme", "箱号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime2", "串码2"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "meid", "MEID"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "货品型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "统计型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "inputType", "入库类型"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "billId", "工厂订单编号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdTime", "工厂发货时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "boxIme", "箱号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime2", "串码2"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "meid", "MEID"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "货品型号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "统计型号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "inputType", "入库类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "billId", "工厂订单编号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdTime", "工厂发货时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
 
 //            TODO 在companyConfig上增加配置
 //        if(Const.HAS_PROVINCE){
 //            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotRegionName", "大区"));
 //            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotProvinceName", "省份"));
 //        }
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaName", "办事处"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotOfficeName", "考核区域"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaType", "区域属性"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "所在仓库"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "保卡注册日期"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeSaleCreatedDate", "串码核销日期"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeSaleEmployeeName", "核销人"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeUploadCreatedDate", "保卡上报日期"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeUploadEmployeeName", "保卡上报人"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedBy", "更新人"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaName", "办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotOfficeName", "考核区域"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaType", "区域属性"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "所在仓库"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "保卡注册日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeSaleCreatedDate", "串码核销日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeSaleEmployeeName", "核销人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeUploadMonth", "保卡上报月份"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeUploadCreatedDate", "保卡上报日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productImeUploadEmployeeName", "保卡上报人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedBy", "更新人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
-            List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000) , productImeQuery).getContent();
-            cacheUtils.initCacheInput(productImeDtoList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
+    }
 
-            SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
-            SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-            ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-            GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-            return StringUtils.toString(gridFSFile.getId());
-        }
+    public String export(ProductImeQuery productImeQuery) {
+        List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000) , productImeQuery).getContent();
+        cacheUtils.initCacheInput(productImeDtoList);
+        return export(productImeDtoList);
+    }
 
 
     public List<ProductIme> findByImeLike(String imeReverse,String shopId){
@@ -249,7 +257,7 @@ public class ProductImeService {
         for (ProductImeCreateForm productImeCreateForm : productImeBatchCreateForm.getProductImeCreateFormList()) {
             ProductIme productIme = new ProductIme();
 
-            productIme.setProductId(productRepository.findByCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName()).getId());
+            productIme.setProductId(productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName()).getId());
             Depot depot = depotRepository.findByCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getStoreName());
             productIme.setDepotId(depot.getId());
             productIme.setRetailShopId(depot.getId());
@@ -277,9 +285,16 @@ public class ProductImeService {
 
             ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(productImeChangeForm.getIme());
 
-            Product product = productRepository.findByCompanyIdAndName(RequestUtils.getCompanyId(), productImeChangeForm.getProductName());
+            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeChangeForm.getProductName());
             productIme.setProductId(product.getId());
             productImeRepository.save(productIme);
         }
     }
+
+    public List<ProductImeDto> batchQuery(List<String> allImeList) {
+        List<ProductImeDto> result = productImeRepository.batchQuery(allImeList, RequestUtils.getCompanyId());
+        cacheUtils.initCacheInput(result);
+        return result;
+    }
+
 }

@@ -23,49 +23,53 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
     fun findAll(): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            and t1.FFORBIDSTATUS = 'A'
-            and t1.FDOCUMENTSTATUS = 'C'
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            and t1.FFORBIDSTATUS = 'A'
-            and t1.FDOCUMENTSTATUS = 'C'
-            and t2.FNAME in (:nameLists)
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t2.FNAME in (:nameLists)
         """, Collections.singletonMap("nameLists",nameList), BeanPropertyRowMapper(BdCustomer::class.java))
 
     }
@@ -73,117 +77,125 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
     fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            and t1.FFORBIDSTATUS = 'A'
-            and t1.FDOCUMENTSTATUS = 'C'
-            and t1.FCUSTID in (:idList)
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FCUSTID in (:idList)
         """, Collections.singletonMap("idList",idList),  BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findById(id: String): BdCustomer {
         return namedParameterJdbcTemplate.queryForObject("""
             SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            and t1.FFORBIDSTATUS = 'A'
-            and t1.FDOCUMENTSTATUS = 'C'
-            and t1.FCUSTID = :id
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FCUSTID = :id
         """,Collections.singletonMap("id",id),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findByNameLike(name: String): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
              FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             where
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            AND t2.FNAME like concat('%',:name,'%')
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                AND t2.FNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findPrimaryGroupAndPrimaryGroupName(): MutableList<NameValueDto> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-            t1.FPRIMARYGROUP as value,
-            t4.FNAME AS name
+                t1.FPRIMARYGROUP as value,
+                t4.FNAME AS name
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
             group by
-            t1.FPRIMARYGROUP,
-            t4.FNAME
+                t1.FPRIMARYGROUP,
+                t4.FNAME
         """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
-    fun findPage(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
+    fun findPageIncloudForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
         var sb = StringBuilder("""
              SELECT
-            t1.FCUSTID,
-            t1.FNUMBER,
-            t1.FSALDEPTID,
-            t2.FNAME,
-            t1.FPRIMARYGROUP,
-            t4.FNAME AS fprimaryGroupName,
-            t1.FMODIFYDATE
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
             FROM
-            T_BD_CUSTOMER t1,
-            T_BD_CUSTOMER_L t2,
-            T_BD_CUSTOMERGROUP t3,
-            T_BD_CUSTOMERGROUP_L t4
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
             WHERE
-            t1.FCUSTID = t2.FCUSTID
-            AND t1.FPRIMARYGROUP = t3.FID
-            AND t3.FID = t4.FID
-            and t1.FFORBIDSTATUS = 'A'
-            and t1.FDOCUMENTSTATUS = 'C'
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
         """);
         if(bdCustomerQuery.customerIdList.size > 0){
            sb.append(" and t1.FCUSTID in (:customerIdList) ")

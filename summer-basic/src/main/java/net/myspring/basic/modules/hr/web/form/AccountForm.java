@@ -35,8 +35,6 @@ public class AccountForm extends BaseForm<Account> {
     private String outPassword;
     private String remarks;
     private String positionId;
-    private List<PositionDto> positionDtoList= Lists.newArrayList();
-    private Map<String,String> boolMap= Maps.newHashMap();
     private List<String> permissionIdList=Lists.newArrayList();
 
     public List<String> getPermissionIdList() {
@@ -177,19 +175,4 @@ public class AccountForm extends BaseForm<Account> {
         this.positionId = positionId;
     }
 
-    public List<PositionDto> getPositionDtoList() {
-        return positionDtoList;
-    }
-
-    public void setPositionDtoList(List<PositionDto> positionDtoList) {
-        this.positionDtoList = positionDtoList;
-    }
-
-    public Map<String, String> getBoolMap() {
-        return boolMap;
-    }
-
-    public void setBoolMap(Map<String, String> boolMap) {
-        this.boolMap = boolMap;
-    }
 }

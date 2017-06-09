@@ -9,7 +9,7 @@
     <el-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData">
         <el-form-item :label="formLabel.productName.label">
-          <product-select v-model="formData.productId"></product-select>
+          <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -29,51 +29,50 @@
       return this.getData();
 
     },
-    mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
-    },
-    methods:{
+    methods: {
       getData(){
-        return{
-          isInit:false,
-          formData:{},
-          submitData:{
-            productId:'',
+        return {
+          isInit: false,
+          formData: {},
+          submitData: {
+            productName: '',
           },
-          formLabel:{
-            productName:{label:this.$t('adPricesystemChangeForm.productName')},
-            productCode:{label:this.$t('adPricesystemChangeForm.productCode')}
+          formLabel: {
+            productName: {label: this.$t('adPricesystemChangeForm.productName')},
+            productCode: {label: this.$t('adPricesystemChangeForm.productCode')}
           },
-          inputForm:{
-            data:''
+          inputForm: {
+            data: []
           },
-          rules:{},
-          productTypes:[],
-          adPricesystem:{},
+          rules: {},
+          productTypes: [],
+          adPricesystem: {},
           formVisible: false,
-          submitDisabled:false,
-          table:null,
+          submitDisabled: false,
+          table: null,
           settings: {
-            colHeaders: [this.$t('adPricesystemChangeForm.id'),this.$t('adPricesystemChangeForm.productCode'),this.$t('adPricesystemChangeForm.productName'),this.$t('adPricesystemChangeForm.volume'),this.$t('adPricesystemChangeForm.shouldGet')],
-            rowHeaders:true,
-            autoColumnSize:true,
-            allowInsertRow:false,
-            maxRows:10000,
+            colHeaders: [this.$t('adPricesystemChangeForm.id'), this.$t('adPricesystemChangeForm.productCode'), this.$t('adPricesystemChangeForm.productName'), this.$t('adPricesystemChangeForm.volume'), this.$t('adPricesystemChangeForm.shouldGet')],
+            rowHeaders: true,
+            autoColumnSize: true,
+            allowInsertRow: false,
+            maxRows: 10000,
             columns: [{
               readOnly: true,
-              width:100
-            },{
+              width: 100
+            }, {
               readOnly: true,
-              width:150
-            },{
+              width: 150
+            }, {
               readOnly: true,
-              width:300
-            },{
-              type:"numeric",
-              width:150
-            },{
-              type:"numeric",
-              width:150
+              width: 300
+            }, {
+              readOnly: true,
+              type: "numeric",
+              width: 150
+            }, {
+              readOnly: true,
+              type: "numeric",
+              width: 150
             }]
           },
         }
@@ -82,33 +81,35 @@
         var that = this;
         this.submitDisabled = true;
         this.inputForm.data = new Array();
-        let list = this.table.getTableData();
-        for(var item in list){
-          if(!this.table.isEmptyRow(item)){
+        let list = this.table.getData();
+        for (var item in list) {
+          if (!this.table.isEmptyRow(item)) {
             this.inputForm.data.push(list[item]);
-           }
+          }
         }
-       this.inputForm.data = JSON.stringify(this.inputForm.data);
-       axios.post('/api/ws/future/layout/adPricesystemChange/save',qs.stringify({data:this.inputForm.data},{allowDots:true})).then((response)=> {
+        this.inputForm.data = JSON.stringify(this.inputForm.data);
+        axios.post('/api/ws/future/layout/adPricesystemChange/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
-         Object.assign(this.$data, this.getData());
+          if(response.data.success){
+            Object.assign(this.$data, this.getData());
+          }
         }).catch(function () {
-         that.submitDisabled = false;
-       });
-      },search() {
+          that.submitDisabled = false;
+        });
+      }, search() {
         this.formVisible = false;
         this.getTableData();
-      },getTableData(){
-          util.copyValue(this.formData,this.submitData);
-          axios.get('/api/ws/future/layout/adPricesystemChange/findFilter',{params:this.submitData}).then((response)=>{
-            this.settings.data = response.data;
-            this.table.loadData(this.settings.data);
-          });
-      },initPage(){
-
+      }, getTableData(){
+        util.copyValue(this.formData, this.submitData);
+        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter', {params: this.submitData}).then((response) => {
+          this.settings.data = response.data;
+          this.table.loadData(this.settings.data);
+        });
+      }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
+        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
         axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
@@ -128,7 +129,6 @@
         this.isInit = true;
 
       }
-    }
   }
 </script>
 

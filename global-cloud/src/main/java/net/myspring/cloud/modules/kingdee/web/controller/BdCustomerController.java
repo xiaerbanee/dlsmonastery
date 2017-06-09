@@ -24,7 +24,7 @@ public class BdCustomerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<BdCustomer> list(Pageable pageable, BdCustomerQuery bdCustomerQuery){
-        Page<BdCustomer> page = bdCustomerService.findPage(pageable,bdCustomerQuery);
+        Page<BdCustomer> page = bdCustomerService.findPageIncloudForbid(pageable,bdCustomerQuery);
         return page;
     }
 
