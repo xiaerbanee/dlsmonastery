@@ -2,13 +2,14 @@ package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class DepotReportQuery {
+public class DepotReportQuery extends BaseQuery{
     private boolean detail;
     private String type;
     //电子保卡，核销
@@ -86,6 +87,9 @@ public class DepotReportQuery {
     }
 
     public LocalDate getDate() {
+        if(date==null){
+            this.date=LocalDate.now();
+        }
         return date;
     }
 
