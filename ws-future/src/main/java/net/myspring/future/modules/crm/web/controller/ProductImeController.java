@@ -1,19 +1,30 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.service.ProductService;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
+import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
+import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +44,10 @@ public class ProductImeController {
 
     @Autowired
     private ProductImeService productImeService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private DepotService depotService;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -112,7 +127,51 @@ public class ProductImeController {
         productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
         productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
         productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
+        productImeSaleReportQuery.setBoolMap(BoolEnum.getMap());
+        productImeSaleReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
+        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
+            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
+        }else{
+            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
+
+        }
         return productImeSaleReportQuery;
+    }
+
+    @RequestMapping(value = "getBatchCreateForm")
+    public ProductImeBatchCreateForm getBatchCreateForm(ProductImeBatchCreateForm productImeBatchCreateForm){
+
+        productImeBatchCreateForm.getExtra().put("productNames" , productService.findNameList(RequestUtils.getCompanyId()));
+        productImeBatchCreateForm.getExtra().put("storeNames" , CollectionUtil.extractToList(depotService.findStoreList(new DepotQuery()),"name"));
+        return productImeBatchCreateForm;
+
+    }
+
+    @RequestMapping(value = "batchCreate")
+    public RestResponse batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm){
+
+        productImeService.batchCreate(productImeBatchCreateForm);
+
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getBatchChangeForm")
+    public ProductImeBatchChangeForm getBatchChangeForm(ProductImeBatchChangeForm  productImeBatchChangeForm){
+
+        productImeBatchChangeForm.getExtra().put("productNames" , productService.findNameList(RequestUtils.getCompanyId()));
+        return productImeBatchChangeForm;
+
+    }
+
+    @RequestMapping(value = "batchChange")
+    public RestResponse batchChange(ProductImeBatchChangeForm  productImeBatchChangeForm){
+
+        productImeService.batchChange(productImeBatchChangeForm);
+
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+
+
     }
 
 }

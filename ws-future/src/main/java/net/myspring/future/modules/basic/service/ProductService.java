@@ -207,4 +207,8 @@ public class ProductService {
     public List<ProductDto> findIntersectionOfBothPricesystem(String pricesystemId1, String pricesystemId2) {
         return  productRepository.findIntersectionOfBothPricesystem(pricesystemId1, pricesystemId2);
     }
+
+    public List<String> findNameList(String companyId) {
+        return CollectionUtil.extractToList(productRepository.findByEnabledIsTrueAndCompanyId(companyId), "name");
+    }
 }

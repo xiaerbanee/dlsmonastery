@@ -35,6 +35,9 @@
         axios.get('/api/ws/future/crm/demoPhoneType/searchById?id=' + this.innerId).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+          });
         })
       }
     },created () {
