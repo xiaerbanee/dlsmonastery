@@ -50,7 +50,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/sys/dictEnum/save', util.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/sys/dictEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(!this.inputForm.create){

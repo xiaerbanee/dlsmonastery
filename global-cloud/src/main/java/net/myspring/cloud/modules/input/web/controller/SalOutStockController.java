@@ -17,7 +17,7 @@ import java.util.List;
 
 
 /**
- * 出库单
+ * 销售出库单
  * Created by lihx on 2017/4/25.
  */
 @RestController

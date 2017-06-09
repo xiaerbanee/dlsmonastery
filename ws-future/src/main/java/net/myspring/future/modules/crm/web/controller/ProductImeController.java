@@ -127,6 +127,7 @@ public class ProductImeController {
         productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
         productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
         productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
+        productImeSaleReportQuery.setBoolMap(BoolEnum.getMap());
         return productImeSaleReportQuery;
     }
 
