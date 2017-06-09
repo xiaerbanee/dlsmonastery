@@ -25,6 +25,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -145,7 +146,7 @@ public class CnJournalForBankService {
     public CnJournalForBankForm getForm(CnJournalForBankForm cnJournalForBankForm,KingdeeBook kingdeeBook){
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
-        map.put("settleTypeNameList",bdSettleTypeRepository.findAll().stream().map(BdSettleType::getFName).collect(Collectors.toList()));
+        map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));
         map.put("bankAcntNameList",cnBankAcntRepository.findAll().stream().map(CnBankAcnt::getFName).collect(Collectors.toList()));
         map.put("empInfoNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
         map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
@@ -158,6 +159,7 @@ public class CnJournalForBankService {
             map.put("customerForFlag",false);
         }
         map.put("accountForBankList",bdAccountRepository.findByIsBank(true));
+        map.put("otherTypeNameMap",basAssistantRepository.findByType("其他类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
         cnJournalForBankForm.setExtra(map);
         return cnJournalForBankForm;
     }

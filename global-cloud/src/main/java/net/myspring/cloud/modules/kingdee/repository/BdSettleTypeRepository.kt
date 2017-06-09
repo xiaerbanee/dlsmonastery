@@ -49,4 +49,23 @@ class BdSettleTypeRepository @Autowired constructor(val namedParameterJdbcTempla
                 AND t1.FFORBIDSTATUS = 'A'
         """, BeanPropertyRowMapper(BdSettleType::class.java))
     }
+
+    fun findAllForDefault():MutableList<BdSettleType>{
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            from
+                T_BD_SETTLETYPE t1,
+                T_BD_SETTLETYPE_L t2
+            where
+                t1.FID=t2.FID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                and t1.FID in (1,4)
+        """, BeanPropertyRowMapper(BdSettleType::class.java))
+    }
 }

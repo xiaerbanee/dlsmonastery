@@ -41,6 +41,7 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
+          otherTypeNameMap:{},
           colHeaders: ["对方科目编码", "结算方式","借方金额", "贷方金额","银行账户", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
           columns: [
             {type: "autocomplete", strict: true, allowEmpty: false, accountNumberFor:[],source: this.accountNumberFor},
@@ -81,7 +82,8 @@
           accountNumber:'',
           json:[],
         },rules: {
-          billDate: [{ required: true, message: '请选择时间'}],
+          billDate: [{ required: true, message: '必填项'}],
+          accountNumber: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',
@@ -105,6 +107,7 @@
           this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});
           this.settings.columns[11].source = extra.customerNameForList;
         }
+        this.settings.otherTypeNameMap = extra.otherTypeNameMap;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
         this.accountForBankList = extra.accountForBankList;
       });
