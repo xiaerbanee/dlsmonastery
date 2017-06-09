@@ -19,7 +19,7 @@
             </el-form-item>
             <el-form-item :label="$t('accountForm.position')" prop="positionId">
               <el-select v-model="inputForm.positionId"  filterable :placeholder="$t('accountForm.selectGroup')" :clearable=true>
-                <el-option v-for="position in inputProperty.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -75,19 +75,8 @@
           isCreate:this.$route.query.id==null,
           multiple:true,
           submitDisabled:false,
-          inputProperty:{},
-          inputForm:{},
-          submitData:{
-            id:'',
-            employeeId:'',
-            loginName:'',
-            officeId:"",
-            leaderId:'',
-            positionId:"",
-            outId:'',
-            outPassword:'',
-            remarks:'',
-            type:"",
+          inputForm:{
+            extra:{}
           },
           radio:'1',
           remoteLoading:false,
@@ -106,8 +95,8 @@
         console.log("form"+form);
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/basic/hr/account/save',qs.stringify(this.submitData)).then((response)=> {
+            var submitData = util.deleteExtra(this.inputForm);
+            axios.post('/api/basic/hr/account/save',qs.stringify(submitData)).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(!this.isCreate){
@@ -122,14 +111,15 @@
         })
       }
     },activated () {
-      /*alert("$route.query.headClick :"+this.$route.query.headClick);*/
+
       if(!this.$route.query.headClick || !this.isInit) {
-        axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        })
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/account/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputProperty=response.data;
-        })
+          this.inputForm=response.data;
+          axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          })
+        });
       }
       this.isInit = true;
     }

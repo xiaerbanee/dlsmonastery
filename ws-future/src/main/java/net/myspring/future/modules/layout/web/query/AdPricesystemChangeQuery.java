@@ -6,13 +6,13 @@ import net.myspring.future.common.query.BaseQuery;
  * Created by zhangyf on 2017/5/11.
  */
 public class AdPricesystemChangeQuery extends BaseQuery{
-    private String productId;
+    private String productName;
 
-    public String getProductId() {
-        return productId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }
