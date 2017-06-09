@@ -42,6 +42,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
+    fun findByCompanyIdAndName(companyId: String, name: String): Depot
+
     @Query("""
         select t
         from #{#entityName} t

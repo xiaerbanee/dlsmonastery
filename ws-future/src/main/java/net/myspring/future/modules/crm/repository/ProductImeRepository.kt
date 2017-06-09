@@ -28,6 +28,7 @@ import java.util.*
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
     fun findByIme(ime: String): ProductIme
+    fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
     @Query("""
     SELECT

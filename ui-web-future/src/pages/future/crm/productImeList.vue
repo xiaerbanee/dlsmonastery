@@ -3,8 +3,10 @@
     <head-tab active="productImeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filterOrExport')}}</el-button>
-
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productIme:edit'">{{$t('productImeList.add')}}</el-button>
+        <el-button type="primary" @click="itemChange"   v-permit="'crm:productIme:adjust'">{{$t('productImeList.adjust')}}</el-button>
+        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form">
@@ -57,7 +59,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
+
           <el-button type="primary" @click="search()">{{$t('productImeList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -180,7 +182,10 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-
+      },itemChange(){
+        this.$router.push({ name: 'productImeChange'});
+      },itemAdd(){
+        this.$router.push({ name: 'productImeCreate'});
       },itemAction:function(id,action){
         if(action==="detail") {
           this.$router.push({ name: 'productImeDetail', query: { id: id }})

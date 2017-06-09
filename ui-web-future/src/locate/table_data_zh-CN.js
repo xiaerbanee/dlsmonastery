@@ -234,6 +234,8 @@ export default {
       productAdEdit: "物料编辑",
       productForm: "货品管理编辑",
       productImeList: "串码列表",
+      productImeCreate: "串码添加",
+      productImeChange: "串码调整",
       productImeDetail: "串码详情",
       productImeSaleForm: "串码核销编辑",
       productImeSaleBackForm: "串码核销退回编辑",
