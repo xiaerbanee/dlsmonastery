@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -125,7 +126,7 @@ public class PriceChangeImeService {
 
         List<String> existShops = CollectionUtil.extractToList(depotRepository.findByNameList(shopNameList),"name");
         List<String> existImes = CollectionUtil.extractToList(productImeRepository.findByImeList(imeList),"ime");
-        if(existImes.size()!=imeList.size() || existShops.size()!=shopNameList.size()){
+        if(existImes.size()!=imeList.size()){
             String notExist = "";
             for(String ime:imeList){
                 if(!existImes.contains(ime)){
@@ -144,12 +145,12 @@ public class PriceChangeImeService {
             if(productImeDtos == null){
                 return "保存失败";
             }
-            List<Depot> depots = depotRepository.findByNameList(shopNameList);
+            Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
                 PriceChangeIme priceChangeIme = new PriceChangeIme();
                 priceChangeIme.setPriceChangeId(priceChangeId);
                 priceChangeIme.setProductImeId(productImeDtos.get(i).getId());
-                priceChangeIme.setShopId(depots.get(i).getId());
+                priceChangeIme.setShopId(depotMap.get(shopNameList.get(i)).getId());
                 priceChangeIme.setSaleDate(productImeDtos.get(i).getProductImeSaleCreatedDate());
                 priceChangeIme.setUploadDate(productImeDtos.get(i).getProductImeUploadCreatedDate());
                 priceChangeIme.setStatus(AuditStatusEnum.已通过.toString());

@@ -90,8 +90,9 @@
         this.inputForm.data = JSON.stringify(this.inputForm.data);
         axios.post('/api/ws/future/layout/adPricesystemChange/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
-          Object.assign(this.$data, this.getData());
-          this.$router.push({name: 'adPricesystemChangeList', query: util.getQuery("adPricesystemChangeList")})
+          if(response.data.success){
+            Object.assign(this.$data, this.getData());
+          }
         }).catch(function () {
           that.submitDisabled = false;
         });
