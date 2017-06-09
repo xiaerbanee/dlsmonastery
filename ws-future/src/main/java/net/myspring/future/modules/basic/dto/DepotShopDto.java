@@ -43,6 +43,9 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String percent;
 
     public Integer getQty() {
+        if(qty==null){
+            qty=0;
+        }
         return qty;
     }
 

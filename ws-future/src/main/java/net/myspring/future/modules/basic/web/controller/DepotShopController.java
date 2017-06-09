@@ -88,4 +88,10 @@ public class DepotShopController {
         depotShopService.setReportData(page.getContent(), depotReportQuery);
         return page;
     }
+
+    @RequestMapping(value = "depotReportDetail")
+    public DepotReportDetailDto depotReportDetail(DepotReportQuery depotReportQuery){
+        DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(depotReportQuery);
+        return depotReportDetailDto;
+    }
 }

@@ -39,6 +39,9 @@
         axios.get('/api/basic/hr/position/findByIds?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+        });
         })
       },
     },created () {

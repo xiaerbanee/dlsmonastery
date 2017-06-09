@@ -42,6 +42,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
+    fun findByCompanyIdAndName(companyId: String, name: String): Depot
+
     @Query("""
         select t
         from #{#entityName} t
@@ -189,7 +191,6 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
             WHERE
                 t1.enabled=1
         """)
-        //TODO 查询条件
         var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
         return query.resultList as Page<DepotDto>
