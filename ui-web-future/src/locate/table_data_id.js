@@ -233,6 +233,8 @@ export default {
       productAdEdit: "Material Editor",
       productForm: "manajemen barang",
       productImeList: "daftar string kdoe",
+      productImeCreate: "串码添加",
+      productImeChange: "串码调整",
       productImeDetail: "串码详情",
       productImeSaleForm: "verifikasi string kode",
       productImeSaleBackForm: "串码核销退回编辑",

@@ -11,7 +11,7 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
               </el-form-item>
             </el-col>

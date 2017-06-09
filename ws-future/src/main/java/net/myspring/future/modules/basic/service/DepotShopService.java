@@ -6,7 +6,7 @@ import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -16,8 +16,6 @@ import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotReportQuery;
-import net.myspring.future.modules.crm.dto.ProductImeReportDto;
-import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -119,10 +117,28 @@ public class DepotShopService {
         Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
         for(DepotShopDto depotShopDto:depotList){
             DepotReportDto depotReportDto=map.get(depotShopDto.getDepotId());
-            depotShopDto.setQty(depotReportDto.getQty());
+            if(depotReportDto!=null){
+                depotShopDto.setQty(depotReportDto.getQty());
+            }
         }
         setPercentage(depotList);
         return depotList;
+    }
+
+    public DepotReportDetailDto getReportDataDetail(DepotReportQuery depotReportQuery){
+        DepotReportDetailDto depotReportDetail=new DepotReportDetailDto();
+        List<DepotReportDto> depotReportList=getProductImeReportList(depotReportQuery);
+        depotReportDetail.setDepotReportList(depotReportList);
+        Map<String,Integer> map= Maps.newHashMap();
+        for(DepotReportDto depotReportDto:depotReportList){
+            if(!map.containsKey(depotReportDto.getProductName())){
+                map.put(depotReportDto.getProductName(),1);
+            }else {
+                map.put(depotReportDto.getProductName(),map.get(depotReportDto.getProductName())+1);
+            }
+        }
+        depotReportDetail.setProductQtyMap(map);
+        return depotReportDetail;
     }
 
     private List<DepotReportDto> getProductImeReportList(DepotReportQuery depotReportQuery){

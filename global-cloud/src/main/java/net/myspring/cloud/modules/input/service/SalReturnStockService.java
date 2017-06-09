@@ -8,6 +8,7 @@ import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
@@ -40,7 +41,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 退货单
+ * 销售退货单
  * Created by liuj on 2017/5/11.
  */
 @Service

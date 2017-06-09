@@ -57,11 +57,9 @@ interface OfficeRuleRepository  : BaseRepository<OfficeRule, String> ,OfficeRule
         SELECT t
         FROM  #{#entityName} t
         where t.enabled=1
-        and t.level > (
-          SELECT level FROM OfficeRule where id=?1
-        )
+        order BY  t.level desc
      """)
-    fun findNextOfficeRule(id: String): List<OfficeRule>
+    fun findLastOfficeRule(pageable: Pageable): Page<OfficeRule>
 
     @Query("""
         SELECT t

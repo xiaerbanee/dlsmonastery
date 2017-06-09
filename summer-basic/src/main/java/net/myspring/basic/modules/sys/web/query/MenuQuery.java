@@ -12,7 +12,6 @@ import java.util.List;
 public class MenuQuery extends BaseQuery {
     private String category;
     private String name;
-    private String sort;
     private String menuCategoryId;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
     private List<String> categoryList=Lists.newArrayList();
@@ -49,13 +48,6 @@ public class MenuQuery extends BaseQuery {
         this.name = name;
     }
 
-    public String getSort() {
-        return sort;
-    }
-
-    public void setSort(String sort) {
-        this.sort = sort;
-    }
 
     public String getMenuCategoryId() {
         return menuCategoryId;

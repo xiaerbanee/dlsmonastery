@@ -85,7 +85,13 @@ public class DepotShopController {
             depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
         }
         Page<DepotShopDto> page=depotShopService.findPage(pageable,depotQuery);
-        depotShopService.setReportData(page.getContent());
+        depotShopService.setReportData(page.getContent(), depotReportQuery);
         return page;
+    }
+
+    @RequestMapping(value = "depotReportDetail")
+    public DepotReportDetailDto depotReportDetail(DepotReportQuery depotReportQuery){
+        DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(depotReportQuery);
+        return depotReportDetailDto;
     }
 }

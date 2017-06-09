@@ -28,7 +28,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.productType.label" :label-width="formLabelWidth">
+              <el-form-item :label="formLabel.productTypeId.label" :label-width="formLabelWidth">
                 <product-type-select v-model="formData.productTypeId"></product-type-select>
               </el-form-item>
               <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">

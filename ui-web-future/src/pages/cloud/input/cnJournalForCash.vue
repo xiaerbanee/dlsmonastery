@@ -1,0 +1,143 @@
+<template>
+  <div>
+    <head-tab active="cnJournalForCash"></head-tab>
+    <div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
+        <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+              <date-picker v-model="formData.billDate"></date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          </el-col>
+        </el-row>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      </el-form>
+    </div>
+  </div>
+</template>
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
+<script>
+  import Handsontable from 'handsontable/dist/handsontable.full.js'
+  var table = null;
+  export default {
+    data() {
+      return {
+        table:null,
+        departmentList:{},
+        settings: {
+          rowHeaders:true,
+          autoColumnSize:true,
+          stretchH: 'all',
+          height: 650,
+          colHeaders: ["对方科目编码", "借方金额", "贷方金额", "摘要", "对方科目", "员工","部门","其他类","费用类"],
+          columns: [
+            {type: "autocomplete", strict: true, allowEmpty: false, accountNumberFor:[],source: this.accountNumberFor},
+            {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
+            {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
+            {type: "text", allowEmpty: true, strict: true},
+            {type: "text", readOnly: true, allowEmpty: true, strict: true},
+            {type: "autocomplete", strict: true, allowEmpty: false, staffName:[],source: this.staffName},
+            {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
+            {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
+            {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
+          ],
+          afterChange: function (changes, source) {
+            var that = this;
+            if (source === 'edit') {
+              for (let i = changes.length - 1; i >= 0; i--) {
+                let row = changes[i][0];
+                let column = changes[i][1];
+                if(column === 0) {
+                  let accountNumberFor = changes[i][3];
+                  if (accountNumberFor === ""){
+                    table.setDataAtCell(row, 4, '')
+                  }else {
+                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumberFor).then((response) => {
+                      let account = response.data;
+                      table.setDataAtCell(row, 4, account.fname);
+                    });
+                  }
+                }
+              }
+            }
+//            let data = table.getData();
+//            for (let i=0;i<data.length;i++){
+//              var otherTypeName = "";
+//              var accountNumberFor = "";
+//              if(datas[i][0]) {
+//                accountNumberFor = datas[i][0];
+//              }
+//              if(datas[i][7]) {
+//                otherTypeName = datas[i][7];
+//              }
+//              if(otherTypeName !== "" && accountNumberFor !== ""){
+//                if(otherTypeName !== '无'  && accountNumberFor !== otherCode[otherTypeName]){
+//                  $('#grid').handsontable('setDataAtCell', i, 7, '');
+//                  alert("其他类的代码前4位必须和对应科目的代码一致");
+//                }
+//              }
+//            }
+          }
+        },
+        formData:{
+          billDate:new Date().toLocaleDateString(),
+          json:[],
+        },formLabel:{
+          billDate:{label:"日期"},
+        },rules: {
+          billDate: [{ required: true, message: '请选择时间'}],
+        },
+        submitDisabled:false,
+        formLabelWidth: '120px',
+        remoteLoading:false
+      };
+    },
+    mounted() {
+      axios.get('/api/global/cloud/input/cnJournalForCash/form').then((response)=>{
+        this.settings.columns[0].source = response.data.accountNumberForList;
+        this.settings.columns[5].source = response.data.staffNameList;
+        this.settings.columns[6].source = response.data.departmentNameList;
+        this.settings.columns[7].source = response.data.otherTypeNameList;
+        this.settings.columns[8].source = response.data.expenseTypeNameList;
+        var flag = response.data.customerForFlag;
+        if(flag === true){
+          this.settings.colHeaders.push("对方关联客户");
+          this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});
+          this.settings.columns[9].source = response.data.customerNameForList;
+        }
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+      });
+    },
+    methods: {
+      formSubmit(){
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.formData.json =new Array();
+            let list = table.getData();
+            for(let item in list){
+              if(!table.isEmptyRow(item)){
+                this.formData.json.push(list[item]);
+              }
+            }
+            this.formData.json = JSON.stringify(this.formData.json);
+            this.formData.billDate = util.formatLocalDate(this.formData.billDate);
+            axios.post('/api/global/cloud/input/cnJournalForCash/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+              this.$message(response.data.message);
+            }).catch(function () {
+              this.submitDisabled = false;
+            });
+          }else{
+            this.submitDisabled = false;
+          }
+        })
+      }
+    }
+  }
+</script>
