@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.query;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
@@ -8,6 +9,7 @@ import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/6/7.
@@ -37,6 +39,15 @@ public class ProductImeReportQuery {
     private List<String> outTypeList=Lists.newArrayList();
     private List<String> areaTypeList=Lists.newArrayList();
     private List<String> townTypeList=Lists.newArrayList();
+    private Map<String, String> boolMap= Maps.newHashMap();
+
+    public Map<String, String> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<String, String> boolMap) {
+        this.boolMap = boolMap;
+    }
 
     public List<String> getSumTypeList() {
         return sumTypeList;
@@ -177,4 +188,6 @@ public class ProductImeReportQuery {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+
 }
