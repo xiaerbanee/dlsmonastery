@@ -106,10 +106,12 @@
                     this.inputForm.imeUploadList.push(list[item]);
                   }
                 }
-                /*this.inputForm.imeUploadList = JSON.stringify(this.inputForm.imeUploadList);*/
                 axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
+                  this.submitDisabled = false;
+                if(response.data.success){
+                  Object.assign(this.$data, this.getData());
+                }
                 }).catch(function () {
                   that.submitDisabled = false;
                 });

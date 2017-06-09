@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by wangzm on 2017/4/21.
@@ -17,8 +18,6 @@ public class PricesystemDetailForm extends BaseForm<PricesystemDetail> {
     private String pricesystemId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
-
-
 
     public String getPricesystemId() {
         return pricesystemId;
