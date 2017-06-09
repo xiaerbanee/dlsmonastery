@@ -123,19 +123,19 @@ public class ProductImeController {
 
     @RequestMapping(value = "getReportQuery")
     public ProductImeReportQuery getReportQuery(ProductImeReportQuery productImeSaleReportQuery){
-        productImeSaleReportQuery.setSumTypeList(SumTypeEnum.getList());
-        productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
-        productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
-        productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
-        productImeSaleReportQuery.setBoolMap(BoolEnum.getMap());
+        productImeSaleReportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
+        productImeSaleReportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
+        productImeSaleReportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
+        productImeSaleReportQuery.getExtra().put("outTypeList",OutTypeEnum.getList());
+        productImeSaleReportQuery.getExtra().put("boolMap",BoolEnum.getMap());
         productImeSaleReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
         CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
             productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
-
         }
+        productImeSaleReportQuery.setScoreType(true);
         return productImeSaleReportQuery;
     }
 

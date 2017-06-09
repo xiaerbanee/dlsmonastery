@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by wangzm on 2017/6/7.
  */
-public class ProductImeReportQuery {
+public class ProductImeReportQuery  extends BaseQuery{
     //销售，库存
     private String type;
     //区域，促销，型号
@@ -31,55 +31,9 @@ public class ProductImeReportQuery {
     //打分型号：是，否
     private boolean scoreType;
     //货品
-    private List<String> productTypeIdList= Lists.newArrayList();
     private String officeId;
-    private List<String> officeIdList=Lists.newArrayList();
 
-    private List<String> sumTypeList=Lists.newArrayList();
-    private List<String> outTypeList=Lists.newArrayList();
-    private List<String> areaTypeList=Lists.newArrayList();
-    private List<String> townTypeList=Lists.newArrayList();
-    private Map<String, String> boolMap= Maps.newHashMap();
-
-    public Map<String, String> getBoolMap() {
-        return boolMap;
-    }
-
-    public void setBoolMap(Map<String, String> boolMap) {
-        this.boolMap = boolMap;
-    }
-
-    public List<String> getSumTypeList() {
-        return sumTypeList;
-    }
-
-    public void setSumTypeList(List<String> sumTypeList) {
-        this.sumTypeList = sumTypeList;
-    }
-
-    public List<String> getOutTypeList() {
-        return outTypeList;
-    }
-
-    public void setOutTypeList(List<String> outTypeList) {
-        this.outTypeList = outTypeList;
-    }
-
-    public List<String> getAreaTypeList() {
-        return areaTypeList;
-    }
-
-    public void setAreaTypeList(List<String> areaTypeList) {
-        this.areaTypeList = areaTypeList;
-    }
-
-    public List<String> getTownTypeList() {
-        return townTypeList;
-    }
-
-    public void setTownTypeList(List<String> townTypeList) {
-        this.townTypeList = townTypeList;
-    }
+    private List<String> productTypeIdList;
 
     public String getType() {
         return type;
@@ -89,13 +43,6 @@ public class ProductImeReportQuery {
         this.type = type;
     }
 
-    public List<String> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
 
     public String getOfficeId() {
         return officeId;
@@ -130,6 +77,9 @@ public class ProductImeReportQuery {
     }
 
     public String getDateRange() {
+        if(StringUtils.isBlank(dateRange)){
+            this.dateRange=LocalDateUtils.format(LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now()))+CharConstant.DATE_RANGE_SPLITTER+LocalDateUtils.format(LocalDate.now());
+        }
         return dateRange;
     }
 
@@ -182,6 +132,9 @@ public class ProductImeReportQuery {
     }
 
     public LocalDate getDate() {
+        if(date==null){
+            this.date=LocalDate.now();
+        }
         return date;
     }
 
