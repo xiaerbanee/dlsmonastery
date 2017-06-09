@@ -1,8 +1,10 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
@@ -112,6 +114,7 @@ public class ProductImeController {
         productImeSaleReportQuery.setAreaTypeList(AreaTypeEnum.getList());
         productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
         productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
+        productImeSaleReportQuery.setBoolMap(BoolEnum.getMap());
         return productImeSaleReportQuery;
     }
 

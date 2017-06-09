@@ -14,7 +14,6 @@
         </el-dropdown>
         <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
         <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
-
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
@@ -130,7 +129,7 @@
       },exportData(command) {
       }
     },created () {
-      axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response) => {
+      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
         console.log(this.formData)
       util.copyValue(this.$route.query, this.formData);
