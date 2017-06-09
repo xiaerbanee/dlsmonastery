@@ -25,6 +25,9 @@ public class KingdeeSynDto {
         this.result = result;
     }
 
+    public KingdeeSynDto() {
+    }
+
     public Boolean getSuccess() {
         return success;
     }
