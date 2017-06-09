@@ -28,6 +28,8 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_CN_BANKACNT_L t2
             WHERE
                 t1.FBANKACNTID = t2.FBANKACNTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
                 and t2.FNAME in (:nameList)
         """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
@@ -46,6 +48,8 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_CN_BANKACNT_L t2
             WHERE
                 t1.FBANKACNTID = t2.FBANKACNTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
 }

@@ -25,6 +25,8 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_HR_EMPINFO_L t2
             where 
                 t1.FID =t2.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
                 and t2.FNAME in (:nameList)
         """, Collections.singletonMap("nameList", nameList), BeanPropertyRowMapper(HrEmpInfo::class.java))
     }
@@ -41,6 +43,8 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_HR_EMPINFO_L t2
             where
                 t1.FID =t2.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(HrEmpInfo::class.java))
     }
 }

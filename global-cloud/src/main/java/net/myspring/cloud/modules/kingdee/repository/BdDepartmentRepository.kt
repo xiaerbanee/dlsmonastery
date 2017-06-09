@@ -45,6 +45,8 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
                 T_BD_DEPARTMENT_L t2
             where
                 t1.FDEPTID = t2.FDEPTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(BdDepartment::class.java))
     }
 

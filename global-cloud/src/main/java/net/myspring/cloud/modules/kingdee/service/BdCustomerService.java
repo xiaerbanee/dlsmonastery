@@ -23,8 +23,8 @@ public class BdCustomerService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
 
-    public Page<BdCustomer> findPage(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPage(pageable,bdCustomerQuery);
+    public Page<BdCustomer> findPageIncloudForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
+        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncloudForbid(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
 

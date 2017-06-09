@@ -149,6 +149,8 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FCUSTID = t2.FCUSTID
                 AND t1.FPRIMARYGROUP = t3.FID
                 AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
                 AND t2.FNAME like concat('%',:name,'%')
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
@@ -173,7 +175,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
-    fun findPage(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
+    fun findPageIncloudForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
         var sb = StringBuilder("""
              SELECT
                 t1.FCUSTID,
@@ -194,8 +196,6 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FCUSTID = t2.FCUSTID
                 AND t1.FPRIMARYGROUP = t3.FID
                 AND t3.FID = t4.FID
-                and t1.FFORBIDSTATUS = 'A'
-                and t1.FDOCUMENTSTATUS = 'C'
         """);
         if(bdCustomerQuery.customerIdList.size > 0){
            sb.append(" and t1.FCUSTID in (:customerIdList) ")

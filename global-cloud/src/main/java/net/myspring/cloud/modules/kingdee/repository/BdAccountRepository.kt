@@ -30,6 +30,8 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
             where
                 t1.FACCTID=t2.FACCTID
                 and t2.FLOCALEID=2052
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
         """, BeanPropertyRowMapper(BdAccount::class.java))
     }
 
@@ -50,6 +52,8 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
             where 
                 t1.FACCTID=t2.FACCTID 
                 and t2.FLOCALEID=2052
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
                 and t1.FISBANK = :isBank
         """,Collections.singletonMap("isBank",isBank), BeanPropertyRowMapper(BdAccount::class.java))
     }
@@ -71,6 +75,8 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
             where
                 t1.FACCTID=t2.FACCTID
                 and t2.FLOCALEID=2052
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
                 and t1.FNUMBER = :number
         """,Collections.singletonMap("number",number),BeanPropertyRowMapper(BdAccount::class.java))
     }
