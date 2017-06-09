@@ -99,8 +99,7 @@ public class ProductImeUploadService {
             return errMsg;
         }
 
-        //TODO 获取employeeId
-        String employeeId = "";
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
         for (ProductIme productIme : productImeList) {

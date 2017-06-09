@@ -1556,6 +1556,7 @@ export default {
   productImeSaleForm: {
     productImeSaleForm: "verifikasi string kode",
     ime: "d=string kode",
+    formInvalid: "表单存在错误，请先修正",
     inputIme: "input string kdoe",
     shopId: "verifikasi toko",
     buyer: "akun pelanggan",
@@ -1597,6 +1598,7 @@ export default {
   productImeSaleBackForm: {
     productImeSaleForm: "串码核销编辑",
     ime: "串码",
+    formInvalid: "表单存在错误，请先修正",
     inputIme: "请输入串码",
     name: "产品名称",
     qty: "数量",
@@ -1631,7 +1633,7 @@ export default {
     saleShopName: "verifikasi toko",
     sale:'核销',
     saleBack:'退回',
-
+    inputImeTail:'请输入串码后六位',
     ime: "string kode",
     saleDate: "verifikasi tanggal",
     productName: "nama produk",
@@ -1666,6 +1668,8 @@ export default {
   productImeUploadForm: {
     productImeUploadForm: "laporan string kode",
     ime: "string kode",
+    formInvalid: "表单存在错误，请先修正",
+    notify: "提示",
     inputIme: "input string kode",
     month: "penilaian bulanan",
     selectDate: "pilih tanggal",
