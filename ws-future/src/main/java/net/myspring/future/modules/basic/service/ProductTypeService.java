@@ -129,7 +129,6 @@ public class ProductTypeService {
     }
 
     public ProductTypeDto findDto(String id) {
-
         ProductTypeDto result = productTypeRepository.findDto(id);
         cacheUtils.initCacheInput(result);
         return result;

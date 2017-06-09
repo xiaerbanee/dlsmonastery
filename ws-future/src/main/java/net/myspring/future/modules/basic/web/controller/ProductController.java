@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -81,6 +82,11 @@ public class ProductController {
         List<ProductDto> productList = Lists.newArrayList();
         productList.add(productDto);
         return productList;
+    }
+    @RequestMapping(value = "findByIds")
+    public List<ProductDto> findByListIds(@RequestParam("idStr") List<String> ids) {
+        List<ProductDto> productDtoList =productService.findByIds(ids);
+        return productDtoList;
     }
 
     @RequestMapping(value = "search")

@@ -35,6 +35,9 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     @CachePut(key = "#p0.id")
     fun save(product: Product): Product
 
+    fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Product>
+
+
     @Query("""
         SELECT t
         FROM #{#entityName} t
