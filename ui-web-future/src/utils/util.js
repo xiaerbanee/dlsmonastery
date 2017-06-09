@@ -45,7 +45,7 @@ util.getFirstDayOfMonth = function (date) {
 }
 util.currentDate = function () {
   var myDate = new Date();
-  return myDate.toLocaleDateString();
+  return util.formatDate(myDate,"yyyy-MM-dd");
 },
   util.latestWeek = function () {
     const end = new Date();

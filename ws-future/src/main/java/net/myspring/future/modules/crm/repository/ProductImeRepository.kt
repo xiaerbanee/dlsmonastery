@@ -130,7 +130,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t3.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
-            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' """)
+            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
         }
         sb.append("""
             FROM
@@ -192,7 +192,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t3.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
-            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' """)
+            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' ,t5.name as 'productTypeName'""")
         }
         sb.append("""
             FROM
@@ -255,7 +255,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
-            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' """)
+            sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
         }
         sb.append("""
             FROM
@@ -307,10 +307,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t2.office_id,t1.id """)
+            sb.append(""" select t2.office_id,t1.id '""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
-            sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty' """)
+            sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
         }
         sb.append("""
             FROM

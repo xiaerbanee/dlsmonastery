@@ -60,6 +60,9 @@
         axios.get('/api/basic/sys/office/findByIds?idStr=' + idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+        });
         })
       }
     },created () {

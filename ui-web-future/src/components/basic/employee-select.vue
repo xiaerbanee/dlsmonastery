@@ -36,10 +36,12 @@
         if(this.innerId instanceof Array){
           idStr=this.innerId.join();
         }
-        console.log(this.innerId);
         axios.get('/api/basic/hr/employee/findByIds?idStr='+idStr).then((response)=>{
           this.itemList=response.data;
           this.remoteLoading = false;
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+        });
         })
       }
     },created () {
