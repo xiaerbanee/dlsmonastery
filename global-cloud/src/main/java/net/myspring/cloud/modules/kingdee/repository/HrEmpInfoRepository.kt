@@ -17,7 +17,9 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
         return namedParameterJdbcTemplate.query("""
             select 
                 t1.FNUMBER,
-                t2.FNAME
+                t2.FNAME,
+                t1.FForbidStatus,
+                t1.FDOCUMENTSTATUS
             from 
                 T_HR_EMPINFO t1,
                 T_HR_EMPINFO_L t2
@@ -31,7 +33,9 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FNUMBER,
-                t2.FNAME
+                t2.FNAME,
+                t1.FForbidStatus,
+                t1.FDOCUMENTSTATUS
             from
                 T_HR_EMPINFO t1,
                 T_HR_EMPINFO_L t2

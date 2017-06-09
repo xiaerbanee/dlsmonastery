@@ -18,7 +18,9 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
             SELECT
                 t2.FENTRYID,
                 t2.FNUMBER,
-                t1.FDATAVALUE
+                t1.FDATAVALUE,
+                t2.FDOCUMENTSTATUS,
+                t2.FFORBIDSTATUS
             FROM
                 T_BAS_ASSISTANTDATAENTRY_L t1,
                 T_BAS_ASSISTANTDATAENTRY t2,
@@ -35,7 +37,9 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
             SELECT
                 t2.FENTRYID,
                 t2.FNUMBER,
-                t1.FDATAVALUE
+                t1.FDATAVALUE,
+                t2.FDOCUMENTSTATUS,
+                t2.FFORBIDSTATUS
             FROM
                 T_BAS_ASSISTANTDATAENTRY_L t1,
                 T_BAS_ASSISTANTDATAENTRY t2,

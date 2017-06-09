@@ -15,19 +15,43 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
 
     fun findAll(): MutableList<BdAccount> {
         return namedParameterJdbcTemplate.query("""
+            select
+                t1.FACCTID,
+                t2.FFULLNAME,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FITEMDETAILID,
+                t1.FISBANK,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            from
+                T_BD_ACCOUNT t1,
+                T_BD_ACCOUNT_L t2
+            where
+                t1.FACCTID=t2.FACCTID
+                and t2.FLOCALEID=2052
+        """, BeanPropertyRowMapper(BdAccount::class.java))
+    }
+
+    fun findByIsBank(isBank:Boolean): MutableList<BdAccount> {
+        return namedParameterJdbcTemplate.query("""
             select 
                 t1.FACCTID, 
                 t2.FFULLNAME,
                 t1.FNUMBER,
                 t2.FNAME,
-                t1.FITEMDETAILID
+                t1.FITEMDETAILID,
+                t1.FISBANK,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
             from 
                 T_BD_ACCOUNT t1,
                 T_BD_ACCOUNT_L t2
             where 
                 t1.FACCTID=t2.FACCTID 
                 and t2.FLOCALEID=2052
-        """, BeanPropertyRowMapper(BdAccount::class.java))
+                and t1.FISBANK = :isBank
+        """,Collections.singletonMap("isBank",isBank), BeanPropertyRowMapper(BdAccount::class.java))
     }
 
     fun findByNumber(number:String):BdAccount?{
@@ -37,7 +61,10 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
                 t2.FFULLNAME,
                 t1.FNUMBER,
                 t2.FNAME,
-                t1.FITEMDETAILID
+                t1.FITEMDETAILID,
+                t1.FISBANK,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
             from
                 T_BD_ACCOUNT t1,
                 T_BD_ACCOUNT_L t2

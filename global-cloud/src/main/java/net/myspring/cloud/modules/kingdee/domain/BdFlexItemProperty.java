@@ -1,9 +1,9 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
 /**
+ * 所有核算维度
  * Created by lihx on 2017/4/10.
  */
-//所有核算维度
 public class BdFlexItemProperty {
     private String FId;
     private String FNumber;

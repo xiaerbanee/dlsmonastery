@@ -2,11 +2,15 @@ package net.myspring.cloud.modules.kingdee.domain;
 
 import java.time.LocalDate;
 
-public class CnBank {
+public class CnBankAcnt {
     private String FBankAcntId;
     private String FNumber;
     private String FName;
     private LocalDate FModeifyDate;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFBankAcntId() {
         return FBankAcntId;
@@ -38,5 +42,21 @@ public class CnBank {
 
     public void setFModeifyDate(LocalDate FModeifyDate) {
         this.FModeifyDate = FModeifyDate;
+    }
+
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
     }
 }
