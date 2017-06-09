@@ -162,4 +162,9 @@ public class OfficeController {
     public boolean checkLastLevel(String officeId){
         return officeService.checkLastLevel(officeId);
     }
+
+    @RequestMapping(value = "getQuery")
+    public OfficeQuery getQuery(OfficeQuery officeQuery){
+        return officeQuery;
+    }
 }

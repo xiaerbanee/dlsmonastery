@@ -97,4 +97,9 @@ public class RoleController {
         }
         return roleDtoList;
     }
+
+    @RequestMapping(value = "getQuery")
+    public RoleQuery getQuery(RoleQuery roleQuery){
+        return roleQuery;
+    }
 }

@@ -32,7 +32,7 @@ public class DictMapController {
 
     @RequestMapping(value = "getQuery")
     public DictMapQuery getQuery(DictMapQuery dictMapQuery) {
-        dictMapQuery.setCategoryList(dictMapService.findDistinctCategory());
+        dictMapQuery.getExtra().put("categoryList",dictMapService.findDistinctCategory());
         return dictMapQuery;
     }
 

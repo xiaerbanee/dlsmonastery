@@ -67,5 +67,8 @@ public class ProcessTypeController {
         return processTypeService.findAll();
     }
 
-
+    @RequestMapping(value = "getQuery")
+    public ProcessTypeQuery getQuery(ProcessTypeQuery processTypeQuery){
+        return processTypeQuery;
+    }
 }
