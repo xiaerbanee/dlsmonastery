@@ -99,6 +99,8 @@ public class StkMisDeliveryService {
                     KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
                     kingdeeSynDtoList.add(kingdeeSynDto);
                 }
+            }else{
+                kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
             }
         }
         return kingdeeSynDtoList;

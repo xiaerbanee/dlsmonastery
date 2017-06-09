@@ -58,7 +58,6 @@ public class ShopAllotController {
 
     @RequestMapping(value = "audit")
     public RestResponse audit(ShopAllotViewOrAuditForm shopAllotViewOrAuditForm) {
-
         shopAllotService.audit(shopAllotViewOrAuditForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -125,7 +124,7 @@ public class ShopAllotController {
 
     @RequestMapping(value="getQuery")
     public ShopAllotQuery getQuery(ShopAllotQuery shopAllotQuery) {
-        shopAllotQuery.setStatusList(AuditStatusEnum.getList());
+        shopAllotQuery.getExtra().put("statusList",AuditStatusEnum.getList());
         return shopAllotQuery;
     }
 

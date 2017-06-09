@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 入库单
+ * 销售入库单
  * Created by liuj on 2017/5/11.
  */
 @Service
