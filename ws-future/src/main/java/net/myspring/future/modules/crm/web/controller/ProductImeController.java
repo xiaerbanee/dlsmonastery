@@ -126,7 +126,7 @@ public class ProductImeController {
         productImeSaleReportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
         productImeSaleReportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
         productImeSaleReportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
-        productImeSaleReportQuery.getExtra().put("outTypeList",OutTypeEnum.getList());
+        productImeSaleReportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
         productImeSaleReportQuery.getExtra().put("boolMap",BoolEnum.getMap());
         productImeSaleReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
         CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());

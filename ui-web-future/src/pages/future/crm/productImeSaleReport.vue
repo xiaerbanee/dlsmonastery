@@ -58,13 +58,33 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
+      <div>
       <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
         <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
+      </div>
+      <div>
+        <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
+        <el-table :data="productMap" style="margin-top:5px;" border stripe border>
+          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
+          <el-table-column prop="qty"  label="数量"></el-table-column>
+        </el-table>
+        <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
+        <el-table :data="productImes" style="margin-top:5px;" border stripe border>
+          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
+          <el-table-column prop="qty"  label="串码"></el-table-column>
+          <el-table-column prop="billQty" label="促销员"></el-table-column>
+          <el-table-column prop="price" label="门店"></el-table-column>
+          <el-table-column prop="billQty" label="核销时间"></el-table-column>
+          <el-table-column prop="price" label="保卡注册时间"></el-table-column>
+        </el-table>
+      </div>
     </div>
+
   </div>
+
 </template>
 <script>
   import productSelect from 'components/future/product-select'
@@ -84,6 +104,8 @@
         formVisible: false,
         pageLoading: false,
         officeIds:[],
+        productMap:[],
+        productImes:[],
         type:"销售报表",
       };
     },
@@ -101,6 +123,7 @@
         util.setQuery("productImeSaleReport",submitData);
         axios.get('/api/ws/future/crm/productIme/productImeReport?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
+          console.log(this.page);
           this.pageLoading = false;
       })
       },sortChange(column) {
