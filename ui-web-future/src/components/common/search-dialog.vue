@@ -84,12 +84,6 @@
       },
       beforeClose: Function
     },
-    data(){
-        return{
-      visible:false
-    };
-    },
-
 
     watch: {
       visible(val) {
