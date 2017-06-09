@@ -68,4 +68,9 @@ public class BackendController {
     public BackendQuery getQuery(BackendQuery backendQuery){
         return backendQuery;
     }
+
+    @RequestMapping(value = "getForm")
+    public BackendForm getQuery(BackendForm backendForm){
+        return backendForm;
+    }
 }
