@@ -198,6 +198,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/duty/getForm',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
           this.dutyType = response.data.dutyType;
           this.showForm = response.data.item;
