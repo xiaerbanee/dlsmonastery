@@ -48,7 +48,7 @@ public class PositionController {
 
     @RequestMapping(value = "getForm")
     public PositionForm getForm(PositionForm positionForm) {
-        positionForm.setRoleList(roleService.findAll());
+        positionForm.getExtra().put("roleList", roleService.findAll());
         return positionForm;
     }
 
