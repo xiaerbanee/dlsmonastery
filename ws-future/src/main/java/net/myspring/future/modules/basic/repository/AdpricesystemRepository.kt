@@ -45,7 +45,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     @Query("""
         SELECT t1
         FROM #{#entityName} t1
-        WHERE t1.enabled = 1
+        WHERE t1.enabled = ?1
     """)
     fun findList(adPricesystemQuery: AdPricesystemQuery): MutableList<AdPricesystem>
 

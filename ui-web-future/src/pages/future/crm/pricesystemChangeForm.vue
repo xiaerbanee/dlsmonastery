@@ -6,7 +6,7 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
-              <product-select v-model="inputForm.productId"></product-select>
+              <product-select v-model="inputForm.productId" :multiple=true @change="handleChange"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
               <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
@@ -49,13 +49,14 @@
             }
             if (col==0 || row ==0) {
               cellProperties.readOnly = true;
-            } else {
               cellProperties.type = 'numeric';
+            } else {
             }
             return cellProperties;
           },
+          colHeaders: [],
+          rowHeaders:true,
           data:[],
-          rowHeaders:false,
 				  colWidth:70
         },
         formProperty:{},
@@ -93,13 +94,19 @@
               that.submitDisabled = false;
           }
         });
-      }
+      },handleChange(){
+          if(this.inputForm.productId = null){
+              this.settings.data = null;
+          }else{
+
+          }
+      },
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;
-      });
+        });
       }
       this.isInit = true;
     }

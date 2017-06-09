@@ -42,10 +42,10 @@
               {{shopPrint.remarks}}
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.pass')"  v-if="action=='audit'">
-              <bool-radio-group v-model="shopPrint.pass"></bool-radio-group>
+              <bool-radio-group v-model="formProperty.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopPrintDetail.passRemarks')"  v-if="action=='audit'">
-              <el-input v-model="shopPrint.passRemarks" :placeholder="$t('shopPrintDetail.inputRemarks')" type="textarea"></el-input>
+              <el-input v-model="formProperty.passRemarks" :placeholder="$t('shopPrintDetail.inputRemarks')" type="textarea"></el-input>
             </el-form-item>
             <el-form-item v-if="action=='audit'">
               <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopPrintDetail.save')}}</el-button>
@@ -69,24 +69,24 @@
         action:this.$route.query.action,
         shopPrint:{
         },
+        formProperty:{},
         submitData:{
             id:'',
             pass:'',
             passRemarks:'',
         },
         submitDisabled:false,
-        activitiEntity:{historicTaskInstances:[]},
+        /*activitiEntity:{historicTaskInstances:[]},*/
         fileList:[]
       }
     },
     methods:{
       passSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["shopPrint"];
+        var form = this.$refs["formProperty"];
         form.validate((valid) => {
           if (valid) {
-              util.copyValue(this.shopPrint,this.submitData);
-              console.log(this.submitData);
+              util.copyValue(this.formProperty,this.submitData);
             axios.post('/api/ws/future/layout/shopPrint/audit', qs.stringify(this.submitData)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
@@ -110,9 +110,13 @@
             this.fileList = response.data;
           });
         }
-        if(response.data.activitiEntity.historicTaskInstances){
+        /*if(response.data.activitiEntity.historicTaskInstances){
           this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;
-        }
+        }*/
+      })
+
+      axios.get('/api/ws/future/layout/shopPrint/getAuditForm').then((response)=>{
+        this.formProperty = response.data;
       })
     }
   }
