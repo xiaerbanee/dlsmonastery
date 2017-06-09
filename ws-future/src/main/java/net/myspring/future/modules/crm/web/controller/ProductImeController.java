@@ -128,6 +128,14 @@ public class ProductImeController {
         productImeSaleReportQuery.setTownTypeList(TownTypeEnum.getList());
         productImeSaleReportQuery.setOutTypeList(OutTypeEnum.getList());
         productImeSaleReportQuery.setBoolMap(BoolEnum.getMap());
+        productImeSaleReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
+        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
+            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
+        }else{
+            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
+
+        }
         return productImeSaleReportQuery;
     }
 
