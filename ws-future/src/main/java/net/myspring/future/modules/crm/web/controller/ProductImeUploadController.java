@@ -11,6 +11,7 @@ import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.service.ProductImeUploadService;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
+import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -46,13 +47,9 @@ public class ProductImeUploadController {
             throw new ServiceException("没有输入任何有效的串码");
         }
 
-        String errMsg = productImeUploadService.upload(productImeUploadForm);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
-        }else{
-            return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
-        }
+        productImeUploadService.upload(productImeUploadForm);
 
+        return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "uploadBack")
@@ -63,31 +60,14 @@ public class ProductImeUploadController {
             throw new ServiceException("没有输入任何有效的串码");
         }
 
-        String errMsg = productImeUploadService.uploadBack(imeList);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
-        } else {
+        productImeUploadService.uploadBack(imeList);
 
-            return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
-        }
-
+        return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getQuery")
     public ProductImeUploadQuery getQuery(ProductImeUploadQuery productImeUploadQuery){
         return productImeUploadQuery;
-    }
-
-    @RequestMapping(value = "delete")
-    public String delete(ProductImeUpload productImeUpload, BindingResult bindingResult){
-        return null;
-    }
-
-    @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids,boolean pass){
-
-        productImeUploadService.batchAudit(ids, pass);
-        return new RestResponse("批量审核成功", ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findDto")
@@ -115,6 +95,13 @@ public class ProductImeUploadController {
             return null;
         }
         return productImeUploadService.checkForUploadBack(imeList);
+    }
+
+
+    @RequestMapping(value="export")
+    public String export(ProductImeUploadQuery productImeUploadQuery) {
+
+        return productImeUploadService.export(productImeUploadQuery);
     }
 
 }

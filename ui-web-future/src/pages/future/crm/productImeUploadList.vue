@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.upload')}}</el-button>
         <el-button type="primary" @click="itemBack" icon="minus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.back')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productImeUploadList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -120,7 +121,11 @@
       },itemBack(){
         this.$router.push({ name: 'productImeUploadBackForm'});
       },exportData(){
-
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/crm/productImeUpload/export',{params:this.submitData}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
       }
     },created () {
       let that = this;

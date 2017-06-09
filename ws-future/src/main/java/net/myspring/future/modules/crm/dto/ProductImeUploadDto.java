@@ -4,21 +4,77 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.util.cahe.annotation.CacheInput;
 
-/**
- * Created by haos on 2017/5/12.
- */
+
 public class ProductImeUploadDto extends DataDto<ProductImeUpload> {
 
     private String month;
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
     private String shopId;
+    private String shopOfficeId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "name")
+    private String shopOfficeName;
+    private String shopAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
+    private String shopAreaName;
+    private String productImeProductId;
+    @CacheInput(inputKey = "products",inputInstance = "productImeProductId",outputInstance = "name")
+    private String productImeProductName;
+
     private String productImeIme;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
     private String employeeId;
     private String status;
     private Boolean enabled;
+
+    public String getShopOfficeId() {
+        return shopOfficeId;
+    }
+
+    public void setShopOfficeId(String shopOfficeId) {
+        this.shopOfficeId = shopOfficeId;
+    }
+
+    public String getShopOfficeName() {
+        return shopOfficeName;
+    }
+
+    public void setShopOfficeName(String shopOfficeName) {
+        this.shopOfficeName = shopOfficeName;
+    }
+
+    public String getShopAreaId() {
+        return shopAreaId;
+    }
+
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
+    }
+
+    public String getShopAreaName() {
+        return shopAreaName;
+    }
+
+    public void setShopAreaName(String shopAreaName) {
+        this.shopAreaName = shopAreaName;
+    }
+
+    public String getProductImeProductId() {
+        return productImeProductId;
+    }
+
+    public void setProductImeProductId(String productImeProductId) {
+        this.productImeProductId = productImeProductId;
+    }
+
+    public String getProductImeProductName() {
+        return productImeProductName;
+    }
+
+    public void setProductImeProductName(String productImeProductName) {
+        this.productImeProductName = productImeProductName;
+    }
 
     public String getMonth() {
         return month;
