@@ -9,6 +9,7 @@ import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.service.ProductTypeService;
+import net.myspring.future.modules.basic.web.form.ProductBatchForm;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -97,6 +98,12 @@ public class ProductController {
     @RequestMapping(value = "save")
     public RestResponse save(ProductForm productForm) {
         productService.save(productForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "batchSave")
+    public RestResponse batchSave(ProductBatchForm productBatchForm){
+        productService.batchSave(productBatchForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

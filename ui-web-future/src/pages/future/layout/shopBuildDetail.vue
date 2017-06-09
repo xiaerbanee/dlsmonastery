@@ -94,8 +94,7 @@
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         inputForm:{},
-        formProperty:{
-        },
+        formProperty:{},
         submitData:{
             id:this.$route.query.id,
           pass:'',

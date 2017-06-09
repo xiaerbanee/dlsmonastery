@@ -7,7 +7,7 @@
           <el-col :span="10">
             <el-form-item :label="$t('menuForm.menuCategory')" prop="menuCategoryId">
             <el-select v-model="inputForm.menuCategoryId" filterable :placeholder="$t('menuForm.selectGroup')">
-              <el-option v-for="category in inputProperty.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
+              <el-option v-for="category in inputForm.extra.menuCategoryList" :key="category.id" :label="category.name" :value="category.id"></el-option>
             </el-select>
             </el-form-item>
             <el-form-item :label="$t('menuForm.name')" prop="name">
@@ -57,18 +57,8 @@
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            inputForm:{},
-            inputProperty:{},
-            submitData:{
-              id:'',
-              menuCategoryId:'',
-              name:'',
-              code:'',
-              sort:'',
-              mobile:true,
-              visible:true,
-              permissionStr:"",
-              remarks:''
+            inputForm:{
+              extra:{}
             },
             rules: {
               menuCategoryId: [{ required: true, message: this.$t('menuForm.prerequisiteMessage')}],
@@ -84,8 +74,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/menu/save',qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/basic/sys/menu/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
                 if(!this.isCreate){
@@ -102,11 +91,11 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          })
           axios.get('/api/basic/sys/menu/getForm').then((response)=>{
-            this.inputProperty = response.data;
+            this.inputForm = response.data;
+            axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            })
           })
         }
         this.isInit = true;

@@ -15,16 +15,6 @@ public class DictMapForm extends BaseForm<DictMap> {
     private String name;
     private String value;
     private String remarks;
-    private List<String> categoryList= Lists.newArrayList();
-
-    public List<String> getCategoryList() {
-        return categoryList;
-    }
-
-    public void setCategoryList(List<String> categoryList) {
-        this.categoryList = categoryList;
-    }
-
     public String getRemarks() {
         return remarks;
     }

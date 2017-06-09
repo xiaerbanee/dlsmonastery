@@ -58,6 +58,9 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table { margin-bottom: 50px;}
+</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'
@@ -96,16 +99,16 @@
         }
       },
       formSubmit(){
-        var that = this;
+
         if (this.errMsg) {
-          this.$alert(this.errMsg, this.$t('productImeSaleBackForm.notify'));
+          this.$alert( this.$t('productImeSaleBackForm.formInvalid'), this.$t('productImeSaleBackForm.notify'));
           return;
         }
 
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.submitDisabled = true;
             this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/productImeSale/saleBack', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
@@ -115,8 +118,8 @@
                   this.$router.push({name: 'productImeSaleList', query: util.getQuery("productImeSaleList")})
                 }
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch( () => {
+              this.submitDisabled = false;
             });
           }
         })

@@ -66,7 +66,7 @@ public class MenuController {
 
     @RequestMapping(value = "getForm")
     public MenuForm getForm(MenuForm menuForm){
-        menuForm.setMenuCategoryList(menuCategoryService.findAll());
+        menuForm.getExtra().put("menuCategoryList",menuCategoryService.findAll());
         return menuForm;
     }
 

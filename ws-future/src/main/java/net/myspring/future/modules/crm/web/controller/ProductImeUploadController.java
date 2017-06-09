@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
@@ -42,12 +43,12 @@ public class ProductImeUploadController {
 
         List<String> imeList = productImeUploadForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
         String errMsg = productImeUploadService.upload(productImeUploadForm);
         if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException(errMsg);
         }else{
             return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
         }
@@ -59,12 +60,12 @@ public class ProductImeUploadController {
 
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
         String errMsg = productImeUploadService.uploadBack(imeList);
         if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException(errMsg);
         } else {
 
             return new RestResponse("退回成功", ResponseCodeEnum.saved.name());

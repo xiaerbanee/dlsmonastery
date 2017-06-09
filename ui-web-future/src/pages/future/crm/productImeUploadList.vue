@@ -35,8 +35,7 @@
           <el-button type="primary" @click="search()">{{$t('productImeUploadList.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"   :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
         <el-table-column prop="shopName" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('productImeUploadList.ime')"></el-table-column>
@@ -102,6 +101,8 @@
         axios.get('/api/ws/future/crm/productImeUpload',{params:this.submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
+        }).catch(()=>{
+          this.pageLoading = false;
         });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
@@ -120,40 +121,14 @@
         this.$router.push({ name: 'productImeUploadBackForm'});
       },exportData(){
 
-      },selectionChange(selection){
-        console.log(selection);
-        this.selects=[];
-        for(let each of selection){
-          this.selects.push(each.id)
-        }
-      },batchPass(){
-
-        if(!this.selects || this.selects.length < 1){
-          this.$message(this.$t('productImeUploadList.noSelectionFound'));
-          return ;
-        }
-
-        util.confirmBeforeBatchPass(this).then(() => {
-          this.submitDisabled = true;
-          this.pageLoading = true;
-          axios.get('/api/ws/future/crm/productImeUpload/batchAudit',{params:{ids:this.selects, pass:true}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageLoading = false;
-            this.submitDisabled = false;
-            this.pageRequest();
-          });
-        }).catch(()=>{});
-
-
-      },checkSelectable(row) {
-        return row.status === '申请中';
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+      let that = this;
+      that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productImeUpload/getQuery').then((response) =>{
-        this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
-        this.pageRequest();
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
       });
     }
   };

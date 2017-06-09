@@ -1458,6 +1458,7 @@ export default {
   productImeSaleForm: {
     productImeSaleForm: "串码核销编辑",
     ime: "串码",
+    formInvalid: "表单存在错误，请先修正",
     inputIme: "请输入串码",
     shopId: "核销门店",
     buyer: "用户姓名",
@@ -1502,6 +1503,7 @@ export default {
     inputIme: "请输入串码",
     name: "产品名称",
     qty: "数量",
+    formInvalid: "表单存在错误，请先修正",
     depotName: "仓库",
     productType: "产品型号",
     baokaDate: "工厂保卡日期",
@@ -1534,7 +1536,7 @@ export default {
     saleShopName: "核销门店",
     sale:'核销',
     saleBack:'退回',
-
+    inputImeTail:'请输入串码后六位',
     ime: "串码",
     saleDate: "核销时间",
     productName: "产品名称",
@@ -1569,6 +1571,8 @@ export default {
   productImeUploadForm: {
     productImeUploadForm: "串码上报编辑",
     ime: "串码",
+    formInvalid: "表单存在错误，请先修正",
+    notify: "提示",
     inputIme: "请输入串码",
     month: "月份",
     selectDate: "选择日期",
