@@ -3,7 +3,7 @@
     <head-tab active="productImeSaleReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -45,7 +45,7 @@
               </el-form-item>
               <el-form-item :label="formLabel.scoreType.label" :label-width="formLabelWidth">
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
-                  <el-option v-for="item in formData.scoreTypeList" :key="item" :label="item | bool2str" :value="item"></el-option>
+                  <el-option v-for="item in formData.boolMap" :key="item" :label="item | bool2str" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="formLabel.productIds.label" :label-width="formLabelWidth">
@@ -84,6 +84,7 @@
           areaType:'',
           townType:'',
           dateRange:util.latestWeek(),
+          scoreType:null,
           productIds:'',
           officeId:''
         },formLabel:{
