@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class DepotReportQuery {
-
+    private boolean detail;
     private String type;
     //电子保卡，核销
     private String outType;
@@ -23,10 +23,27 @@ public class DepotReportQuery {
     //打分型号：是，否
     private boolean scoreType;
     //货品
+    private String depotId;
     private List<String> productTypeIdList= Lists.newArrayList();
     private String officeId;
     private List<String> officeIdList=Lists.newArrayList();
     private List<String> shopIdList=Lists.newArrayList();
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
+    }
+
+    public boolean getDetail() {
+        return detail;
+    }
+
+    public void setDetail(boolean detail) {
+        this.detail = detail;
+    }
 
     public String getType() {
         return type;

@@ -157,4 +157,9 @@ public class OfficeController {
         }
         return map;
     }
+
+    @RequestMapping(value = "checkLastLevel")
+    public boolean checkLastLevel(String officeId){
+        return officeService.checkLastLevel(officeId);
+    }
 }

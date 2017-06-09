@@ -276,4 +276,14 @@ public class OfficeService {
         }
         return null;
     }
+
+    public boolean checkLastLevel(String officeId){
+        OfficeRule lastOfficeRule = officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
+        Office office=officeRepository.findOne(officeId);
+        if(office!=null&&lastOfficeRule.getId().equals(office.getOfficeRuleId())){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }
