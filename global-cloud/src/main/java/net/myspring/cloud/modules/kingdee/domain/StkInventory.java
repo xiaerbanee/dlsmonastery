@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
 /**
+ * 其他出库单
  * Created by lihx on 2017/4/6.
  */
 public class StkInventory {

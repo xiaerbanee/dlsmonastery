@@ -299,6 +299,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(depotQuery.officeId)) {
             sb.append("""  and t1.office_id=:officeId """)
         }
+        if (CollectionUtil.isNotEmpty(depotQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList) """)
+        }
         if (CollectionUtil.isNotEmpty(depotQuery.officeIdList)) {
             sb.append("""  and t1.office_id in (:officeIdList) """)
         }

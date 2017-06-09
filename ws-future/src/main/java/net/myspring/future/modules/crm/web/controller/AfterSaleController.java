@@ -4,6 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
+import net.myspring.future.common.enums.AfterSaleTypeEnum;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
@@ -14,6 +17,7 @@ import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.service.AfterSaleService;
 import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.form.AfterSaleToCompanyForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -55,9 +59,9 @@ public class AfterSaleController {
             List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
             for(ProductImeDto productIme:productImeList){
                 AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-                afterSaleInputDto.setProductName(productIme.getProductName());
-                afterSaleInputDto.setIme(productIme.getIme());
-                afterSaleInputDto.setDepotName(productIme.getDepotName());
+                afterSaleInputDto.setBadProductName(productIme.getProductName());
+                afterSaleInputDto.setBadProductIme(productIme.getIme());
+                afterSaleInputDto.setBadDepotName(productIme.getDepotName());
                 afterSaleInputList.add(afterSaleInputDto);
             }
         }
@@ -80,19 +84,17 @@ public class AfterSaleController {
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
             List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-            List<AfterSale> afterSaleList=afterSaleService.findByImeList(imeList);
-            Map<String,AfterSale> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList);
+            Map<String,AfterSaleDto> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
             for(ProductImeDto productIme:productImeList){
                 AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-                AfterSale afterSale=afterSaleMap.get(productIme.getId());
+                AfterSaleDto afterSale=afterSaleMap.get(productIme.getId());
+                afterSaleInputDto.setBadProductName(productIme.getProductName());
+                afterSaleInputDto.setBadProductIme(productIme.getIme());
+                afterSaleInputDto.setBadDepotName(productIme.getDepotName());
                 if(afterSale!=null){
-                    afterSaleInputDto.setMemory(afterSale.getMemory());
-                    afterSaleInputDto.setBadType(afterSale.getBadType());
-                    afterSaleInputDto.setPackageStatus(afterSale.getPackageStatus());
+                   ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
                 }
-                afterSaleInputDto.setProductName(productIme.getProductName());
-                afterSaleInputDto.setIme(productIme.getIme());
-                afterSaleInputDto.setDepotName(productIme.getDepotName());
                 afterSaleInputList.add(afterSaleInputDto);
             }
         }
@@ -104,7 +106,7 @@ public class AfterSaleController {
         Map<String,Object> map=Maps.newLinkedHashMap();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            List<AfterSale> afterSaleList=afterSaleService.findByImeList(imeList);
+            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList);
             map.put("afterSaleList",afterSaleList);
             Map<String,Integer> productQtyMap=productImeService.findQtyMap(imeList);
             map.put("productQtyMap",productQtyMap);
@@ -112,6 +114,13 @@ public class AfterSaleController {
         return map;
     }
 
+    @RequestMapping(value = "getToCompanyForm",method = RequestMethod.GET)
+    public AfterSaleToCompanyForm getToCompanyForm(AfterSaleToCompanyForm afterSaleToCompanyForm) {
+        afterSaleToCompanyForm.setToCompanyDate(LocalDate.now());
+        afterSaleToCompanyForm.setType(AfterSaleTypeEnum.售后机.name());
+        afterSaleToCompanyForm.getExtra().put("typeList",AfterSaleTypeEnum.getList());
+        return afterSaleToCompanyForm;
+    }
 
     @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
     public List<AfterSaleCompanyDto> getFromCompanyData(String imeStr) {
@@ -144,11 +153,11 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "toCompany", method = RequestMethod.POST)
-    public RestResponse toCompany(List<String> badImes, LocalDate toCompanyDate, String toCompanyRemarks) {
-        if(CollectionUtil.isEmpty(badImes)) {
+    public RestResponse toCompany(AfterSaleToCompanyForm afterSaleToCompanyForm) {
+        if(CollectionUtil.isEmpty(afterSaleToCompanyForm.getImeList())) {
             return new RestResponse("保存失败",null,false);
         }
-        afterSaleService.toCompany(badImes,toCompanyDate,toCompanyRemarks);
+        afterSaleService.toCompany(afterSaleToCompanyForm);
         return new RestResponse("保存成功",null);
     }
 
@@ -161,15 +170,4 @@ public class AfterSaleController {
         afterSaleService.fromCompany(datas, LocalDateUtils.parse(fromCompanyDate));
         return new RestResponse("保存成功",null);
     }
-
-    @RequestMapping(value = "synToFinance")
-    public String synToFinance() {
-        return null;
-    }
-
-    @RequestMapping(value = "delete")
-    public String logicDelete(String id) {
-        return null;
-    }
-
 }

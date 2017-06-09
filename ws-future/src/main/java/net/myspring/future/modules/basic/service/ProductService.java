@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
@@ -9,6 +10,7 @@ import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.web.form.ProductBatchForm;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -153,6 +155,17 @@ public class ProductService {
                 ReflectionUtil.copyProperties(productForm,product);
                 productRepository.save(product);
             }
+    }
+
+    public void batchSave(ProductBatchForm productBatchForm){
+        List<Product> productList = Lists.newArrayList();
+        List<List<String>> products = productBatchForm.getProductList();
+        for(List<String> rows:products){
+            Product product = productRepository.findOne(rows.get(0));
+
+            productList.add(product);
+        }
+        productRepository.save(productList);
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){

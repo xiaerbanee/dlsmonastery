@@ -28,6 +28,7 @@ public class DepotReportQuery extends BaseQuery{
     private List<String> productTypeIdList= Lists.newArrayList();
     private String officeId;
     private List<String> officeIdList=Lists.newArrayList();
+    private List<String> depotIdList=Lists.newArrayList();
     private List<String> shopIdList=Lists.newArrayList();
 
     public String getDepotId() {

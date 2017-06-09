@@ -32,7 +32,7 @@ public class DictMapController {
 
     @RequestMapping(value = "getQuery")
     public DictMapQuery getQuery(DictMapQuery dictMapQuery) {
-        dictMapQuery.setCategoryList(dictMapService.findDistinctCategory());
+        dictMapQuery.getExtra().put("categoryList",dictMapService.findDistinctCategory());
         return dictMapQuery;
     }
 
@@ -49,9 +49,9 @@ public class DictMapController {
     }
 
     @RequestMapping(value = "getForm")
-    public DictMapForm getForm(DictMapForm dictEnumForm){
-        dictEnumForm.setCategoryList(dictMapService.findDistinctCategory());
-        return dictEnumForm;
+    public DictMapForm getForm(DictMapForm dictMapForm){
+        dictMapForm.getExtra().put("",dictMapService.findDistinctCategory());
+        return dictMapForm;
     }
 
     @RequestMapping(value = "save")

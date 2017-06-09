@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 /**
  * Created by wangzm on 2017/5/12.
@@ -17,6 +18,24 @@ public class AfterSaleDto extends DataDto<AfterSale> {
     private String packageStatus;
     private String memory;
     private String badProductIme;
+    private String replaceProductName;
+    private String fromDepotName;
+
+    public String getReplaceProductName() {
+        return replaceProductName;
+    }
+
+    public void setReplaceProductName(String replaceProductName) {
+        this.replaceProductName = replaceProductName;
+    }
+
+    public String getFromDepotName() {
+        return fromDepotName;
+    }
+
+    public void setFromDepotName(String fromDepotName) {
+        this.fromDepotName = fromDepotName;
+    }
 
     public String getBadProductImeId() {
         return badProductImeId;

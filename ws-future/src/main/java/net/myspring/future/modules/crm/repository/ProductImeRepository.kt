@@ -60,6 +60,9 @@ interface ProductImeRepositoryCustom{
 
     fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto>
 
+
+    fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto>
+
     fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
     fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate,   companyId :String) : MutableList<ProductImeForReportScoreDto>
@@ -74,6 +77,49 @@ interface ProductImeRepositoryCustom{
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
+    override fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto> {
+        if(allImeList.isEmpty()){
+            return ArrayList()
+        }
+
+        val params = HashMap<String, Any>()
+        params.put("allImeList", allImeList)
+        params.put("companyId", companyId)
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            sale.created_date productImeSaleCreatedDate,
+            sale.created_by productImeSaleCreatedBy,
+            sale.employee_id productImeSaleEmployeeId,
+            sale.shop_id productImeSaleShopId,
+            upload.created_date productImeUploadCreatedDate,
+            upload.created_by productImeUploadCreatedBy,
+            upload.employee_id productImeUploadEmployeeId,
+            upload.shop_id productImeUploadShopId,
+            upload.status productImeUploadStatus,
+            upload.month productImeUploadMonth,
+            upload.id productImeUploadId,
+            validProductIme.*
+        FROM
+        (
+            SELECT
+            product.product_type_id, depot.office_id depotOfficeId, t1.*
+            FROM
+            crm_product_ime t1,
+            crm_depot depot,
+            crm_product product
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = depot.id
+                AND depot.enabled = 1
+                AND t1.company_id =  :companyId
+                AND t1.product_id =  product.id
+                AND product.enabled =  1
+                AND (t1.ime IN (:allImeList) OR t1.ime2 IN (:allImeList) OR t1.box_ime IN (:allImeList) OR t1.meid IN (:allImeList))
+            ) validProductIme
+            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
+                """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
+    }
 
     override fun findBaokaStoreReport(productImeReportQuery: ProductImeReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
@@ -381,6 +427,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto> {
+        if(imeList.isEmpty()){
+            return ArrayList()
+        }
+
         val params = HashMap<String, Any>()
         params.put("imeList", imeList)
         params.put("companyId", companyId)
@@ -395,6 +445,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             upload.employee_id productImeUploadEmployeeId,
             upload.shop_id productImeUploadShopId,
             upload.status productImeUploadStatus,
+            upload.month productImeUploadMonth,
             upload.id productImeUploadId,
             validProductIme.*
         FROM

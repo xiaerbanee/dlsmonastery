@@ -35,7 +35,7 @@ interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String>, Pro
         """ )
     fun findByEmployeeId(@Param("employeeId") employeeId: String, @Param("createdDateStart") createdDateStart: LocalDateTime, @Param("createdDateEnd") createdDateEnd: LocalDateTime): MutableList<ProductImeSale>
 
-    fun findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId: String): ProductImeSale
+    fun findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId: String): ProductImeSale?
 
 
 
@@ -105,8 +105,8 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if (productImeSaleQuery.isBack != null && !productImeSaleQuery.isBack) {
             sb.append("""  and t1.is_back = 0  """)
         }
-        if (StringUtils.isNotBlank(productImeSaleQuery.ime )) {
-            sb.append("""  and t1.ime LIKE CONCAT('%', :ime,'%')  """)
+        if (StringUtils.isNotBlank(productImeSaleQuery.imeReverse )) {
+            sb.append("""  and ime.ime_reverse LIKE CONCAT( :imeReverse,'%')  """)
         }
         if (StringUtils.isNotBlank(productImeSaleQuery.employeeId )) {
             sb.append("""  and t1.employee_id = :employeeId  """)

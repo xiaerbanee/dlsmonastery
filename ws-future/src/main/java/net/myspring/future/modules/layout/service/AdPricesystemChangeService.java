@@ -7,18 +7,15 @@ import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
-import net.myspring.future.modules.basic.web.form.AdPricesystemDetailForm;
-import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
-import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
 import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +23,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,9 +61,9 @@ public class AdPricesystemChangeService {
     }
 
     public List<List<Object>> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        List<Product> productList = Lists.newArrayList();
-        if(adPricesystemChangeQuery.getProductId()!=null){
-            productList.add(productRepository.findOne(adPricesystemChangeQuery.getProductId()));
+        List<Product> productList;
+        if(adPricesystemChangeQuery.getProductName()!=null){
+            productList = productRepository.findByNameLike(adPricesystemChangeQuery.getProductName());
         }else{
             productList = productRepository.findAllEnabled();
         }
@@ -74,9 +72,10 @@ public class AdPricesystemChangeService {
         return data;
     }
 
-    public void save(List<List<String>> data){
-        int pricesystemFromIndex = 5;
-        List<AdPricesystem> adPricesystems = adpricesystemRepository.findList(null);
+    public void save(String adpricesystemChanges){
+        String json = HtmlUtils.htmlUnescape(adpricesystemChanges);
+        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
+        List<AdPricesystem> adPricesystems = adpricesystemRepository.findByEnabledIsTrue();
         List<Map<String, AdPricesystemDetail>> adPricesystemList = Lists.newArrayList();
         for (AdPricesystem adPricesystem : adPricesystems) {
             Map<String, AdPricesystemDetail> map = Maps.newHashMap();
@@ -88,53 +87,38 @@ public class AdPricesystemChangeService {
             }
             adPricesystemList.add(map);
         }
-        for (List<String> row : data) {
-            Product product = productRepository.findOne(StringUtils.toString(row.get(0)).trim());
-            for (int i = 0; i < row.size(); i++) {
+        List<AdPricesystemDetail> adPricesystemDetails = Lists.newArrayList();
+        List<AdPricesystemChange> adPricesystemChanges = Lists.newArrayList();
+        for (List<Object> row : data) {
+            String productId = StringUtils.toString(row.get(0)).trim();
+            for (int i = 5; i < row.size(); i++) {
                 String value = StringUtils.toString(row.get(i)).trim();
-                switch (i) {
-                    case 0:
-                    case 1:
-                    case 2:
-                        break;
-                    case 3:
-                        if (StringUtils.isBlank(value)) {
-                            product.setVolume(null);
-                        } else {
-                            product.setVolume(new BigDecimal(value));
-                        }
-                        break;
-                    case 4:
-                        if (StringUtils.isBlank(value)) {
-                            product.setShouldGet(null);
-                        } else {
-                            product.setShouldGet(new BigDecimal(value));
-                        }
-                        break;
-                    default:
-                        AdPricesystem adPricesystem = adPricesystems.get(i - pricesystemFromIndex);
-                        Map<String, AdPricesystemDetail> map = adPricesystemList.get(i - pricesystemFromIndex);
-                        BigDecimal price = null;
-                        if (StringUtils.isNotBlank(value)) {
-                            price = new BigDecimal(value);
-                        }
-                        AdPricesystemDetail adPricesystemDetail = map.get(product.getId());
-                        if (adPricesystemDetail == null) {
-                            adPricesystemDetail = new AdPricesystemDetail();
-                            adPricesystemDetail.setAdPricesystemId(adPricesystem.getId());
-                            adPricesystemDetail.setProductId(product.getId());
-                        }
-                        if ((adPricesystemDetail.getPrice() == null && price != null) || (adPricesystemDetail.getPrice() != null && price == null) || (adPricesystemDetail.getPrice() != null && price != null && adPricesystemDetail.getPrice().compareTo(price) != 0)) {
-                            AdPricesystemChange adPricesystemChange = new AdPricesystemChange();
-                            adPricesystemChangeRepository.save(adPricesystemChange);
-                        }
-                        adPricesystemDetail.setPrice(price);
-                        adPricesystemDetailRepository.save(adPricesystemDetail);
-                        break;
+                AdPricesystem adPricesystem = adPricesystems.get(i - 5);
+                Map<String, AdPricesystemDetail> map = adPricesystemList.get(i - 5);
+                BigDecimal price = null;
+                if (StringUtils.isNotBlank(value)) {
+                    price = new BigDecimal(value);
                 }
+                AdPricesystemDetail adPricesystemDetail = map.get(productId);
+                if (adPricesystemDetail == null) {
+                    adPricesystemDetail = new AdPricesystemDetail();
+                    adPricesystemDetail.setAdPricesystemId(adPricesystem.getId());
+                    adPricesystemDetail.setProductId(productId);
+                }
+                if ((adPricesystemDetail.getPrice() == null && price != null) || (adPricesystemDetail.getPrice() != null && price == null) || (adPricesystemDetail.getPrice() != null && price != null && adPricesystemDetail.getPrice().compareTo(price) != 0)) {
+                    AdPricesystemChange adPricesystemChange = new AdPricesystemChange();
+                    adPricesystemChange.setOldPrice(adPricesystemDetail.getPrice());
+                    adPricesystemChange.setNewPrice(price);
+                    adPricesystemChange.setAdPricesystemId(adPricesystem.getId());
+                    adPricesystemChange.setProductId(productId);
+                    adPricesystemChanges.add(adPricesystemChange);
+                }
+                adPricesystemDetail.setPrice(price);
+                adPricesystemDetails.add(adPricesystemDetail);
             }
-            productRepository.save(product);
         }
+        adPricesystemChangeRepository.save(adPricesystemChanges);
+        adPricesystemDetailRepository.save(adPricesystemDetails);
     }
 
     //拼接数据给界面

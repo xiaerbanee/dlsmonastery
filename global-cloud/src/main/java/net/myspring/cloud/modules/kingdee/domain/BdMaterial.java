@@ -15,6 +15,10 @@ public class BdMaterial {
     private String FMaterialGroupName;
     //
     private LocalDateTime FModifyDate;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFMasterId() {
         return FMasterId;
@@ -64,4 +68,19 @@ public class BdMaterial {
         this.FModifyDate = FModifyDate;
     }
 
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
+    }
 }

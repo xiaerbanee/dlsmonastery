@@ -7,9 +7,9 @@ import java.time.LocalDate;
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleInputDto {
-    private String ime;
-    private String productName;
-    private String depotName;
+    private String badProductIme;
+    private String badProductName;
+    private String badDepotName;
     private String badType;
     private String packageStatus;
     private String memory;
@@ -21,28 +21,28 @@ public class AfterSaleInputDto {
     private String replaceProductName;
     private BigDecimal replaceAmount;
 
-    public String getIme() {
-        return ime;
+    public String getBadProductIme() {
+        return badProductIme;
     }
 
-    public void setIme(String ime) {
-        this.ime = ime;
+    public void setBadProductIme(String badProductIme) {
+        this.badProductIme = badProductIme;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getBadProductName() {
+        return badProductName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setBadProductName(String badProductName) {
+        this.badProductName = badProductName;
     }
 
-    public String getDepotName() {
-        return depotName;
+    public String getBadDepotName() {
+        return badDepotName;
     }
 
-    public void setDepotName(String depotName) {
-        this.depotName = depotName;
+    public void setBadDepotName(String badDepotName) {
+        this.badDepotName = badDepotName;
     }
 
     public String getBadType() {

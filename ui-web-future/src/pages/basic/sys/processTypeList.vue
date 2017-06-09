@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:processType:edit'">{{$t('processTypeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:processType:view'">{{$t('processTypeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span  v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('processTypeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('processTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('processTypeList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('processTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('processTypeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('processTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('processTypeList.id')" sortable ></el-table-column>
         <el-table-column prop="name" :label="$t('processTypeList.name')"sortable ></el-table-column>
@@ -52,13 +52,9 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          name:''
-        },formLabel:{
-          name:{label:this.$t('processTypeList.name')}
+        searchText:"",
+        formData:{
+          extra:{}
         },
         detailFormData:{},
         formLabelWidth: '120px',
@@ -66,11 +62,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("processTypeList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/general/sys/processType?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("processTypeList",submitData);
+        axios.get('/api/general/sys/processType?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -98,9 +100,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      var that = this;
+      that.pageHeight = window.outerHeight - 320;
+      axios.get('/api/basic/sys/processType/getQuery').then((response) => {
+        that.formData = response.data;
+        util.copyValue(that.$route.query, that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

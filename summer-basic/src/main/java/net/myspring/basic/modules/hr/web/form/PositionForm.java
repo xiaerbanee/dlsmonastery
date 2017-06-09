@@ -21,7 +21,6 @@ public class PositionForm extends BaseForm<Position> {
     private String permission;
     private String remarks;
     private String roleId;
-    private List<RoleDto> roleList= Lists.newArrayList();
 
 
     public String getRoleName() {
@@ -64,13 +63,5 @@ public class PositionForm extends BaseForm<Position> {
     @Override
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public void setRoleList(List<RoleDto> roleList) {
-        this.roleList = roleList;
-    }
-
-    public List<RoleDto> getRoleList() {
-        return roleList;
     }
 }

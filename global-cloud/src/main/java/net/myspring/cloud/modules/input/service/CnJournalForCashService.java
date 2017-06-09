@@ -79,7 +79,7 @@ public class CnJournalForCashService {
             }
         }
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
-        Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFName,BdDepartment::getFNumber));
+        Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
         Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
         Map<String, String> expenseNameMap = basAssistantRepository.findByNameList(expenseTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
         if (customerNameForList.size() > 0){
@@ -129,7 +129,7 @@ public class CnJournalForCashService {
     public CnJournalForCashForm getForm(CnJournalForCashForm cnJournalForCashForm,KingdeeBook kingdeeBook){
         cnJournalForCashForm.setAccountNumberForList(bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         cnJournalForCashForm.setStaffNameList(hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
-        cnJournalForCashForm.setDepartmentNameList(bdDepartmentRepository.findAll().stream().map(BdDepartment::getFName).collect(Collectors.toList()));
+        cnJournalForCashForm.setDepartmentNameList(bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
         cnJournalForCashForm.setOtherTypeNameList(basAssistantRepository.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
         cnJournalForCashForm.setExpenseTypeNameList(basAssistantRepository.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
         if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName()) || KingdeeTypeEnum.proxy.name().equals(kingdeeBook.getType())) {

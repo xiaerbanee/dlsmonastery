@@ -18,14 +18,12 @@ public class PricesystemDetailDto extends DataDto<PricesystemDetail> {
     private String productName;
     private BigDecimal price;
 
-    private Product product;
-
-    public Product getProduct() {
-        return product;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     public String getProductId() {

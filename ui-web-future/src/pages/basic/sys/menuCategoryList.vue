@@ -5,16 +5,16 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:menuCategory:edit'">{{$t('menuCategoryList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:menuCategory:view'">{{$t('menuCategoryList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>>
       </el-row>
-      <el-dialog :title="$t('menuCategoryList.filter')"  v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('menuCategoryList.filter')"  v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuCategoryList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('menuCategoryList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.sort.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuCategoryList.sort')" :label-width="formLabelWidth">
                 <el-input v-model="formData.sort" auto-complete="off" :placeholder="$t('menuCategoryList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -23,7 +23,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('menuCategoryList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('menuCategoryList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="code" :label="$t('menuCategoryList.code')" sortable width="200"></el-table-column>
         <el-table-column prop="name" :label="$t('menuCategoryList.name')"></el-table-column>
@@ -54,26 +54,26 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          name:"",
-          sort:''
-        },formLabel:{
-          name:{label:this.$t('menuCategoryList.name')},
-          sort:{label:this.$t('menuCategoryList.sort')}
+        searchText:'',
+        formData:{
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("menuCategoryList",this.submitData);
-        axios.get('/api/basic/sys/menuCategory?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("menuCategoryList",submitData);
+        axios.get('/api/basic/sys/menuCategory?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -103,10 +103,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      this.pageRequest();
-      this.formData=this.submitData;
-      util.copyValue(this.$route.query,this.formData);
+        var that=this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/menuCategory/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

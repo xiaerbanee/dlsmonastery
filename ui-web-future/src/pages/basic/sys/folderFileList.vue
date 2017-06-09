@@ -4,13 +4,13 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('folderFileList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span  v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('folderFileList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('folderFileList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('folderFileList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -19,7 +19,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('folderFileList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('folderFileList.loading')" @sort-change="sortChange"  stripe border>
         <el-table-column  prop="id" :label="$t('folderFileList.id')" sortable width="150"></el-table-column>
         <el-table-column  prop="name" :label="$t('folderFileList.name')" ></el-table-column>
@@ -37,15 +37,9 @@
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          createdDate:'',
-        },
-        submitData:{
-          page:0,
-          size:25,
-          createdDate:'',
-        },formLabel:{
-          createdDate:{label: this.$t('folderFileList.createdDate')}
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -53,11 +47,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("folderFileList",this.submitData);
-        axios.get('/api/general/sys/folderFile?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("folderFileList",submitData);
+        axios.get('/api/general/sys/folderFile?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -74,9 +74,13 @@
         this.pageRequest();
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+        var that=this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/folderFile/getQuery').then((response) =>{
+        that.formData=response.data;
+      util.copyValue(that.$route.query,that.formData);
+      that.pageRequest();
+    });
     }
   };
 </script>

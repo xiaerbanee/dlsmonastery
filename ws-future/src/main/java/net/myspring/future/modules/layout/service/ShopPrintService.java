@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.domain.ShopPrint;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.repository.ShopPrintRepository;
+import net.myspring.future.modules.layout.web.form.ShopPrintAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -88,13 +89,13 @@ public class ShopPrintService {
         shopPrintRepository.logicDelete(id);
     }
 
-    public void audit(ShopPrintForm shopPrintForm) {
+    public void audit(ShopPrintAuditForm shopPrintAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 
-        activitiCompleteForm.setPass(shopPrintForm.getPass());
-        activitiCompleteForm.setComment(shopPrintForm.getPassRemarks());
+        activitiCompleteForm.setPass(shopPrintAuditForm.getPass());
+        activitiCompleteForm.setComment(shopPrintAuditForm.getPassRemarks());
 
-        ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
+        ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintAuditForm.getId());
         activitiCompleteForm.setProcessInstanceId(shopPrint.getProcessInstanceId());
         activitiCompleteForm.setProcessTypeId(shopPrint.getProcessTypeId());
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);

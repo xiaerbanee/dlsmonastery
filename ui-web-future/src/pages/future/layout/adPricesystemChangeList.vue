@@ -11,8 +11,8 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
-                <product-select v-model="formData.productId"></product-select>
+              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -22,13 +22,13 @@
         </div>
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adPricesystemChangeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="productCode" :label="$t('adPricesystemChangeList.productCode')" sortable width="150"></el-table-column>
-        <el-table-column prop="productName" :label="$t('adPricesystemChangeList.productName')"></el-table-column>
-        <el-table-column prop="adPricesystemName" :label="$t('adPricesystemChangeList.adPricesystem')"></el-table-column>
-        <el-table-column prop="oldPrice" :label="$t('adPricesystemChangeList.oldPrice')"></el-table-column>
-        <el-table-column prop="newPrice" :label="$t('adPricesystemChangeList.newPrice')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('adPricesystemChangeList.createdBy')"></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('adPricesystemChangeList.createdDate')"></el-table-column>
+        <el-table-column column-key="productId" prop="productCode" :label="$t('adPricesystemChangeList.productCode')" sortable width="150"></el-table-column>
+        <el-table-column column-key="productId" prop="productName" :label="$t('adPricesystemChangeList.productName')" sortable></el-table-column>
+        <el-table-column column-key="adPricesystemId" prop="adPricesystemName" :label="$t('adPricesystemChangeList.adPricesystem')" sortable></el-table-column>
+        <el-table-column prop="oldPrice" :label="$t('adPricesystemChangeList.oldPrice')" sortable></el-table-column>
+        <el-table-column prop="newPrice" :label="$t('adPricesystemChangeList.newPrice')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('adPricesystemChangeList.createdBy')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('adPricesystemChangeList.createdDate')" sortable></el-table-column>
 
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -48,9 +48,10 @@
         submitData:{
           page:0,
           size:25,
-          productId:''
+          sort:"id,DESC",
+          productName:''
         },formLabel:{
-          productId:{label:this.$t('adPricesystemChangeList.productName')}
+          productName:{label:this.$t('adPricesystemChangeList.productName')}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -71,7 +72,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

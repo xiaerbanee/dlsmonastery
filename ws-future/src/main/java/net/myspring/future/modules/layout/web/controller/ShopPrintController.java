@@ -5,6 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopPrintDto;
 import net.myspring.future.modules.layout.service.ShopPrintService;
+import net.myspring.future.modules.layout.web.form.ShopPrintAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopPrintForm;
 import net.myspring.future.modules.layout.web.query.ShopPrintQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,11 @@ public class ShopPrintController {
         return shopPrintService.getForm(shopPrintForm);
     }
 
+    @RequestMapping(value = "getAuditForm")
+    public ShopPrintAuditForm getAuditForm(ShopPrintAuditForm shopPrintAuditForm){
+        return shopPrintAuditForm;
+    }
+
     @RequestMapping(value = "findOne", method = RequestMethod.GET)
     public ShopPrintDto detail(String id) {
         return shopPrintService.findOne(id);
@@ -59,8 +65,8 @@ public class ShopPrintController {
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(ShopPrintForm shopPrintForm) {
-        shopPrintService.audit(shopPrintForm);
+    public RestResponse audit(ShopPrintAuditForm shopPrintAuditFormForm) {
+        shopPrintService.audit(shopPrintAuditFormForm);
         RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
