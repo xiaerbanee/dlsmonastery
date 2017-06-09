@@ -6,6 +6,10 @@ package net.myspring.cloud.modules.kingdee.domain;
 public class HrEmpInfo {
     private String FNumber;
     private String FName;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFNumber() {
         return FNumber;
@@ -21,5 +25,21 @@ public class HrEmpInfo {
 
     public void setFName(String FName) {
         this.FName = FName;
+    }
+
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
     }
 }

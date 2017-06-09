@@ -16,33 +16,41 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
     fun findByNameList(nameList: List<String>): MutableList<BasAssistant> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-                t2.FENTRYID,
-                t2.FNUMBER,
-                t1.FDATAVALUE
+                t1.FENTRYID,
+                t1.FNUMBER,
+                t2.FDATAVALUE,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
             FROM
-                T_BAS_ASSISTANTDATAENTRY_L t1,
-                T_BAS_ASSISTANTDATAENTRY t2,
+                T_BAS_ASSISTANTDATAENTRY t1,
+                T_BAS_ASSISTANTDATAENTRY_L t2,
                 T_BAS_ASSISTANTDATA_L t3
             WHERE
-                t2.FENTRYID = t1.FENTRYID
-                AND t2.FID = t3.FID
-                AND t1.FDATAVALUE in (:nameList)
+                t1.FENTRYID = t2.FENTRYID
+                AND t1.FID = t3.FID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                AND t2.FDATAVALUE in (:nameList)
         """, Collections.singletonMap("nameList", nameList), BeanPropertyRowMapper(BasAssistant::class.java))
     }
 
     fun findByType(type: String): MutableList<BasAssistant> {
         return namedParameterJdbcTemplate.query("""
             SELECT
-                t2.FENTRYID,
-                t2.FNUMBER,
-                t1.FDATAVALUE
+                t1.FENTRYID,
+                t1.FNUMBER,
+                t2.FDATAVALUE,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
             FROM
-                T_BAS_ASSISTANTDATAENTRY_L t1,
-                T_BAS_ASSISTANTDATAENTRY t2,
+                T_BAS_ASSISTANTDATAENTRY t1,
+                T_BAS_ASSISTANTDATAENTRY_L t2,
                 T_BAS_ASSISTANTDATA_L t3
             WHERE
-                t2.FENTRYID = t1.FENTRYID
-                AND t2.FID = t3.FID
+                t1.FENTRYID = t2.FENTRYID
+                AND t1.FID = t3.FID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
                 AND t3.FNAME = :type
         """, Collections.singletonMap("type", type), BeanPropertyRowMapper(BasAssistant::class.java))
     }

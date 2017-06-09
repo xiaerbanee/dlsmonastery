@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDate;
 
 public class BdStock {
-
     private String FStockId;
     private String FNumber;
     private String FName;
@@ -12,6 +11,10 @@ public class BdStock {
     private String FGroupName;
     //修改时间
     private LocalDate FModifyDate;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFStockId() {
         return FStockId;
@@ -59,5 +62,21 @@ public class BdStock {
 
     public void setFModifyDate(LocalDate FModifyDate) {
         this.FModifyDate = FModifyDate;
+    }
+
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
     }
 }

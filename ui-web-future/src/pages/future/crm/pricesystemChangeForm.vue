@@ -6,7 +6,7 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
-              <product-select v-model="inputForm.productId" :multiple=true @change="handleChange"></product-select>
+              <product-select v-model="inputForm.productIds" :multiple=true @input="handleChange"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
               <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
@@ -57,20 +57,19 @@
           colHeaders: [],
           rowHeaders:true,
           data:[],
-				  colWidth:70
+          columns:[],
+				  colWidth:100
         },
+        pricesystem:{},
         formProperty:{},
         remoteLoading:false,
         inputForm:{
-          productIdList:"",
+          productIds:"",
           data:[],
           remarks:''
         },
         rules: {}
       }
-    },
-    mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
       formSubmit(){
         var that = this;
@@ -95,15 +94,32 @@
           }
         });
       },handleChange(){
-          if(this.inputForm.productId = null){
-              this.settings.data = null;
+          if(this.inputForm.productIds.length == 0){
+              this.table = null;
           }else{
-
+            axios.get('/api/ws/future/basic/pricesystemDetail/filter',{params:{productIds:this.inputForm.productIds}}).then((response)=>{
+              this.settings.data = response.data;
+              this.table.loadData(this.settings.data);
+            });
           }
       },
     },activated () {
+
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
+
+        axios.get('/api/ws/future/basic/pricesystem/filter').then((response)=>{
+          this.pricesystem=response.data;
+          this.settings.colHeaders.push("");
+          this.settings.columns.push({type: "numeric"});
+          for(let key in this.pricesystem){
+            this.settings.colHeaders.push(this.pricesystem[key].name);
+            this.settings.columns.push({type: "numeric"});
+          }
+          console.log(this.settings.colHeaders);
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;
         });

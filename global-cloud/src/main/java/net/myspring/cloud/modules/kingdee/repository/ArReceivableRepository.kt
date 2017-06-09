@@ -14,7 +14,8 @@ class ArReceivableRepository @Autowired constructor(val namedParameterJdbcTempla
         return namedParameterJdbcTemplate.query("""
             select
             t1.FBILLNO,
-            t2.FSOURCEBILLNO
+            t2.FSOURCEBILLNO,
+            t1.FDOCUMENTSTATUS
             from
             T_AR_RECEIVABLE t1,
             T_AR_RECEIVABLEENTRY t2
