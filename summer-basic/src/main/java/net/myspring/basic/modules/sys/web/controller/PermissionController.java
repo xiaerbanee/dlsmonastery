@@ -64,6 +64,11 @@ public class PermissionController {
         return permissionForm;
     }
 
+    @RequestMapping(value = "getQuery")
+    public PermissionQuery getForm(PermissionQuery permissionQuery) {
+        return permissionQuery;
+    }
+
     @RequestMapping(value = "search")
     public List<PermissionDto> search(String query){
         List<PermissionDto> permissions=permissionService.findByPermissionLike(query);

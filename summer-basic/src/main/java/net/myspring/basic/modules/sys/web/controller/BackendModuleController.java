@@ -61,4 +61,8 @@ public class BackendModuleController {
         return backendModuleForm;
     }
 
+    @RequestMapping(value = "getQuery")
+    public BackendModuleQuery getQuery(BackendModuleQuery backendModuleQuery){
+        return backendModuleQuery;
+    }
 }

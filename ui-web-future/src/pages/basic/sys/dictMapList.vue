@@ -5,21 +5,21 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:dictMap:edit'">{{$t('dictMapList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search"  v-permit="'sys:dictMap:view'">{{$t('dictMapList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dictMapList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dictMapList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictMapList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.category.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictMapList.category')" :label-width="formLabelWidth">
                 <el-select v-model="formData.category" filterable clearable :placeholder="$t('dictMapList.inputKey')">
-                  <el-option v-for="category in formData.categoryList" :key="category" :label="category" :value="category"></el-option>
+                  <el-option v-for="category in formData.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.value.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dictMapList.value')" :label-width="formLabelWidth">
                 <el-input v-model="formData.value" auto-complete="off" :placeholder="$t('dictMapList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -28,7 +28,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dictMapList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dictMapList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('dictMapList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="category" :label="$t('dictMapList.category')" sortable></el-table-column>
@@ -55,18 +55,9 @@
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          createdDate:'',
-        }, submitData:{
-          page:0,
-          size:25,
-          createdDate:'',
-          category:'',
-          value:''
-        },formLabel:{
-          createdDate:{label: this.$t('dictMapList.createdDate')},
-          category:{label: this.$t('dictMapList.category')},
-          value:{label: this.$t('dictMapList.value')}
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -74,11 +65,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("dictMapList",this.submitData);
-        axios.get('/api/basic/sys/dictMap?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dictMapList",submitData);
+        axios.get('/api/basic/sys/dictMap?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

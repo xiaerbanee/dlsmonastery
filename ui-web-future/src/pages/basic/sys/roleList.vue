@@ -6,13 +6,13 @@
         <el-button type="primary" @click="itemAdd" icon="plus" >添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" >过滤</el-button>
         <el-button type="primary" @click="itemAuthAdd" icon="plus">角色权限编辑</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('roleList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" ></el-input>
               </el-form-item>
             </el-col>
@@ -21,7 +21,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" label="名称" sortable width="150"></el-table-column>
         <el-table-column prop="permission" label="权限"></el-table-column>
@@ -47,13 +47,9 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          name:'',
-        },formLabel:{
-          name:{label:"名称"},
+        searchText:"",
+        formData:{
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -61,11 +57,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("roleList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/role?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("roleList",submitData);
+        axios.get('/api/basic/sys/role?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -99,9 +101,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+        var that=this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/role/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+      });
     }
   };
 </script>

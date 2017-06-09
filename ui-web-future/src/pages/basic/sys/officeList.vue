@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:office:edit'">{{$t('officeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:office:view'">{{$t('officeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('officeList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('officeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('officeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('officeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="parentName" :label="$t('officeList.parentName')" sortable></el-table-column>
         <el-table-column prop="name" :label="$t('officeList.name')" ></el-table-column>
@@ -58,13 +58,9 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          name:''
-        },formLabel:{
-          name:{label:this.$t('officeList.name')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -73,11 +69,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("officeList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/sys/office?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("officeList",submitData);
+        axios.get('/api/basic/sys/office?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -110,10 +112,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      this.formData=this.submitData;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+        var that=this;
+        that.pageHeight = window.outerHeight -320;
+      axios.get('/api/basic/sys/office/getQuery').then((response) =>{
+        that.formData=response.data;
+      util.copyValue(that.$route.query,that.formData);
+      that.pageRequest();
+    });
     }
   };
 </script>
