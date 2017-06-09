@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -13,13 +15,23 @@ import net.myspring.future.modules.crm.repository.ProductImeUploadRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +45,8 @@ public class ProductImeUploadService {
     private ProductImeRepository productImeRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
 
@@ -40,24 +54,6 @@ public class ProductImeUploadService {
         cacheUtils.initCacheInput(page.getContent());
 
         return page;
-    }
-
-    public void batchAudit(String[] ids, boolean pass) {
-
-        if(ids == null || ids.length == 0){
-            return;
-        }
-
-        List<ProductImeUpload> productImeUploads = productImeUploadRepository.findAll(Lists.newArrayList(ids));
-        if(CollectionUtil.isEmpty(productImeUploads)){
-            return;
-        }
-
-        for (ProductImeUpload each : productImeUploads) {
-            each.setStatus(pass ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
-
-        }
-        productImeUploadRepository.save(productImeUploads);
     }
 
     public ProductImeUploadDto findDto(String id) {
@@ -90,17 +86,16 @@ public class ProductImeUploadService {
         return sb.toString();
     }
 
-    public String upload(ProductImeUploadForm productImeUploadForm) {
+    public void upload(ProductImeUploadForm productImeUploadForm) {
 
         List<String> imeList = productImeUploadForm.getImeList();
 
         String errMsg = checkForUpload(imeList);
         if(StringUtils.isNotBlank(errMsg)){
-            return errMsg;
+            throw new ServiceException(errMsg);
         }
 
-        //TODO 获取employeeId
-        String employeeId = "";
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
         for (ProductIme productIme : productImeList) {
@@ -136,7 +131,6 @@ public class ProductImeUploadService {
 
         }
 
-        return null;
     }
 
     public String checkForUploadBack(List<String> imeList) {
@@ -166,11 +160,11 @@ public class ProductImeUploadService {
         return sb.toString();
     }
 
-    public String uploadBack(List<String> imeList) {
+    public void uploadBack(List<String> imeList) {
 
         String errMsg = checkForUploadBack(imeList);
         if(StringUtils.isNotBlank(errMsg)){
-            return errMsg;
+            throw new ServiceException(errMsg);
         }
 
         List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
@@ -189,6 +183,36 @@ public class ProductImeUploadService {
             }
         }
 
-        return null;
+    }
+
+    public String export(ProductImeUploadQuery productImeUploadQuery) {
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SimpleExcelColumn> productImeUploadColumnList = Lists.newArrayList();
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "month", "上报月份"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "shopOfficeName", "考核区域"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "shopName", "上报门店"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "productImeProductName", "货品名称"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "上报人"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "上报时间"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "status", "上报状态"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "更新人"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
+        productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+
+        List<ProductImeUploadDto> productImeUploadDtoList = findPage(new PageRequest(0,10000), productImeUploadQuery).getContent();
+        simpleExcelSheetList.add(new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList));
+
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
+
     }
 }

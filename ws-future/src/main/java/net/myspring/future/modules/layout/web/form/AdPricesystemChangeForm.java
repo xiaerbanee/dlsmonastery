@@ -12,58 +12,13 @@ import java.util.List;
  */
 public class AdPricesystemChangeForm extends BaseForm<AdPricesystemChange> {
 
-    private String productId;
-    private String productName;
-    private String productCode;
-    private BigDecimal volume;
-    private BigDecimal shouldGet;
-    private List<AdPricesystemDetailForm> adPricesystemDetailFormList;
+    private String data;
 
-    public String getProductId() {
-        return productId;
+    public String getData() {
+        return data;
     }
 
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
-    public BigDecimal getVolume() {
-        return volume;
-    }
-
-    public void setVolume(BigDecimal volume) {
-        this.volume = volume;
-    }
-
-    public BigDecimal getShouldGet() {
-        return shouldGet;
-    }
-
-    public void setShouldGet(BigDecimal shouldGet) {
-        this.shouldGet = shouldGet;
-    }
-
-    public List<AdPricesystemDetailForm> getAdPricesystemDetailFormList() {
-        return adPricesystemDetailFormList;
-    }
-
-    public void setAdPricesystemDetailFormList(List<AdPricesystemDetailForm> adPricesystemDetailFormList) {
-        this.adPricesystemDetailFormList = adPricesystemDetailFormList;
+    public void setData(String data) {
+        this.data = data;
     }
 }

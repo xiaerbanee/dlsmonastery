@@ -23,7 +23,6 @@ public class MenuForm extends BaseForm<Menu> {
     private Integer sort;
     private String name;
     private String code;
-    private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
     private List<String> categoryList= Lists.newArrayList();
     private Map<String,String> boolMap= Maps.newHashMap();
 
@@ -41,14 +40,6 @@ public class MenuForm extends BaseForm<Menu> {
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
-    }
-
-    public List<MenuCategoryDto> getMenuCategoryList() {
-        return menuCategoryList;
-    }
-
-    public void setMenuCategoryList(List<MenuCategoryDto> menuCategoryList) {
-        this.menuCategoryList = menuCategoryList;
     }
 
     public List<String> getCategoryList() {

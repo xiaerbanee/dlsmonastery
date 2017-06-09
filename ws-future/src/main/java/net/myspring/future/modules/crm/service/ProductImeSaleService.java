@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -69,6 +70,7 @@ public class ProductImeSaleService {
     private GridFsTemplate tempGridFsTemplate;
 
     public Page<ProductImeSaleDto> findPage(Pageable pageable, ProductImeSaleQuery productImeSaleQuery) {
+
         Page<ProductImeSaleDto> page = productImeSaleRepository.findPage(pageable, productImeSaleQuery);
         cacheUtils.initCacheInput(page.getContent());
 
@@ -114,9 +116,7 @@ public class ProductImeSaleService {
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
-
-        //TODO 获取employeeId
-        String employeeId = "";
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
         Integer leftCredit =0;
         if(latestProductImeSale!=null){
@@ -186,7 +186,7 @@ public class ProductImeSaleService {
 
     public void saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
-        String employeeId = "";//TODO 获取employeeId
+        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
         List<ProductIme> productImes = productImeRepository.findByImeList(imeList);
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);

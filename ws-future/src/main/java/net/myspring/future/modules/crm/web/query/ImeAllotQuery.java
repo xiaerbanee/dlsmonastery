@@ -91,4 +91,8 @@ public class ImeAllotQuery extends BaseQuery{
         }
     }
 
+    public String getImeReverse(){
+        return StringUtils.reverse(ime);
+    }
+
 }

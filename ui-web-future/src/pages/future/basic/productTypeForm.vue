@@ -31,7 +31,7 @@
           <el-input v-model.number="productType.price3"></el-input>
         </el-form-item>
         <el-form-item :label="$t('productTypeForm.remarks')" prop="remarks">
-          <el-input v-model="productType.remarks"></el-input>
+          <el-input  type="textarea" v-model="productType.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productTypeForm.save')}}</el-button>

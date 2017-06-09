@@ -27,8 +27,6 @@ public class ShopAllotQuery extends BaseQuery {
     private LocalDateTime auditDateStart;
     private LocalDateTime auditDateEnd;
 
-    private List<String> statusList = new ArrayList<String>();
-
     public List<String> getBusinessIdList() {
         if(StringUtils.isNotBlank(businessIds)) {
             return StringUtils.getSplitList(businessIds, CharConstant.ENTER);
@@ -121,14 +119,6 @@ public class ShopAllotQuery extends BaseQuery {
 
     public LocalDateTime getCreatedDateEnd() {
         return createdDateEnd;
-    }
-
-    public List<String> getStatusList() {
-        return statusList;
-    }
-
-    public void setStatusList(List<String> statusList) {
-        this.statusList = statusList;
     }
 
 

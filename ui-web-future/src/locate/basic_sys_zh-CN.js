@@ -621,4 +621,7 @@ export default {
     business:"业务部门",
     support:"后勤部门"
   },
+  roleList:{
+    name:"名称"
+  }
 }

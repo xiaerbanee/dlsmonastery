@@ -62,6 +62,9 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table { margin-bottom: 50px;}
+</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'

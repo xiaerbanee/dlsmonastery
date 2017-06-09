@@ -54,4 +54,9 @@ public class OfficeRuleController {
         officeRuleService.logicDelete(officeRuleForm);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
+
+    @RequestMapping(value = "getQuery")
+    public OfficeRuleQuery getQuery(OfficeRuleQuery officeRuleQuery) {
+        return officeRuleQuery;
+    }
 }

@@ -19,6 +19,8 @@ public class ProductDto extends DataDto<Product> {
     private String productTypeId;
     @CacheInput(inputKey = "productTypes",inputInstance = "productTypeId",outputInstance = "name")
     private String productTypeName;
+    private Boolean visible;
+    private BigDecimal volume;
     private Boolean hasIme;
     private Boolean allowOrder;
     private Boolean allowBill;
@@ -30,6 +32,23 @@ public class ProductDto extends DataDto<Product> {
     private BigDecimal retailPrice;
     private BigDecimal depositPrice;
     private String mappingName;
+
+
+    public BigDecimal getVolume() {
+        return volume;
+    }
+
+    public void setVolume(BigDecimal volume) {
+        this.volume = volume;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public BigDecimal getRetailPrice() {
         return retailPrice;

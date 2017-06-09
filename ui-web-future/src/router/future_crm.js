@@ -45,12 +45,16 @@ const pricesystemChangeList= r => require.ensure([], () => r(require('pages/futu
 const pricesystemChangeForm= r => require.ensure([], () => r(require('pages/future/crm/pricesystemChangeForm.vue')));
 const productAdEdit = r  => require.ensure([], () => r(require('pages/future/crm/productAdEdit.vue')));
 const productImeList = r => require.ensure([], () => r(require('pages/future/crm/productImeList.vue')));
+const productImeBatchQuery = r => require.ensure([], () => r(require('pages/future/crm/productImeBatchQuery.vue')));
+const productImeCreate = r => require.ensure([], () => r(require('pages/future/crm/productImeCreate.vue')));
+const productImeChange = r => require.ensure([], () => r(require('pages/future/crm/productImeChange.vue')));
 const productImeDetail = r => require.ensure([], () => r(require('pages/future/crm/productImeDetail.vue')));
 const productImeSaleList= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleList.vue')));
 const productImeSaleForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleForm.vue')));
 const productImeSaleBackForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleBackForm.vue')));
 const productImeUploadList  = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadList.vue')));
 const productImeUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadForm.vue')));
+const productImeUploadBackForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadBackForm.vue')));
 const productMonthPriceList = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceList.vue')));
 const productMonthPriceForm = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceForm.vue')));
 const reportScoreList = r => require.ensure([], () => r(require('pages/future/crm/reportScoreList.vue')));
@@ -121,12 +125,16 @@ let routes = [
   {path:'/future/crm/pricesystemChangeForm',component:pricesystemChangeForm,name:'pricesystemChangeForm',meta: {menu:"pricesystemChangeList",keepAlive:true}},
   {path:'/future/crm/productAdEdit',component:productAdEdit,name:'productAdEdit',meta: {menu:"productList"}},
   {path:'/future/crm/productImeList',component:productImeList,name:'productImeList'},
+  {path:'/future/crm/productImeChange',component:productImeChange,name:'productImeChange', meta: {menu:"productImeList",keepAlive:true}},
+  {path:'/future/crm/productImeCreate',component:productImeCreate,name:'productImeCreate',meta: {menu:"productImeList",keepAlive:true}},
+  {path:'/future/crm/productImeBatchQuery',component:productImeBatchQuery,name:'productImeBatchQuery',meta: {menu:"productImeList",keepAlive:true}},
   {path:'/future/crm/productImeDetail',component:productImeDetail,name:'productImeDetail'},
   {path:'/future/crm/productImeSaleList',component:productImeSaleList,name:'productImeSaleList'},
   {path:'/future/crm/productImeSaleForm',component:productImeSaleForm,name:'productImeSaleForm',meta: {menu:"productImeSaleList",keepAlive:true}},
   {path:'/future/crm/productImeSaleBackForm',component:productImeSaleBackForm,name:'productImeSaleBackForm',meta: {menu:"productImeSaleList",keepAlive:true}},
   {path:'/future/crm/productImeUploadList',component:productImeUploadList,name:'productImeUploadList'},
   {path:'/future/crm/productImeUploadForm',component:productImeUploadForm,name:'productImeUploadForm',meta: {menu:"productImeUploadList",keepAlive:true}},
+  {path:'/future/crm/productImeUploadBackForm',component:productImeUploadBackForm,name:'productImeUploadBackForm',meta: {menu:"productImeUploadList",keepAlive:true}},
   {path:'/future/crm/productMonthPriceList',component:productMonthPriceList,name:'productMonthPriceList' },
   {path:'/future/crm/productMonthPriceForm',component:productMonthPriceForm,name:'productMonthPriceForm',meta: {menu:"productMonthPriceList",keepAlive:true}},
   {path:'/future/crm/reportScoreList',component:reportScoreList,name:'reportScoreList' },

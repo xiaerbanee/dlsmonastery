@@ -6,12 +6,12 @@
     <head-tab active="productAdEdit"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="" icon="check">{{$t('productAdEdit.save')}}</el-button>
+        <el-button type="primary" @click="formSubmit()" icon="check">{{$t('productAdEdit.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productAdEdit.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <el-dialog :title="$t('productAdEdit.filter')" v-model="formVisible"  size="small" class="search-form">
-        <el-form :model="formData">
+        <el-form :model="formData"  ref="inputForm" >
           <el-row :gutter="8">
             <el-col :span="12">
               <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
@@ -93,7 +93,6 @@
           hasIme:'',
           allowBill:'',
           productTypeId:'',
-          code:'',
           allowOrder:'',
           outGroupName:'',
           netType:'',
@@ -103,13 +102,15 @@
           hasIme:{label:this.$t('productAdEdit.hasIme'),value:""},
           code:{label:this.$t('productAdEdit.code')},
           allowBill:{label:this.$t('productAdEdit.allowBill'),value:""},
-          productTypeId:{label:this.$t('productAdEdit.productType'),value:""},
+          productType:{label:this.$t('productAdEdit.productType'),value:""},
           allowOrder:{label:this.$t('productAdEdit.allowOrder'),value:""},
           outGroupName:{label:this.$t('productAdEdit.outGroupName'),value:""},
           netType:{label:this.$t('productAdEdit.netType'),value:""}
         },
+        inputForm:{
+            productList:[],
+        },
         formLabelWidth: '120px',
-        formProperty:{},
         formVisible: false
       };
     },
@@ -122,13 +123,25 @@
         this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
         this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
         this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
-        this.formLabel.productTypeId.value = util.getLabel(this.formData.productTypeId);
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productList",this.submitData);
         axios.get('/api/ws/future/basic/product/filter',{params:this.submitData}).then((response) => {
           this.settings.data  = response.data;
           this.table.loadData(this.settings.data);
         });
+      },formSubmit(){
+          this.submitDisabled = true;
+        this.table.validateCells(function(valid) {
+            if(valid){
+              this.inputForm.productList = this.table.getData();
+              axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
+                this.$message(response.data.message);
+              }).catch(function () {
+                this.submitDisabled = false;
+              });
+            }
+
+        })
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

@@ -103,6 +103,8 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByName(name: String): Product
 
+    fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product
+
     fun findByOutId(outId: String): Product
 
     @Query("""
@@ -162,6 +164,8 @@ WHERE
     fun findIntersectionOfBothPricesystem(@Param("pricesystemId1") pricesystemId1: String, @Param("pricesystemId2") pricesystemId2: String): MutableList<ProductDto>
 
     fun findByNameIn(nameList: MutableList<String>): MutableList<Product>
+
+    fun findByEnabledIsTrueAndCompanyId(companyId: String): List<Product>
 }
 
 interface ProductRepositoryCustom{

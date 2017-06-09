@@ -78,7 +78,9 @@
     </div>
   </div>
 </template>
-
+<style>
+  .el-table { margin-bottom: 50px;}
+</style>
 <script>
 
   import depotSelect from 'components/future/depot-select'
@@ -126,7 +128,12 @@
           }
       },
         formSubmit(){
-          var that = this;
+
+          if (this.errMsg) {
+            this.$alert( this.$t('productImeSaleForm.formInvalid'), this.$t('productImeSaleForm.notify'));
+            return;
+          }
+
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -141,7 +148,7 @@
                   }
                 }
               }).catch( () => {
-                that.submitDisabled = false;
+                this.submitDisabled = false;
               });
             }
           })

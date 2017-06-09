@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
@@ -10,6 +11,7 @@ import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.service.ProductImeUploadService;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
+import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -42,16 +44,12 @@ public class ProductImeUploadController {
 
         List<String> imeList = productImeUploadForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
-        String errMsg = productImeUploadService.upload(productImeUploadForm);
-        if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
-        }else{
-            return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
-        }
+        productImeUploadService.upload(productImeUploadForm);
 
+        return new RestResponse("上报成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "uploadBack")
@@ -59,34 +57,17 @@ public class ProductImeUploadController {
 
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
-        String errMsg = productImeUploadService.uploadBack(imeList);
-        if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
-        } else {
+        productImeUploadService.uploadBack(imeList);
 
-            return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
-        }
-
+        return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getQuery")
     public ProductImeUploadQuery getQuery(ProductImeUploadQuery productImeUploadQuery){
         return productImeUploadQuery;
-    }
-
-    @RequestMapping(value = "delete")
-    public String delete(ProductImeUpload productImeUpload, BindingResult bindingResult){
-        return null;
-    }
-
-    @RequestMapping(value = "batchAudit")
-    public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids,boolean pass){
-
-        productImeUploadService.batchAudit(ids, pass);
-        return new RestResponse("批量审核成功", ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findDto")
@@ -114,6 +95,13 @@ public class ProductImeUploadController {
             return null;
         }
         return productImeUploadService.checkForUploadBack(imeList);
+    }
+
+
+    @RequestMapping(value="export")
+    public String export(ProductImeUploadQuery productImeUploadQuery) {
+
+        return productImeUploadService.export(productImeUploadQuery);
     }
 
 }

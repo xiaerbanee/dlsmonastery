@@ -3,7 +3,24 @@
     <head-tab active="productImeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productIme:edit'">{{$t('productImeList.add')}}</el-button>
+        <el-dropdown @command="handleCommand">
+          <el-button type="primary">
+            {{$t('productImeList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="sale">{{$t('productImeList.sale')}}</el-dropdown-item>
+            <el-dropdown-item command="saleBack">{{$t('productImeList.saleBack')}}</el-dropdown-item>
+            <el-dropdown-item command="allot">{{$t('productImeList.allot')}}</el-dropdown-item>
+            <el-dropdown-item command="change">{{$t('productImeList.change')}}</el-dropdown-item>
+            <el-dropdown-item command="batchAllot">{{$t('productImeList.batchAllot')}}</el-dropdown-item>
+            <el-dropdown-item command="upload">{{$t('productImeList.upload')}}</el-dropdown-item>
+            <el-dropdown-item command="uploadBack">{{$t('productImeList.uploadBack')}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
+        <el-button type="primary" @click="batchQuery"  >{{$t('productImeList.batchQuery')}}</el-button>
+        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
 
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
@@ -57,7 +74,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
+
           <el-button type="primary" @click="search()">{{$t('productImeList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -180,8 +197,30 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },itemAdd(){
+        this.$router.push({ name: 'productImeCreate'});
+      },batchQuery(){
+        this.$router.push({ name: 'productImeBatchQuery'});
+      },
+      handleCommand(command) {
+        if(command==="sale") {
+          this.$router.push({ name: 'productImeSaleForm'});
+        }else if(command==="saleBack"){
+          this.$router.push({ name: 'productImeSaleBackForm'});
+        }else if(command==="allot"){
+          this.$router.push({ name: 'imeAllotForm'});
+        }else if(command==="change"){
+          this.$router.push({ name: 'productImeChange'});
+        }else if(command==="batchAllot"){
+          this.$router.push({ name: 'imeBatchAllotForm'});
+        }else if(command==="upload"){
+          this.$router.push({ name: 'productImeUploadForm'});
+        }else if(command==="uploadBack"){
+          this.$router.push({ name: 'productImeUploadBackForm'});
+        }
 
-      },itemAction:function(id,action){
+      },
+      itemAction:function(id,action){
         if(action==="detail") {
           this.$router.push({ name: 'productImeDetail', query: { id: id }})
         }

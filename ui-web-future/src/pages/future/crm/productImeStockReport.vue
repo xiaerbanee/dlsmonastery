@@ -3,125 +3,129 @@
     <head-tab active="productImeStockReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.filter')}}</el-button>
-        <el-button type="primary" @click="exportData" icon="check" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.export')}}</el-button>
-        <el-button type="primary" @click="viewDetail" icon="check" v-permit="'crm:productIme:stockReport'">{{$t('productImeStockReport.viewDetail')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-dropdown  @command="exportData">
+          <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="按数量导出">按数量导出</el-dropdown-item>
+            <el-dropdown-item command="按合计导出">按合计导出</el-dropdown-item>
+            <el-dropdown-item command="按串码导出">按串码导出</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
+        <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('productImeStockReport.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.sumType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.sumType" clearable>
-                  <el-option v-for="item in formData.sumTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-form-item label="汇总" :label-width="formLabelWidth">
+                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.sumTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.outType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.outType" clearable>
-                  <el-option v-for="item in formData.outTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-form-item label="查看" :label-width="formLabelWidth">
+                <el-select v-model="formData.outType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.outTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaType" clearable>
-                  <el-option v-for="item in formData.areaTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-form-item label="区域" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.areaTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.townType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.townType" clearable>
-                  <el-option v-for="item in formData.townTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-form-item label="乡镇" :label-width="formLabelWidth">
+                <el-select v-model="formData.townType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.townTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.date.label"  :label-width="formLabelWidth">
-                <date-picker  v-model="formData.date"  ></date-picker>
+              <el-form-item label="日期" :label-width="formLabelWidth">
+                <date-picker v-model="formData.date"></date-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.scoreType.label"  :label-width="formLabelWidth">
-                <bool-select  v-model="formData.scoreType"  ></bool-select>
+              <el-form-item label="打分型号" :label-width="formLabelWidth">
+                <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
+                  <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str" :value="key"></el-option>
+                </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.productIds.label"  :label-width="formLabelWidth">
-                <product-select  v-model="formData.productIds"  multiple ></product-select>
+              <el-form-item label="货品" :label-width="formLabelWidth">
+                <el-select v-model="formData.productIds" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.productIdsList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">{{$t('productImeStockReport.sure')}}</el-button>
+          <el-button type="primary" @click="search()">确定</el-button>
         </div>
-      </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading"    :element-loading-text="$t('productImeStockReport.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column  prop="depotName" :label="$t('productImeStockReport.depotName')" width="180" ></el-table-column>
-        <el-table-column prop="qty" :label="$t('productImeStockReport.qty')"  ></el-table-column>
-        <el-table-column prop="percent" :label="$t('productImeStockReport.percent')"></el-table-column>
+      </search-dialog>
+      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
+        <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
+        <el-table-column prop="qty" label="数量"  sortable></el-table-column>
+        <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
 <script>
-
-  import productSelect from 'components/future/product-select'
-
-  export default{
-    components:{
-      productSelect,
-
+  export default {
+    data() {
+      return {
+        page:[],
+        searchText:"",
+        formData:{
+          extra:{},
+        },
+        formLabelWidth: '120px',
+        formVisible: false,
+        pageLoading: false,
+        officeIds:[],
+        type:"库存报表",
+      };
     },
-      data(){
-          return{
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-
-            formData:{},
-            submitData:{
-              sumType:'',
-              outType:"",
-              areaType:"",
-              townType:"",
-              date:"",
-              scoreType:"",
-              productIds:''
-            },formLabel:{
-              sumType:{label:this.$t('productImeStockReport.sumType')},
-              outType:{label:this.$t('productImeStockReport.outType')},
-              areaType:{label:this.$t('productImeStockReport.areaType')},
-              townType:{label:this.$t('productImeStockReport.townType')},
-              date:{label:this.$t('productImeStockReport.date')},
-              scoreType:{label:this.$t('productImeStockReport.scoreType')},
-              productIds:{label:this.$t('productImeStockReport.productIds')},
-
-            },
-
-          }
+    methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
       },
-      methods:{
-        formSubmit(){
-          this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              util.copyValue(this.reportScore, this.submitData);
-              axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if(response.data.success){
-                  if(this.isCreate){
-                    form.resetFields();
-                  } else {
-                    this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
-                  }
-                }
-              }).catch(function () {
-                this.submitDisabled = false;
-              });
-            }else{
-              this.submitDisabled = false;
-            }
-          })
-        }
-      },created(){
-        axios.get('/api/ws/future/crm/productIme/getStockReportQuery').then((response)=>{
-          this.formData=response.data;
-        });
+      pageRequest() {
+        this.pageLoading = true;
+        this.setSearchText();
+        this.formData.type=this.type;
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("productImeStockReport",this.formData);
+        axios.get('/api/ws/future/crm/productIme/productImeReport?'+qs.stringify(submitData)).then((response) => {
+          this.page = response.data;
+        this.pageLoading = false;
+      })
+      },sortChange(column) {
+        this.formData.sort=util.getSort(column);
+        this.formData.page=0;
+        this.pageRequest();
+      },search() {
+        this.formVisible = false;
+        this.pageRequest();
+      },nextLevel(	row, event, column){
+        this.officeIds.push(row.officeId);
+        this.submitData.officeId=this.officeIds[this.officeIds.length-1];
+        this.pageRequest();
+      },preLevel(){
+        this.officeIds.pop();
+        this.submitData.officeId=this.officeIds[this.officeIds.length-1];
+        this.pageRequest();
+      },saleReportGrid(){
+
+      },exportData(command) {
       }
+    },created () {
+      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+        this.formData = response.data;
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
+      })
     }
+  };
 </script>
+

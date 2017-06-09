@@ -66,13 +66,14 @@ public class MenuController {
 
     @RequestMapping(value = "getForm")
     public MenuForm getForm(MenuForm menuForm){
-        menuForm.setMenuCategoryList(menuCategoryService.findAll());
+        menuForm.getExtra().put("menuCategoryList",menuCategoryService.findAll());
         return menuForm;
     }
 
     @RequestMapping(value="getQuery")
     public MenuQuery getQuery(MenuQuery menuQuery){
-        menuQuery.setMenuCategoryList(menuCategoryService.findAll());
+        menuQuery.getExtra().put("menuCategoryList", menuCategoryService.findAll());
+//        menuQuery.getExtra().put("categoryList",menuService.);
         return menuQuery;
     }
 }

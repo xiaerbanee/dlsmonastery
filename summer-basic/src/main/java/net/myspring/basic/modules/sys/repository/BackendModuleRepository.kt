@@ -80,7 +80,8 @@ class BackendModuleRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                     and t1.backend_id in (
                     select id
                     from sys_backend
-                    where t1.name like concat('%',#{p.backendName},'%')
+                    where name like CONCAT('%',:backendName,'%')
+                )
                 """);
         }
 
