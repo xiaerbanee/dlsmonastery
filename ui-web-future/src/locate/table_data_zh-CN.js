@@ -235,6 +235,7 @@ export default {
       productAdEdit: "物料编辑",
       productForm: "货品管理编辑",
       productImeList: "串码列表",
+      productImeBatchQuery: "串码批量查询",
       productImeCreate: "串码添加",
       productImeChange: "串码调整",
       productImeDetail: "串码详情",
