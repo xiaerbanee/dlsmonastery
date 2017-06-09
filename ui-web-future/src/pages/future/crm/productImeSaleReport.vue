@@ -109,11 +109,11 @@
         this.pageRequest();
       },nextLevel(	row, event, column){
           this.officeIds.push(row.officeId);
-        this.submitData.officeId=this.officeIds[this.officeIds.length-1];
+        this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },preLevel(){
         this.officeIds.pop();
-        this.submitData.officeId=this.officeIds[this.officeIds.length-1];
+        this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },saleReportGrid(){
 
