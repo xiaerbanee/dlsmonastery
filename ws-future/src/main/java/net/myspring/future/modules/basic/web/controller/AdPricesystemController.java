@@ -47,4 +47,9 @@ public class AdPricesystemController {
     public AdPricesystemDto findOne(String id){
         return adPricesystemService.findOne(id);
     }
+
+    @RequestMapping(value = "getForm")
+    public AdPricesystemForm getForm(AdPricesystemForm adPricesystemForm){
+        return adPricesystemForm;
+    }
 }
