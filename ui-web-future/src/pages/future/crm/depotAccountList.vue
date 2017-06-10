@@ -7,22 +7,22 @@
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportDetail"  >{{$t('depotAccountList.exportDetail')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportConfirmation" >{{$t('depotAccountList.exportConfirmation')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportAllDepots"  >{{$t('depotAccountList.exportAllDepots')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('depotAccountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.dutyDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.dateRange')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"  ></office-select>
+              <el-form-item :label="$t('depotAccountList.officeName')" :label-width="formLabelWidth">
+                <office-select v-model="formData.officeId" @afterInit="setSearchText" ></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.specialityStore.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.isSpecialityStore')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.specialityStore" ></bool-select>
               </el-form-item>
             </el-col>
@@ -31,7 +31,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('depotAccountList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotAccountList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="officeName" column-key="officeId" :label="$t('depotAccountList.officeName')" sortable></el-table-column>
         <el-table-column prop="areaName" column-key="areaId" :label="$t('depotAccountList.areaName')" sortable></el-table-column>
@@ -54,31 +54,17 @@
 <script>
   import officeSelect from 'components/basic/office-select'
   import boolSelect from 'components/common/bool-select'
-
-
   export default{
     components:{
       officeSelect,
       boolSelect,
-
     },
     data() {
       return {
         page: {},
-        formData:{},
-        submitData: {
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          name: '',
-          dutyDateRange: '',
-          officeId: '',
-          specialityStore: ''
-        }, formLabel: {
-          name: {label: this.$t('depotAccountList.name')},
-          dutyDateRange: {label: this.$t('depotAccountList.dateRange')},
-          officeId: {label: this.$t('depotAccountList.officeName')},
-          specialityStore: {label: this.$t('depotAccountList.isSpecialityStore')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -86,11 +72,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData, this.submitData);
-        util.setQuery("depotAccountList", this.submitData);
-        axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("depotAccountList", submitData);
+        axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         }).catch(()=>{

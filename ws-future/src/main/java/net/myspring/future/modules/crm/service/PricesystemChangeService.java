@@ -45,8 +45,8 @@ public class PricesystemChangeService {
     }
 
     public PricesystemChangeQuery getQuery(PricesystemChangeQuery pricesystemChangeQuery){
-        pricesystemChangeQuery.setStatusList(AuditStatusEnum.getList());
-        pricesystemChangeQuery.setPricesystems(BeanUtil.map(pricesystemRepository.findAllEnabled(), PricesystemDto.class));
+        pricesystemChangeQuery.getExtra().put("statusList",AuditStatusEnum.getList());
+        pricesystemChangeQuery.getExtra().put("pricesystems",BeanUtil.map(pricesystemRepository.findAllEnabled(), PricesystemDto.class));
         return pricesystemChangeQuery;
     }
 

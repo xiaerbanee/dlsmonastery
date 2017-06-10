@@ -5,36 +5,36 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('priceChangeImeList.status')" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('priceChangeImeList.inputKey')">
-                  <el-option v-for="item in formData.statusList" :key="item":label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.statusList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+              <el-form-item :label="$t('priceChangeImeList.officeName')" :label-width="formLabelWidth">
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
-                <product-select v-model="formData.productId"></product-select>
+              <el-form-item :label="$t('priceChangeImeList.type')" :label-width="formLabelWidth">
+                <product-select v-model="formData.productId" @afterInit="setSearchText"></product-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="shop"></depot-select>
+              <el-form-item :label="$t('priceChangeImeList.shopName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.shopId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.isCheck.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('priceChangeImeList.isCheck')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.isCheck"></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.hasImage.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('priceChangeImeList.image')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.hasImage"></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('priceChangeImeList.ime')" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.priceChangeName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('priceChangeImeList.priceChangeName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.priceChangeName" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -43,7 +43,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('priceChangeImeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('priceChangeImeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="ime" :label="$t('priceChangeImeList.ime')" sortable width="150"></el-table-column>
         <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" sortable></el-table-column>
@@ -91,42 +91,28 @@
       return {
         pageLoading: false,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          priceChangeName:'',
-          status:'',
-          officeId:'',
-          productId:'',
-          shopId:'',
-          isCheck:'',
-          hasImage:'',
-          ime:''
-        },formLabel:{
-          priceChangeName:{label:this.$t('priceChangeImeList.priceChangeName')},
-          status:{label:this.$t('priceChangeImeList.status')},
-          officeId:{label:this.$t('priceChangeImeList.officeName'),value:''},
-          productId:{label:this.$t('priceChangeImeList.type')},
-          shopId:{label:this.$t('priceChangeImeList.shopName')},
-          isCheck:{label:this.$t('priceChangeImeList.isCheck'),value:''},
-          hasImage:{label:this.$t('priceChangeImeList.image'),value:''},
-          ime:{label:this.$t('priceChangeImeList.ime')},
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
         this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
         this.formLabel.hasImage.value = util.bool2str(this.formData.hasImage);
-
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("priceChangeImeList",this.submitData);
-        axios.get('/api/ws/future/crm/priceChangeIme',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("priceChangeImeList",submitData);
+        axios.get('/api/ws/future/crm/priceChangeIme',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -46,7 +46,7 @@ public class BankInController {
         List<String> processStatusList = new ArrayList<>();
         processStatusList.add("已通过");
         processStatusList.add("未通过");
-        bankInQuery.setProcessStatusList(processStatusList);
+        bankInQuery.getExtra().put("processStatusList",processStatusList);
 
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();

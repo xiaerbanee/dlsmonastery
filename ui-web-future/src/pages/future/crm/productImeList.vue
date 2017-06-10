@@ -22,51 +22,50 @@
         <el-button type="primary" @click="batchQuery"  >{{$t('productImeList.batchQuery')}}</el-button>
         <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
 
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form">
+      <search-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.boxIme.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.boxIme')" :label-width="formLabelWidth">
                 <el-input v-model="formData.boxIme" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.imeReverse.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.ime')" :label-width="formLabelWidth">
                 <el-input v-model="formData.imeReverse" ></el-input>
               </el-form-item>
 
-              <el-form-item :label="formLabel.ime2.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.ime2')" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime2" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.meid.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.meid')" :label-width="formLabelWidth">
                 <el-input v-model="formData.meid" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
 
-              <el-form-item :label="formLabel.depotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.depotId" category="store" ></depot-select>
+              <el-form-item :label="$t('productImeList.depotName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.depotId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
 
-              <el-form-item :label="formLabel.inputType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.inputType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.inputType" clearable filterable :placeholder="$t('productImeList.selectInputType')">
-                  <el-option v-for="item in formData.inputTypeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.inputTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.imeOrMeids.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.imeOrMeids')" :label-width="formLabelWidth">
                 <el-input  type="textarea"   v-model="formData.imeOrMeids" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.productId.label" :label-width="formLabelWidth">
-
-                <product-select v-model="formData.productId" ></product-select>
+              <el-form-item :label="$t('productImeList.productType')" :label-width="formLabelWidth">
+                <product-select v-model="formData.productId"  @afterInit="setSearchText"></product-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.createTimeRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.createTimeBtw')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createTimeRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.retailDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeList.retailDateBtw')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.retailDateRange" ></date-range-picker>
               </el-form-item>
 
@@ -77,7 +76,7 @@
 
           <el-button type="primary" @click="search()">{{$t('productImeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeList.loading')" @sort-change="sortChange" stripe border>
 
         <el-table-column type="expand">
@@ -128,58 +127,33 @@
   export default{
     components:{
       depotSelect,
-      productSelect,
-
+      productSelect
     },
     data() {
       return {
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          imeReverse:'',
-          ime2:'',
-          boxIme:'',
-          meid:'',
-          depotId:'',
-          inputType:'',
-          imeOrMeids:'',
-          productId:'',
-          createdDateRange:"",
-          retailDateRange:"",
-          saleDateRange:"",
-          createTimeRange:"",
-        },formLabel:{
-          imeReverse:{label:this.$t('productImeList.ime')},
-          ime2:{label:this.$t('productImeList.ime2')},
-          boxIme:{label:this.$t('productImeList.boxIme')},
-          meid:{label:this.$t('productImeList.meid')},
-          depotId:{label:this.$t('productImeList.depotName')},
-          inputType:{label:this.$t('productImeList.inputType')},
-          imeOrMeids:{label:this.$t('productImeList.imeOrMeids')},
-          productId:{label:this.$t('productImeList.productType')},
-          createdDateRange:{label: this.$t('productImeList.createdDate')},
-          retailDateRange:{label:this.$t('productImeList.retailDateBtw')},
-          saleDateRange:{label:this.$t('productImeList.saleDate')},
-          createTimeRange:{label:this.$t('productImeList.createTimeBtw')},
+        seachText:"",
+        formData:{
+            extra:{}
         },
-
         formLabelWidth: '120px',
         formVisible: false,
-
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
-
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("productImeList",this.submitData);
-        axios.get('/api/ws/future/crm/productIme?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("productImeList",submitData);
+        axios.get('/api/ws/future/crm/productIme?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

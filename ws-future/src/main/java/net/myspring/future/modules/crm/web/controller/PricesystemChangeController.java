@@ -39,6 +39,7 @@ public class PricesystemChangeController {
 
     @RequestMapping(value="getQuery")
     public PricesystemChangeQuery getQuery(PricesystemChangeQuery pricesystemChangeQuery){
+
         return pricesystemChangeService.getQuery(pricesystemChangeQuery);
     }
 

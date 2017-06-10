@@ -6,33 +6,33 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:express:edit'">{{$t('expressList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:express:view'">{{$t('expressList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:express:view'">{{$t('expressList.export')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.expressOrderToDepotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.expressOrderToDepotId" category="shop"></depot-select>
+              <el-form-item :label="$t('expressList.toDepotName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.expressOrderToDepotId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.expressOrderExtendBusinessId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.extendBusinessId')" :label-width="formLabelWidth">
                 <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.expressOrderFromDepotId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.expressOrderFromDepotId" category="shop"></depot-select>
+              <el-form-item :label="$t('expressList.fromDepotName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.expressOrderFromDepotId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.expressOrderExpressCompanyId.label" :label-width="formLabelWidth">
-                <express-company-select v-model="formData.expressOrderExpressCompanyId"></express-company-select>
+              <el-form-item :label="$t('expressList.expressCompanyName')" :label-width="formLabelWidth">
+                <express-company-select v-model="formData.expressOrderExpressCompanyId" @afterInit="setSearchText"></express-company-select>
               </el-form-item>
-              <el-form-item :label="formLabel.expressOrderExtendType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.extendType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.expressOrderExtendType" filterable clearable :placeholder="$t('expressList.inputKey')">
-                  <el-option v-for="item in formData.expressOrderExtendTypeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.expressOrderExtendTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -41,7 +41,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('expressList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable width="150"></el-table-column>
         <el-table-column prop="expressOrderExpressCompanyName"  :label="$t('expressList.expressCompanyName')" ></el-table-column>
@@ -79,26 +79,9 @@
     }, data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          code:'',
-          expressOrderToDepotId:'',
-          createdDateRange:'',
-          expressOrderExtendBusinessId:'',
-          expressOrderFromDepotId:'',
-          expressOrderExpressCompanyId:'',
-          expressOrderExtendType:''
-        },formLabel:{
-          code:{label:this.$t('expressList.code')},
-          expressOrderToDepotId:{label:this.$t('expressList.toDepotName')},
-          createdDateRange:{label: this.$t('expressOrderList.createdDate')},
-          expressOrderExtendBusinessId:{label:this.$t('expressList.extendBusinessId')},
-          expressOrderFromDepotId:{label:this.$t('expressList.fromDepotName')},
-          expressOrderExpressCompanyId:{label:this.$t('expressList.expressCompanyName')},
-          expressOrderExtendType:{label:this.$t('expressList.extendType')},
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -106,12 +89,17 @@
       };
     },
     methods: {
-
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("expressList",this.submitData);
-        axios.get('/api/ws/future/crm/express?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("expressList",submitData);
+        axios.get('/api/ws/future/crm/express?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

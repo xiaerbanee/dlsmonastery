@@ -5,21 +5,21 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:depotChange:edit'">{{$t('depotChangeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotChange:view'">{{$t('depotChangeList.filterOrExport')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span  v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('depotChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('depotChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.depotName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotChangeList.depotName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('depotChangeList.likeSearch')"></el-input>
               </el-form-item>
-               <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
+               <el-form-item :label="$t('depotChangeList.type')" :label-width="formLabelWidth">
                  <el-select v-model="formData.type" clearable filterable :placeholder="$t('depotChangeList.selectGroup')">
                    <el-option v-for="type in formProperty.types" :key="type" :label="type" :value="type"></el-option>
                  </el-select>
                </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotChangeList.createdDate')" :label-width="formLabelWidth">
                 <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('depotChangeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
               </el-form-item>
             </el-col>
@@ -29,7 +29,7 @@
           <el-button @click="exportData" v-permit="'crm:depotChange:view'">{{$t('depotChangeList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('depotChangeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('depotChangeList.unicode')" sortable width="100"></el-table-column>
         <el-table-column prop="type" :label="$t('depotChangeList.type')" width="120"></el-table-column>
@@ -55,17 +55,9 @@
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          page:0,
-          size:25,
-          depotName:'',
-          type:'',
-          createdDateBTW:'',
-          createdDate:'',
-        },formLabel:{
-          depotName:{label: this.$t('depotChangeList.depotName'),value:""},
-          type:{label: this.$t('depotChangeList.type'),value:""},
-          createdDateBTW:{label: this.$t('depotChangeList.createdDate')},
+          extra:{}
         },
         pickerDateOption:util.pickerDateOption,
         formProperty:{},
@@ -75,10 +67,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("depotChangeList",this.formData);
-        axios.get('/api/crm/depotChange',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("depotChangeList",submitData);
+        axios.get('/api/ws/future/crm/depotChange',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -96,14 +95,14 @@
       },itemAdd(){
         this.$router.push({ name: 'depotChangeForm'})
       },exportData(){
-				window.location.href= "/api/crm/depotChange/export?"+qs.stringify(this.formData);
+				window.location.href= "/api/ws/future/crm/depotChange/export?"+qs.stringify(this.formData);
       },itemAction:function(id,action){
         if(action=="详细") {
           this.$router.push({ name: 'depotChangeDetail', query: { id: id,action:"detail" }})
       } else if(action=="审核"){
           this.$router.push({ name: 'depotChangeDetail', query: { id: id,action:"audit" }})
       }else if(action=="删除") {
-          axios.get('/api/crm/depotChange/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/crm/depotChange/delete',{params:{id:id}}).then((response) =>{
            this.$message(response.data.message);
            this.pageRequest();
           })
@@ -112,7 +111,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/depotChange/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
         this.formProperty=response.data;
       });
       this.pageRequest();
