@@ -1,20 +1,12 @@
 package net.myspring.future.modules.basic.web.form;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Created by lihx on 2017/4/19.
- */
+
 public class ProductTypeForm extends BaseForm<ProductType> {
     private String name;
     private String reportName;
