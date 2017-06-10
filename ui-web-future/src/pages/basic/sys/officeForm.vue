@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
-                <el-option v-for="item in inputProperty.officeTypeList" :key="item" :label="item"  :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.officeTypeList" :key="item" :label="item"  :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.officeName')" prop="name">
@@ -21,17 +21,17 @@
             </el-form-item>
             <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
               <el-select v-model="inputForm.officeRuleId" filterable >
-                <el-option v-for="item in inputProperty.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.extra.officeRuleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.jointType')" prop="jointType">
               <el-select v-model="inputForm.jointType" filterable>
-                <el-option v-for="item in inputProperty.jointTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.jointTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="机构级别" prop="jointLevel">
               <el-select v-model="inputForm.jointLevel" filterable>
-                <el-option v-for="item in inputProperty.jointLevelList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.jointLevelList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('officeForm.point')" prop="point">
@@ -87,23 +87,10 @@
           multiple:true,
           submitDisabled: false,
           isBusiness:false,
-          inputProperty:{},
           offices: [],
           accountList: [],
-          inputForm: {},
-          submitData: {
-            id: this.$route.query.id,
-            parentId: '',
-            name: '',
-            officeRuleId: '',
-            type:"",
-            jointType: '',
-            point: '',
-            taskPoint: '',
-            sort: '',
-            officeIdList:"",
-            leaderIdList:"",
-            jointLevel:"",
+          inputForm: {
+              extra:{}
           },
           rules: {
             name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
@@ -125,12 +112,11 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/basic/sys/office/save', qs.stringify(this.submitData)).then((response) => {
+            axios.post('/api/basic/sys/office/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if (!this.isCreate) {
+                if (!this.inputForm.create) {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
                 }
               }else {
@@ -173,8 +159,10 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data,this.getData());
-        axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+        axios.get('/api/basic/sys/office/getForm').then((response) => {
           this.inputForm = response.data;
+        axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+          util.copyValue(response.data,this.inputForm);
           if(response.data.type =="SUPPORT" ){
             this.isBusiness=false;
             this.checked=response.data.businessIdList
@@ -183,9 +171,7 @@
             this.isBusiness=true;
           }
         })
-        axios.get('/api/basic/sys/office/getForm').then((response) => {
-          this.inputProperty = response.data;
-        })
+      })
       }
       this.isInit = true;
     }
