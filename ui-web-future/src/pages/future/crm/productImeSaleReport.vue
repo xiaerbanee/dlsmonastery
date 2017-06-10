@@ -60,29 +60,13 @@
       </search-dialog>
       <div>
       <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
-        <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
+        <el-table-column fixed prop="depotName" label="门店" sortable width="300" v-if="nextIsShop"></el-table-column>
+        <el-table-column fixed prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
       </div>
-      <div>
-        <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
-        <el-table :data="productMap" style="margin-top:5px;" border stripe border>
-          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
-          <el-table-column prop="qty"  label="数量"></el-table-column>
-        </el-table>
-        <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
-        <el-table :data="productImes" style="margin-top:5px;" border stripe border>
-          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
-          <el-table-column prop="qty"  label="串码"></el-table-column>
-          <el-table-column prop="billQty" label="促销员"></el-table-column>
-          <el-table-column prop="price" label="门店"></el-table-column>
-          <el-table-column prop="billQty" label="核销时间"></el-table-column>
-          <el-table-column prop="price" label="保卡注册时间"></el-table-column>
-        </el-table>
-      </div>
     </div>
-
   </div>
 
 </template>
@@ -97,6 +81,7 @@
       return {
         page:[],
         searchText:"",
+        nextIsShop:false,
         formData:{
           extra:{},
         },
@@ -104,8 +89,6 @@
         formVisible: false,
         pageLoading: false,
         officeIds:[],
-        productMap:[],
-        productImes:[],
         type:"销售报表",
       };
     },
@@ -121,11 +104,17 @@
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
-        axios.get('/api/ws/future/crm/productIme/productImeReport?'+qs.stringify(submitData)).then((response) => {
-          this.page = response.data;
-          console.log(this.page);
-          this.pageLoading = false;
-      })
+        if(!this.nextIsShop){
+          axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
+          })
+        }else {
+          axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
+          })
+        }
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
@@ -134,23 +123,25 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        this.officeIds.push(row.officeId);
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
-        this.pageRequest();
+        axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
+          this.officeIds.push(row.officeId);
+          this.formData.officeId=this.officeIds[this.officeIds.length-1];
+          console.log(this.formData)
+          this.nextIsShop=response.data
+          this.pageRequest();
+        })
       },preLevel(){
         this.officeIds.pop();
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
-      },saleReportGrid(){
-
       },exportData(command) {
       }
     },created () {
-      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
-        this.formData = response.data;
-      util.copyValue(this.$route.query, this.formData);
-      this.pageRequest();
-    })
+        axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+          this.formData = response.data;
+          util.copyValue(this.$route.query, this.formData);
+          this.pageRequest();
+      })
     }
   };
 </script>

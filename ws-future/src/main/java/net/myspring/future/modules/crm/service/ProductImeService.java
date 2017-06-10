@@ -24,7 +24,7 @@ import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
 import net.myspring.future.modules.crm.web.form.ProductImeChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
+import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -34,7 +34,6 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -170,17 +169,15 @@ public class ProductImeService {
         return productImeList;
     }
 
-    public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeReportQuery) {
-        productImeReportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+    public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
+        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
-        boolean nextIsShop=false;
-        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())){
-            productImeReportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(productImeReportQuery.getOfficeId()));
-            childOfficeMap=officeClient.getChildOfficeMap(productImeReportQuery.getOfficeId());
-            nextIsShop=officeClient.checkLastLevel(productImeReportQuery.getOfficeId());
+        if(StringUtils.isNotBlank(reportQuery.getOfficeId())){
+            reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
+            childOfficeMap=officeClient.getChildOfficeMap(reportQuery.getOfficeId());
         }
-        List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(productImeReportQuery);
-        if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(productImeReportQuery.getSumType())){
+        List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(reportQuery);
+        if(StringUtils.isNotBlank(reportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
             Map<String,ProductImeReportDto> map=Maps.newHashMap();
             for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
                 String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
@@ -196,7 +193,7 @@ public class ProductImeService {
             List<ProductImeReportDto> list=Lists.newArrayList(map.values());
             setPercentage(list);
             cacheUtils.initCacheInput(list);
-            return Lists.newArrayList(list);
+            return list;
         }else {
             setPercentage(productImeSaleReportList);
             cacheUtils.initCacheInput(productImeSaleReportList);
@@ -215,19 +212,19 @@ public class ProductImeService {
         return null;
     }
 
-    private List<ProductImeReportDto> getProductImeReportList(ProductImeReportQuery productImeReportQuery){
+    private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery){
         List<ProductImeReportDto> productImeReportList=Lists.newArrayList();
-        if(OutTypeEnum.电子报卡.name().equals(productImeReportQuery.getOutType())){
-            if("销售报表".equals(productImeReportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaSaleReport(productImeReportQuery);
-            }else if("库存报表".equals(productImeReportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaStoreReport(productImeReportQuery);
+        if(OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())){
+            if("销售报表".equals(reportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaSaleReport(reportQuery);
+            }else if("库存报表".equals(reportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaStoreReport(reportQuery);
             }
         }else {
-            if("销售报表".equals(productImeReportQuery.getType())){
-                productImeReportList=productImeRepository.findSaleReport(productImeReportQuery);
-            }else if("库存报表".equals(productImeReportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaStoreReport(productImeReportQuery);
+            if("销售报表".equals(reportQuery.getType())){
+                productImeReportList=productImeRepository.findSaleReport(reportQuery);
+            }else if("库存报表".equals(reportQuery.getType())){
+                productImeReportList=productImeRepository.findBaokaStoreReport(reportQuery);
             }
         }
         return productImeReportList;
@@ -239,16 +236,8 @@ public class ProductImeService {
             sum= sum + productImeReportDto.getQty();
         }
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
-            productImeReportDto.setPercent(division(sum,productImeReportDto.getQty()));
+            productImeReportDto.setPercent(StringUtils.division(sum,productImeReportDto.getQty()));
         }
-    }
-
-    private String division(Integer totalQty, Integer qty) {
-        if (qty == 0 || totalQty == 0) {
-            return "0.00";
-        }
-        BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
-        return percent.toString();
     }
 
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {
