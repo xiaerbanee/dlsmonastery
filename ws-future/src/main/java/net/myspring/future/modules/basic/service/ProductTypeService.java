@@ -6,13 +6,11 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
-import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -30,13 +28,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductTypeService {
 
     @Autowired
@@ -45,42 +44,43 @@ public class ProductTypeService {
     private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
-
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
 
-
-    public ProductType findOne(String id) {
-        ProductType productType = productTypeRepository.findOne(id);
-        return productType;
-    }
-
-    public List<ProductType> findAllScoreType(){
-        List<ProductType> productTypeList = productTypeRepository.findAllScoreType();
-        return productTypeList;
-    }
-
     public ProductType save(ProductTypeForm productTypeForm) {
+
         ProductType productType;
         if (productTypeForm.isCreate()) {
-            productType= BeanUtil.map(productTypeForm,ProductType.class);
+            productType = new ProductType();
+            ReflectionUtil.copyProperties(productTypeForm, productType);
             productTypeRepository.save(productType);
-        } else {
 
-            //TODO 不这样写update
-//            productRepository.updateProductTypeToNull(productTypeForm.getId());
+        } else {
             productType= productTypeRepository.findOne(productTypeForm.getId());
-            ReflectionUtil.copyProperties(productTypeForm,productType);
+            ReflectionUtil.copyProperties(productTypeForm, productType);
             productTypeRepository.save(productType);
         }
-        if (CollectionUtil.isNotEmpty(productTypeForm.getProductIdList())) {
-            //TODO 需要重写，不能这样写update
-//            productRepository.updateProductTypeId(productType.getId(), productTypeForm.getProductIdList());
+
+        //开始更新product表
+        if(!productTypeForm.isCreate()){
+            List<Product> oldProductList = productRepository.findByEnabledIsTrueAndProductTypeId(productTypeForm.getId());
+            for(Product product : oldProductList){
+                product.setProductTypeId(null);
+            }
+            productRepository.save(oldProductList);
         }
+
+        if (CollectionUtil.isNotEmpty(productTypeForm.getProductIdList())) {
+            List<Product> newProductList = productRepository.findAll(productTypeForm.getProductIdList());
+            for(Product product : newProductList){
+                product.setProductTypeId(productType.getId());
+            }
+            productRepository.save(newProductList);
+        }
+
         return productType;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         productTypeRepository.logicDelete(id);
     }
@@ -90,25 +90,6 @@ public class ProductTypeService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
-
-    public List<ProductType> findAll(){
-        List<ProductType> productTypeList=productTypeRepository.findAll();
-        return productTypeList;
-    }
-
-//    public List<SimpleExcelSheet> findSimpleExcelSheets(Workbook workbook, Map<String, Object> map) {
-//        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "name", "产品型号"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "code", "型号编码"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "created.fullName", "创建人"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
-//        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scoreType", "是否打分"));
-//        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
-//        List<ProductType> productTypeList = productTypeRepository.findList(map);
-//        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("货品类型", productTypeList, simpleExcelColumnList);
-//        simpleExcelSheetList.add(simpleExcelSheet);
-//        return simpleExcelSheetList;
-//    }
 
     public List<ProductTypeDto> findByNameLike(String name){
         List<ProductTypeDto> productTypeDtos = Lists.newArrayList();

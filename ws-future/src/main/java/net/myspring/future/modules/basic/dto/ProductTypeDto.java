@@ -4,27 +4,32 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.util.text.StringUtils;
-import org.jboss.netty.util.internal.StringUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created by lihx on 2017/4/17.
- */
 public class ProductTypeDto extends DataDto<ProductType> {
 
     private String name;
     private String reportName;
     private String code;
     private String productNames;
-    private BigDecimal price1;
-    private Boolean scoreType;
     private Boolean locked;
     private Boolean enabled;
     private BigDecimal baokaPrice;
+    private BigDecimal price1;
+    private BigDecimal price2;
     private BigDecimal price3;
+    private Boolean scoreType;
     private String productIds;
+
+    public BigDecimal getPrice2() {
+        return price2;
+    }
+
+    public void setPrice2(BigDecimal price2) {
+        this.price2 = price2;
+    }
 
     public String getScoreTypeName(){
         if(scoreType==null){

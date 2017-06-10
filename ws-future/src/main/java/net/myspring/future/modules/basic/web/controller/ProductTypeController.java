@@ -1,26 +1,19 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.common.enums.BoolEnum;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.service.ProductTypeService;
-import net.myspring.future.modules.basic.web.form.ProductForm;
-import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
-import net.myspring.util.mapper.BeanUtil;
+import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
 import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
