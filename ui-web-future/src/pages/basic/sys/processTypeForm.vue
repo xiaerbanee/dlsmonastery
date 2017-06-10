@@ -64,15 +64,8 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           loading: false,
-          inputForm:{},
-          submitData:{
-            id:"",
-            name:'',
-            auditFileType:"1",
-            remarks:'',
-            createdPositionIdList:[],
-            viewPositionIdList:[],
-            processFlowList:[]
+          inputForm:{
+              extra:{}
           },
           rules: {
             name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
@@ -88,11 +81,10 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/general/sys/processType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/general/sys/processType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
-              if(!this.isCreate){
+              if(!this.inputForm.create){
                 this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
               }
             }).catch(function () {
@@ -136,10 +128,10 @@
             this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
           }
         } else {
-          axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
             axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
               this.inputForm.processFlowList = response.data.processFlowList;
+            axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
             });
           });
         }

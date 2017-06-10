@@ -44,7 +44,7 @@ public class ProcessTypeController {
     @RequestMapping(value = "getForm")
     public ProcessTypeForm list(ProcessTypeForm processTypeForm){
         if(!processTypeForm.isCreate()){
-            processTypeForm.setProcessFlowList(processFlowService.findByProcessTypeId(processTypeForm.getId()));
+            processTypeForm.getExtra().put("processFlowList",processFlowService.findByProcessTypeId(processTypeForm.getId()));
         }
         return processTypeForm;
     }

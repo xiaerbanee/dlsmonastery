@@ -55,7 +55,7 @@ public class MenuCategoryController {
 
     @RequestMapping(value = "getForm")
     public MenuCategoryForm findForm(MenuCategoryForm menuCategoryForm){
-        menuCategoryForm.setBackendModuleList(backendModuleService.findAll());
+        menuCategoryForm.getExtra().put("backendModuleList",backendModuleService.findAll());
         return menuCategoryForm;
     }
 

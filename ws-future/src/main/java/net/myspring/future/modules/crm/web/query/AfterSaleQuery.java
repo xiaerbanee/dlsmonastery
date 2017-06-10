@@ -1,132 +1,76 @@
 package net.myspring.future.modules.crm.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleQuery {
 
-    private String id;
-    private String remarks;
-    private String createdDate;
-    private String toCompanyDate;
-    private String toStoreDate;
-    private String fromCompanyDate;
+    private String imeStr;
+    private String type;
+    private String toCompanyDateRanger;
+    private String productTypeId;
 
-    public String getFromCompanyDate() {
-        return fromCompanyDate;
+    public String getType() {
+        return type;
     }
 
-    public void setFromCompanyDate(String fromCompanyDate) {
-        this.fromCompanyDate = fromCompanyDate;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getId() {
-        return id;
+    public String getImeStr() {
+        return imeStr;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setImeStr(String imeStr) {
+        this.imeStr = imeStr;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getToCompanyDateRanger() {
+        return toCompanyDateRanger;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setToCompanyDateRanger(String toCompanyDateRanger) {
+        this.toCompanyDateRanger = toCompanyDateRanger;
     }
 
-    public String getCreatedDate() {
-        return createdDate;
+    public String getProductTypeId() {
+        return productTypeId;
     }
 
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getToCompanyDate() {
-        return toCompanyDate;
-    }
-
-    public void setToCompanyDate(String toCompanyDate) {
-        this.toCompanyDate = toCompanyDate;
-    }
-
-    public String getToStoreDate() {
-        return toStoreDate;
-    }
-
-    public void setToStoreDate(String toStoreDate) {
-        this.toStoreDate = toStoreDate;
-    }
-
-    public LocalDate getCreatedDateStart() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
-        }
-    }
-
-    public LocalDate getCreatedDateEnd() {
-        if(StringUtils.isNotBlank(createdDate)) {
-            return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
-        }
+    public void setProductTypeId(String productTypeId) {
+        this.productTypeId = productTypeId;
     }
 
     public LocalDate getToCompanyDateStart() {
-        if(StringUtils.isNotBlank(toCompanyDate)) {
-            return LocalDateUtils.parse(toCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(StringUtils.isNotBlank(toCompanyDateRanger)) {
+            return LocalDateUtils.parse(toCompanyDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
     public LocalDate getToCompanyDateEnd() {
-        if(StringUtils.isNotBlank(toCompanyDate)) {
-            return LocalDateUtils.parse(toCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(StringUtils.isNotBlank(toCompanyDateRanger)) {
+            return LocalDateUtils.parse(toCompanyDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
     }
 
-    public LocalDate getFromCompanyDateStart() {
-        if(StringUtils.isNotBlank(fromCompanyDate)) {
-            return LocalDateUtils.parse(fromCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+    public List<String> getImeList(){
+        List<String> imeList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(imeStr)){
+            imeList=StringUtils.getSplitList(imeStr,CharConstant.ENTER);
         }
-    }
-
-    public LocalDate getFromCompanyDateEnd() {
-        if(StringUtils.isNotBlank(fromCompanyDate)) {
-            return LocalDateUtils.parse(fromCompanyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
-        }
-    }
-
-    public LocalDate getToStoreDateStart() {
-        if(StringUtils.isNotBlank(toStoreDate)) {
-            return LocalDateUtils.parse(toStoreDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
-        }
-    }
-
-    public LocalDate getToStoreDateEnd() {
-        if(StringUtils.isNotBlank(toStoreDate)) {
-            return LocalDateUtils.parse(toStoreDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
-        }
+        return imeList;
     }
 }

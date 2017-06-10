@@ -24,6 +24,7 @@ interface AdPricesystemChangeRepository : BaseRepository<AdPricesystemChange,Str
 
 interface AdPricesystemChangeRepositoryCustom{
     fun findPage(pageable: Pageable,adPricesystemChangeQuery: AdPricesystemChangeQuery): Page<AdPricesystemChangeDto>
+
 }
 
 class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdPricesystemChangeRepositoryCustom{

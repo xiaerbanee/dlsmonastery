@@ -4,13 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.service.ProductService;
-import net.myspring.future.modules.crm.domain.AfterSale;
-import net.myspring.future.modules.crm.domain.AfterSaleDetail;
-import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
@@ -123,12 +117,8 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
-    public List<AfterSaleCompanyDto> getFromCompanyData(String imeStr) {
-        List<AfterSaleCompanyDto> afterSaleToCompanyList=Lists.newArrayList();
-        if(StringUtils.isNotBlank(imeStr)){
-            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            afterSaleService.getFromCompanyData(imeList);
-        }
+    public List<AfterSaleCompanyDto> getFromCompanyData(AfterSaleQuery afterSaleQuery) {
+        List<AfterSaleCompanyDto> afterSaleToCompanyList=afterSaleService.getFromCompanyData(afterSaleQuery);
         return afterSaleToCompanyList;
     }
 

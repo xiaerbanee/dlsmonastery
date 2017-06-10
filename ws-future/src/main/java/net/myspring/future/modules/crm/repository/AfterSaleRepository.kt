@@ -4,11 +4,14 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.AfterSale
 import net.myspring.future.modules.crm.dto.AfterSaleDto
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery
+import net.myspring.util.collection.CollectionUtil
+import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
@@ -35,12 +38,46 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
 
 
 interface AfterSaleRepositoryCustom{
+
+    fun findFilter(afterSaleQuery : AfterSaleQuery):MutableList<AfterSaleDto>
+
     fun findPage(pageable: Pageable, afterSaleQuery : AfterSaleQuery): Page<AfterSale>?
 
     fun findDtoByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSaleDto>
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryCustom {
+    override fun findFilter(afterSaleQuery: AfterSaleQuery): MutableList<AfterSaleDto> {
+        val sb = StringBuilder()
+        sb.append("""
+             SELECT
+                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName'
+             FROM
+                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
+                 left join crm_product t3 on t1.bad_product_id=t3.id
+                 left join crm_depot t4 on t1.bad_depot_id=t4.id
+                 left join crm_after_sale_detail t5 on t5.after_sale_id=t1.id
+             WHERE
+                 t1.enabled=1
+        """)
+        if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
+            sb.append(""" and t2.ime in (:imeList) """)
+        }
+        if(afterSaleQuery.toCompanyDateStart!=null){
+            sb.append(""" and t5.input_date>=:toCompanyDateStart""")
+        }
+        if(afterSaleQuery.toCompanyDateEnd!=null){
+            sb.append(""" and t5.input_date<=:toCompanyDateEnd""")
+        }
+        if(StringUtils.isNotBlank(afterSaleQuery.type)){
+            sb.append(""" and t5.type=:type""")
+        }
+        if(StringUtils.isNotBlank(afterSaleQuery.productTypeId)){
+            sb.append(""" and t3.product_type_id=:productTypeId""")
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java))
+    }
+
     override fun findDtoByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSaleDto> {
         val sb = StringBuilder()
         sb.append("""
