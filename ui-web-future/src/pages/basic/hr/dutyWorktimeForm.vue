@@ -42,11 +42,6 @@
               yearMonth:'',
               remarks:''
             },
-            submitData:{
-              importFile:'',
-              yearMonth:'',
-              remarks:''
-            },
             rules: {
               importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
               yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
@@ -59,8 +54,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.get('/api/basic/hr/dutyWorktime/import', {params: this.submitData}).then((response)=> {
+              axios.get('/api/basic/hr/dutyWorktime/import', {params: this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
               }).catch(function () {
@@ -80,6 +74,8 @@
       },
       activated () {
         if(!this.$route.query.headClick || !this.isInit) {
+          Object.assign(this.$data, this.getData());
+          
         }
         this.isInit = true;
       }
