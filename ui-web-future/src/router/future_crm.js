@@ -1,10 +1,5 @@
 const afterSaleList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleList.vue')));
-const afterSaleForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleForm.vue')));
-const afterSaleEditForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleEditForm.vue')));
-const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleImeAllotList.vue')));
 const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaInput.vue')));
-const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
-const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
 const afterSaleAreaFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaFleeInput.vue')));
 const afterSaleHeadInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadInput.vue')));
 const afterSaleHeadFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadFleeInput.vue')));
@@ -84,11 +79,6 @@ const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/c
 
 let routes = [
   {path:'/future/crm/afterSaleList',component:afterSaleList,name:'afterSaleList'},
-  {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm',meta: {menu:"afterSaleList",keepAlive:true}},
-  {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm',meta: {menu:"afterSaleList",keepAlive:true}},
-  {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
-  {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
-  {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
   {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleAreaFleeInput',component:afterSaleAreaFleeInput,name:'afterSaleAreaFleeInput'},
   {path:'/future/crm/afterSaleHeadInput',component:afterSaleHeadInput,name:'afterSaleHeadInput'},
