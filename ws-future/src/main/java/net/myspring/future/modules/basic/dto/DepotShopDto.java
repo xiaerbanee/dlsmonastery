@@ -38,29 +38,6 @@ public class DepotShopDto extends DataDto<DepotShop>{
 
     private String depotName;
 
-    private Integer qty;
-
-    private String percent;
-
-    public Integer getQty() {
-        if(qty==null){
-            qty=0;
-        }
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public String getPercent() {
-        return percent;
-    }
-
-    public void setPercent(String percent) {
-        this.percent = percent;
-    }
-
     public String getDepotId() {
         return depotId;
     }

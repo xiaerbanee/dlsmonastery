@@ -17,8 +17,7 @@ import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.basic.web.query.DepotReportQuery;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -120,14 +119,15 @@ public class DepotShopService {
         depotShopRepository.logicDelete(id);
     }
 
-    public List<DepotReportDto> setReportData(DepotReportQuery depotReportQuery){
-        List<DepotReportDto> depotReportList=getProductImeReportList(depotReportQuery);
+    public List<DepotReportDto> setReportData(ReportQuery reportQuery){
+        List<DepotReportDto> depotReportList=getProductImeReportList(reportQuery);
+        setPercentage(depotReportList);
         return depotReportList;
     }
 
-    public DepotReportDetailDto getReportDataDetail(DepotReportQuery depotReportQuery){
+    public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery){
         DepotReportDetailDto depotReportDetail=new DepotReportDetailDto();
-        List<DepotReportDto> depotReportList=getProductImeReportList(depotReportQuery);
+        List<DepotReportDto> depotReportList=getProductImeReportList(reportQuery);
         depotReportDetail.setDepotReportList(depotReportList);
         Map<String,Integer> map= Maps.newHashMap();
         for(DepotReportDto depotReportDto:depotReportList){
@@ -141,40 +141,31 @@ public class DepotShopService {
         return depotReportDetail;
     }
 
-    private List<DepotReportDto> getProductImeReportList(DepotReportQuery depotReportQuery){
+    private List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery){
         List<DepotReportDto> depotReportList= Lists.newArrayList();
-        if(OutTypeEnum.电子报卡.name().equals(depotReportQuery.getOutType())){
-            if("销售报表".equals(depotReportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaSaleReport(depotReportQuery);
-            }else if("库存报表".equals(depotReportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaStoreReport(depotReportQuery);
+        if(OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())){
+            if("销售报表".equals(reportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaSaleReport(reportQuery);
+            }else if("库存报表".equals(reportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaStoreReport(reportQuery);
             }
         }else {
-            if("销售报表".equals(depotReportQuery.getType())){
-                depotReportList=depotShopRepository.findSaleReport(depotReportQuery);
-            }else if("库存报表".equals(depotReportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaStoreReport(depotReportQuery);
+            if("销售报表".equals(reportQuery.getType())){
+                depotReportList=depotShopRepository.findSaleReport(reportQuery);
+            }else if("库存报表".equals(reportQuery.getType())){
+                depotReportList=depotShopRepository.findBaokaStoreReport(reportQuery);
             }
         }
         return depotReportList;
     }
 
-    private void setPercentage(List<DepotShopDto> depotShopList) {
+    private void setPercentage(List<DepotReportDto> depotReportList) {
         Integer sum = 0;
-        for (DepotShopDto depotShopDto : depotShopList) {
-            sum= sum + depotShopDto.getQty();
+        for (DepotReportDto depotReport : depotReportList) {
+            sum= sum + depotReport.getQty();
         }
-        for (DepotShopDto depotShopDto : depotShopList) {
-            depotShopDto.setPercent(division(sum,depotShopDto.getQty()));
+        for (DepotReportDto depotReport : depotReportList) {
+            depotReport.setPercent(StringUtils.division(sum,depotReport.getQty()));
         }
     }
-
-    private String division(Integer totalQty, Integer qty) {
-        if (qty == 0 || totalQty == 0) {
-            return "0.00";
-        }
-        BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
-        return percent.toString();
-    }
-
 }

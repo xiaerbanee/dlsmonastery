@@ -38,7 +38,7 @@ public class ShopAdTypeService {
     }
 
     public ShopAdTypeForm getForm(ShopAdTypeForm shopAdTypeForm){
-        shopAdTypeForm.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+        shopAdTypeForm.getExtra().put("totalPriceTypeList",TotalPriceTypeEnum.getValues());
         return shopAdTypeForm;
     }
 
@@ -66,7 +66,7 @@ public class ShopAdTypeService {
     }
 
     public ShopAdTypeQuery getQuery(ShopAdTypeQuery shopAdTypeQuery) {
-        shopAdTypeQuery.setTotalPriceTypeList(TotalPriceTypeEnum.getValues());
+        shopAdTypeQuery.getExtra().put("totalPriceTypeList",TotalPriceTypeEnum.getValues());
         return shopAdTypeQuery;
     }
 }

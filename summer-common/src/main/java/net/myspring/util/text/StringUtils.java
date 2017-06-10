@@ -9,6 +9,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.springside.modules.utils.text.EncodeUtil;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -111,4 +112,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
+	public static String division(Integer totalQty, Integer qty) {
+		if (qty == 0 || totalQty == 0) {
+			return "0.00";
+		}
+		BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
+		return percent.toString();
+	}
 }

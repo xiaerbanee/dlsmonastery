@@ -17,8 +17,7 @@ import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.basic.web.query.DepotReportQuery;
-import net.myspring.util.mapper.BeanUtil;
+import net.myspring.future.modules.crm.web.query.ReportQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,33 +82,33 @@ public class DepotShopController {
         return depotForm;
     }
 
-    @RequestMapping(value = "depotReport")
-    public List<DepotReportDto> depotReport(DepotReportQuery depotReportQuery){
-        List<DepotReportDto> list=depotShopService.setReportData(depotReportQuery);
+    @RequestMapping(value = "depotReportDate")
+    public List<DepotReportDto> depotReport(ReportQuery reportQuery){
+        List<DepotReportDto> list=depotShopService.setReportData(reportQuery);
         return list;
     }
 
     @RequestMapping(value = "getReportQuery")
-    public DepotReportQuery getReportQuery(DepotReportQuery depotReportQuery){
-        depotReportQuery.getExtra().put("typeList", ReportTypeEnum.getList());
-        depotReportQuery.getExtra().put("areaTypeList", AreaTypeEnum.getList());
-        depotReportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
-        depotReportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
-        depotReportQuery.getExtra().put("boolMap", BoolEnum.getMap());
+    public ReportQuery getReportQuery(ReportQuery reportQuery){
+        reportQuery.getExtra().put("typeList", ReportTypeEnum.getList());
+        reportQuery.getExtra().put("areaTypeList", AreaTypeEnum.getList());
+        reportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
+        reportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
+        reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
         CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
-            depotReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
-            depotReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
         }
-        depotReportQuery.setType(ReportTypeEnum.核销.name());
-        depotReportQuery.setScoreType(true);
-        return depotReportQuery;
+        reportQuery.setType(ReportTypeEnum.核销.name());
+        reportQuery.setScoreType(true);
+        return reportQuery;
     }
 
     @RequestMapping(value = "depotReportDetail")
-    public DepotReportDetailDto depotReportDetail(DepotReportQuery depotReportQuery){
-        DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(depotReportQuery);
+    public DepotReportDetailDto depotReportDetail(ReportQuery reportQuery){
+        DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(reportQuery);
         return depotReportDetailDto;
     }
 }

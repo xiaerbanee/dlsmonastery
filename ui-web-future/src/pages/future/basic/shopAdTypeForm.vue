@@ -9,7 +9,7 @@
 
         <el-form-item :label="$t('shopAdTypeForm.totalPriceType')" prop="totalPriceType" >
             <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
-              <el-option v-for="item in formProperty.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
+              <el-option v-for="item in formData.extra.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
             </el-select>
         </el-form-item>
 
@@ -37,14 +37,8 @@
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            formData:{},
-            submitData:{
-              id:'',
-              name:'',
-              totalPriceType:'',
-              price:'',
-              remarks:''
+            formData:{
+                extra:{}
             },
             rules: {
               name: [{ required: true, message: this.$t('shopAdTypeForm.prerequisiteMessage')}],
@@ -56,10 +50,9 @@
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["formData"];
-          util.copyValue(this.formData,this.submitData);
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
                 this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
@@ -76,12 +69,12 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.formData = response.data;
-        });
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
-            this.formProperty = response.data;
-        });
+            this.formData = response.data;
+            axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.formData);
+            });
+          });
         }
         this.isInit = true;
       }

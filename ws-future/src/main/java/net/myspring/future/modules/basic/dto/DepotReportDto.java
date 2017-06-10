@@ -16,6 +16,26 @@ public class DepotReportDto {
     private String employeeId;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
+    private String percent;
+
+    public Integer getQty() {
+        if(qty==null){
+            qty=0;
+        }
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public String getPercent() {
+        return percent;
+    }
+
+    public void setPercent(String percent) {
+        this.percent = percent;
+    }
 
     public String getProductId() {
         return productId;
@@ -87,14 +107,6 @@ public class DepotReportDto {
 
     public void setDepotId(String depotId) {
         this.depotId = depotId;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
     }
 
 }

@@ -14,16 +14,6 @@ public class ShopAdTypeForm extends BaseForm<ShopAdType> {
     private String name;
     private String totalPriceType;
     private BigDecimal price;
-    private List<String> totalPriceTypeList= Lists.newArrayList();
-
-
-    public List<String> getTotalPriceTypeList() {
-        return totalPriceTypeList;
-    }
-
-    public void setTotalPriceTypeList(List<String> totalPriceTypeList) {
-        this.totalPriceTypeList = totalPriceTypeList;
-    }
 
     public String getName() {
         return name;

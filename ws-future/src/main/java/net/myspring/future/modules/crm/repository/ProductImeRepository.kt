@@ -7,7 +7,7 @@ import net.myspring.future.modules.crm.dto.ProductImeForReportScoreDto
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
 import net.myspring.future.modules.crm.dto.ProductImeReportDto
 import net.myspring.future.modules.crm.web.query.ProductImeQuery
-import net.myspring.future.modules.crm.web.query.ProductImeReportQuery
+import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -67,13 +67,13 @@ interface ProductImeRepositoryCustom{
 
     fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate,   companyId :String) : MutableList<ProductImeForReportScoreDto>
 
-    fun findBaokaSaleReport(productImeSaleReportQuery: ProductImeReportQuery) : MutableList<ProductImeReportDto>
+    fun findBaokaSaleReport(productImeSaleReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
-    fun findSaleReport(productImeSaleReportQuery: ProductImeReportQuery) : MutableList<ProductImeReportDto>
+    fun findSaleReport(productImeSaleReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
-    fun findBaokaStoreReport(productImeReportQuery: ProductImeReportQuery) : MutableList<ProductImeReportDto>
+    fun findBaokaStoreReport(productImeReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
-    fun findStoreReport(productImeReportQuery: ProductImeReportQuery) : MutableList<ProductImeReportDto>
+    fun findStoreReport(productImeReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
@@ -121,7 +121,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
     }
 
-    override fun findBaokaStoreReport(productImeReportQuery: ProductImeReportQuery): MutableList<ProductImeReportDto> {
+    override fun findBaokaStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
             sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
@@ -183,7 +183,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
-    override fun findStoreReport(productImeReportQuery: ProductImeReportQuery): MutableList<ProductImeReportDto> {
+    override fun findStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
             sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
@@ -246,7 +246,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
-    override fun findSaleReport(productImeReportQuery: ProductImeReportQuery): MutableList<ProductImeReportDto> {
+    override fun findSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
@@ -301,7 +301,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
-    override fun findBaokaSaleReport(productImeReportQuery: ProductImeReportQuery): MutableList<ProductImeReportDto> {
+    override fun findBaokaSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
