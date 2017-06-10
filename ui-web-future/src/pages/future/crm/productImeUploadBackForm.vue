@@ -18,7 +18,7 @@
             <div v-if="imeStr !==''">
 
               <el-form-item>
-                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productImeUploadBackForm.save')}}</el-button>
+                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productImeUploadBackForm.uploadBack')}}</el-button>
               </el-form-item>
             </div>
 
@@ -87,8 +87,8 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            this.submitData.imeStr = this.imeStr;
-            axios.post('/api/ws/future/crm/productImeUpload/uploadBack',qs.stringify(this.imeStr)).then((response)=> {
+
+            axios.post('/api/ws/future/crm/productImeUpload/uploadBack',{params:{imeStr:this.imeStr}}).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(response.data.success){

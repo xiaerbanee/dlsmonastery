@@ -88,7 +88,12 @@
           }
       },
         formSubmit(){
-          var that = this;
+
+          if (this.errMsg) {
+            this.$alert( this.$t('imeAllotForm.formInvalid'), this.$t('imeAllotForm.notify'));
+            return;
+          }
+
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
@@ -103,7 +108,7 @@
                   }
                 }
               }).catch(()=>{
-                that.submitDisabled = false;
+                this.submitDisabled = false;
               });
             }
           });

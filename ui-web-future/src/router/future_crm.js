@@ -55,6 +55,7 @@ const productImeSaleForm= r => require.ensure([], () => r(require('pages/future/
 const productImeSaleBackForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleBackForm.vue')));
 const productImeUploadList  = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadList.vue')));
 const productImeUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadForm.vue')));
+const productImeBatchUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeBatchUploadForm.vue')));
 const productImeUploadBackForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadBackForm.vue')));
 const productMonthPriceList = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceList.vue')));
 const productMonthPriceForm = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceForm.vue')));
@@ -136,6 +137,7 @@ let routes = [
   {path:'/future/crm/productImeSaleBackForm',component:productImeSaleBackForm,name:'productImeSaleBackForm',meta: {menu:"productImeSaleList",keepAlive:true}},
   {path:'/future/crm/productImeUploadList',component:productImeUploadList,name:'productImeUploadList'},
   {path:'/future/crm/productImeUploadForm',component:productImeUploadForm,name:'productImeUploadForm',meta: {menu:"productImeUploadList",keepAlive:true}},
+  {path:'/future/crm/productImeBatchUploadForm',component:productImeBatchUploadForm,name:'productImeBatchUploadForm',meta: {menu:"productImeUploadList",keepAlive:true}},
   {path:'/future/crm/productImeUploadBackForm',component:productImeUploadBackForm,name:'productImeUploadBackForm',meta: {menu:"productImeUploadList",keepAlive:true}},
   {path:'/future/crm/productMonthPriceList',component:productMonthPriceList,name:'productMonthPriceList' },
   {path:'/future/crm/productMonthPriceForm',component:productMonthPriceForm,name:'productMonthPriceForm',meta: {menu:"productMonthPriceList",keepAlive:true}},

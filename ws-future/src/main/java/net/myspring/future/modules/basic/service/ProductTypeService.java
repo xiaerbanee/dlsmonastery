@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
@@ -51,11 +52,20 @@ public class ProductTypeService {
 
         ProductType productType;
         if (productTypeForm.isCreate()) {
+            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            if(sameNameRecord != null){
+                throw new ServiceException("名称已经存在，不能新增");
+            }
             productType = new ProductType();
             ReflectionUtil.copyProperties(productTypeForm, productType);
             productTypeRepository.save(productType);
 
         } else {
+            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            if(sameNameRecord != null && !sameNameRecord.getId().equals(productTypeForm.getId())){
+                throw new ServiceException("名称已经存在，不能修改");
+            }
+
             productType= productTypeRepository.findOne(productTypeForm.getId());
             ReflectionUtil.copyProperties(productTypeForm, productType);
             productTypeRepository.save(productType);

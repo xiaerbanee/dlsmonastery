@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.upload')}}</el-button>
         <el-button type="primary" @click="itemBack" icon="minus" v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.back')}}</el-button>
+        <el-button type="primary" @click="batchUpload"  icon="plus"  v-permit="'crm:productImeUpload:edit'">{{$t('productImeUploadList.batchUpload')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.export')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
@@ -120,6 +121,8 @@
         this.$router.push({ name: 'productImeUploadForm'});
       },itemBack(){
         this.$router.push({ name: 'productImeUploadBackForm'});
+      },batchUpload(){
+        this.$router.push({ name: 'productImeBatchUploadForm'});
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
           axios.get('/api/ws/future/crm/productImeUpload/export',{params:this.submitData}).then((response)=> {
