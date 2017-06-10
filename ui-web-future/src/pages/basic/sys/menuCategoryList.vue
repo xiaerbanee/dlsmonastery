@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:menuCategory:edit'">{{$t('menuCategoryList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'sys:menuCategory:view'">{{$t('menuCategoryList.filter')}}</el-button>
-        <span v-html="searchText"></span>>
+        <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('menuCategoryList.filter')"  v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
