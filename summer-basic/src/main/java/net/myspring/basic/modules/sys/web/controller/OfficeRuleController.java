@@ -45,7 +45,7 @@ public class OfficeRuleController {
 
     @RequestMapping(value = "getForm")
     public OfficeRuleForm getForm(OfficeRuleForm officeRuleForm){
-        officeRuleForm.setOfficeRuleList(officeRuleService.findAll());
+        officeRuleForm.getExtra().put("officeRuleList",officeRuleService.findAll());
         return officeRuleForm;
     }
 

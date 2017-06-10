@@ -56,13 +56,13 @@ public class ExpressCompanyController {
     @RequestMapping(value = "getForm")
     public ExpressCompanyForm findOne(ExpressCompanyForm expressCompanyForm){
         expressCompanyForm=expressCompanyService.getForm(expressCompanyForm);
-        expressCompanyForm.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+        expressCompanyForm.getExtra().put("expressTypeList",ExpressCompanyTypeEnum.getList());
         return expressCompanyForm;
     }
 
     @RequestMapping(value="getQuery")
     public  ExpressCompanyQuery getQuery(ExpressCompanyQuery expressCompanyQuery){
-        expressCompanyQuery.setExpressTypeList(ExpressCompanyTypeEnum.getList());
+        expressCompanyQuery.getExtra().put("expressTypeList",ExpressCompanyTypeEnum.getList());
         return expressCompanyQuery;
     }
 

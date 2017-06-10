@@ -49,13 +49,8 @@
           remoteLoading:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
-          inputForm:{},
-          submitData:{
-            id:this.$route.query.id,
-            name:'',
-            permission:'',
-            remarks:'',
-            moduleIdList:""
+          inputForm:{
+              extra:{}
           },
           rules: {
             name: [{ required: true, message: this.$t('roleForm.prerequisiteMessage')}],
@@ -76,11 +71,10 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/sys/role/save',qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/role/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
-              if(!this.isCreate){
+              if(!this.inputForm.create){
                 this.$router.push({name:'roleList',query:util.getQuery("roleList")})
               }
             }).catch(function () {
@@ -104,12 +98,13 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data,this.getData());
-        axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-          this.inputForm = response.data;
-        })
         axios.get('/api/basic/sys/role/getForm', {params: {id: this.$route.query.id}}).then((response) => {
           this.treeData = new Array(response.data.treeNode);
           this.checked = response.data.moduleIdList;
+          this.inputForm = response.data;
+          axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+            util.copyValue(response.data,this.inputForm);
+          })
         })
       }
       this.isInit = true;

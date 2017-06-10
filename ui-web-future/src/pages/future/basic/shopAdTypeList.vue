@@ -5,18 +5,18 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAdType:edit'">{{$t('shopAdTypeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAdType:view'">{{$t('shopAdTypeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('shopAdTypeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopAdTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdTypeList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('shopAdTypeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.totalPriceType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdTypeList.totalPriceType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.totalPriceType" filterable clearable :placeholder="$t('shopAdTypeList.inputKey')">
-                  <el-option v-for="item in formData.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.totalPriceTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -25,7 +25,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('shopAdTypeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAdTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('shopAdTypeList.name')" sortable ></el-table-column>
         <el-table-column prop="totalPriceType" :label="$t('shopAdTypeList.totalPriceType')" sortable></el-table-column>
@@ -46,18 +46,10 @@
   export default {
     data() {
       return {
+        searchText:"",
         page:{},
-        formData:{},
-        formLabel:{
-          totalPriceType:{label:this.$t('shopAdTypeList.totalPriceType')},
-          name:{label:this.$t('shopAdTypeList.name')},
-        },
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          name:'',
-          totalPriceType:'',
+        formData:{
+            extra:{}
         },
         pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
@@ -65,11 +57,17 @@
         pageLoading: false
       };
     }, methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopAdTypeList",this.submitData);
-        axios.get('/api/ws/future/basic/shopAdType',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopAdTypeList",submitData);
+        axios.get('/api/ws/future/basic/shopAdType?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -77,7 +75,6 @@
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
-
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
