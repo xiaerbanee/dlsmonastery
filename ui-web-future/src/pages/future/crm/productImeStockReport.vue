@@ -126,13 +126,15 @@
         this.setSearchText();
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeStockReport",submitData);
+        util.setQuery("productImeSaleReport",submitData);
         if(!this.nextIsShop){
+          this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
           })
         }else {
+          this.formData.officeId=""
           axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
@@ -157,18 +159,22 @@
           this.detailVisible=true;
           this.formData.isDetail=true;
           this.formData.depotId=row.depotId;
-          console.log( this.formData.depotId)
           axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
-            console.log(response.data)
-            this.detailData=response.data;
+            this.depotReportList=response.data.depotReportList;
+            let productQtyMap=response.data.productQtyMap;
+            let productQty=[];
+            if(productQtyMap){
+              for(let key in productQtyMap){
+                productQty.push({productName:key,qty:productQtyMap[key]})
+              }
+              this.productQtyMap=productQty;
+            }
           })
         }
       },preLevel(){
-        if(this.nextIsShop){
-          this.nextIsShop=false
-        }
+        this.nextIsShop=false;
+        this.formData.isDetail=false;
         this.officeIds.pop();
-        console.log(this.officeIds);
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },exportData(command) {
