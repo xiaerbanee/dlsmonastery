@@ -85,7 +85,7 @@ public class ProductImeSaleService {
 
     public String checkForSale(List<String> imeList) {
         StringBuffer sb = new StringBuffer();
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -160,22 +160,22 @@ public class ProductImeSaleService {
 
     public String checkForSaleBack(List<String> imeList) {
 
-        StringBuffer sb = new StringBuffer();
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        StringBuilder sb = new StringBuilder();
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
             if(productIme == null) {
-                sb.append("串码："+ime+"在系统中不存在；");
+                sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
                 if(productIme.getProductImeSaleId() ==null) {
-                    sb.append("串码："+ime+"还未被核销，不能退回；");
+                    sb.append("串码：").append(ime).append("还未被核销，不能退回；");
                     //TODO 需要增加判断，判断门店是否可以核销
 //                } else if(!DepotUtils.isAccess(productIme.getDepot(),true)) {
 //                    message.addText("message_product_ime_sale_not_have_ime",ime,"message_product_ime_sale_in_store",productIme.getDepotName(),"message_product_ime_sale_no_sale_permission");
                 }
                 if(productIme.getProductImeUploadId() != null) {
-                    sb.append("串码："+ime+"已上报,不能退回；");
+                    sb.append("串码：").append(ime).append("已上报,不能退回；");
                 }
             }
         }
@@ -188,7 +188,7 @@ public class ProductImeSaleService {
         List<String> imeList = productImeSaleBackForm.getImeList();
         String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
-        List<ProductIme> productImes = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
         Integer leftCredit =0;
         if(latestProductImeSale!=null){

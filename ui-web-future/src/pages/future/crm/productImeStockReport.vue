@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList"></product-select>
+                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -58,16 +58,39 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
-        <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
-        <el-table-column prop="qty" label="数量"  sortable></el-table-column>
-        <el-table-column prop="percent" label="占比(%)"></el-table-column>
-      </el-table>
+      <div>
+        <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
+          <el-table-column fixed prop="depotName" label="门店" sortable width="300" v-if="nextIsShop"></el-table-column>
+          <el-table-column fixed prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop"></el-table-column>
+          <el-table-column prop="qty" label="数量"  sortable></el-table-column>
+          <el-table-column prop="percent" label="占比(%)"></el-table-column>
+        </el-table>
+      </div>
+      <div>
+        <el-dialog title="详细" :visible.sync="detailVisible">
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
+          <el-table :data="detailData.productQtyMap">
+            <el-table-column property="productName" label="货品" width="400"></el-table-column>
+            <el-table-column property="qty" label="数量" ></el-table-column>
+          </el-table>
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
+          <el-table :data="detailData.depotReportList">
+            <el-table-column property="productName" label="货品" width="300"></el-table-column>
+            <el-table-column property="ime" label="串码" width="200"></el-table-column>
+            <el-table-column property="employeeName" label="促销员"></el-table-column>
+            <el-table-column property="depotName" label="门店"></el-table-column>
+            <el-table-column property="saleDate" label="核销时间"></el-table-column>
+            <el-table-column property="retailDate" label="保卡注册时间"></el-table-column>
+          </el-table>
+        </el-dialog>
+      </div>
     </div>
   </div>
+
 </template>
 <script>
-  import productSelect from 'components/future/product-select'
+  import productSelect from 'components/future/product-select';
+
   export default {
     components:{
       productSelect
@@ -76,13 +99,19 @@
       return {
         page:[],
         searchText:"",
+        nextIsShop:false,
         formData:{
           extra:{},
         },
         formLabelWidth: '120px',
         formVisible: false,
+        detailVisible: false,
         pageLoading: false,
         officeIds:[],
+        detailData:{
+          productQtyMap:[],
+          depotReportList:[],
+        },
         type:"库存报表",
       };
     },
@@ -97,11 +126,20 @@
         this.setSearchText();
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeStockReport",submitData);
-        axios.get('/api/ws/future/crm/productIme/productImeReport?'+qs.stringify(submitData)).then((response) => {
-          this.page = response.data;
-        this.pageLoading = false;
-      })
+        util.setQuery("productImeSaleReport",submitData);
+        if(!this.nextIsShop){
+          this.formData.depotId=""
+          axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
+          })
+        }else {
+          this.formData.officeId=""
+          axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
+            this.page = response.data;
+            this.pageLoading = false;
+          })
+        }
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
@@ -110,23 +148,43 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        this.officeIds.push(row.officeId);
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
-        this.pageRequest();
+        if(!this.nextIsShop){
+          axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
+            this.officeIds.push(row.officeId);
+            this.formData.officeId=this.officeIds[this.officeIds.length-1];
+            this.nextIsShop=response.data;
+            this.pageRequest();
+          })
+        }else{
+          this.detailVisible=true;
+          this.formData.isDetail=true;
+          this.formData.depotId=row.depotId;
+          axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+            this.depotReportList=response.data.depotReportList;
+            let productQtyMap=response.data.productQtyMap;
+            let productQty=[];
+            if(productQtyMap){
+              for(let key in productQtyMap){
+                productQty.push({productName:key,qty:productQtyMap[key]})
+              }
+              this.productQtyMap=productQty;
+            }
+          })
+        }
       },preLevel(){
+        this.nextIsShop=false;
+        this.formData.isDetail=false;
         this.officeIds.pop();
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
-      },saleReportGrid(){
-
       },exportData(command) {
       }
     },created () {
       axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
-      util.copyValue(this.$route.query, this.formData);
-      this.pageRequest();
-    })
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
+      })
     }
   };
 </script>

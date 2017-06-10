@@ -105,10 +105,10 @@ public class OfficeController {
 
     @RequestMapping(value = "getForm")
     public OfficeForm getForm(OfficeForm officeForm) {
-        officeForm.setOfficeRuleList(officeService.findOfficeRuleList());
-        officeForm.setJointTypeList(JointTypeEnum.getList());
-        officeForm.setOfficeTypeList(OfficeTypeEnum.getList());
-        officeForm.setJointLevelList(JointLevelEnum.getList());
+        officeForm.getExtra().put("officeRuleList",officeService.findOfficeRuleList());
+        officeForm.getExtra().put("jointTypeList",JointTypeEnum.getList());
+        officeForm.getExtra().put("officeTypeList",OfficeTypeEnum.getList());
+        officeForm.getExtra().put("jointLevelList",JointLevelEnum.getList());
         return officeForm;
     }
 
@@ -152,9 +152,7 @@ public class OfficeController {
     @RequestMapping(value = "getChildOfficeMap")
     public Map<String,List<String>> getNextLevelOfficeMap(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
-        if(StringUtils.isNotBlank(officeId)){
-            map = officeService.getChildOfficeMap(officeId);
-        }
+        map = officeService.getChildOfficeMap(officeId);
         return map;
     }
 

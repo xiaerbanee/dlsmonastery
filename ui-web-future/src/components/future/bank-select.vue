@@ -27,7 +27,7 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val=="") {
+        if(this.innerId == val || val==""||typeof(val)=="undefined") {
           return;
         }
         this.innerId=val;

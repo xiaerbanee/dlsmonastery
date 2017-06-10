@@ -39,7 +39,7 @@ public class ShopPromotionController {
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
     public ShopPromotionQuery getQuery(ShopPromotionQuery shopPromotionQuery) {
-        shopPromotionQuery.setActivityTypeList(ActivityTypeEnum.getList());
+        shopPromotionQuery.getExtra().put("activityTypeList",ActivityTypeEnum.getList());
         return shopPromotionQuery;
     }
 

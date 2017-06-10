@@ -14,28 +14,14 @@ public class ExpressCompanyForm extends BaseForm<ExpressCompany> {
     @NotEmpty(message="expressCompanyForm.nameNotEmptyMessage")
     @Length(max=64, message="expressCompanyForm.nameTooLongMessage")
     private String  name;
-
     private String  expressType;
-
     private String  districtId;
-
     private String  reachPlace;
-
     private String  shouldGetRule;
     private String  address;
     private String  phone;
     private String  mobilePhone;
     private String  contator;
-
-    private List<String> expressTypeList= Lists.newArrayList();
-
-    public List<String> getExpressTypeList() {
-        return expressTypeList;
-    }
-
-    public void setExpressTypeList(List<String> expressTypeList) {
-        this.expressTypeList = expressTypeList;
-    }
 
     public String getName() {
         return name;

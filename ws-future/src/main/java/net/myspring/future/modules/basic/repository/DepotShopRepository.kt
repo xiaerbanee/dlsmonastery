@@ -37,6 +37,7 @@ interface DepotShopRepositoryCustom{
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
+
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
@@ -226,7 +227,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty """)
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime，t2.retail_date,t1.employee_Id,t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName'
+               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_Id,t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName'
             """)
         }
         sb.append("""

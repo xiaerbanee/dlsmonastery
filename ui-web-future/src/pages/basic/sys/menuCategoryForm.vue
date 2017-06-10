@@ -11,7 +11,7 @@
         <el-form-item :label="$t('menuCategoryForm.name')" prop="name">
           <el-input v-model.number="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="$t('menuCategoryForm.code')" prop="code">
+        <el-form-item label="Code" prop="code">
           <el-input v-model="inputForm.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.sort')"  prop="sort">
@@ -55,11 +55,10 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
               axios.post('/api/basic/sys/menuCategory/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
                   this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList")})
                 }
               }).catch(function () {

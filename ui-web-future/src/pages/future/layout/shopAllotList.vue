@@ -104,6 +104,7 @@
         formData:{
           extra:{}
         },
+        pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,

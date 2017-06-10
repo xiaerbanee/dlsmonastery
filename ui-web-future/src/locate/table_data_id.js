@@ -241,6 +241,8 @@ export default {
       productImeSaleBackForm: "串码核销退回编辑",
       productImeSaleList: "verfikasi string kode",
       productImeUploadForm: "laporan string kode",
+      productImeUploadBackForm: "串码上报退回编辑",
+      productImeBatchUploadForm: "串码批量上报编辑",
       productImeUploadList: "laporan string kode",
       productList: "manajemen barang",
       productEdit: "manajemen bahan",

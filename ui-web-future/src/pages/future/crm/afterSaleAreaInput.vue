@@ -1,6 +1,7 @@
 <template>
   <div>
     <head-tab active="afterSaleAreaInput"></head-tab>
+    <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}
@@ -44,6 +45,7 @@
           data: ''
         },
         rules: {},
+        shipResult:"",
         type: '售后机',
         options: ['售后机', '窜货机'],
         formLabelWidth: '120px',

@@ -47,27 +47,66 @@ interface ProductImeSaleRepositoryCustom{
     fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto>
 
     fun findDto(id: String): ProductImeSaleDto
+
+    fun findForBatchUpload(dateStart: LocalDateTime, dateEnd: LocalDateTime, officeIds: List<String>): List<ProductImeSaleDto>
 }
 
 class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeSaleRepositoryCustom {
+    override fun findForBatchUpload(dateStart: LocalDateTime, dateEnd: LocalDateTime, officeIds: List<String>): List<ProductImeSaleDto> {
+      if(officeIds.isEmpty()){
+          return ArrayList()
+      }
+
+        val params = HashMap<String, Any>()
+        params.put("officeIds", officeIds)
+        params.put("dateStart", dateStart)
+        params.put("dateEnd", dateEnd)
+
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            ime.ime productImeIme,
+            ime.meid productImeMeid,
+            ime.product_id productImeProductId,
+            ime.product_ime_upload_id productImeProductImeUploadId,
+            depot.office_id shopOfficeId,
+            depot.area_id shopAreaId,
+            depotShop.area_type depotShopAreaType,
+            t1.*
+        FROM
+            crm_product_ime_sale t1
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_depot_shop depotShop ON depot.depot_shop_id = depotShop.id
+            LEFT JOIN crm_product_ime ime ON t1.product_ime_id = ime.id
+
+        WHERE
+            t1.enabled = 1
+            AND t1.is_back = 0
+            AND depot.office_id IN (:officeIds)
+            AND t1.created_date >= (:dateStart)
+            AND t1.created_date < (:dateEnd)
+                """, params, BeanPropertyRowMapper(ProductImeSaleDto::class.java))
+
+    }
+
     override fun findDto(id: String): ProductImeSaleDto {
         return namedParameterJdbcTemplate.queryForObject("""
         SELECT
             ime.ime productImeIme,
             ime.meid productImeMeid,
             ime.product_id productImeProductId,
+            ime.product_ime_upload_id productImeProductImeUploadId,
             depot.office_id shopOfficeId,
+            depot.area_id shopAreaId,
+            depotShop.area_type depotShopAreaType,
             t1.*
         FROM
-            crm_product_ime_sale t1,
-            crm_depot depot,
-            crm_product_ime ime
+            crm_product_ime_sale t1
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_depot_shop depotShop ON depot.depot_shop_id = depotShop.id
+            LEFT JOIN crm_product_ime ime ON t1.product_ime_id = ime.id
         WHERE
             t1.id = :id
-        AND t1.product_ime_id = ime.id
-        AND t1.shop_id = depot.id
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductImeSaleDto::class.java))
-
     }
 
     override fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto> {
@@ -78,16 +117,18 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
             ime.ime productImeIme,
             ime.meid productImeMeid,
             ime.product_id productImeProductId,
+            ime.product_ime_upload_id productImeProductImeUploadId,
             depot.office_id shopOfficeId,
+            depot.area_id shopAreaId,
+            depotShop.area_type depotShopAreaType,
             t1.*
         FROM
-            crm_product_ime_sale t1,
-            crm_depot depot,
-            crm_product_ime ime
+            crm_product_ime_sale t1
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_depot_shop depotShop ON depot.depot_shop_id = depotShop.id
+            LEFT JOIN crm_product_ime ime ON t1.product_ime_id = ime.id
         WHERE
             t1.enabled = 1
-            AND t1.shop_id = depot.id
-            AND t1.product_ime_id = ime.id
         """)
 
         if (productImeSaleQuery.createdDateStart != null) {
