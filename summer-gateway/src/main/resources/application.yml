@@ -21,8 +21,8 @@ zuul:
     global-tool: /api/global/tool/**
     global-cloud: /api/global/cloud/**
   host:
-    socket-timeout-millis: 60000
-    connect-timeout-millis: 60000
+    socket-timeout-millis: 100000
+    connect-timeout-millis: 100000
   add-proxy-headers: true
 
 hystrix:
@@ -31,7 +31,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 60000
+            timeoutInMilliseconds: 100000
 
 security:
   oauth2:

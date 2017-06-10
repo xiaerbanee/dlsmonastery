@@ -85,6 +85,9 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         if(StringUtils.isNotBlank(depotQuery.areaId)){
             sb.append("""  and t1.area_id=:areaId """)
         }
+        if(StringUtils.isNotBlank(depotQuery.officeId)){
+            sb.append("""  and t1.office_id=:officeId """)
+        }
         if(CollectionUtil.isNotEmpty(depotQuery.depotIdList)){
             sb.append("""  and t1.id in (:depotIdList) """)
         }

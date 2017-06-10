@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -60,8 +60,9 @@
       </search-dialog>
       <div>
       <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
-        <el-table-column fixed prop="depotName" label="门店" sortable width="300" v-if="nextIsShop"></el-table-column>
-        <el-table-column fixed prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop"></el-table-column>
+        <el-table-column  prop="depotName" label="门店" sortable width="300" v-if="nextIsShop&&'区域'==formData.sumType"></el-table-column>
+        <el-table-column  prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop&&'区域'==formData.sumType"></el-table-column>
+        <el-table-column  prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
@@ -69,19 +70,18 @@
       <div>
         <el-dialog title="详细" :visible.sync="detailVisible">
           <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
-          <el-table :data="detailData.productQtyMap">
+          <el-table :data="productQtyMap">
           <el-table-column property="productName" label="货品" width="400"></el-table-column>
           <el-table-column property="qty" label="数量" ></el-table-column>
         </el-table>
           <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
-          <el-table :data="detailData.depotReportList">
+          <el-table :data="depotReportList">
             <el-table-column property="productName" label="货品" width="300"></el-table-column>
             <el-table-column property="ime" label="串码" width="200"></el-table-column>
             <el-table-column property="employeeName" label="促销员"></el-table-column>
             <el-table-column property="depotName" label="门店"></el-table-column>
             <el-table-column property="saleDate" label="核销时间"></el-table-column>
             <el-table-column property="retailDate" label="保卡注册时间"></el-table-column>
-
           </el-table>
       </el-dialog>
       </div>
@@ -109,10 +109,8 @@
         detailVisible: false,
         pageLoading: false,
         officeIds:[],
-        detailData:{
-          productQtyMap:[],
-          depotReportList:[],
-        },
+        productQtyMap:[],
+        depotReportList:[],
         type:"销售报表",
       };
     },
@@ -129,11 +127,13 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
         if(!this.nextIsShop){
+          this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
           })
         }else {
+          this.formData.officeId=""
           axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
@@ -147,29 +147,40 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        if(!this.nextIsShop){
-          axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
-            this.officeIds.push(row.officeId);
-            this.formData.officeId=this.officeIds[this.officeIds.length-1];
-            this.nextIsShop=response.data;
-            this.pageRequest();
-          })
+        console.log(row)
+        if(row.productTypeId){
+          this.formData.productTypeIdList=row.productTypeId;
+          this.formData.sumType="区域";
+          this.pageRequest();
         }else{
-          this.detailVisible=true;
-          this.formData.isDetail=true;
-          this.formData.depotId=row.depotId;
-          console.log( this.formData.depotId)
-          axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
-            console.log(response.data)
-            this.detailData=response.data;
-          })
+          if(!this.nextIsShop){
+            axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
+              this.officeIds.push(row.officeId);
+              this.formData.officeId=this.officeIds[this.officeIds.length-1];
+              this.nextIsShop=response.data;
+              this.pageRequest();
+            })
+          }else{
+            this.detailVisible=true;
+            this.formData.isDetail=true;
+            this.formData.depotId=row.depotId;
+            axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+              this.depotReportList=response.data.depotReportList;
+              let productQtyMap=response.data.productQtyMap;
+              let productQty=[];
+              if(productQtyMap){
+                for(let key in productQtyMap){
+                  productQty.push({productName:key,qty:productQtyMap[key]})
+                }
+                this.productQtyMap=productQty;
+              }
+            })
+          }
         }
       },preLevel(){
-        if(this.nextIsShop){
-          this.nextIsShop=false
-        }
+        this.nextIsShop=false;
+        this.formData.isDetail=false;
         this.officeIds.pop();
-        console.log(this.officeIds);
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },exportData(command) {

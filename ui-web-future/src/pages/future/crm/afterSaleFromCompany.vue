@@ -5,7 +5,7 @@
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleFromCompany.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>
       </el-row>
-      <el-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
+      <search-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="submitData">
           <el-form-item label="型号" :label-width="formLabelWidth">
             <product-type-select v-model="submitData.productTypeId"></product-type-select>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleFromCompany.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <div>
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-row>
@@ -45,8 +45,11 @@
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   import productTypeSelect from 'components/future/product-type-select';
   import dateRangePicker from 'components/common/date-range-picker';
+  import SearchDialog from "../../../components/common/search-dialog.vue";
   export default{
-    components:{productTypeSelect,dateRangePicker},
+    components:{
+      SearchDialog,
+      productTypeSelect,dateRangePicker},
     data(){
       return{
         submitData:{
