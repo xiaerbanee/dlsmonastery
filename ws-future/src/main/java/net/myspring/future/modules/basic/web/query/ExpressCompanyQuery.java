@@ -5,7 +5,11 @@ import net.myspring.future.common.query.BaseQuery;
 import java.util.List;
 
 public class ExpressCompanyQuery extends BaseQuery {
-
+    private String name;
+    private String expressType;
+    private String reachPlace;
+    private String mobilePhone;
+    private String contator;
 
     public String getName() {
         return name;
@@ -40,16 +44,6 @@ public class ExpressCompanyQuery extends BaseQuery {
         this.reachPlace = reachPlace;
     }
 
-
-    public List<String> getExpressTypeList() {
-        return expressTypeList;
-    }
-
-    public void setExpressTypeList(List<String> expressTypeList) {
-        this.expressTypeList = expressTypeList;
-    }
-
-
     public String getContator() {
         return contator;
     }
@@ -58,10 +52,4 @@ public class ExpressCompanyQuery extends BaseQuery {
         this.contator = contator;
     }
 
-    private String name;
-    private String expressType;
-    private String reachPlace;
-    private String mobilePhone;
-    private String contator;
-    private List<String> expressTypeList;
 }

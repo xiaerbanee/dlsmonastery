@@ -8,14 +8,13 @@
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.expressType')" prop="expressType">
           <el-select v-model="inputForm.expressType" filterable :placeholder="$t('expressCompanyForm.selectType')">
-            <el-option v-for="item in formProperty.expressTypeList" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in inputForm.extra.expressTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.district')" prop="districtId">
           <district-select v-model="inputForm.districtId">
           </district-select>
         </el-form-item>
-
         <el-form-item :label="$t('expressCompanyForm.reachPlace')" prop="reachPlace">
           <el-input v-model="inputForm.reachPlace" type="textarea"></el-input>
         </el-form-item>
@@ -50,31 +49,19 @@
     components:{
       districtSelect,
     },
-      data(){
-        return this.getData()
-      },
+    data(){
+      return this.getData()
+    },
     methods:{
       getData() {
           return{
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            formProperty:{},
-            inputForm:{},
-            submitData:{
-              id:'',
-              name:'',
-              expressType:"",
-              districtId:'',
-              reachPlace:'',
-              shouldGetRule:'',
-              address:'',
-              phone:'',
-              mobilePhone:'',
-              contator:"",
-              remarks:''
+            inputForm:{
+              extra:{}
             },
-              rules: {
+            rules: {
               name: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}]
             }
           }
@@ -85,8 +72,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm, this.submitData);
-              axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
@@ -103,14 +89,14 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
+        axios.get('/api/ws/future/basic/expressCompany/getForm').then((response)=>{
+          this.inputForm = response.data;
           axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
+            util.copyValue(response.data,this.inputForm);
+          });
         });
-          axios.get('/api/ws/future/basic/expressCompany/getForm').then((response)=>{
-            this.formProperty = response.data;
-        });
-        }
-      this.isInit = true;
       }
+      this.isInit = true;
     }
+  }
 </script>
