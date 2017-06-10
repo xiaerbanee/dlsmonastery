@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.activityType')" prop="activityType">
               <el-select v-model="inputForm.activityType" filterable clearable :placeholder="$t('shopPromotionForm.inputType')">
-                <el-option v-for="activityType in formProperty.activityTypeList" :key="activityType" :label="activityType" :value="activityType"></el-option>
+                <el-option v-for="activityType in inputForm.extra.activityTypeList" :key="activityType" :label="activityType" :value="activityType"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.dayAmount')" prop="dayAmount">
@@ -81,26 +81,11 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           shopDisabled:false,
-          formProperty:{},
           fileList1:[],
           fileList2:[],
           fileList3:[],
-          inputForm:{},
-          submitData:{
-            id:'',
-            shopId:'',
-            activityDate:'',
-            activityType:'',
-            amount:'',
-            dayAmount:'',
-            salerComment:'',
-            materialComment:'',
-            comment:'',
-            phone:'',
-            activityImage1:'',
-            activityImage2:'',
-            activityImage3:'',
-            remarks:''
+          inputForm:{
+            extra:{}
           },
           rules: {
             shopId: [{ required: true, message: this.$t('shopPromotionForm.prerequisiteMessage')}],
@@ -124,8 +109,7 @@
           this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
           this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
           if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(this.submitData)).then((response) => {
+            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(response.data.success) {
@@ -161,40 +145,39 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-          if(response.data.shopId!=null){
-            this.shopDisabled = true;
-          }else {
-            this.shopDisabled=false;
-          }
-
-          if(this.inputForm.activityImage1 !=null) {
-            console.log(this.fileList1);
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-              this.fileList1= response.data;
-            });
-          }else {
-            this.fileList1=[];
-          }
-          if(this.inputForm.activityImage2 !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-              this.fileList2= response.data;
-            });
-          }else {
-            this.fileList2=[];
-          }
-          if(this.inputForm.activityImage3 !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-              this.fileList3= response.data;
-            });
-          }else {
-            this.fileList3=[];
-          }
-        });
         axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
-          this.formProperty = response.data;
+          Object.assign(this.$data, this.getData());
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(response.data.shopId!=null){
+              this.shopDisabled = true;
+            }else {
+              this.shopDisabled=false;
+            }
+            if(this.inputForm.activityImage1 !=null) {
+              console.log(this.fileList1);
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
+                this.fileList1= response.data;
+              });
+            }else {
+              this.fileList1=[];
+            }
+            if(this.inputForm.activityImage2 !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
+                this.fileList2= response.data;
+              });
+            }else {
+              this.fileList2=[];
+            }
+            if(this.inputForm.activityImage3 !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
+                this.fileList3= response.data;
+              });
+            }else {
+              this.fileList3=[];
+            }
+          });
         });
       }
       this.isInit = true;
