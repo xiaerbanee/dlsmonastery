@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('permissionForm.menu')" prop="menuId">
           <el-select v-model="inputForm.menuId" filterable :placeholder="$t('permissionForm.selectCategory')">
-            <el-option v-for="menu in inputProperty.menuList" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
+            <el-option v-for="menu in inputForm.extra.menuList" :key="menu.id" :label="menu.name" :value="menu.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('permissionForm.name')" prop="name">
@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="角色" prop="roleIdList">
           <el-select v-model="inputForm.roleIdList" multiple filterable  :placeholder="$t('accountForm.inputWord')" >
-            <el-option v-for="item in inputProperty.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="请求Url" prop="url">
@@ -47,17 +47,8 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             roleList:[],
-            inputForm:{},
-            inputProperty:{},
-            submitData:{
-              id:'',
-              menuId:'',
-              name:'',
-              permission:'',
-              roleIdList:'',
-              remarks:'',
-              url:"",
-              method:"",
+            inputForm:{
+                extra:{}
             },
             rules: {
               menuId: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
@@ -75,11 +66,10 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/permission/save' ,qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/basic/sys/permission/save' ,qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
                   this.$router.push({name:'permissionList',query:util.getQuery("permissionList")})
                 }
               }).catch(function () {
@@ -93,12 +83,11 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          })
           axios.get('/api/basic/sys/permission/getForm').then((response)=>{
-            this.inputProperty = response.data;
-            console.log(this.inputProperty)
+            this.inputForm = response.data;
+            axios.get('/api/basic/sys/permission/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+             util.copyValue(response.data,this.inputForm)
+            })
           })
         }
         this.isInit = true;

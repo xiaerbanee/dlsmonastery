@@ -59,8 +59,8 @@ public class PermissionController {
 
     @RequestMapping(value = "getForm")
     public PermissionForm getForm(PermissionForm permissionForm) {
-        permissionForm.setMenuList(menuService.findAll());
-        permissionForm.setRoleList(roleService.findAll());
+        permissionForm.getExtra().put("menuList",menuService.findAll());
+        permissionForm.getExtra().put("roleList",roleService.findAll());
         return permissionForm;
     }
 

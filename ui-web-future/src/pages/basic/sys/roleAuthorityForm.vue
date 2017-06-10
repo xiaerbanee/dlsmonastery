@@ -7,7 +7,7 @@
           <el-col :span = "7">
             <el-form-item label="角色" prop="id">
               <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remoteRole" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
-                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -45,10 +45,8 @@
           remoteLoading:false,
           isCreate:this.$route.query.id!=null,
           submitDisabled:false,
-          inputForm:{},
-          submitData:{
-            id:"",
-            permissionIdList:""
+          inputForm:{
+              extra:{}
           },
           rules: {
             id: [{ required: true, message: "必填属性"}],
@@ -68,8 +66,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData())
             }).catch(function () {
