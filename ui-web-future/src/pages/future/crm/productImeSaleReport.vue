@@ -134,7 +134,7 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-          this.officeIds.push(row.officeId);
+        this.officeIds.push(row.officeId);
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },preLevel(){

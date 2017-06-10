@@ -27,6 +27,9 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeIds")
     List<String> getChildOfficeIds(@RequestParam(value = "officeId") String officeId);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/checkLastLevel")
+    boolean checkLastLevel(@RequestParam(value = "officeId") String officeId);
+
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeMap")
     Map<String,List<String>> getChildOfficeMap(@RequestParam(value = "officeId") String officeId);
 

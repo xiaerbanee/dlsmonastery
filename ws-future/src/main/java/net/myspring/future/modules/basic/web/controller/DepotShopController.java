@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by liuj on 2017/5/12.
  */
@@ -81,11 +83,9 @@ public class DepotShopController {
     }
 
     @RequestMapping(value = "depotReport")
-    public Page<DepotShopDto> depotReport(Pageable pageable, DepotReportQuery depotReportQuery){
-        DepotQuery depotQuery=BeanUtil.map(depotReportQuery,DepotQuery.class);
-        Page<DepotShopDto> page=depotShopService.findPage(pageable,depotQuery);
-        depotShopService.setReportData(page.getContent(), depotReportQuery);
-        return page;
+    public List<DepotReportDto> depotReport(DepotReportQuery depotReportQuery){
+        List<DepotReportDto> list=depotShopService.setReportData(depotReportQuery);
+        return list;
     }
 
     @RequestMapping(value = "getReportQuery")

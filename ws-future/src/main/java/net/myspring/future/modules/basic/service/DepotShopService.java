@@ -120,18 +120,9 @@ public class DepotShopService {
         depotShopRepository.logicDelete(id);
     }
 
-    public List<DepotShopDto> setReportData(List<DepotShopDto>  depotList,DepotReportQuery depotReportQuery){
-        depotReportQuery.setShopIdList(CollectionUtil.extractToList(depotList,"depotId"));
+    public List<DepotReportDto> setReportData(DepotReportQuery depotReportQuery){
         List<DepotReportDto> depotReportList=getProductImeReportList(depotReportQuery);
-        Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
-        for(DepotShopDto depotShopDto:depotList){
-            DepotReportDto depotReportDto=map.get(depotShopDto.getDepotId());
-            if(depotReportDto!=null){
-                depotShopDto.setQty(depotReportDto.getQty());
-            }
-        }
-        setPercentage(depotList);
-        return depotList;
+        return depotReportList;
     }
 
     public DepotReportDetailDto getReportDataDetail(DepotReportQuery depotReportQuery){
