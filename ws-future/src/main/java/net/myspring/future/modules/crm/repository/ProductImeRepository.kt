@@ -30,6 +30,9 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
     fun findByIme(ime: String): ProductIme
     fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
+    fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
+
+
     @Query("""
     SELECT
         t1

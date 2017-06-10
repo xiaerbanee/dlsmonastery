@@ -2,22 +2,20 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
-import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
-/**
- * Created by haos on 2017/5/12.
- */
+
 public class ProductImeSaleDto extends DataDto<ProductImeSale> {
 
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
     private String shopId;
-    //TODO 下面的areaName areaType如何獲取
+    private String shopAreaId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
     private String shopAreaName;
-    private String shopAreaType;
+    private String depotShopAreaType;
     @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "name")
     private String shopOfficeName;
     private String shopOfficeId;
@@ -40,6 +38,41 @@ public class ProductImeSaleDto extends DataDto<ProductImeSale> {
     private String hongbao;
     private LocalDate lotteryDate;
 
+    private String productImeProductImeUploadId;
+    private String productImeId;
+
+    public String getShopAreaId() {
+        return shopAreaId;
+    }
+
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
+    }
+
+    public String getDepotShopAreaType() {
+        return depotShopAreaType;
+    }
+
+    public void setDepotShopAreaType(String depotShopAreaType) {
+        this.depotShopAreaType = depotShopAreaType;
+    }
+
+    public String getProductImeProductImeUploadId() {
+        return productImeProductImeUploadId;
+    }
+
+    public void setProductImeProductImeUploadId(String productImeProductImeUploadId) {
+        this.productImeProductImeUploadId = productImeProductImeUploadId;
+    }
+
+    public String getProductImeId() {
+        return productImeId;
+    }
+
+    public void setProductImeId(String productImeId) {
+        this.productImeId = productImeId;
+    }
+
     public String getShopOfficeId() {
         return shopOfficeId;
     }
@@ -54,14 +87,6 @@ public class ProductImeSaleDto extends DataDto<ProductImeSale> {
 
     public void setShopAreaName(String shopAreaName) {
         this.shopAreaName = shopAreaName;
-    }
-
-    public String getShopAreaType() {
-        return shopAreaType;
-    }
-
-    public void setShopAreaType(String shopAreaType) {
-        this.shopAreaType = shopAreaType;
     }
 
     public String getShopOfficeName() {

@@ -122,6 +122,8 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByProductTypeId(productTypeId: String): MutableList<Product>
 
+    fun findByEnabledIsTrueAndProductTypeId(productTypeId: String): MutableList<Product>
+
 //    fun updateProductTypeId(@Param("productTypeId") id: String, @Param("list") ids: MutableList<String>): Int
 
 //    fun updateProductTypeToNull(productTypeId: String): Int

@@ -383,8 +383,9 @@ public class AfterSaleService {
         List<String> imeList=Lists.newArrayList();
         List<String> productNameList=Lists.newArrayList();
         for (List<String> row : datas) {
-            imeList.add( StringUtils.toString(row.get(0)).trim());
-            productNameList.add( StringUtils.toString(row.get(1)).trim());
+            listAddTrim(imeList,row.get(5));
+            listAddTrim(imeList,row.get(2));
+            listAddTrim(productNameList,row.get(1));
         }
         List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
@@ -395,20 +396,26 @@ public class AfterSaleService {
         Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         for (List<String> row : datas) {
-            ProductIme productIme=productImeMap.get(StringUtils.toString(row.get(0)).trim());
+            ProductIme productIme=productImeMap.get(StringUtils.toString(row.get(5)).trim());
             AfterSale afterSale=afterSaleMap.get(productIme.getId());
             AfterSaleDetail afterSaleDetail=afterSaleDetailMap.get(afterSale.getId());
             afterSaleDetail.setReplaceDate(fromCompanyDate);
             for (int i = 0; i < row.size(); i++) {
                 String value = StringUtils.toString(row.get(i)).trim();
                 switch (i) {
-                    case 2:
+                    case 1:
                         if(StringUtils.isNotBlank(value)){
                             Product product=productMap.get(value);
                             afterSaleDetail.setReplaceProductId(product.getId());
                         }
                         break;
-                    case 4:
+                    case 2:
+                        if(StringUtils.isNotBlank(value)){
+                            ProductIme replaceProductIme=productImeMap.get(value);
+                            afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
+                        }
+                        break;
+                    case 3:
                         if(StringUtils.isNotBlank(value)){
                             afterSaleDetail.setReplaceAmount(new BigDecimal(value));
                         }
@@ -428,7 +435,7 @@ public class AfterSaleService {
 
     private void listAddTrim(List<String> list,String item){
         if(StringUtils.isNotBlank(item)){
-            list.add(item);
+            list.add(item.trim());
         }
     }
 

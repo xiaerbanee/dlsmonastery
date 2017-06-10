@@ -244,6 +244,8 @@ export default {
       productImeSaleBackForm: "串码核销退回编辑",
       productImeSaleList: "串码核销",
       productImeUploadForm: "串码上报编辑",
+      productImeUploadBackForm: "串码上报退回编辑",
+      productImeBatchUploadForm: "串码批量上报编辑",
       productImeUploadList: "串码上报",
       productList: "货品管理",
       productEdit: "物料编辑",

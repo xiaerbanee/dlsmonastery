@@ -65,15 +65,15 @@
         remoteLoading:false,
         table:null,
         settings: {
-          colHeaders: [this.$t('afterSaleFromCompany.badProductName'),this.$t('afterSaleFromCompany.toAreaProductType'),this.$t('afterSaleFromCompany.toCompanyDate'),this.$t('afterSaleFromCompany.badProductIme'),this.$t('afterSaleFromCompany.areaDepot'),this.$t('afterSaleFromCompany.packageStatus'),this.$t('afterSaleFromCompany.toStoreType'),this.$t('afterSaleFromCompany.memory'),this.$t('afterSaleFromCompany.remarks')],
+          colHeaders: [this.$t('afterSaleFromCompany.badProductName'),this.$t('afterSaleFromCompany.toAreaProductType'),"调换机串码","返还价格",this.$t('afterSaleFromCompany.toCompanyDate'),this.$t('afterSaleFromCompany.badProductIme'),this.$t('afterSaleFromCompany.areaDepot'),this.$t('afterSaleFromCompany.packageStatus'),this.$t('afterSaleFromCompany.toStoreType'),this.$t('afterSaleFromCompany.memory'),this.$t('afterSaleFromCompany.remarks')],
           rowHeaders:true,
           maxRows:1000,
           columns: [{
-            data:"badProductIme.product.name",
+            data:"badProductName",
             strict:true,
             width:150
           },{
-            data:"toAreaProductIme.product.name",
+            data:"replaceProductName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -85,7 +85,7 @@
               } else {
                 var productNames = new Array();
                 if(query.length>=2) {
-                  axios.get('/api/crm/product/search?name='+query).then((response)=>{
+                  axios.get('/api/ws/future/basic/product/search?name='+query).then((response)=>{
                     if(response.data.length>0) {
                       for(var index in response.data) {
                         var productName = response.data[index].name;
@@ -104,25 +104,34 @@
             },
             width:200
           },{
-            data:"toCompanyDate",
+            data:"replaceProductIme",
+            strict:true,
+            width:150
+          },{
+            data:"replaceAmount",
+            width:100
+          },{
+            data:"inputDate",
             type: 'date',
             dateFormat: 'YYYY-DD-MM',
             width:150
           },{
-            data:"badProductIme.ime",
+            data:"badProductIme",
             width:150
           },{
-            data:"areaDepot.name",
+            data:"fromDepotName",
             width:150
           },{
             data:"packageStatus",
             width:150
           },{
-            data:"toStoreType",
+            data:"badType",
             width:150
           },{
+            data:"memory",
             width:150
           },{
+            data:"remarks",
             width:150
           }]
         },
@@ -148,7 +157,6 @@
           this.inputForm.data = JSON.stringify(this.inputForm.data);
           axios.post('/api/ws/future/crm/afterSale/fromCompany',qs.stringify(this.inputForm)).then((response)=> {
             this.$message(response.data.message);
-            form.resetFields();
             this.submitDisabled = false;
           }).catch(function () {
             this.submitDisabled = false;
