@@ -14,7 +14,10 @@ const afterSaleFromCompany = r => require.ensure([], () => r(require('pages/futu
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
 const bankInDetail = r => require.ensure([], () => r(require('pages/future/crm/bankInDetail.vue')));
+const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
+const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
 const depotDetailList  = r => require.ensure([], () => r(require('pages/future/crm/depotDetailList.vue')));
+const depotInventoryReport =r =>require([], () => r(require('pages/future/crm/depotInventoryReport.vue')))
 const demoPhoneList= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneList.vue')));
 const demoPhoneForm= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneForm.vue')));
 const demoPhoneTypeOfficeList= r => require.ensure([], () => r(require('pages/future/crm/demoPhoneTypeOfficeList.vue')));
@@ -24,8 +27,7 @@ const expressList  = r => require.ensure([], () => r(require('pages/future/crm/e
 const expressForm = r => require.ensure([], () => r(require('pages/future/crm/expressForm.vue')));
 const expressOrderList  = r => require.ensure([], () => r(require('pages/future/crm/expressOrderList.vue')));
 const expressOrderForm = r => require.ensure([], () => r(require('pages/future/crm/expressOrderForm.vue')));
-const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
-const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
+
 
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
 const goodsOrderShipList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderShipList.vue')));
@@ -98,6 +100,7 @@ let routes = [
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},
   {path:'/future/crm/bankInDetail',component:bankInDetail,name:'bankInDetail',meta: {menu:"bankInList"}},
   {path:'/future/crm/depotDetailList',component:depotDetailList,name:'depotDetailList'},
+  {path:'/future/crm/depotInventoryReport',component:depotInventoryReport,name:'depotInventoryReport'},
   {path:'/future/crm/demoPhoneList',component:demoPhoneList,name:'demoPhoneList'},
   {path:'/future/crm/demoPhoneForm',component:demoPhoneForm,name:'demoPhoneForm',meta: {menu:"demoPhoneList",keepAlive:true}},
   {path:'/future/crm/demoPhoneTypeOfficeList',component:demoPhoneTypeOfficeList,name:'demoPhoneTypeOfficeList'},

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <head-tab active="productImeSaleReport"></head-tab>
+    <head-tab active="depotInventoryReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -13,16 +13,15 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
-        <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item label="汇总" :label-width="formLabelWidth">
-                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
-                  <el-option v-for="item in formData.extra.sumTypeList" :key="item" :label="item" :value="item"></el-option>
+            <el-col :span="12">
+              <el-form-item label="类型" :label-width="formLabelWidth">
+                <el-select v-model="formData.type" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="查看" :label-width="formLabelWidth">
@@ -40,16 +39,18 @@
                   <el-option v-for="item in formData.extra.townTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+            </el-col>
+              <el-col :span="12">
               <el-form-item label="日期" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.dateRange"></date-range-picker>
+                <date-picker v-model="formData.date"></date-picker>
               </el-form-item>
               <el-form-item label="打分型号" :label-width="formLabelWidth">
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
-                  <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str " :value="key"></el-option>
+                  <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str" :value="key"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productIds"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -58,33 +59,15 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
-      <div>
-      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
-        <el-table-column fixed prop="officeName" label="门店" sortable width="300"></el-table-column>
+      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange"  stripe border>
+        <el-table-column fixed prop="depotName" label="门店" sortable width="300"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
-      </div>
-      <div>
-        <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
-        <el-table :data="productMap" style="margin-top:5px;" border stripe border>
-          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
-          <el-table-column prop="qty"  label="数量"></el-table-column>
-        </el-table>
-        <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
-        <el-table :data="productImes" style="margin-top:5px;" border stripe border>
-          <el-table-column  prop="productName" label="货品"  width="300"></el-table-column>
-          <el-table-column prop="qty"  label="串码"></el-table-column>
-          <el-table-column prop="billQty" label="促销员"></el-table-column>
-          <el-table-column prop="price" label="门店"></el-table-column>
-          <el-table-column prop="billQty" label="核销时间"></el-table-column>
-          <el-table-column prop="price" label="保卡注册时间"></el-table-column>
-        </el-table>
-      </div>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
+
     </div>
-
   </div>
-
 </template>
 <script>
   import productSelect from 'components/future/product-select'
@@ -104,9 +87,6 @@
         formVisible: false,
         pageLoading: false,
         officeIds:[],
-        productMap:[],
-        productImes:[],
-        type:"销售报表",
       };
     },
     methods: {
@@ -118,14 +98,17 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeSaleReport",submitData);
-        axios.get('/api/ws/future/crm/productIme/productImeReport?'+qs.stringify(submitData)).then((response) => {
+        util.setQuery("productImeStockReport",this.formData);
+        axios.get('/api/ws/future/basic/depotShop/depotReport?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           console.log(this.page);
           this.pageLoading = false;
-      })
+        })
+      },pageChange(pageNumber,pageSize) {
+        this.formData.page = pageNumber;
+        this.formData.size = pageSize;
+        this.pageRequest();
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
@@ -133,24 +116,17 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },nextLevel(	row, event, column){
-        this.officeIds.push(row.officeId);
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
-        this.pageRequest();
-      },preLevel(){
-        this.officeIds.pop();
-        this.formData.officeId=this.officeIds[this.officeIds.length-1];
-        this.pageRequest();
       },saleReportGrid(){
 
       },exportData(command) {
       }
     },created () {
-      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+      axios.get('/api/ws/future/basic/depotShop/getReportQuery').then((response) => {
         this.formData = response.data;
-      util.copyValue(this.$route.query, this.formData);
-      this.pageRequest();
-    })
+        console.log(this.formData.extra)
+        util.copyValue(this.$route.query, this.formData);
+        this.pageRequest();
+      })
     }
   };
 </script>

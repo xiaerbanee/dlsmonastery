@@ -67,8 +67,11 @@ public class ProductService {
         return productDtoList;
     }
 
-    public List<Product> findByIds(List<String> ids) {
-        return productRepository.findAll(ids);
+
+    public List<ProductDto> findByIds(List<String> ids){
+        List<Product> productList=productRepository.findByEnabledIsTrueAndIdIn(ids);
+        List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
+        return productDtoList;
     }
 
     public Product findByName(String name){
