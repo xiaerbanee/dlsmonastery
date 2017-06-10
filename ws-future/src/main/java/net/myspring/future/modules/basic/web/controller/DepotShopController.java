@@ -8,6 +8,7 @@ import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.AdPricesystemService;
 import net.myspring.future.modules.basic.service.ChainService;
