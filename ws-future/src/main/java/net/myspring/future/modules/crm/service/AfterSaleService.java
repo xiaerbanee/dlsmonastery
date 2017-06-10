@@ -23,9 +23,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
-import org.aspectj.lang.annotation.After;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -84,26 +82,15 @@ public class AfterSaleService {
         return afterSaleInputList;
     }
 
-    public List<AfterSaleCompanyDto> getFromCompanyData(List<String> imeList){
+    public List<AfterSaleCompanyDto> getFromCompanyData(AfterSaleQuery afterSaleQuery){
         List<AfterSaleCompanyDto> afterSaleCompanyList=Lists.newArrayList();
-        List<AfterSaleDto> afterSaleList=afterSaleRepository.findDtoByBadProductImeIn(imeList);
-        List<ProductIme> productImeList=productImeRepository.findAll(CollectionUtil.extractToList(afterSaleList,"badProductImeId"));
-        List<Product> productList=productRepository.findAll(CollectionUtil.extractToList(afterSaleList,"badProductId"));
+        List<AfterSaleDto> afterSaleList=afterSaleRepository.findFilter(afterSaleQuery);
         List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),AfterSaleDetailTypeEnum.工厂录入.name());
         Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
-        Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"id");
-        Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"id");
         for(AfterSaleDto afterSale:afterSaleList){
-            AfterSaleCompanyDto afterSaleCompanyDto=new AfterSaleCompanyDto();
+            AfterSaleCompanyDto afterSaleCompanyDto=BeanUtil.map(afterSale,AfterSaleCompanyDto.class);
             AfterSaleDetail afterSaleDetail=afterSaleDetailMap.get(afterSale.getId());
-            ProductIme productIme=productImeMap.get(afterSale.getBadProductImeId());
-            afterSaleCompanyDto.setBadIme(productIme.getIme());
-            Product product=productMap.get(afterSale.getBadProductId());
-            afterSaleCompanyDto.setBadProductName(product.getName());
             afterSaleCompanyDto.setInputDate(afterSaleDetail.getInputDate());
-            afterSaleCompanyDto.setBadType(afterSale.getBadType());
-            afterSaleCompanyDto.setPackageStatus(afterSale.getPackageStatus());
-            afterSaleCompanyDto.setMemory(afterSale.getMemory());
             afterSaleCompanyList.add(afterSaleCompanyDto);
         }
         return afterSaleCompanyList;
