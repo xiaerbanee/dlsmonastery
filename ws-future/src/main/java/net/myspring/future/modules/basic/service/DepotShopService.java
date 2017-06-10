@@ -18,6 +18,7 @@ import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -46,30 +47,30 @@ public class DepotShopService {
     @Autowired
     private OfficeClient officeClient;
 
-    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery){
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery) {
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         depotQuery.setDepotIdList(depotManager.filterDepotIds());
-        if(StringUtils.isNotBlank(depotQuery.getOfficeId())){
+        if (StringUtils.isNotBlank(depotQuery.getOfficeId())) {
             depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
         }
-        Page<DepotShopDto> page=depotShopRepository.findPage(pageable,depotQuery);
+        Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
     public DepotShopForm getForm(DepotShopForm depotShopForm) {
-        if(!depotShopForm.isCreate()) {
-            DepotShop depotShop =depotShopRepository.findOne(depotShopForm.getId());
-            depotShopForm= BeanUtil.map(depotShop,DepotShopForm.class);
+        if (!depotShopForm.isCreate()) {
+            DepotShop depotShop = depotShopRepository.findOne(depotShopForm.getId());
+            depotShopForm = BeanUtil.map(depotShop, DepotShopForm.class);
             cacheUtils.initCacheInput(depotShopForm);
         }
         return depotShopForm;
     }
 
     public DepotForm findDepotForm(DepotForm depotForm) {
-        if(!depotForm.isCreate()) {
-            Depot depot =depotRepository.findOne(depotForm.getId());
-            depotForm= BeanUtil.map(depot,DepotForm.class);
+        if (!depotForm.isCreate()) {
+            Depot depot = depotRepository.findOne(depotForm.getId());
+            depotForm = BeanUtil.map(depot, DepotForm.class);
             cacheUtils.initCacheInput(depotForm);
         }
         return depotForm;
@@ -77,10 +78,10 @@ public class DepotShopService {
 
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
-        if(depotShopForm.isCreate()) {
-            depotShop = BeanUtil.map(depotShopForm,DepotShop.class);
+        if (depotShopForm.isCreate()) {
+            depotShop = BeanUtil.map(depotShopForm, DepotShop.class);
             depotShopRepository.save(depotShop);
-            Depot depot=new Depot();
+            Depot depot = new Depot();
             depot.setName(depotShopForm.getDepotName());
             depot.setNamePinyin(StringUtils.getFirstSpell(depotShopForm.getDepotName()));
             depot.setDepotShopId(depotShop.getId());
@@ -89,26 +90,26 @@ public class DepotShopService {
             depotShopRepository.save(depotShop);
         } else {
             depotShop = depotShopRepository.findOne(depotShopForm.getId());
-            ReflectionUtil.copyProperties(depotShopForm,depotShop);
+            ReflectionUtil.copyProperties(depotShopForm, depotShop);
             depotShopRepository.save(depotShop);
         }
         return depotShop;
     }
 
-    public Depot saveDepot(DepotForm depotForm){
+    public Depot saveDepot(DepotForm depotForm) {
         Depot depot;
         depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
-        if(depotForm.isCreate()){
-            depot=BeanUtil.map(depotForm,Depot.class);
+        if (depotForm.isCreate()) {
+            depot = BeanUtil.map(depotForm, Depot.class);
             depotRepository.save(depot);
-            DepotShop depotShop=new DepotShop();
+            DepotShop depotShop = new DepotShop();
             depotShop.setDepotId(depot.getId());
             depotShopRepository.save(depotShop);
             depot.setDepotShopId(depotShop.getId());
             depotRepository.save(depot);
-        }else {
-            depot=depotRepository.findOne(depotForm.getId());
-            ReflectionUtil.copyProperties(depotForm,depot);
+        } else {
+            depot = depotRepository.findOne(depotForm.getId());
+            ReflectionUtil.copyProperties(depotForm, depot);
             depotRepository.save(depot);
         }
         return depot;
@@ -119,41 +120,55 @@ public class DepotShopService {
         depotShopRepository.logicDelete(id);
     }
 
-    public List<DepotReportDto> setReportData(ReportQuery reportQuery){
-        List<DepotReportDto> depotReportList=getProductImeReportList(reportQuery);
+    public List<DepotReportDto> setReportData(ReportQuery reportQuery) {
+        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        reportQuery.setDepotIdList(depotManager.filterDepotIds());
+        DepotQuery depotQuery = BeanUtil.map(reportQuery, DepotQuery.class);
+        List<Depot> depotList = depotRepository.findByFilter(depotQuery);
+        List<DepotReportDto> depotReportList = getProductImeReportList(reportQuery);
+        Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
+        for(Depot depot:depotList){
+            if(!map.containsKey(depot.getId())){
+                DepotReportDto depotReport = new DepotReportDto();
+                depotReport.setDepotId(depot.getId());
+                depotReport.setQty(0);
+                depotReport.setDepotName(depot.getName());
+                depotReportList.add(depotReport);
+            }
+        }
         setPercentage(depotReportList);
         return depotReportList;
     }
 
-    public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery){
-        DepotReportDetailDto depotReportDetail=new DepotReportDetailDto();
-        List<DepotReportDto> depotReportList=getProductImeReportList(reportQuery);
+    public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery) {
+        DepotReportDetailDto depotReportDetail = new DepotReportDetailDto();
+        List<DepotReportDto> depotReportList = getProductImeReportList(reportQuery);
         depotReportDetail.setDepotReportList(depotReportList);
-        Map<String,Integer> map= Maps.newHashMap();
-        for(DepotReportDto depotReportDto:depotReportList){
-            if(!map.containsKey(depotReportDto.getProductName())){
-                map.put(depotReportDto.getProductName(),1);
-            }else {
-                map.put(depotReportDto.getProductName(),map.get(depotReportDto.getProductName())+1);
+        Map<String, Integer> map = Maps.newHashMap();
+        for (DepotReportDto depotReportDto : depotReportList) {
+            if (!map.containsKey(depotReportDto.getProductName())) {
+                map.put(depotReportDto.getProductName(), 1);
+            } else {
+                map.put(depotReportDto.getProductName(), map.get(depotReportDto.getProductName()) + 1);
             }
         }
         depotReportDetail.setProductQtyMap(map);
         return depotReportDetail;
     }
 
-    private List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery){
-        List<DepotReportDto> depotReportList= Lists.newArrayList();
-        if(OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())){
-            if("销售报表".equals(reportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaSaleReport(reportQuery);
-            }else if("库存报表".equals(reportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaStoreReport(reportQuery);
+    private List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery) {
+        List<DepotReportDto> depotReportList = Lists.newArrayList();
+        if (OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())) {
+            if ("销售报表".equals(reportQuery.getType())) {
+                depotReportList = depotShopRepository.findBaokaSaleReport(reportQuery);
+            } else if ("库存报表".equals(reportQuery.getType())) {
+                depotReportList = depotShopRepository.findBaokaStoreReport(reportQuery);
             }
-        }else {
-            if("销售报表".equals(reportQuery.getType())){
-                depotReportList=depotShopRepository.findSaleReport(reportQuery);
-            }else if("库存报表".equals(reportQuery.getType())){
-                depotReportList=depotShopRepository.findBaokaStoreReport(reportQuery);
+        } else {
+            if ("销售报表".equals(reportQuery.getType())) {
+                depotReportList = depotShopRepository.findSaleReport(reportQuery);
+            } else if ("库存报表".equals(reportQuery.getType())) {
+                depotReportList = depotShopRepository.findBaokaStoreReport(reportQuery);
             }
         }
         return depotReportList;
@@ -162,10 +177,10 @@ public class DepotShopService {
     private void setPercentage(List<DepotReportDto> depotReportList) {
         Integer sum = 0;
         for (DepotReportDto depotReport : depotReportList) {
-            sum= sum + depotReport.getQty();
+            sum = sum + depotReport.getQty();
         }
         for (DepotReportDto depotReport : depotReportList) {
-            depotReport.setPercent(StringUtils.division(sum,depotReport.getQty()));
+            depotReport.setPercent(StringUtils.division(sum, depotReport.getQty()));
         }
     }
 }

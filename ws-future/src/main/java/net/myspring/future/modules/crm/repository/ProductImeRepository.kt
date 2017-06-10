@@ -63,7 +63,6 @@ interface ProductImeRepositoryCustom{
 
     fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto>
 
-
     fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto>
 
     fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
@@ -126,10 +125,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findBaokaStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
-        }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.sumType)||productImeReportQuery.sumType=="区域") {
             sb.append(""" select t3.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
@@ -176,8 +172,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t3.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" group by t3.area_id """)
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+            sb.append(""" and t3.id in (:depotIdList) """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
@@ -188,10 +184,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
-        }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.sumType)||productImeReportQuery.sumType=="区域") {
             sb.append(""" select t3.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
@@ -239,8 +232,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t3.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" group by t3.area_id """)
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+            sb.append(""" and t3.id in (:depotIdList) """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
@@ -251,10 +244,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
-        }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.sumType)||productImeReportQuery.sumType=="区域") {
             sb.append(""" select t2.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
@@ -294,8 +284,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" group by t2.area_id """)
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+            sb.append(""" and t2.id in (:depotIdList) """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
@@ -306,10 +296,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findBaokaSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
-        }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.sumType)||productImeReportQuery.sumType=="区域") {
             sb.append(""" select t2.office_id,t1.id '""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
@@ -346,8 +333,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" group by t2.area_id """)
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+            sb.append(""" and t2.id in (:depotIdList) """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t4.id """)
