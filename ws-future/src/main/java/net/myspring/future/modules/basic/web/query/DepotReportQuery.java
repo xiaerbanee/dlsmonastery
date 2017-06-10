@@ -28,7 +28,22 @@ public class DepotReportQuery {
     private String officeId;
     private List<String> officeIdList=Lists.newArrayList();
     private List<String> depotIdList=Lists.newArrayList();
-    private List<String> shopIdList=Lists.newArrayList();
+
+    public boolean isDetail() {
+        return detail;
+    }
+
+    public boolean isScoreType() {
+        return scoreType;
+    }
+
+    public List<String> getDepotIdList() {
+        return depotIdList;
+    }
+
+    public void setDepotIdList(List<String> depotIdList) {
+        this.depotIdList = depotIdList;
+    }
 
     public String getDepotId() {
         return depotId;
@@ -52,14 +67,6 @@ public class DepotReportQuery {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public List<String> getShopIdList() {
-        return shopIdList;
-    }
-
-    public void setShopIdList(List<String> shopIdList) {
-        this.shopIdList = shopIdList;
     }
 
     public String getOutType() {

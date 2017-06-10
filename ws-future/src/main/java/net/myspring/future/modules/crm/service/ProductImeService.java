@@ -173,9 +173,11 @@ public class ProductImeService {
     public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeReportQuery) {
         productImeReportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
+        boolean nextIsShop=false;
         if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())){
             productImeReportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(productImeReportQuery.getOfficeId()));
             childOfficeMap=officeClient.getChildOfficeMap(productImeReportQuery.getOfficeId());
+            nextIsShop=officeClient.checkLastLevel(productImeReportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(productImeReportQuery);
         if(StringUtils.isNotBlank(productImeReportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(productImeReportQuery.getSumType())){
