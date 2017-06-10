@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by wangzm on 2017/6/7.
  */
-public class ProductImeReportQuery  extends BaseQuery{
+public class ReportQuery extends BaseQuery{
     //销售，库存
     private String type;
     //区域，促销，型号
@@ -25,6 +25,7 @@ public class ProductImeReportQuery  extends BaseQuery{
     private String areaType;
     //日期范围
     private String dateRange;
+
     private LocalDate date;
     //乡镇类型
     private String townType;
@@ -33,7 +34,27 @@ public class ProductImeReportQuery  extends BaseQuery{
     //货品
     private String officeId;
 
+    private String depotId;
+
+    private Boolean isDetail;
+
     private List<String> productTypeIdList;
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
+    }
+
+    public Boolean getIsDetail() {
+        return isDetail;
+    }
+
+    public void setIsDetail(Boolean detail) {
+        isDetail = detail;
+    }
 
     public String getType() {
         return type;

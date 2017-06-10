@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import com.google.common.collect.Sets;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
@@ -22,9 +21,8 @@ import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
-import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
+import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -118,12 +116,12 @@ public class ProductImeController {
     }
 
     @RequestMapping(value = "productImeReport")
-    public List<ProductImeReportDto> productImeReport(ProductImeReportQuery productImeSaleReportQuery){
+    public List<ProductImeReportDto> productImeReport(ReportQuery productImeSaleReportQuery){
         return productImeService.productImeReport(productImeSaleReportQuery);
     }
 
     @RequestMapping(value = "getReportQuery")
-    public ProductImeReportQuery getReportQuery(ProductImeReportQuery productImeSaleReportQuery){
+    public ReportQuery getReportQuery(ReportQuery productImeSaleReportQuery){
         productImeSaleReportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
         productImeSaleReportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
         productImeSaleReportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
