@@ -50,7 +50,7 @@ public class DictMapController {
 
     @RequestMapping(value = "getForm")
     public DictMapForm getForm(DictMapForm dictMapForm){
-        dictMapForm.getExtra().put("",dictMapService.findDistinctCategory());
+        dictMapForm.getExtra().put("categoryList",dictMapService.findDistinctCategory());
         return dictMapForm;
     }
 
