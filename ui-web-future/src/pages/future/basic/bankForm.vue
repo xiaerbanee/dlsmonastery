@@ -25,9 +25,9 @@
     components:{
       accountSelect
     },
-      data(){
-        return this.getData()
-      },
+    data(){
+      return this.getData()
+    },
     methods:{
       getData() {
           return{
@@ -35,47 +35,45 @@
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             remoteLoading:false,
-            inputForm:{},
-            submitData:{
-              id:'',
-              name:'',
-              accountIdList:"",
-              remarks:''
+            inputForm:{
+              extra:{}
             },
             rules: {
               name: [{ required: true, message: this.$t('bankForm.prerequisiteMessage')}]
             }
           }
       },
-        formSubmit(){
-          var that = this;
-          let form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              this.submitDisabled = true;
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/ws/future/basic/bank/save',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
-                  }
+      formSubmit(){
+        var that = this;
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.submitDisabled = true;
+            axios.post('/api/ws/future/basic/bank/save',qs.stringify(util.deleteExtra(that.inputForm))).then((response)=> {
+              this.$message(response.data.message);
+              Object.assign(this.$data, this.getData());
+              if(response.data.success) {
+                if (!this.isCreate) {
+                  this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
                 }
-              }).catch(() => {
-                that.submitDisabled = false;
-              });
-            }
-          });
-        }
+              }
+            }).catch(() => {
+              that.submitDisabled = false;
+            });
+          }
+        });
+      }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm=response.data;
+        axios.get('/api/ws/future/basic/bank/getForm').then((response)=>{
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
-        }
-      this.isInit = true;
       }
+      this.isInit = true;
     }
+  }
 </script>

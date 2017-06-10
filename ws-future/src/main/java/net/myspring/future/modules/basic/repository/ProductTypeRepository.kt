@@ -39,6 +39,8 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     """)
     fun findByNameLike(name: String): MutableList<ProductType>
 
+    fun findByNameAndCompanyId(name :String,  companyId :String): ProductType?
+
     @Query("""
         SELECT t1
         from #{#entityName}  t1

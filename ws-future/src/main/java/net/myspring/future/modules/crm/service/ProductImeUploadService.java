@@ -109,7 +109,7 @@ public class ProductImeUploadService {
 
         String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -179,7 +179,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Map<String, ProductImeUpload> productImeUploadMap = productImeUploadRepository.findMap(CollectionUtil.extractToList(productImeList, "productImeUploadId"));
 
         for (ProductIme productIme : productImeList) {

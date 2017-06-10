@@ -64,4 +64,9 @@ public class BankController {
         List<BankDto> bankDtoList =bankService.findByNameContaining(key);
         return bankDtoList;
     }
+
+    @RequestMapping(value = "getForm")
+    public BankForm getForm(BankForm bankForm){
+        return bankForm;
+    }
 }

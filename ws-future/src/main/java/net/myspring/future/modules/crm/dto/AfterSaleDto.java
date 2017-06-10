@@ -20,6 +20,15 @@ public class AfterSaleDto extends DataDto<AfterSale> {
     private String badProductIme;
     private String replaceProductName;
     private String fromDepotName;
+    private String toDepotName;
+
+    public String getToDepotName() {
+        return toDepotName;
+    }
+
+    public void setToDepotName(String toDepotName) {
+        this.toDepotName = toDepotName;
+    }
 
     public String getReplaceProductName() {
         return replaceProductName;

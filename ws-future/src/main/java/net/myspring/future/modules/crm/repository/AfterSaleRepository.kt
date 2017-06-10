@@ -51,12 +51,14 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         val sb = StringBuilder()
         sb.append("""
              SELECT
-                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName'
+                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName',t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks,t5.replace_amount
              FROM
                  crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                  left join crm_product t3 on t1.bad_product_id=t3.id
                  left join crm_depot t4 on t1.bad_depot_id=t4.id
                  left join crm_after_sale_detail t5 on t5.after_sale_id=t1.id
+                left join crm_depot t6 on t5.from_depot_id=t6.id
+                left join crm_depot t7 on t5.to_depot_id=t7.id
              WHERE
                  t1.enabled=1
         """)
