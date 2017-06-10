@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -147,28 +147,35 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        if(!this.nextIsShop){
-          axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
-            this.officeIds.push(row.officeId);
-            this.formData.officeId=this.officeIds[this.officeIds.length-1];
-            this.nextIsShop=response.data;
-            this.pageRequest();
-          })
+        console.log(row)
+        if(row.productTypeId){
+          this.formData.productTypeIdList=row.productTypeId;
+          this.formData.sumType="区域";
+          this.pageRequest();
         }else{
-          this.detailVisible=true;
-          this.formData.isDetail=true;
-          this.formData.depotId=row.depotId;
-          axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
-            this.depotReportList=response.data.depotReportList;
-            let productQtyMap=response.data.productQtyMap;
-            let productQty=[];
-            if(productQtyMap){
-              for(let key in productQtyMap){
-                productQty.push({productName:key,qty:productQtyMap[key]})
+          if(!this.nextIsShop){
+            axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
+              this.officeIds.push(row.officeId);
+              this.formData.officeId=this.officeIds[this.officeIds.length-1];
+              this.nextIsShop=response.data;
+              this.pageRequest();
+            })
+          }else{
+            this.detailVisible=true;
+            this.formData.isDetail=true;
+            this.formData.depotId=row.depotId;
+            axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+              this.depotReportList=response.data.depotReportList;
+              let productQtyMap=response.data.productQtyMap;
+              let productQty=[];
+              if(productQtyMap){
+                for(let key in productQtyMap){
+                  productQty.push({productName:key,qty:productQtyMap[key]})
+                }
+                this.productQtyMap=productQty;
               }
-              this.productQtyMap=productQty;
-            }
-          })
+            })
+          }
         }
       },preLevel(){
         this.nextIsShop=false;
