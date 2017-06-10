@@ -1,10 +1,5 @@
 const afterSaleList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleList.vue')));
-const afterSaleForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleForm.vue')));
-const afterSaleEditForm= r => require.ensure([], () => r(require('pages/future/crm/afterSaleEditForm.vue')));
-const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleImeAllotList.vue')));
 const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaInput.vue')));
-const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
-const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
 const afterSaleAreaFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaFleeInput.vue')));
 const afterSaleHeadInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadInput.vue')));
 const afterSaleHeadFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadFleeInput.vue')));
@@ -60,6 +55,7 @@ const productImeSaleForm= r => require.ensure([], () => r(require('pages/future/
 const productImeSaleBackForm= r => require.ensure([], () => r(require('pages/future/crm/productImeSaleBackForm.vue')));
 const productImeUploadList  = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadList.vue')));
 const productImeUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadForm.vue')));
+const productImeBatchUploadForm = r => require.ensure([], () => r(require('pages/future/crm/productImeBatchUploadForm.vue')));
 const productImeUploadBackForm = r => require.ensure([], () => r(require('pages/future/crm/productImeUploadBackForm.vue')));
 const productMonthPriceList = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceList.vue')));
 const productMonthPriceForm = r => require.ensure([], () => r(require('pages/future/crm/productMonthPriceForm.vue')));
@@ -84,11 +80,6 @@ const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/c
 
 let routes = [
   {path:'/future/crm/afterSaleList',component:afterSaleList,name:'afterSaleList'},
-  {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm',meta: {menu:"afterSaleList",keepAlive:true}},
-  {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm',meta: {menu:"afterSaleList",keepAlive:true}},
-  {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
-  {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
-  {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
   {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
   {path:'/future/crm/afterSaleAreaFleeInput',component:afterSaleAreaFleeInput,name:'afterSaleAreaFleeInput'},
   {path:'/future/crm/afterSaleHeadInput',component:afterSaleHeadInput,name:'afterSaleHeadInput'},
@@ -146,6 +137,7 @@ let routes = [
   {path:'/future/crm/productImeSaleBackForm',component:productImeSaleBackForm,name:'productImeSaleBackForm',meta: {menu:"productImeSaleList",keepAlive:true}},
   {path:'/future/crm/productImeUploadList',component:productImeUploadList,name:'productImeUploadList'},
   {path:'/future/crm/productImeUploadForm',component:productImeUploadForm,name:'productImeUploadForm',meta: {menu:"productImeUploadList",keepAlive:true}},
+  {path:'/future/crm/productImeBatchUploadForm',component:productImeBatchUploadForm,name:'productImeBatchUploadForm',meta: {menu:"productImeUploadList",keepAlive:true}},
   {path:'/future/crm/productImeUploadBackForm',component:productImeUploadBackForm,name:'productImeUploadBackForm',meta: {menu:"productImeUploadList",keepAlive:true}},
   {path:'/future/crm/productMonthPriceList',component:productMonthPriceList,name:'productMonthPriceList' },
   {path:'/future/crm/productMonthPriceForm',component:productMonthPriceForm,name:'productMonthPriceForm',meta: {menu:"productMonthPriceList",keepAlive:true}},

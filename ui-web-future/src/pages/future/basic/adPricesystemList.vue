@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adPricesystem:edit'">{{$t('adPricesystemList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adPricesystem:view'">{{$t('adPricesystemList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('adPricesystemList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('adPricesystemList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adPricesystemList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('adPricesystemList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('adPricesystemList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adPricesystemList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('adPricesystemList.name')" sortable width="150"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adPricesystemList.remarks')"></el-table-column>
@@ -50,30 +50,30 @@
   export default {
     data() {
       return {
+        searchText:"",
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          name:''
-        },formLabel:{
-          name:{label:this.$t('adPricesystemList.name')}
+        formData:{
+          extra:{}
         },
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData)
-        util.setQuery("adPricesystemList",this.submitData);
-        axios.get('/api/ws/future/basic/adPricesystem',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("adPricesystemList",submitData);
+        axios.get('/api/ws/future/basic/adPricesystem',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

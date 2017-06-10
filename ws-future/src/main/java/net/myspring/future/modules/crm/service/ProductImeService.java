@@ -12,6 +12,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -62,6 +63,8 @@ public class ProductImeService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private DepotManager depotManager;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
@@ -171,13 +174,13 @@ public class ProductImeService {
 
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
         reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
+        reportQuery.setDepotIdList(depotManager.filterDepotIds());
+        Map<String,List<String>>  childOfficeMap=officeClient.getChildOfficeMap(reportQuery.getOfficeId());
         if(StringUtils.isNotBlank(reportQuery.getOfficeId())){
             reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-            childOfficeMap=officeClient.getChildOfficeMap(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(reportQuery);
-        if(StringUtils.isNotBlank(reportQuery.getOfficeId())&& SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
+        if(SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
             Map<String,ProductImeReportDto> map=Maps.newHashMap();
             for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
                 String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
@@ -188,6 +191,11 @@ public class ProductImeService {
                         ProductImeReportDto productImeSaleReport=new ProductImeReportDto(key,1);
                         map.put(key,productImeSaleReport);
                     }
+                }
+            }
+            for(String officeId:childOfficeMap.keySet()){
+                if(!map.containsKey(officeId)){
+                    map.put(officeId,new ProductImeReportDto(officeId,0));
                 }
             }
             List<ProductImeReportDto> list=Lists.newArrayList(map.values());

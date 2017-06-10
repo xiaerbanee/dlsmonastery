@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.education')" prop="education">
               <el-select v-model="employeeForm.education" >
-                <el-option v-for="item in inputProperty.educationList":key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in employeeForm.extra.educationList":key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.code')" prop="code">
@@ -82,7 +82,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeForm.position')" prop="positionId">
               <el-select v-model="accountForm.positionId"  filterable :placeholder="$t('employeeForm.selectGroup')" :clearable=true>
-                <el-option v-for="position in inputProperty.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                <el-option v-for="position in accountForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -111,58 +111,32 @@
     },
     methods:{
       getData(){
-        return{
-          isInit:false,
-          isCreate:this.$route.query.id==null,
-          submitDisabled:false,
-          employeeForm:{},
-          accountForm:{},
-          inputProperty:{},
-          employeeSubmitData:{
-            id:'',
-            accountId:"",
-            name:'',
-            education:'',
-            code:'',
-            salary:'',
-            bankNumber:'',
-            bankName:'',
-            entryDate:'',
-            regularDate:'',
-            leaveDate:'',
-            school:'',
-            mobilePhone:'',
-            idcard:'',
-            birthday:'',
-            sex:"",
-            originId:'',
-            salerName:'',
+        return {
+          isInit: false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
+          employeeForm: {
+            extra: {}
           },
-          accountSubmitData:{
-            id:"",
-            loginName:'',
-            employeeId:"",
-            officeId:"",
-            leaderId:'',
-            positionId:"",
-            type:"主账号",
-            officeIdList:'',
+          accountForm: {
+            extra: {},
+            type: "主账号"
           },
-          remoteLoading:false,
+          remoteLoading: false,
           employeeRules: {
-            name: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            mobilePhone: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            salary: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            idcard: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            entryDate: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            name: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            mobilePhone: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            salary: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            idcard: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            entryDate: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
           },
           accountRules: {
-            loginName: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            officeId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
-            positionId: [{ required: true, message:this.$t('employeeForm.prerequisiteMessage')}],
+            loginName: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            officeId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            positionId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
           },
-          loading:false
-        }
+          loading: false
+        };
       },
       formSubmit(){
         var that = this;
@@ -178,20 +152,17 @@
             this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
             accountForm.validate((accountValid) => {
               if (accountValid) {
-                util.copyValue(this.employeeForm,this.employeeSubmitData);
-                axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeSubmitData)).then((response)=> {
+                axios.post('/api/basic/hr/employee/save', qs.stringify(util.deleteExtra(this.employeeForm))).then((response)=> {
                   this.$message("员工"+response.data.message);
-                this.accountForm.employeeId=response.data.extra.employeeId;
-                util.copyValue(this.accountForm,this.accountSubmitData);
-                console.log(this.accountSubmitData)
-                axios.post('/api/basic/hr/account/save', qs.stringify(this.accountSubmitData)).then((response)=> {
-                  this.$message("账户"+response.data.message);
-              });
-                Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
-                  this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
-                }
-              }).catch(function () {
+                  this.accountForm.employeeId=response.data.extra.employeeId;
+                  axios.post('/api/basic/hr/account/save', qs.stringify(util.deleteExtra(this.accountForm))).then((response)=> {
+                    this.$message("账户"+response.data.message);
+                  });
+                  Object.assign(this.$data, this.getData());
+                  if(!this.isCreate){
+                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+                  }
+                }).catch(function () {
                   that.submitDisabled = false;
                 });
               }
@@ -203,17 +174,20 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
-        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.employeeForm=response.data;
-        this.employeeForm.sex=response.data.sex=="男"?1:0;
-        axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
-          this.accountForm=response.data;
-      })
-      })
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/employee/getForm').then((response)=>{
-          this.inputProperty=response.data
-        console.log(this.inputProperty)
-      })
+          this.employeeForm = response.data;
+          axios.get('/api/basic/hr/account/getForm').then((response)=>{
+            this.accountForm = response.data;
+            axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data, this.employeeForm);
+              this.employeeForm.sex = response.data.sex == "男" ? 1 : 0;
+              axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
+                util.copyValue(response.data, this.accountForm);
+              })
+            })
+          })
+        });
       }
       this.isInit = true;
     }

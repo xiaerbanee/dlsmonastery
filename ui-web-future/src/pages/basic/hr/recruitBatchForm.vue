@@ -20,7 +20,7 @@
           </el-form-item>
           <el-form-item  :label="$t('recruitBatchForm.education')" prop="education">
             <el-select v-model="inputForm.education" >
-              <el-option v-for="item in formProperty.educationsList"  :key="item" :label="item" :value="item"></el-option>
+              <el-option v-for="item in inputForm.extra.educationsList"  :key="item" :label="item" :value="item"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item  :label="$t('recruitBatchForm.entryRealDate')" prop="entryRealDate">
@@ -40,25 +40,24 @@
     },
     methods:{
       getData(){
-        return{
-          isInit:false,
-          isCreate:this.$route.query.ids==null,
-          submitDisabled:false,
-          formProperty:{},
-          nameList:"",
-          inputForm:{
-            ids:this.$route.query.ids,
-            applyPositionName:'',
-            applyFrom:'',
-            workArea:"",
-            workCategory:"",
-            education:'',
-            entryRealDate:""
+        return {
+          isInit: false,
+          isCreate: this.$route.query.ids == null,
+          submitDisabled: false,
+          nameList: "",
+          inputForm: {
+            ids: this.$route.query.ids,
+            applyPositionName: '',
+            applyFrom: '',
+            workArea: "",
+            workCategory: "",
+            education: '',
+            entryRealDate: "",
+            extra: {}
           },
-          rules: {
-          },
-          remoteLoading:false
-        }
+          rules: {},
+          remoteLoading: false
+        };
       },
       formSubmit(){
         var that = this;
@@ -82,8 +81,9 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+
         axios.get('/api/basic/hr/recruit/getForm').then((response)=>{
-          this.formProperty=response.data;
+          this.inputForm.extra = response.data;
         });
         console.log(this.inputForm.ids)
         axios.get('/api/basic/hr/recruit/findNameByIds',{params:{ids:this.inputForm.ids}}).then((response)=>{

@@ -72,21 +72,21 @@
 <script>
   export default{
     data(){
-      var validateConfigPass = (rule, value, callback) => {
-        var password=this.accountForm.password;
-        var configPassword=this.confirmPassword;
-        if (password&&configPassword == '') {
-          callback(new Error('请再次输入密码'));
-        } else if (password&&configPassword !== password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
-          callback();
-        }
-      };
       return this.getData();
     },
     methods:{
       getData(){
+        var validateConfigPass = (rule, value, callback) => {
+          var password=this.accountForm.password;
+          var configPassword=this.confirmPassword;
+          if (password&&configPassword == '') {
+            callback(new Error('请再次输入密码'));
+          } else if (password&&configPassword !== password) {
+            callback(new Error('两次输入密码不一致!'));
+          } else {
+            callback();
+          }
+        };
         return{
           isInit:false,
           isCreate:this.$route.query.id==null,
