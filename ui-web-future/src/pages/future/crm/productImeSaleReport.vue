@@ -66,12 +66,28 @@
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
       </el-table>
       </div>
+      <div>
+        <el-dialog title="详细" :visible.sync="dialogTableVisible">
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
+          <el-table :data="gridData">
+          <el-table-column property="date" label="日期" width="150"></el-table-column>
+          <el-table-column property="name" label="姓名" width="200"></el-table-column>
+          <el-table-column property="address" label="地址"></el-table-column>
+        </el-table>
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
+          <el-table :data="gridData">
+            <el-table-column property="date" label="日期" width="150"></el-table-column>
+            <el-table-column property="name" label="姓名" width="200"></el-table-column>
+            <el-table-column property="address" label="地址"></el-table-column>
+          </el-table>
+      </el-dialog>
+      </div>
     </div>
   </div>
 
 </template>
 <script>
-  import productSelect from 'components/future/product-select'
+  import productSelect from 'components/future/product-select';
 
   export default {
     components:{
@@ -87,9 +103,27 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
+        dialogTableVisible: true,
         pageLoading: false,
         officeIds:[],
         type:"销售报表",
+        gridData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }],
       };
     },
     methods: {
@@ -126,11 +160,21 @@
         axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
           this.officeIds.push(row.officeId);
           this.formData.officeId=this.officeIds[this.officeIds.length-1];
-          console.log(this.formData)
-          this.nextIsShop=response.data
-          this.pageRequest();
+          if(this.nextIsShop){
+            this.nextIsShop=true;
+            this.formData.isDetail=true;
+            axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+              console.log(response.data)
+            })
+          }else{
+            this.nextIsShop=response.data;
+            this.pageRequest();
+          }
         })
       },preLevel(){
+        if(this.nextIsShop){
+          this.nextIsShop=false
+        }
         this.officeIds.pop();
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
