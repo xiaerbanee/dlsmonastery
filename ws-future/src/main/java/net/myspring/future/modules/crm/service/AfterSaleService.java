@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -23,6 +24,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.aspectj.lang.annotation.After;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,16 +69,29 @@ public class AfterSaleService {
         return afterSales;
     }
 
-    public List<AfterSaleInputDto> areaInputUpdateData(List<String> imeList){
+    public List<AfterSaleInputDto> areaInputUpdateData(List<String> imeList,String type){
         List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
         List<AfterSaleDto> afterSaleList=afterSaleRepository.findDtoByBadProductImeIn(imeList);
         List<AfterSaleDetailDto> afterSaleDetailList=afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"地区录入");
         Map<String,AfterSaleDetailDto> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
+        Map<String,AfterSaleFlee> afterSaleFleeMap= Maps.newHashMap();
+        if(AfterSaleTypeEnum.窜货机.equals(type)){
+            List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(CollectionUtil.extractToList(afterSaleList,"id"));
+            afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"afterSaleId");
+        }
         for(AfterSaleDto afterSale:afterSaleList){
             AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailMap.get(afterSale.getId());
             AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
             ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
             ReflectionUtil.copyProperties(afterSaleDetailDto,afterSaleInputDto);
+            if(AfterSaleTypeEnum.窜货机.equals(type)){
+                AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(afterSale.getId());
+                if(afterSaleFlee==null){
+                    continue;
+                }
+                ReflectionUtil.copyProperties(afterSaleFlee,afterSaleInputDto);
+                afterSaleInputDto.setBadProductIme(afterSaleFlee.getIme());
+            }
             afterSaleInputList.add(afterSaleInputDto);
         }
         return afterSaleInputList;
@@ -97,7 +112,7 @@ public class AfterSaleService {
     }
 
     //地区录入
-    public void save(List<List<String>> datas, String type) {
+    public void save(List<List<String>> datas, String type,String action) {
         List<String> imeList=Lists.newArrayList();
         List<String> productNameList=Lists.newArrayList();
         List<String> depotNameList=Lists.newArrayList();
@@ -116,10 +131,32 @@ public class AfterSaleService {
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
+        Map<String,AfterSale> afterSaleMap=Maps.newHashMap();
+        Map<String,AfterSaleFlee> afterSaleFleeMap=Maps.newHashMap();
+        Map<String,AfterSaleDetail> afterSaleDetailMap=Maps.newHashMap();
+        if("update".equals(action)){
+            List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
+            List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),AfterSaleDetailTypeEnum.地区录入.name());
+            if(AfterSaleTypeEnum.窜货机.equals(type)){
+                List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList,"id"));
+                afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"afterSaleId");
+            }
+            afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+            afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
+        }
         for (List<String> row : datas) {
-            AfterSale afterSale=new AfterSale();
-            AfterSaleDetail afterSaleDetail=new AfterSaleDetail();
+            ProductIme productIme=productImeMap.get(StringUtils.toString(row.get(0)).trim());
+            AfterSale afterSale=afterSaleMap.get(productIme.getId());
             AfterSaleFlee afterSaleFlee=new AfterSaleFlee();
+            AfterSaleDetail afterSaleDetail=new AfterSaleDetail();
+            if(afterSale==null){
+                afterSale=new AfterSale();
+            }else {
+                afterSaleDetail=afterSaleDetailMap.get(afterSale.getId());
+                if(AfterSaleTypeEnum.窜货机.equals(type)){
+                    afterSaleFlee=afterSaleFleeMap.get(afterSale.getId());
+                }
+            }
             afterSale.setType(type);
             afterSaleDetail.setInputDate(LocalDate.now());
             afterSaleDetail.setType(AfterSaleDetailTypeEnum.地区录入.name());
@@ -133,7 +170,6 @@ public class AfterSaleService {
                             if(AfterSaleTypeEnum.窜货机.name().equals(type)){
                                 afterSaleFlee.setIme(value);
                             }else {
-                                ProductIme productIme =productImeMap.get(value);
                                 afterSale.setBadProductImeId(productIme.getId());
                                 afterSale.setBadProductId(productIme.getProductId());
                                 afterSale.setBadDepotId(productIme.getDepotId());
@@ -221,7 +257,7 @@ public class AfterSaleService {
     }
 
     //总部录入
-    public void saveHead(List<List<String>> datas,String type) {
+    public void saveHead(List<List<String>> datas,String type,String action) {
         List<String> imeList=Lists.newArrayList();
         List<String> productNameList=Lists.newArrayList();
         List<String> depotNameList=Lists.newArrayList();
@@ -234,27 +270,37 @@ public class AfterSaleService {
             listAddTrim(depotNameList,StringUtils.toString(row.get(6)).trim());
             listAddTrim(depotNameList,StringUtils.toString(row.get(7)).trim());
         }
-        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
-        List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
         List<Product> productList=productRepository.findByNameIn(productNameList);
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
-        Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
-        Map<String,AfterSaleFlee> afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"ime");
         Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
+        List<AfterSale> afterSaleList=afterSaleRepository.findByBadProductImeIn(imeList);
+        Map<String,AfterSale> afterSaleMap=CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+        Map<String,AfterSaleFlee> afterSaleFleeMap=Maps.newHashMap();
+        Map<String,AfterSaleDetail> afterSaleDetailMap=Maps.newHashMap();
+        if(AfterSaleTypeEnum.窜货机.equals(type)){
+            List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList,"id"));
+            afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"afterSaleId");
+        }
+        if("update".equals(action)){
+            List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),AfterSaleDetailTypeEnum.地区录入.name());
+            afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
+        }
         for (List<String> row : datas) {
             ProductIme productIme=productImeMap.get(StringUtils.toString(row.get(0)).trim());
             AfterSale afterSale=afterSaleMap.get(productIme.getId());
+            AfterSaleFlee afterSaleFlee=new AfterSaleFlee();
+            AfterSaleDetail afterSaleDetail=new AfterSaleDetail();
             if(afterSale==null){
                 afterSale=new AfterSale();
+            }else {
+                afterSaleDetail=afterSaleDetailMap.get(afterSale.getId());
+                if(AfterSaleTypeEnum.窜货机.equals(type)){
+                    afterSaleFlee=afterSaleFleeMap.get(afterSale.getId());
+                }
             }
-            AfterSaleFlee afterSaleFlee=afterSaleFleeMap.get(productIme.getIme());
-            if(afterSaleFlee==null){
-                afterSaleFlee=new AfterSaleFlee();
-            }
-            AfterSaleDetail afterSaleDetail=new AfterSaleDetail();
             afterSale.setType(type);
             afterSaleDetail.setInputDate(LocalDate.now());
             afterSaleDetail.setType(AfterSaleDetailTypeEnum.总部录入.name());

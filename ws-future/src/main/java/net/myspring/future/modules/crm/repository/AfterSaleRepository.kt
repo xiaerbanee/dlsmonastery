@@ -69,7 +69,7 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                  t1.enabled=1
             """)
             if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
-                sb.append(""" and t2.ime in (:imeList) """)
+                sb.append(""" and( t2.ime in (:imeList)  or t8.ime in(:imeList))""")
             }
             if(afterSaleQuery.inputDateStart!=null){
                 sb.append(""" and t5.input_date>=:inputDateStart""")
@@ -89,12 +89,10 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             if(StringUtils.isNotBlank(afterSaleQuery.detailRemarks)){
                 sb.append(""" and t5.remarks=:detailRemarks""")
             }
-            if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
-                sb.append(""" and t2.ime in(:imeList)""")
-            }
             if(CollectionUtil.isNotEmpty(afterSaleQuery.replaceProductImeList)){
                 sb.append(""" and t9.ime in(:replaceProductImeList)""")
             }
+           print(sb.toString())
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
             var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));
