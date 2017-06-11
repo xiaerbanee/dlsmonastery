@@ -14,8 +14,35 @@ import java.util.List;
 public class AfterSaleQuery {
     private String imeStr;
     private String type;
-    private String toCompanyDateRanger;
+    private String inputDateRanger;
     private String productTypeId;
+    private String badDepotName;
+    private String replaceProductImeStr;
+    private String detailRemarks;
+
+    public String getBadDepotName() {
+        return badDepotName;
+    }
+
+    public void setBadDepotName(String badDepotName) {
+        this.badDepotName = badDepotName;
+    }
+
+    public String getReplaceProductImeStr() {
+        return replaceProductImeStr;
+    }
+
+    public void setReplaceProductImeStr(String replaceProductImeStr) {
+        this.replaceProductImeStr = replaceProductImeStr;
+    }
+
+    public String getDetailRemarks() {
+        return detailRemarks;
+    }
+
+    public void setDetailRemarks(String detailRemarks) {
+        this.detailRemarks = detailRemarks;
+    }
 
     public String getType() {
         return type;
@@ -33,12 +60,12 @@ public class AfterSaleQuery {
         this.imeStr = imeStr;
     }
 
-    public String getToCompanyDateRanger() {
-        return toCompanyDateRanger;
+    public String getInputDateRanger() {
+        return inputDateRanger;
     }
 
-    public void setToCompanyDateRanger(String toCompanyDateRanger) {
-        this.toCompanyDateRanger = toCompanyDateRanger;
+    public void setInputDateRanger(String inputDateRanger) {
+        this.inputDateRanger = inputDateRanger;
     }
 
     public String getProductTypeId() {
@@ -49,17 +76,17 @@ public class AfterSaleQuery {
         this.productTypeId = productTypeId;
     }
 
-    public LocalDate getToCompanyDateStart() {
-        if(StringUtils.isNotBlank(toCompanyDateRanger)) {
-            return LocalDateUtils.parse(toCompanyDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+    public LocalDate getInputDateStart() {
+        if(StringUtils.isNotBlank(inputDateRanger)) {
+            return LocalDateUtils.parse(inputDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
-    public LocalDate getToCompanyDateEnd() {
-        if(StringUtils.isNotBlank(toCompanyDateRanger)) {
-            return LocalDateUtils.parse(toCompanyDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+    public LocalDate getInputDateEnd() {
+        if(StringUtils.isNotBlank(inputDateRanger)) {
+            return LocalDateUtils.parse(inputDateRanger.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
@@ -69,6 +96,14 @@ public class AfterSaleQuery {
         List<String> imeList= Lists.newArrayList();
         if(StringUtils.isNotBlank(imeStr)){
             imeList=StringUtils.getSplitList(imeStr,CharConstant.ENTER);
+        }
+        return imeList;
+    }
+
+    public List<String> getReplaceProductImeList(){
+        List<String> imeList= Lists.newArrayList();
+        if(StringUtils.isNotBlank(replaceProductImeStr)){
+            imeList=StringUtils.getSplitList(replaceProductImeStr,CharConstant.ENTER);
         }
         return imeList;
     }

@@ -64,23 +64,36 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 left join crm_depot t6 on t5.from_depot_id=t6.id
                 left join crm_depot t7 on t5.to_depot_id=t7.id
                 left join crm_after_sale_flee t8 on t8.after_sale_id=t1.id
+                left join crm_product_ime t9 on t5.replace_product_ime_id=t9.id
              WHERE
                  t1.enabled=1
             """)
             if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
                 sb.append(""" and t2.ime in (:imeList) """)
             }
-            if(afterSaleQuery.toCompanyDateStart!=null){
-                sb.append(""" and t5.input_date>=:toCompanyDateStart""")
+            if(afterSaleQuery.inputDateStart!=null){
+                sb.append(""" and t5.input_date>=:inputDateStart""")
             }
-            if(afterSaleQuery.toCompanyDateEnd!=null){
-                sb.append(""" and t5.input_date<=:toCompanyDateEnd""")
+            if(afterSaleQuery.inputDateEnd!=null){
+                sb.append(""" and t5.input_date<=:inputDateEnd""")
             }
             if(StringUtils.isNotBlank(afterSaleQuery.type)){
                 sb.append(""" and t5.type=:type""")
             }
             if(StringUtils.isNotBlank(afterSaleQuery.productTypeId)){
                 sb.append(""" and t3.product_type_id=:productTypeId""")
+            }
+            if(StringUtils.isNotBlank(afterSaleQuery.badDepotName)){
+                sb.append(""" and t4.name=:badDepotName""")
+            }
+            if(StringUtils.isNotBlank(afterSaleQuery.detailRemarks)){
+                sb.append(""" and t5.remarks=:detailRemarks""")
+            }
+            if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
+                sb.append(""" and t2.ime in(:imeList)""")
+            }
+            if(CollectionUtil.isNotEmpty(afterSaleQuery.replaceProductImeList)){
+                sb.append(""" and t9.ime in(:replaceProductImeList)""")
             }
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
@@ -107,11 +120,11 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
             sb.append(""" and t2.ime in (:imeList) """)
         }
-        if(afterSaleQuery.toCompanyDateStart!=null){
-            sb.append(""" and t5.input_date>=:toCompanyDateStart""")
+        if(afterSaleQuery.inputDateStart!=null){
+            sb.append(""" and t5.input_date>=:inputDateStart""")
         }
-        if(afterSaleQuery.toCompanyDateEnd!=null){
-            sb.append(""" and t5.input_date<=:toCompanyDateEnd""")
+        if(afterSaleQuery.inputDateEnd!=null){
+            sb.append(""" and t5.input_date<=:inputDateEnd""")
         }
         if(StringUtils.isNotBlank(afterSaleQuery.type)){
             sb.append(""" and t5.type=:type""")

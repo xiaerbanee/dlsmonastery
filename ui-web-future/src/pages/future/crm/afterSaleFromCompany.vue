@@ -14,7 +14,7 @@
             <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="返厂时间" :label-width="formLabelWidth">
-          <date-range-picker v-model="formData.toCompanyDateRanger" />
+          <date-range-picker v-model="formData.inputDateRanger" />
         </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -168,7 +168,6 @@
       this.formVisible = false;
       var submitData = util.deleteExtra(this.formData);
       axios.get('/api/ws/future/crm/afterSale/getFromCompanyData?'+qs.stringify(submitData)).then((response)=>{
-        console.log(response.data)
           this.settings.data=response.data;
           this.table.loadData(this.settings.data);
       })
