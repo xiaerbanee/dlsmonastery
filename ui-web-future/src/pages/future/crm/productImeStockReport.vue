@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -60,8 +60,9 @@
       </search-dialog>
       <div>
         <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
-          <el-table-column fixed prop="depotName" label="门店" sortable width="300" v-if="nextIsShop"></el-table-column>
-          <el-table-column fixed prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop"></el-table-column>
+          <el-table-column fixed prop="depotName" label="门店" sortable width="300" v-if="nextIsShop&&'区域'==formData.sumType"></el-table-column>
+          <el-table-column fixed prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop&&'区域'==formData.sumType"></el-table-column>
+          <el-table-column  prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
           <el-table-column prop="qty" label="数量"  sortable></el-table-column>
           <el-table-column prop="percent" label="占比(%)"></el-table-column>
         </el-table>
@@ -69,14 +70,14 @@
       <div>
         <el-dialog title="详细" :visible.sync="detailVisible">
           <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
-          <el-table :data="detailData.productQtyMap">
+          <el-table :data="productQtyMap">
             <el-table-column property="productName" label="货品" width="400"></el-table-column>
             <el-table-column property="qty" label="数量" ></el-table-column>
           </el-table>
           <div style="width:100%;height:50px;text-align:center;font-size:20px">串码详情</div>
-          <el-table :data="detailData.depotReportList">
-            <el-table-column property="productName" label="货品" width="300"></el-table-column>
-            <el-table-column property="ime" label="串码" width="200"></el-table-column>
+          <el-table :data="depotReportList">
+            <el-table-column property="productName" label="货品" width="400"></el-table-column>
+            <el-table-column property="ime" label="串码"></el-table-column>
           </el-table>
         </el-dialog>
       </div>
@@ -103,10 +104,8 @@
         detailVisible: false,
         pageLoading: false,
         officeIds:[],
-        detailData:{
-          productQtyMap:[],
-          depotReportList:[],
-        },
+        productQtyMap:[],
+        depotReportList:[],
         type:"库存报表",
       };
     },
