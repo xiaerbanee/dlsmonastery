@@ -12,15 +12,6 @@ public class ShopPromotionQuery extends BaseQuery {
     private String businessId;
     private String activityType;
     private String shopId;
-    private List<String> activityTypeList;
-
-    public List<String> getActivityTypeList() {
-        return activityTypeList;
-    }
-
-    public void setActivityTypeList(List<String> activityTypeList) {
-        this.activityTypeList = activityTypeList;
-    }
 
     public String getBusinessId() {
         return businessId;

@@ -35,38 +35,42 @@
 <script>
   export default{
     data(){
-      return {
-        remoteLoading: false,
-        isCreate: this.$route.query.id != null,
-        submitDisabled: false,
-        inputForm: {
-          id: "",
-          permissionIdList: ""
-        },
-        rules: {
-          id: [{required: true, message: "必填属性"}],
-        },
-        accountList: [],
-        treeData: [],
-        checked: [],
-        defaultProps: {
-          label: 'label',
-          children: 'children'
-        }
-      };
+      return this.getData();
     },
     methods: {
+      getData() {
+        return {
+          isInit:false,
+          remoteLoading: false,
+          isCreate: this.$route.query.id != null,
+          submitDisabled: false,
+          inputForm: {
+            id: "",
+            permissionIdList: ""
+          },
+          rules: {
+            id: [{required: true, message: "必填属性"}],
+          },
+          accountList: [],
+          treeData: [],
+          checked: [],
+          defaultProps: {
+            label: 'label',
+            children: 'children'
+          }
+        };
+      },
       formSubmit(){
+        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm, {allowDots:true})).then((response) => {
               this.$message(response.data.message);
-              form.resetFields();
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           } else {
             this.submitDisabled = false;
@@ -96,15 +100,15 @@
           this.$refs.tree.setCheckedKeys(response.data);
           this.checked=response.data
         })
-      },initPage() {
+      }
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/account/getTreeNode').then((response) => {
           this.treeData = new Array(response.data);
         })
       }
-    },activated () {
-      if(!this.$route.query.headClick) {
-        this.initPage();
-      }
+      this.isInit = true;
     }
   }
 </script>

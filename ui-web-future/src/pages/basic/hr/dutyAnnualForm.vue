@@ -45,12 +45,6 @@
           inputForm:{
             annualYear:''
           },
-          submitData:{
-            id:'',
-            mongoId:'',
-            annualYear:'',
-            remarks:''
-          },
           rules: {
             folderFileId: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
             annualYear: [{ required: true, message: this.$t('dutyAnnualForm.prerequisiteMessage')}],
@@ -58,22 +52,19 @@
         }
       },
       formSubmit(){
-        var that = this;
+       var that = this;
        this.inputForm.mongoId = util.getMongoId(this.fileList);
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            this.submitData.annualYear=util.formatLocalDate(this.submitData.annualYear)
-            axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.submitData)).then((response)=> {
+            this.inputForm.annualYear=util.formatLocalDate(this.submitData.annualYear)
+            axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
               Object.assign(this.$data, this.getData())
-              if(this.isCreate){
-                this.fileList = [];
-              } else {
+              if(!this.isCreate){
                 this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
               }
             }).catch(function () {
@@ -96,6 +87,7 @@
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
 
       }
       this.isInit = true;

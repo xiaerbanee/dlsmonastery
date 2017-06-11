@@ -5,14 +5,14 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneTypeOfficeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneTypeOfficeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('demoPhoneTypeOfficeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('demoPhoneTypeOfficeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+              <el-form-item :label="$t('demoPhoneTypeOfficeList.officeName')" :label-width="formLabelWidth">
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('demoPhoneTypeOfficeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed column-key="officeId" prop="officeName" :label="$t('demoPhoneTypeOfficeList.officeName')" sortable></el-table-column>
         <el-table-column column-key="demoPhoneTypeId" prop="demoPhoneTypeName" :label="$t('demoPhoneTypeOfficeList.demoPhoneType')" sortable></el-table-column>
@@ -40,25 +40,26 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          officeId:''
-        },formLabel:{
-          officeId:{label: this.$t('demoPhoneTypeOfficeList.officeName')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("demoPhoneTypeOfficeList",this.submitData);
-        axios.get('/api/ws/future/basic/demoPhoneTypeOffice?'+qs.stringify(this.submitData)).then((response)  => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("demoPhoneTypeOfficeList",submitData);
+        axios.get('/api/ws/future/basic/demoPhoneTypeOffice?'+qs.stringify(submitData)).then((response)  => {
           this.page = response.data;
           this.pageLoading = false;
         })

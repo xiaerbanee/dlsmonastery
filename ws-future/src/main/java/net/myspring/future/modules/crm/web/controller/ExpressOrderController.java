@@ -33,7 +33,7 @@ public class ExpressOrderController {
     @RequestMapping(value = "getQuery")
     public ExpressOrderQuery getQuery() {
         ExpressOrderQuery result = new ExpressOrderQuery();
-        result.setExtendTypeList(ExpressOrderTypeEnum.getList());
+        result.getExtra().put("extendTypeList",ExpressOrderTypeEnum.getList());
         result.setExtendType(ExpressOrderTypeEnum.手机订单.name());
 
         return result;

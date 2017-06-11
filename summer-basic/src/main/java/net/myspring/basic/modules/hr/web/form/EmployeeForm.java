@@ -34,9 +34,6 @@ public class EmployeeForm extends BaseForm<Employee> {
     private String salerName;
     private String accountId;
     private String code;
-    private List<PositionDto> positionList= Lists.newArrayList();
-    private List<String> educationList= Lists.newArrayList();
-
     public String getCode() {
         return code;
     }
@@ -51,22 +48,6 @@ public class EmployeeForm extends BaseForm<Employee> {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
-    }
-
-    public List<String> getEducationList() {
-        return educationList;
-    }
-
-    public void setEducationList(List<String> educationList) {
-        this.educationList = educationList;
     }
 
     public String getMobilePhone() {

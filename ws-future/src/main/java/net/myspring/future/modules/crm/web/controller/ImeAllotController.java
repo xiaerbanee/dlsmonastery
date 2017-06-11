@@ -55,7 +55,7 @@ public class ImeAllotController {
 
     @RequestMapping(value="getQuery")
     public  ImeAllotQuery getQuery(ImeAllotQuery imeAllotQuery){
-        imeAllotQuery.setStatusList(AuditStatusEnum.getList());
+        imeAllotQuery.getExtra().put("statusList",AuditStatusEnum.getList());
         return imeAllotQuery;
     }
 

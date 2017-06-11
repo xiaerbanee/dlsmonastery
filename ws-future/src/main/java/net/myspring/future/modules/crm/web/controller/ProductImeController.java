@@ -58,7 +58,7 @@ public class ProductImeController {
 
     @RequestMapping(value="getQuery")
     public ProductImeQuery getQuery(ProductImeQuery productImeQuery) {
-        productImeQuery.setInputTypeList(InputTypeEnum.getList());
+        productImeQuery.getExtra().put("inputTypeList",InputTypeEnum.getList());
         return productImeQuery;
     }
 
