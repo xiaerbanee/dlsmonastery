@@ -5,7 +5,7 @@
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
     </el-row>
     <div class="position:relative;" style="margin-top:20px;margin-left:50px">
-      <el-form :model="formData" >
+      <el-form>
         <el-form-item label="类型" :label-width="formLabelWidth">
           <el-select v-model="type" placeholder="请选择" @change="onchange(type)">
             <el-option v-for="item in options" :key="item" :label="item" :value="item">
