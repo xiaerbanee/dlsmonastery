@@ -98,7 +98,7 @@ public class ReportQuery extends BaseQuery{
     }
 
     public String getDateRange() {
-        if(StringUtils.isBlank(dateRange)){
+        if(StringUtils.isBlank(dateRange)&&"销售报表".equals(type)){
             this.dateRange=LocalDateUtils.format(LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now()))+CharConstant.DATE_RANGE_SPLITTER+LocalDateUtils.format(LocalDate.now());
         }
         return dateRange;
@@ -155,6 +155,8 @@ public class ReportQuery extends BaseQuery{
     public LocalDate getDate() {
         if(date==null){
             this.date=LocalDate.now();
+        }else {
+            this.date=date.plusDays(1);
         }
         return date;
     }

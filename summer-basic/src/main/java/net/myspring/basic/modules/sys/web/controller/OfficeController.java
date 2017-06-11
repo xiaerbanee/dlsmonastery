@@ -152,7 +152,9 @@ public class OfficeController {
     @RequestMapping(value = "getChildOfficeMap")
     public Map<String,List<String>> getNextLevelOfficeMap(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
-        map = officeService.getChildOfficeMap(officeId);
+        if(StringUtils.isNotBlank(officeId)){
+            map = officeService.getChildOfficeMap(officeId);
+        }
         return map;
     }
 

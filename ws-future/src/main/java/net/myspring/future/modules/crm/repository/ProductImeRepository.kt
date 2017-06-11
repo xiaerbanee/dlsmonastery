@@ -178,6 +178,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t3.id in (:depotIdList) """)
         }
+        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+            sb.append(""" group by t3.area_id """)
+        }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
         }
@@ -241,6 +244,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t3.id in (:depotIdList) """)
         }
+        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+            sb.append(""" group by t3.area_id """)
+        }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
         }
@@ -296,6 +302,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
+        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+            sb.append(""" group by t2.area_id """)
+        }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
         }
@@ -347,6 +356,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
+        }
+        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+            sb.append(""" group by t2.area_id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t4.id """)
