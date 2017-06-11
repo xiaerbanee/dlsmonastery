@@ -37,6 +37,9 @@
       return {
         searchText:"",
         formData: {
+          imeStr: '',
+          type:'售后机',
+          action:this.$route.query.action
         },
         inputForm: {
           data: ''
@@ -59,6 +62,7 @@
             width: 100
           }, {
             data: "badProductName",
+            type: "autocomplete",
             allowEmpty:false ,
             strict: true,
             badProductNames: [],
@@ -281,7 +285,7 @@
         })
       }, onchange(type){
         if (this.type == '窜货机') {
-          this.$router.push({ name: 'afterSaleHeadFleeInput'})
+          this.$router.push({ name: 'afterSaleHeadFleeInput',query:{action:this.$route.query.action}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

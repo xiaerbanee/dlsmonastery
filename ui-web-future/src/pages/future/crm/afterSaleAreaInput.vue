@@ -290,7 +290,7 @@
         })
       }, onchange(type){
         if (this.type == '窜货机') {
-          this.$router.push({ name: 'afterSaleAreaFleeInput'})
+          this.$router.push({ name: 'afterSaleAreaFleeInput',query:{action:this.$route.query.action}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

@@ -20,6 +20,60 @@ public class AfterSaleInputDto {
     private String replaceProductIme;
     private String replaceProductName;
     private BigDecimal replaceAmount;
+    private String fleeShopName;
+    private String contact;
+    private String mobilePhone;
+    private String address;
+    private BigDecimal buyAmount;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getFleeShopName() {
+        return fleeShopName;
+    }
+
+    public void setFleeShopName(String fleeShopName) {
+        this.fleeShopName = fleeShopName;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public BigDecimal getBuyAmount() {
+        return buyAmount;
+    }
+
+    public void setBuyAmount(BigDecimal buyAmount) {
+        this.buyAmount = buyAmount;
+    }
 
     public String getBadProductIme() {
         return badProductIme;

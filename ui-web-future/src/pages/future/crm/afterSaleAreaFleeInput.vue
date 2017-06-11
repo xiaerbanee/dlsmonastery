@@ -3,7 +3,7 @@
     <head-tab active="afterSaleAreaFleeInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
-      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
+      <el-button type="primary" @click="formVisible = true" icon="search" v-if="formData.action=='update'">{{$t('adPricesystemChangeForm.filter')}}</el-button>
       <span v-html="searchText"></span>
     </el-row>
     <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -39,7 +39,11 @@
         inputForm: {
           data: ''
         },
-        formData:{},
+        formData:{
+          imeStr: '',
+          type:'窜货机',
+          action:this.$route.query.action
+        },
         rules: {},
         type: '窜货机',
         options: ['售后机', '窜货机'],
@@ -301,7 +305,7 @@
         })
       }, onchange(type){
         if (this.type == '售后机') {
-          this.$router.push({ name: 'afterSaleAreaInput'})
+          this.$router.push({ name: 'afterSaleAreaInput',query:{action:this.$route.query.action}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")
