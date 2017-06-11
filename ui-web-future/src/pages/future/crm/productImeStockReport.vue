@@ -12,7 +12,7 @@
             <el-dropdown-item command="按串码导出">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
+        <el-button type="primary" @click="stockReportGrid()" icon="document">明细</el-button>
         <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -73,14 +73,10 @@
             <el-table-column property="productName" label="货品" width="400"></el-table-column>
             <el-table-column property="qty" label="数量" ></el-table-column>
           </el-table>
-          <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">串码详情</div>
           <el-table :data="detailData.depotReportList">
             <el-table-column property="productName" label="货品" width="300"></el-table-column>
             <el-table-column property="ime" label="串码" width="200"></el-table-column>
-            <el-table-column property="employeeName" label="促销员"></el-table-column>
-            <el-table-column property="depotName" label="门店"></el-table-column>
-            <el-table-column property="saleDate" label="核销时间"></el-table-column>
-            <el-table-column property="retailDate" label="保卡注册时间"></el-table-column>
           </el-table>
         </el-dialog>
       </div>
@@ -126,7 +122,7 @@
         this.setSearchText();
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("productImeSaleReport",submitData);
+        util.setQuery("productImeStockReport",submitData);
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
@@ -148,28 +144,34 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        if(!this.nextIsShop){
-          axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
-            this.officeIds.push(row.officeId);
-            this.formData.officeId=this.officeIds[this.officeIds.length-1];
-            this.nextIsShop=response.data;
-            this.pageRequest();
-          })
-        }else{
-          this.detailVisible=true;
-          this.formData.isDetail=true;
-          this.formData.depotId=row.depotId;
-          axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
-            this.depotReportList=response.data.depotReportList;
-            let productQtyMap=response.data.productQtyMap;
-            let productQty=[];
-            if(productQtyMap){
-              for(let key in productQtyMap){
-                productQty.push({productName:key,qty:productQtyMap[key]})
+        if(row.productTypeId){
+          this.formData.productTypeIdList=row.productTypeId;
+          this.formData.sumType="区域";
+          this.pageRequest();
+        }else {
+          if (!this.nextIsShop) {
+            axios.get('/api/basic/sys/office/checkLastLevel?officeId=' + row.officeId).then((response) => {
+              this.officeIds.push(row.officeId);
+              this.formData.officeId = this.officeIds[this.officeIds.length - 1];
+              this.nextIsShop = response.data;
+              this.pageRequest();
+            })
+          } else {
+            this.detailVisible = true;
+            this.formData.isDetail = true;
+            this.formData.depotId = row.depotId;
+            axios.post('/api/ws/future/basic/depotShop/depotReportDetail', qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+              this.depotReportList = response.data.depotReportList;
+              let productQtyMap = response.data.productQtyMap;
+              let productQty = [];
+              if (productQtyMap) {
+                for (let key in productQtyMap) {
+                  productQty.push({productName: key, qty: productQtyMap[key]})
+                }
+                this.productQtyMap = productQty;
               }
-              this.productQtyMap=productQty;
-            }
-          })
+            })
+          }
         }
       },preLevel(){
         this.nextIsShop=false;
@@ -178,6 +180,9 @@
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       },exportData(command) {
+
+      },stockReportGrid(){
+
       }
     },created () {
       axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {

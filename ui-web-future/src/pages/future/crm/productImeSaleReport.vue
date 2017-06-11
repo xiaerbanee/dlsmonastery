@@ -74,7 +74,7 @@
           <el-table-column property="productName" label="货品" width="400"></el-table-column>
           <el-table-column property="qty" label="数量" ></el-table-column>
         </el-table>
-          <div style="width:100%;height:50px;text-align:center;font-size:20px">详情</div>
+          <div style="width:100%;height:50px;text-align:center;font-size:20px">串码详情</div>
           <el-table :data="depotReportList">
             <el-table-column property="productName" label="货品" width="300"></el-table-column>
             <el-table-column property="ime" label="串码" width="200"></el-table-column>
@@ -183,8 +183,12 @@
         this.officeIds.pop();
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
-      },exportData(command) {
+      }, exportData(command) {
+
+      },saleReportGrid(){
+
       }
+
     },created () {
         axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
           this.formData = response.data;

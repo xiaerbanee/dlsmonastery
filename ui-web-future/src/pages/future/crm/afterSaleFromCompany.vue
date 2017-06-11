@@ -5,16 +5,16 @@
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleFromCompany.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>
       </el-row>
-      <search-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
-        <el-form :model="submitData">
+      <search-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+        <el-form :model="formData">
           <el-form-item label="型号" :label-width="formLabelWidth">
-            <product-type-select v-model="submitData.productTypeId"></product-type-select>
+            <product-type-select v-model="formData.productTypeId"></product-type-select>
           </el-form-item>
           <el-form-item label="串码" :label-width="formLabelWidth">
-            <el-input type="textarea" v-model="submitData.imeStr" auto-complete="off" ></el-input>
+            <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" ></el-input>
           </el-form-item>
           <el-form-item label="返厂时间" :label-width="formLabelWidth">
-          <date-range-picker v-model="submitData.toCompanyDateRanger" />
+          <date-range-picker v-model="formData.toCompanyDateRanger" />
         </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -52,11 +52,7 @@
       productTypeSelect,dateRangePicker},
     data(){
       return{
-        submitData:{
-          productTypeId:'',
-          imeStr:'',
-          toCompanyDateRanger:'',
-          type:'工厂录入'
+        formData:{
         },
         inputForm:{
           fromCompanyDate:util.currentDate(),
@@ -170,7 +166,9 @@
       })
     },search() {
       this.formVisible = false;
-      axios.get('/api/ws/future/crm/afterSale/getFromCompanyData?'+qs.stringify(this.submitData)).then((response)=>{
+      var submitData = util.deleteExtra(this.formData);
+      axios.get('/api/ws/future/crm/afterSale/getFromCompanyData?'+qs.stringify(submitData)).then((response)=>{
+        console.log(response.data)
           this.settings.data=response.data;
           this.table.loadData(this.settings.data);
       })
