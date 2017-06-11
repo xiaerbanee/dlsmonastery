@@ -146,9 +146,9 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'afterSaleForm'})
+        this.$router.push({ name: 'afterSaleAreaInput',query:{action:"add"}})
       },itemEdit(){
-        this.$router.push({ name: 'afterSaleEditForm'})
+        this.$router.push({ name: 'afterSaleAreaInput',query:{action:"update"}})
       },itemSyn(){
         axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
           this.$message(response.data.message);

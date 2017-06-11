@@ -261,7 +261,7 @@
           }
         }
         this.inputForm.data = JSON.stringify(this.inputForm.data);
-        axios.post('/api/ws/future/crm/afterSale/saveHead', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
+        axios.post('/api/ws/future/crm/afterSale/saveHead', qs.stringify({data: this.inputForm.data,type:this.type,action:this.$route.query.action}, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
           this.settings.data = [];
           this.table.loadData(this.settings.data);

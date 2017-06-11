@@ -5,6 +5,7 @@ const afterSaleHeadFleeInput = r => require.ensure([], () => r(require('pages/fu
 const afterSaleToCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleToCompany.vue')));
 const afterSaleFromCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleFromCompany.vue')));
 const afterSaleAreaList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaList.vue')));
+
 const afterSaleHeadList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadList.vue')));
 const afterSaleCompanyList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleCompanyList.vue')));
 
