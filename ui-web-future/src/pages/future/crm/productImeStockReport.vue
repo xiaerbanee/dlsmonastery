@@ -41,7 +41,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="日期" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.dateRange"></date-range-picker>
+                <date-picker v-model="formData.date"></date-picker>
               </el-form-item>
               <el-form-item label="打分型号" :label-width="formLabelWidth">
                 <el-select v-model="formData.scoreType" clearable filterable placeholder="请选择">
@@ -86,7 +86,6 @@
 </template>
 <script>
   import productSelect from 'components/future/product-select';
-
   export default {
     components:{
       productSelect

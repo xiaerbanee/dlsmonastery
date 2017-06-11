@@ -180,7 +180,7 @@ public class ProductImeService {
             reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
         }
         List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(reportQuery);
-        if(SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
+        if(StringUtils.isNotBlank(reportQuery.getOfficeId())&&SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
             Map<String,ProductImeReportDto> map=Maps.newHashMap();
             for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
                 String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
