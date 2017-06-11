@@ -6,7 +6,7 @@
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
       <span v-html="searchText"></span>
     </el-row>
-    <search-dialog :title="$t('adPricesystemChangeForm.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+    <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
       <el-form :model="formData">
         <el-form-item label="串码" :label-width="formLabelWidth">
           <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" placeholder="请输入串码，逗号或换行隔开"></el-input>
