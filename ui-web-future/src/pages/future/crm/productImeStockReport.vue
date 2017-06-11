@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productIdsList" multiple  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
               </el-form-item>
             </el-col>
           </el-row>
