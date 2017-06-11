@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.repository
 
+import net.myspring.future.common.enums.AfterSaleTypeEnum
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.AfterSale
 import net.myspring.future.modules.crm.dto.AfterSaleDto
@@ -46,10 +47,12 @@ interface AfterSaleRepositoryCustom{
 
     fun findPage(pageable: Pageable, afterSaleQuery : AfterSaleQuery): Page<AfterSaleDto>?
 
-    fun findDtoByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSaleDto>
+    fun findDtoByBadProductImeIn(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto>
+
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryCustom {
+
     override fun findPage(pageable: Pageable, afterSaleQuery: AfterSaleQuery): Page<AfterSaleDto>? {
             val sb = StringBuilder()
             sb.append("""
@@ -133,7 +136,7 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java))
     }
 
-    override fun findDtoByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSaleDto> {
+    override fun findDtoByBadProductImeIn(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto> {
         val sb = StringBuilder()
         sb.append("""
              SELECT
@@ -142,10 +145,15 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                  crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                  left join crm_product t3 on t1.bad_product_id=t3.id
                  left join crm_depot t4 on t1.bad_depot_id=t4.id
+                 left join crm_after_sale_flee t5 on t5.after_sale_id=t1.id
              WHERE
                  t1.enabled=1
-                AND t2.ime in (:imeList)
         """)
+        if(AfterSaleTypeEnum.售后机.name.equals(type)){
+            sb.append("AND t2.ime in (:imeList)")
+        }else{
+            sb.append("AND t5.ime in (:imeList)")
+        }
         var paramMap = HashMap<String, Any>()
         paramMap.put("imeList", imeList);
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AfterSaleDto::class.java))

@@ -39,6 +39,8 @@
         searchText:"",
         formData: {
           imeStr: '',
+          type:'售后机',
+           action:this.$route.query.action
         },
         inputForm: {
           data: ''

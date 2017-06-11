@@ -55,8 +55,8 @@ public class AfterSaleService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<AfterSaleDto> findDtoByImeList(List<String> imeList) {
-        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByBadProductImeIn(imeList);
+    public List<AfterSaleDto> findDtoByImeList(List<String> imeList,String type) {
+        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByBadProductImeIn(imeList,type);
         if(CollectionUtil.isNotEmpty(afterSales)){
             List<AfterSaleDetailDto>  afterSaleDetailList= afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSales, "id"), AfterSaleDetailTypeEnum.总部录入.name());
             Map<String,AfterSaleDetailDto> afterSaleDetailDtoMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
@@ -69,30 +69,32 @@ public class AfterSaleService {
         return afterSales;
     }
 
-    public List<AfterSaleInputDto> areaInputUpdateData(List<String> imeList,String type){
+    public List<AfterSaleInputDto> inputUpdateData(List<String> imeList,String type,String detailType){
         List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
-        List<AfterSaleDto> afterSaleList=afterSaleRepository.findDtoByBadProductImeIn(imeList);
-        List<AfterSaleDetailDto> afterSaleDetailList=afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),"地区录入");
-        Map<String,AfterSaleDetailDto> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
         Map<String,AfterSaleFlee> afterSaleFleeMap= Maps.newHashMap();
-        if(AfterSaleTypeEnum.窜货机.equals(type)){
-            List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(CollectionUtil.extractToList(afterSaleList,"id"));
-            afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"afterSaleId");
-        }
-        for(AfterSaleDto afterSale:afterSaleList){
-            AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailMap.get(afterSale.getId());
-            AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-            ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
-            ReflectionUtil.copyProperties(afterSaleDetailDto,afterSaleInputDto);
+        List<AfterSaleDto>   afterSaleList=afterSaleRepository.findDtoByBadProductImeIn(imeList,type);
+        if(CollectionUtil.isNotEmpty(afterSaleList)){
+            List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList,"id"),detailType);
+            Map<String,AfterSaleDetailDto> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetailList,"afterSaleId");
             if(AfterSaleTypeEnum.窜货机.equals(type)){
-                AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(afterSale.getId());
-                if(afterSaleFlee==null){
-                    continue;
-                }
-                ReflectionUtil.copyProperties(afterSaleFlee,afterSaleInputDto);
-                afterSaleInputDto.setBadProductIme(afterSaleFlee.getIme());
+                List<AfterSaleFlee> afterSaleFleeList=afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(CollectionUtil.extractToList(afterSaleList,"id"));
+                afterSaleFleeMap=CollectionUtil.extractToMap(afterSaleFleeList,"afterSaleId");
             }
-            afterSaleInputList.add(afterSaleInputDto);
+            for(AfterSaleDto afterSale:afterSaleList){
+                AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailMap.get(afterSale.getId());
+                AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
+                ReflectionUtil.copyProperties(afterSaleDetailDto,afterSaleInputDto);
+                if(AfterSaleTypeEnum.窜货机.equals(type)){
+                    AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(afterSale.getId());
+                    if(afterSaleFlee==null){
+                        continue;
+                    }
+                    ReflectionUtil.copyProperties(afterSaleFlee,afterSaleInputDto);
+                    afterSaleInputDto.setBadProductIme(afterSaleFlee.getIme());
+                }
+                afterSaleInputList.add(afterSaleInputDto);
+            }
         }
         return afterSaleInputList;
     }

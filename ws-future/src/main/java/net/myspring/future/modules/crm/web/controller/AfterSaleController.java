@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
@@ -46,28 +47,22 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "areaInputData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> formData(String imeStr) {
+    public List<AfterSaleInputDto> formData(String imeStr,String action,String type) {
         List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-            for(ProductImeDto productIme:productImeList){
-                AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-                afterSaleInputDto.setBadProductName(productIme.getProductName());
-                afterSaleInputDto.setBadProductIme(productIme.getIme());
-                afterSaleInputDto.setBadDepotName(productIme.getDepotName());
-                afterSaleInputList.add(afterSaleInputDto);
+            if("update".equals(action)){
+                afterSaleInputList=afterSaleService.inputUpdateData(imeList,type, AfterSaleDetailTypeEnum.地区录入.name());
+            }else {
+                List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
+                for(ProductImeDto productIme:productImeList){
+                    AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                    afterSaleInputDto.setBadProductName(productIme.getProductName());
+                    afterSaleInputDto.setBadProductIme(productIme.getIme());
+                    afterSaleInputDto.setBadDepotName(productIme.getDepotName());
+                    afterSaleInputList.add(afterSaleInputDto);
+                }
             }
-        }
-        return afterSaleInputList;
-    }
-
-    @RequestMapping(value = "areaInputUpdateData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> areaInputUpdateData(String imeStr,String type) {
-        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
-        if(StringUtils.isNotBlank(imeStr)){
-            List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            afterSaleInputList=afterSaleService.areaInputUpdateData(imeList,type);
         }
         return afterSaleInputList;
     }
@@ -78,34 +73,38 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "headInputData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> editFormData(String imeStr) {
+    public List<AfterSaleInputDto> editFormData(String imeStr,String type,String action) {
         List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList);
-            Map<String,AfterSaleDto> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
-            for(ProductImeDto productIme:productImeList){
-                AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-                AfterSaleDto afterSale=afterSaleMap.get(productIme.getId());
-                afterSaleInputDto.setBadProductName(productIme.getProductName());
-                afterSaleInputDto.setBadProductIme(productIme.getIme());
-                afterSaleInputDto.setBadDepotName(productIme.getDepotName());
-                if(afterSale!=null){
-                   ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
+            if("update".equals(action)){
+                afterSaleInputList=afterSaleService.inputUpdateData(imeList,type, AfterSaleDetailTypeEnum.总部录入.name());
+            }else {
+                List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
+                List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList,type);
+                Map<String,AfterSaleDto> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+                for(ProductImeDto productIme:productImeList){
+                    AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                    AfterSaleDto afterSale=afterSaleMap.get(productIme.getId());
+                    afterSaleInputDto.setBadProductName(productIme.getProductName());
+                    afterSaleInputDto.setBadProductIme(productIme.getIme());
+                    afterSaleInputDto.setBadDepotName(productIme.getDepotName());
+                    if(afterSale!=null){
+                        ReflectionUtil.copyProperties(afterSale,afterSaleInputDto);
+                    }
+                    afterSaleInputList.add(afterSaleInputDto);
                 }
-                afterSaleInputList.add(afterSaleInputDto);
             }
         }
         return afterSaleInputList;
     }
 
     @RequestMapping(value="searchImeMap" ,method=RequestMethod.GET)
-    public Map<String,Object> searchImeMap(String imeStr){
+    public Map<String,Object> searchImeMap(String imeStr,String type){
         Map<String,Object> map=Maps.newLinkedHashMap();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList);
+            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList,type);
             map.put("afterSaleList",afterSaleList);
             Map<String,Integer> productQtyMap=productImeService.findQtyMap(imeList);
             map.put("productQtyMap",productQtyMap);
@@ -128,22 +127,22 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public RestResponse save(String data, String type) {
+    public RestResponse save(String data, String type,String action) {
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         if(CollectionUtil.isEmpty(datas)) {
             return new RestResponse("保存失败",null,false);
         }
-        afterSaleService.save(datas,type);
+        afterSaleService.save(datas,type,action);
         return new RestResponse("保存成功",null);
     }
 
     @RequestMapping(value = "saveHead", method = RequestMethod.POST)
-    public RestResponse saveHead(String data, String type) {
+    public RestResponse saveHead(String data, String type,String action) {
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         if(CollectionUtil.isEmpty(datas)) {
             return new RestResponse("保存失败",null,false);
         }
-        afterSaleService.saveHead(datas,type);
+        afterSaleService.saveHead(datas,type,action);
         return new RestResponse("保存成功",null);
     }
 
