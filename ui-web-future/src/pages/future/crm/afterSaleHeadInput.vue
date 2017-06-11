@@ -3,21 +3,21 @@
     <head-tab active="afterSaleHeadInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
-      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}
-      </el-button>
+      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
+      <span v-html="searchText"></span>
     </el-row>
-    <el-dialog :title="$t('adPricesystemChangeForm.filter')" v-model="formVisible" size="tiny" class="search-form">
+    <search-dialog :title="$t('adPricesystemChangeForm.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
       <el-form :model="formData">
-        <el-form-item :label="formLabel.imeStr.label" :label-width="formLabelWidth">
+        <el-form-item label="串码" :label-width="formLabelWidth">
           <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" placeholder="请输入串码，逗号或换行隔开"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
       </div>
-    </el-dialog>
+    </search-dialog>
     <div class="position:relative;" style="margin-top:20px;margin-left:50px">
-      <el-form :model="formData" >
+      <el-form>
         <el-form-item label="类型" :label-width="formLabelWidth">
           <el-select v-model="type" placeholder="请选择" @change="onchange(type)">
             <el-option v-for="item in options" :key="item" :label="item" :value="item">
@@ -35,10 +35,8 @@
   export default{
     data(){
       return {
+        searchText:"",
         formData: {
-          imeStr: '',
-        }, formLabel: {
-          imeStr: {label: '串码'},
         },
         inputForm: {
           data: ''
@@ -103,8 +101,6 @@
                 var productNames = new Array();
                 if (query.length >= 2) {
                   axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
-                    console.log(response.data)
-
                     if (response.data.length > 0) {
                       for (var index in response.data) {
                         var productName = response.data[index].name;
@@ -154,8 +150,6 @@
                 var productNames = new Array();
                 if (query.length >= 2) {
                   axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
-                    console.log(response.data)
-
                     if (response.data.length > 0) {
                       for (var index in response.data) {
                         var productName = response.data[index].name;
@@ -187,8 +181,6 @@
                 var productNames = new Array();
                 if (query.length >= 2) {
                   axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
-                    console.log(response.data)
-
                     if (response.data.length > 0) {
                       for (var index in response.data) {
                         var productName = response.data[index].name;
@@ -254,6 +246,11 @@
       this.onchange(this.type);
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -274,8 +271,10 @@
         });
       }, search() {
         this.formVisible = false;
+        this.setSearchText();
         this.getData();
       }, getData(){
+        console.log(this.formData)
         axios.get('/api/ws/future/crm/afterSale/headInputData', {params: this.formData}).then((response) => {
           this.settings.data = response.data;
           this.table.loadData(this.settings.data);
