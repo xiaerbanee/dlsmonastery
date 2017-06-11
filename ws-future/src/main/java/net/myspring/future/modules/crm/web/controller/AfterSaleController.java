@@ -63,13 +63,18 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "areaInputUpdateData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> areaInputUpdateData(String imeStr) {
+    public List<AfterSaleInputDto> areaInputUpdateData(String imeStr,String type) {
         List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            afterSaleInputList=afterSaleService.areaInputUpdateData(imeList);
+            afterSaleInputList=afterSaleService.areaInputUpdateData(imeList,type);
         }
         return afterSaleInputList;
+    }
+
+    @RequestMapping(value = "getQuery")
+    public AfterSaleQuery getQuery(AfterSaleQuery afterSaleQuery){
+        return afterSaleQuery;
     }
 
     @RequestMapping(value = "headInputData", method = RequestMethod.GET)

@@ -5,45 +5,29 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.add')}}</el-button>
         <el-button type="primary" @click="itemEdit" icon="edit" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.edit')}}</el-button>
-        <el-button type="primary" @click="itemSyn" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.syn')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleList.filter')" v-model="formVisible" size="large" class="search-form">
+      <search-dialog :title="$t('afterSaleList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+              <el-form-item label="坏机门店" :label-width="formLabelWidth">
+                <el-input v-model="formData.badDepotName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+              <el-form-item label="坏机串码" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.toAreaProductIme.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.toAreaProductIme" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+              <el-form-item label="替换机串码" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="formData.replaceProductImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.badProductIme.label" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
-              </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
-              </el-form-item>
-              <el-form-item :label="formLabel.toCompanyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.toCompanyDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
-              </el-form-item>
-              <el-form-item :label="formLabel.fromCompanyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.fromCompanyDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
-              </el-form-item>
-              <el-form-item :label="formLabel.toStoreDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.toStoreDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item label="录入时间" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.inputDateRanger" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -51,32 +35,54 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="id" :label="$t('afterSaleList.bill')" sortable></el-table-column>
-        <el-table-column prop="badProductIme.ime" :label="$t('afterSaleList.badProductIme')"></el-table-column>
-        <el-table-column prop="badProductIme.product.name" :label="$t('afterSaleList.badProductName')" ></el-table-column>
-        <el-table-column prop="toAreaProductIme.product.name" :label="$t('afterSaleList.toAreaProductName')"></el-table-column>
-        <el-table-column prop="areaDepot.name" :label="$t('afterSaleList.areaDepot')"></el-table-column>
-        <el-table-column prop="packageStatus" :label="$t('afterSaleList.package')" ></el-table-column>
-        <el-table-column prop="memory" :label="$t('afterSaleList.memory')" ></el-table-column>
-        <el-table-column prop="toStoreType":label="$t('afterSaleList.toStoreType')"></el-table-column>
-        <el-table-column prop="toStoreRemarks" :label="$t('afterSaleList.toStoreDateRemarks')"></el-table-column>
-        <el-table-column prop="toStoreDate" :label="$t('afterSaleList.toStoreDate')"></el-table-column>
-        <el-table-column prop="toCompanyDate" :label="$t('afterSaleList.toCompanyDate')" ></el-table-column>
-        <el-table-column prop="fromCompanyDate" :label="$t('afterSaleList.fromCompanyDate')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('afterSaleList.createdBy')"></el-table-column>
-        <el-table-column prop="remarks" :label="$t('afterSaleList.remarks')"></el-table-column>
-        <el-table-column prop="syn" :label="$t('afterSaleList.synFor')">
+        <el-table-column type="expand">
           <template scope="scope">
-            <el-tag :type="scope.row.syn ? 'primary' : 'danger'">{{scope.row.syn | bool2str}}</el-tag>
+            <el-form label-position="left"  class="demo-table-expand">
+              <el-row :gutter="4">
+                <el-col :span="8">
+                  <el-form-item label="窜货机串码">
+                    <span>{{ scope.row.ime }}</span>
+                  </el-form-item>
+                  <el-form-item label="窜货机门店">
+                    <span>{{ scope.row.fleeShopName }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="联系人">
+                    <span>{{ scope.row.contact }}</span>
+                  </el-form-item>
+                  <el-form-item label="电话">
+                    <span>{{ scope.row.mobilePhone }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="地址">
+                    <span>{{ scope.row.address }}</span>
+                  </el-form-item>
+                  <el-form-item label="收购价">
+                    <span>{{ scope.row.buyAmount }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
           </template>
         </el-table-column>
+        <el-table-column prop="type" label="类型" sortable></el-table-column>
+        <el-table-column prop="badProductName" label="货品型号"></el-table-column>
+        <el-table-column prop="badDepotName" label="坏机门店" ></el-table-column>
+        <el-table-column prop="badType" label="坏机类型"></el-table-column>
+        <el-table-column prop="packageStatus" :label="$t('afterSaleList.package')" ></el-table-column>
+        <el-table-column prop="memory" :label="$t('afterSaleList.memory')" ></el-table-column>
+        <el-table-column prop="badProductIme"label="坏机串码"></el-table-column>
+        <el-table-column prop="replaceProductName" label="替换机型号"></el-table-column>
+        <el-table-column prop="replaceProductIme" label="替换机串码"></el-table-column>
+        <el-table-column prop="fromDepotName" label="来源" ></el-table-column>
+        <el-table-column prop="toDepotName" label="所在地"></el-table-column>
+        <el-table-column prop="detailRemarks" :label="$t('afterSaleList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('afterSaleList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -90,51 +96,26 @@
       return {
         pageLoading: false,
         pageHeight:600,
+        searchText:"",
         page:{},
         formData:{
-          page:0,
-          size:25,
-          id:'',
-          shopName:'',
-          badProductIme:'',
-          toAreaProductIme:'',
-          remarks:'',
-          createdBy:'',
-          createdDateBTW:'',
-          createdDate:'',
-          toCompanyDateBTW:'',
-          toCompanyDate:'',
-          fromCompanyDateBTW:'',
-          fromCompanyDate:'',
-          toStoreDateBTW:'',
-          toStoreDate:'',
-        },formLabel:{
-          id:{label:this.$t('afterSaleList.bill')},
-          shopName:{label:this.$t('afterSaleList.areaDepot')},
-          toAreaProductIme:{label:this.$t('afterSaleList.toAreaProductIme')},
-          badProductIme:{label:this.$t('afterSaleList.badProductIme')},
-          remarks:{label:this.$t('afterSaleList.remarks')},
-          createdBy:{label:this.$t('afterSaleList.createdBy')},
-          createdDateBTW:{label:this.$t('afterSaleList.createdDate')},
-          toCompanyDateBTW:{label:this.$t('afterSaleList.toCompanyDate')},
-          fromCompanyDateBTW:{label:this.$t('afterSaleList.fromCompanyDate')},
-          toStoreDateBTW:{label:this.$t('afterSaleList.toStoreDate')}
         },
-        pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        this.formData.toCompanyDateBTW = util.formatDateRange(this.formData.toCompanyDate);
-        this.formData.fromCompanyDateBTW = util.formatDateRange(this.formData.fromCompanyDate);
-        this.formData.toStoreDateBTW = util.formatDateRange(this.formData.toStoreDate);
-
-        util.setQuery("afterSaleList",this.formData);
-        axios.get('/api/ws/future/crm/afterSale',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("afterSaleHeadList",this.submitData);
+        axios.get('/api/ws/future/crm/afterSale?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -159,17 +140,15 @@
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
-        }else if(action=="刪除"){
+        if(action=="刪除"){
           util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          });
-        }).catch(()=>{});
+            axios.get('/api/ws/future/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
         }else if(action=="同步"){
-          axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
+          axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -177,8 +156,12 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
+        this.formData=response.data;
+        this.formData.type="总部录入"
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
+      });
     }
   };
 </script>

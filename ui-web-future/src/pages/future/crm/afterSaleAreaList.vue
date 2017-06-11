@@ -12,37 +12,22 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('afterSaleList.bill')" :label-width="formLabelWidth">
-                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+              <el-form-item label="坏机门店" :label-width="formLabelWidth">
+                <el-input v-model="formData.badDepotName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('afterSaleList.areaDepot')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+              <el-form-item label="坏机串码" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('afterSaleList.toAreaProductIme')" :label-width="formLabelWidth">
-                <el-input v-model="formData.toAreaProductIme" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.badProductIme')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
+              <el-form-item label="替换机串码" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="formData.replaceProductImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('afterSaleList.createdBy')" :label-width="formLabelWidth">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.createdDate')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.createdDate"></date-range-picker>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.toCompanyDate')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.toCompanyDate" ></date-range-picker>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.fromCompanyDate')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.fromCompanyDate"></date-range-picker>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.toStoreDate')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.toStoreDate"></date-range-picker>
+              <el-form-item label="录入时间" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.inputDateRanger" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -129,7 +114,7 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("afterSaleList",this.submitData);
+        util.setQuery("afterSaleAreaList",this.submitData);
         axios.get('/api/ws/future/crm/afterSale?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -155,17 +140,15 @@
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
-        }else if(action=="刪除"){
+        if(action=="刪除"){
           util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/ws/future/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           });
         }).catch(()=>{});
         }else if(action=="同步"){
-          axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
+          axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
@@ -173,8 +156,12 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
+        this.formData=response.data;
+        this.formData.type="地区录入"
+        util.copyValue(this.$route.query,this.formData);
+        this.pageRequest();
+      });
     }
   };
 </script>

@@ -29,9 +29,15 @@ hystrix:
   command:
     default:
       execution:
+        timeout:
+          enabled: false
         isolation:
           thread:
             timeoutInMilliseconds: 100000
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
 
 security:
   oauth2:
