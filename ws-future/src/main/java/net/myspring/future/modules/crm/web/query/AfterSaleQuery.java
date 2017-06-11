@@ -12,7 +12,6 @@ import java.util.List;
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleQuery {
-
     private String imeStr;
     private String type;
     private String toCompanyDateRanger;
