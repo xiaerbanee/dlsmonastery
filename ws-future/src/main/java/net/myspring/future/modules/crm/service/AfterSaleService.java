@@ -429,7 +429,7 @@ public class AfterSaleService {
     }
 
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
-        Page<AfterSale> page=afterSaleRepository.findPage(pageable,afterSaleQuery);
+        Page<AfterSaleDto> page=afterSaleRepository.findPage(pageable,afterSaleQuery);
         return page;
     }
 
@@ -438,5 +438,4 @@ public class AfterSaleService {
             list.add(item.trim());
         }
     }
-
 }

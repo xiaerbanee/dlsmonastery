@@ -40,7 +40,7 @@ public class AfterSaleController {
     private ProductImeService productImeService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<AfterSaleDto> list(Pageable pageable, AfterSaleQuery afterSaleQuery) {
+    public Page<AfterSaleDto> areaList(Pageable pageable, AfterSaleQuery afterSaleQuery) {
         Page<AfterSaleDto> page = afterSaleService.findPage(pageable, afterSaleQuery);
         return page;
     }
