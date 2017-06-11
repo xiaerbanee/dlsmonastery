@@ -3,7 +3,19 @@
     <head-tab active="afterSaleAreaFleeInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
+      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
+      <span v-html="searchText"></span>
     </el-row>
+    <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <el-form :model="formData">
+        <el-form-item label="串码" :label-width="formLabelWidth">
+          <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" placeholder="请输入串码，逗号或换行隔开"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
+      </div>
+    </search-dialog>
     <div class="position:relative;" style="margin-top:20px;margin-left:50px">
       <el-form>
         <el-form-item label="类型" :label-width="formLabelWidth">
@@ -23,6 +35,7 @@
   export default{
     data(){
       return {
+        searchText:"",
         inputForm: {
           data: ''
         },
@@ -254,6 +267,11 @@
       this.onchange(this.type);
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -272,6 +290,15 @@
         }).catch(function () {
           this.submitDisabled = false;
         });
+      },search() {
+        this.formVisible = false;
+        this.setSearchText();
+        this.getData();
+      }, getData(){
+        axios.get('/api/ws/future/crm/afterSale/areaInputData', {params: this.formData}).then((response) => {
+          this.settings.data = response.data;
+          this.table.loadData(this.settings.data);
+        })
       }, onchange(type){
         if (this.type == '售后机') {
           this.$router.push({ name: 'afterSaleAreaInput'})
