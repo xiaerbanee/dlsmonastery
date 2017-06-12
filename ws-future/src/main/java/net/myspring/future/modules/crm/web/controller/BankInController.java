@@ -84,9 +84,7 @@ public class BankInController {
 
     @RequestMapping(value = "getForm")
     public BankInForm getForm(BankInForm bankInForm ){
-
-        bankInForm.setTypeList(BankInTypeEnum.getList());
-        bankInForm.setBankDtoList(bankService.findByAccountId(RequestUtils.getAccountId()));
+        bankInForm.getExtra().put("typeList",BankInTypeEnum.getList());
         return bankInForm;
     }
 
