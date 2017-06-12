@@ -77,7 +77,7 @@
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption
+
       };
     },
     methods: {

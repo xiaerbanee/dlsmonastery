@@ -1,10 +1,17 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.domain.ProductMonthPrice;
+import net.myspring.future.modules.crm.dto.ProductMonthPriceDetailDto;
 import net.myspring.future.modules.crm.dto.ProductMonthPriceDto;
+import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.ProductMonthPriceService;
+import net.myspring.future.modules.crm.web.form.ProductMonthPriceForm;
 import net.myspring.future.modules.crm.web.query.ProductMonthPriceQuery;
+import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +31,9 @@ public class ProductMonthPriceController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductMonthPriceDto> list(Pageable pageable, ProductMonthPriceQuery ProductMonthPriceQuery){
-        Page<ProductMonthPriceDto> page = productMonthPriceService.findPage(pageable,ProductMonthPriceQuery);
-        return page;
+        return productMonthPriceService.findPage(pageable,ProductMonthPriceQuery);
     }
+
     @RequestMapping(value = "getQuery")
     public ProductMonthPriceQuery getQuery(ProductMonthPriceQuery productMonthPriceQuery) {
         return productMonthPriceQuery;
@@ -36,24 +43,41 @@ public class ProductMonthPriceController {
     public String getForm() {
         return null;
     }
-    @RequestMapping(value = "findOne")
-    public String findOne(ProductMonthPrice productMonthPrice){
-        return null;
+    @RequestMapping(value = "findDto")
+    public ProductMonthPriceDto findDto(String id){
+
+        if(StringUtils.isBlank(id)){
+            return new ProductMonthPriceDto();
+        }
+
+        return productMonthPriceService.findDto(id);
+    }
+
+    @RequestMapping(value = "findDetailListForNew")
+    public List<ProductMonthPriceDetailDto> findDetailListForNew() {
+
+        return productMonthPriceService.findDetailListForNew();
+
+    }
+
+    @RequestMapping(value = "findDetailListForEdit")
+    public List<ProductMonthPriceDetailDto> findDetailListForEdit(String productMonthPriceId) {
+
+        return productMonthPriceService.findDetailListForEdit(productMonthPriceId);
+
     }
 
 
     @RequestMapping(value = "checkMonth")
-    public String checkMonth(String month) {
-        return null;
+    public String checkMonth(String id, String month) {
+        return productMonthPriceService.checkMonth(id, month);
     }
 
     @RequestMapping(value = "save")
-    public String save(ProductMonthPrice productMonthPrice) {
-        return null;
-    }
+    public RestResponse save(ProductMonthPriceForm productMonthPriceForm) {
+        productMonthPriceService.save(productMonthPriceForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
 
-    private List<String> getActionList(ProductMonthPrice productMonthPrice) {
-        return null;
     }
 
 }

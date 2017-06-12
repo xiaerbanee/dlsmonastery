@@ -50,7 +50,7 @@
     methods:{
       getData() {
           return{
-            isInit:false,
+
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputProperty:{},
@@ -68,8 +68,10 @@
             rules: {
               shopId: [{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
               type:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
-              amount:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
+              amount:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}, {type: 'number',message: this.$t('bankInForm.inputLegalValue')}],
               serialNumber:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}]
+
+
             }
           }
       },
@@ -95,9 +97,8 @@
             }
           })
         }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+    },created () {
+
           axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
             this.inputProperty = response.data;
           });
@@ -105,7 +106,6 @@
             this.bankIn = response.data;
           });
         }
-      this.isInit = true;
-      }
+
   }
 </script>

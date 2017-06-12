@@ -37,7 +37,7 @@ interface StoreAllotDetailRepositoryCustom{
 
 }
 
-class StoreAllotDetailRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotDetailRepositoryCustom{
+class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotDetailRepositoryCustom{
     override fun findStoreAllotDetailListForNew(companyId: String): MutableList<SimpleStoreAllotDetailDto> {
         return namedParameterJdbcTemplate.query("""
          SELECT

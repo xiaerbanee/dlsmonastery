@@ -1864,7 +1864,10 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "必填信息",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    searchProductTypeName: "搜索统计名称",
+    formInvalid: "表单存在错误，请先修正",
+    notify: "提示",
   },
   productMonthPriceList: {
     productMonthPriceList: "penilaian bulanan",

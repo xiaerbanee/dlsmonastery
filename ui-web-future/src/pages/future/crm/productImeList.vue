@@ -134,7 +134,7 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        seachText:"",
+        searchText:"",
         formData:{
             extra:{}
         },
