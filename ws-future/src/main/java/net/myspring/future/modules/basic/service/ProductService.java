@@ -175,7 +175,7 @@ public class ProductService {
     }
 
     public ProductForm getForm(ProductForm productForm){
-        productForm.setNetTypeList(NetTypeEnum.getList());
+        productForm.getExtra().put("netTypeList",NetTypeEnum.getList());
         return productForm;
     }
 

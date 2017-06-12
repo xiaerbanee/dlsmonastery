@@ -2,30 +2,24 @@
   <div>
     <head-tab active="expressForm"></head-tab>
     <div>
-      <el-form :model="express" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('expressForm.expressOrderExtendType')" prop="expressOrderExtendType" v-if="!isCreate">
-          {{express.expressOrderExtendType}}
-        </el-form-item>
-        <el-form-item :label="$t('expressForm.expressOrderId')" prop="expressOrderId"  v-if="!isCreate">
-          {{express.expressOrderId}}
-        </el-form-item>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('expressForm.expressOrderToDepotId')" prop="expressOrderToDepotId">
-          <depot-select :disabled="!isCreate" v-model="express.expressOrderToDepotId" category="shop" ></depot-select>
+          <depot-select :disabled="!isCreate" v-model="inputForm.expressOrderToDepotId" category="shop" ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressForm.code')" prop="code">
-          <el-input v-model="express.code"></el-input>
+          <el-input v-model="inputForm.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.weight')" prop="weight">
-          <el-input v-model="express.weight"></el-input>
+          <el-input v-model="inputForm.weight"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.qty')" prop="qty">
-          <el-input v-model="express.qty"></el-input>
+          <el-input v-model="inputForm.qty"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.tracking')" prop="tracking">
-          <el-input v-model="express.tracking"></el-input>
+          <el-input v-model="inputForm.tracking"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressForm.remarks')" prop="remarks">
-          <el-input type="textarea"  v-model="express.remarks"></el-input>
+          <el-input type="textarea"  v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('expressForm.save')}}</el-button>
@@ -49,19 +43,7 @@
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-
-            express:{},
-            submitData:{
-              id:'',
-              code:'',
-              weight:'',
-              qty:'',
-              tracking:'',
-              remarks:'',
-              expressOrderId:'',
-              expressOrderToDepotId:'',
-              expressOrderIdExtendType:''
-            },
+            inputForm:{},
             rules: {
               code: [{ required: true, message: this.$t('expressForm.prerequisiteMessage')}],
               expressOrderToDepotId: [{ required: true, message: this.$t('expressForm.prerequisiteMessage')}],
@@ -75,11 +57,11 @@
             if (valid) {
               this.submitDisabled = true;
               util.copyValue(this.express,this.submitData);
-              axios.post('/api/ws/future/crm/express/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/crm/express/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
                 if(response.data.success) {
-                  if (!this.isCreate) {
+                  if (!this.inputForm.create) {
                     this.$router.push({name: 'expressList', query: util.getQuery("expressList")});
                   }
                 }
@@ -92,8 +74,11 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/crm/express/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.express = response.data;
+        axios.get('/api/ws/future/crm/express/findDto').then((response)=> {
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/crm/express/findDto', {params: {id: this.$route.query.id}}).then((response) => {
+            util.copyValue(response.data,this.inputForm);``
+          });
         });
         }
       this.isInit = true;

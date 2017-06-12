@@ -102,7 +102,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/priceChange/getQuery',{params:this.formData}).then((response) =>{
+      axios.get('/api/ws/future/crm/priceChange/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
         this.pageRequest();

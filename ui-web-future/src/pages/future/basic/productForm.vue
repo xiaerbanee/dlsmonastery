@@ -17,7 +17,7 @@
             </el-form-item>
             <el-form-item  :label="$t('productForm.netType')" prop="netType">
               <el-select v-model="inputForm.netType"   clearable  :placeholder="$t('productForm.select')">
-                <el-option v-for="netType in formProperty.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
+                <el-option v-for="netType in inputForm.extra.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('productForm.hasIme')" prop="hasIme">
@@ -85,26 +85,10 @@
         isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
         fileList: [],
-        inputForm:{},
-        submitData:{
-          id:'',
-          name:'',
-          code:'',
-          outGroupName:'',
-          productTypeId:'',
-          netType:'',
-          hasIme:'',
-          allowOrder:'',
-          allowBill:'',
-          price2:'',
-          retailPrice:'',
-          depositPrice:'',
-          mappingName:'',
-          image:'',
-          remarks:''
-         },
+        inputForm:{
+            extra:{}
+        },
         rules: {
         },
         remoteLoading:false,
@@ -118,7 +102,7 @@
         form.validate((valid) => {
           if (valid) {
               util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/product/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/basic/product/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
             Object.assign(this.$data, this.getData());
               if(!this.isCreate){
@@ -149,17 +133,17 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data;
-          this.inputForm.hasIme = response.data.hasIme?1:0;
-          this.inputForm.allowOrder = response.data.allowOrder?1:0;
-          this.inputForm.allowBill = response.data.allowBill?1:0;
-          if(response.data.productType != null){
-            this.productTypeList = new Array(response.data.productType)
-          }
-        });
         axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
-          this.formProperty = response.data;
+          this.inputForm = response.data;
+        axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+        this.inputForm.hasIme = response.data.hasIme?1:0;
+        this.inputForm.allowOrder = response.data.allowOrder?1:0;
+        this.inputForm.allowBill = response.data.allowBill?1:0;
+        if(response.data.productType != null){
+          this.productTypeList = new Array(response.data.productType)
+        }
+      });
         });
       }
       this.isInit = true;
