@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,6 +73,10 @@ public class LocalDateUtils {
 
     public static LocalDate getFirstDayOfThisMonth(LocalDate localDate){
         return localDate.withDayOfMonth(1);
+    }
+
+    public static LocalDate getLastDayOfThisMonth(LocalDate localDate){
+        return localDate.with(TemporalAdjusters.lastDayOfMonth());
     }
 
 

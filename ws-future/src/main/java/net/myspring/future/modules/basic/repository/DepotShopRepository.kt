@@ -41,10 +41,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty""")
+            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName', t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -53,7 +53,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id,
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
+                    LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
@@ -100,6 +101,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.depot_id""")
         }
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.depot_id,t5.id""")
+        }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
@@ -107,10 +111,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty """)
+            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t2.ime
+               SELECT t4.id as 'productId',t4.name as 'productName',t2.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -120,7 +124,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime_upload t3 ON t2.product_ime_id = t3.id
                     LEFT JOIN crm_product t4 on t2.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.shop_id=t6.id,
+                    LEFT JOIN crm_depot t6 on t1.shop_id=t6.id
+                    LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
@@ -168,6 +173,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.shop_id""")
         }
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.shop_id,t5.id""")
+        }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
@@ -176,27 +184,26 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty """)
+            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName' """)
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime，t1.retail_date,t6.employee_Id,t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName'
+               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,
+               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
                     LEFT JOIN crm_product t2 ON t1.product_id = t2.id
-                    LEFT JOIN crm_product_type t3 on t2.product_type_id=t2.id
-                    LEFT JOIN crm_depot t4 on t1.depot_id=t4.id,
-                    crm_depot_shop t5
+                    LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
+                    LEFT JOIN crm_depot t4 on t1.depot_id=t4.id
+                    LEFT JOIN crm_chain t7 on t4.chain_id=t7.id
+
         """)
-        if(reportQuery.isDetail){
+        if(reportQuery.isDetail!=null&&reportQuery.isDetail){
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
         }
-        sb.append("""    WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
-        if(reportQuery.isDetail){
-            sb.append(""" and t6.enabled=1 and t6.is_back=0 """)
-        }
+        sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
         if(reportQuery.scoreType){
             sb.append("""  and t3.score_type =:scoreType """)
         }
@@ -230,6 +237,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.depot_id""")
         }
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.depot_id,t3.id""")
+        }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
@@ -237,10 +247,11 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty """)
+            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_Id,t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName'
+               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,
+               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t7.name as 'chainName',t4.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -249,7 +260,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_ime t2 ON t2.product_ime_sale_id = t1.id
                     LEFT JOIN crm_product t3 on t2.product_id=t3.id
                     LEFT JOIN crm_product_type t4 on t3.product_type_id=t4.id
-                    LEFT JOIN crm_depot t5 on t1.shop_id=t5.id,
+                    LEFT JOIN crm_depot t5 on t1.shop_id=t5.id
+                    LEFT JOIN crm_chain t7 on t5.chain_id=t7.id,
                     crm_depot_shop t6
                     WHERE
                     t1.enabled = 1
@@ -289,6 +301,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.shop_id""")
+        }
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.shop_id,t4.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))

@@ -65,6 +65,10 @@ public class DepotService {
         return depotRepository.findShopList(depotQuery);
     }
 
+    public List<String> filterDepotIds(){
+        return depotManager.filterDepotIds();
+    }
+
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
         List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));

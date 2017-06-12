@@ -38,7 +38,17 @@ public class ReportQuery extends BaseQuery{
 
     private Boolean isDetail;
 
+    private String exportType;
+
     private List<String> productTypeIdList;
+
+    public String getExportType() {
+        return exportType;
+    }
+
+    public void setExportType(String exportType) {
+        this.exportType = exportType;
+    }
 
     public String getDepotId() {
         return depotId;
@@ -98,7 +108,7 @@ public class ReportQuery extends BaseQuery{
     }
 
     public String getDateRange() {
-        if(StringUtils.isBlank(dateRange)&&"销售报表".equals(type)){
+        if(StringUtils.isBlank(dateRange)){
             this.dateRange=LocalDateUtils.format(LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now()))+CharConstant.DATE_RANGE_SPLITTER+LocalDateUtils.format(LocalDate.now());
         }
         return dateRange;
@@ -117,10 +127,6 @@ public class ReportQuery extends BaseQuery{
     }
 
     public boolean getScoreType() {
-        return scoreType;
-    }
-
-    public boolean isScoreType() {
         return scoreType;
     }
 

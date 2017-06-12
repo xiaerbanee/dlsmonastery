@@ -67,12 +67,5 @@ public class PricesystemChangeController {
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());
     }
 
-    @RequestMapping(value = "getPricesystemDetail")
-    public String getPricesystemDetail(@RequestParam(value = "productIdList[]") String[] proudctIdList){
-        return null;
-    }
 
-    private List<String> getActionList(PricesystemChange pricesystemChange) {
-        return null;
-    }
 }

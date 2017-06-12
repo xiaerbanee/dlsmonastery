@@ -4,28 +4,28 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyRestList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dutyRestList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyRestList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.dutyDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.type')" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
-                  <el-option v-for="item in formData.restList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.restList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.dateType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
-                  <el-option v-for="item in formData.dateList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dutyRestList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyRestList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="dutyDate" :label="$t('dutyRestList.dutyDate')"></el-table-column>
         <el-table-column prop="type" :label="$t('dutyRestList.type')" ></el-table-column>
@@ -50,31 +50,27 @@
       return {
         page:{},
         formData:{
+          extra:{},
           dutyDate:'',
         },
-        submitData:{
-          page:0,
-          size:25,
-          dutyDate:'',
-          type:'',
-          dateType:''
-        },
-        formLabel:{
-          dutyDate:{label:this.$t('dutyRestList.dutyDate')},
-          type:{label:this.$t('dutyRestList.type')},
-          dateType:{label:this.$t('dutyRestList.dateType')}
-        },
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        });
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("dutyRestList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/dutyRest?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dutyRestList",submitData);
+        axios.get('/api/basic/hr/dutyRest?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

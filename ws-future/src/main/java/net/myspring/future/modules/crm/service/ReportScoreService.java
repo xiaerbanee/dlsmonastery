@@ -20,6 +20,8 @@ import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ReportScoreDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.repository.ReportScoreAreaRepository;
+import net.myspring.future.modules.crm.repository.ReportScoreOfficeRepository;
 import net.myspring.future.modules.crm.repository.ReportScoreRepository;
 import net.myspring.future.modules.crm.web.form.ReportScoreForm;
 import net.myspring.future.modules.crm.web.query.ReportScoreQuery;
@@ -29,6 +31,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +43,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -53,7 +57,10 @@ public class ReportScoreService {
     private ProductTypeRepository productTypeRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
-
+    @Autowired
+    private ReportScoreOfficeRepository reportScoreOfficeRepository;
+    @Autowired
+    private ReportScoreAreaRepository reportScoreAreaRepository;
     @Autowired
     private ProductRepository productRepository;
 
@@ -107,9 +114,9 @@ public class ReportScoreService {
 //        Map<String,String> itemNumberMap = Maps.newHashMap();
 //        Map<String,ProductType> map = Maps.newHashMap();
 //        if(CompanyBrand.OPPO.name().equals(account.getCompany().getBrand())) {
-//            monthList = oppoPlantProductItemelectronSelDao.findNameQtyList(firstDayOfMonth, dateEnd);
-//            List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoPlantAgentProductSelDao.findAll();
-//            itemNumberMap = Collections3.extractToMap(oppoPlantAgentProductSels, "itemNumber","colorId");
+//            monthList = oppoPlantProductItemelectronSelRepository.findNameQtyList(firstDayOfMonth, dateEnd);
+//            List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoPlantAgentProductSelRepository.findAll();
+//            itemNumberMap = CollectionsUtil.extractToMap(oppoPlantAgentProductSels, "itemNumber","colorId");
 //            for(OppoPlantAgentProductSel item:oppoPlantAgentProductSels) {
 //                if(item.getProduct() != null && item.getProduct().getProductType() != null) {
 //                    ProductType productType = item.getProduct().getProductType();
@@ -119,9 +126,9 @@ public class ReportScoreService {
 //                }
 //            }
 //        } else if (CompanyBrand.vivo.name().equals(account.getCompany().getBrand())) {
-//            monthList = vivoPlantElectronicsnDao.findNameQtyList(firstDayOfMonth, dateEnd);
-//            List<VivoPlantProducts> vivoPlantProducts = vivoPlantProductsDao.findAll();
-//            itemNumberMap = Collections3.extractToMap(vivoPlantProducts, "itemNumber","colorId");
+//            monthList = vivoPlantElectronicsnRepository.findNameQtyList(firstDayOfMonth, dateEnd);
+//            List<VivoPlantProducts> vivoPlantProducts = vivoPlantProductsRepository.findAll();
+//            itemNumberMap = CollectionsUtil.extractToMap(vivoPlantProducts, "itemNumber","colorId");
 //            for(VivoPlantProducts item:vivoPlantProducts) {
 //                if(item.getProduct() != null && item.getProduct().getProductType() != null) {
 //                    ProductType productType = item.getProduct().getProductType();
@@ -131,7 +138,7 @@ public class ReportScoreService {
 //                }
 //            }
 //        }
-//        if(Collections3.isNotEmpty(monthList)){
+//        if(CollectionsUtil.isNotEmpty(monthList)){
 //            for(NameQty nameQty:monthList) {
 //                String colorId = itemNumberMap.get(nameQty.getName());
 //                if(!map.containsKey(colorId) && org.apache.commons.lang.StringUtils.isNotBlank(nameQty.getName())) {
@@ -142,10 +149,28 @@ public class ReportScoreService {
         return result;
     }
 
-    public void save(ReportScoreForm reportScoreForm) {
-
-        //TODO
-
+    public ReportScore save(ReportScoreForm reportScoreForm) {
+        LocalDate date = reportScoreForm.getScoreDate();
+        LocalDate dateStart = date;
+        LocalDate dateEnd = date.plusDays(1);
+        LocalDate firstDayOfMonth = LocalDateUtils.getFirstDayOfThisMonth(date);
+        //最近一个月
+        LocalDate lastDayOfMonth = LocalDateUtils.getLastDayOfThisMonth(date).plusDays(1);
+        //当日电子保卡
+        List<ProductIme> dateProductImes = productImeRepository.findByRetailDate(dateStart, dateEnd);
+        if(CollectionUtil.isEmpty(dateProductImes)) {
+            throw new ServiceException("exception_report_score_not_in_system" );
+        }
+        //当月电子保卡
+        List<ProductIme> monthProductImes = productImeRepository.findByRetailDate(firstDayOfMonth, dateEnd);
+        //最近一个月累计电子保卡
+        List<ProductIme> recentMonthProductImes = productImeRepository.findByRetailDate(lastDayOfMonth, dateEnd);
+        //当前需要统计型号
+        List<ProductType> productTypes = productTypeRepository.findAllScoreType();
+        Map<String,ProductType> productTypeMap = CollectionUtil.extractToMap(productTypes,"id");
+        Map<String,ReportScoreOffice> reportScoreOfficeMap = Maps.newHashMap();
+        Map<String,ReportScoreArea> reportScoreAreaMap = Maps.newHashMap();
+        return null;
     }
 
 }

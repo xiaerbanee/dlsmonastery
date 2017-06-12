@@ -22,30 +22,11 @@ public class AccountChangeQuery extends BaseQuery {
     private String type;
     private String id;
 
-    private List<String> typeList=Lists.newArrayList();
-    private List<Office> areaList=Lists.newArrayList();
-
     public AccountChangeQuery(){}
 
     public AccountChangeQuery(String accountId,String id){
         this.accountId=accountId;
         this.id=id;
-    }
-
-    public List<String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<String> typeList) {
-        this.typeList = typeList;
-    }
-
-    public List<Office> getAreaList() {
-        return areaList;
-    }
-
-    public void setAreaList(List<Office> areaList) {
-        this.areaList = areaList;
     }
 
     public String getId() {

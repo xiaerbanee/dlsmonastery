@@ -126,7 +126,6 @@
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
-        console.log(submitData)
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
@@ -188,10 +187,10 @@
       },saleReportGrid(){
 
       }
-
     },created () {
         axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
           this.formData = response.data;
+          this.formData.scoreType=this.formData.scoreType?"1":"0"
           util.copyValue(this.$route.query, this.formData);
           this.pageRequest();
       })

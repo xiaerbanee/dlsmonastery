@@ -156,9 +156,9 @@ public class DepotShopService {
         return depotReportDetail;
     }
 
-    private List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery) {
+    public List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery) {
         List<DepotReportDto> depotReportList = Lists.newArrayList();
-        if (OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())) {
+        if (OutTypeEnum.电子保卡.name().equals(reportQuery.getOutType())) {
             if ("销售报表".equals(reportQuery.getType())) {
                 depotReportList = depotShopRepository.findBaokaSaleReport(reportQuery);
             } else if ("库存报表".equals(reportQuery.getType())) {
@@ -168,7 +168,7 @@ public class DepotShopService {
             if ("销售报表".equals(reportQuery.getType())) {
                 depotReportList = depotShopRepository.findSaleReport(reportQuery);
             } else if ("库存报表".equals(reportQuery.getType())) {
-                depotReportList = depotShopRepository.findBaokaStoreReport(reportQuery);
+                depotReportList = depotShopRepository.findStoreReport(reportQuery);
             }
         }
         return depotReportList;

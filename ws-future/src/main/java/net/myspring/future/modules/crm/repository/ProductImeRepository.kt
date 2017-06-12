@@ -28,9 +28,13 @@ import java.util.*
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
     fun findByIme(ime: String): ProductIme
+
     fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
     fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
+
+    @Query("select  t from #{#entityName} t where t.retailDate >= ?1 and t.retailDate<?2  and t.retailDate is not null ")
+    abstract fun findByRetailDate(dateStart: LocalDate, dateEnd: LocalDate): List<ProductIme>
 
 
     @Query("""
@@ -139,13 +143,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 crm_product_ime t1 LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
-                LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                LEFT JOIN crm_depot_shop t6 on t3.depot_shop_id=t6.id
+                LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
+                crm_depot_shop t6
             WHERE
                  t1.enabled = 1
                 AND t2.enabled = 1
-                and t4.enabled=1
-                and t5.enabled=1
+                and t3.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.date!=null){
             sb.append("""
@@ -161,7 +164,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -205,13 +208,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
                 LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                LEFT JOIN crm_depot_shop t6 on t3.depot_shop_id=t6.id
-                LEFT JOIN crm_product_ime_upload t7 on t1.product_ime_upload_id=t7.id
+                LEFT JOIN crm_product_ime_upload t7 on t1.product_ime_upload_id=t7.id,
+                crm_depot_shop t6
             WHERE
                  t1.enabled = 1
                 AND t2.enabled = 1
-                and t4.enabled=1
-                and t5.enabled=1
+                and t3.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.date!=null){
             sb.append("""
@@ -227,7 +229,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -271,12 +273,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             LEFT JOIN crm_depot t2 ON t1.shop_id = t2.id
             LEFT JOIN crm_product_ime t3 on t1.product_ime_id = t3.id
             LEFT JOIN crm_product t4 on t3.product_id=t4.id
-            LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-            LEFT JOIN crm_depot_shop t6 on t2.depot_shop_id=t6.id
+            LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
+            crm_depot_shop t6
             WHERE
              t1.enabled = 1
             AND t1.is_back = 0
             AND t3.enabled = 1
+            and t2.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.dateStart!=null){
             sb.append(""" and t1.created_date>=:dateStart """)
@@ -285,7 +288,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -318,7 +321,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t2.office_id,t1.id '""")
+            sb.append(""" select t2.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
@@ -328,10 +331,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 crm_product_ime t1
             LEFT JOIN crm_depot t2 ON t1.depot_id = t2.id
             LEFT JOIN crm_product t3 ON t1.product_id = t3.id
-            LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id
-            left join crm_depot_shop t5 on t2.depot_shop_id=t5.id
+            LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id,
+            crm_depot_shop t5
             where t1.enabled=1
-            and t2.enabled=1
+            and t2.depot_shop_id=t5.id
     """)
         if(productImeReportQuery.dateStart!=null){
             sb.append(""" and t1.retail_date>=:dateStart """)
@@ -340,7 +343,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t4.score_type=1 """)
+            sb.append(""" and t4.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t5.town_type=:townType """)
@@ -363,6 +366,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t4.id """)
         }
+        println("销售报表按电子报卡"+productImeReportQuery.officeId)
+        println(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
