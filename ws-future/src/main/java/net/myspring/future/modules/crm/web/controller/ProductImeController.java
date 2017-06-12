@@ -11,7 +11,11 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.service.DepotService;
+import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -27,6 +31,8 @@ import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +40,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
 
@@ -49,6 +56,10 @@ public class ProductImeController {
     private DepotService depotService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private DepotShopService depotShopService;
+    @Autowired
+    private OfficeClient officeClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page list(Pageable pageable,ProductImeQuery productImeQuery){
@@ -113,6 +124,18 @@ public class ProductImeController {
         }
         reportQuery.setScoreType(true);
         return reportQuery;
+    }
+
+    @RequestMapping(value = "exportReport")
+    public String exportReport(ReportQuery reportQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
+        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        reportQuery.setDepotIdList(depotService.filterDepotIds());
+        if("按串码".equals(reportQuery.getExportType())){
+            reportQuery.setIsDetail(true);
+        }
+        List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
+        return productImeService.getMongoDbId(workbook,depotReportList,reportQuery);
     }
 
     @RequestMapping(value = "getBatchCreateForm")

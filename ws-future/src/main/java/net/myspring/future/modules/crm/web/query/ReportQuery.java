@@ -38,7 +38,17 @@ public class ReportQuery extends BaseQuery{
 
     private Boolean isDetail;
 
+    private String exportType;
+
     private List<String> productTypeIdList;
+
+    public String getExportType() {
+        return exportType;
+    }
+
+    public void setExportType(String exportType) {
+        this.exportType = exportType;
+    }
 
     public String getDepotId() {
         return depotId;

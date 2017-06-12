@@ -334,7 +334,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id,
             crm_depot_shop t5
             where t1.enabled=1
-            and t2.enabled=1
             and t2.depot_shop_id=t5.id
     """)
         if(productImeReportQuery.dateStart!=null){
