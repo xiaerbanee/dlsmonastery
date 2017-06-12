@@ -7,7 +7,7 @@
           <el-col :span="6">
             <el-form-item :label="$t('shopAdForm.shopAdTypeId')" prop="shopAdTypeId">
               <el-select v-model="inputForm.shopAdTypeId" filterable clearable :placeholder="$t('shopAdForm.inputWord')">
-                <el-option v-for="shopAdType in formProperty.shopAdTypeFormList" :key="shopAdType.id" :label="shopAdType.name+' ('+shopAdType.remarks+')'" :value="shopAdType.id"></el-option>
+                <el-option v-for="shopAdType in inputForm.extra.shopAdTypeFormList" :key="shopAdType.id" :label="shopAdType.name+' ('+shopAdType.remarks+')'" :value="shopAdType.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
@@ -63,20 +63,9 @@
           action:this.$route.query.action,
           submitDisabled:false,
           remoteLoading:false,
-          formProperty:{},
           fileList:[],
-          inputForm:{},
-          submitData:{
-            id:'',
-            shopAdTypeId:'',
-            shopId:'',
-            length:'',
-            qty:'',
-            width:'',
-            content:'',
-            specialArea:'',
-            attachment:'',
-            remarks:''
+          inputForm:{
+            extra:{}
           },
           rules: {
             shopAdTypeId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
@@ -95,8 +84,7 @@
         form.validate((valid) => {
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(this.submitData)).then((response) => {
+            axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if (response.data.success) {
@@ -120,16 +108,16 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-          if(this.inputForm.attachment !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
-        });
         axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
-          this.formProperty = response.data;
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(this.inputForm.attachment !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }
+          });
         });
       }
       this.isInit = true;

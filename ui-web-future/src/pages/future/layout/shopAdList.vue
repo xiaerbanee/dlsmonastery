@@ -7,36 +7,36 @@
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filterOrExport')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.areaName')" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.adCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('shopAdList.inputNotZeroPart')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.shopName')" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.specialArea.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.specialArea')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.specialArea"></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopAdTypeId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.shopAdType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.shopAdTypeId" filterable clearable :placeholder="$t('expressOrderList.inputKey')">
-                  <el-option v-for="shopAdType in formData.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
+                  <el-option v-for="shopAdType in formData.extra.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.processStatus')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="广告申请"></process-status-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAdList.createdBy')" :label-width="formLabelWidth">
                 <account-select  v-model="formData.createdBy"></account-select>
               </el-form-item>
             </el-col>
@@ -46,7 +46,7 @@
           <el-button @click="exportData" v-permit="'crm:shopAd:view'">{{$t('expressOrderList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('expressOrderList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')"  @selection-change="handleSelectionChange" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
         <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
@@ -101,30 +101,11 @@
     },
     data() {
       return {
+        searchText:"",
         multiple:true,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          id:"",
-          officeId:"",
-          shopId:"",
-          specialArea:'',
-          shopAdTypeId:'',
-          processStatus:'',
-          createdBy:"",
-          createdDate:""
-        },formLabel:{
-          officeId:{label:this.$t('shopAdList.areaName'),value:""},
-          id:{label:this.$t('shopAdList.adCode'),value:""},
-          shopId:{label:this.$t('shopAdList.shopName')},
-          processStatus:{label:this.$t('shopAdList.processStatus')},
-          specialArea:{label:this.$t('shopAdList.specialArea'),value:''},
-          shopAdTypeId:{label:this.$t('shopAdList.shopAdType'),value:''},
-          createdBy:{label:this.$t('shopAdList.createdBy')},
-          createdDate:{label:this.$t('shopAdList.createdDate')}
+        formData:{
+          extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -134,11 +115,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopAdList",this.submitData);
-        axios.get('/api/ws/future/layout/shopAd',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopAdList",submitData);
+        axios.get('/api/ws/future/layout/shopAd',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
