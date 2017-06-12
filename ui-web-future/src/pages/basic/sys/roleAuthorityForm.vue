@@ -7,7 +7,7 @@
           <el-col :span = "7">
             <el-form-item label="角色" prop="id">
               <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remoteRole" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
-                <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -96,10 +96,12 @@
           this.roleList = [];
         }
       },getTreeNode(id){
+        if(id){
           axios.get('/api/basic/sys/role/getTreeNode',{params:{id:id}}).then((response)=>{
-            this.treeData =response.data.treeNode.children;
+            this.treeData =response.data.extra.treeNode.children;
             this.checked = response.data.permissionIdList;
           })
+        }
       }
     }
   }
