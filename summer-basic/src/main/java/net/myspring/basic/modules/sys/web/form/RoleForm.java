@@ -13,8 +13,6 @@ import java.util.List;
 public class RoleForm extends BaseForm<Role> {
     private String name;
     private String permission;
-    private String remarks;
-    private TreeNode treeNode;
     private List<String> permissionIdList= Lists.newArrayList();
     private List<String> moduleIdList=Lists.newArrayList();
 
@@ -58,13 +56,5 @@ public class RoleForm extends BaseForm<Role> {
     @Override
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public TreeNode getTreeNode() {
-        return treeNode;
-    }
-
-    public void setTreeNode(TreeNode treeNode) {
-        this.treeNode = treeNode;
     }
 }

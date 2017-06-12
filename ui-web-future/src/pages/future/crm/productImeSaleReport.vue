@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,11 +90,11 @@
 
 </template>
 <script>
-  import productSelect from 'components/future/product-select';
+  import productTypeSelect from 'components/future/product-type-select';
 
   export default {
     components:{
-      productSelect
+      productTypeSelect
     },
     data() {
       return {
@@ -126,6 +126,7 @@
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
+        console.log(submitData)
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
@@ -147,7 +148,6 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        console.log(row)
         if(row.productTypeId){
           this.formData.productTypeIdList=row.productTypeId;
           this.formData.sumType="区域";

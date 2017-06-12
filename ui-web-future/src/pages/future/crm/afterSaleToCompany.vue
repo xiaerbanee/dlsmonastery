@@ -5,6 +5,12 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
+            <el-form-item label="类型" :label-width="formLabelWidth">
+              <el-select v-model="inputForm.type" placeholder="请选择">
+                <el-option v-for="item in inputForm.extra.typeList" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('afterSaleToCompany.ime')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('afterSaleToCompany.inputIme')" @change="onchange"></el-input>
             </el-form-item>
@@ -32,12 +38,6 @@
                 <el-table-column prop="remarks" :label="$t('afterSaleToCompany.remarks')"></el-table-column>
               </el-table>
             </template>
-            <el-form-item label="类型" :label-width="formLabelWidth">
-              <el-select v-model="inputForm.type" placeholder="请选择">
-                <el-option v-for="item in inputForm.extra.typeList" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('afterSaleToCompany.toCompanyDate')" prop="toCompanyDate">
               <el-date-picker  v-model="inputForm.toCompanyDate" type="date" align="left" :placeholder="$t('afterSaleToCompany.selectDate')" format="yyyy-MM-dd" ></el-date-picker>
             </el-form-item>
@@ -92,7 +92,7 @@
         })
       },onchange(){
         this.message = '';
-        axios.get('/api/ws/future/crm/afterSale/searchImeMap',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/afterSale/searchImeMap',{params:{imeStr:this.inputForm.imeStr,type:this.inputForm.type}}).then((response)=>{
           this.searchData=response.data;
           var product=new Array();
           for(let i in response.data.productQtyMap){
