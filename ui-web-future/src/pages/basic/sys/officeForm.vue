@@ -144,7 +144,7 @@
         }
         this.inputForm.officeIdList=officeIdList;
       },typeChange(evl){
-          if(evl!=null&&evl=="SUPPORT"){
+          if(evl!=null&&evl=="职能部门"){
             this.isBusiness=false;
             axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
               this.treeData =new Array(response.data);
@@ -163,7 +163,7 @@
           this.inputForm = response.data;
         axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
           util.copyValue(response.data,this.inputForm);
-          if(response.data.type =="SUPPORT" ){
+          if(response.data.type =="职能部门" ){
             this.isBusiness=false;
             this.checked=response.data.businessIdList
             this.inputForm.officeIdList = response.data.businessIdList;

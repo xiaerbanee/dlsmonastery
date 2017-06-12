@@ -27,7 +27,6 @@ public class OfficeForm extends BaseForm<Office> {
     private BigDecimal point;
     private BigDecimal taskPoint;
     private String sort;
-    private TreeNode officeTree;
     private String type;
     private List<String> officeIdList=Lists.newArrayList();
     private List<OfficeRuleDto>  officeRuleList= Lists.newArrayList();
@@ -133,14 +132,6 @@ public class OfficeForm extends BaseForm<Office> {
         this.leaderIdList = leaderIdList;
     }
 
-    public TreeNode getOfficeTree() {
-        return officeTree;
-    }
-
-    public void setOfficeTree(TreeNode officeTree) {
-        this.officeTree = officeTree;
-    }
-
     public List<String> getOfficeIdList() {
         return officeIdList;
     }
@@ -190,7 +181,7 @@ public class OfficeForm extends BaseForm<Office> {
     }
 
     public String getOfficeRuleId() {
-        if(OfficeTypeEnum.业务部门.name().equals(type)){
+        if(OfficeTypeEnum.职能部门.name().equals(type)){
             this.officeRuleId=null;
         }
         return officeRuleId;

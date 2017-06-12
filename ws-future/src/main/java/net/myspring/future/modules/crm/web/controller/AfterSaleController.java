@@ -6,6 +6,9 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
@@ -39,6 +42,8 @@ public class AfterSaleController {
     private AfterSaleService afterSaleService;
     @Autowired
     private ProductImeService productImeService;
+    @Autowired
+    private ProductService productService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AfterSaleDto> areaList(Pageable pageable, AfterSaleQuery afterSaleQuery) {
@@ -106,7 +111,21 @@ public class AfterSaleController {
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
             List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList,type);
             map.put("afterSaleList",afterSaleList);
-            Map<String,Integer> productQtyMap=productImeService.findQtyMap(imeList);
+            Map<String,Integer> productQtyMap=Maps.newHashMap();
+            if(CollectionUtil.isNotEmpty(afterSaleList)){
+                if(AfterSaleTypeEnum.窜货机.name().equals(type)){
+                    List<ProductDto> productList=productService.findByIds(CollectionUtil.extractToList(afterSaleList,"badProductId"));
+                    for(ProductDto product:productList){
+                        if(!productQtyMap.containsKey(product.getName())){
+                            productQtyMap.put(product.getName(),0);
+                        }
+                        productQtyMap.put(product.getName(),productQtyMap.get(product.getName())+1);
+                    }
+                }else {
+                    imeList=CollectionUtil.extractToList(afterSaleList,"badProductIme");
+                    productQtyMap=productImeService.findQtyMap(imeList);
+                }
+            }
             map.put("productQtyMap",productQtyMap);
         }
         return map;

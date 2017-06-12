@@ -99,9 +99,9 @@
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data,this.getData());
         axios.get('/api/basic/sys/role/getForm', {params: {id: this.$route.query.id}}).then((response) => {
-          this.treeData = new Array(response.data.treeNode);
-          this.checked = response.data.moduleIdList;
           this.inputForm = response.data;
+          this.treeData = new Array(response.data.extra.treeNode);
+          this.checked = response.data.moduleIdList;
           axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
             util.copyValue(response.data,this.inputForm);
           })
