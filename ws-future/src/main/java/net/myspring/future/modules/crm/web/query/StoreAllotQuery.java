@@ -21,7 +21,9 @@ public class StoreAllotQuery extends BaseQuery {
     private String remarks;
     private String createdBy;
     private String businessIds;
+    private String shipType;
     private List<String> statusList = new ArrayList<String>();
+    private List<String> shipTypeList = new ArrayList<String>();
 
     public List<String> getBusinessIdList() {
         if(StringUtils.isNotBlank(businessIds)) {
@@ -29,6 +31,14 @@ public class StoreAllotQuery extends BaseQuery {
         } else {
             return null;
         }
+    }
+
+    public String getShipType() {
+        return shipType;
+    }
+
+    public void setShipType(String shipType) {
+        this.shipType = shipType;
     }
 
     public String getCreatedBy() {
@@ -119,6 +129,11 @@ public class StoreAllotQuery extends BaseQuery {
         this.statusList = statusList;
     }
 
+    public List<String> getShipTypeList() {
+        return shipTypeList;
+    }
 
-
+    public void setShipTypeList(List<String> shipTypeList) {
+        this.shipTypeList = shipTypeList;
+    }
 }

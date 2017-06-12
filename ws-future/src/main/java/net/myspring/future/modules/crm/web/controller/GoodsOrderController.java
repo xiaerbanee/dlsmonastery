@@ -62,8 +62,8 @@ public class GoodsOrderController {
 
     @RequestMapping(value = "getForm")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
-        goodsOrderForm.setNetTypeList(NetTypeEnum.getList());
-        goodsOrderForm.setShipTypeList(ShipTypeEnum.getList());
+        goodsOrderForm.getExtra().put("netTypeList",NetTypeEnum.getList());
+        goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
     }
 

@@ -69,8 +69,8 @@ public class StoreAllotController {
     @RequestMapping(value = "getForm")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
 
-        storeAllotForm.setAllotTypeList(StoreAllotTypeEnum.getList());
-        storeAllotForm.setShipTypeList(ShipTypeEnum.getList());
+        storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         storeAllotForm.setShowAllotType(storeAllotService.getShowAllotType());
 
         return storeAllotForm;
