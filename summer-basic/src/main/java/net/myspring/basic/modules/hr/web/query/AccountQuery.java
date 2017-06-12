@@ -20,7 +20,6 @@ public class AccountQuery extends BaseQuery {
     private String leaderName;
     private String officeId;
     private List<String> officeIds=Lists.newArrayList();
-    private List<PositionDto> positionList= Lists.newArrayList();
 
     public String getId() {
         return id;
@@ -36,14 +35,6 @@ public class AccountQuery extends BaseQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
     }
 
     public String getLoginName() {

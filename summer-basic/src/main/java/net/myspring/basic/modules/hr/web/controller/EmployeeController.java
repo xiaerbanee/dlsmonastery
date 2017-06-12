@@ -86,8 +86,8 @@ public class EmployeeController {
 
     @RequestMapping(value="getQuery")
     public EmployeeQuery getQuery(EmployeeQuery employeeQuery){
-        employeeQuery.setPositionList(positionService.findAll());
-        employeeQuery.setStatusList(EmployeeStatusEnum.getList());
+        employeeQuery.getExtra().put("positionList", positionService.findAll());
+        employeeQuery.getExtra().put("statusList", EmployeeStatusEnum.getList());
         return employeeQuery;
     }
 

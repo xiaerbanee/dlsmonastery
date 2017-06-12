@@ -4,26 +4,26 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyLeaveList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dutyLeaveList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyLeaveList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyLeaveList.dutyDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.leaveType.label" :label-width="formLabelWidth">
-                <dict-enum-select v-model="formData.leaveType" category="请假类型" />
+              <el-form-item :label="$t('dutyLeaveList.leaveType')" :label-width="formLabelWidth">
+                <dict-enum-select v-model="formData.extra.leaveType" category="请假类型" />
               </el-form-item>
-              <el-form-item :label="formLabel.dateType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyLeaveList.dateType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyLeaveList.inputKey')">
-                  <el-option v-for="item in formData.dateList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dutyLeaveList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyLeaveList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="dutyDate" :label="$t('dutyLeaveList.dutyDate')"></el-table-column>
         <el-table-column prop="dateType"  :label="$t('dutyLeaveList.dateType')" ></el-table-column>
@@ -49,31 +49,27 @@
       return {
         page:{},
         formData:{
+          extra:{},
           dutyDate:'',
         },
-        submitData:{
-          page:0,
-          size:25,
-          dutyDate:'',
-          leaveType:'',
-          dateType:''
-        },
-        formLabel:{
-          dutyDate:{label:this.$t('dutyLeaveList.dutyDate')},
-          leaveType:{label:this.$t('dutyLeaveList.leaveType')},
-          dateType:{label:this.$t('dutyLeaveList.dateType')}
-        },
+        searchText:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("dutyLeaveList",this.submitData);
-        axios.get('/api/basic/hr/dutyLeave?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dutyLeaveList",submitData);
+        axios.get('/api/basic/hr/dutyLeave?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,7 +86,7 @@
         this.pageRequest();
       },getQuery(){
         axios.get('/api/basic/hr/dutyLeave/getQuery').then((response) =>{
-          this.formData=response.data;
+          this.formData = response.data;
           util.copyValue(this.$route.query,this.formData);
           this.pageRequest();
         });

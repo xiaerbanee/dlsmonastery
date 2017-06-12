@@ -4,9 +4,9 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyFreeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dutyFreeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyFreeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
               <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
@@ -15,7 +15,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dutyFreeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyFreeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="freeDate" :label="$t('dutyFreeList.freeDate')"></el-table-column>
         <el-table-column prop="dateType" :label="$t('dutyFreeList.dateType')" ></el-table-column>
@@ -31,18 +31,18 @@
   </div>
 </template>
 <script>
+  import SearchDialog from "../../../components/common/search-dialog.vue";
+
   export default {
+    components: {SearchDialog},
     data() {
       return {
         page:{},
         formData:{
           dutyDate:'',
+          extra:{}
         },
-        submitData:{
-          page:0,
-          size:25,
-          dutyDate:'',
-        },
+        searchText:"",
         formLabel:{
           dutyDate:{label:this.$t('dutyFreeList.freeDate')},
         },
@@ -52,11 +52,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("dutyFreeList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/dutyFree?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dutyFreeList",submitData);
+        axios.get('/api/basic/hr/dutyFree?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
