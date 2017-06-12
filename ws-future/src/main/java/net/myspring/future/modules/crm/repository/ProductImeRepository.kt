@@ -139,13 +139,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 crm_product_ime t1 LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
-                LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                LEFT JOIN crm_depot_shop t6 on t3.depot_shop_id=t6.id
+                LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
+                crm_depot_shop t6
             WHERE
                  t1.enabled = 1
                 AND t2.enabled = 1
-                and t4.enabled=1
-                and t5.enabled=1
+                and t3.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.date!=null){
             sb.append("""
@@ -205,13 +204,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
                 LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                LEFT JOIN crm_depot_shop t6 on t3.depot_shop_id=t6.id
-                LEFT JOIN crm_product_ime_upload t7 on t1.product_ime_upload_id=t7.id
+                LEFT JOIN crm_product_ime_upload t7 on t1.product_ime_upload_id=t7.id,
+                crm_depot_shop t6
             WHERE
                  t1.enabled = 1
                 AND t2.enabled = 1
-                and t4.enabled=1
-                and t5.enabled=1
+                and t3.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.date!=null){
             sb.append("""
@@ -271,12 +269,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             LEFT JOIN crm_depot t2 ON t1.shop_id = t2.id
             LEFT JOIN crm_product_ime t3 on t1.product_ime_id = t3.id
             LEFT JOIN crm_product t4 on t3.product_id=t4.id
-            LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-            LEFT JOIN crm_depot_shop t6 on t2.depot_shop_id=t6.id
+            LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
+            crm_depot_shop t6
             WHERE
              t1.enabled = 1
             AND t1.is_back = 0
             AND t3.enabled = 1
+            and t2.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.dateStart!=null){
             sb.append(""" and t1.created_date>=:dateStart """)
@@ -328,10 +327,11 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 crm_product_ime t1
             LEFT JOIN crm_depot t2 ON t1.depot_id = t2.id
             LEFT JOIN crm_product t3 ON t1.product_id = t3.id
-            LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id
-            left join crm_depot_shop t5 on t2.depot_shop_id=t5.id
+            LEFT JOIN crm_product_type t4 ON t3.product_type_id = t4.id,
+            crm_depot_shop t5
             where t1.enabled=1
             and t2.enabled=1
+            and t2.depot_shop_id=t5.id
     """)
         if(productImeReportQuery.dateStart!=null){
             sb.append(""" and t1.retail_date>=:dateStart """)

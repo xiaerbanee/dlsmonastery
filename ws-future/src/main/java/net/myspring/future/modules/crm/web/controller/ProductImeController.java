@@ -92,50 +92,27 @@ public class ProductImeController {
         return productImeDtoList;
     }
 
-    @RequestMapping(value = "getStockReportQuery")
-    public ProductImeStockReportQuery getStockReportQuery(ProductImeStockReportQuery productImeStockReportQuery){
-
-        productImeStockReportQuery.setSumTypeList(ProductImeStockReportSumTypeEnum.getList());
-        productImeStockReportQuery.setOutTypeList(ProductImeStockReportOutTypeEnum.getList());
-        productImeStockReportQuery.setTownTypeList(TownTypeEnum.getList());
-
-        //TODO 需要获取地区类型列表
-        productImeStockReportQuery.setAreaTypeList(new ArrayList<>());
-
-        productImeStockReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
-        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
-        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
-            productImeStockReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
-         }else{
-            productImeStockReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
-
-         }
-        productImeStockReportQuery.setScoreType(true);
-
-        return productImeStockReportQuery;
-    }
-
     @RequestMapping(value = "productImeReport")
     public List<ProductImeReportDto> productImeReport(ReportQuery productImeSaleReportQuery){
         return productImeService.productImeReport(productImeSaleReportQuery);
     }
 
     @RequestMapping(value = "getReportQuery")
-    public ReportQuery getReportQuery(ReportQuery productImeSaleReportQuery){
-        productImeSaleReportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
-        productImeSaleReportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
-        productImeSaleReportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
-        productImeSaleReportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
-        productImeSaleReportQuery.getExtra().put("boolMap",BoolEnum.getMap());
-        productImeSaleReportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
+    public ReportQuery getReportQuery(ReportQuery reportQuery){
+        reportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());
+        reportQuery.getExtra().put("areaTypeList",AreaTypeEnum.getList());
+        reportQuery.getExtra().put("townTypeList",TownTypeEnum.getList());
+        reportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
+        reportQuery.getExtra().put("boolMap",BoolEnum.getMap());
+        reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
         CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
-            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
-            productImeSaleReportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
         }
-        productImeSaleReportQuery.setScoreType(true);
-        return productImeSaleReportQuery;
+        reportQuery.setScoreType(true);
+        return reportQuery;
     }
 
     @RequestMapping(value = "getBatchCreateForm")

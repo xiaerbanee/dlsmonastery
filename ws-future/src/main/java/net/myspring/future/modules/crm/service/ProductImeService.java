@@ -223,7 +223,7 @@ public class ProductImeService {
 
     private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery){
         List<ProductImeReportDto> productImeReportList=Lists.newArrayList();
-        if(OutTypeEnum.电子报卡.name().equals(reportQuery.getOutType())){
+        if(OutTypeEnum.电子保卡.name().equals(reportQuery.getOutType())){
             if("销售报表".equals(reportQuery.getType())){
                 productImeReportList=productImeRepository.findBaokaSaleReport(reportQuery);
             }else if("库存报表".equals(reportQuery.getType())){

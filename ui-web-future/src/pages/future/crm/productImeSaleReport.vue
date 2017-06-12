@@ -188,10 +188,10 @@
       },saleReportGrid(){
 
       }
-
     },created () {
         axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
           this.formData = response.data;
+          this.formData.scoreType=this.formData.scoreType?"1":"0"
           util.copyValue(this.$route.query, this.formData);
           this.pageRequest();
       })
