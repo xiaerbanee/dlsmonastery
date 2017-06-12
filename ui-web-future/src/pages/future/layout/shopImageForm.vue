@@ -10,7 +10,7 @@
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageType')" prop="imageType">
               <el-select v-model="inputForm.imageType" filterable clearable :placeholder="$t('shopImageForm.inputType')">
-                <el-option v-for="item in formProperty.imageTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.imageTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopImageForm.imageSize')" prop="imageSize">
@@ -50,16 +50,9 @@
           submitDisabled:false,
           shopDisabled:false,
           remoteLoading:false,
-          formProperty:{},
           fileList:[],
-          inputForm:{},
-          submitData:{
-            id:'',
-            shopId:'',
-            imageType:'',
-            imageSize:'',
-            image:'',
-            remarks:''
+          inputForm:{
+            extra:{}
           },
           rules: {
             shopName: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
@@ -76,8 +69,7 @@
         form.validate((valid) => {
           this.inputForm.image = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData)
-            axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(response.data.success) {
@@ -100,23 +92,23 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-          if(this.inputForm.id != null){
-            this.shopDisabled = true;
-          }else{
-            this.shopDisabled = false;
-          }
-          if(this.inputForm.image != null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }else{
-            this.fileList = [];
-          }
-        });
         axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-          this.formProperty = response.data;
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(this.inputForm.id != null){
+              this.shopDisabled = true;
+            }else{
+              this.shopDisabled = false;
+            }
+            if(this.inputForm.image != null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }else{
+              this.fileList = [];
+            }
+          });
         });
       }
       this.isInit = true;

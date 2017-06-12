@@ -73,7 +73,7 @@ public class MenuController {
     @RequestMapping(value="getQuery")
     public MenuQuery getQuery(MenuQuery menuQuery){
         menuQuery.getExtra().put("menuCategoryList", menuCategoryService.findAll());
-//        menuQuery.getExtra().put("categoryList",menuService.);
+        menuQuery.getExtra().put("categoryList",CollectionUtil.extractToList(menuCategoryService.findAll(),"name"));
         return menuQuery;
     }
 }

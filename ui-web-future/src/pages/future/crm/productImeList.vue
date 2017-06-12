@@ -186,7 +186,7 @@
         }else if(command==="change"){
           this.$router.push({ name: 'productImeChange'});
         }else if(command==="batchAllot"){
-          this.$router.push({ name: 'imeBatchAllotForm'});
+          this.$router.push({ name: 'imeAllotBatchForm'});
         }else if(command==="upload"){
           this.$router.push({ name: 'productImeUploadForm'});
         }else if(command==="uploadBack"){

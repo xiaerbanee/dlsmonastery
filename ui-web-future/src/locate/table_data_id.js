@@ -219,6 +219,7 @@ export default {
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",
       imeAllotForm: "Alokasi mengedit string kode",
+      imeAllotBatchForm: "串码批量调拨编辑",
       imeAllotList: "alokasi string kode",
       priceChangeDetail: "Proyek sampel Harga",
       priceChangeForm: "Harga mengedit proyek",

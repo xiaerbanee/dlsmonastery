@@ -140,8 +140,8 @@
 
         axios.get('/api/ws/future/crm/productIme/getBatchCreateForm').then((response)=>{
           this.batchCreateForm = response.data;
-          this.settings.columns[0].source = response.data.extra.productNames;
-          this.settings.columns[1].source = response.data.extra.storeNames;
+          this.settings.columns[0].source = response.data.extra.productNameList;
+          this.settings.columns[1].source = response.data.extra.storeNameList;
           this.table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }

@@ -55,46 +55,46 @@ public class AfterSaleService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    public List<AfterSaleDto> findDtoByImeList(List<String> imeList, String type) {
-        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByBadProductImeIn(imeList, type);
+    public List<AfterSale> findByBadProductImeIdList(List<String> badProductImeIdList){
+        return afterSaleRepository.findByBadProductImeIdIn(badProductImeIdList);
+    }
+
+    public List<AfterSaleDto> findDtoByImeListAndType(List<String> imeList, String type) {
+        List<AfterSaleDto> afterSaleDtoList=Lists.newArrayList();
+        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByBadProductImeInAndType(imeList, type);
         if (CollectionUtil.isNotEmpty(afterSales)) {
-            List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSales, "id"), AfterSaleDetailTypeEnum.总部录入.name());
-            Map<String, AfterSaleDetailDto> afterSaleDetailDtoMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
-            for (AfterSaleDto afterSaleDto : afterSales) {
-                AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailDtoMap.get(afterSaleDto.getId());
-                if (afterSaleDetailDto != null) {
-                    afterSaleDto.setReplaceProductName(afterSaleDetailDto.getReplaceProductName());
-                    afterSaleDto.setFromDepotName(afterSaleDetailDto.getFromDepotName());
-                }
+            List<AfterSaleDetailDto>afterSaleDetailList  = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSales, "id"), AfterSaleDetailTypeEnum.总部录入.name());
+            Map<String, AfterSaleDto> afterSaleMap = CollectionUtil.extractToMap(afterSales, "id");
+            for (AfterSaleDetailDto detail : afterSaleDetailList) {
+                AfterSaleDto afterSale = afterSaleMap.get(detail.getAfterSaleId());
+                ReflectionUtil.copyProperties(detail,afterSale);
+                afterSaleDtoList.add(afterSale);
             }
         }
         return afterSales;
     }
 
-    public List<AfterSaleInputDto> inputUpdateData(List<String> imeList, String type, String detailType) {
+    public List<AfterSaleInputDto> inputUpdateData(List<String> imeList, String type, String inputType) {
         List<AfterSaleInputDto> afterSaleInputList = Lists.newArrayList();
         Map<String, AfterSaleFlee> afterSaleFleeMap = Maps.newHashMap();
-        List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeIn(imeList, type);
+        List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeInAndType(imeList, type);
         if (CollectionUtil.isNotEmpty(afterSaleList)) {
-            List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), detailType);
-            Map<String, AfterSaleDetailDto> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
+            List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), inputType);
+            Map<String, AfterSaleDto> afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "id");
             if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                List<AfterSaleFlee> afterSaleFleeList = afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList, "id"));
+                List<AfterSaleFlee> afterSaleFleeList = afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
                 afterSaleFleeMap = CollectionUtil.extractToMap(afterSaleFleeList, "afterSaleId");
             }
-            for (AfterSaleDto afterSale : afterSaleList) {
-                AfterSaleDetailDto afterSaleDetailDto = afterSaleDetailMap.get(afterSale.getId());
+            for (AfterSaleDetailDto detail : afterSaleDetailList) {
                 AfterSaleInputDto afterSaleInputDto = new AfterSaleInputDto();
+                AfterSaleDto afterSale = afterSaleMap.get(detail.getAfterSaleId());
                 ReflectionUtil.copyProperties(afterSale, afterSaleInputDto);
                 if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
                     AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(afterSale.getId());
-                    if (afterSaleFlee == null) {
-                        continue;
-                    }
                     ReflectionUtil.copyProperties(afterSaleFlee, afterSaleInputDto);
                     afterSaleInputDto.setBadProductIme(afterSaleFlee.getIme());
                 }
-                ReflectionUtil.copyProperties(afterSaleDetailDto, afterSaleInputDto);
+                ReflectionUtil.copyProperties(detail, afterSaleInputDto);
                 afterSaleInputList.add(afterSaleInputDto);
             }
         }
@@ -103,13 +103,17 @@ public class AfterSaleService {
 
     public List<AfterSaleCompanyDto> getFromCompanyData(AfterSaleQuery afterSaleQuery) {
         List<AfterSaleCompanyDto> afterSaleCompanyList = Lists.newArrayList();
+        afterSaleQuery.setInputType(AfterSaleDetailTypeEnum.工厂录入.name());
         List<AfterSaleDto> afterSaleList = afterSaleRepository.findFilter(afterSaleQuery);
-        List<AfterSaleDetail> afterSaleDetailList = afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.工厂录入.name());
-        Map<String, AfterSaleDetail> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
+        List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.工厂录入.name());
+        Map<String, AfterSaleDetailDto> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
         for (AfterSaleDto afterSale : afterSaleList) {
             AfterSaleCompanyDto afterSaleCompanyDto = BeanUtil.map(afterSale, AfterSaleCompanyDto.class);
-            AfterSaleDetail afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
-            afterSaleCompanyDto.setInputDate(afterSaleDetail.getInputDate());
+            AfterSaleDetailDto afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
+            ReflectionUtil.copyProperties(afterSaleDetail,afterSaleCompanyDto);
+            if(AfterSaleTypeEnum.窜货机.name().equals(afterSaleQuery.getType())){
+                afterSaleCompanyDto.setBadProductIme(afterSale.getIme());
+            }
             afterSaleCompanyList.add(afterSaleCompanyDto);
         }
         return afterSaleCompanyList;
@@ -428,11 +432,11 @@ public class AfterSaleService {
     //坏机返厂
     @Transactional
     public void toCompany(AfterSaleToCompanyForm afterSaleToCompanyForm) {
-        List<AfterSale> afterSaleList = afterSaleRepository.findByBadProductImeIn(afterSaleToCompanyForm.getImeList());
-        List<AfterSaleDetail> afterSaleDetails = afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.总部录入.name());
-        Map<String, AfterSaleDetail> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetails, "afterSaleId");
+        List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeInAndType(afterSaleToCompanyForm.getImeList(),afterSaleToCompanyForm.getType());
+        List<AfterSaleDetail> afterSaleDetails = afterSaleDetailRepository.findByAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList, "id"));
+        Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetails,"afterSaleId");
         List<AfterSaleDetail> afterSaleDetailList = Lists.newArrayList();
-        for (AfterSale afterSale : afterSaleList) {
+        for (AfterSaleDto afterSale : afterSaleList) {
             AfterSaleDetail detail = afterSaleDetailMap.get(afterSale.getId());
             AfterSaleDetail afterSaleDetail = BeanUtil.map(detail, AfterSaleDetail.class);
             afterSaleDetail.setType(AfterSaleDetailTypeEnum.工厂录入.name());
@@ -501,6 +505,23 @@ public class AfterSaleService {
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery) {
         Page<AfterSaleDto> page = afterSaleRepository.findPage(pageable, afterSaleQuery);
         return page;
+    }
+
+    public void delete(String detailId){
+        AfterSaleDetail afterSaleDetail=afterSaleDetailRepository.getOne(detailId);
+        afterSaleDetail.setEnabled(false);
+        afterSaleDetailRepository.save(afterSaleDetail);
+        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
+        if(CollectionUtil.isEmpty(afterSaleDetailList)){
+            AfterSale afterSale=afterSaleRepository.getOne(afterSaleDetail.getAfterSaleId());
+            afterSale.setEnabled(false);
+            afterSaleRepository.save(afterSale);
+            AfterSaleFlee afterSaleFlee=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
+            if(afterSale!=null){
+                afterSaleFlee.setEnabled(false);
+                afterSaleFleeRepository.save(afterSaleFlee);
+            }
+        }
     }
 
     private void listAddTrim(List<String> list, String item) {

@@ -76,7 +76,7 @@
     },created () {
         var that=this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/folderFile/getQuery').then((response) =>{
+      axios.get('/api/general/sys/folderFile/getQuery').then((response) =>{
         that.formData=response.data;
       util.copyValue(that.$route.query,that.formData);
       that.pageRequest();

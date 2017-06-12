@@ -42,7 +42,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('bankInList.createdBy')" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy" ></account-select>
+                <account-select  v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
               <el-form-item :label="$t('bankInList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.createdDateRange" ></date-range-picker>

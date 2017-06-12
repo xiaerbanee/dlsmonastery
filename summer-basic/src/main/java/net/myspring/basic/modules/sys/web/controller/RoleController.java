@@ -72,7 +72,7 @@ public class RoleController {
     @RequestMapping(value = "getForm")
     public RoleForm getForm(RoleForm roleForm){
         List<String> backendModuleIdList = roleForm.isCreate()? Lists.newArrayList() : backendModuleService.findBackendModuleIdByRoleId(roleForm.getId());
-        roleForm.setTreeNode(permissionService.findBackendTree());
+        roleForm.getExtra().put("treeNode",permissionService.findBackendTree());
         roleForm.setModuleIdList(Lists.newArrayList(Sets.newHashSet(backendModuleIdList)));
         return roleForm;
     }
@@ -84,7 +84,7 @@ public class RoleController {
             List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
             List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
             roleForm.setPermissionIdList(permissionIds);
-            roleForm.setTreeNode(treeNode);
+            roleForm.getExtra().put("treeNode",treeNode);
         }
         return roleForm;
     }

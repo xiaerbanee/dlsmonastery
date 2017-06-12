@@ -16,6 +16,12 @@
           <el-form-item label="返厂时间" :label-width="formLabelWidth">
           <date-range-picker v-model="formData.inputDateRanger" />
         </el-form-item>
+          <el-form-item label="类型" :label-width="formLabelWidth">
+            <el-select v-model="formData.type" placeholder="请选择">
+              <el-option v-for="item in inputTypeList" :key="item" :label="item" :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleFromCompany.sure')}}</el-button>
@@ -53,12 +59,14 @@
     data(){
       return{
         formData:{
+          type:"售后机",
         },
         inputForm:{
           fromCompanyDate:util.currentDate(),
           data:""
         },
         rules:{},
+        inputTypeList:['售后机','窜货机'],
         formLabelWidth: '120px',
         formVisible: false,
         remoteLoading:false,

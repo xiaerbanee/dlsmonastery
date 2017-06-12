@@ -1,7 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
+import com.google.common.collect.Maps;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/5/12.
@@ -26,6 +29,15 @@ public class AfterSaleInputDto {
     private String address;
     private BigDecimal buyAmount;
     private String remarks;
+    private Map<String,Object> extra= Maps.newHashMap();
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
+    }
 
     public String getRemarks() {
         return remarks;

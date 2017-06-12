@@ -96,7 +96,7 @@ public class ShopAdService {
     }
 
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
-        shopAdQuery.setShopAdTypes(shopAdTypeRepository.findAllByEnabled());
+        shopAdQuery.getExtra().put("shopAdTypes",shopAdTypeRepository.findAllByEnabled());
         return shopAdQuery;
     }
 
@@ -157,7 +157,7 @@ public class ShopAdService {
     }
 
     public ShopAdForm getForm(ShopAdForm shopAdForm){
-        shopAdForm.setShopAdTypeFormList(shopAdTypeRepository.findAllByEnabled());
+        shopAdForm.getExtra().put("shopAdTypeFormList",shopAdTypeRepository.findAllByEnabled());
         return shopAdForm;
     }
 

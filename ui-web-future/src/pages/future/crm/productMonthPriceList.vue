@@ -93,7 +93,7 @@
         }
       }
     },created () {
-      let that = this;
+      var that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
         that.formData=response.data;

@@ -5,21 +5,21 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreOfficeList.officeRank')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.scoreDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('reportScoreOfficeList.scoreDate')" :label-width="formLabelWidth">
                 <date-picker v-model="formData.scoreDate"></date-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
-                 <office-select v-model="formData.officeId"></office-select>
+              <el-form-item :label="$t('reportScoreOfficeList.officeName')" :label-width="formLabelWidth">
+                 <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('reportScoreOfficeList.areaName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable >
-                  <el-option v-for="item in formProperty.areas" key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.areas" key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -28,7 +28,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('expressOrderList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreOfficeList.scoreDate')" sortable></el-table-column>
         <el-table-column prop="officeName" :label="$t('reportScoreOfficeList.officeName')"  width="200"></el-table-column>
@@ -59,19 +59,10 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          scoreDate:'',
-          officeId:'',
-          areaId:''
-        },formLabel:{
-          scoreDate:{label:this.$t('reportScoreOfficeList.scoreDate')},
-          officeId:{label:this.$t('reportScoreOfficeList.officeName')},
-          areaId:{label:this.$t('reportScoreOfficeList.areaName')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
-        formProperty:{},
         pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
@@ -81,12 +72,18 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("reportScoreOfficeList",this.submitData);
-        this.formData.scoreDate = util.formatLocalDate(this.submitData.scoreDate);
-        axios.get('/api/ws/future/crm/reportScoreOffice',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("reportScoreOfficeList",submitData);
+//        this.formData.scoreDate = util.formatLocalDate(this.submitData.scoreDate);
+        axios.get('/api/ws/future/crm/reportScoreOffice',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -105,11 +102,13 @@
         this.$router.push({ name: 'reportScoreAreaList'});
       }
     },created () {
-      this.pageHeight = window.outerHeight -325;
-      axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response)=>{
-        this.formProperty = response.data;
-      });
-      this.pageRequest();
+      const that = this;
+      that.pageHeight = window.outerHeight -320;
+      axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+        that.pageRequest();
+    });
     }
   };
 </script>

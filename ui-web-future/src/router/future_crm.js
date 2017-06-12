@@ -39,6 +39,7 @@ const goodsOrderPrint= r => require.ensure([], () => r(require('pages/future/crm
 const goodsOrderShipPrint= r => require.ensure([], () => r(require('pages/future/crm/goodsOrderShipPrint.vue')));
 const imeAllotList= r => require.ensure([], () => r(require('pages/future/crm/imeAllotList.vue')));
 const imeAllotForm= r => require.ensure([], () => r(require('pages/future/crm/imeAllotForm.vue')));
+const imeAllotBatchForm= r => require.ensure([], () => r(require('pages/future/crm/imeAllotBatchForm.vue')));
 const priceChangeList  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeList.vue')));
 const priceChangeForm  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeForm.vue')));
 const priceChangeDetail  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeDetail.vue')));
@@ -123,6 +124,7 @@ let routes = [
   {path:'/future/crm/goodsOrderShipPrint',component:goodsOrderShipPrint,name:'goodsOrderShipPrint',meta: {hidden: true}},
   {path:'/future/crm/imeAllotList',component:imeAllotList,name:'imeAllotList'},
   {path:'/future/crm/imeAllotForm',component:imeAllotForm,name:'imeAllotForm',meta: {menu:"imeAllotList",keepAlive:true}},
+  {path:'/future/crm/imeAllotBatchForm',component:imeAllotBatchForm,name:'imeAllotBatchForm',meta: {menu:"imeAllotList",keepAlive:true}},
   {path:'/future/crm/priceChangeList',component:priceChangeList,name:'priceChangeList'},
   {path:'/future/crm/priceChangeForm',component:priceChangeForm,name:'priceChangeForm',meta: {menu:"priceChangeList",keepAlive:true}},
   {path:'/future/crm/priceChangeDetail',component:priceChangeDetail,name:'priceChangeDetail',meta: {menu:"priceChangeList"}},

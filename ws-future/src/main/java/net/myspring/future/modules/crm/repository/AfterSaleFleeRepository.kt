@@ -10,6 +10,8 @@ interface AfterSaleFleeRepository : BaseRepository<AfterSaleFlee, String> {
     fun findByEnabledIsTrueAndImeIn(imeList: MutableList<String>): MutableList<AfterSaleFlee>
 
     fun findByEnabledIsTrueAndAfterSaleIdIn(afterSaleIdList: MutableList<String>): MutableList<AfterSaleFlee>
+
+    fun findByEnabledIsTrueAndAfterSaleId(afterSaleId: String): AfterSaleFlee
 }
 
 

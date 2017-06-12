@@ -83,6 +83,9 @@
         <el-table-column prop="detailRemarks" :label="$t('afterSaleList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('afterSaleList.operation')" width="140">
           <template scope="scope">
+            <div class="action" >
+              <el-button size="small"  @click.native="itemAction(scope.row.detailId, 'detail')">删除</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -139,10 +142,10 @@
           this.$message(response.data.message);
           this.pageRequest();
         })
-      },itemAction:function(id,action){
-        if(action=="刪除"){
+      },itemAction:function(detailId,action){
+        if(action=="detail"){
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/ws/future/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
+            axios.get('/api/ws/future/crm/afterSale/delete',{params:{detailId:detailId}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
             });

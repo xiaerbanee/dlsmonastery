@@ -20,7 +20,6 @@ public class BankInForm extends BaseForm<BankIn> {
     private String serialNumber;
 
     private List<String>  typeList;
-    private List<BankDto> bankDtoList;
 
     public String getShopId() {
         return shopId;
@@ -54,15 +53,6 @@ public class BankInForm extends BaseForm<BankIn> {
     public void setBankId(String bankId) {
         this.bankId = bankId;
     }
-
-    public List<BankDto> getBankDtoList() {
-        return bankDtoList;
-    }
-
-    public void setBankDtoList(List<BankDto> bankDtoList) {
-        this.bankDtoList = bankDtoList;
-    }
-
     public LocalDate getInputDate() {
         return inputDate;
     }

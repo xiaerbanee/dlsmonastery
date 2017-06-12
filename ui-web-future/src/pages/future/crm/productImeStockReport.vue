@@ -3,7 +3,7 @@
     <head-tab active="productImeStockReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -86,10 +86,10 @@
 
 </template>
 <script>
-  import productSelect from 'components/future/product-select';
+  import productTypeSelect from 'components/future/product-type-select';
   export default {
     components:{
-      productSelect
+      productTypeSelect
     },
     data() {
       return {

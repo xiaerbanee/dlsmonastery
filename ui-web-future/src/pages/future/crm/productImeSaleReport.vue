@@ -3,7 +3,7 @@
     <head-tab active="productImeSaleReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-if="!nextIsShop&&'区域'==formData.sumType || '型号'==formData.sumType">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,11 +90,11 @@
 
 </template>
 <script>
-  import productSelect from 'components/future/product-select';
+  import productTypeSelect from 'components/future/product-type-select';
 
   export default {
     components:{
-      productSelect
+      productTypeSelect
     },
     data() {
       return {
@@ -126,6 +126,7 @@
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
+        console.log(submitData)
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
@@ -147,7 +148,6 @@
         this.formVisible = false;
         this.pageRequest();
       },nextLevel(	row, event, column){
-        console.log(row)
         if(row.productTypeId){
           this.formData.productTypeIdList=row.productTypeId;
           this.formData.sumType="区域";
@@ -188,10 +188,10 @@
       },saleReportGrid(){
 
       }
-
     },created () {
         axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
           this.formData = response.data;
+          this.formData.scoreType=this.formData.scoreType?"1":"0"
           util.copyValue(this.$route.query, this.formData);
           this.pageRequest();
       })
