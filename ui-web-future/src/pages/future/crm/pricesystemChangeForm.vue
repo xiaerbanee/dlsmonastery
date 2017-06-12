@@ -43,22 +43,19 @@
         table:null,
         settings: {
           cells: function (row, col, prop) {
-            var cellProperties = {width:100};
-            if(col==0) {
-              cellProperties.width = 100;
-            }
-            if (col==0 || row ==0) {
+            var cellProperties = {width:150};
+            if (col==0) {
               cellProperties.readOnly = true;
-              cellProperties.type = 'numeric';
             } else {
+              cellProperties.type = 'numeric';
             }
             return cellProperties;
           },
+          fixedColumnsLeft:1,
+          fixedRowsTop:0,
           colHeaders: [],
-          rowHeaders:true,
           data:[],
-          columns:[],
-				  colWidth:100
+          columns:[]
         },
         pricesystem:{},
         formProperty:{},
@@ -79,8 +76,8 @@
             var form = that.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
-                that.inputForm.data = that.settings.data;
-                axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm)).then((response)=> {
+                that.inputForm.data = JSON.stringify(that.settings.data);
+                axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm, {allowDots: true})).then((response)=> {
                   this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 }).catch(function () {
@@ -95,7 +92,7 @@
         });
       },handleChange(){
           if(this.inputForm.productIds.length == 0){
-              this.table = null;
+            this.table = null;
           }else{
             axios.get('/api/ws/future/basic/pricesystemDetail/filter',{params:{productIds:this.inputForm.productIds}}).then((response)=>{
               this.settings.data = response.data;
@@ -103,22 +100,24 @@
             });
           }
       },
+      tableInit(){
+        axios.get('/api/ws/future/basic/pricesystem/filter').then((response)=>{
+          this.pricesystem=response.data;
+          this.settings.colHeaders.push("");
+          this.settings.columns.push({readonly:true});
+          for(let key in this.pricesystem){
+            this.settings.colHeaders.push(this.pricesystem[key].name);
+            this.settings.columns.push({type: "numeric"});
+          }
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+      }
     },activated () {
 
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
 
-        axios.get('/api/ws/future/basic/pricesystem/filter').then((response)=>{
-          this.pricesystem=response.data;
-          this.settings.colHeaders.push("");
-          this.settings.columns.push({type: "numeric"});
-          for(let key in this.pricesystem){
-            this.settings.colHeaders.push(this.pricesystem[key].name);
-            this.settings.columns.push({type: "numeric"});
-          }
-          console.log(this.settings.colHeaders);
-          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
-        });
+        this.tableInit();
 
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
           this.formProperty=response.data;

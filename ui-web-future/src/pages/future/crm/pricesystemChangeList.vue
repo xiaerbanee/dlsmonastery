@@ -92,7 +92,7 @@
         var submitData = util.deleteExtra(this.formData);
         util.copyValue(this.formData,submitData);
         util.setQuery("pricesystemChangeList",submitData);
-        axios.get('/api/ws/future/crm/pricesystemChange',{params:this.submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/pricesystemChange',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

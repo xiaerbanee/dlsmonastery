@@ -5,18 +5,18 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{$t('dutyAnnualList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyAnnualList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('bankList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('bankList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyAnnualList.employeeName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('dutyAnnualList.likeSearch')"></el-input>
               </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dutyAnnualList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyAnnualList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="officeName" :label="$t('dutyAnnualList.officeName')" ></el-table-column>
         <el-table-column prop="positionName" :label="$t('dutyAnnualList.positionName')" ></el-table-column>
@@ -36,26 +36,26 @@
       return {
         page:{},
         formData:{
+          extra:{}
         },
-        submitData:{
-          page:0,
-          size:25,
-          name:''
-        },
-        formLabel:{
-          name:{label:this.$t('dutyAnnualList.employeeName')}
-        },
+        searchText:'',
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        });
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("dutyAnnualList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/dutyAnnual?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dutyAnnualList",submitData);
+        axios.get('/api/basic/hr/dutyAnnual?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

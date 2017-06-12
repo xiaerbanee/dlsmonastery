@@ -25,24 +25,6 @@ public class EmployeeQuery extends BaseQuery {
     private String positionId;
     private String leaderName;
     private String officeId;
-    private List<PositionDto> positionList= Lists.newArrayList();
-    private List<String> statusList=Lists.newArrayList();
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
-    }
-
-    public List<String> getStatusList() {
-        return statusList;
-    }
-
-    public void setStatusList(List<String> statusList) {
-        this.statusList = statusList;
-    }
 
     public List<String> getOfficeIds() {
         return officeIds;

@@ -38,8 +38,8 @@ public class AccountChangeController {
 
     @RequestMapping(value="getQuery")
     public AccountChangeQuery getQuery(AccountChangeQuery accountChangeQuery){
-        accountChangeQuery.setAreaList(officeService.findByOfficeRuleName("办事处"));
-        accountChangeQuery.setTypeList(AccountChangeTypeEnum.getList());
+        accountChangeQuery.getExtra().put("areaList", officeService.findByOfficeRuleName("办事处"));
+        accountChangeQuery.getExtra().put("typeList", AccountChangeTypeEnum.getList());
         return accountChangeQuery;
     }
 

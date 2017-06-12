@@ -43,8 +43,8 @@ public class DutyLeaveController {
 
     @RequestMapping(value="getQuery")
     public DutyLeaveQuery getQuery(DutyLeaveQuery dutyLeaveQuery){
-        dutyLeaveQuery.setDateList( DutyDateTypeEnum.getList());
-        dutyLeaveQuery.setLeaveList(dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
+        dutyLeaveQuery.getExtra().put("dateList", DutyDateTypeEnum.getList());
+        dutyLeaveQuery.getExtra().put("leaveList", dictEnumService.findValueByCategory(DictEnumCategoryEnum.DUTY_LEAVE_TYPE.getValue()));
         return dutyLeaveQuery;
     }
 

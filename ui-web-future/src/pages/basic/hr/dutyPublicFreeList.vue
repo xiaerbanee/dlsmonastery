@@ -4,13 +4,13 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyPublicFreeList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dutyPublicFreeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyPublicFreeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
-              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyPublicFreeList.freeDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -19,7 +19,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dutyPublicFreeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutyPublicFreeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="freeDate":label="$t('dutyPublicFreeList.freeDate')"></el-table-column>
         <el-table-column prop="dateType" :label="$t('dutyPublicFreeList.dateType')"></el-table-column>
@@ -42,27 +42,27 @@
       return {
         page:{},
         formData:{
+          extra:{},
           dutyDate:'',
         },
-        submitData:{
-          page:0,
-          size:25,
-          dutyDate:'',
-        },
-        formLabel:{
-          dutyDate:{label:this.$t('dutyPublicFreeList.freeDate')},
-        },
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("dutyPublicFreeList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/dutyPublicFree?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dutyPublicFreeList",submitData);
+        axios.get('/api/basic/hr/dutyPublicFree?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

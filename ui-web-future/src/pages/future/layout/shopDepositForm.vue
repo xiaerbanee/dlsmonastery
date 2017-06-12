@@ -2,23 +2,23 @@
   <div>
     <head-tab active="shopDepositForm"></head-tab>
     <div>
-      <el-form :model="shopDeposit" ref="inputForm" label-width="120px"  class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('shopDepositForm.shopName')" prop="shopId">
           <depot-select v-model ="shopDeposit.shopId"  category="directShop" @input="shopChanged"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.outBillType')" prop="outBillType" >
           <el-select v-model="outBillType" clearable :placeholder="$t('shopDepositForm.inputKey')">
-            <el-option v-for="item in inputProperty.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in inputForm.extra.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.department')" prop="departMent" >
           <office-select v-model = "departMent" ></office-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.bank')" prop="bankId" v-if="outBillType==='手工日记账'" >
-          <bank-select v-model = "shopDeposit.bankId"></bank-select>
+          <bank-select v-model = "inputForm.bankId"></bank-select>
         </el-form-item>
         <el-form-item   :label="$t('shopDepositForm.billDate')" prop="billDate" >
-          <date-picker  v-model="shopDeposit.billDate" ></date-picker>
+          <date-picker  v-model="inputForm.billDate" ></date-picker>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.marketAmount')" prop="marketAmount" >
           <el-input v-model.number="marketAmount"></el-input>
@@ -30,7 +30,7 @@
           <el-input v-model.number="demoPhoneAmount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.remarks')" prop="remarks" >
-          <el-input v-model="shopDeposit.remarks" type="textarea"></el-input>
+          <el-input v-model="inputForm.remarks" type="textarea"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopDepositForm.save')}}</el-button>
@@ -57,24 +57,15 @@
           return{
             isInit:false,
             submitDisabled:false,
-            inputProperty:{},
+            inputForm:{
+                extra:{}
+            },
             shopDeposit:{},
             marketAmount:0,
             imageAmount:0,
             demoPhoneAmount:0,
             outBillType:'',
             departMent:'',
-            submitData:{
-              shopId:'',
-              departMent:'',
-              billDate:'',
-              outBillType:'',
-              bankId:'',
-              marketAmount:'',
-              imageAmount:'',
-              demoPhoneAmount:'',
-              remarks:'',
-            },
             rules: {
               shopId: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
               departMent: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
@@ -91,14 +82,13 @@
           form.validate((valid) => {
             if (valid) {
               this.submitDisabled = true;
-              util.copyValue(this.shopDeposit,this.submitData);
               this.submitData.marketAmount = this.marketAmount;
               this.submitData.imageAmount = this.imageAmount;
               this.submitData.demoPhoneAmount = this.demoPhoneAmount;
               this.submitData.outBillType = this.outBillType;
               this.submitData.departMent = this.departMent;
 
-              axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(response.data.success) {
@@ -121,12 +111,11 @@
         if(!this.$route.query.headClick || ! this.isInit) {
           Object.assign(this.$data, this.getData());
           axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
-            this.inputProperty = response.data;
-          });
-
+            this.inputForm = response.data;
           //押金列表只能增加，不能修改
-          axios.get('/api/ws/future/crm/shopDeposit/findDto').then((response)=>{
-            this.shopDeposit = response.data;
+          axios.get('/api/ws/future/crm/shopDeposit/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+        });
           });
         }
         this.isInit = true;

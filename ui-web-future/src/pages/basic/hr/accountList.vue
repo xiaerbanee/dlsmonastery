@@ -6,27 +6,27 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:account:edit'">{{$t('accountList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:account:view'">{{$t('accountList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="itemAuthAdd" icon="plus">用户权限编辑</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('accountList.filter')" v-model="formVisible" size="tiny" class="search-form">
-        <el-form :model="formData" method="get" >
+      <search-dialog :title="$t('accountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData" method="get">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.loginName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.loginName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.loginName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.employeeName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.employeeName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.officeName.label"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.officeName')"  :label-width="formLabelWidth">
                 <office-select v-model="formData.officeName"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.leaderName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.leader')" :label-width="formLabelWidth">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.positionName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.positionName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" clearable filterable :placeholder="$t('accountList.selectGroup')">
-                  <el-option v-for="position in formData.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
+                  <el-option v-for="position in formData.extra.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -36,7 +36,7 @@
           <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('accountList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('accountList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="type" :label="$t('accountList.type')"></el-table-column>
@@ -65,23 +65,10 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          loginName:'',
-          employeeName:'',
-          officeName:'',
-          leaderName:'',
-          positionName:''
+        formData:{
+          extra:{}
         },
-        formLabel:{
-          loginName:{label:this.$t('accountList.loginName')},
-          employeeName:{label:this.$t('accountList.employeeName')},
-          officeName:{label:this.$t('accountList.officeName')},
-          leaderName:{label:this.$t('accountList.leader')},
-          positionName:{label:this.$t('accountList.positionName')}
-        },
+        searchText:"",
         offices:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -90,11 +77,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("accountList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/account?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("accountList",submitData);
+        axios.get('/api/basic/hr/account?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

@@ -59,13 +59,14 @@ public class ExpressController {
 
     }
 
-
-
     @RequestMapping(value="export")
     public String export(ExpressQuery expressQuery) {
 
         return expressService.export(expressQuery);
     }
 
-
+    @RequestMapping(value="getForm")
+    public ExpressForm getForm(ExpressForm expressForm) {
+        return expressForm;
+    }
 }
