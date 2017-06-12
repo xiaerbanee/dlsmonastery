@@ -3,8 +3,7 @@
     <head-tab active="afterSaleHeadFleeInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
-      <el-button type="primary" @click="formVisible = true" icon="search" v-if="formData.action=='update'">{{$t('adPricesystemChangeForm.filter')}}</el-button>
-      <span v-html="searchText"></span>
+      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
     </el-row>
     <search-dialog label="串码" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
       <el-form :model="formData">
@@ -35,7 +34,6 @@
   export default{
     data(){
       return {
-        searchText:"",
         inputForm: {
           data: ''
         },
@@ -271,11 +269,6 @@
       this.onchange(this.type);
     },
     methods: {
-      setSearchText() {
-        this.$nextTick(function () {
-          this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
-      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -296,11 +289,10 @@
         });
       },  search() {
         this.formVisible = false;
-        this.setSearchText();
         this.getData();
       },getData(){
         axios.get('/api/ws/future/crm/afterSale/headInputData', {params: this.formData}).then((response) => {
-          this.settings.data = response.data;
+          this.settings.data = response.data.afterSaleInputList;
           this.table.loadData(this.settings.data);
         })
       }, onchange(type){

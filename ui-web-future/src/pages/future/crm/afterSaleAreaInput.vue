@@ -5,7 +5,6 @@
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
-      <span v-html="searchText"></span>
     </el-row>
     <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
       <el-form :model="formData">
@@ -256,11 +255,6 @@
       this.onchange(this.type);
     },
     methods: {
-      setSearchText() {
-        this.$nextTick(function () {
-          this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
-      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -281,12 +275,18 @@
         });
       }, search() {
         this.formVisible = false;
-        this.setSearchText();
         this.getData();
       }, getData(){
         axios.get('/api/ws/future/crm/afterSale/areaInputData', {params: this.formData}).then((response) => {
-          this.settings.data = response.data;
+          this.settings.data = response.data.afterSaleInputList;
           this.table.loadData(this.settings.data);
+          this.shipResult = response.data.restResponse;
+          //错误信息
+          var errorMsg = "";
+          for(var index in this.shipResult.errors) {
+            errorMsg = errorMsg + this.shipResult.errors[index].message + "<br/>";
+          }
+          this.shipResult.errorMsg = errorMsg;
         })
       }, onchange(type){
         if (this.type == '窜货机') {

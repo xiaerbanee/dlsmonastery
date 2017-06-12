@@ -17,7 +17,7 @@
               <el-form-item :label="$t('productImeUploadList.officeId')" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeUploadList.month')" :label-width="formLabelWidth">
                 <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadList.createdDate')" :label-width="formLabelWidth">

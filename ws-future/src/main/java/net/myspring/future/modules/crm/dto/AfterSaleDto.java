@@ -5,11 +5,13 @@ import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleDto extends DataDto<AfterSale> {
+    private String detailId;
     private String type;
     private String badProductImeId;
     private String badProductId;
@@ -30,6 +32,32 @@ public class AfterSaleDto extends DataDto<AfterSale> {
     private String mobilePhone;
     private String address;
     private BigDecimal buyAmount;
+    private LocalDate inputDate;
+    private LocalDate replaceDate;
+
+    public String getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(String detailId) {
+        this.detailId = detailId;
+    }
+
+    public LocalDate getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(LocalDate inputDate) {
+        this.inputDate = inputDate;
+    }
+
+    public LocalDate getReplaceDate() {
+        return replaceDate;
+    }
+
+    public void setReplaceDate(LocalDate replaceDate) {
+        this.replaceDate = replaceDate;
+    }
 
     public String getDetailRemarks() {
         return detailRemarks;

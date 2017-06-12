@@ -222,6 +222,7 @@ export default {
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",
       imeAllotForm: "串码调拨编辑",
+      imeAllotBatchForm: "串码批量调拨编辑",
       imeAllotList: "串码调拨",
       priceChangeDetail: "调价项目抽检",
       priceChangeForm: "调价项目编辑",
