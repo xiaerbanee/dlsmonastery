@@ -3,12 +3,16 @@ package net.myspring.future.modules.crm.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
+import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
@@ -19,6 +23,7 @@ import net.myspring.future.modules.crm.web.form.AfterSaleToCompanyForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -52,24 +57,44 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "areaInputData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> formData(String imeStr,String action,String type) {
-        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+    public Map<String,Object> formData(String imeStr,String action,String type) {
+        Map<String,Object> map=Maps.newHashMap();
         if(StringUtils.isNotBlank(imeStr)){
+            List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+            RestResponse restResponse =  new RestResponse("valid", ResponseCodeEnum.valid.name());
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            List<String>  inputImeList=Lists.newArrayList();
             if("update".equals(action)){
                 afterSaleInputList=afterSaleService.inputUpdateData(imeList,type, AfterSaleDetailTypeEnum.地区录入.name());
             }else {
                 List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-                for(ProductImeDto productIme:productImeList){
-                    AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
-                    afterSaleInputDto.setBadProductName(productIme.getProductName());
-                    afterSaleInputDto.setBadProductIme(productIme.getIme());
-                    afterSaleInputDto.setBadDepotName(productIme.getDepotName());
-                    afterSaleInputList.add(afterSaleInputDto);
+                if(CollectionUtil.isNotEmpty(productImeList)){
+                    List<AfterSale> afterSaleList=afterSaleService.findByBadProductImeIdList(CollectionUtil.extractToList(productImeList,"id"));
+                    List<String> badProductImeIdList=CollectionUtil.extractToList(afterSaleList,"badProductImeId");
+                    for(ProductImeDto productIme:productImeList){
+                        if(!badProductImeIdList.contains(productIme.getId())){
+                            AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
+                            afterSaleInputDto.setBadProductName(productIme.getProductName());
+                            afterSaleInputDto.setBadProductIme(productIme.getIme());
+                            afterSaleInputDto.setBadDepotName(productIme.getDepotName());
+                            afterSaleInputList.add(afterSaleInputDto);
+                        }else {
+                            inputImeList.add(productIme.getIme());
+                            restResponse.getErrors().add(new RestErrorField("串码"+productIme.getIme()+"已录入","bad_product_ime_error","badProductIme"));
+                        }
+                    }
                 }
             }
+            List<String> list=CollectionUtil.extractToList(afterSaleInputList,"badProductIme");
+            for(String ime:imeList){
+                if(!list.contains(ime)&&!inputImeList.contains(ime)){
+                    restResponse.getErrors().add(new RestErrorField("串码"+ime+"未录入","bad_product_ime_error","badProductIme"));
+                }
+            }
+            map.put("restResponse",restResponse);
+            map.put("afterSaleInputList",afterSaleInputList);
         }
-        return afterSaleInputList;
+        return map;
     }
 
     @RequestMapping(value = "getQuery")
@@ -78,16 +103,25 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "headInputData", method = RequestMethod.GET)
-    public List<AfterSaleInputDto> editFormData(String imeStr,String type,String action) {
-        List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
+    public Map<String,Object>  editFormData(String imeStr,String type,String action) {
+        Map<String,Object> map=Maps.newHashMap();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+            RestResponse restResponse =  new RestResponse("valid", ResponseCodeEnum.valid.name());
+            List<AfterSaleInputDto> afterSaleInputList=Lists.newArrayList();
             if("update".equals(action)){
                 afterSaleInputList=afterSaleService.inputUpdateData(imeList,type, AfterSaleDetailTypeEnum.总部录入.name());
             }else {
                 List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-                List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList,type);
+                List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeListAndType(imeList,type);
                 Map<String,AfterSaleDto> afterSaleMap= CollectionUtil.extractToMap(afterSaleList,"badProductImeId");
+                if(AfterSaleTypeEnum.窜货机.name().equals(type)){
+                    for(AfterSaleDto afterSale:afterSaleList){
+                        AfterSaleInputDto afterSaleInputDto= BeanUtil.map(afterSale,AfterSaleInputDto.class);
+                        afterSaleInputDto.setBadProductIme(afterSale.getIme());
+                        afterSaleInputList.add(afterSaleInputDto);
+                    }
+                }
                 for(ProductImeDto productIme:productImeList){
                     AfterSaleInputDto afterSaleInputDto=new AfterSaleInputDto();
                     AfterSaleDto afterSale=afterSaleMap.get(productIme.getId());
@@ -100,8 +134,18 @@ public class AfterSaleController {
                     afterSaleInputList.add(afterSaleInputDto);
                 }
             }
+            if(AfterSaleTypeEnum.售后机.name().equals(type)){
+                List<String> list=CollectionUtil.extractToList(afterSaleInputList,"badProductIme");
+                for(String ime:imeList){
+                    if(!list.contains(ime)){
+                        restResponse.getErrors().add(new RestErrorField("串码"+ime+"未录入","bad_product_ime_error","badProductIme"));
+                    }
+                }
+            }
+            map.put("restResponse",restResponse);
+            map.put("afterSaleInputList",afterSaleInputList);
         }
-        return afterSaleInputList;
+        return map;
     }
 
     @RequestMapping(value="searchImeMap" ,method=RequestMethod.GET)
@@ -109,7 +153,7 @@ public class AfterSaleController {
         Map<String,Object> map=Maps.newLinkedHashMap();
         if(StringUtils.isNotBlank(imeStr)){
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeList(imeList,type);
+            List<AfterSaleDto> afterSaleList=afterSaleService.findDtoByImeListAndType(imeList,type);
             map.put("afterSaleList",afterSaleList);
             Map<String,Integer> productQtyMap=Maps.newHashMap();
             if(CollectionUtil.isNotEmpty(afterSaleList)){
@@ -183,4 +227,11 @@ public class AfterSaleController {
         afterSaleService.fromCompany(datas, LocalDateUtils.parse(fromCompanyDate));
         return new RestResponse("保存成功",null);
     }
+
+    @RequestMapping(value = "delete")
+    public RestResponse fromCompany(String detailId) {
+        afterSaleService.delete(detailId);
+        return new RestResponse("删除成功",null);
+    }
+
 }
