@@ -517,8 +517,10 @@ public class AfterSaleService {
             afterSale.setEnabled(false);
             afterSaleRepository.save(afterSale);
             AfterSaleFlee afterSaleFlee=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
-            afterSaleFlee.setEnabled(false);
-            afterSaleFleeRepository.save(afterSaleFlee);
+            if(afterSale!=null){
+                afterSaleFlee.setEnabled(false);
+                afterSaleFleeRepository.save(afterSaleFlee);
+            }
         }
     }
 

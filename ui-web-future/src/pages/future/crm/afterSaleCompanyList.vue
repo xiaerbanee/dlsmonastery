@@ -85,7 +85,7 @@
         <el-table-column prop="detailRemarks" :label="$t('afterSaleList.remarks')"></el-table-column>
         <el-table-column :label="$t('afterSaleList.operation')" width="140">
           <template scope="scope">
-            <div class="action" v-permit="'crm:depot:depotAccountData'">
+            <div class="action" >
               <el-button size="small"  @click.native="itemAction(scope.row.detailId, 'detail')">删除</el-button>
             </div>
           </template>
