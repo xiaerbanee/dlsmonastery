@@ -184,11 +184,11 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t6.name as 'chainName',t3.name as 'productTypeName' """)
+            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName' """)
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime，t1.retail_date,t6.employee_id,
-               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t6.name as 'chainName'
+               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,
+               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName'
             """)
         }
         sb.append("""
@@ -197,16 +197,13 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product t2 ON t1.product_id = t2.id
                     LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
                     LEFT JOIN crm_depot t4 on t1.depot_id=t4.id
-                    LEFT JOIN crm_chain t6 on t4.chain_id=t6.id,
-                    crm_depot_shop t5
+                    LEFT JOIN crm_chain t7 on t4.chain_id=t7.id
+
         """)
         if(reportQuery.isDetail!=null&&reportQuery.isDetail){
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
         }
-        sb.append("""    WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
-        if(reportQuery.isDetail!=null&&reportQuery.isDetail){
-            sb.append(""" and t6.enabled=1 and t6.is_back=0 """)
-        }
+        sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
         if(reportQuery.scoreType){
             sb.append("""  and t3.score_type =:scoreType """)
         }
