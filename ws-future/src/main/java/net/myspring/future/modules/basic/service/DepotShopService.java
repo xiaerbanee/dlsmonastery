@@ -168,7 +168,7 @@ public class DepotShopService {
             if ("销售报表".equals(reportQuery.getType())) {
                 depotReportList = depotShopRepository.findSaleReport(reportQuery);
             } else if ("库存报表".equals(reportQuery.getType())) {
-                depotReportList = depotShopRepository.findBaokaStoreReport(reportQuery);
+                depotReportList = depotShopRepository.findStoreReport(reportQuery);
             }
         }
         return depotReportList;

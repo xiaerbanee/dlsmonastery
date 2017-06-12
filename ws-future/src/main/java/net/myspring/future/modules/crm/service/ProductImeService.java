@@ -241,7 +241,7 @@ public class ProductImeService {
             if("销售报表".equals(reportQuery.getType())){
                 productImeReportList=productImeRepository.findSaleReport(reportQuery);
             }else if("库存报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaStoreReport(reportQuery);
+                productImeReportList=productImeRepository.findStoreReport(reportQuery);
             }
         }
         return productImeReportList;

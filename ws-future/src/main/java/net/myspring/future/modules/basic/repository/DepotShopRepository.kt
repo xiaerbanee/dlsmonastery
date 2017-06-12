@@ -44,7 +44,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName', t8.name as 'chainName',t5.name as 'productTypeName
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName', t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -247,7 +247,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName """)
+            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,
