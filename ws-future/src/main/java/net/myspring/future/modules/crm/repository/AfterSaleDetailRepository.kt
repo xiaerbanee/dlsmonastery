@@ -19,6 +19,10 @@ import java.util.*
 interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,AfterSaleRepositoryDetailCustom {
 
     fun findByAfterSaleIdInAndType(afterSaleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetail>
+
+    fun findByAfterSaleIdIn(afterSaleIdList: MutableList<String>): MutableList<AfterSaleDetail>
+
+    fun findByEnabledIsTrueAndAfterSaleId(afterSaleId: String): MutableList<AfterSaleDetail>
 }
 
 interface AfterSaleRepositoryDetailCustom{

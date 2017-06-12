@@ -38,6 +38,8 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
         """)
     fun findMaxBusinessId(dateStart: LocalDate): String
 
+    fun findByBadProductImeIdIn(badProductImeId:MutableList<String>):MutableList<AfterSale>
+
 }
 
 
@@ -47,7 +49,7 @@ interface AfterSaleRepositoryCustom{
 
     fun findPage(pageable: Pageable, afterSaleQuery : AfterSaleQuery): Page<AfterSaleDto>?
 
-    fun findDtoByBadProductImeIn(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto>
+    fun findDtoByBadProductImeInAndType(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto>
 
     fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto>
 
@@ -78,7 +80,8 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""
              SELECT
                  t1.*,t8.ime,t8.flee_shop_name,t8.contact,t8.mobile_phone,t8.address,t8.buy_amount,t2.ime as 'badProductIme',t3.name as 'badProductName',
-                 t4.name as 'badDepotName',t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks as 'detailRemarks',t5.replace_amount
+                 t4.name as 'badDepotName',t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks as 'detailRemarks',
+                 t5.replace_amount,t5.input_date,t5.replace_date,t5.id as 'detailId'
              FROM
                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                 left join crm_product t3 on t1.bad_product_id=t3.id
@@ -161,11 +164,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java))
     }
 
-    override fun findDtoByBadProductImeIn(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto> {
+    override fun findDtoByBadProductImeInAndType(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto> {
         val sb = StringBuilder()
         sb.append("""
              SELECT
-                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName'
+                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName',t5.ime,
+                t5.flee_shop_name,t5.contact,t5.mobile_phone,t5.address,t5.buy_amount
              FROM
                  crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                  left join crm_product t3 on t1.bad_product_id=t3.id

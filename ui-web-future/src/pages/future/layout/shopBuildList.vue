@@ -7,33 +7,33 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchBlack')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.officeName')" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.auditType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
                   <el-option v-for="(value,key) in auditTypes" :key="key" :label="value" :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.shopName')" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="门店建设申请"></process-status-select>
               </el-form-item>
-              <el-form-item :label="formLabel.fixtureType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.fixtureType')" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.createdBy')" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy"></account-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopBuildList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -43,7 +43,7 @@
           <el-button type="primary" @click="exportData()" v-permit="'crm:shopBuild:view'" icon="upload">{{$t('shopBuildList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('shopBuildList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('shopBuildList.code')" sortable></el-table-column>
@@ -86,32 +86,13 @@
     components:{officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
     data() {
       return {
+        searchText:"",
         pageLoading: false,
         page:{},
         formData:{
           auditType:1,
         },
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          officeId:'',
-          auditType:'',
-          shopId:'',
-          processStatus:'',
-          fixtureType:'',
-          createdBy:'',
-          createdDate:'',
-        },
-        formLabel:{
-          officeId:{label: this.$t('shopBuildList.officeName'),value:''},
-          auditType:{label: this.$t('shopBuildList.auditType'),value:''},
-          shopId:{label:this.$t('shopBuildList.shopName')},
-          processStatus:{label:this.$t('shopBuildList.processFlow'),value:''},
-          fixtureType:{label:this.$t('shopBuildList.fixtureType'),value:''},
-          createdBy:{label: this.$t('shopBuildList.createdBy')},
-          createdDate:{label: this.$t('shopBuildList.createdDate')},
-        },auditTypes:{
+        auditTypes:{
           0:this.$t('shopBuildList.all'),
           1:this.$t('shopBuildList.waitAudit')
         },
@@ -122,11 +103,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopBuildList",this.submitData);
-        axios.get('/api/ws/future/layout/shopBuild',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopBuildList",submitData);
+        axios.get('/api/ws/future/layout/shopBuild',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })

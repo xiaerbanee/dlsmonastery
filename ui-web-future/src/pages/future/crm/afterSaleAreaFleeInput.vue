@@ -300,7 +300,7 @@
         this.getData();
       }, getData(){
         axios.get('/api/ws/future/crm/afterSale/areaInputData', {params: this.formData}).then((response) => {
-          this.settings.data = response.data;
+          this.settings.data = response.data.afterSaleInputList;
           this.table.loadData(this.settings.data);
         })
       }, onchange(type){

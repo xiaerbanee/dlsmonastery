@@ -4,8 +4,8 @@
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
-      <span v-html="searchText"></span>
     </el-row>
+    <su-alert :text="shipResult.errorMsg" type="danger"></su-alert>
     <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
       <el-form :model="formData">
         <el-form-item label="串码" :label-width="formLabelWidth">
@@ -35,7 +35,6 @@
   export default{
     data(){
       return {
-        searchText:"",
         formData: {
           imeStr: '',
           type:'售后机',
@@ -49,6 +48,7 @@
         options: ['售后机', '窜货机'],
         formLabelWidth: '120px',
         formVisible: false,
+        shipResult:"",
         submitDisabled: false,
         table: null,
         settings: {
@@ -250,11 +250,6 @@
       this.onchange(this.type);
     },
     methods: {
-      setSearchText() {
-        this.$nextTick(function () {
-          this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
-      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -275,13 +270,19 @@
         });
       }, search() {
         this.formVisible = false;
-        this.setSearchText();
         this.getData();
       }, getData(){
         console.log(this.formData)
         axios.get('/api/ws/future/crm/afterSale/headInputData', {params: this.formData}).then((response) => {
-          this.settings.data = response.data;
+          this.settings.data = response.data.afterSaleInputList;
           this.table.loadData(this.settings.data);
+          this.shipResult = response.data.restResponse;
+          //错误信息
+          var errorMsg = "";
+          for(var index in this.shipResult.errors) {
+            errorMsg = errorMsg + this.shipResult.errors[index].message + "<br/>";
+          }
+          this.shipResult.errorMsg = errorMsg;
         })
       }, onchange(type){
         if (this.type == '窜货机') {
