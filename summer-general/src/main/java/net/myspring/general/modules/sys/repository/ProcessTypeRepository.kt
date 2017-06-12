@@ -48,7 +48,7 @@ class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemp
 
         if (StringUtils.isNotBlank(processTypeQuery.name)) {
             sb.append("""
-                AND t1.name LIKE CONCAT('%',#{p.name},'%')
+                AND t1.name LIKE CONCAT('%',:name,'%')
             """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);

@@ -14,11 +14,20 @@ import java.util.List;
 public class AfterSaleQuery {
     private String imeStr;
     private String type;
+    private String inputType;
     private String inputDateRanger;
     private String productTypeId;
     private String badDepotName;
     private String replaceProductImeStr;
     private String detailRemarks;
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
 
     public String getBadDepotName() {
         return badDepotName;

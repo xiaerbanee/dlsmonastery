@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary"  v-permit="'crm:reportScore:edit'" @click="itemAdd" icon="plus" >{{$t('reportScoreList.add')}}</el-button>
         <el-button type="primary"  v-permit="'crm:reportScore:view'" @click="formVisible = true" icon="search">{{$t('reportScoreList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('reportScoreList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('reportScoreList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.scoreDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('reportScoreList.scoreDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.scoreDateRange"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('reportScoreList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('reportScoreList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreList.scoreDate')" sortable></el-table-column>
         <el-table-column prop="companyScore" :label="$t('reportScoreList.companyScore')"></el-table-column>
@@ -52,15 +52,10 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          scoreDateRange:''
-        },formLabel:{
-          scoreDateRange:{label:this.$t('reportScoreList.scoreDate')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
-
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -68,11 +63,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("reportScoreList",this.submitData);
-        axios.get('/api/ws/future/crm/reportScore?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("reportScoreList",submitData);
+        axios.get('/api/ws/future/crm/reportScore?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         });

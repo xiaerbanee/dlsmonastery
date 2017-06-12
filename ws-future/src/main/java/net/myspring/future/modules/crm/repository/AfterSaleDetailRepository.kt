@@ -24,6 +24,7 @@ interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,Af
 interface AfterSaleRepositoryDetailCustom{
 
     fun findDtoByAfterSaleIdInAndType(saleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetailDto>
+
 }
 
 class AfterSaleDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryDetailCustom {
