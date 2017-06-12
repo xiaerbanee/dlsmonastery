@@ -52,8 +52,9 @@
         isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
-        inputForm:{},
+        inputForm:{
+            extra:{}
+        },
         demoPhoneTypeOfficeDtos:[],
         submitData:{
           id:'',
@@ -89,7 +90,7 @@
                 }
             }
             this.submitData.demoPhoneTypeOfficeDtos = demoPhoneTypeOfficeList;
-            axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 if(!this.isCreate){
@@ -131,11 +132,12 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        });
         axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.demoPhoneTypeOfficeDtos = response.data.demoPhoneTypeOfficeDtos;
+        this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+            });
         });
       }
       this.isInit = true;
