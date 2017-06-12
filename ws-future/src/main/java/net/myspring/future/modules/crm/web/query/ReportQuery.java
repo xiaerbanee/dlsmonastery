@@ -120,10 +120,6 @@ public class ReportQuery extends BaseQuery{
         return scoreType;
     }
 
-    public boolean isScoreType() {
-        return scoreType;
-    }
-
     public void setScoreType(boolean scoreType) {
         this.scoreType = scoreType;
     }

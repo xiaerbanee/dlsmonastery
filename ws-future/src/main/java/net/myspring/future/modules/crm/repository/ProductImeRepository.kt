@@ -28,9 +28,13 @@ import java.util.*
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
     fun findByIme(ime: String): ProductIme
+
     fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
     fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
+
+    @Query("select  t from #{#entityName} t where t.retailDate >= ?1 and t.retailDate<?2  and t.retailDate is not null ")
+    abstract fun findByRetailDate(dateStart: LocalDate, dateEnd: LocalDate): List<ProductIme>
 
 
     @Query("""
@@ -160,7 +164,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -225,7 +229,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -284,7 +288,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=1 """)
+            sb.append(""" and t5.score_type=:scoreType""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
@@ -317,7 +321,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t2.office_id,t1.id '""")
+            sb.append(""" select t2.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
@@ -340,7 +344,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
         if (productImeReportQuery.scoreType) {
-            sb.append(""" and t4.score_type=1 """)
+            sb.append(""" and t4.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
             sb.append(""" and t5.town_type=:townType """)
@@ -363,6 +367,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t4.id """)
         }
+        println("销售报表按电子报卡"+productImeReportQuery.officeId)
+        println(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
