@@ -152,7 +152,7 @@ public class StoreAllotController {
 
     @RequestMapping(value="getQuery")
     public StoreAllotQuery getQuery(StoreAllotQuery storeAllotQuery) {
-        storeAllotQuery.setStatusList(StoreAllotStatusEnum.getList());
+        storeAllotQuery.getExtra().put("statusList",StoreAllotStatusEnum.getList());
         return storeAllotQuery;
     }
 

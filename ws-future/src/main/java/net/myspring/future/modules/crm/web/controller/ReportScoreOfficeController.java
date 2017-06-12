@@ -27,8 +27,7 @@ public class ReportScoreOfficeController {
     }
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
-    @ResponseBody
-    public String getQuery(){
-        return null;
+    public ReportScoreOfficeQuery getQuery(ReportScoreOfficeQuery reportScoreOfficeQuery){
+        return reportScoreOfficeQuery;
     }
 }

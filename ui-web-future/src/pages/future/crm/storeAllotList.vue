@@ -6,38 +6,38 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:storeAllot:edit'">{{$t('storeAllotList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form">
+      <search-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth" >
+              <el-form-item :label="$t('storeAllotList.status')" :label-width="formLabelWidth" >
                 <el-select v-model="formData.status" clearable>
-                  <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy" ></account-select>
+              <el-form-item :label="$t('storeAllotList.createdBy')" :label-width="formLabelWidth">
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.fromStoreId.label" :label-width="formLabelWidth">
-                <depot-select category="store" v-model="formData.fromStoreId"  ></depot-select>
+              <el-form-item :label="$t('storeAllotList.fromStore')" :label-width="formLabelWidth">
+                <depot-select category="store" v-model="formData.fromStoreId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.toStoreId.label" :label-width="formLabelWidth">
-                <depot-select category="store" v-model="formData.toStoreId"  ></depot-select>
+              <el-form-item :label="$t('storeAllotList.toStore')" :label-width="formLabelWidth">
+                <depot-select category="store" v-model="formData.toStoreId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.outCode.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.outCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.businessIds.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.businessId')" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -46,7 +46,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('storeAllotList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
@@ -84,28 +84,9 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          outCode:"",
-          businessIds:'',
-          status:'',
-          createdDateRange:"",
-          remarks:"",
-          toStoreId:"",
-          fromStoreId:"",
-          createdBy:"",
-        },formLabel:{
-          outCode:{label:this.$t('storeAllotList.outCode')},
-          businessIds:{label:this.$t('storeAllotList.businessId')},
-          status:{label:this.$t('storeAllotList.status')},
-          remarks:{label:this.$t('storeAllotList.remarks')},
-          fromStoreId:{label:this.$t('storeAllotList.fromStore')},
-          toStoreId:{label:this.$t('storeAllotList.toStore')},
-          createdDateRange:{label:this.$t('storeAllotList.createdDate')},
-          createdBy:{label:this.$t('storeAllotList.createdBy')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formLabelWidth: '120px',
         formVisible: false,
@@ -114,12 +95,17 @@
       };
     },
     methods: {
-
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("storeAllotList",this.submitData);
-        axios.get('/api/ws/future/crm/storeAllot',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("storeAllotList",submitData);
+        axios.get('/api/ws/future/crm/storeAllot',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
