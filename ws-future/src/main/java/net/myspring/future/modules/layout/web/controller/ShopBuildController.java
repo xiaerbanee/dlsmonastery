@@ -91,4 +91,9 @@ public class ShopBuildController {
         return shopBuildService.findSimpleExcelSheets(workbook,shopBuildQuery);
     }
 
+    @RequestMapping(value = "getForm")
+    public ShopBuildForm getForm(ShopBuildForm shopBuildForm){
+        return shopBuildForm;
+    }
+
 }

@@ -55,8 +55,8 @@
   import depotSelect from 'components/future/depot-select';
   export default{
     components:{
-        dictEnumSelect,
-        accountSelect,
+      dictEnumSelect,
+      accountSelect,
       depotSelect
     },
     data(){
@@ -71,19 +71,8 @@
           shopDisabled:false,
           fileList: [],
           fixtureContent:'',
-          inputForm: {},
-          submitData:{
-            id: '',
-            shopId: '',
-            shopType: '',
-            fixtureType: '',
-            oldContents:'',
-            newContents: '',
-            buildType: '',
-            applyAccountId: '',
-            content: '',
-            remarks: '',
-            scenePhoto: ''
+          inputForm: {
+            extra:{}
           },
           rules: {
             shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
@@ -103,8 +92,7 @@
         form.validate((valid) => {
           this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 if(response.data.success) {
@@ -132,19 +120,22 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-          if(this.inputForm.id != null){
-            this.shopDisabled = true;
-          }
-          if(this.inputForm.fixtureType!=null){
-            this.shopChange();
-          }
-          if(this.inputForm.scenePhoto !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-              this.fileList= response.data;
-            });
-          }
+        axios.get('/api/ws/future/layout/shopBuild/getForm').then((response)=>{
+           this.inputForm = response.data;
+          axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(this.inputForm.id != null){
+              this.shopDisabled = true;
+            }
+            if(this.inputForm.fixtureType!=null){
+              this.shopChange();
+            }
+            if(this.inputForm.scenePhoto !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }
+          });
         });
       }
       this.isInit = true;
