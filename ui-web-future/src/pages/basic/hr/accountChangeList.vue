@@ -7,31 +7,31 @@
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('accountChangeList.filter')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" >批量通过</el-button>
         <el-button type="primary" @click="batchNoPass" icon="close" >批量打回</el-button>
-        <search-tag  :submitData="submitData" :formLabel = "formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.createdDate')" :label-width="formLabelWidth">
             <date-range-picker v-model="formData.createdDate"></date-range-picker>
           </el-form-item>
-          <el-form-item :label="formLabel.createdByName.label" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.createdBy')" :label-width="formLabelWidth">
             <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
           </el-form-item>
-          <el-form-item :label="formLabel.officeId.label" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.areaName')" :label-width="formLabelWidth">
             <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('accountChangeList.inputKey')">
-              <el-option v-for="area in formData.areas" :key="area.id" :label="area.name" :value="area.id"></el-option>
+              <el-option v-for="area in formData.extra.areaList" :key="area.id" :label="area.name" :value="area.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="formLabel.officeRuleName.label" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.type')" :label-width="formLabelWidth">
             <el-select v-model="formData.officeRuleName" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
-              <el-option v-for="officeRuleName in formData.types" :key="type" :label="type" :value="type"></el-option>
+              <el-option v-for="officeRuleName in formData.extra.typeList" :key="officeRuleName" :label="officeRuleName" :value="officeRuleName"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('accountChangeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('accountChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
@@ -60,21 +60,10 @@
       return {
         page:{},
         formData:{
+          extra:{},
           createdDate:'',
-        },formLabel:{
-          createdDate:{label:this.$t('accountChangeList.createdDate')},
-          createdByName:{label:this.$t('accountChangeList.createdBy')},
-          officeRuleName:{label:this.$t('accountChangeList.type')},
-          officeId:{label:this.$t('accountChangeList.areaName'),value:''}
         },
-        submitData:{
-          page:0,
-          size:25,
-          officeId:'',
-          createdDate:'',
-          createdByName:'',
-          officeRuleName:''
-        },
+        searchText:"",
         selects:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -82,12 +71,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.officeId.value=util.getLabel(this.formData.areas, this.formData.officeId);
-        util.setQuery("accountChangeList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/accountChange?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("accountChangeList",submitData);
+        axios.get('/api/basic/hr/accountChange?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -158,6 +152,7 @@
       this.pageHeight = window.outerHeight -120;
       axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         that.formData=response.data;
+        console.log(this.formData.extra.typeList);
         util.copyValue(that.$route.query,that.formData);
         that.pageRequest();
       });
