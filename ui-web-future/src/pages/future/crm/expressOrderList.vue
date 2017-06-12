@@ -35,16 +35,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('expressOrderList.outPrint')" :label-width="formLabelWidth">
-                <el-select v-model="formData.outPrint"  clearable >
-                  <el-option :label="$t('expressOrderList.true')" value="true">{{$t('expressOrderList.true')}}</el-option>
-                  <el-option :label="$t('expressOrderList.false')" value="false">{{$t('expressOrderList.false')}}</el-option>
-                </el-select>
+                <bool-select v-model="formData.outPrint"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('expressOrderList.expressPrint')" :label-width="formLabelWidth">
-                <el-select v-model="formData.expressPrint"   clearable>
-                  <el-option :label="$t('expressOrderList.true')" value="true">{{$t('expressOrderList.true')}}</el-option>
-                  <el-option :label="$t('expressOrderList.false')" value="false">{{$t('expressOrderList.false')}}</el-option>
-                </el-select>
+                <bool-select v-model="formData.expressPrint"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('expressOrderList.extendBusinessId')" :label-width="formLabelWidth">
                 <el-input v-model="formData.extendBusinessId" auto-complete="off" :placeholder="$t('expressOrderList.preciseSearch')"></el-input>
@@ -119,7 +113,13 @@
   }
 </style>
 <script>
-  export default {
+  import boolSelect from 'components/common/bool-select'
+
+  export default{
+    components:{
+      boolSelect,
+    },
+
     data() {
       return {
         pageLoading: false,
@@ -163,10 +163,12 @@
         if(action==="edit") {
           this.$router.push({ name: 'expressOrderForm', query: { id: id }})
         } else if(action==="reset") {
-          axios.get('/api/ws/future/crm/expressOrder/resetPrintStatus',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
+          util.confirmBeforeAction(this, this.$t('expressOrderList.confirmBeforeReset')).then(() => {
+            axios.get('/api/ws/future/crm/expressOrder/resetPrintStatus',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
+          }).catch(()=>{});
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {

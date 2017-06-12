@@ -7,7 +7,9 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
@@ -16,7 +18,9 @@ import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.ImeAllotRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
+import net.myspring.future.modules.crm.web.form.ImeAllotSimpleForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -26,7 +30,6 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,10 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -49,51 +49,18 @@ public class ImeAllotService {
 
     @Autowired
     private ImeAllotRepository imeAllotRepository;
-
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
-
     @Autowired
     private ProductImeRepository productImeRepository;
-
-
-
-//    public void save(ImeAllot imeAllot) {
-//        List<String> imeList = StringUtils.getSplitList(imeAllot.getImeStr(), "");
-//        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-//        for(ProductIme productIme:productImeList) {
-//            if(!productIme.getDepotId().equals(imeAllot.getToDepotId())) {
-//                ImeAllot allot = new ImeAllot();
-//                allot.setProductImeId(productIme.getId());
-//                allot.setFromDepotId(productIme.getDepotId());
-//                allot.setToDepotId(imeAllot.getToDepotId());
-//                allot.setRemarks(imeAllot.getRemarks());
-//                allot.setCrossArea(crossArea(imeAllot.getToDepotId(),productIme.getDepotId()));
-//                imeAllotRepository.save(allot);
-//                productIme.setDepotId(imeAllot.getToDepotId());
-//                productImeRepository.save(productIme);
-//            }
-//        }
-//    }
 
     public void logicDelete(String id) {
         imeAllotRepository.logicDelete(id);
     }
-
-    public ImeAllot findOne(String id) {
-        ImeAllot imeAllot = imeAllotRepository.findOne(id);
-        return imeAllot;
-    }
-
-
-    public List<ImeAllot> findByProductImeId(String productImeId){
-        return imeAllotRepository.findByProductImeId(productImeId);
-    }
-
 
     private boolean getCrossArea(String toDepotId,String productImeDepotId){
         //TODO 需要实现是否跨地区
@@ -167,8 +134,14 @@ public class ImeAllotService {
 
     }
 
-    public void save(ImeAllotForm imeAllotForm) {
+    public void allot(ImeAllotForm imeAllotForm) {
+
         List<String> imeList = imeAllotForm.getImeList();
+
+        String errMsg = checkForImeAllot(imeList, true);
+        if(StringUtils.isNotBlank(errMsg)){
+            throw new ServiceException(errMsg);
+        }
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
 
@@ -235,5 +208,24 @@ public class ImeAllotService {
         ImeAllotDto imeAllotDto = imeAllotRepository.findDto(id);
         cacheUtils.initCacheInput(imeAllotDto);
         return imeAllotDto;
+    }
+
+    public List<String> findToDepotNameList() {
+        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(RequestUtils.getCompanyId());
+        return CollectionUtil.extractToList(depotList, "name");
+    }
+
+    public void batchAllot(ImeAllotBatchForm imeAllotBatchForm) {
+
+        for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
+
+            Depot toDepot=depotRepository.findByName(imeAllotSimpleForm.getToDepotName());
+            ImeAllotForm imeAllotForm = new ImeAllotForm();
+            imeAllotForm.setImeStr(imeAllotSimpleForm.getIme());
+            imeAllotForm.setToDepotId(toDepot.getId());
+            imeAllotForm.setRemarks(imeAllotSimpleForm.getRemarks());
+            allot(imeAllotForm);
+        }
+
     }
 }

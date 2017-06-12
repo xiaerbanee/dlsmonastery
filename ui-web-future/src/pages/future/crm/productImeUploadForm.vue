@@ -13,9 +13,14 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeUploadForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeUploadForm.inputIme')" @change="imeStrChanged"></el-input>
+              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeUploadForm.inputIme')"  ></el-input>
             </el-form-item>
-            <div v-if="imeStr !==''">
+            <el-form-item >
+              <el-button  type="primary" @click.native="onImeStrChange">{{$t('productImeUploadForm.search')}}</el-button>
+              <el-button  type="primary" @click.native="reset">{{$t('productImeUploadForm.reset')}}</el-button>
+
+            </el-form-item>
+            <div v-if="searched">
               <el-form-item :label="$t('productImeUploadForm.month')" prop="month">
                 <month-picker  v-model="productImeUpload.month"></month-picker>
               </el-form-item>
@@ -34,7 +39,7 @@
             </div>
 
           </el-col>
-          <el-col :span="18" v-if="imeStr !==''">
+          <el-col :span="18" v-if="searched">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border show-summary>
                 <el-table-column prop="productName" :label="$t('productImeUploadForm.productName')"></el-table-column>
@@ -84,6 +89,7 @@
       getData() {
         return {
           isInit: false,
+          searched: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
           productImeList: [],
@@ -132,7 +138,8 @@
             });
           }
         });
-      }, imeStrChanged(){
+      }, onImeStrChange(){
+          this.searched = true;
         axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.imeStr}}).then((response) => {
           this.errMsg = response.data;
         });
@@ -155,6 +162,13 @@
           }
           this.productQtyList = tmpList;
         });
+      },reset(){
+        this.searched = false;
+        this.imeStr = '';
+        this.errMsg='';
+        this.productImeList=[];
+        this.productQtyList = [];
+        this.$refs["inputForm"].resetFields();
       }
     }, activated () {
       if (!this.$route.query.headClick || !this.isInit) {

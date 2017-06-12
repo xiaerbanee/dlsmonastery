@@ -141,8 +141,8 @@ public class ProductImeController {
     @RequestMapping(value = "getBatchCreateForm")
     public ProductImeBatchCreateForm getBatchCreateForm(ProductImeBatchCreateForm productImeBatchCreateForm){
 
-        productImeBatchCreateForm.getExtra().put("productNames" , productService.findNameList(RequestUtils.getCompanyId()));
-        productImeBatchCreateForm.getExtra().put("storeNames" , CollectionUtil.extractToList(depotService.findStoreList(new DepotQuery()),"name"));
+        productImeBatchCreateForm.getExtra().put("productNameList" , productService.findNameList(RequestUtils.getCompanyId()));
+        productImeBatchCreateForm.getExtra().put("storeNameList" , CollectionUtil.extractToList(depotService.findStoreList(new DepotQuery()),"name"));
         return productImeBatchCreateForm;
 
     }
@@ -158,7 +158,7 @@ public class ProductImeController {
     @RequestMapping(value = "getBatchChangeForm")
     public ProductImeBatchChangeForm getBatchChangeForm(ProductImeBatchChangeForm  productImeBatchChangeForm){
 
-        productImeBatchChangeForm.getExtra().put("productNames" , productService.findNameList(RequestUtils.getCompanyId()));
+        productImeBatchChangeForm.getExtra().put("productNameList" , productService.findNameList(RequestUtils.getCompanyId()));
         return productImeBatchChangeForm;
 
     }
@@ -203,7 +203,6 @@ public class ProductImeController {
                 sb.append(String.format("串码：%s 不存在或者不在管辖区", each));
             }
         }
-
 
         result.put("errMsg", sb.toString());
         result.put("productImeList", productImeDtoList);

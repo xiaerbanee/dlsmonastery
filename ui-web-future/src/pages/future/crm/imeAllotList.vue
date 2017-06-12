@@ -61,8 +61,8 @@
         </el-table-column>
         <el-table-column  :label="$t('imeAllotList.operation')" >
           <template scope="scope">
-            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:batchSave'"><el-button size="small" @click="itemAction(scope.row.id, 'auditPass')">{{$t('imeAllotList.auditPass')}}</el-button></div>
-            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:batchSave'"><el-button size="small" @click="itemAction(scope.row.id, 'auditNotPass')">{{$t('imeAllotList.auditNotPass')}}</el-button></div>
+            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:edit'"><el-button size="small" @click="itemAction(scope.row.id, 'auditPass')">{{$t('imeAllotList.auditPass')}}</el-button></div>
+            <div class="action" v-if="scope.row.status === '申请中'" v-permit="'crm:imeAllot:edit'"><el-button size="small" @click="itemAction(scope.row.id, 'auditNotPass')">{{$t('imeAllotList.auditNotPass')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
