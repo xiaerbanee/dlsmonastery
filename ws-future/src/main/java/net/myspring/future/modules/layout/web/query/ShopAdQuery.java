@@ -22,7 +22,6 @@ public class ShopAdQuery extends BaseQuery{
     private String createdBy;
     private String createdDate;
     private String processStatus;
-    private List<ShopAdTypeDto> shopAdTypes;
 
     public String getId() {
         return id;
@@ -86,14 +85,6 @@ public class ShopAdQuery extends BaseQuery{
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
-    }
-
-    public List<ShopAdTypeDto> getShopAdTypes() {
-        return shopAdTypes;
-    }
-
-    public void setShopAdTypes(List<ShopAdTypeDto> shopAdTypes) {
-        this.shopAdTypes = shopAdTypes;
     }
 
     public LocalDate getCreatedDateStart() {
