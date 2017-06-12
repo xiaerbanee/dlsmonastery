@@ -103,7 +103,7 @@ public class AccountController {
 
     @RequestMapping(value = "getQuery")
     public AccountQuery getQuery(AccountQuery accountQuery) {
-        accountQuery.setPositionList(positionService.findAll());
+        accountQuery.getExtra().put("positionList", positionService.findAll());
         return accountQuery;
     }
 

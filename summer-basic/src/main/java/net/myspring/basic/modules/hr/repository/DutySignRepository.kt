@@ -158,7 +158,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(dutySignQuery.dutyDateEnd!=null){
             sql.append("""
-                   AND t1.duty_date &lt; :dutyDateEnd
+                   AND t1.duty_date < :dutyDateEnd
                 """);
         }
         if(dutySignQuery.employeeName!=null){
