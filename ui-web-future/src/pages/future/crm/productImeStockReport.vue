@@ -49,7 +49,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-select>
+                <product-type-select v-model="formData.productTypeIdList"  @afterInit="setSearchText"></product-type-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -86,10 +86,10 @@
 
 </template>
 <script>
-  import productSelect from 'components/future/product-select';
+  import productTypeSelect from 'components/future/product-type-select';
   export default {
     components:{
-      productSelect
+      productTypeSelect
     },
     data() {
       return {

@@ -49,9 +49,29 @@ interface AfterSaleRepositoryCustom{
 
     fun findDtoByBadProductImeIn(imeList: MutableList<String>,type:String): MutableList<AfterSaleDto>
 
+    fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto>
+
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryCustom {
+    override fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto> {
+        val sb = StringBuilder()
+        sb.append("""
+             SELECT
+                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName'
+             FROM
+                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
+                 left join crm_product t3 on t1.bad_product_id=t3.id
+                 left join crm_depot t4 on t1.bad_depot_id=t4.id
+                 left join crm_after_sale_flee t5 on t5.after_sale_id=t1.id
+             WHERE
+                 t1.enabled=1
+                and t1.id in(:ids)
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("ids", ids);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(AfterSaleDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, afterSaleQuery: AfterSaleQuery): Page<AfterSaleDto>? {
             val sb = StringBuilder()
@@ -107,16 +127,18 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         val sb = StringBuilder()
         sb.append("""
              SELECT
-                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName',t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks,t5.replace_amount
+                 t1.*,t2.ime as 'badProductIme',t3.name as 'badProductName',t4.name as 'badDepotName',
+                 t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks,t5.replace_amount,t8.ime
              FROM
-                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
-                 left join crm_product t3 on t1.bad_product_id=t3.id
-                 left join crm_depot t4 on t1.bad_depot_id=t4.id
-                 left join crm_after_sale_detail t5 on t5.after_sale_id=t1.id
-                left join crm_depot t6 on t5.from_depot_id=t6.id
+                crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
+                left join crm_product t3 on t1.bad_product_id=t3.id
+                left join crm_depot t4 on t1.bad_depot_id=t4.id
+                left join crm_after_sale_flee t8 on t8.after_sale_id=t1.id,
+                crm_after_sale_detail t5    left join crm_depot t6 on t5.from_depot_id=t6.id
                 left join crm_depot t7 on t5.to_depot_id=t7.id
              WHERE
                  t1.enabled=1
+                 and  t5.after_sale_id=t1.id
         """)
         if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
             sb.append(""" and t2.ime in (:imeList) """)
@@ -128,7 +150,10 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" and t5.input_date<=:inputDateEnd""")
         }
         if(StringUtils.isNotBlank(afterSaleQuery.type)){
-            sb.append(""" and t5.type=:type""")
+            sb.append(""" and t1.type=:type""")
+        }
+        if(StringUtils.isNotBlank(afterSaleQuery.inputType)){
+            sb.append(""" and t5.type=:inputType""")
         }
         if(StringUtils.isNotBlank(afterSaleQuery.productTypeId)){
             sb.append(""" and t3.product_type_id=:productTypeId""")

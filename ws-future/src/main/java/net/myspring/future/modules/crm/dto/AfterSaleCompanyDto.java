@@ -17,6 +17,15 @@ public class AfterSaleCompanyDto {
     private String memory;
     private String remarks;
     private BigDecimal replaceAmount;
+    private String replaceProductIme;
+
+    public String getReplaceProductIme() {
+        return replaceProductIme;
+    }
+
+    public void setReplaceProductIme(String replaceProductIme) {
+        this.replaceProductIme = replaceProductIme;
+    }
 
     public String getFromDepotName() {
         return fromDepotName;

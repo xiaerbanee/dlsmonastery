@@ -111,7 +111,7 @@ public class ActivitiService {
                 processTask.setStatus(processStatus);
             }
         } else {
-            processTask.setStatus(AuditTypeEnum.NOT_PASS.name());
+            processTask.setStatus(AuditTypeEnum.NOT_PASS.getValue());
             processTask.setEnabled(false);
         }
         processTaskRepository.save(processTask);
@@ -141,7 +141,7 @@ public class ActivitiService {
         if (processFlow != null) {
             return processFlow.getName();
         } else {
-            return pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.name();
+            return pass ? AuditTypeEnum.PASS.getValue() : AuditTypeEnum.NOT_PASS.getValue();
         }
     }
 }

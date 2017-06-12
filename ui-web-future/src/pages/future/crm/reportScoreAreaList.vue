@@ -5,18 +5,18 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreAreaList.reportScoreOfficeRank')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('reportScoreAreaList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('reportScoreAreaList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('reportScoreAreaList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.scoreDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('reportScoreAreaList.scoreDate')" :label-width="formLabelWidth">
                 <el-date-picker v-model="formData.scoreDate" type="date" align="right"  :picker-options="pickerDateOption"></el-date-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.areaId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('reportScoreAreaList.officeName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable >
-                  <el-option v-for="item in formProperty.areas" :key="item" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.extra.areas" :key="item" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -25,7 +25,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('reportScoreAreaList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('reportScoreAreaList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreAreaList.scoreDate')" sortable></el-table-column>
         <el-table-column prop="office.name" :label="$t('reportScoreAreaList.officeName')" width="180"></el-table-column>
@@ -49,16 +49,10 @@
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          page:0,
-          size:25,
-          scoreDate:new Date(),
-          areaId:''
-        },formLabel:{
-          scoreDate:{label:this.$t('reportScoreAreaList.scoreDate')},
-          areaId:{label:this.$t('reportScoreAreaList.officeName')}
+          extra:{}
         },
-        formProperty:{},
         pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
@@ -68,11 +62,18 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("reportScoreAreaList",this.formData);
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("reportScoreAreaList",submitData);
         this.formData.scoreDate = util.formatLocalDate(this.formData.scoreDate);
-        axios.get('/api/crm/reportScoreArea',{params:this.formData}).then((response) => {
+        axios.get('/api/crm/reportScoreArea',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -93,7 +94,7 @@
     },created () {
       this.pageHeight = window.outerHeight -325;
       axios.get('/api/crm/reportScoreArea/getQuery').then((response)=>{
-        this.formProperty = response.data;
+        this.formData = response.data;
       });
       this.pageRequest();
     }
