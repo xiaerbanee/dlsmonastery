@@ -62,21 +62,10 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           officeDisabled:false,
-          formProperty:{},
           printTypeContent:'',
           fileList:[],
-          inputForm:{},
-          submitData:{
-            id:'',
-            officeId:'',
-            printType:'',
-            content:'',
-            qty:'',
-            address:'',
-            contator:'',
-            mobilePhone:'',
-            attachment:'',
-            remarks:''
+          inputForm:{
+            extra:{}
           },
           rules: {
             officeId: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
@@ -96,8 +85,7 @@
         form.validate((valid) => {
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(response.data.success) {
@@ -125,20 +113,23 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/layout/shopPrint/getForm').then((response)=>{
           this.inputForm = response.data;
-          if(this.inputForm.printType!=null){
-            this.typeChange();
-          }
-          if(this.inputForm.attachment !=null) {
-            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-              this.fileList= response.data;
-            });
+          axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(this.inputForm.printType!=null){
+              this.typeChange();
+            }
+            if(this.inputForm.attachment !=null) {
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+                this.fileList= response.data;
+              });
+            }
+          });
+          if(!this.isCreate){
+            this.officeDisabled = true;
           }
         });
-        if(!this.isCreate){
-          this.officeDisabled = true;
-        }
       }
       this.isInit = true;
       }
