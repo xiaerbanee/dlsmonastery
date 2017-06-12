@@ -48,14 +48,14 @@
           // so cid alone is not enough (#3269)
           ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
           : vnode.key;
-        if (this.cache[key] && this.$store.state.global.keep) {
+        if (this.cache[key] && this.$route.params._keep) {
           vnode.componentInstance = this.cache[key].componentInstance;
 
         } else {
 
           this.cache[key] = vnode;
         }
-        this.$store.dispatch("setKeep", false);
+//        this.$store.dispatch("setKeep", false);
         vnode.data.keepAlive = true;
       }
 
