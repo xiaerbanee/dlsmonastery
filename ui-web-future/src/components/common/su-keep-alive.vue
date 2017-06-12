@@ -48,7 +48,7 @@
           // so cid alone is not enough (#3269)
           ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
           : vnode.key;
-        if (this.cache[key] && this.$route.params._keep) {
+        if (this.cache[key]  && this.$route.params._keep) {
           vnode.componentInstance = this.cache[key].componentInstance;
 
         } else {
