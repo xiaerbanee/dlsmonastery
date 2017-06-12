@@ -4,9 +4,7 @@
     <div >
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item  >
-          <div style="color:#ff0000">
-            用于办事处批量保卡上报，上报门店默认为核销门店，上报人员默认为核销人员，请谨慎使用该功能
-          </div>
+          <su-alert  type="warning" text="用于办事处批量保卡上报，上报门店默认为核销门店，上报人员默认为核销人员，请谨慎使用该功能"> </su-alert>
         </el-form-item>
         <el-form-item :label="$t('productImeBatchUploadForm.areaId')" prop="officeId">
           <el-select v-model="inputForm.officeId" filterable clearable :placeholder="$t('productImeBatchUploadForm.inputWord')">
@@ -26,10 +24,12 @@
 </template>
 <script>
   import monthPicker from 'components/common/month-picker'
+  import suAlert from 'components/common/su-alert'
 
   export default{
     components:{
       monthPicker,
+      suAlert,
 
     },
     data(){
@@ -38,7 +38,7 @@
     methods:{
       getData() {
         return{
-
+          isInit: false,
           submitDisabled:false,
           inputForm:{
             extra:{},
@@ -69,10 +69,17 @@
           }
         });
       }
-    },created () {
+    },activated () {
+
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+
         axios.get('/api/ws/future/crm/productImeUpload/getBatchUploadForm').then((response)=>{
           this.inputForm = response.data;
         });
+      }
+      this.isInit = true;
+
     }
   }
 </script>

@@ -6,16 +6,21 @@
         <el-row >
           <el-col :span="21">
             <el-form-item >
-              <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
+              <su-alert  type="danger" :text="errMsg"> </su-alert>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item  :label="$t('imeAllotForm.imeStr')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('imeAllotForm.inputIme')" @change="imeStrChanged"></el-input>
+              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('imeAllotForm.inputIme')" ></el-input>
             </el-form-item>
-            <div v-if="imeStr !==''" >
+            <el-form-item >
+              <el-button  type="primary" @click.native="onImeStrChange">{{$t('imeAllotForm.search')}}</el-button>
+              <el-button  type="primary" @click.native="reset">{{$t('imeAllotForm.reset')}}</el-button>
+
+            </el-form-item>
+            <div v-if="searched" >
               <el-form-item :label="$t('imeAllotForm.toDepotId')" prop="toDepotId" >
                 <depot-select v-model="imeAllot.toDepotId"  category="shop" ></depot-select>
               </el-form-item>
@@ -28,7 +33,7 @@
             </div>
 
           </el-col>
-          <el-col :span="16" v-if="imeStr !==''">
+          <el-col :span="16" v-if="searched">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('imeAllotForm.productName')"></el-table-column>
@@ -58,9 +63,12 @@
 <script>
 
   import depotSelect from 'components/future/depot-select'
+  import suAlert from 'components/common/su-alert'
+
   export default{
     components:{
       depotSelect,
+      suAlert,
     },
       data(){
         return this.getData()
@@ -69,7 +77,7 @@
       getData() {
           return{
             isInit:false,
-            isCreate:this.$route.query.id==null,
+            searched:false,
             submitDisabled:false,
             imeAllot:{},
             imeStr:'',
@@ -102,11 +110,7 @@
               axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(this.submitData)).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
-                if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'imeAllotList', query: util.getQuery("imeAllotList")})
-                  }
-                }
+
               }).catch(()=>{
                 this.submitDisabled = false;
               });
@@ -116,7 +120,8 @@
           this.submitData.imeStr = this.imeStr;
           this.submitData.toDepotId = this.imeAllot.toDepotId;
           this.submitData.remarks = this.imeAllot.remarks;
-        },imeStrChanged(){
+        },onImeStrChange(){
+            this.searched = true;
           axios.get('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.imeStr}}).then((response)=>{
             this.errMsg=response.data;
           });
@@ -138,7 +143,14 @@
             }
             this.productQtyList = tmpList;
           });
-        }
+        },reset(){
+        this.searched = false;
+        this.imeStr = '';
+        this.errMsg='';
+        this.productImeList=[];
+        this.productQtyList = [];
+        this.$refs["inputForm"].resetFields();
+      }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
