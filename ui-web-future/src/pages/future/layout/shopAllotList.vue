@@ -104,6 +104,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
@@ -162,11 +163,22 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
+      console.log("promise 1")
+      this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
+        console.log("promise 2")
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+        console.log("promise 3")
+
       });
+    },activated(){
+      console.log("promise 4")
+      this.initPromise.then(()=>{
+        console.log("promise 5")
+        this.pageRequest();
+        console.log("promise 6")
+      });
+      console.log(this.initPromise);
     }
   };
 </script>

@@ -47,10 +47,9 @@
         <!-- content start -->
         <div class="db-content-wrapper">
           <section class="db-content">
-            <keep-alive >
-              <router-view  v-if="$route.meta.keepAlive"></router-view>
-            </keep-alive>
-            <router-view  v-if="!$route.meta.keepAlive"></router-view>
+            <su-keep-alive>
+              <router-view></router-view>
+            </su-keep-alive>
           </section>
         </div>
         <!-- content end -->
@@ -66,8 +65,14 @@
 
 <script>
   import Vue from 'vue';
+  import suKeepAlive from 'components/common/su-keep-alive.vue';
+
   import { mapState } from 'vuex'
   export default {
+    components:{
+      suKeepAlive,
+
+    },
     data() {
       return {
         backendMap:{},

@@ -4,7 +4,7 @@
     <div>
       <el-form :model="shopAllot" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <template>
-          <el-alert :title="errMsg" type="error"  v-if="errMsg !==''"></el-alert>
+          <su-alert  type="danger" :text="errMsg"> </su-alert>
         </template>
         <el-form-item :label="$t('shopAllotForm.fromShop')" prop="fromShopId">
             <depot-select :disabled="!isCreate" category="directShop" v-model="shopAllot.fromShopId"  @input="refreshProductListIfNeeded" ></depot-select>
@@ -49,7 +49,6 @@
       methods:{
         getData(){
           return{
-            isInit:false,
             isCreate:(this.$route.query.id==null || this.$route.query.id==''),
             submitDisabled:false,
             productName:'',
@@ -79,10 +78,15 @@
               this.initSubmitDataBeforeSubmit();
               axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
+
                 if(response.data.success) {
-                  if (this.isCreate) {
+                  if (!this.isCreate) {
+                    this.submitDisabled = false;
                     this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
+
+                  }else{
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
                   }
                 }
               }).catch(() => {
@@ -135,20 +139,21 @@
           }
         }
         this.filterShopAllotDetailList = tempList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        if(this.$route.query.id){
-          axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
-            this.setShopAllotDetailList(response.data);
+      },initPage(){
+          if(this.$route.query.id){
+            axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
+              this.setShopAllotDetailList(response.data);
+            });
+          }
+          axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.shopAllot = response.data;
           });
         }
-        axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.shopAllot = response.data;
-        });
-      }
-      this.isInit = true;
+    },created () {
+
+          this.initPage();
+
+
     }
   }
 </script>

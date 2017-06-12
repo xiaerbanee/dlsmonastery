@@ -55,7 +55,7 @@
 
           this.cache[key] = vnode;
         }
-//        this.$store.dispatch("setKeep", false);
+
         vnode.data.keepAlive = true;
       }
 
