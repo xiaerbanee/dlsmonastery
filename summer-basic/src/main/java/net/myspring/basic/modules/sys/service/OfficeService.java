@@ -122,7 +122,7 @@ public class OfficeService {
 
     public Map<String,List<String>> getChildOfficeMap(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
-        List<Office> officeList=officeRepository.findByParentId(officeId);
+        List<Office> officeList=officeRepository.findByEnabledIsTrueAndParentId(officeId);
         List<Office> childOfficeList=officeRepository.findByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
         if(CollectionUtil.isNotEmpty(childOfficeList)){
             for(Office office:childOfficeList){

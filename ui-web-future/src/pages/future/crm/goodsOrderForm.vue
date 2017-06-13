@@ -22,12 +22,12 @@
             <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
                 <el-select  :disabled="!isCreate" v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
-                  <el-option v-for="item in inputProperty.netTypeList" :key="item":label="item" :value="item"></el-option>
+                  <el-option v-for="item in inputForm.extra.netTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
                 <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
-                  <el-option v-for="item in inputProperty.shipTypeList" :key="item":label="item" :value="item"></el-option>
+                  <el-option v-for="item in inputForm.extra.shipTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </div>
@@ -87,32 +87,25 @@
     },
     methods:{
       getData() {
-      return{
-        isInit:false,
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        pageLoading:false,
-        alertError:false,
-        filterValue:'',
-        goodsOrder:{},
-        filterDetailList:[],
-        goodsOrderDetailList:[],
-        shop:{},
-        summary:'',
-        inputProperty:{},
-        inputForm:{},
-        submitData:{
-          id:'',
-          shopId:'',
-          netType:'',
-          shipType:'',
-          remarks:'',
-          goodsOrderDetailFormList:[],
-        },
-        rules: {
+        return{
+          isInit:false,
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          pageLoading:false,
+          alertError:false,
+          filterValue:'',
+          goodsOrder:{},
+          filterDetailList:[],
+          goodsOrderDetailList:[],
+          shop:{},
+          summary:'',
+          inputForm:{
+            extra:{}
+          },
+          rules: {
+          }
         }
-      }
-    },
+      },
       formSubmit(){
         var that = this;
         this.submitDisabled = true;
@@ -120,7 +113,6 @@
 
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
             var  goodsOrderDetailFormList = new Array();
             for(var index in this.filterDetailList) {
               var filterDetail = this.filterDetailList[index];
@@ -129,19 +121,19 @@
               }
             }
             this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
-            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
-                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-              }
-            }).catch(function () {
+            if(!this.isCreate){
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+            }
+          }).catch(function () {
               that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
-          }
-        })
+      }
+      })
       },filterProducts(){
         if(!this.goodsOrderDetailList){
           this.filterDetailList = [];
@@ -195,16 +187,16 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
         if(!this.isCreate) {
           axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
             this.shop = response.data;
         });
         }
       });
-        axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputProperty = response.data;
       });
         if(!this.isCreate){
           axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{

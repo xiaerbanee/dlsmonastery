@@ -1,23 +1,26 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.crm.domain.*
+import net.myspring.future.modules.crm.domain.ProductMonthPrice
+import net.myspring.future.modules.crm.dto.ProductMonthPriceDetailDto
 import net.myspring.future.modules.crm.dto.ProductMonthPriceDto
+import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.web.query.ProductMonthPriceQuery
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
 import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 
 interface ProductMonthPriceRepository : BaseRepository<ProductMonthPrice, String> ,ProductMonthPriceRepositoryCustom{
 
-    fun findByMonth(month: String): ProductMonthPrice
+    fun findByCompanyIdAndMonth(companyId: String, month: String): ProductMonthPrice?
 
 
 }
@@ -26,10 +29,24 @@ interface ProductMonthPriceRepositoryCustom {
 
     fun findPage(pageable: Pageable, productMonthPriceQuery: ProductMonthPriceQuery): Page<ProductMonthPriceDto>
 
+    fun findDto(id: String): ProductMonthPriceDto
+
 }
 
 
 class ProductMonthPriceRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductMonthPriceRepositoryCustom{
+
+    override fun findDto(id: String): ProductMonthPriceDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+            SELECT
+                t1.*
+            FROM
+                crm_product_month_price t1
+            WHERE
+                t1.id =  :id
+
+                """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ProductMonthPriceDto::class.java))
+    }
 
 
     override fun findPage(pageable: Pageable, productMonthPriceQuery: ProductMonthPriceQuery): Page<ProductMonthPriceDto> {

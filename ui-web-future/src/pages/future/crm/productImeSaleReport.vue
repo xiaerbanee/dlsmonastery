@@ -126,7 +126,6 @@
         this.formData.type=this.type;
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleReport",submitData);
-        console.log(submitData)
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {

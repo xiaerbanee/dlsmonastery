@@ -44,15 +44,6 @@
         submitDisabled:false,
         inputForm:{},
         url:'',
-        submitData:{
-          id:this.$route.query.id,
-          name:'',
-          priceChangeDate:'',
-          uploadEndDate:'',
-          productTypeIdList:[],
-          remarks:'',
-          checkPercent:'',
-        },
         rules: {
           name: [{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
         }
@@ -64,18 +55,16 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData)
-
             if(this.action==='audit'){
               this.url = '/api/ws/future/crm/priceChange/check';
             }else{
               this.url = '/api/ws/future/crm/priceChange/save';
             }
 
-            axios.post(this.url,qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post(this.url,qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
+              if(!this.inputForm.create){
                 this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
               }
             }).catch(function () {
@@ -89,9 +78,12 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/priceChange/getForm').then((response)=>{
           this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
       });
+        });
       }
       this.isInit = true;
     }

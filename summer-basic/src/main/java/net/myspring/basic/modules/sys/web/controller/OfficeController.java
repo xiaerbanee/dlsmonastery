@@ -144,7 +144,11 @@ public class OfficeController {
         List<String> officeIds=Lists.newArrayList();
         if(StringUtils.isNotBlank(officeId)){
             List<Office> officeList = officeService.findByParentIdsLike(officeId);
-            officeIds=CollectionUtil.extractToList(officeList,"id");
+            if(CollectionUtil.isNotEmpty(officeList)){
+                officeIds=CollectionUtil.extractToList(officeList,"id");
+            }else {
+                officeIds=Lists.newArrayList(officeId);
+            }
         }
         return officeIds;
     }

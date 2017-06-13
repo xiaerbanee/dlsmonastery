@@ -17,7 +17,7 @@ public class ShopDepositQuery extends BaseQuery {
 
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
-    private List<String> typeList= Lists.newArrayList();
+
 
     public String getCreatedBy() {
         return createdBy;
@@ -33,14 +33,6 @@ public class ShopDepositQuery extends BaseQuery {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public List<String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<String> typeList) {
-        this.typeList = typeList;
     }
 
     public String getCreatedDateRange() {

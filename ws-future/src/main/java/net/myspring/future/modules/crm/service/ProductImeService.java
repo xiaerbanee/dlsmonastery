@@ -12,13 +12,16 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.dto.ProductImeReportDto;
+import net.myspring.future.modules.crm.dto.ProductImeReportExportDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
@@ -33,6 +36,7 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +49,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -65,6 +71,8 @@ public class ProductImeService {
     private OfficeClient officeClient;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private DepotShopRepository depotShopRepository;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
@@ -233,7 +241,7 @@ public class ProductImeService {
             if("销售报表".equals(reportQuery.getType())){
                 productImeReportList=productImeRepository.findSaleReport(reportQuery);
             }else if("库存报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaStoreReport(reportQuery);
+                productImeReportList=productImeRepository.findStoreReport(reportQuery);
             }
         }
         return productImeReportList;
@@ -247,6 +255,21 @@ public class ProductImeService {
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
             productImeReportDto.setPercent(StringUtils.division(sum,productImeReportDto.getQty()));
         }
+    }
+
+    public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList,ReportQuery reportQuery){
+        List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+        if("按数量".equals(reportQuery.getExportType())){
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"qty","数量"));
+        }
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表"+reportQuery.getExportType(),depotReportList,simpleExcelColumnList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"销售报表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
     }
 
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {

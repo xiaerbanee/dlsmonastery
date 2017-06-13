@@ -107,8 +107,7 @@
       },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.isCheck.value = util.bool2str(this.formData.isCheck);
-        this.formLabel.hasImage.value = util.bool2str(this.formData.hasImage);
+
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("priceChangeImeList",submitData);

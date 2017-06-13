@@ -7,7 +7,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog ref="searchDialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
+      <search-dialog :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -104,6 +104,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
@@ -162,10 +163,13 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };
