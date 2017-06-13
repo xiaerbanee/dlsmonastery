@@ -78,6 +78,8 @@
               this.submitDisabled = true;
               axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
+                this.submitDisabled = false;
+
                 if(response.data.success) {
                   Object.assign(this.$data, this.getData());
                   this.initPage();

@@ -32,7 +32,6 @@
     methods:{
       getData() {
         return{
-          isInit:false,
           submitDisabled:false,
           inputForm:{
             extra:{}
@@ -52,9 +51,12 @@
           if (valid) {
             axios.post('/api/basic/sys/dictEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
+              this.submitDisabled = false;
               if(!this.inputForm.create){
                 this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
+              }else{
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -63,10 +65,7 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
           this.inputForm = response.data;
           axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -74,7 +73,8 @@
           });
         });
       }
-      this.isInit = true;
+    },created () {
+        this.initPage();
     }
   }
 </script>

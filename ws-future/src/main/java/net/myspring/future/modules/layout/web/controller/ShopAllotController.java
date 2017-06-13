@@ -3,12 +3,10 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
 import net.myspring.future.modules.layout.service.ShopAllotService;
-import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
@@ -30,24 +28,18 @@ public class ShopAllotController {
 
     @Autowired
     private ShopAllotService shopAllotService;
-
-    @Autowired
-    private ProductService productService;
     @Autowired
     private ShopAllotDetailService shopAllotDetailService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopAllotDto> list(Pageable pageable, ShopAllotQuery shopAllotQuery){
-        Page<ShopAllotDto> page = shopAllotService.findPage(pageable, shopAllotQuery);
-        return page;
+        return shopAllotService.findPage(pageable, shopAllotQuery);
     }
 
     @RequestMapping(value = "logicDelete")
     public RestResponse logicDelete(String id) {
         shopAllotService.logicDelete(id);
-        RestResponse restResponse=new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
-
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
@@ -62,13 +54,9 @@ public class ShopAllotController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
-
-
     @RequestMapping(value = "findDetailListForEdit")
     public List<ShopAllotDetailDto> findDetailListForEdit(String shopAllotId) {
-
         return shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotId);
-
     }
 
     @RequestMapping(value = "findDetailListForNew")
@@ -96,7 +84,6 @@ public class ShopAllotController {
 
     @RequestMapping(value="findDetailListForViewOrAudit")
     public List<ShopAllotDetailDto> findDetailListForViewOrAudit(String id) {
-
         return  shopAllotService.findDetailListForViewOrAudit(id);
     }
 
@@ -105,9 +92,7 @@ public class ShopAllotController {
         if(StringUtils.isBlank(id)){
             return new ShopAllotDto();
         }
-
         return shopAllotService.findDtoForViewOrAudit(id);
-
     }
 
     @RequestMapping(value="findDto")
@@ -116,11 +101,7 @@ public class ShopAllotController {
             return new ShopAllotDto();
         }
         return shopAllotService.findDto(id);
-
     }
-
-
-
 
     @RequestMapping(value="getQuery")
     public ShopAllotQuery getQuery(ShopAllotQuery shopAllotQuery) {
@@ -128,8 +109,9 @@ public class ShopAllotController {
         return shopAllotQuery;
     }
 
-
-
-
+    @RequestMapping(value="getForm")
+    public ShopAllotForm getForm(ShopAllotForm shopAllotForm) {
+        return shopAllotForm;
+    }
 
 }
