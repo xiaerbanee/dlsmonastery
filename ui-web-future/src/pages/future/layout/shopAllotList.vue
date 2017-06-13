@@ -7,7 +7,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog ref="searchDialog" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" zIndex="1800">
+      <search-dialog :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -120,8 +120,8 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
-        util.setQuery("shopAllotList",submitData);
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopAllotList", submitData);
         axios.get('/api/ws/future/crm/shopAllot',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -163,22 +163,14 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      console.log("promise 1")
       this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
-        console.log("promise 2")
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        console.log("promise 3")
-
       });
     },activated(){
-      console.log("promise 4")
       this.initPromise.then(()=>{
-        console.log("promise 5")
         this.pageRequest();
-        console.log("promise 6")
       });
-      console.log(this.initPromise);
     }
   };
 </script>

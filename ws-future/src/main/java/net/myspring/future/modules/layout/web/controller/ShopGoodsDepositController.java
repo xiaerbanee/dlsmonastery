@@ -39,8 +39,8 @@ public class ShopGoodsDepositController {
 
     @RequestMapping(value="getQuery")
     public ShopGoodsDepositQuery getQuery(ShopGoodsDepositQuery shopGoodsDepositQuery) {
-        shopGoodsDepositQuery.setOutBillTypeList(OutBillTypeEnum.getList());
-        shopGoodsDepositQuery.setStatusList(ShopGoodsDepositStatusEnum.getList());
+        shopGoodsDepositQuery.getExtra().put("outBillTypeList", OutBillTypeEnum.getList());
+        shopGoodsDepositQuery.getExtra().put("statusList", ShopGoodsDepositStatusEnum.getList());
 
         return shopGoodsDepositQuery;
     }
@@ -88,7 +88,7 @@ public class ShopGoodsDepositController {
     public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
 
         //TODO 需要修改获取departMentList的方法
-        shopGoodsDepositForm.setDepartMentList(new ArrayList<>());
+        shopGoodsDepositForm.getExtra().put("departMentList", new ArrayList<>());
 
         return shopGoodsDepositForm;
     }

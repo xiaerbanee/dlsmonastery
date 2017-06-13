@@ -140,14 +140,14 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         sb.append("""
             FROM
-                crm_product_ime t1 LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
+                crm_product_ime t1
+                LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
                 LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
                 LEFT JOIN crm_product t4 on t1.product_id=t4.id
                 LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id,
                 crm_depot_shop t6
             WHERE
                  t1.enabled = 1
-                AND t2.enabled = 1
                 and t3.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.date!=null){
@@ -161,7 +161,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     OR t2.created_date > :date
                 )
                 AND t1.created_date < :date
-""")
+            """)
         }
         if (productImeReportQuery.scoreType) {
             sb.append(""" and t5.score_type=:scoreType """)
@@ -194,60 +194,64 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     override fun findStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
+            sb.append(""" select t6.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" select t3.office_id,t1.id """)
+            sb.append(""" select t6.office_id,t1.id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' ,t5.name as 'productTypeName'""")
         }
         sb.append("""
-            FROM
-                crm_product_ime t1 LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
-                LEFT JOIN crm_depot t3 on t1.depot_id=t3.id
-                LEFT JOIN crm_product t4 on t1.product_id=t4.id
-                LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                LEFT JOIN crm_product_ime_upload t7 on t1.product_ime_upload_id=t7.id,
-                crm_depot_shop t6
-            WHERE
-                 t1.enabled = 1
-                AND t2.enabled = 1
-                and t3.depot_shop_id=t6.id
+                FROM
+                    crm_product_ime t1
+                    LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
+                    LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
+                    LEFT JOIN crm_product t4 on t1.product_id=t4.id
+                    LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id,
+                    crm_depot_shop t7
+                    WHERE
+                    t1.enabled = 1
+                    and t6.depot_shop_id=t7.id
     """)
+        if(productImeReportQuery.scoreType){
+            sb.append("""  and t5.score_type =:scoreType """)
+        }
         if(productImeReportQuery.date!=null){
             sb.append("""
-                and (
-                    t2.id is null
-                    or t2.created_date>:date
+               AND (
+                    t1.retail_date IS NULL
+                    OR t1.retail_date > :date
                 )
-                and (
-                    t7.id is null
-                    or t7.created_date>:date
+                AND (
+                    t2.id IS NULL
+                    OR t2.created_date > :date
                 )
-                and t1.created_date<:date
-""")
-        }
-        if (productImeReportQuery.scoreType) {
-            sb.append(""" and t5.score_type=:scoreType """)
+                AND (
+                    t3.id IS NULL
+                    OR t3.created_date > :date
+                )
+                AND t1.created_date <= :date
+            """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
-            sb.append(""" and t6.town_type=:townType """)
+            sb.append(""" and t7.town_type=:townType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.areaType)) {
-            sb.append(""" and t6.area_type=:areaType """)
+            sb.append(""" and t7.area_type=:areaType """)
         }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.productTypeIdList)) {
             sb.append(""" and t5.id in (:productTypeIdList) """)
         }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
-            sb.append(""" and t3.office_id in (:officeIdList) """)
+            sb.append(""" and t6.office_id in (:officeIdList) """)
         }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
-            sb.append(""" and t3.id in (:depotIdList) """)
+            sb.append(""" and t6.id in (:depotIdList) """)
         }
         if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
-            sb.append(""" group by t3.area_id """)
+            sb.append(""" group by t6.area_id """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t5.id """)
@@ -277,8 +281,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             crm_depot_shop t6
             WHERE
              t1.enabled = 1
-            AND t1.is_back = 0
-            AND t3.enabled = 1
             and t2.depot_shop_id=t6.id
     """)
         if(productImeReportQuery.dateStart!=null){

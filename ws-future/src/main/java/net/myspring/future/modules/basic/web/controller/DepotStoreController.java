@@ -8,6 +8,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.DepotStore;
+import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.service.DepotShopService;
@@ -23,6 +24,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -61,21 +64,25 @@ public class DepotStoreController {
         return new RestResponse("删除成功",null);
     }
 
-    @RequestMapping(value = "getDepotStoreQuery")
-    public DepotStoreQuery getDepotStoreQuery(DepotStoreQuery depotStoreQuery){
-        depotStoreQuery.getExtra().put("typeList", ReportTypeEnum.getList());
-        depotStoreQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
-        depotStoreQuery.getExtra().put("boolMap", BoolEnum.getMap());
-        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
-        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
-            depotStoreQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
-        }else{
-            depotStoreQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
-        }
-        depotStoreQuery.setType(ReportTypeEnum.核销.name());
-        depotStoreQuery.setScoreType(true);
-        return depotStoreQuery;
+    @RequestMapping(value = "depotReportDate")
+    public List<DepotReportDto> depotReport(ReportQuery reportQuery){
+        List<DepotReportDto> list=depotStoreService.setReportData(reportQuery);
+        return list;
     }
 
+    @RequestMapping(value = "getReportQuery")
+    public ReportQuery getReportQuery(ReportQuery reportQuery){
+        reportQuery.getExtra().put("sumTypeList", SumTypeEnum.getList());
+        reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
+        }else{
+            reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
+        }
+        reportQuery.setType(ReportTypeEnum.核销.name());
+        reportQuery.setScoreType(true);
+        return reportQuery;
+    }
 
 }

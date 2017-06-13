@@ -62,6 +62,26 @@
                     });
                   }
                 }
+                let data=table.getData();
+                for(let i=0;i<data.length; i++) {
+                  let otherTypeName = "";
+                  let accountNumber = "";
+                  if(data[i][0]) {
+                    accountNumber =data[i][0];
+                  }
+                  if(data[i][9]) {
+                    otherTypeName = data[i][9];
+                  }
+                  if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
+                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName?name=' + otherTypeName).then((response) => {
+                      let number = response.data;
+                        if (accountNumber !== number){
+                        table.setDataAtCell(i, 9, '');
+                        alert("其他类的编码前4位必须和对应科目的编码一致");
+                      }
+                    });
+                  }
+                }
               }
             }
           }
