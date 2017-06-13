@@ -13,10 +13,10 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('productTypeList.name')">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+                <el-input v-model="formData.name" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productTypeList.code')">
-                <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+                <el-input v-model="formData.code" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
