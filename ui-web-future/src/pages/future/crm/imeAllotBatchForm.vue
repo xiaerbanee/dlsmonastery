@@ -1,11 +1,11 @@
 <template>
   <div>
     <head-tab active="imeAllotBatchForm"></head-tab>
-    <search-dialog :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="small" class="search-form" zIndex="1500">
+    <search-dialog :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
       <el-form >
         <el-row :gutter="4">
           <el-col :span="12">
-            <el-form-item :label="$t('imeAllotBatchForm.ime')" prop="imeStr">
+            <el-form-item :label="$t('imeAllotBatchForm.ime')">
               <el-input type="textarea" :rows="6" v-model="imeStr"  ></el-input>
             </el-form-item>
           </el-col>
@@ -17,7 +17,7 @@
       </div>
     </search-dialog>
     <div>
-      <el-form  :model="batchChangeForm"  ref="inputForm"  :rules="rules">
+      <el-form  :model="inputForm"  ref="inputForm">
         <el-row :gutter="24">
           <el-col :span="12">
             <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -60,12 +60,14 @@
     methods: {
       getData() {
         return {
-          isInit: false,
           table: null,
           errMsg:'',
           searchFormVisible:false,
           imeStr:'',
-          imeAllotBatchForm: {},
+          inputForm: {
+              extra:{},
+          },
+          submitDisabled: false,
           settings: {
             rowHeaders: true,
             minSpareRows: 100,
@@ -92,11 +94,8 @@
               width: 200
             }],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
+          },
 
-          }, rules: {},
-          submitDisabled: false,
-          formLabelWidth: '120px',
-          remoteLoading: false,
         };
       },
       search() {
@@ -131,11 +130,12 @@
                 tableData.push(imeAllotSimpleForm);
               }
             }
-            this.imeAllotBatchForm.imeAllotSimpleFormList = tableData;
+            this.inputForm.imeAllotSimpleFormList = tableData;
 
-            axios.post('/api/ws/future/crm/imeAllot/batchAllot', qs.stringify(this.imeAllotBatchForm, {allowDots: true})).then((response) => {
+            axios.post('/api/ws/future/crm/imeAllot/batchAllot', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
+              this.initPage();
 
             }).catch( () => {
               this.submitDisabled = false;
@@ -143,20 +143,16 @@
 
           }
         })
-      }
-    },
-    activated() {
-
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-
+      },initPage(){
         axios.get('/api/ws/future/crm/imeAllot/getImeAllotBatchForm').then((response)=>{
-          this.imeAllotBatchForm = response.data;
+          this.inputForm = response.data;
           this.settings.columns[2].source = response.data.extra.toDepotNameList;
           this.table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }
-      this.isInit = true;
+    },
+    created() {
+        this.initPage();
     },
   }
 </script>
