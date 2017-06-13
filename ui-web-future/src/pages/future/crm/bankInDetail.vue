@@ -2,7 +2,7 @@
   <div>
     <head-tab active="bankInDetail"></head-tab>
     <div>
-      <el-form :model="bankIn" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('bankInDetail.shopName')" >
@@ -39,20 +39,20 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <div v-if="action=='audit'" >
+        <div v-if="action==='audit'" >
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('bankInDetail.synToCloud')" prop="syn" >
-                <bool-radio-group v-model="syn"></bool-radio-group>
+                <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.billDate')" prop="billDate"  >
-                <date-picker v-model="bankIn.billDate"></date-picker>
+                <date-picker v-model="inputForm.billDate"></date-picker>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.pass')" prop="pass" >
-                <bool-radio-group v-model="audit.pass"></bool-radio-group>
+                <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('bankInDetail.auditRemarks')" prop="auditRemarks"  >
-                <el-input type="textarea" v-model="audit.auditRemarks"></el-input>
+                <el-input type="textarea" v-model="inputForm.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()"  >{{$t('bankInDetail.save')}}</el-button>
@@ -82,17 +82,8 @@
       data(){
           return{
             bankIn:{},
-            audit:{
-                pass:false,
-                auditRemarks:'',
-            },
-            syn:true,
-            submitData:{
-              id:'',
-              syn:'',
-              billDate:'',
-              pass:'',
-              auditRemarks:'',
+            inputForm:{
+                extra:{},
             },
             action:this.$route.query.action,
             submitDisabled:false,
@@ -104,8 +95,8 @@
             form.validate((valid) => {
               if (valid) {
                 this.submitDisabled = true;
-                this.initSubmitDataBeforeSubmit();
-                axios.post('/api/ws/future/crm/bankIn/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+
+                axios.post('/api/ws/future/crm/bankIn/audit', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
                   this.submitDisabled = false;
                   if(response.data.success) {
@@ -125,15 +116,28 @@
         this.submitData.pass = this.audit.pass;
         this.submitData.auditRemarks = this.audit.auditRemarks;
 
-      }
-    },created(){
-          axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+              if(this.action !== 'audit'){
+                  return;
+              }
+          axios.get('/api/ws/future/crm/bankIn/getAuditForm').then((response)=>{
+            this.inputForm = response.data;
+
+
+            axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
               this.bankIn = response.data;
 
               if(!this.bankIn.billDate){
-//TODO 默认设置为今天
+                //TODO 默认设置为今天
               }
-          })
+            });
+          });
+
+
+      }
+    },created(){
+          this.initPage();
+
       }
     }
 </script>

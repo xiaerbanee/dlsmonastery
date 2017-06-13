@@ -6,16 +6,16 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productType:edit'">{{$t('productTypeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productType:view'">{{$t('productTypeList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:productType:view'">{{$t('productTypeList.export')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('productTypeList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('productTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productTypeList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productTypeList.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -24,7 +24,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('productTypeList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('productTypeList.name')"  width="150" sortable></el-table-column>
         <el-table-column prop="reportName" :label="$t('productTypeList.reportName')" sortable></el-table-column>
@@ -66,31 +66,28 @@
       return {
         page:{},
         formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          code:'',
-          name:'',
-        },formLabel:{
-          code:{label:this.$t('productTypeList.code')},
-          name:{label:this.$t('productTypeList.name')},
-        },
-
+        searchText:'',
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
-    };
+      };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("productTypeList",this.submitData);
-        axios.get('/api/ws/future/basic/productType?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("productTypeList",submitData);
+        axios.get('/api/ws/future/basic/productType?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
 
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
@@ -119,7 +116,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/basic/productType/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/basic/productType/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -129,12 +126,17 @@
 
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/productType/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/basic/productType/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };
 </script>
 
+0
