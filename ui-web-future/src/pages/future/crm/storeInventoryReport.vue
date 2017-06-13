@@ -18,6 +18,11 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
+              <el-form-item label="汇总" :label-width="formLabelWidth">
+                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
+                  <el-option v-for="item in formData.extra.sumTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item label="类型" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.typeList" :key="item" :label="item" :value="item"></el-option>
@@ -89,7 +94,6 @@
         util.setQuery("storeInventoryReport",this.formData);
         axios.get('/api/ws/future/basic/depotStore/depotReportDate?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
-          console.log(this.page);
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
