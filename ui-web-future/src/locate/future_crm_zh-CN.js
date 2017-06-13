@@ -1771,6 +1771,10 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    searchProductTypeName: "搜索统计名称",
+    formInvalid: "表单存在错误，请先修正",
+    notify: "提示",
+
   },
   productMonthPriceList: {
     productMonthPriceList: "每月价格",

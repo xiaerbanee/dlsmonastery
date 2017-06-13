@@ -159,7 +159,6 @@ public class CnJournalForBankService {
             map.put("customerForFlag",false);
         }
         map.put("accountForBankList",bdAccountRepository.findByIsBank(true));
-        map.put("otherTypeNameMap",basAssistantRepository.findByType("其他类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
         cnJournalForBankForm.setExtra(map);
         return cnJournalForBankForm;
     }

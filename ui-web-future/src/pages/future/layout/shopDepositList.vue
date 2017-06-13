@@ -5,30 +5,27 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">{{$t('shopDepositList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-Index="1500">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.shopName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
-
-              <el-form-item :label="formLabel.type.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.type')" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('shopDepositList.inputKey')">
-                  <el-option v-for="item in formData.typeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-
-
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy"></account-select>
+              <el-form-item :label="$t('shopDepositList.createdBy')" :label-width="formLabelWidth">
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -37,7 +34,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('shopDepositList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
 
         <el-table-column fixed prop="id" :label="$t('shopDepositList.billCode')" sortable width="100"></el-table-column>
@@ -80,37 +77,31 @@
       return {
         page:{},
         pageLoading:false,
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          shopName:'',
-          createdBy:'',
-          createdDateRange:'',
-          type:'',
-          remarks:''
-        },formLabel:{
-          shopName:{label:this.$t('shopDepositList.shopName')},
-          createdBy:{label:this.$t('shopDepositList.createdBy')},
-          createdDateRange:{label:this.$t('shopDepositList.createdDate')},
-          type:{label:this.$t('shopDepositList.type')},
-          remarks:{label:this.$t('shopDepositList.remarks')}
+        formData:{
+            extra:{},
         },
+        initPromise:{},
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
       };
     },
     methods: {
-
+      setSearchText(){
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopDepositList",this.submitData);
-        axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopDepositList",submitData);
+
+        axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
 
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
@@ -127,13 +118,15 @@
         this.$router.push({ name: 'shopDepositForm'})
       }
     },created () {
-
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };

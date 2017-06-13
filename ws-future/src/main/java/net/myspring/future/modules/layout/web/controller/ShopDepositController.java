@@ -30,10 +30,9 @@ public class ShopDepositController {
         return shopDepositService.findPage(pageable, shopDepositQuery);
     }
 
-
     @RequestMapping(value = "getQuery")
     public ShopDepositQuery getQuery(ShopDepositQuery shopDepositQuery) {
-        shopDepositQuery.setTypeList( ShopDepositTypeEnum.getList());
+        shopDepositQuery.getExtra().put("typeList", ShopDepositTypeEnum.getList());
         return shopDepositQuery;
     }
 

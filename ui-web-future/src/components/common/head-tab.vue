@@ -33,12 +33,16 @@
         }
     },methods: {
       headTabClick (event) {
+        if(event.target.dataset.tabName === this.currentActive){
+          return ;
+        }
         let name=event.target.dataset.tabName;
+        let keep = false;
         if(name!="home"){
           var query = this.tabs.get(name);
-          query.headClick = true;
+          keep = true;
         }
-        this.$router.push({ name: name, query: query})
+        this.$router.push({ name: name, query: query, params:{_keep:keep}})
       },
       headTabRemove(event) {
         this.tabs.delete(event.target.dataset.tabName);
@@ -52,8 +56,7 @@
             this.tabList = this.getTabList();
           } else {
             var query = this.tabs.get(tabItem.name);
-            query.headClick = true;
-            this.$router.push({ name: tabItem.name, query: query})
+            this.$router.push({ name: tabItem.name, query: query, params:{_keep:true}})
           }
         }
       },

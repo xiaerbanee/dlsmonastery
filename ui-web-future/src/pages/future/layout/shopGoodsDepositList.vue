@@ -7,35 +7,35 @@
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopGoodsDeposit:audit'">{{$t('shopGoodsDepositList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.export')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-Index="1500">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.shopName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.bankName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.bank')" :label-width="formLabelWidth">
                 <el-input v-model="formData.bankName" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.status')" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('shopGoodsDepositList.inputStatus')">
-                  <el-option v-for="item in formData.statusList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.amount.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.Deposit')" :label-width="formLabelWidth">
                 <el-input v-model="formData.amount" auto-complete="off" :placeholder="$t('shopGoodsDepositList.preciseSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.outBillType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.outBillType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.outBillType" clearable filterable :placeholder="$t('shopGoodsDepositList.inputStatus')">
-                  <el-option v-for="item in formData.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -44,7 +44,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('shopGoodsDepositList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column prop="formatId" column-key="id"  :label="$t('shopGoodsDepositList.code')" width="160" sortable></el-table-column>
@@ -84,41 +84,33 @@
   export default {
     data() {
       return {
+        initPromise:{},
+        searchText:'',
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          shopName:'',
-          remarks:'',
-          bankName:'',
-          createdDateRange:'',
-          status:'',
-          amount:'',
-          outBillType:''
-        },formLabel:{
-          createdDateRange:{label: this.$t('shopGoodsDepositList.createdDate')},
-          shopName:{label:this.$t('shopGoodsDepositList.shopName')},
-          remarks:{label:this.$t('shopGoodsDepositList.remarks')},
-          bankName:{label:this.$t('shopGoodsDepositList.bank')},
-          status:{label:this.$t('shopGoodsDepositList.status')},
-          amount:{label:this.$t('shopGoodsDepositList.Deposit')},
-          outBillType:{label:this.$t('shopGoodsDepositList.outBillType')}
+        formData:{
+          extra:{},
         },
         selects:[],
         formLabelWidth: '120px',
         formVisible: false,
+
       };
     },
     methods: {
+      setSearchText(){
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("shopGoodsDepositList",this.submitData);
-        axios.get('/api/ws/future/crm/shopGoodsDeposit?'+qs.stringify(this.submitData)).then((response) => {
+
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopGoodsDepositList",submitData);
+        axios.get('/api/ws/future/crm/shopGoodsDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -148,7 +140,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/shopGoodsDeposit/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/crm/shopGoodsDeposit/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -185,12 +177,15 @@
 
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
       });
 
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>
