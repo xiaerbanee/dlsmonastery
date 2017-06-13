@@ -19,13 +19,13 @@
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('accountList.officeName')"  :label-width="formLabelWidth">
-                <office-select v-model="formData.officeName"></office-select>
+                <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="$t('accountList.leader')" :label-width="formLabelWidth">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('accountList.positionName')" :label-width="formLabelWidth">
-                <el-select v-model="formData.positionName" clearable filterable :placeholder="$t('accountList.selectGroup')">
+                <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('accountList.selectGroup')">
                   <el-option v-for="position in formData.extra.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -69,6 +69,7 @@
           extra:{}
         },
         searchText:"",
+        initPromise:{},
         offices:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -129,10 +130,13 @@
     },created () {
       var that=this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/hr/account/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/basic/hr/account/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+    },activated(){
+      this.initPromise.then(() => {
+        this.pageRequest();
       });
     }
   };

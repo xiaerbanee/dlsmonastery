@@ -20,6 +20,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.EntityManager
 
@@ -53,9 +54,9 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
         FROM #{#entityName} t1
         where t1.enabled=1
         and t1.status=:status
-        and t1.regularDate>:regularDate
+        and t1.regularDate > :regularDate
     """)
-    fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDateTime): MutableList<Employee>
+    fun findByStatusAndregularDate(@Param("status") status: String, @Param("regularDate") regularDate: LocalDate): MutableList<Employee>
 
     @Query("""
         SELECT t1

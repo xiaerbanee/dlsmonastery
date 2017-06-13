@@ -49,23 +49,12 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{
             extra:{}
         },
         demoPhoneTypeOfficeDtos:[],
-        submitData:{
-          id:'',
-          name:'',
-          limitQty:'',
-          applyEndDate:'',
-          renewEndDate:'',
-          remarks:'',
-          demoPhoneTypeOfficeDtos:[],
-          productTypeIdList:[]
-        },
         remoteLoading:false,
         productTypes:[],
         rules: {
@@ -82,19 +71,20 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
             let demoPhoneTypeOfficeList = new Array();
             for(let key in this.demoPhoneTypeOfficeDtos){
                 if(this.demoPhoneTypeOfficeDtos[key].qty!=0&&this.demoPhoneTypeOfficeDtos[key].qty!=null){
                     demoPhoneTypeOfficeList.push(this.demoPhoneTypeOfficeDtos[key]);
                 }
             }
-            this.submitData.demoPhoneTypeOfficeDtos = demoPhoneTypeOfficeList;
             axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
+                  this.submitDisabled = false;
                   this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
+                }else{
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
                 }
               }).catch(function () {
                 that.submitDisabled = false;
@@ -128,10 +118,8 @@
           realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
         }
         this.inputForm.limitQty  = realSum;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+    initPage(){
         axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.demoPhoneTypeOfficeDtos = response.data.demoPhoneTypeOfficeDtos;
         this.inputForm = response.data;
@@ -140,7 +128,8 @@
             });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

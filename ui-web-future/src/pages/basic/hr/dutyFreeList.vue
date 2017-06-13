@@ -81,6 +81,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
+    },activated() {
       this.pageRequest();
     }
   };

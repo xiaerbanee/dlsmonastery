@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="bankList"></head-tab>
+    <head-tab active="dutyAnnualList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{$t('dutyAnnualList.add')}}</el-button>
@@ -36,6 +36,7 @@
       return {
         page:{},
         formData:{
+          name:"",
           extra:{}
         },
         searchText:'',
@@ -75,6 +76,7 @@
       },
     },created () {
       this.pageHeight = window.outerHeight -320;
+    },activated() {
       this.pageRequest();
     }
   };

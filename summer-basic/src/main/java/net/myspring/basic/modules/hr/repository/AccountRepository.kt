@@ -173,7 +173,6 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (accountQuery.positionId != null) {
             sb.append("""
                 and t1.position_id =:positionId
-            )
             """)
         }
         if (accountQuery.employeeName != null) {
