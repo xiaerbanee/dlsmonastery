@@ -14,8 +14,6 @@ public class ShopGoodsDepositForm extends BaseForm<ShopGoodsDeposit> {
     private BigDecimal amount;
     private String departMent;
 
-    private List<String> departMentList;
-
     public String getShopId() {
         return shopId;
     }
@@ -48,11 +46,4 @@ public class ShopGoodsDepositForm extends BaseForm<ShopGoodsDeposit> {
         this.departMent = departMent;
     }
 
-    public List<String> getDepartMentList() {
-        return departMentList;
-    }
-
-    public void setDepartMentList(List<String> departMentList) {
-        this.departMentList = departMentList;
-    }
 }

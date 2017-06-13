@@ -215,7 +215,12 @@ public class ExcelUtils {
                     SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
                     Object value=null;
                     if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
-                        value = ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
+                        if(StringUtils.isNotBlank(simpleExcelColumn.getFieldKey())){
+                            Map<String,Object> map=ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
+                            value = map.get(simpleExcelColumn.getFieldKey());
+                        }else {
+                            value = ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
+                        }
                     }
                     Cell cell = row.createCell(i);
                     cell.setCellStyle(simpleExcelColumn.getCellStyle());

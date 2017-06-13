@@ -62,8 +62,6 @@ public class ProductTypeController {
 
     }
 
-
-
     @RequestMapping(value = "search")
     public List<ProductTypeDto> search(String name){
         return productTypeService.findByNameLike(name);
@@ -73,6 +71,11 @@ public class ProductTypeController {
     public String export(ProductTypeQuery productTypeQuery) {
 
         return productTypeService.export(productTypeQuery);
+    }
+
+    @RequestMapping(value = "getForm")
+    public ProductTypeForm getForm(ProductTypeForm productTypeForm) {
+        return productTypeForm;
     }
 
 }
