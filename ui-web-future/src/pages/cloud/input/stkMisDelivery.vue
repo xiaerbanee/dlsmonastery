@@ -7,7 +7,7 @@
           <el-col :span="6">
             <el-form-item :label="formLabel.departmentNumber.label"  :label-width="formLabelWidth" prop="departmentNumber">
               <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
-                <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+                <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -41,6 +41,7 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
+          minSpareRows: 1,
           colHeaders: ["货品编码", "货品", "仓库", "数量", "类型", "备注"],
           columns: [
             {type: "autocomplete", strict: true, productNumber:[],source: this.productNumber},

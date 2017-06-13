@@ -6,8 +6,8 @@
         <el-row :gutter="24">
           <el-col :span="6">
             <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth" prop="storeNumber">
-              <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStore" :loading="remoteLoading">
-                <el-option v-for="item in storeList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+              <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
+                <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -35,12 +35,13 @@
     data() {
       return {
         table:null,
-        storeList:{},
+        stockList:{},
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
+          minSpareRows: 1,
           colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
           columns: [
             {type:"text", allowEmpty: false, strict: true},
@@ -117,15 +118,15 @@
           }
         })
       },
-      remoteStore(query) {
+      remoteStock(query) {
         if (query !== '') {
           this.remoteLoading = true;
           axios.get('/api/global/cloud/kingdee/bdStock/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.storeList = response.data;
+            this.stockList = response.data;
             this.remoteLoading = false;
           })
         } else {
-          this.storeList = {};
+          this.stockList = {};
         }
       },
     }

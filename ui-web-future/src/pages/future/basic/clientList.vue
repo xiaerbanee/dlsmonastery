@@ -30,7 +30,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="remarks" :label="$t('clientList.remarks')"></el-table-column>
-
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
@@ -45,6 +44,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
@@ -58,7 +58,6 @@
         })
       },
       pageRequest() {
-
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
@@ -79,15 +78,17 @@
         this.formVisible = false;
         this.pageRequest();
       }
-
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/client/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/basic/client/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
       });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

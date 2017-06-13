@@ -7,28 +7,28 @@
         <el-button type="primary" @click="itemBillAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyBillForm')}}</el-button>
         <el-button type="primary" @click="grain" icon="plus" v-permit="'crm:adApply:goods'">{{$t('adApplyList.adApplyGoods')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adApply:view'">{{$t('adApplyList.filterOrExport')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form">
-        <el-form :model="formData" method="get" >
+      <search-dialog :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+        <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+              <el-form-item :label="$t('adApplyList.shopName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.productCodeList.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adApplyList.productCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdLoginName.label" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy"></account-select>
+              <el-form-item :label="$t('adApplyList.createdBy')" :label-width="formLabelWidth">
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adApplyList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adApplyList.productName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.isBilled.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adApplyList.isBilled')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.isBilled"></bool-select>
               </el-form-item>
             </el-col>
@@ -38,18 +38,18 @@
           <el-button type="primary" @click="exportData()">{{$t('adApplyList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('adApplyList.createdBy')"></el-table-column>
-        <el-table-column prop="productCode" :label="$t('adApplyList.productCode')"></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')" sortable></el-table-column>
+        <el-table-column column-key="createdBy" prop="createdByName" :label="$t('adApplyList.createdBy')" sortable></el-table-column>
+        <el-table-column column-key="productId" prop="productCode" :label="$t('adApplyList.productCode')" sortable></el-table-column>
         <el-table-column prop="expiryDateRemarks" :label="$t('adApplyList.expiryDateRemarks')"></el-table-column>
-        <el-table-column prop="productName" :label="$t('adApplyList.product')"></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')"></el-table-column>
-        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')"></el-table-column>
-        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')"></el-table-column>
-        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')"></el-table-column>
+        <el-table-column column-key="productId" prop="productName" :label="$t('adApplyList.product')" sortable></el-table-column>
+        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')" sortable></el-table-column>
+        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')" sortable></el-table-column>
+        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')" sortable></el-table-column>
+        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')" sortable></el-table-column>
         <el-table-column prop="orderId" :label="$t('adApplyList.orderId')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
       </el-table>
@@ -68,29 +68,12 @@
     data() {
       return {
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          shopId:'',
-          productCode:'',
-          createdBy:'',
-          createdDate:'',
-          productName:'',
-          isBilled:''
+        searchText:"",
+        formData:{
+            extra:{}
         },
-        formLabel:{
-          shopName:{label:this.$t('adApplyList.shopName')},
-          productCodeList:{label:this.$t('adApplyList.productCode')},
-          createdLoginName:{label:this.$t('adApplyList.createdBy')},
-          createdDateBTW:{label:this.$t('adApplyList.createdDate')},
-          productName:{label:this.$t('adApplyList.productName')},
-          isBilled:{label:this.$t('adApplyList.isBilled'),value:""}
-        },
-
-
-        pickerDateOption:util.pickerDateOption,
-        productList:[],
+        initPromise:{},
+        pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -98,11 +81,17 @@
       };
     },
     methods: {
+      setSearchText(){
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("adApplyList", this.submitData);
-        axios.get('/api/ws/future/layout/adApply',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("adApplyList", submitData);
+        axios.get('/api/ws/future/layout/adApply',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -111,7 +100,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -125,20 +114,16 @@
         this.$router.push({name: 'adApplyGoods'});
       },exportData(){
 				window.location.href= "/api/crm/adApply/export?"+qs.stringify(this.formData);
-      },getProductList(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/crm/product/search',{params:{code:query}}).then((response)=>{
-            this.productList = response.data;
-            this.remoteLoading = false;
-            })
-        }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
-        this.formData = response.data;
-        util.copyValue(this.$route.query,this.formData);
+        let that = this;
+      that.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
+        that.formData = response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }

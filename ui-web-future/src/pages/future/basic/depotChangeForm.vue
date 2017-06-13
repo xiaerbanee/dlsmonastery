@@ -6,13 +6,11 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('depotChangeForm.depotName')" prop="depotId">
-              <el-select v-model="inputForm.depotId" filterable remote :placeholder="$t('depotChangeForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true @change="getDepot(inputForm.depotId)">
-                <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-              </el-select>
+              <depot-select v-model="inputForm.depotId" category="store"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.type')" prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('depotChangeForm.selectGroup')" @change="getOldValue">
-                <el-option v-for="item in formProperty.types" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.types" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.expiryDate')" prop="expiryDate">
@@ -25,14 +23,14 @@
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('depotChangeForm.newValue')" prop="newValue">
-              <el-select v-model="inputForm.newValue"  clearable :placeholder="$t('depotChangeForm.inputKey')">
+              <!--<el-select v-model="inputForm.newValue"  clearable :placeholder="$t('depotChangeForm.inputKey')">
                 <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="value | bool2str" :value="key"></el-option>
-              </el-select>
+              </el-select>-->
             </el-form-item>
             <el-form-item v-show="inputForm.type=='价格体系'" :label="$t('depotChangeForm.newValue')" prop="newValue" >
-              <el-select v-model="inputForm.newValue" filterable :placeholder="$t('depotChangeForm.selectGroup')">
+              <!--<el-select v-model="inputForm.newValue" filterable :placeholder="$t('depotChangeForm.selectGroup')">
                 <el-option v-for="item in formProperty.pricesystems" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              </el-select>-->
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -48,7 +46,9 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select'
   export default{
+    components:{depotSelect},
     data(){
       return this.getData()
     },
@@ -58,17 +58,8 @@
         isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
-        depot:{},
-        depots:[],
         inputForm:{
-          id:'',
-          type:'',
-          depotId:"",
-          expiryDate:'',
-          oldValue:'',
-          newValue:'',
-          remarks:''
+            extra:{}
         },
         rules: {
           depotId: [{ required: true, message: this.$t('depotChangeForm.prerequisiteMessage')}],
@@ -130,13 +121,12 @@
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/crm/depotChange/getForm').then((response)=>{
-          this.formProperty = response.data;
+        axios.get('/api/ws/future/crm/depotChange/getForm').then((response)=>{
+          this.inputForm = response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            this.depots = new Array(response.data.depot)
           })
         }
       }

@@ -58,7 +58,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.annualYear=util.formatLocalDate(this.submitData.annualYear)
+            /*this.inputForm.annualYear = util.formatLocalDate(this.inputForm.annualYear);*/
             axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);

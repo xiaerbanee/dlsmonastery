@@ -87,7 +87,7 @@
             for(var index in this.inputForm.adApplyList){
               var detail=this.inputForm.adApplyList[index];
               if(util.isNotBlank(detail.applyQty)){
-                tempList.push(detail)
+                tempList.push(detail);
                 qtyList.push(detail.applyQty);
               }
             }
@@ -131,8 +131,8 @@
        },onchange(){
           this.submitDisabled = true;
           axios.get('api/ws/future/layout/adApply/getForm',{params:{billType:this.inputForm.billType}}).then((response) =>{
-          this.inputForm.adApplyList = response.data;
-          this.submitDisabled = false;
+              this.inputForm.adApplyList = response.data;
+              this.submitDisabled = false;
           });
       },initPage(){
 

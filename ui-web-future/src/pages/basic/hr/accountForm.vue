@@ -98,9 +98,12 @@
             var submitData = util.deleteExtra(this.inputForm);
             axios.post('/api/basic/hr/account/save',qs.stringify(submitData)).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
+              this.submitDisabled = false;
               if(!this.isCreate){
                 this.$router.push({name:'accountList',query:util.getQuery("accountList")})
+              }else {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -109,11 +112,8 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+      initPage(){
         axios.get('/api/basic/hr/account/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
           axios.get('/api/basic/hr/account/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -121,7 +121,8 @@
           })
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

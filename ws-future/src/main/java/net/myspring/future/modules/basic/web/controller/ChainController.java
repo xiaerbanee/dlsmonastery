@@ -49,5 +49,9 @@ public class ChainController {
         return chainService.findOne(id);
     }
 
+    @RequestMapping(value = "getForm")
+    public ChainForm getForm(ChainForm chainForm){
+        return chainForm;
+    }
 
 }

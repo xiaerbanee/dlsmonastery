@@ -49,26 +49,27 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val==""||typeof(val)=="undefined") {
-          return;
+        if(val){
+          this.innerId=val;
+          let idStr=this.innerId;
+          if(this.multiple && this.innerId){
+            idStr=this.innerId.join();
+          }
+          if(util.isBlank(idStr)) {
+            return;
+          }
+          this.remoteLoading = true;
+          axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{
+            this.itemList=response.data;
+            this.remoteLoading = false;
+            this.$nextTick(()=>{
+              this.$emit('afterInit');
+            });
+          })
+        }else{
+          this.innerId=[];
         }
-        this.innerId=val;
-        let idStr=this.innerId;
-        if(this.multiple && this.innerId){
-          idStr=this.innerId.join();
-        }
-        if(util.isBlank(idStr) || this.itemList.length>0) {
-          return;
-        }
-        this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{
-          this.itemList=response.data;
-          this.remoteLoading = false;
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
-          });
 
-        })
       }
     },created () {
       this.setValue(this.value);

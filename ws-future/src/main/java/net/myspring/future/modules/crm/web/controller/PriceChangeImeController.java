@@ -36,7 +36,7 @@ public class PriceChangeImeController {
 
     @RequestMapping(value = "getQuery")
     public PriceChangeImeQuery getQuery(PriceChangeImeQuery priceChangeImeQuery){
-        priceChangeImeQuery.setStatusList(AuditStatusEnum.getList());
+        priceChangeImeQuery.getExtra().put("statusList",AuditStatusEnum.getList());
         return priceChangeImeQuery;
     }
 

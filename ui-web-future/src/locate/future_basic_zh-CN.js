@@ -98,6 +98,7 @@ export default {
     officeName: "机构",
     isAdPricesystem: "是否属于该类别",
     areaName: "办事处",
+    shop:"门店",
     shopType: "门店类型",
     chainName: "连锁体系",
     areaType: "区域类型",

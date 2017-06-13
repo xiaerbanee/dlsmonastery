@@ -9,7 +9,7 @@
         <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
+        <el-form-item :label="$t('chainForm.shop')" prop="depotList">
           <depot-select v-model="inputForm.depotIdList" category="shop" multiple="multiple"></depot-select>
         </el-form-item>
         <el-form-item>
@@ -31,17 +31,12 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        inputForm:{},
-        loading:false,
-        submitData:{
-            id:"",
-            name:"",
-            remarks:"",
-            depotIdList:[]
+        inputForm:{
+          extra:{}
         },
+        loading:false,
         rules: {
           name: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}]
         }
@@ -49,15 +44,17 @@
     },
       formSubmit(){
         var that = this;
-          this.submitDisabled = true;
+        this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/chain/save',qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/basic/chain/save',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
+              if(this.inputForm.isCreate){
+                Object.assign(this.$data,this.inputForm);
+                this.initPage();
+              }else {
+                this.submitDisabled = false;
                 this.$router.push({name:'chainList',query:util.getQuery("chainList")})
               }
             }).catch(function () {
@@ -67,15 +64,16 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+        axios.get('/api/ws/future/basic/chain/getForm').then((response)=>{
           this.inputForm = response.data;
+          axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

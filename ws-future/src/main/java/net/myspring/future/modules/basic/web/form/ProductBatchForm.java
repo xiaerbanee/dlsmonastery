@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class ProductBatchForm extends BaseForm<Product>{
 
-    private List<List<String>> productList;
+    private String productList;
 
-    public List<List<String>> getProductList() {
+    public String getProductList() {
         return productList;
     }
 
-    public void setProductList(List<List<String>> productList) {
+    public void setProductList(String productList) {
         this.productList = productList;
     }
 }

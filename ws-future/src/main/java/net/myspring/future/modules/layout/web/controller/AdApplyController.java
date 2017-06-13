@@ -44,6 +44,10 @@ public class AdApplyController {
         return adApplyService.getForm(adApplyForm);
     }
 
+    @RequestMapping(value = "findOne")
+    public AdApplyDto findOne(String id){
+        return adApplyService.findOne(id);
+    }
 
     @RequestMapping(value = "save")
     public RestResponse save(AdApplyForm adApplyForm){

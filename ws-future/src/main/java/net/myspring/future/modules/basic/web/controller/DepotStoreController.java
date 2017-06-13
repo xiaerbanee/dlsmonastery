@@ -103,4 +103,9 @@ public class DepotStoreController {
         return reportQuery;
     }
 
+    @RequestMapping(value = "getQuery")
+    public DepotStoreQuery getQuery(DepotStoreQuery depotStoreQuery){
+        return depotStoreQuery;
+    }
+
 }

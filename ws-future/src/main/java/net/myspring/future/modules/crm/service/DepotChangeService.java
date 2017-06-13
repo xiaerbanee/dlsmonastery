@@ -1,8 +1,15 @@
 package net.myspring.future.modules.crm.service;
 
+import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.crm.dto.DepotChangeDto;
 import net.myspring.future.modules.crm.repository.DepotChangeRepository;
 import net.myspring.future.modules.crm.domain.DepotChange;
+import net.myspring.future.modules.crm.web.query.DepotChangeQuery;
+import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +19,25 @@ public class DepotChangeService {
 
     @Autowired
     private DepotChangeRepository depotChangeRepository;
+    @Autowired
+    private CacheUtils cacheUtils;
+
+    public Page<DepotChangeDto> findPage(Pageable pageable, DepotChangeQuery depotChangeQuery){
+        Page<DepotChangeDto> page = depotChangeRepository.findPage(pageable,depotChangeQuery);
+        cacheUtils.initCacheInput(page.getContent());
+        return page;
+    }
+
+    public DepotChangeDto findOne(String id){
+        DepotChangeDto depotChangeDto;
+        if(StringUtils.isBlank(id)){
+            depotChangeDto = new DepotChangeDto();
+        }else{
+            depotChangeDto = BeanUtil.map(depotChangeRepository.findOne(id),DepotChangeDto.class);
+            cacheUtils.initCacheInput(depotChangeDto);
+        }
+        return depotChangeDto;
+    }
 
 
     public void logicDelete(String id) {
