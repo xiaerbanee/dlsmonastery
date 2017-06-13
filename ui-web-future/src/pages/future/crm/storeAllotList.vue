@@ -9,36 +9,36 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('storeAllotList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.status')" :label-width="formLabelWidth" >
+              <el-form-item :label="$t('storeAllotList.status')">
                 <el-select v-model="formData.status" clearable>
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.createdBy')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.createdBy')">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.remarks')" :label-width="formLabelWidth">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('storeAllotList.remarks')">
+                <el-input v-model="formData.remarks" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('storeAllotList.fromStore')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.fromStore')">
                 <depot-select category="store" v-model="formData.fromStoreId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.toStore')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('storeAllotList.toStore')">
                 <depot-select category="store" v-model="formData.toStoreId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.outCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('storeAllotList.outCode')">
+                <el-input v-model="formData.outCode" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('storeAllotList.businessId')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('storeAllotList.businessId')">
+                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -48,7 +48,7 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
         <el-table-column prop="fromStoreName" column-key="fromStoreId"  :label="$t('storeAllotList.fromStore')" sortable ></el-table-column>
         <el-table-column prop="toStoreName" column-key="toStoreId" :label="$t('storeAllotList.toStore')" sortable ></el-table-column>
@@ -84,11 +84,11 @@
     data() {
       return {
         page:{},
+        initPromise:{},
         searchText:"",
         formData:{
             extra:{}
         },
-        formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
         multipleSelection:[],
@@ -103,7 +103,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("storeAllotList",submitData);
         axios.get('/api/ws/future/crm/storeAllot',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -137,9 +137,7 @@
         }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
         }else if(action==="print"){
-
           this.$router.push({ name: 'storeAllotPrint', query: { id: id }});
-
         }else if(action==="shipPrint"){
           this.$router.push({ name: 'storeAllotShipPrint', query: { id: id }});
         }else if(action==="delete") {
@@ -170,14 +168,14 @@
         }
       }
     },created () {
-
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      this.initPromise = axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
+    },activated(){
+        this.initPromise.then(()=>{
+            this.pageRequest();
+        });
     }
   };
 </script>

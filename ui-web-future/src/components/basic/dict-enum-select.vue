@@ -18,10 +18,7 @@
         this.$emit('input', newVal);
       },
       setValue(val){
-        if(this.innerId == val || val==""||typeof(val)=="undefined") {
-          return;
-        }
-        this.innerId=val;
+          this.innerId=val;
       }
     },created () {
       axios.get('/api/basic/sys/dictEnum/findByCategory?category=' + this.category).then((response)=>{

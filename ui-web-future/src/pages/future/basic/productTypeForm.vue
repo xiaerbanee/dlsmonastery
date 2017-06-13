@@ -85,6 +85,7 @@
                 if(response.data.success) {
                     if (this.isCreate) {
                       Object.assign(this.$data, this.getData());
+                      console.log(this.$data)
                       this.initPage();
                     }else{
                       this.submitDisabled = false;
