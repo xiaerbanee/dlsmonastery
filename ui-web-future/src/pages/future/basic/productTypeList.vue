@@ -66,6 +66,7 @@
       return {
         page:{},
         formData:{},
+        searchText:'',
         initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
