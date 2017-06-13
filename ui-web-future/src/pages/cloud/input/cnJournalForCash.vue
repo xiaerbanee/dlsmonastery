@@ -73,9 +73,9 @@
                     otherTypeName = data[i][9];
                   }
                   if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
-                    axios.get('/api/global/cloud/kingdee/basAssistant/findByName?name=' + otherTypeName).then((response) => {
-                      let basAssistant = response.data;
-                      if (accountNumber !== basAssistant.FNumber){
+                    axios.get('/api/global/cloud/kingdee/basAssistant/findNumberSubByName?name=' + otherTypeName).then((response) => {
+                      let number = response.data;
+                        if (accountNumber !== number){
                         table.setDataAtCell(i, 9, '');
                         alert("其他类的编码前4位必须和对应科目的编码一致");
                       }
