@@ -39,8 +39,8 @@ public class ShopGoodsDepositController {
 
     @RequestMapping(value="getQuery")
     public ShopGoodsDepositQuery getQuery(ShopGoodsDepositQuery shopGoodsDepositQuery) {
-        shopGoodsDepositQuery.setOutBillTypeList(OutBillTypeEnum.getList());
-        shopGoodsDepositQuery.setStatusList(ShopGoodsDepositStatusEnum.getList());
+        shopGoodsDepositQuery.getExtra().put("outBillTypeList", OutBillTypeEnum.getList());
+        shopGoodsDepositQuery.getExtra().put("statusList", ShopGoodsDepositStatusEnum.getList());
 
         return shopGoodsDepositQuery;
     }

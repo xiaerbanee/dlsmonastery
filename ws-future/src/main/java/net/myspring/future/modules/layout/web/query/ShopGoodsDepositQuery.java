@@ -16,11 +16,10 @@ public class ShopGoodsDepositQuery extends BaseQuery {
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
     private String status;
-    private List<String> statusList;
     private BigDecimal amount;
     private String outBillType;
 
-    private List<String> outBillTypeList;
+
 
 
     public String getOutBillType() {
@@ -29,14 +28,6 @@ public class ShopGoodsDepositQuery extends BaseQuery {
 
     public void setOutBillType(String outBillType) {
         this.outBillType = outBillType;
-    }
-
-    public List<String> getOutBillTypeList() {
-        return outBillTypeList;
-    }
-
-    public void setOutBillTypeList(List<String> outBillTypeList) {
-        this.outBillTypeList = outBillTypeList;
     }
 
     public String getShopName() {
@@ -69,14 +60,6 @@ public class ShopGoodsDepositQuery extends BaseQuery {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public List<String> getStatusList() {
-        return statusList;
-    }
-
-    public void setStatusList(List<String> statusList) {
-        this.statusList = statusList;
     }
 
     public BigDecimal getAmount() {
