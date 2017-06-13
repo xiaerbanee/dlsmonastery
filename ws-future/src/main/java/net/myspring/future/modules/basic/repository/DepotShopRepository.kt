@@ -25,7 +25,7 @@ interface DepotShopRepository : BaseRepository<DepotShop,String>,DepotShopReposi
 
 interface DepotShopRepositoryCustom{
 
-    fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto>
+    fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto>?
 
     fun findSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
@@ -58,7 +58,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
-                    AND t2.enabled = 1
                     and  t6.depot_shop_id=t7.id
         """)
         if(reportQuery.scoreType){
@@ -89,6 +88,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t6.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIds)) {
+            sb.append(""" and t6.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
             sb.append(""" and t6.id in (:depotIdList) """)
         }
@@ -102,7 +104,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" group by t1.depot_id,t5.id""")
+            sb.append(""" ,t5.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -114,23 +116,21 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName'""")
         }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t2.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName'
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
                     FROM
-                    crm_product_ime_sale t1
-                    LEFT JOIN crm_product_ime t2 ON t1.product_ime_id = t2.id
-                    LEFT JOIN crm_product_ime_upload t3 ON t2.product_ime_id = t3.id
-                    LEFT JOIN crm_product t4 on t2.product_id=t4.id
+                    crm_product_ime t1
+                    LEFT JOIN crm_product_ime_upload t2 ON t1.product_ime_upload_id = t2.id
+                    LEFT JOIN crm_product_ime_sale t3 ON t1.product_ime_sale_id = t3.id
+                    LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
-                    LEFT JOIN crm_depot t6 on t1.shop_id=t6.id
+                    LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
                     LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
                     crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
-                    AND t1.is_back = 0
-                    AND t2.enabled = 1
                     and t6.depot_shop_id=t7.id
         """)
         if(reportQuery.scoreType){
@@ -139,12 +139,16 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(reportQuery.date!=null){
             sb.append("""
                 AND (
-                    t3.id IS NULL
-                    OR t3.created_date > :date
+                    t1.retail_date IS NULL
+                    OR t1.retail_date > :date
                 )
                 AND (
                     t2.id IS NULL
                     OR t2.created_date > :date
+                )
+                AND (
+                    t3.id IS NULL
+                    OR t3.created_date > :date
                 )
                 AND t1.created_date <= :date
             """)
@@ -161,6 +165,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t6.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIds)) {
+            sb.append(""" and t6.office_id in (:officeIds) """)
+        }
         if (StringUtils.isNotBlank(reportQuery.officeId)) {
             sb.append(""" and t6.office_id =:officeId""")
         }
@@ -171,10 +178,10 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" and t6.id=:depotId """)
         }
         if(reportQuery.isDetail==null||!reportQuery.isDetail){
-            sb.append(""" group by t1.shop_id""")
+            sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" group by t1.shop_id,t5.id""")
+            sb.append(""" ,t5.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -198,7 +205,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
                     LEFT JOIN crm_depot t4 on t1.depot_id=t4.id
                     LEFT JOIN crm_chain t7 on t4.chain_id=t7.id
-
         """)
         if(reportQuery.isDetail!=null&&reportQuery.isDetail){
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
@@ -225,6 +231,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t4.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIds)) {
+            sb.append(""" and t4.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
             sb.append(""" and t4.id in (:depotIdList) """)
         }
@@ -238,7 +247,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" group by t1.depot_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" group by t1.depot_id,t3.id""")
+            sb.append(""" ,t3.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
@@ -265,8 +274,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     crm_depot_shop t6
                     WHERE
                     t1.enabled = 1
-                    AND t1.is_back = 0
-                    AND t2.enabled = 1
                     and t5.depot_shop_id=t6.id
         """)
         if(reportQuery.scoreType){
@@ -290,6 +297,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t5.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIds)) {
+            sb.append(""" and t5.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
             sb.append(""" and t5.id in (:depotIdList) """)
         }
@@ -303,13 +313,13 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" group by t1.shop_id""")
         }
         if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
-            sb.append(""" group by t1.shop_id,t4.id""")
+            sb.append(""" ,t4.id""")
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto> {
+    override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto>? {
         val sb = StringBuffer()
         sb.append("""
             SELECT
@@ -321,7 +331,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 crm_depot_shop t2
             WHERE
                 t1.enabled = 1
-            AND t2.enabled = 1
             AND t1.depot_shop_id = t2.id
         """)
         if (StringUtils.isNotEmpty(depotQuery.name)) {
