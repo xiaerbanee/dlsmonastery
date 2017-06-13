@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -33,14 +34,20 @@ public class ReportQuery extends BaseQuery{
     private boolean scoreType;
     //货品
     private String officeId;
-
     private String depotId;
-
     private Boolean isDetail;
-
+    //需要导出的office的下级
+    private List<String> officeIds=Lists.newArrayList();
     private String exportType;
-
     private List<String> productTypeIdList;
+
+    public List<String> getOfficeIds() {
+        return officeIds;
+    }
+
+    public void setOfficeIds(List<String> officeIds) {
+        this.officeIds = officeIds;
+    }
 
     public String getExportType() {
         return exportType;
@@ -76,6 +83,9 @@ public class ReportQuery extends BaseQuery{
 
 
     public String getOfficeId() {
+        if(CollectionUtil.isNotEmpty(officeIds)){
+            this.officeId=null;
+        }
         return officeId;
     }
 

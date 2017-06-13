@@ -134,6 +134,7 @@ public class ProductImeController {
         if("按串码".equals(reportQuery.getExportType())){
             reportQuery.setIsDetail(true);
         }
+        reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
         List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
         return productImeService.getMongoDbId(workbook,depotReportList,reportQuery);
     }

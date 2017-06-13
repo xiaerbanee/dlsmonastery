@@ -153,6 +153,7 @@ public class DepotShopService {
             }
         }
         depotReportDetail.setProductQtyMap(map);
+        cacheUtils.initCacheInput(depotReportList);
         return depotReportDetail;
     }
 
