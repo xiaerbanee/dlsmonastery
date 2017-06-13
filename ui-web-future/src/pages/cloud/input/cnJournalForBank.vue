@@ -41,10 +41,9 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          otherTypeNameMap:{},
           colHeaders: ["对方科目编码", "结算方式","借方金额", "贷方金额","银行账户", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
           columns: [
-            {type: "autocomplete", strict: true, allowEmpty: false, accountNumberFor:[],source: this.accountNumberFor},
+            {type: "autocomplete", strict: true, allowEmpty: false, accountNumber:[],source: this.accountNumber},
             {type: "autocomplete", strict: true, allowEmpty: false, settleTypeName:[],source: this.settleTypeName},
             {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
             {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
@@ -57,21 +56,40 @@
             {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
           ],
           afterChange: function (changes, source) {
-            var that = this;
             if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 0) {
-                  let accountNumberFor = changes[i][3];
-                  if (accountNumberFor === ""){
+                  let accountNumber = changes[i][3];
+                  if (accountNumber === ""){
                     table.setDataAtCell(row, 6, '')
                   }else {
-                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumberFor).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 6, account.fname);
                     });
                   }
+                }
+              }
+              let data=table.getData();
+              for(let i=0;i<data.length; i++) {
+                let otherTypeName = "";
+                let accountNumber = "";
+                if(data[i][0]) {
+                  accountNumber =data[i][0];
+                }
+                if(data[i][9]) {
+                  otherTypeName = data[i][9];
+                }
+                if(otherTypeName !== "" && accountNumber !== "" && otherTypeName!== '无'){
+                  axios.get('/api/global/cloud/kingdee/basAssistant/findByName?name=' + otherTypeName).then((response) => {
+                    let basAssistant = response.data;
+                    if (accountNumber !== basAssistant.FNumber){
+                      table.setDataAtCell(i, 9, '');
+                      alert("其他类的编码前4位必须和对应科目的编码一致");
+                    }
+                  });
                 }
               }
             }
@@ -93,7 +111,6 @@
     mounted() {
       axios.get('/api/global/cloud/input/cnJournalForBank/form').then((response)=>{
         let extra = response.data.extra;
-        console.log(extra);
         this.settings.columns[0].source = extra.accountNumberList;
         this.settings.columns[1].source = extra.settleTypeNameList;
         this.settings.columns[4].source = extra.bankAcntNameList;
@@ -107,7 +124,6 @@
           this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});
           this.settings.columns[11].source = extra.customerNameForList;
         }
-        this.settings.otherTypeNameMap = extra.otherTypeNameMap;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
         this.accountForBankList = extra.accountForBankList;
       });

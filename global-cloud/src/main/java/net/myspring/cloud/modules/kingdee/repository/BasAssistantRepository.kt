@@ -23,15 +23,32 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
                 t1.FFORBIDSTATUS
             FROM
                 T_BAS_ASSISTANTDATAENTRY t1,
-                T_BAS_ASSISTANTDATAENTRY_L t2,
-                T_BAS_ASSISTANTDATA_L t3
+                T_BAS_ASSISTANTDATAENTRY_L t2
             WHERE
                 t1.FENTRYID = t2.FENTRYID
-                AND t1.FID = t3.FID
                 AND t1.FDOCUMENTSTATUS = 'C'
                 AND t1.FFORBIDSTATUS = 'A'
                 AND t2.FDATAVALUE in (:nameList)
         """, Collections.singletonMap("nameList", nameList), BeanPropertyRowMapper(BasAssistant::class.java))
+    }
+
+    fun findByName(name: String): BasAssistant {
+        return namedParameterJdbcTemplate.queryForObject("""
+            SELECT
+                t1.FENTRYID,
+                t1.FNUMBER,
+                t2.FDATAVALUE,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            FROM
+                T_BAS_ASSISTANTDATAENTRY t1,
+                T_BAS_ASSISTANTDATAENTRY_L t2
+            WHERE
+                t1.FENTRYID = t2.FENTRYID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                AND t2.FDATAVALUE = :name
+        """, Collections.singletonMap("name", name), BeanPropertyRowMapper(BasAssistant::class.java))
     }
 
     fun findByType(type: String): MutableList<BasAssistant> {
