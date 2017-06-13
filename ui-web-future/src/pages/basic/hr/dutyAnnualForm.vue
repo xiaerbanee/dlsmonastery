@@ -82,7 +82,7 @@
         this.fileList = fileList;
       },downLoad(){
         axios.get('/api/basic/hr/dutyAnnual/import/template').then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }
     },activated () {
