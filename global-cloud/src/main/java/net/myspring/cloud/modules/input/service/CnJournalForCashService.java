@@ -60,7 +60,6 @@ public class CnJournalForCashService {
     }
 
     public KingdeeSynDto save(CnJournalForCashForm cnJournalForCashForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
-        Map<String, String> customerNameMap = Maps.newHashMap();
         LocalDate billDate = cnJournalForCashForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(cnJournalForCashForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -78,6 +77,7 @@ public class CnJournalForCashService {
                 customerNameForList.add(HandsontableUtils.getValue(row, 9));
             }
         }
+        Map<String, String> customerNameMap = Maps.newHashMap();
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
         Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
@@ -127,17 +127,20 @@ public class CnJournalForCashService {
     }
 
     public CnJournalForCashForm getForm(CnJournalForCashForm cnJournalForCashForm,KingdeeBook kingdeeBook){
-        cnJournalForCashForm.setAccountNumberForList(bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
-        cnJournalForCashForm.setStaffNameList(hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
-        cnJournalForCashForm.setDepartmentNameList(bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
-        cnJournalForCashForm.setOtherTypeNameList(basAssistantRepository.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
-        cnJournalForCashForm.setExpenseTypeNameList(basAssistantRepository.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
+        map.put("staffNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
+        map.put("departmentNameList",bdDepartmentRepository.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
+        map.put("otherTypeNameList",basAssistantRepository.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        map.put("expenseTypeNameList",basAssistantRepository.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
+        //是否为对方关联客户
         if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName()) || KingdeeTypeEnum.proxy.name().equals(kingdeeBook.getType())) {
-            cnJournalForCashForm.setCustomerForFlag(true);
-            cnJournalForCashForm.setCustomerNameForList(bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
+            map.put("customerForFlag",true);
+            map.put("customerNameForList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         }else {
-            cnJournalForCashForm.setCustomerForFlag(false);
+            map.put("customerForFlag",false);
         }
+        cnJournalForCashForm.setExtra(map);
         return cnJournalForCashForm;
     }
 }

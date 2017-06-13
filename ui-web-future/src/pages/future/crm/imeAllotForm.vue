@@ -2,7 +2,7 @@
   <div>
     <head-tab active="imeAllotForm"></head-tab>
     <div>
-      <el-form :model="imeAllot" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item >
@@ -13,7 +13,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item  :label="$t('imeAllotForm.imeStr')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('imeAllotForm.inputIme')" ></el-input>
+              <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('imeAllotForm.inputIme')" ></el-input>
             </el-form-item>
             <el-form-item >
               <el-button  type="primary" @click.native="onImeStrChange">{{$t('imeAllotForm.search')}}</el-button>
@@ -22,10 +22,10 @@
             </el-form-item>
             <div v-if="searched" >
               <el-form-item :label="$t('imeAllotForm.toDepotId')" prop="toDepotId" >
-                <depot-select v-model="imeAllot.toDepotId"  category="shop" ></depot-select>
+                <depot-select v-model="inputForm.toDepotId"  category="shop" ></depot-select>
               </el-form-item>
               <el-form-item :label="$t('imeAllotForm.remarks')" prop="remarks" >
-                <el-input type="textarea" :rows="2" v-model="imeAllot.remarks"></el-input>
+                <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('imeAllotForm.save')}}</el-button>
@@ -76,18 +76,13 @@
     methods:{
       getData() {
           return{
-            isInit:false,
             searched:false,
             submitDisabled:false,
-            imeAllot:{},
-            imeStr:'',
+            inputForm:{
+                extra:{},
+            },
             productImeList:[],
             productQtyList:[],
-            submitData:{
-              imeStr:'',
-              toDepotId:"",
-              remarks:''
-            },
             rules: {
               imeStr: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
               toDepotId: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}]
@@ -97,6 +92,7 @@
       },
         formSubmit(){
 
+          this.submitDisabled = true;
           if (this.errMsg) {
             this.$alert( this.$t('imeAllotForm.formInvalid'), this.$t('imeAllotForm.notify'));
             return;
@@ -105,27 +101,23 @@
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.submitDisabled = true;
-              this.initSubmitDataBeforeSubmit();
-              axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
-
+                this.initPage();
               }).catch(()=>{
                 this.submitDisabled = false;
               });
+            }else{
+              this.submitDisabled = false;
             }
           });
-        }, initSubmitDataBeforeSubmit(){
-          this.submitData.imeStr = this.imeStr;
-          this.submitData.toDepotId = this.imeAllot.toDepotId;
-          this.submitData.remarks = this.imeAllot.remarks;
         },onImeStrChange(){
             this.searched = true;
-          axios.get('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.imeStr}}).then((response)=>{
+          axios.get('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
             this.errMsg=response.data;
           });
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
+          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
             this.productImeList=response.data;
 
             let tmpMap = new Map();
@@ -145,20 +137,17 @@
           });
         },reset(){
         this.searched = false;
-        this.imeStr = '';
         this.errMsg='';
         this.productImeList=[];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
+      },initPage(){
+        axios.get('/api/ws/future/crm/imeAllot/getForm').then((response)=>{
+            this.inputForm = response.data;
+        });
       }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/crm/imeAllot/findDto').then((response)=>{
-            this.imeAllot=response.data;
-          });
-        }
-      this.isInit = true;
+    },created () {
+          this.initPage();
       }
   }
 </script>

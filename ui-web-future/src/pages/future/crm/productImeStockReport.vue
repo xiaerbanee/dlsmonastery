@@ -98,6 +98,7 @@
         formData:{
           extra:{},
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         detailVisible: false,
@@ -185,12 +186,16 @@
 
       }
     },created () {
-      axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
+        this.pageHeight = window.outerHeight -320;
+        this.initPromise=axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0"
         util.copyValue(this.$route.query, this.formData);
-        this.pageRequest();
       })
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

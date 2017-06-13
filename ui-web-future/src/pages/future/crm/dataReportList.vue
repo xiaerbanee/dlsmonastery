@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="preRequest" icon="left">{{$t('dataReportList.black')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dataReportList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('dataReportList.filter')"  v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dataReportList.filter')"  v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.reportDateRange.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dataReportList.dateRange')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.reportDateRange" ></date-range-picker>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('dataReportList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="data" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dataReportList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column :label="$t('dataReportList.name')" prop="name">
           <template scope="scope">
@@ -48,6 +48,7 @@
         page:{
           inventoryDetailModeList:[]
         },
+        searchText:"",
         total:{},
         data:[],
         parentIdArr:[],
@@ -59,12 +60,6 @@
           totalImeStockReport:{saleStock:""}
         },
         formData:{
-          parentOfficeId:"",
-          productName: "",
-          reportDateRange:"",
-
-        },formLabel:{
-          reportDateRange:{label:this.$t('dataReportList.dateRange')},
         },actionButton:{
           hasEdit:false
         },
@@ -76,16 +71,22 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formData.reportDateBTW = util.formatDateRange(this.formData.reportDate);
-        util.setQuery("dataReportList",this.formData);
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("dataReportList",submitData);
         if(this.parentIdArr.length!=0){
             this.formData.parentOfficeId=this.parentIdArr[this.parentIdArr.length-1]
         }else{
           this.formData.parentOfficeId=""
         }
-        axios.get('/api/crm/imeSaleReport/officeInventory',{params:this.formData}).then((response) => {
+        axios.get('/api/crm/imeSaleReport/officeInventory',{params:submitData}).then((response) => {
           var arr=[];
           this.page =response.data;
           this.pageLoading = false;

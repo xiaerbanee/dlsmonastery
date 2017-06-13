@@ -8,31 +8,31 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('shopAllotList.fromShop')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.fromShop')">
                 <depot-select  category="directShop" v-model="formData.fromShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.toShop')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.toShop')">
                 <depot-select  category="directShop" v-model="formData.toShopId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.auditDateRange')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.auditDateRange')">
                 <date-range-picker v-model="formData.auditDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopAllotList.status')">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('shopAllotList.inputKey')">
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.billCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopAllotList.billCode')" >
+                <el-input v-model="formData.businessId" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopAllotList.billCode')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('shopAllotList.multiEnterOrComma')"></el-input>
+              <el-form-item :label="$t('shopAllotList.billCode')">
+                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('shopAllotList.multiEnterOrComma')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -41,7 +41,7 @@
           <el-button type="primary" @click="search()">{{$t('shopAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="id" :label="$t('shopAllotList.billCode')" width="180" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('shopAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
@@ -105,8 +105,6 @@
           extra:{}
         },
         initPromise:{},
-        pageHeight:600,
-        formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
       };
@@ -161,11 +159,9 @@
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
       }
     },created () {
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

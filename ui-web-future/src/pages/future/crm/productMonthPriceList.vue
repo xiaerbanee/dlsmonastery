@@ -8,10 +8,10 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('productMonthPriceList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('productMonthPriceList.month')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productMonthPriceList.month')">
                 <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
             </el-col>
@@ -21,7 +21,7 @@
           <el-button type="primary" @click="search()">{{$t('productMonthPriceList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productMonthPriceList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productMonthPriceList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('productMonthPriceList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="month" :label="$t('productMonthPriceList.month')" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('productMonthPriceList.createdBy')" sortable></el-table-column>
@@ -46,17 +46,14 @@
     data() {
       return {
         pageLoading: false,
-        pageHeight:600,
         page:{},
         searchText:"",
         formData:{
             extra:{}
         },
         formProperty:{},
-        formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption,
-        loading:false
+        initPromise:{},
       };
     },
     methods: {
@@ -68,7 +65,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("productMonthPriceList",submitData);
         axios.get('/api/ws/future/crm/productMonthPrice?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -93,13 +90,14 @@
         }
       }
     },created () {
-      var that = this;
-      that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      this.initPromise = axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
+    },activated(){
+        this.initPromise.then(()=>{
+          this.pageRequest();
+        });
     }
   };
 </script>

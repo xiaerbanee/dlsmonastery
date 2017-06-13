@@ -7,6 +7,10 @@ public class BdSupplier{
     private String FSupplierId;
     private String FNumber;
     private String FName;
+    //审核状态
+    private String FDocumentStatus;
+    //禁用状态
+    private String FForbidStatus;
 
     public String getFSupplierId() {
         return FSupplierId;
@@ -30,5 +34,21 @@ public class BdSupplier{
 
     public void setFName(String FName) {
         this.FName = FName;
+    }
+
+    public String getFDocumentStatus() {
+        return FDocumentStatus;
+    }
+
+    public void setFDocumentStatus(String FDocumentStatus) {
+        this.FDocumentStatus = FDocumentStatus;
+    }
+
+    public String getFForbidStatus() {
+        return FForbidStatus;
+    }
+
+    public void setFForbidStatus(String FForbidStatus) {
+        this.FForbidStatus = FForbidStatus;
     }
 }

@@ -11,22 +11,22 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('productImeUploadList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('productImeUploadList.officeId')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeUploadList.officeId')">
                 <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('productImeUploadList.month')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeUploadList.month')">
                 <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
-              <el-form-item :label="$t('productImeUploadList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeUploadList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('productImeUploadList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('productImeUploadList.likeSearch')"></el-input>
+              <el-form-item :label="$t('productImeUploadList.shopName')">
+                <el-input v-model="formData.shopName" :placeholder="$t('productImeUploadList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productImeUploadList.imeOrMeids')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeUploadList.imeOrMeids')">
                 <el-input  type="textarea" v-model="formData.imeOrMeids"  :placeholder="$t('productImeUploadList.imeOrMeidsMultiLine')"></el-input>
               </el-form-item>
             </el-col>
@@ -37,7 +37,7 @@
           <el-button type="primary" @click="search()">{{$t('productImeUploadList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column  prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
         <el-table-column prop="shopName" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('productImeUploadList.ime')"></el-table-column>
@@ -67,14 +67,13 @@
     data() {
       return {
         pageLoading: false,
-        pageHeight:600,
         page:{},
+        initPromise:{},
         searchText:"",
         formData:{
             extra:{}
         },
         selects:[],
-        formLabelWidth: '120px',
         formVisible: false,
 
       };
@@ -88,7 +87,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeUploadList",submitData);
         axios.get('/api/ws/future/crm/productImeUpload',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -115,18 +114,19 @@
         this.$router.push({ name: 'productImeBatchUploadForm'});
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/productImeUpload/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/crm/productImeUpload/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
       }
     },created () {
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/productImeUpload/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      this.initPromise = axios.get('/api/ws/future/crm/productImeUpload/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };

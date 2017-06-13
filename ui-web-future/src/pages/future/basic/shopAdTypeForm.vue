@@ -34,11 +34,9 @@
       methods:{
         getData() {
           return{
-            isInit:false,
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formData:{
-                extra:{}
+              extra:{}
             },
             rules: {
               name: [{ required: true, message: this.$t('shopAdTypeForm.prerequisiteMessage')}],
@@ -54,8 +52,12 @@
             if (valid) {
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
                 this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
+                if(this.formData.isCreate){
+                  Object.assign(this.$data,this.getData());
+                  this.initPage();
+                }
+                else{
+                  this.submitDisabled = false;
                   this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList")})
                 }
               }).catch(function () {
@@ -65,10 +67,8 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
+        },
+        initPage () {
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
             this.formData = response.data;
             axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -76,7 +76,8 @@
             });
           });
         }
-        this.isInit = true;
+      },created(){
+        this.initPage();
       }
     }
 </script>
