@@ -311,9 +311,9 @@ public class GoodsOrderShipService {
     }
 
 
-    public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
-        String id = goodsOrderShipForm.getId();
+    public GoodsOrderDto getShip(String id) {
         GoodsOrder goodsOrder = null;
+        GoodsOrderDto goodsOrderDto = null;
         if(StringUtils.isNotBlank(id)) {
             id = IdUtils.getId(id);
             if(StringUtils.isNotBlank(id)) {
@@ -321,7 +321,7 @@ public class GoodsOrderShipService {
             }
         }
         if(goodsOrder != null) {
-            GoodsOrderDto goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
+            goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
             cacheUtils.initCacheInput(goodsOrderDto);
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
             List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
@@ -332,10 +332,8 @@ public class GoodsOrderShipService {
                 Product product = productMap.get(goodsOrderDetailDto.getProductId());
                 goodsOrderDetailDto.setHasIme(product.getHasIme());
             }
-            goodsOrderShipForm.setStoreName(goodsOrderDto.getStoreName());
-            goodsOrderShipForm.setShopName(goodsOrderDto.getShopName());
-            goodsOrderShipForm.setGoodsOrderDetailList(goodsOrderDetailDtoList);
+            goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
         }
-        return goodsOrderShipForm;
+        return goodsOrderDto;
     }
 }

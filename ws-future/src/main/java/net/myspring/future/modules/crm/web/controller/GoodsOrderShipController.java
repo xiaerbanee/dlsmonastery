@@ -33,9 +33,6 @@ import java.util.Map;
 public class GoodsOrderShipController {
 
     @Autowired
-    private GoodsOrderService goodsOrderService;
-
-    @Autowired
     private GoodsOrderShipService goodsOrderShipService;
 
 
@@ -55,7 +52,7 @@ public class GoodsOrderShipController {
 
     @RequestMapping(value = "getForm")
     public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
-        return goodsOrderShipService.getForm(goodsOrderShipForm);
+        return goodsOrderShipForm;
     }
 
     @RequestMapping(value = "shipCheck")
@@ -64,10 +61,14 @@ public class GoodsOrderShipController {
     }
 
 
-
     @RequestMapping(value = "ship")
     public RestResponse ship(GoodsOrderShipForm goodsOrderShipForm) {
          goodsOrderShipService.ship(goodsOrderShipForm);
          return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getShip")
+    public GoodsOrderDto getShip(String id) {
+        return goodsOrderShipService.getShip(id);
     }
 }

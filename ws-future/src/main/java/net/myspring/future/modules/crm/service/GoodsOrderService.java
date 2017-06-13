@@ -67,7 +67,6 @@ import java.util.Map;
 @Service
 @Transactional
 public class GoodsOrderService {
-
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
@@ -299,8 +298,8 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
-    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
-        List<GoodsOrderDetailForm> goodsOrderDetailFormList  = Lists.newArrayList();
+    public List<GoodsOrderDetailDto> findDetailList(String id,String shopId,String netType,String shipType) {
+        List<GoodsOrderDetailDto> goodsOrderDetailDtoList   = Lists.newArrayList();
         Map<String,GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         Map<String,Product> productMap = Maps.newHashMap();
         if(StringUtils.isNotBlank(id)) {
@@ -312,8 +311,8 @@ public class GoodsOrderService {
             List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(id);
             if(CollectionUtil.isNotEmpty(goodsOrderDetailList)) {
                 goodsOrderDetailMap = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
-                List<GoodsOrderDetailForm> list = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailForm.class);
-                goodsOrderDetailFormList.addAll(list);
+                List<GoodsOrderDetailDto> list = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+                goodsOrderDetailDtoList.addAll(list);
                 productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
             }
         }
@@ -334,11 +333,11 @@ public class GoodsOrderService {
                 }
                 Boolean allowOrder = product.getAllowOrder() && product.getAllowBill();
                 if(showNotAllow || allowOrder) {
-                    GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
-                    goodsOrderDetailForm.setProductId(pricesystemDetail.getProductId());
-                    goodsOrderDetailForm.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailForm.setAllowOrder(allowOrder);
-                    goodsOrderDetailFormList.add(goodsOrderDetailForm);
+                    GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
+                    goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
+                    goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
+                    goodsOrderDetailDto.setAllowOrder(allowOrder);
+                    goodsOrderDetailDtoList.add(goodsOrderDetailDto);
                 }
             }
         }
@@ -354,82 +353,68 @@ public class GoodsOrderService {
             }
         }
         //设置其他数据
-        for(GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderDetailFormList) {
-            Product product= productMap.get(goodsOrderDetailForm.getProductId());
-            goodsOrderDetailForm.setProductName(product.getName());
-            goodsOrderDetailForm.setHasIme(product.getHasIme());
-            goodsOrderDetailForm.setAreaQty(areaDetailMap.get(product.getId()));
+        for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+            Product product= productMap.get(goodsOrderDetailDto.getProductId());
+            goodsOrderDetailDto.setProductName(product.getName());
+            goodsOrderDetailDto.setHasIme(product.getHasIme());
+            goodsOrderDetailDto.setAreaQty(areaDetailMap.get(product.getId()));
         }
-        return goodsOrderDetailFormList;
+        return goodsOrderDetailDtoList;
     }
 
-    public GoodsOrderBillForm getGoodsOrderBillForm(String id) {
-        GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
-        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+    public GoodsOrderDto getBill(String id) {
+        GoodsOrderDto goodsOrderDto = findOne(id);
+        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrderDto.getExpressOrderId());
 
-        GoodsOrderBillForm goodsOrderBillForm = new GoodsOrderBillForm();
-        goodsOrderBillForm.setId(goodsOrder.getId());
-        goodsOrderBillForm.setBillDate(LocalDate.now());
-        goodsOrderBillForm.setStoreId(goodsOrder.getStoreId());
-        goodsOrderBillForm.setShopId(goodsOrder.getShopId());
-        goodsOrderBillForm.setExpressCompanyId(expressOrder.getExpressCompanyId());
-        goodsOrderBillForm.setNetType(goodsOrder.getNetType());
+        goodsOrderDto.setBillDate(LocalDate.now());
+        goodsOrderDto.setExpressCompanyId(expressOrder.getCompanyId());
 
         //是否自动同步，根据门店是否包含client
-        goodsOrderBillForm.setSyn(false);
-        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
+        goodsOrderDto.setSyn(false);
+        Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
         if(StringUtils.isNotBlank(shop.getClientId())) {
             Client client = clientRepository.findOne(shop.getClientId());
-            goodsOrderBillForm.setSyn(client != null);
+            goodsOrderDto.setSyn(client != null);
         }
-        goodsOrderBillForm.setRemarks(goodsOrder.getRemarks());
-        goodsOrderBillForm.setShipType(expressOrder.getShipType());
-        goodsOrderBillForm.setAddress(expressOrder.getAddress());
-        goodsOrderBillForm.setContator(expressOrder.getContator());
-        goodsOrderBillForm.setMobilePhone(expressOrder.getMobilePhone());
-
+        goodsOrderDto.setShipType(expressOrder.getShipType());
+        goodsOrderDto.setAddress(expressOrder.getAddress());
+        goodsOrderDto.setContator(expressOrder.getContator());
+        goodsOrderDto.setMobilePhone(expressOrder.getMobilePhone());
         //开单明细
-        List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
+        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+        Map<String,GoodsOrderDetailDto> goodsOrderDetailDtoMap = CollectionUtil.extractToMap(goodsOrderDetailDtoList,"productId");
         List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
         Map<String,PricesystemDetail> pricesystemDetailMap =  CollectionUtil.extractToMap(pricesystemDetailList,"productId");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
-        for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList) {
-            Product product = productMap.get(goodsOrderDetail.getProductId());
-            GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
-            goodsOrderBillDetailForm.setGoodsOrderDetailId(goodsOrderDetail.getId());
-            goodsOrderBillDetailForm.setProductId(product.getId());
-            goodsOrderBillDetailForm.setQty(goodsOrderDetail.getQty());
-            goodsOrderBillDetailForm.setBillQty(goodsOrderDetail.getBillQty());
-            goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
-
-            goodsOrderBillDetailForm.setProductName(product.getName());
-            goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
-            goodsOrderBillDetailForm.setHasIme(product.getHasIme());
-            goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
+        for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+            Product product = productMap.get(goodsOrderDetailDto.getProductId());
+            goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
+            goodsOrderDetailDto.setProductName(product.getName());
+            goodsOrderDetailDto.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+            goodsOrderDetailDto.setHasIme(product.getHasIme());
         }
         //价格体系
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrder.getNetType())) {
-                GoodsOrderBillDetailForm goodsOrderBillDetailForm = new GoodsOrderBillDetailForm();
-                goodsOrderBillDetailForm.setProductId(product.getId());
-                goodsOrderBillDetailForm.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
+            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
+                GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
+                goodsOrderDetailDto.setProductId(product.getId());
+                goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
 
-                goodsOrderBillDetailForm.setProductName(product.getName());
-                goodsOrderBillDetailForm.setAllowBill(product.getAllowOrder() && product.getAllowBill());
-                goodsOrderBillDetailForm.setHasIme(product.getHasIme());
-                goodsOrderBillDetailFormList.add(goodsOrderBillDetailForm);
+                goodsOrderDetailDto.setProductName(product.getName());
+                goodsOrderDetailDto.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+                goodsOrderDetailDto.setHasIme(product.getHasIme());
+                goodsOrderDetailDtoList.add(goodsOrderDetailDto);
             }
         }
         //设置areaQty及stockQty
-        for(GoodsOrderBillDetailForm goodsOrderBillDetailForm:goodsOrderBillDetailFormList) {
-            goodsOrderBillDetailForm.setAreaQty(0);
+        for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
+            goodsOrderDetailDto.setAreaQty(0);
         }
-        goodsOrderBillForm.setGoodsOrderBillDetailFormList(goodsOrderBillDetailFormList);
-        return goodsOrderBillForm;
+        goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
+        return goodsOrderDto;
     }
 
     public GoodsOrderDto findDetail(String id) {
