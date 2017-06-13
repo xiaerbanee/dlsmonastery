@@ -51,12 +51,12 @@
           if (valid) {
             axios.post('/api/basic/sys/dictEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(!this.inputForm.create){
-                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
-              }else{
+              if(this.inputForm.create){
                 Object.assign(this.$data, this.getData());
                 this.initPage();
+              }else{
+                this.submitDisabled = false;
+                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
               }
             }).catch(function () {
               that.submitDisabled = false;
