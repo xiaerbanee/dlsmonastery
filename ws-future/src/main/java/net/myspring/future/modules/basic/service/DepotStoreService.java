@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -85,38 +86,39 @@ public class DepotStoreService {
         return depotStore;
     }
 
-    public List<DepotReportDto> setReportData(ReportQuery reportQuery) {
-        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        reportQuery.setDepotIdList(depotManager.filterDepotIds());
-        DepotQuery depotQuery = BeanUtil.map(reportQuery, DepotQuery.class);
-        List<Depot> depotList = depotRepository.findByFilter(depotQuery);
-        List<DepotReportDto> depotReportList = getProductImeReportList(reportQuery);
+    public List<DepotStoreDto> setReportData(List<DepotStoreDto> depotStoreList,ReportQuery reportQuery) {
+        List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
         Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
-        for(Depot depot:depotList){
-            if(!map.containsKey(depot.getId())){
-                DepotReportDto depotReport = new DepotReportDto();
-                depotReport.setDepotId(depot.getId());
-                depotReport.setQty(0);
-                depotReport.setDepotName(depot.getName());
-                depotReportList.add(depotReport);
+        for(DepotStoreDto depotStore:depotStoreList){
+            DepotReportDto depotReportDto=map.get(depotStore.getDepotId());
+            depotStore.setQty(depotReportDto.getQty());
+        }
+        setPercentage(depotStoreList);
+        return depotStoreList;
+    }
+
+    public Map<String,Integer> getReportDetail(ReportQuery reportQuery) {
+        Map<String,Integer> map= Maps.newHashMap();
+        List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
+        if(CollectionUtil.isNotEmpty(depotReportList)){
+            for(DepotReportDto depotReport:depotReportList){
+                String key=depotReport.getProductTypeName();
+                if(!map.containsKey(key)){
+                    map.put(key,0);
+                }
+                map.put(key,map.get(key)+1);
             }
         }
-        setPercentage(depotReportList);
-        return depotReportList;
+        return map;
     }
 
-    public List<DepotReportDto> getProductImeReportList(ReportQuery reportQuery) {
-        List<DepotReportDto> depotReportList = Lists.newArrayList();
-        return depotReportList;
-    }
-
-    private void setPercentage(List<DepotReportDto> depotReportList) {
+    private void setPercentage(List<DepotStoreDto> depotStoreList) {
         Integer sum = 0;
-        for (DepotReportDto depotReport : depotReportList) {
-            sum = sum + depotReport.getQty();
+        for (DepotStoreDto depotStore : depotStoreList) {
+            sum +=  depotStore.getQty();
         }
-        for (DepotReportDto depotReport : depotReportList) {
-            depotReport.setPercent(StringUtils.division(sum, depotReport.getQty()));
+        for (DepotStoreDto depotStore : depotStoreList) {
+            depotStore.setPercentage(StringUtils.division(sum, depotStore.getQty()));
         }
     }
 

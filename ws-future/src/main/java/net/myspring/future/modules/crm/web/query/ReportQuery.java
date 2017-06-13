@@ -35,7 +35,7 @@ public class ReportQuery extends BaseQuery{
     //货品
     private String officeId;
     private String depotId;
-    private Boolean isDetail;
+    private Boolean isDetail=false;
     //需要导出的office的下级
     private List<String> officeIds=Lists.newArrayList();
     private String exportType;
