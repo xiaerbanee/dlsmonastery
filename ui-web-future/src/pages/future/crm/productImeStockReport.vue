@@ -185,6 +185,7 @@
     },created () {
       axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
+        console.log(this.formData)
         util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       })
