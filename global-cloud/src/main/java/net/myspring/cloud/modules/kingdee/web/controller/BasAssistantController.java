@@ -1,6 +1,5 @@
 package net.myspring.cloud.modules.kingdee.web.controller;
 
-import net.myspring.cloud.modules.kingdee.domain.BasAssistant;
 import net.myspring.cloud.modules.kingdee.service.BasAssistantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,8 @@ public class BasAssistantController {
     @Autowired
     private BasAssistantService basAssistantService;
 
-    @RequestMapping(value = "findByName")
-    public BasAssistant findByName(String name){
-        return basAssistantService.findByName(name);
+    @RequestMapping(value = "findNumberSubByName")
+    public String findNumberSubByName(String name){
+        return basAssistantService.findNumberSubByName(name);
     }
 }
