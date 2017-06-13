@@ -57,7 +57,7 @@ public class BackendModuleController {
 
     @RequestMapping(value = "getForm")
     public BackendModuleForm getForm(BackendModuleForm backendModuleForm){
-        backendModuleForm.setBackendList(backendService.findAll());
+        backendModuleForm.getExtra().put("backendList",backendService.findAll());
         return backendModuleForm;
     }
 

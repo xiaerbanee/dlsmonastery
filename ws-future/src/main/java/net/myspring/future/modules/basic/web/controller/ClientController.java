@@ -63,4 +63,9 @@ public class ClientController {
         return clientDtoList;
     }
 
+    @RequestMapping(value = "getForm")
+    public ClientForm getForm(ClientForm clientForm){
+        return clientForm;
+    }
+
 }

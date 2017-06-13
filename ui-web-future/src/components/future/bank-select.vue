@@ -27,13 +27,13 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val=="") {
+        if(this.innerId == val || val==""||typeof(val)=="undefined") {
           return;
         }
         this.innerId=val;
         this.remoteLoading = true;
-        axios.get('/api/future/basic/bank/findById?id=' + this.innerId).then((response)=>{
-          this.itemList=response.data;
+        axios.get('/api/ws/future/basic/bank/findOne?id=' + this.innerId).then((response)=>{
+          this.itemList=[response.data];
           this.remoteLoading = false;
           this.$nextTick(()=>{
             this.$emit('afterInit');

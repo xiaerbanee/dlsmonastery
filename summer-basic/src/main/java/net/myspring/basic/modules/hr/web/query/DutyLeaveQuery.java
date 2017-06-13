@@ -18,9 +18,6 @@ public class DutyLeaveQuery extends BaseQuery {
     private String dutyDate;
     private String dateType;
     private String leaveType;
-    private List<String> dateList= Lists.newArrayList();
-    private List<String> leaveList= Lists.newArrayList();
-
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
@@ -35,22 +32,6 @@ public class DutyLeaveQuery extends BaseQuery {
 
     public String getDutyDate() {
         return dutyDate;
-    }
-
-    public List<String> getDateList() {
-        return dateList;
-    }
-
-    public void setDateList(List<String> dateList) {
-        this.dateList = dateList;
-    }
-
-    public List<String> getLeaveList() {
-        return leaveList;
-    }
-
-    public void setLeaveList(List<String> leaveList) {
-        this.leaveList = leaveList;
     }
 
     public String getDateType() {

@@ -6,22 +6,22 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filter')}}</el-button>
         <el-button type="primary" @click="itemCollect" icon="document" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.collect')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('demoPhoneList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('demoPhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.ime.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('demoPhoneList.ime')" :label-width="formLabelWidth">
                 <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('demoPhoneList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="shop"></depot-select>
+              <el-form-item :label="$t('demoPhoneList.shopName')" :label-width="formLabelWidth">
+                <depot-select v-model="formData.shopId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.demoPhoneTypeId.label" :label-width="formLabelWidth">
-                <demo-phone-type v-model = "formData.demoPhoneTypeId"></demo-phone-type>
+              <el-form-item :label="$t('demoPhoneList.demoPhoneType')" :label-width="formLabelWidth">
+                <demo-phone-type v-model = "formData.demoPhoneTypeId" @afterInit="setSearchText"></demo-phone-type>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('demoPhoneList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -31,7 +31,7 @@
           <el-button @click="exportData" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('demoPhoneList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('demoPhoneList.shopName')" sortable></el-table-column>
@@ -70,33 +70,28 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          ime:'',
-          shopId:'',
-          demoPhoneTypeId:'',
-          createdDate:'',
-        },formLabel:{
-          ime:{label: this.$t('demoPhoneList.ime')},
-          shopId:{label: this.$t('demoPhoneList.shopName')},
-          demoPhoneTypeId:{label: this.$t('demoPhoneList.demoPhoneType')},
-          createdDate:{label: this.$t('demoPhoneList.createdDate')},
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption
+
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("demoPhoneList",this.submitData);
-        axios.get('/api/ws/future/crm/demoPhone?'+qs.stringify(this.submitData)).then((response)  => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("demoPhoneList",submitData);
+        axios.get('/api/ws/future/crm/demoPhone?'+qs.stringify(submitData)).then((response)  => {
           this.page = response.data;
           this.pageLoading = false;
         })

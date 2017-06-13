@@ -52,7 +52,7 @@ public class ShopPromotionService {
     }
 
     public ShopPromotionForm getForm(ShopPromotionForm shopPromotionForm){
-        shopPromotionForm.setActivityTypeList(ActivityTypeEnum.getList());
+        shopPromotionForm.getExtra().put("activityTypeList",ActivityTypeEnum.getList());
         return shopPromotionForm;
     }
 

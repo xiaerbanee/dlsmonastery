@@ -108,10 +108,11 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sql.append("""
                 and t1.employee_id in (
                 select t2.id
-                from hr_employee t2 , hr_account_office t3, sys_office t4
-                where t2.account_id = t3.account_id
+                from hr_employee t2 , hr_account t3 ,sys_office t4
+                where t2.account_id = t3.id
                 and t3.office_id = t4.id
                 and t4.name like CONCAT('%',:officeName,'%')
+        )
                 """);
         }
         if(dutySignQuery.positionName!=null){
@@ -158,7 +159,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(dutySignQuery.dutyDateEnd!=null){
             sql.append("""
-                   AND t1.duty_date &lt; :dutyDateEnd
+                   AND t1.duty_date < :dutyDateEnd
                 """);
         }
         if(dutySignQuery.employeeName!=null){
@@ -173,10 +174,11 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sql.append("""
                 and t1.employee_id in (
                 select t2.id
-                from hr_employee t2 , hr_account_office t3, sys_office t4
-                where t2.account_id = t3.account_id
+                from hr_employee t2 , hr_account t3, sys_office t4
+                where t2.account_id = t3.id
                 and t3.office_id = t4.id
                 and t4.name like CONCAT('%',:officeName,'%')
+        )
                 """);
         }
         if(dutySignQuery.positionName!=null){

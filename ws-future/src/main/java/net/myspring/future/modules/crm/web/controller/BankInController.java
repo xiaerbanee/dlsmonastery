@@ -46,7 +46,7 @@ public class BankInController {
         List<String> processStatusList = new ArrayList<>();
         processStatusList.add("已通过");
         processStatusList.add("未通过");
-        bankInQuery.setProcessStatusList(processStatusList);
+        bankInQuery.getExtra().put("processStatusList",processStatusList);
 
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
@@ -84,9 +84,7 @@ public class BankInController {
 
     @RequestMapping(value = "getForm")
     public BankInForm getForm(BankInForm bankInForm ){
-
-        bankInForm.setTypeList(BankInTypeEnum.getList());
-        bankInForm.setBankDtoList(bankService.findByAccountId(RequestUtils.getAccountId()));
+        bankInForm.getExtra().put("typeList",BankInTypeEnum.getList());
         return bankInForm;
     }
 

@@ -69,8 +69,8 @@ public class StoreAllotController {
     @RequestMapping(value = "getForm")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
 
-        storeAllotForm.setAllotTypeList(StoreAllotTypeEnum.getList());
-        storeAllotForm.setShipTypeList(ShipTypeEnum.getList());
+        storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
+        storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         storeAllotForm.setShowAllotType(storeAllotService.getShowAllotType());
 
         return storeAllotForm;
@@ -152,7 +152,7 @@ public class StoreAllotController {
 
     @RequestMapping(value="getQuery")
     public StoreAllotQuery getQuery(StoreAllotQuery storeAllotQuery) {
-        storeAllotQuery.setStatusList(StoreAllotStatusEnum.getList());
+        storeAllotQuery.getExtra().put("statusList",StoreAllotStatusEnum.getList());
         return storeAllotQuery;
     }
 

@@ -3,9 +3,21 @@
     <head-tab active="afterSaleAreaFleeInput"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
+      <el-button type="primary" @click="formVisible = true" icon="search" v-if="formData.action=='update'">{{$t('adPricesystemChangeForm.filter')}}</el-button>
+      <span v-html="searchText"></span>
     </el-row>
+    <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <el-form :model="formData">
+        <el-form-item label="串码" :label-width="formLabelWidth">
+          <el-input type="textarea" v-model="formData.imeStr" auto-complete="off" placeholder="请输入串码，逗号或换行隔开"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
+      </div>
+    </search-dialog>
     <div class="position:relative;" style="margin-top:20px;margin-left:50px">
-      <el-form :model="formData" >
+      <el-form>
         <el-form-item label="类型" :label-width="formLabelWidth">
           <el-select v-model="type" placeholder="请选择" @change="onchange(type)">
             <el-option v-for="item in options" :key="item" :label="item" :value="item">
@@ -23,8 +35,14 @@
   export default{
     data(){
       return {
+        searchText:"",
         inputForm: {
           data: ''
+        },
+        formData:{
+          imeStr: '',
+          type:'窜货机',
+          action:this.$route.query.action
         },
         rules: {},
         type: '窜货机',
@@ -34,16 +52,17 @@
         submitDisabled: false,
         table: null,
         settings: {
-          colHeaders: ['窜货机串码', '窜货机型号', '窜货门店', '退机类型', '包装', '内存', '窜货机来源', '窜货机所在库', '替换机串码', '替换机型号', '返还金额','联系人','手机号','地址','购买金额'],
+          colHeaders: ['窜货机串码', '窜货机型号', '窜货门店', '退机类型', '包装', '内存', '窜货机来源', '窜货机所在库', '替换机串码', '替换机型号', '返还金额','联系人','手机号','地址','购买金额',"备注"],
           rowHeaders: true,
           autoColumnSize: true,
           allowInsertRow: false,
           maxRows: 1000,
           columns: [{
-            data: "ime",
+            data: "badProductIme",
             width: 100
           }, {
-            data: "productName",
+            data: "badProductName",
+            type: "autocomplete",
             allowEmpty:false ,
             strict: true,
             badProductNames: [],
@@ -73,7 +92,7 @@
             },
             width: 100
           }, {
-            data: "badDepotId",
+            data: "badDepotName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -127,16 +146,76 @@
             badDepotNames: [],
             width: 100
           }, {
-            data: "fromDepotId",
+            data: "fromDepotName",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            fromDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.fromDepotNames.indexOf(query) >= 0) {
+                process(that.fromDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                    console.log(response.data)
+
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.fromDepotNames.indexOf(productName) < 0) {
+                          that.fromDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "toDepotName",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            toDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.toDepotNames.indexOf(query) >= 0) {
+                process(that.toDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
+                    console.log(response.data)
+
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.toDepotNames.indexOf(productName) < 0) {
+                          that.toDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "replaceProductIme",
             width: 100
           }, {
-            data: "toDepotId",
-            width: 100
-          }, {
-            data: "replaceProductImeId",
-            width: 100
-          }, {
-            data: "replaceProductId",
+            data: "replaceProductName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -181,6 +260,9 @@
           },{
             data:"buyAmount",
             width:100
+          }, {
+            data: "remarks",
+            width: 100
           }],
         },
       }
@@ -189,6 +271,11 @@
       this.onchange(this.type);
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       formSubmit(){
         this.submitDisabled = true;
         this.inputForm.data = new Array();
@@ -199,15 +286,26 @@
           }
         }
         this.inputForm.data = JSON.stringify(this.inputForm.data);
-        axios.post('/api/ws/future/crm/afterSale/save', qs.stringify({data: this.inputForm.data,type:this.type}, {allowDots: true})).then((response) => {
+        axios.post('/api/ws/future/crm/afterSale/save', qs.stringify({data: this.inputForm.data,type:this.type,action:this.$route.query.action}, {allowDots: true})).then((response) => {
           this.$message(response.data.message);
+          this.settings.data = [];
+          this.table.loadData(this.settings.data);
           this.submitDisabled = false;
         }).catch(function () {
           this.submitDisabled = false;
         });
+      },search() {
+        this.formVisible = false;
+        this.setSearchText();
+        this.getData();
+      }, getData(){
+        axios.get('/api/ws/future/crm/afterSale/areaInputData', {params: this.formData}).then((response) => {
+          this.settings.data = response.data.afterSaleInputList;
+          this.table.loadData(this.settings.data);
+        })
       }, onchange(type){
         if (this.type == '售后机') {
-          this.$router.push({ name: 'afterSaleAreaInput'})
+          this.$router.push({ name: 'afterSaleAreaInput',query:{action:this.$route.query.action}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

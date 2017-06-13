@@ -73,9 +73,7 @@
                 this.$message(response.data.message);
               }
               Object.assign(this.$data,this.getData());
-              if(this.isCreate){
-                this.fileList = [];
-              } else {
+              if(!this.isCreate){
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
               }
             }).catch(function () {
@@ -94,7 +92,7 @@
         this.fileList = fileList;
       }
     },activated () {
-      if(!this.$route.query.headClick || !!this.isInit) {
+      if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;

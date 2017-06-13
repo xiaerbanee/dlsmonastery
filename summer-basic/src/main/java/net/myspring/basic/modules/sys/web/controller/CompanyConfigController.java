@@ -67,4 +67,9 @@ public class CompanyConfigController {
     public CompanyConfigQuery getQuery(CompanyConfigQuery companyConfigQuery){
         return companyConfigQuery;
     }
+
+    @RequestMapping(value="getForm")
+    public CompanyConfigForm getForm(CompanyConfigForm companyConfigForm){
+        return companyConfigForm;
+    }
 }

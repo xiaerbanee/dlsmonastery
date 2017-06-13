@@ -70,7 +70,7 @@ public class OfficeService {
     }
 
     public List<Office> findByParentIdsLike(String parentId) {
-        List<Office> officeList = officeRepository.findByParentIdsLike(parentId);
+        List<Office> officeList = officeRepository.findByParentIdsLike("%,"+parentId+",%");
         return officeList;
     }
 
@@ -124,13 +124,19 @@ public class OfficeService {
         Map<String,List<String>> map= Maps.newHashMap();
         List<Office> officeList=officeRepository.findByParentId(officeId);
         List<Office> childOfficeList=officeRepository.findByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
-        for(Office office:childOfficeList){
-            String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
-            if(StringUtils.isNotBlank(key)){
-                if(!map.containsKey(key)){
-                    map.put(key,Lists.newArrayList());
+        if(CollectionUtil.isNotEmpty(childOfficeList)){
+            for(Office office:childOfficeList){
+                String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
+                if(StringUtils.isNotBlank(key)){
+                    if(!map.containsKey(key)){
+                        map.put(key,Lists.newArrayList());
+                    }
+                    map.get(key).add(office.getId());
                 }
-                map.get(key).add(office.getId());
+            }
+        }else {
+            for(Office office:officeList){
+                map.put(office.getId(),Lists.newArrayList(office.getId()));
             }
         }
         return map;
@@ -176,7 +182,7 @@ public class OfficeService {
             String oldParentIds=office.getParentIds();
             ReflectionUtil.copyProperties(officeForm, office);
             officeRepository.save(office);
-            List<Office> list = officeRepository.findByParentIdsLike("," + office.getId() + ",");
+            List<Office> list = officeRepository.findByParentIdsLike("%," + office.getId() + ",%");
             for (Office item : list) {
                 item.setParentIds(item.getParentIds().replace(oldParentIds, office.getParentIds()));
                 item.setAreaId(office.getAreaId());

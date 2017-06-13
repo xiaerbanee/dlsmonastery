@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item label="所属模块" prop="backendModuleId">
           <el-select v-model="inputForm.backendModuleId" clearable>
-            <el-option v-for="item in inputProperty.backendModuleList" :key="item.id" :label="$t('menus.backendModule.'+item.code)" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.backendModuleList" :key="item.id" :label="$t('menus.backendModule.'+item.code)" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('menuCategoryForm.name')" prop="name">
@@ -38,15 +38,8 @@
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            inputForm:{},
-            inputProperty:{},
-            submitData:{
-              id:'',
-              name:'',
-              sort:'',
-              remarks:'',
-              code:"",
-              backendModuleId:""
+            inputForm:{
+                extra:{}
             },
             rules: {
               backendModuleId: [{ required: true, message: this.$t('menuCategoryForm.prerequisiteMessage')}],
@@ -62,11 +55,10 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/menuCategory/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/basic/sys/menuCategory/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
                   this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList")})
                 }
               }).catch(function () {
@@ -80,11 +72,11 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          })
           axios.get('/api/basic/sys/menuCategory/getForm').then((response)=>{
-            this.inputProperty = response.data;
+            this.inputForm = response.data;
+          axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            })
           })
         }
         this.isInit = true;

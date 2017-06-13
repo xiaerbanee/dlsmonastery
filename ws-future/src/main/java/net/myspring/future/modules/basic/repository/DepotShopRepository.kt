@@ -5,9 +5,7 @@ import net.myspring.future.modules.basic.domain.DepotShop
 import net.myspring.future.modules.basic.dto.DepotReportDto
 import net.myspring.future.modules.basic.dto.DepotShopDto
 import net.myspring.future.modules.basic.web.query.DepotQuery
-import net.myspring.future.modules.basic.web.query.DepotReportQuery
-import net.myspring.future.modules.crm.dto.ProductImeReportDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
+import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import javax.persistence.EntityManager
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -30,23 +27,24 @@ interface DepotShopRepositoryCustom{
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto>
 
-    fun findSaleReport(depotReportQuery: DepotReportQuery):MutableList<DepotReportDto>
+    fun findSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
-    fun findBaokaSaleReport(depotReportQuery: DepotReportQuery):MutableList<DepotReportDto>
+    fun findBaokaSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
-    fun findStoreReport(depotReportQuery: DepotReportQuery):MutableList<DepotReportDto>
+    fun findStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
-    fun findBaokaStoreReport(depotReportQuery: DepotReportQuery):MutableList<DepotReportDto>
+    fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
-    override fun findBaokaStoreReport(depotReportQuery: DepotReportQuery): MutableList<DepotReportDto> {
+
+    override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
-            sb.append("""   SELECT t6.id as depotId, COUNT(t1.id) AS qty""")
-        }else if(depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+            sb.append("""   SELECT t6.id as depotId,t6.name as 'depotName', COUNT(t1.id) AS qty,t8.name as 'chainName',t5.name as 'productTypeName'""")
+        }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime
+               SELECT t4.id as 'productId',t4.name as 'productName',t1.ime,t6.name as 'depotName', t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -56,58 +54,67 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product t4 on t1.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
                     LEFT JOIN crm_depot t6 on t1.depot_id=t6.id
-                    LEFT JOIN crm_depot_shop t7 on t6.depot_shop_id=t7.id
+                    LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
+                    crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
                     AND t2.enabled = 1
+                    and  t6.depot_shop_id=t7.id
         """)
-        if(depotReportQuery.scoreType){
+        if(reportQuery.scoreType){
             sb.append("""  and t5.score_type =:scoreType """)
         }
-        if(depotReportQuery.date!=null){
+        if(reportQuery.date!=null){
             sb.append("""
                 AND (
                     t2.id IS NULL
-                    OR t2.created_date < :date
+                    OR t2.created_date > :date
                 )
                 AND (
                     t1.retail_date IS NULL
-                    OR t1.retail_date >= :date
+                    OR t1.retail_date > :date
                 )
-                AND t1.created_date <= :date
+                AND t1.created_date < :date
             """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.shopIdList)) {
-            sb.append(""" and t6.id IN (:shopIdList) """)
-        }
-        if (StringUtils.isNotBlank(depotReportQuery.townType)) {
+        if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t7.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(reportQuery.areaType)) {
             sb.append(""" and t7.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.productTypeIdList)) {
             sb.append(""" and t5.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t6.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.depotId)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
+            sb.append(""" and t6.id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotBlank(reportQuery.officeId)) {
+            sb.append(""" and t6.office_id =:officeId""")
+        }
+        if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t6.id=:depotId """)
         }
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.depot_id""")
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotReportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.depot_id,t5.id""")
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findStoreReport(depotReportQuery: DepotReportQuery): MutableList<DepotReportDto> {
+    override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
-            sb.append("""  SELECT t6.id as depotId,COUNT(t1.id) AS qty """)
-        }else if(depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+            sb.append("""  SELECT t6.id as depotId,t6.name as depotName,COUNT(t1.id) AS qty ,t8.name as 'chainName',t5.name as 'productTypeName'""")
+        }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t4.id as 'productId',t4.name as 'productName',t2.ime
+               SELECT t4.id as 'productId',t4.name as 'productName',t2.ime,t6.name as 'depotName',t8.name as 'chainName',t5.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -118,16 +125,18 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product t4 on t2.product_id=t4.id
                     LEFT JOIN crm_product_type t5 on t4.product_type_id=t5.id
                     LEFT JOIN crm_depot t6 on t1.shop_id=t6.id
-                    LEFT JOIN crm_depot_shop t7 on t6.depot_shop_id=t7.id
+                    LEFT JOIN crm_chain t8 on t6.chain_id=t8.id,
+                    crm_depot_shop t7
                     WHERE
                     t1.enabled = 1
                     AND t1.is_back = 0
                     AND t2.enabled = 1
+                    and t6.depot_shop_id=t7.id
         """)
-        if(depotReportQuery.scoreType){
+        if(reportQuery.scoreType){
             sb.append("""  and t5.score_type =:scoreType """)
         }
-        if(depotReportQuery.date!=null){
+        if(reportQuery.date!=null){
             sb.append("""
                 AND (
                     t3.id IS NULL
@@ -140,96 +149,109 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 AND t1.created_date <= :date
             """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.shopIdList)) {
-            sb.append(""" and t6.id IN (:shopIdList) """)
-        }
-        if (StringUtils.isNotBlank(depotReportQuery.townType)) {
+        if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t7.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(reportQuery.areaType)) {
             sb.append(""" and t7.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.productTypeIdList)) {
             sb.append(""" and t5.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t6.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.depotId)) {
+        if (StringUtils.isNotBlank(reportQuery.officeId)) {
+            sb.append(""" and t6.office_id =:officeId""")
+        }
+        if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
+            sb.append(""" and t6.id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t6.id=:depotId """)
         }
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.shop_id""")
         }
-
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotReportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.shop_id,t5.id""")
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
 
-    override fun findBaokaSaleReport(depotReportQuery: DepotReportQuery): MutableList<DepotReportDto> {
+    override fun findBaokaSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
-            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty """)
-        }else if(depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+            sb.append("""  SELECT t4.id as 'depotId',t4.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t3.name as 'productTypeName' """)
+        }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime，t1.retail_date,t6.employee_Id,t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName'
+               SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,
+               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName'
             """)
         }
         sb.append("""
                     FROM
                     crm_product_ime t1
                     LEFT JOIN crm_product t2 ON t1.product_id = t2.id
-                    LEFT JOIN crm_product_type t3 on t2.product_type_id=t2.id
+                    LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
                     LEFT JOIN crm_depot t4 on t1.depot_id=t4.id
-                    LEFT JOIN crm_depot_shop t5 on t4.depot_shop_id=t5.id
+                    LEFT JOIN crm_chain t7 on t4.chain_id=t7.id
+
         """)
-        if(depotReportQuery.detail){
+        if(reportQuery.isDetail!=null&&reportQuery.isDetail){
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
         }
-        sb.append("""    WHERE t1.enabled = 1 """)
-        if(depotReportQuery.detail){
-            sb.append(""" and t6.enabled=1 and t6.is_back=0 """)
-        }
-        if(depotReportQuery.scoreType){
+        sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
+        if(reportQuery.scoreType){
             sb.append("""  and t3.score_type =:scoreType """)
         }
-        if(depotReportQuery.dateStart!=null){
+        if(reportQuery.dateStart!=null){
             sb.append(""" and t1.retail_date>=:dateStart """)
         }
-        if(depotReportQuery.dateEnd!=null){
+        if(reportQuery.dateEnd!=null){
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.shopIdList)) {
-            sb.append(""" and t4.id IN (:shopIdList) """)
-        }
-        if (StringUtils.isNotBlank(depotReportQuery.townType)) {
+        if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t5.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(reportQuery.areaType)) {
             sb.append(""" and t5.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.productTypeIdList)) {
             sb.append(""" and t3.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t4.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.depotId)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
+            sb.append(""" and t4.id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotBlank(reportQuery.officeId)) {
+            sb.append(""" and t4.office_id =:officeId""")
+        }
+        if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t4.id=:depotId """)
         }
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.depot_id""")
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotReportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.depot_id,t3.id""")
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
-    override fun findSaleReport(depotReportQuery: DepotReportQuery): MutableList<DepotReportDto> {
+    override fun findSaleReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
-            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty """)
-        }else if(depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
+            sb.append("""  SELECT t5.id as 'depotId',t5.name as 'depotName', COUNT(t1.id) AS qty,t7.name as 'chainName',t4.name as 'productTypeName'""")
+        }else if(reportQuery.isDetail){
             sb.append("""
-               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime，t2.retail_date,t1.employee_Id,t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName'
+               SELECT t3.id as 'productId',t3.name as 'productName',t2.ime,t2.retail_date,t1.employee_id,
+               t1.created_date as 'saleDate',t5.id as 'depotId',t5.name as 'depotName',t7.name as 'chainName',t4.name as 'productTypeName'
             """)
         }
         sb.append("""
@@ -239,43 +261,52 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     LEFT JOIN crm_product t3 on t2.product_id=t3.id
                     LEFT JOIN crm_product_type t4 on t3.product_type_id=t4.id
                     LEFT JOIN crm_depot t5 on t1.shop_id=t5.id
-                    LEFT JOIN crm_depot_shop t6 on t5.depot_shop_id=t6.id
+                    LEFT JOIN crm_chain t7 on t5.chain_id=t7.id,
+                    crm_depot_shop t6
                     WHERE
                     t1.enabled = 1
                     AND t1.is_back = 0
                     AND t2.enabled = 1
+                    and t5.depot_shop_id=t6.id
         """)
-        if(depotReportQuery.scoreType){
+        if(reportQuery.scoreType){
             sb.append("""  and t4.score_type =:scoreType """)
         }
-        if(depotReportQuery.dateStart!=null){
+        if(reportQuery.dateStart!=null){
             sb.append(""" and t1.created_date>=:dateStart """)
         }
-        if(depotReportQuery.dateEnd!=null){
+        if(reportQuery.dateEnd!=null){
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.shopIdList)) {
-            sb.append(""" and t1.shop_id IN (:shopIdList) """)
-        }
-        if (StringUtils.isNotBlank(depotReportQuery.townType)) {
+        if (StringUtils.isNotBlank(reportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(reportQuery.areaType)) {
             sb.append(""" and t6.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.productTypeIdList)) {
             sb.append(""" and t4.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(depotReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.officeIdList)) {
             sb.append(""" and t5.office_id in (:officeIdList) """)
         }
-        if (StringUtils.isNotBlank(depotReportQuery.depotId)) {
+        if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
+            sb.append(""" and t5.id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotBlank(reportQuery.officeId)) {
+            sb.append(""" and t5.office_id =:officeId""")
+        }
+        if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t5.id=:depotId """)
         }
-        if(depotReportQuery.detail==null||!depotReportQuery.detail){
+        if(reportQuery.isDetail==null||!reportQuery.isDetail){
             sb.append(""" group by t1.shop_id""")
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotReportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
+        if(StringUtils.isNotBlank(reportQuery.exportType)&&reportQuery.exportType=="按数量"){
+            sb.append(""" group by t1.shop_id,t4.id""")
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(reportQuery), BeanPropertyRowMapper(DepotReportDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotShopDto> {
@@ -298,6 +329,9 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         if (StringUtils.isNotEmpty(depotQuery.officeId)) {
             sb.append("""  and t1.office_id=:officeId """)
+        }
+        if (CollectionUtil.isNotEmpty(depotQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList) """)
         }
         if (CollectionUtil.isNotEmpty(depotQuery.officeIdList)) {
             sb.append("""  and t1.office_id in (:officeIdList) """)

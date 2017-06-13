@@ -21,7 +21,6 @@ public class ShopAdForm extends BaseForm<ShopAd> {
     private Boolean specialArea;
     private String attachment;
     private BigDecimal price;
-    private List<ShopAdTypeDto> shopAdTypeFormList = Lists.newArrayList();
     private String processInstanceId;
     private Boolean pass = false;
     private String passRemarks;
@@ -129,13 +128,5 @@ public class ShopAdForm extends BaseForm<ShopAd> {
         }else{
             return null;
         }
-    }
-
-    public List<ShopAdTypeDto> getShopAdTypeFormList() {
-        return shopAdTypeFormList;
-    }
-
-    public void setShopAdTypeFormList(List<ShopAdTypeDto> shopAdTypeFormList) {
-        this.shopAdTypeFormList = shopAdTypeFormList;
     }
 }

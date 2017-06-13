@@ -17,7 +17,7 @@ public class ProductImeReportDto {
     private String officeName;
     private String productTypeName;
 
-public ProductImeReportDto(){}
+    public ProductImeReportDto(){}
 
     public ProductImeReportDto(String officeId, Integer qty){
         this.officeId=officeId;

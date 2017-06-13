@@ -93,7 +93,7 @@
         if(action=="详细") {
           this.$router.push({ name: 'processTypeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/basic/sys/processType/delete',{params:{id:id}}).then((response) =>{
+          axios.get('/api/general/sys/processType/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
             this.pageRequest();
           })
@@ -102,7 +102,7 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight - 320;
-      axios.get('/api/basic/sys/processType/getQuery').then((response) => {
+      axios.get('/api/general/sys/processType/getQuery').then((response) => {
         that.formData = response.data;
         util.copyValue(that.$route.query, that.formData);
         that.pageRequest();

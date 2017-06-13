@@ -135,7 +135,7 @@
 
         axios.get('/api/ws/future/crm/productIme/getBatchChangeForm').then((response)=>{
           this.batchChangeForm = response.data;
-          this.settings.columns[3].source = response.data.extra.productNames;
+          this.settings.columns[3].source = response.data.extra.productNameList;
           this.table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }

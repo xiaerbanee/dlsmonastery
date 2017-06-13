@@ -47,9 +47,9 @@ public class GoodsOrderShipController {
 
     @RequestMapping(value = "getQuery")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
-        goodsOrderQuery.setNetTypeList(NetTypeEnum.getList());
-        goodsOrderQuery.setShipTypeList(ShipTypeEnum.getList());
-        goodsOrderQuery.setStatusList(Arrays.asList("待发货","待签收","已完成"));
+        goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
+        goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
+        goodsOrderQuery.getExtra().put("statusList",Arrays.asList("待发货","待签收","已完成"));
         return goodsOrderQuery;
     }
 

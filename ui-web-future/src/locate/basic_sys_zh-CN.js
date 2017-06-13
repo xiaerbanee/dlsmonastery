@@ -259,6 +259,7 @@ export default {
   },
   menuCategoryForm: {
     menuCategoryForm: "菜单分组编辑",
+    code:"编码",
     name: "名称",
     sort: "排序",
     inputKey: "请输入关键字",

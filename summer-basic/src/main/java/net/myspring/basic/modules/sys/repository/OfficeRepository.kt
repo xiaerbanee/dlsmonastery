@@ -63,7 +63,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
     @Query("""
         SELECT t
         FROM  #{#entityName} t
-        where t.parentIds like %?1%
+        where t.parentIds like ?1
         and t.enabled =1
      """)
     fun findByParentIdsLike(parentId: String): MutableList<Office>
@@ -76,7 +76,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
         where t1.enabled=1
         and t2.enabled=1
         and t1.officeRuleId=t2.id
-        and (t1.parentIds like %?1% or t1.id=?2)
+        and (t1.parentIds like ?1 or t1.id=?1)
         and t1.officeRuleId=?2
      """)
     fun findByOfficeIdAndRuleId( officeId: String, officeRuleId: String): MutableList<Office>
@@ -160,7 +160,7 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         sb.append(")");
         var paramMap = Maps.newHashMap<String,String>();
         for((index,value) in parentIdList.withIndex()) {
-            paramMap.put("parentId" + index ,"%$value%");
+            paramMap.put("parentId" + index ,"%,$value,%");
         }
         print(sb.toString())
         print(paramMap)

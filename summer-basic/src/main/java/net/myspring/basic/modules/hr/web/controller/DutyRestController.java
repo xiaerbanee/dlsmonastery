@@ -54,8 +54,8 @@ public class DutyRestController {
 
     @RequestMapping(value = "getQuery")
     public DutyRestQuery getQuery(DutyRestQuery dutyRestQuery) {
-        dutyRestQuery.setRestList(DutyRestTypeEnum.getList());
-        dutyRestQuery.setDateList(DutyDateTypeEnum.getList());
+        dutyRestQuery.getExtra().put("restList", DutyRestTypeEnum.getList());
+        dutyRestQuery.getExtra().put("dateList", DutyDateTypeEnum.getList());
         return dutyRestQuery;
     }
 

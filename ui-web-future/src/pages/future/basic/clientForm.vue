@@ -30,13 +30,8 @@
           isInit: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
-          formProperty: {},
-          inputForm: {},
-          submitData: {
-            id: '',
-            name: '',
-            mobilePhone: '',
-            remarks: '',
+          inputForm: {
+            extra:{}
           },
           rules: {
             name: [{required: true, message: this.$t('clientForm.prerequisiteMessage')}],
@@ -50,8 +45,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData)
-            axios.post('/api/ws/future/basic/client/save', qs.stringify(this.submitData)).then((response) => {
+            axios.post('/api/ws/future/basic/client/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if (!this.isCreate) {
@@ -68,10 +62,13 @@
       }, activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
+        axios.get('/api/ws/future/basic/client/getForm').then((response)=>{
+          this.inputForm = response.data;
           axios.get('/api/ws/future/basic/client/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-            this.inputForm = response.data
+            util.copyValue(response.data,this.inputForm);
           });
-        }
+        });
+      }
       this.isInit = true;
       }
   }

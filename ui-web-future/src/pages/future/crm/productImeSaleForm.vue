@@ -6,7 +6,7 @@
         <el-row >
           <el-col :span="21">
             <el-form-item>
-              <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
+              <su-alert :text="errMsg" type="danger"> </su-alert>
             </el-form-item>
           </el-col>
         </el-row>

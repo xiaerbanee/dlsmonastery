@@ -9,13 +9,31 @@ import java.time.LocalDate;
 public class AfterSaleCompanyDto {
     private String badProductName;
     private String replaceProductName;
+    private String fromDepotName;
     private LocalDate inputDate;
-    private String badIme;
+    private String badProductIme;
     private String packageStatus;
     private String badType;
     private String memory;
     private String remarks;
     private BigDecimal replaceAmount;
+    private String replaceProductIme;
+
+    public String getReplaceProductIme() {
+        return replaceProductIme;
+    }
+
+    public void setReplaceProductIme(String replaceProductIme) {
+        this.replaceProductIme = replaceProductIme;
+    }
+
+    public String getFromDepotName() {
+        return fromDepotName;
+    }
+
+    public void setFromDepotName(String fromDepotName) {
+        this.fromDepotName = fromDepotName;
+    }
 
     public BigDecimal getReplaceAmount() {
         return replaceAmount;
@@ -49,12 +67,12 @@ public class AfterSaleCompanyDto {
         this.inputDate = inputDate;
     }
 
-    public String getBadIme() {
-        return badIme;
+    public String getBadProductIme() {
+        return badProductIme;
     }
 
-    public void setBadIme(String badIme) {
-        this.badIme = badIme;
+    public void setBadProductIme(String badProductIme) {
+        this.badProductIme = badProductIme;
     }
 
     public String getPackageStatus() {

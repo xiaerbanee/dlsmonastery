@@ -2,28 +2,31 @@
   <div>
     <head-tab active="productImeUploadBackForm"></head-tab>
     <div>
-      <el-form :model="productImeUpload" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
+            <el-form-item  >
+              <su-alert :text="$t('productImeUploadBackForm.instruction')" type="success"></su-alert>
+            </el-form-item>
             <el-form-item>
-              <el-alert  v-show="errMsg"  :closable=false  title=""  :description="errMsg" type="error"> </el-alert>
+              <su-alert :text="errMsg" type="danger"> </su-alert>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeUploadBackForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeUploadBackForm.inputIme')" @change="imeStrChanged"></el-input>
+              <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('productImeUploadBackForm.inputIme')" ></el-input>
             </el-form-item>
-            <div v-if="imeStr !==''">
-
-              <el-form-item>
-                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productImeUploadBackForm.save')}}</el-button>
-              </el-form-item>
-            </div>
-
+            <el-form-item >
+              <el-button  type="primary" @click.native="onImeStrChange">{{$t('productImeUploadBackForm.search')}}</el-button>
+              <el-button  type="primary" @click.native="reset">{{$t('productImeUploadBackForm.reset')}}</el-button>
+            </el-form-item>
+            <el-form-item  v-if="searched" >
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productImeUploadBackForm.uploadBack')}}</el-button>
+            </el-form-item>
           </el-col>
-          <el-col :span="18" v-if="imeStr !==''">
+          <el-col :span="18" v-if="searched">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeUploadBackForm.productName')"></el-table-column>
@@ -55,9 +58,13 @@
   .el-table { margin-bottom: 50px;}
 </style>
 <script>
+  import suAlert from 'components/common/su-alert'
 
   export default{
+    components:{
+      suAlert,
 
+    },
     data(){
       return this.getData()
     },
@@ -65,10 +72,14 @@
       getData() {
       return{
         isInit:false,
-        isCreate:this.$route.query.id==null,
+        searched:false,
+
+        inputForm:{
+            imeStr:'',
+        },
         submitDisabled:false,
+
         productImeList:[],
-        imeStr:'',
         errMsg:'',
         productQtyList:[],
         rules: {
@@ -87,26 +98,24 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            this.submitData.imeStr = this.imeStr;
-            axios.post('/api/ws/future/crm/productImeUpload/uploadBack',qs.stringify(this.imeStr)).then((response)=> {
+
+            axios.post('/api/ws/future/crm/productImeUpload/uploadBack', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              if(response.data.success){
-                if(!this.isCreate){
-                  this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
-                }
-              }
+              this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
+
             }).catch( () => {
               this.submitDisabled = false;
             });
           }
         });
-      },imeStrChanged(){
-        axios.get('/api/ws/future/crm/productImeUpload/checkForUploadBack',{params:{imeStr:this.imeStr}}).then((response)=>{
+      },onImeStrChange(){
+        this.searched = true;
+        axios.get('/api/ws/future/crm/productImeUpload/checkForUploadBack',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.errMsg=response.data;
         });
 
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.productImeList=response.data;
 
           let tmpMap = new Map();
@@ -124,7 +133,25 @@
           }
           this.productQtyList = tmpList;
         });
+      },reset(){
+        this.searched = false;
+        this.inputForm.imeStr = '';
+
+        this.errMsg='';
+        this.productImeList=[];
+        this.productQtyList = [];
+        this.$refs["inputForm"].resetFields();
       }
+    },activated(){
+
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+
+        axios.get('/api/ws/future/crm/productImeUpload/getUploadBackForm').then((response)=>{
+          this.inputForm = response.data;
+        });
+      }
+      this.isInit = true;
     }
   }
 </script>

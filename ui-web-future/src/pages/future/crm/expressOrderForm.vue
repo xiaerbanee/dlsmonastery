@@ -2,24 +2,24 @@
   <div>
     <head-tab active="expressOrderForm"></head-tab>
     <div>
-      <el-form :model="expressOrder" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('expressOrderForm.fromDepotId')" prop="fromDepotId">
-          <depot-select v-model="expressOrder.fromDepotId" category="store"></depot-select>
+          <depot-select v-model="inputForm.fromDepotId" category="store"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.toDepotId')" prop="toDepotId">
-          <depot-select v-model="expressOrder.toDepotId"  category="shop"></depot-select>
+          <depot-select v-model="inputForm.toDepotId"  category="shop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.expressCompanyId')" prop="expressCompanyId">
-          <express-company-select v-model="expressOrder.expressCompanyId"  ></express-company-select>
+          <express-company-select v-model="inputForm.expressCompanyId"  ></express-company-select>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.contact')" prop="contator">
-          <el-input v-model="expressOrder.contator"></el-input>
+          <el-input v-model="inputForm.contator"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.address')" prop="address">
-          <el-input type="textarea" v-model="expressOrder.address"></el-input>
+          <el-input type="textarea" v-model="inputForm.address"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressOrderForm.mobilePhone')" prop="mobilePhone">
-          <el-input v-model="expressOrder.mobilePhone"></el-input>
+          <el-input v-model="inputForm.mobilePhone"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('expressOrderForm.save')}}</el-button>
@@ -45,16 +45,7 @@
             isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            expressOrder:{},
-            submitData:{
-              id:'',
-              fromDepotId:'',
-              toDepotId:'',
-              expressCompanyId:'',
-              contator:'',
-              address:'',
-              mobilePhone:''
-            },
+            inputForm:{},
             rules: {
             }
           }
@@ -65,11 +56,10 @@
           form.validate((valid) => {
             if (valid) {
               this.submitDisabled = true;
-              util.copyValue(this.expressOrder,this.submitData);
-              axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
+                if(!this.inputForm.create){
                   this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
                 }
               }).catch( () => {
@@ -82,7 +72,7 @@
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
         axios.get('/api/ws/future/crm/expressOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
-          this.expressOrder = response.data;
+          this.inputForm = response.data;
       })
       }
       this.isInit = true;

@@ -49,6 +49,9 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
+        if(this.innerId == val || val==""||typeof(val)=="undefined") {
+          return;
+        }
         this.innerId=val;
         let idStr=this.innerId;
         if(this.multiple && this.innerId){

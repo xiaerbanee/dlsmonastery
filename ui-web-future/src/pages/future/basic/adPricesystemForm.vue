@@ -16,7 +16,6 @@
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adPricesystemForm.save')}}
               </el-button>
             </el-form-item>
-
       </el-form>
     </div>
   </div>
@@ -36,12 +35,8 @@
         isInit:false,
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
-        inputForm: {},
-        submitData: {
-          id: this.$route.query.id,
-          name: '',
-          remarks: '',
-          officeIdList:[],
+        inputForm: {
+          extra:{}
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
@@ -59,8 +54,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response) => {
+            axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
@@ -85,8 +79,11 @@
     },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+          axios.get('/api/ws/future/basic/adPricesystem/getForm').then((response)=> {
             this.inputForm = response.data;
+            axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data,this.inputForm);
+            });
           });
         }
       this.isInit = true;

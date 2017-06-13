@@ -61,8 +61,8 @@ public class EmployeeController {
 
     @RequestMapping(value = "getForm")
     public EmployeeForm findForm(EmployeeForm employeeForm){
-        employeeForm.setPositionList(positionService.findAll());
-        employeeForm.setEducationList( dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
+        employeeForm.getExtra().put("positionList",positionService.findAll());
+        employeeForm.getExtra().put("educationList", dictEnumService.findValueByCategory(DictEnumCategoryEnum.EDUCATION.getValue()));
         return employeeForm;
     }
 
@@ -86,8 +86,8 @@ public class EmployeeController {
 
     @RequestMapping(value="getQuery")
     public EmployeeQuery getQuery(EmployeeQuery employeeQuery){
-        employeeQuery.setPositionList(positionService.findAll());
-        employeeQuery.setStatusList(EmployeeStatusEnum.getList());
+        employeeQuery.getExtra().put("positionList", positionService.findAll());
+        employeeQuery.getExtra().put("statusList", EmployeeStatusEnum.getList());
         return employeeQuery;
     }
 

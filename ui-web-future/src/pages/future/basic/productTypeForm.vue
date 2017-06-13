@@ -76,7 +76,12 @@
             rules: {
               name: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
               reportName: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
+              code: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
               scoreType: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
+              baokaPrice: [{  required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
+              price1: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
+              price2: [{required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
+              price3: [{required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
             }
           }
       },

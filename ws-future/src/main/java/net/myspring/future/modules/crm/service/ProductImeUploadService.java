@@ -6,12 +6,16 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
 import net.myspring.future.modules.crm.repository.ProductImeUploadRepository;
+import net.myspring.future.modules.crm.web.form.ProductImeBatchUploadForm;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -42,7 +46,11 @@ public class ProductImeUploadService {
     @Autowired
     private ProductImeUploadRepository productImeUploadRepository;
     @Autowired
+    private ProductImeSaleRepository productImeSaleRepository;
+    @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private OfficeClient officeClient;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -97,7 +105,7 @@ public class ProductImeUploadService {
 
         String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
 
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -167,7 +175,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Map<String, ProductImeUpload> productImeUploadMap = productImeUploadRepository.findMap(CollectionUtil.extractToList(productImeList, "productImeUploadId"));
 
         for (ProductIme productIme : productImeList) {
@@ -214,5 +222,41 @@ public class ProductImeUploadService {
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
 
+    }
+
+    public Long batchUpload(ProductImeBatchUploadForm productImeBatchUploadForm) {
+        Long uploadQty = 0L;
+
+        List<String> officeIds = officeClient.getChildOfficeIds(productImeBatchUploadForm.getOfficeId());
+
+        LocalDate dateStart = LocalDate.parse(productImeBatchUploadForm.getMonth() + "-01");
+        LocalDate dateEnd = dateStart.plusMonths(1);
+
+        List<ProductImeSaleDto> productImeSaleDtoList = productImeSaleRepository.findForBatchUpload(dateStart.atStartOfDay(), dateEnd.atStartOfDay(), officeIds);
+        if (CollectionUtil.isEmpty(productImeSaleDtoList)) {
+            return uploadQty;
+        }
+        Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(productImeSaleDtoList, "productImeId"));
+
+        for (ProductImeSaleDto productImeSaleDto : productImeSaleDtoList) {
+
+            if (StringUtils.isBlank(productImeSaleDto.getProductImeProductImeUploadId())) {
+                ProductImeUpload productImeUpload = new ProductImeUpload();
+                productImeUpload.setStatus(AuditStatusEnum.申请中.name());
+                productImeUpload.setMonth(productImeBatchUploadForm.getMonth());
+                productImeUpload.setRemarks("批量上报");
+                productImeUpload.setEmployeeId(productImeSaleDto.getEmployeeId());
+                productImeUpload.setShopId(productImeSaleDto.getShopId());
+                productImeUpload.setProductImeId(productImeSaleDto.getProductImeId());
+                productImeUploadRepository.save(productImeUpload);
+
+                ProductIme productIme = productImeMap.get(productImeSaleDto.getProductImeId());
+                productIme.setProductImeUploadId(productImeUpload.getId());
+                productIme.setRetailShopId(productImeSaleDto.getShopId());
+                productImeRepository.save(productIme);
+                uploadQty ++;
+            }
+        }
+        return uploadQty;
     }
 }

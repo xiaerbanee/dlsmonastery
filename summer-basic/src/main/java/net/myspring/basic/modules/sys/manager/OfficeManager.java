@@ -40,7 +40,7 @@ public class OfficeManager {
             Office office = officeRepository.findOne(officeId);
             officeIdList.add(office.getId());
             if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(office.getType())) {
-                officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike(office.getParentId()), "id"));
+                officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike("%,"+office.getParentId()+",%"), "id"));
             } else {
                 List<OfficeBusiness> businessList = officeBusinessRepository.findBusinessIdById(office.getId());
                 if (CollectionUtil.isNotEmpty(businessList)) {
@@ -68,7 +68,7 @@ public class OfficeManager {
     }
 
     public List<Office> findByOfficeIdAndRuleId(String officeId, String ruleId) {
-        List<Office> officeList = officeRepository.findByOfficeIdAndRuleId(officeId, ruleId);
+        List<Office> officeList = officeRepository.findByOfficeIdAndRuleId("%,"+officeId+",%", ruleId);
         return officeList;
     }
 

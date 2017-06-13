@@ -36,6 +36,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
+    fun findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(companyId :String): MutableList<Depot>
+
     fun findByChainId(chainId: String): MutableList<Depot>
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Depot>
@@ -78,13 +80,15 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
                 crm_depot t1
             WHERE
              t1.enabled = 1
-
         """)
         if(StringUtils.isNotBlank(depotQuery.name)){
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
         if(StringUtils.isNotBlank(depotQuery.areaId)){
             sb.append("""  and t1.area_id=:areaId """)
+        }
+        if(StringUtils.isNotBlank(depotQuery.officeId)){
+            sb.append("""  and t1.office_id=:officeId """)
         }
         if(CollectionUtil.isNotEmpty(depotQuery.depotIdList)){
             sb.append("""  and t1.id in (:depotIdList) """)

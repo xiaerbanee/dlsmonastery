@@ -23,8 +23,6 @@ public class DutySignQuery extends BaseQuery {
     private String officeName;
     private String positionName;
     private List<String> officeIds;
-    private List<Office> officeList= Lists.newArrayList();
-    private List<PositionDto> positionList= Lists.newArrayList();
 
     public void setDutyDate(String dutyDate) {
         this.dutyDate = dutyDate;
@@ -32,22 +30,6 @@ public class DutySignQuery extends BaseQuery {
 
     public String getDutyDate() {
         return dutyDate;
-    }
-
-    public List<Office> getOfficeList() {
-        return officeList;
-    }
-
-    public void setOfficeList(List<Office> officeList) {
-        this.officeList = officeList;
-    }
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
     }
 
     public String getCreatedBy() {

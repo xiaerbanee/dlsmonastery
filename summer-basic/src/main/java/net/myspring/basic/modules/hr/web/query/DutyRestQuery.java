@@ -20,8 +20,6 @@ public class DutyRestQuery extends BaseQuery {
     private String type;
     private String dateType;
     private List<String> officeIds;
-    private List<String> restList= Lists.newArrayList();
-    private List<String> dateList= Lists.newArrayList();
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -37,22 +35,6 @@ public class DutyRestQuery extends BaseQuery {
 
     public String getDutyDate() {
         return dutyDate;
-    }
-
-    public void setRestList(List<String> restList) {
-        this.restList = restList;
-    }
-
-    public void setDateList(List<String> dateList) {
-        this.dateList = dateList;
-    }
-
-    public List<String> getRestList() {
-        return restList;
-    }
-
-    public List<String> getDateList() {
-        return dateList;
     }
 
     public String getType() {

@@ -16,6 +16,7 @@ public class ProductImeSaleQuery extends BaseQuery{
     private Boolean isBack;
     private String shopName;
     private String ime;
+    private String imeReverse;
 
     public String getEmployeeId() {
         return employeeId;
@@ -59,6 +60,10 @@ public class ProductImeSaleQuery extends BaseQuery{
 
     public String getImeReverse(){
         return StringUtils.reverse(ime);
+    }
+
+    public void setImeReverse(String imeReverse) {
+        this.imeReverse = imeReverse;
     }
 
     public LocalDate getCreatedDateStart() {

@@ -11,15 +11,6 @@ import java.util.List;
 public class ShopAdTypeQuery extends BaseQuery {
     private String totalPriceType;
     private String name;
-    private List<String> totalPriceTypeList = Lists.newArrayList();
-
-    public List<String> getTotalPriceTypeList() {
-        return totalPriceTypeList;
-    }
-
-    public void setTotalPriceTypeList(List<String> totalPriceTypeList) {
-        this.totalPriceTypeList = totalPriceTypeList;
-    }
 
     public String getTotalPriceType() {
         return totalPriceType;

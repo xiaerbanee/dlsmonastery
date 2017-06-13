@@ -71,14 +71,6 @@
           accounts:[],
           offices:[],
           inputForm:{},
-          submitData:{
-            id:'',
-            accountId:"",
-            type:'',
-            oldValue:'',
-            newValue:'',
-            remarks:''
-          },
           rules: {
             accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
             type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
@@ -95,8 +87,7 @@
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm, this.submitData);
-            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
               this.$message(response.data.message);
             }
@@ -156,11 +147,12 @@
         }else if(this.inputForm.type == "离职"){
           this.inputForm.oldValue = this.inputForm.leaveDate;
         }else {
-          this.inputForm.oldValue ="";
+          this.inputForm.oldValue = "";
         }
       }
     },created () {
       if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
         this.inputForm.type=this.$route.query.type;
         this.inputForm.id=this.$route.query.id;
         this.getAccount(this.$route.query.accountId);

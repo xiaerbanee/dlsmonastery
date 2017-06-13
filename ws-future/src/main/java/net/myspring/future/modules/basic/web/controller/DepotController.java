@@ -6,16 +6,10 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.crm.domain.ProductImeSale;
-import net.myspring.future.modules.crm.dto.ProductImeReportDto;
-import net.myspring.future.modules.crm.service.ProductImeService;
-import net.myspring.future.modules.crm.web.query.ProductImeReportQuery;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +99,6 @@ public class DepotController {
 
     @RequestMapping(value = "getDepotAccountQuery")
     public DepotAccountQuery getDepotAccountQuery(DepotAccountQuery depotAccountQuery) {
-
         LocalDate now = LocalDate.now();
         LocalDate dutyDateStart = now.minusDays(30);
         depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(now));

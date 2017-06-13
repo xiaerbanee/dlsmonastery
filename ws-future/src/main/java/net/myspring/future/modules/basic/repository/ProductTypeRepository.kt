@@ -4,11 +4,8 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery
-import net.myspring.future.modules.crm.dto.ProductImeSaleDto
-import net.myspring.future.modules.crm.dto.ReportScoreDto
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
-import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -21,11 +18,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
-/**
- * Created by zhangyf on 2017/5/24.
- */
+
 @CacheConfig(cacheNames = arrayOf("productTypes"))
 interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductTypeRepositoryCustom {
 
@@ -38,31 +32,6 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     fun save(productType: ProductType): ProductType
 
     @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-    """, nativeQuery = true)
-    fun findAllEnabled(): MutableList<ProductType>
-
-    @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.id in ?1
-    """, nativeQuery = true)
-    fun findByIds(ids: MutableList<String>): MutableList<ProductType>
-
-//    fun findList(@Param("p") map: Map<String, Any>): MutableList<ProductType>
-
-    @Query("""
-        SELECT t1.*
-        FROM crm_product t1
-        where t1.enabled=1
-        and t1.demo_phone_type_id in ?1
-    """, nativeQuery = true)
-    fun findByDemoPhoneTypeIds(dempProductTypeIds: MutableList<String>): MutableList<ProductType>
-
-    @Query("""
     SELECT t
     FROM #{#entityName} t
     WHERE t.enabled = 1
@@ -70,9 +39,7 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     """)
     fun findByNameLike(name: String): MutableList<ProductType>
 
-//    fun updateDemoPhoneType(@Param("demoPhoneTypeId") demoPhoneTypeId: String, @Param("list") ids: MutableList<String>): Int
-//
-//    fun updateDemoPhoneTypeToNull(demoPhoneTypeId: String): Int
+    fun findByNameAndCompanyId(name :String,  companyId :String): ProductType?
 
     @Query("""
         SELECT t1
@@ -104,8 +71,9 @@ class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                 t1.enabled = 1
             AND t2.enabled = 1
             AND t1.id = :id
-
-                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductTypeDto::class.java));
+            GROUP BY
+                t1.id
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductTypeDto::class.java))
 
     }
 
@@ -113,7 +81,7 @@ class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         val sb = StringBuffer()
         sb.append("""
             SELECT
-                group_concat(t2.name) AS productNames, t1.*
+                group_concat(t2.name) AS productNames, group_concat(t2.id) AS productIds, t1.*
             FROM
                 crm_product_type t1
             LEFT JOIN crm_product t2 ON t1.id = t2.product_type_id
@@ -130,11 +98,11 @@ class ProductTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         sb.append(""" group by t1.id """)
 
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(productTypeQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductTypeDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(productTypeQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductTypeDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
     }
 }

@@ -30,7 +30,7 @@ public class ExpressController {
 
     @RequestMapping(value = "getQuery")
     public ExpressQuery getQuery(ExpressQuery expressQuery) {
-        expressQuery.setExpressOrderExtendTypeList(ExpressOrderTypeEnum.getList());
+        expressQuery.getExtra().put("expressOrderExtendTypeList",ExpressOrderTypeEnum.getList());
         return expressQuery;
     }
 
@@ -59,13 +59,14 @@ public class ExpressController {
 
     }
 
-
-
     @RequestMapping(value="export")
     public String export(ExpressQuery expressQuery) {
 
         return expressService.export(expressQuery);
     }
 
-
+    @RequestMapping(value="getForm")
+    public ExpressForm getForm(ExpressForm expressForm) {
+        return expressForm;
+    }
 }

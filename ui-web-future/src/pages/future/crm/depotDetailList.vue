@@ -5,26 +5,26 @@
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="upload2" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.syn')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('depotDetailList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('depotDetailList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" >
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.depotName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.shopName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.productName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.productName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.hasIme.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.hasIme')" :label-width="formLabelWidth">
                 <el-select v-model="formData.hasIme" filterable clearable :placeholder="$t('depotDetailList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.extra.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.isSame.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.isSame')" :label-width="formLabelWidth">
                 <el-select v-model="formData.isSame" filterable clearable :placeholder="$t('depotDetailList.inputKey')">
-                  <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
+                  <el-option v-for="(value,key) in formData.extra.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -34,7 +34,7 @@
           <el-button @click="exportData" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('depotDetailList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotDetailList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="depot.name" :label="$t('depotDetailList.shopName')" ></el-table-column>
         <el-table-column prop="product.name" :label="$t('depotDetailList.productName')" ></el-table-column>
@@ -60,18 +60,9 @@
     data() {
       return {
         page:{},
+        searchText:"",
         formData:{
-          page:0,
-          size:25,
-          depotName:'',
-          productName:'',
-          hasIme:'',
-          isSame:''
-        },formLabel:{
-          depotName:{label:this.$t('depotDetailList.shopName')},
-          productName:{label:this.$t('depotDetailList.productName')},
-          hasIme:{label:this.$t('depotDetailList.hasIme'),value:""},
-          isSame:{label:this.$t('depotDetailList.isSame'),value:""}
+          extra:{}
         },
         pickerDateOption:util.pickerDateOption,
         formProperty:{},
@@ -81,12 +72,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
-        this.formLabel.isSame.value= util.bool2str(this.formData.isSame);
-        util.setQuery("depotDetailList",this.formData);
-        axios.get('/api/crm/depotDetail',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("depotDetailList",submitData);
+        axios.get('/api//ws/future/crm/depotDetail',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -102,12 +98,12 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-       	window.location.href="/api/crm/depotDetail/export?"+qs.stringify(this.formData);
+       	window.location.href="/api//ws/future/crm/depotDetail/export?"+qs.stringify(this.formData);
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/crm/depotDetail/getQuery').then((response) =>{
+      axios.get('/api/ws/future/crm/depotDetail/getQuery').then((response) =>{
         this.formProperty=response.data;
         this.pageRequest();
       });

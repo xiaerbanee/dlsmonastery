@@ -2,14 +2,20 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.service.ImeAllotService;
+import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
+import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -31,6 +37,8 @@ public class ImeAllotController {
 
     @Autowired
     private ImeAllotService imeAllotService;
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ImeAllotDto> list(Pageable pageable, ImeAllotQuery imeAllotQuery) {
@@ -51,11 +59,10 @@ public class ImeAllotController {
         return imeAllotService.checkForImeAllot(imeList, true);
     }
 
-
-
     @RequestMapping(value="getQuery")
     public  ImeAllotQuery getQuery(ImeAllotQuery imeAllotQuery){
-        imeAllotQuery.setStatusList(AuditStatusEnum.getList());
+        imeAllotQuery.getExtra().put("statusList",AuditStatusEnum.getList());
+        imeAllotQuery.setCrossArea(true);
         return imeAllotQuery;
     }
 
@@ -64,17 +71,29 @@ public class ImeAllotController {
 
         List<String> imeList = imeAllotForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            return new RestResponse("没有输入任何有效的IME", ResponseCodeEnum.invalid.name(), false);
+            throw new ServiceException("没有输入任何有效的串码");
         }
 
-        String errMsg = imeAllotService.checkForImeAllot(imeList, true);
-        if(StringUtils.isNotBlank(errMsg)){
-            return new RestResponse(errMsg, ResponseCodeEnum.invalid.name(), false);
-        }
-
-        imeAllotService.save(imeAllotForm);
+        imeAllotService.allot(imeAllotForm);
 
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getImeAllotBatchForm")
+    public ImeAllotBatchForm getImeAllotBatchForm(ImeAllotBatchForm  imeAllotBatchForm){
+
+        imeAllotBatchForm.getExtra().put("toDepotNameList" , imeAllotService.findToDepotNameList());
+        return imeAllotBatchForm;
+
+    }
+
+    @RequestMapping(value = "batchAllot")
+    public RestResponse batchAllot(ImeAllotBatchForm  imeAllotBatchForm){
+
+        imeAllotService.batchAllot(imeAllotBatchForm);
+
+        return new RestResponse("串码批量调拨成功", ResponseCodeEnum.saved.name());
+
     }
 
     @RequestMapping(value = "audit")

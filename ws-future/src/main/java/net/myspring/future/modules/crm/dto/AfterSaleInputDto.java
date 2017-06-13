@@ -1,15 +1,18 @@
 package net.myspring.future.modules.crm.dto;
 
+import com.google.common.collect.Maps;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleInputDto {
-    private String ime;
-    private String productName;
-    private String depotName;
+    private String badProductIme;
+    private String badProductName;
+    private String badDepotName;
     private String badType;
     private String packageStatus;
     private String memory;
@@ -20,29 +23,92 @@ public class AfterSaleInputDto {
     private String replaceProductIme;
     private String replaceProductName;
     private BigDecimal replaceAmount;
+    private String fleeShopName;
+    private String contact;
+    private String mobilePhone;
+    private String address;
+    private BigDecimal buyAmount;
+    private String remarks;
+    private Map<String,Object> extra= Maps.newHashMap();
 
-    public String getIme() {
-        return ime;
+    public Map<String, Object> getExtra() {
+        return extra;
     }
 
-    public void setIme(String ime) {
-        this.ime = ime;
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
-    public String getDepotName() {
-        return depotName;
+    public String getFleeShopName() {
+        return fleeShopName;
     }
 
-    public void setDepotName(String depotName) {
-        this.depotName = depotName;
+    public void setFleeShopName(String fleeShopName) {
+        this.fleeShopName = fleeShopName;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public BigDecimal getBuyAmount() {
+        return buyAmount;
+    }
+
+    public void setBuyAmount(BigDecimal buyAmount) {
+        this.buyAmount = buyAmount;
+    }
+
+    public String getBadProductIme() {
+        return badProductIme;
+    }
+
+    public void setBadProductIme(String badProductIme) {
+        this.badProductIme = badProductIme;
+    }
+
+    public String getBadProductName() {
+        return badProductName;
+    }
+
+    public void setBadProductName(String badProductName) {
+        this.badProductName = badProductName;
+    }
+
+    public String getBadDepotName() {
+        return badDepotName;
+    }
+
+    public void setBadDepotName(String badDepotName) {
+        this.badDepotName = badDepotName;
     }
 
     public String getBadType() {

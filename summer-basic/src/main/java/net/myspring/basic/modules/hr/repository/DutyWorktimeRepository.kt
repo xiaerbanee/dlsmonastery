@@ -70,7 +70,7 @@ class DutyWorktimeRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcT
         }
         if(dutyWorktimeQuery.dutyDateEnd!=null){
             sql.append("""
-                   AND t1.duty_date &lt; :dutyDateEnd
+                   AND t1.duty_date < :dutyDateEnd
                 """);
         }
         if(dutyWorktimeQuery.accountId!=null){

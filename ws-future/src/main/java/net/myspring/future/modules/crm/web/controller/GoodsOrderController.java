@@ -53,17 +53,17 @@ public class GoodsOrderController {
 
     @RequestMapping(value = "getQuery")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
-        goodsOrderQuery.setNetTypeList(NetTypeEnum.getList());
-        goodsOrderQuery.setShipTypeList(ShipTypeEnum.getList());
-        goodsOrderQuery.setStatusList(GoodsOrderStatusEnum.getList());
+        goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
+        goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
+        goodsOrderQuery.getExtra().put("StatusList",GoodsOrderStatusEnum.getList());
         return goodsOrderQuery;
     }
 
 
     @RequestMapping(value = "getForm")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
-        goodsOrderForm.setNetTypeList(NetTypeEnum.getList());
-        goodsOrderForm.setShipTypeList(ShipTypeEnum.getList());
+        goodsOrderForm.getExtra().put("netTypeList",NetTypeEnum.getList());
+        goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
     }
 

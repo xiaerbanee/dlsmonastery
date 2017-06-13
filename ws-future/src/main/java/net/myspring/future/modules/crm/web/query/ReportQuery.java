@@ -1,33 +1,54 @@
-package net.myspring.future.modules.basic.web.query;
+package net.myspring.future.modules.crm.web.query;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
-public class DepotReportQuery {
-    private boolean detail;
+/**
+ * Created by wangzm on 2017/6/7.
+ */
+public class ReportQuery extends BaseQuery{
+    //销售，库存
     private String type;
+    //区域，促销，型号
+    private String sumType ;
     //电子保卡，核销
     private String outType;
     //区域类型
     private String areaType;
     //日期范围
     private String dateRange;
+
     private LocalDate date;
     //乡镇类型
     private String townType;
     //打分型号：是，否
     private boolean scoreType;
     //货品
-    private String depotId;
-    private List<String> productTypeIdList= Lists.newArrayList();
     private String officeId;
-    private List<String> officeIdList=Lists.newArrayList();
-    private List<String> shopIdList=Lists.newArrayList();
+
+    private String depotId;
+
+    private Boolean isDetail;
+
+    private String exportType;
+
+    private List<String> productTypeIdList;
+
+    public String getExportType() {
+        return exportType;
+    }
+
+    public void setExportType(String exportType) {
+        this.exportType = exportType;
+    }
 
     public String getDepotId() {
         return depotId;
@@ -37,12 +58,12 @@ public class DepotReportQuery {
         this.depotId = depotId;
     }
 
-    public boolean getDetail() {
-        return detail;
+    public Boolean getIsDetail() {
+        return isDetail;
     }
 
-    public void setDetail(boolean detail) {
-        this.detail = detail;
+    public void setIsDetail(Boolean detail) {
+        isDetail = detail;
     }
 
     public String getType() {
@@ -53,12 +74,21 @@ public class DepotReportQuery {
         this.type = type;
     }
 
-    public List<String> getShopIdList() {
-        return shopIdList;
+
+    public String getOfficeId() {
+        return officeId;
     }
 
-    public void setShopIdList(List<String> shopIdList) {
-        this.shopIdList = shopIdList;
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getSumType() {
+        return sumType;
+    }
+
+    public void setSumType(String sumType) {
+        this.sumType = sumType;
     }
 
     public String getOutType() {
@@ -78,19 +108,14 @@ public class DepotReportQuery {
     }
 
     public String getDateRange() {
+        if(StringUtils.isBlank(dateRange)){
+            this.dateRange=LocalDateUtils.format(LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now()))+CharConstant.DATE_RANGE_SPLITTER+LocalDateUtils.format(LocalDate.now());
+        }
         return dateRange;
     }
 
     public void setDateRange(String dateRange) {
         this.dateRange = dateRange;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     public String getTownType() {
@@ -117,25 +142,9 @@ public class DepotReportQuery {
         this.productTypeIdList = productTypeIdList;
     }
 
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public List<String> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
     public LocalDate getDateStart() {
         if(StringUtils.isNotBlank(getDateRange())) {
-            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[0]);
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
@@ -143,9 +152,24 @@ public class DepotReportQuery {
 
     public LocalDate getDateEnd() {
         if(StringUtils.isNotBlank(getDateRange())) {
-            return LocalDateUtils.parse(getDateRange().split(CharConstant.WAVE_LINE)[1]).plusDays(1);
+            return LocalDateUtils.parse(getDateRange().split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }
     }
+
+    public LocalDate getDate() {
+        if(date==null){
+            this.date=LocalDate.now();
+        }else {
+            this.date=date.plusDays(1);
+        }
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+
 }

@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item label="所属项目" prop="backendId">
           <el-select v-model="inputForm.backendId" filterable placeholder="所属项目">
-            <el-option v-for="item in inputProperty.backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.backendList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('backendModuleForm.remarks')" prop="remarks">
@@ -34,14 +34,8 @@
           return{
             isInit:false,
             submitDisabled:false,
-            inputForm:{},
-            inputProperty:{},
-            submitData:{
-              id:'',
-              code:'',
-              backendId:'',
-              name:'',
-              remarks:''
+            inputForm:{
+                extra:{}
             },
             rules: {
               backendId: [{ required: true, message: this.$t('backendModuleForm.prerequisiteMessage')}],
@@ -56,8 +50,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/basic/sys/backendModule/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/basic/sys/backendModule/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
                 if(!this.inputForm.create){
@@ -74,11 +67,11 @@
       },activated () {
         if(!this.$route.query.headClick || !this.isInit) {
           Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/backendModule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.inputForm = response.data;
-          })
           axios.get('/api/basic/sys/backendModule/getForm').then((response)=>{
-            this.inputProperty = response.data;
+            this.inputForm = response.data;
+            axios.get('/api/basic/sys/backendModule/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            })
           })
         }
         this.isInit = true;

@@ -5,13 +5,13 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:productMonthPrice:edit'">{{$t('productMonthPriceList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productMonthPrice:view'">{{$t('productMonthPriceList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('productMonthPriceList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('productMonthPriceList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.month.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productMonthPriceList.month')" :label-width="formLabelWidth">
                 <month-picker  v-model="formData.month" ></month-picker>
               </el-form-item>
             </el-col>
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('productMonthPriceList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productMonthPriceList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('productMonthPriceList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="month" :label="$t('productMonthPriceList.month')" sortable></el-table-column>
@@ -48,14 +48,9 @@
         pageLoading: false,
         pageHeight:600,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          month:''
-        },formLabel:{
-          month:{label:this.$t('productMonthPriceList.month')}
+        searchText:"",
+        formData:{
+            extra:{}
         },
         formProperty:{},
         formLabelWidth: '120px',
@@ -65,11 +60,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("productMonthPriceList",this.submitData);
-        axios.get('/api/ws/future/crm/productMonthPrice?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("productMonthPriceList",submitData);
+        axios.get('/api/ws/future/crm/productMonthPrice?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -92,7 +93,7 @@
         }
       }
     },created () {
-      let that = this;
+      var that = this;
       that.pageHeight = window.outerHeight -320;
       axios.get('/api/ws/future/crm/productMonthPrice/getQuery').then((response) =>{
         that.formData=response.data;

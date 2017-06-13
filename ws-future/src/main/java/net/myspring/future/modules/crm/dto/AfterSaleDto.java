@@ -2,11 +2,16 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.util.cahe.annotation.CacheInput;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleDto extends DataDto<AfterSale> {
+    private String detailId;
     private String type;
     private String badProductImeId;
     private String badProductId;
@@ -17,6 +22,122 @@ public class AfterSaleDto extends DataDto<AfterSale> {
     private String packageStatus;
     private String memory;
     private String badProductIme;
+    private String replaceProductName;
+    private String fromDepotName;
+    private String toDepotName;
+    private String detailRemarks;
+    private String ime;
+    private String fleeShopName;
+    private String contact;
+    private String mobilePhone;
+    private String address;
+    private BigDecimal buyAmount;
+    private LocalDate inputDate;
+    private LocalDate replaceDate;
+
+    public String getDetailId() {
+        return detailId;
+    }
+
+    public void setDetailId(String detailId) {
+        this.detailId = detailId;
+    }
+
+    public LocalDate getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(LocalDate inputDate) {
+        this.inputDate = inputDate;
+    }
+
+    public LocalDate getReplaceDate() {
+        return replaceDate;
+    }
+
+    public void setReplaceDate(LocalDate replaceDate) {
+        this.replaceDate = replaceDate;
+    }
+
+    public String getDetailRemarks() {
+        return detailRemarks;
+    }
+
+    public void setDetailRemarks(String detailRemarks) {
+        this.detailRemarks = detailRemarks;
+    }
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getFleeShopName() {
+        return fleeShopName;
+    }
+
+    public void setFleeShopName(String fleeShopName) {
+        this.fleeShopName = fleeShopName;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public BigDecimal getBuyAmount() {
+        return buyAmount;
+    }
+
+    public void setBuyAmount(BigDecimal buyAmount) {
+        this.buyAmount = buyAmount;
+    }
+
+    public String getToDepotName() {
+        return toDepotName;
+    }
+
+    public void setToDepotName(String toDepotName) {
+        this.toDepotName = toDepotName;
+    }
+
+    public String getReplaceProductName() {
+        return replaceProductName;
+    }
+
+    public void setReplaceProductName(String replaceProductName) {
+        this.replaceProductName = replaceProductName;
+    }
+
+    public String getFromDepotName() {
+        return fromDepotName;
+    }
+
+    public void setFromDepotName(String fromDepotName) {
+        this.fromDepotName = fromDepotName;
+    }
 
     public String getBadProductImeId() {
         return badProductImeId;

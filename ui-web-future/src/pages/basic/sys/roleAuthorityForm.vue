@@ -45,10 +45,8 @@
           remoteLoading:false,
           isCreate:this.$route.query.id!=null,
           submitDisabled:false,
-          inputForm:{},
-          submitData:{
-            id:"",
-            permissionIdList:""
+          inputForm:{
+              extra:{}
           },
           rules: {
             id: [{ required: true, message: "必填属性"}],
@@ -68,8 +66,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData())
             }).catch(function () {
@@ -99,10 +96,12 @@
           this.roleList = [];
         }
       },getTreeNode(id){
+        if(id){
           axios.get('/api/basic/sys/role/getTreeNode',{params:{id:id}}).then((response)=>{
-            this.treeData =response.data.treeNode.children;
+            this.treeData =response.data.extra.treeNode.children;
             this.checked = response.data.permissionIdList;
           })
+        }
       }
     }
   }
