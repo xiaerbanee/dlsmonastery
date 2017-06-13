@@ -59,7 +59,6 @@
         rules: {
           shopId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
-          productImeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],

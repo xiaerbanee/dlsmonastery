@@ -14,16 +14,16 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('imeAllotList.fromDepot')">
-                <el-input v-model="formData.fromDepotName" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.fromDepotName" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.toDepot')">
-                <el-input v-model="formData.toDepotName" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.toDepotName" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.crossArea')" >
                 <bool-select v-model="formData.crossArea"   ></bool-select>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.ime')">
-                <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.ime" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.status')">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('imeAllotList.inputKey')">
