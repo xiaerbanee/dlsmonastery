@@ -5,9 +5,9 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form">
+      <search-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off"></el-input>
@@ -16,7 +16,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">过滤</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="depotName" label="名称" sortable width="120"></el-table-column>
         <el-table-column prop="type" label="仓库类型"  />
@@ -40,15 +40,14 @@
   export default {
     data() {
       return {
+        searchText:"",
         page:{},
         formData:{
-          page:0,
-          size:25,
-          name:"",
+          extra:{}
         },formLabel:{
           name:{label:"名称"},
         },
-        formProperty:{},
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -56,10 +55,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("depotStoreList",this.formData);
-        axios.get('/api/ws/future/basic/depotStore',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("depotStoreList",submitData);
+        axios.get('/api/ws/future/basic/depotStore',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -90,8 +96,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      this.initPromise = axios.get('/api/basic/sys/dictEnum/getQuery').then((response) =>{
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>
