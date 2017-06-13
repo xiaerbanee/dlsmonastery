@@ -29,10 +29,10 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopAllotList.billCode')" >
-                <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.businessId" :placeholder="$t('shopAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopAllotList.billCode')">
-                <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('shopAllotList.multiEnterOrComma')"></el-input>
+                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('shopAllotList.multiEnterOrComma')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

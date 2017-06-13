@@ -24,7 +24,7 @@
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
               <el-form-item :label="$t('storeAllotList.remarks')">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.remarks" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -35,10 +35,10 @@
                 <depot-select category="store" v-model="formData.toStoreId"  @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('storeAllotList.outCode')">
-                <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+                <el-input v-model="formData.outCode" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('storeAllotList.businessId')">
-                <el-input type="textarea" v-model="formData.businessIds" auto-complete="off" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
+                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('storeAllotList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

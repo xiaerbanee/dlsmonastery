@@ -11,25 +11,25 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('productImeSaleList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="8">
-              <el-form-item :label="$t('productImeSaleList.employeeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeSaleList.employeeName')">
                 <employee-select v-model="formData.employeeId" @afterInit="setSearchText"></employee-select>
               </el-form-item>
-              <el-form-item :label="$t('productImeSaleList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeSaleList.createdDate')" >
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('productImeSaleList.isBack')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productImeSaleList.isBack')">
                 <bool-select v-model="formData.isBack"></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item :label="$t('productImeSaleList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
+              <el-form-item :label="$t('productImeSaleList.shopName')">
+                <el-input v-model="formData.shopName" :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productImeSaleList.ime')" :label-width="formLabelWidth">
-                <el-input v-model="formData.ime" auto-complete="off"  :placeholder="$t('productImeSaleList.inputImeTail')"></el-input>
+              <el-form-item :label="$t('productImeSaleList.ime')">
+                <el-input v-model="formData.ime" :placeholder="$t('productImeSaleList.inputImeTail')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -38,7 +38,7 @@
           <el-button type="primary" @click="search()">{{$t('productImeSaleList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="shopName" column-key="shopId" :label="$t('productImeSaleList.saleShopName')" width="180" sortable></el-table-column>
         <el-table-column prop="productImeIme"  :label="$t('productImeSaleList.ime')" ></el-table-column>
         <el-table-column prop="productImeProductName" :label="$t('productImeSaleList.productName')"></el-table-column>
@@ -66,16 +66,13 @@
     data() {
       return {
         pageLoading: false,
-        pageHeight:600,
         page:{},
+        initPromise:{},
         searchText:"",
         formData:{
             extra:{}
         },
-        initPromise:{},
-        formLabelWidth: '120px',
         formVisible: false,
-        loading:false
       };
     },
     methods: {
@@ -87,7 +84,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("productImeSaleList",submitData);
         axios.get('/api/ws/future/crm/productImeSale?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -108,7 +105,7 @@
         this.pageRequest();
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/productImeSale/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/crm/productImeSale/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -128,12 +125,9 @@
         }
       }
     },created () {
-
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
-      this.initPromise=axios.get('/api/ws/future/crm/productImeSale/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+      this.initPromise = axios.get('/api/ws/future/crm/productImeSale/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{
