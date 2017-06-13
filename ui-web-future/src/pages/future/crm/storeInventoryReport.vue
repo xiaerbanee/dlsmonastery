@@ -87,7 +87,7 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("storeInventoryReport",this.formData);
-        axios.get('/api/ws/future/basic/depotStore?'+qs.stringify(submitData)).then((response) => {
+        axios.get('/api/ws/future/basic/depotStore/depotReportDate?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           console.log(this.page);
           this.pageLoading = false;
@@ -106,7 +106,7 @@
       },exportData(command) {
       }
     },created () {
-      axios.get('/api/ws/future/basic/depotStore/getDepotStoreQuery').then((response) => {
+      axios.get('/api/ws/future/basic/depotStore/getReportQuery').then((response) => {
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";
         util.copyValue(this.$route.query, this.formData);
