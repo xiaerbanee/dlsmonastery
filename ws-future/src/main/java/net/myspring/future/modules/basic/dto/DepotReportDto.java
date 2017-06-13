@@ -1,8 +1,11 @@
 package net.myspring.future.modules.basic.dto;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 public class DepotReportDto {
     private String productId;
@@ -19,6 +22,16 @@ public class DepotReportDto {
     private String percent;
     private String productTypeName;
     private String chainName;
+
+    private Map<String,Object> extra= Maps.newHashMap();
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
+    }
 
     public String getProductTypeName() {
         return productTypeName;

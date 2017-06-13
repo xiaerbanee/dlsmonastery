@@ -44,11 +44,11 @@ interface ProductTypeRepository : BaseRepository<ProductType,String>,ProductType
     @Query("""
         SELECT t1
         from #{#entityName}  t1
-        where t1.scoreType=1
+        where t1.scoreType=?1
         and t1.enabled = 1
-        and t1.price1 is not null order by t1.name
+        order by t1.name
     """)
-    fun findAllScoreType(): MutableList<ProductType>
+    fun findByScoreType(scoreType:Boolean): MutableList<ProductType>
 
     fun findByDemoPhoneTypeId(demoPhoneTypeId: String): MutableList<ProductType>
 }

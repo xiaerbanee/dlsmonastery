@@ -12,11 +12,13 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
@@ -73,6 +75,8 @@ public class ProductImeService {
     private DepotManager depotManager;
     @Autowired
     private DepotShopRepository depotShopRepository;
+    @Autowired
+    private ProductTypeRepository productTypeRepository;
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
@@ -264,6 +268,50 @@ public class ProductImeService {
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"qty","数量"));
+        }else if("按串码".equals(reportQuery.getExportType())){
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"ime","串码"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
+        }else if("按合计".equals(reportQuery.getExportType())){
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
+            List<ProductType> productTypeList=productTypeRepository.findByScoreType(reportQuery.getScoreType());
+            for(ProductType productType:productTypeList){
+                simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extra",productType.getName(),productType.getName()));
+            }
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extra","合计","sum"));
+            Map<String,DepotReportDto> map=Maps.newHashMap();
+            for(DepotReportDto depotReport:depotReportList){
+                if(!map.containsKey(depotReport.getDepotId())){
+                    map.put(depotReport.getDepotId(),depotReport);
+                }
+                map.get(depotReport.getDepotId()).getExtra().put(depotReport.getProductTypeName(),depotReport.getQty());
+            }
+            depotReportList=Lists.newArrayList(map.values());
+            Map<String,Object> sumMap=Maps.newHashMap();
+            Integer totalSum=0;
+            for(DepotReportDto depotReport:depotReportList){
+                Integer sum=0;
+                for(ProductType productType:productTypeList){
+                    String key=productType.getName();
+                    if(!depotReport.getExtra().containsKey(key)){
+                        depotReport.getExtra().put(key,0);
+                    }
+                    if(!sumMap.containsKey(key)){
+                        sumMap.put(key,0);
+                    }
+                    sumMap.put(key,(Integer)sumMap.get(key)+(Integer)depotReport.getExtra().get(key));
+                    sum+=(Integer)depotReport.getExtra().get(key);
+                    totalSum+=(Integer)depotReport.getExtra().get(key);
+                }
+                depotReport.getExtra().put("sum",sum);
+            }
+            DepotReportDto depotReportDto=new DepotReportDto();
+            depotReportDto.setChainName("合计");
+            depotReportDto.setExtra(sumMap);
+            depotReportDto.getExtra().put("sum",totalSum);
+            depotReportList.add(depotReportDto);
         }
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表"+reportQuery.getExportType(),depotReportList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"销售报表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);

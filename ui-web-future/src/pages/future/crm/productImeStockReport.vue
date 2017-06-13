@@ -8,6 +8,7 @@
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="按数量">按数量导出</el-dropdown-item>
+            <el-dropdown-item command="按合计">按合计导出</el-dropdown-item>
             <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -180,6 +181,7 @@
         axios.post('/api/ws/future/crm/productIme/exportReport', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
+        this.formData.exportType=null;
       },stockReportGrid(){
 
       }

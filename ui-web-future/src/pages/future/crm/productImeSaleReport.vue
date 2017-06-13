@@ -7,9 +7,9 @@
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="按数量导出">按数量导出</el-dropdown-item>
-            <el-dropdown-item command="按合计导出">按合计导出</el-dropdown-item>
-            <el-dropdown-item command="按串码导出">按串码导出</el-dropdown-item>
+            <el-dropdown-item command="按数量">按数量导出</el-dropdown-item>
+            <el-dropdown-item command="按合计">按合计导出</el-dropdown-item>
+            <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
@@ -133,7 +133,6 @@
             this.pageLoading = false;
           })
         }else {
-          this.formData.officeId=""
           axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;
@@ -183,7 +182,11 @@
         this.formData.officeId=this.officeIds[this.officeIds.length-1];
         this.pageRequest();
       }, exportData(command) {
-
+        this.formData.exportType=command;
+        axios.post('/api/ws/future/crm/productIme/exportReport', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
+        this.formData.exportType=null;
       },saleReportGrid(){
 
       }

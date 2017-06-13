@@ -87,7 +87,7 @@ public class ReportScoreService {
     }
 
     public String getProductTypeNames() {
-        List<ProductType> productTypes = productTypeRepository.findAllScoreType();
+        List<ProductType> productTypes = productTypeRepository.findByScoreType(true);
 
          return StringUtils.join(CollectionUtil.extractToList(productTypes, "name"), CharConstant.COMMA_FULL);
 
@@ -166,7 +166,7 @@ public class ReportScoreService {
         //最近一个月累计电子保卡
         List<ProductIme> recentMonthProductImes = productImeRepository.findByRetailDate(lastDayOfMonth, dateEnd);
         //当前需要统计型号
-        List<ProductType> productTypes = productTypeRepository.findAllScoreType();
+        List<ProductType> productTypes = productTypeRepository.findByScoreType(true);
         Map<String,ProductType> productTypeMap = CollectionUtil.extractToMap(productTypes,"id");
         Map<String,ReportScoreOffice> reportScoreOfficeMap = Maps.newHashMap();
         Map<String,ReportScoreArea> reportScoreAreaMap = Maps.newHashMap();

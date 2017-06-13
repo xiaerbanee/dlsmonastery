@@ -12,6 +12,7 @@ public class SimpleExcelColumn {
     private String label;
     private CellStyle headerStyle;
     private CellStyle cellStyle;
+    private String fieldKey;
 
     public SimpleExcelColumn(String fieldName,String label) {
         this.fieldName = fieldName;
@@ -24,6 +25,15 @@ public class SimpleExcelColumn {
         this.headerStyle = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.HEADER.name());
         this.cellStyle =  ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.DATA.name());
     }
+
+    public SimpleExcelColumn(Workbook workbook,String fieldName,String label,String fieldKey) {
+        this.fieldName = fieldName;
+        this.label = label;
+        this.fieldKey = fieldKey;
+        this.headerStyle = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.HEADER.name());
+        this.cellStyle =  ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.DATA.name());
+    }
+
     public SimpleExcelColumn(Workbook workbook,String fieldName, String label,Integer width) {
         this.fieldName = fieldName;
         this.label = label;
@@ -38,6 +48,14 @@ public class SimpleExcelColumn {
         this.label = label;
         this.headerStyle = headerStyle;
         this.cellStyle = cellStyle;
+    }
+
+    public String getFieldKey() {
+        return fieldKey;
+    }
+
+    public void setFieldKey(String fieldKey) {
+        this.fieldKey = fieldKey;
     }
 
     public String getFieldName() {
