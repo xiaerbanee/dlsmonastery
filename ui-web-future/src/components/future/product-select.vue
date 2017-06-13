@@ -48,30 +48,32 @@
       },  handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        this.innerId=val;
-        let idStr=this.innerId;
-        if(this.multiple && this.innerId){
-          idStr=this.innerId.join();
+        if (val) {
+          this.innerId = val;
+          let idStr = this.innerId;
+          if (this.multiple && this.innerId) {
+            idStr = this.innerId.join();
+          }
+          if (util.isBlank(idStr)) {
+            return;
+          }
+          this.remoteLoading = true;
+          axios.get('/api/ws/future/basic/product/findByIds?idStr=' + idStr).then((response) => {
+            this.itemList = response.data;
+            this.remoteLoading = false;
+            this.$nextTick(() => {
+              this.$emit('afterInit');
+            });
+          })
+        } else {
+          this.innerId = [];
         }
-        if(util.isBlank(idStr)) {
-          return;
-        }
-        this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/product/findByIds?idStr=' + idStr).then((response)=>{
-          this.itemList=response.data;
-          this.remoteLoading = false;
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
-          });
-        })
       }
     },created () {
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
           this.setValue(newVal);
-        }
       }
     }
   };

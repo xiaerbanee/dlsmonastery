@@ -27,26 +27,26 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val==""||typeof(val)=="undefined") {
-          return;
-        }
-        this.innerId=val;
-        this.remoteLoading = true;
-        axios.get('/api/ws/future/basic/bank/findOne?id=' + this.innerId).then((response)=>{
-          this.itemList=[response.data];
-          this.remoteLoading = false;
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
+        if(val){
+          this.innerId=val;
+          this.remoteLoading = true;
+          axios.get('/api/ws/future/basic/bank/findOne?id=' + this.innerId).then((response)=>{
+            this.itemList=[response.data];
+            this.remoteLoading = false;
+            this.$nextTick(()=>{
+              this.$emit('afterInit');
+            })
           })
-        })
+        }else{
+          this.innerId=[];
+        }
+
       }
     },created () {
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-        if(newVal){
           this.setValue(newVal);
-        }
       }
     }
   };
