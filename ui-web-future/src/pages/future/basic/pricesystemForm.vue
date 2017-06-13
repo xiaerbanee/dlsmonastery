@@ -40,18 +40,12 @@
       getData() {
       return{
         isInit:false,
-        isCreate:this.$route.query.id==null,
         submitDisabled:false,
         productName:'',
         pricesystemDetailList:[],
         filterPricesystemDetailList:[],
-        inputForm:{},
-        submitData:{
-          id:'',
-          name:'',
-          sort:'',
-          remarks:'',
-          pricesystemDetailList:[]
+        inputForm:{
+          extra:{}
         },
         pageLoading: false,
         rules: {
@@ -74,12 +68,14 @@
                 }
             }
             this.inputForm.pricesystemDetailList=tempList;
-            util.copyValue(this.inputForm,this.submitData);
-            this.submitData.enabled = true;
-            axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            this.inputForm.enabled = true;
+            axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
+              if(this.inputForm.isCreate){
+                Object.assign(this.$data,this.getData());
+                this.initPage;
+              }else {
+                this.submitDisabled = false ;
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
               }
             }).catch(function () {
@@ -105,19 +101,18 @@
           }
         }
         this.filterPricesystemDetailList = tempList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm=response.data;
-        });
+      },initPage(){
         axios.get('/api/ws/future/basic/pricesystem/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
           this.pricesystemDetailList = response.data.pricesystemDetailList;
           this.filterPricesystemDetailList = this.pricesystemDetailList;
+          axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

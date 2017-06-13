@@ -81,13 +81,15 @@
 
               axios.post('/api/ws/future/basic/productType/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
+
                 if(response.data.success) {
-                    if (!this.inputForm.create) {
+                    if (this.isCreate) {
+                      Object.assign(this.$data, this.getData());
+                      console.log(this.$data)
+                      this.initPage();
+                    }else{
                       this.submitDisabled = false;
                       this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList")})
-                    }else{
-                      Object.assign(this.$data, this.getData());
-                      this.initPage();
                     }
                 }
               }).catch( ()=>{
