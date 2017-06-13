@@ -88,6 +88,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -173,10 +174,13 @@
 
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
+      this.initPromise=axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };
