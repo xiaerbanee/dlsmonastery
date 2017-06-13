@@ -9,7 +9,7 @@
         <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('chainForm.shopType')" prop="depotList">
+        <el-form-item :label="$t('chainForm.shop')" prop="depotList">
           <depot-select v-model="inputForm.depotIdList" category="shop" multiple="multiple"></depot-select>
         </el-form-item>
         <el-form-item>

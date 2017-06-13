@@ -29,6 +29,10 @@ const shopForm  = r => require.ensure([], () => r(require('pages/future/basic/sh
 const depotStoreForm  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreForm.vue')));
 const depotStoreList  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreList.vue')));
 
+const depotChangeForm  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeForm.vue')));
+const depotChangeList  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeList.vue')));
+const depotChangeDetail  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeDetail.vue')));
+
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
   {path:'/future/basic/adPricesystemForm',component:adPricesystemForm,name:'adPricesystemForm',meta: {menu:"adPricesystemList",keepAlive:true}},
@@ -60,6 +64,10 @@ let routes = [
   {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/depotStoreList',component:depotStoreList,name:'depotStoreList'},
   {path:'/future/basic/depotStoreForm',component:depotStoreForm,name:'depotStoreForm',meta: {menu:"depotStoreList",keepAlive:true}},
+
+  {path:'/future/basic/depotChangeList',component:depotChangeList,name:'depotChangeList'},
+  {path:'/future/basic/depotChangeForm',component:depotChangeForm,name:'depotChangeForm',meta: {menu:"depotChangeList",keepAlive:true}},
+  {path:'/future/basic/depotChangeDetail',component:depotChangeDetail,name:'depotChangeDetail',meta: {menu:"depotChangeList",keepAlive:true}},
 ];
 
 export default routes;

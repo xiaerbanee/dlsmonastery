@@ -99,6 +99,7 @@ export default {
     officeName: "nama kantor",
     isAdPricesystem: "是否属于该类别",
     areaName: "area",
+    shop:"门店",
     shopType: "jenis",
     chainName: "nama rantai",
     areaType: "area",

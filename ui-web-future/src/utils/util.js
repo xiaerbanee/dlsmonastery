@@ -268,7 +268,7 @@ util.getSearchText = function (root){
   let tmp = [];
   for(let item of formItems){
     let eachValueLabel = util.getComponentValueLabel(item);
-    if(eachValueLabel && eachValueLabel!=""){
+    if(eachValueLabel && eachValueLabel.trim()!=""){
       tmp.push([item.label, eachValueLabel]);
     }
   }
