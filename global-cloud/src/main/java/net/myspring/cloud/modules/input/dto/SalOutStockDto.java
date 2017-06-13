@@ -19,7 +19,7 @@ import java.util.Map;
 public class SalOutStockDto {
     //创建人
     private String creator;
-    // 客户名称
+    // 客户编码
     private String customerNumber;
     //仓库
     private String storeNumber;
@@ -27,7 +27,7 @@ public class SalOutStockDto {
     private LocalDate date;
     // 备注
     private String note;
-    //部门名称
+    //部门编码
     private String departmentNumber;
     //单据类型
     private String billType;

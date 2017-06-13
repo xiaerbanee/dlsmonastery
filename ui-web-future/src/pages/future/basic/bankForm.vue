@@ -30,18 +30,16 @@
     },
     methods:{
       getData() {
-          return{
-            isInit:false,
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            remoteLoading:false,
-            inputForm:{
-              extra:{}
-            },
-            rules: {
-              name: [{ required: true, message: this.$t('bankForm.prerequisiteMessage')}]
-            }
+        return{
+          submitDisabled:false,
+          remoteLoading:false,
+          inputForm:{
+            extra:{}
+          },
+          rules: {
+            name: [{ required: true, message: this.$t('bankForm.prerequisiteMessage')}]
           }
+        }
       },
       formSubmit(){
         var that = this;
@@ -51,9 +49,12 @@
             this.submitDisabled = true;
             axios.post('/api/ws/future/basic/bank/save',qs.stringify(util.deleteExtra(that.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
               if(response.data.success) {
-                if (!this.isCreate) {
+                if (this.inputForm.isCreate) {
+                  Object.assign(this.$data,this.getData());
+                  this.initPage();
+                }else {
+                  this.submitDisabled = false ;
                   this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
                 }
               }
@@ -62,10 +63,7 @@
             });
           }
         });
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/ws/future/basic/bank/getForm').then((response)=>{
           this.inputForm = response.data;
           axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -73,7 +71,8 @@
           });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

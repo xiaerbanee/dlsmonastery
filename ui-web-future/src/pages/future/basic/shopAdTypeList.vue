@@ -51,6 +51,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         pickerDateOption:util.pickerDateOption,
         formLabelWidth: '120px',
         formVisible: false,
@@ -96,10 +97,14 @@
         });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
-        this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      that.initPromise = axios.get('/api/ws/future/basic/shopAdType/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(this.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }
