@@ -12,7 +12,6 @@
             <el-dropdown-item command="按串码">按串码导出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
         <el-button type="primary" @click="preLevel()" v-show="officeIds.length">返回</el-button>
         <span v-html="searchText"></span>
       </el-row>

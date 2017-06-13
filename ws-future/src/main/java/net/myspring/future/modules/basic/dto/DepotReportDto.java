@@ -22,6 +22,44 @@ public class DepotReportDto {
     private String percent;
     private String productTypeName;
     private String chainName;
+    private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
+    private String areaName;
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     private Map<String,Object> extra= Maps.newHashMap();
 

@@ -263,18 +263,18 @@ public class ProductImeService {
 
     public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList,ReportQuery reportQuery){
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","考核区域"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
         if("按数量".equals(reportQuery.getExportType())){
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"qty","数量"));
         }else if("按串码".equals(reportQuery.getExportType())){
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"ime","串码"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
         }else if("按合计".equals(reportQuery.getExportType())){
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
             List<ProductType> productTypeList=productTypeRepository.findByScoreType(reportQuery.getScoreType());
             for(ProductType productType:productTypeList){
@@ -313,6 +313,7 @@ public class ProductImeService {
             depotReportDto.getExtra().put("sum",totalSum);
             depotReportList.add(depotReportDto);
         }
+        cacheUtils.initCacheInput(depotReportList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表"+reportQuery.getExportType(),depotReportList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"销售报表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
