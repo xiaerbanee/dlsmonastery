@@ -88,7 +88,7 @@ public class ShopGoodsDepositController {
     public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
 
         //TODO 需要修改获取departMentList的方法
-        shopGoodsDepositForm.setDepartMentList(new ArrayList<>());
+        shopGoodsDepositForm.getExtra().put("departMentList", new ArrayList<>());
 
         return shopGoodsDepositForm;
     }

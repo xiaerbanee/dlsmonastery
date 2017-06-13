@@ -96,6 +96,7 @@
       return {
         pageLoading: false,
         searchText:"",
+        initPromise:{},
         pageHeight:600,
         page:{},
         formData:{
@@ -187,12 +188,16 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/bankIn/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/crm/bankIn/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+
       });
 
+    },activated(){
+        this.initPromise.then(()=>{
+          this.pageRequest();
+        });
     }
   };
 </script>

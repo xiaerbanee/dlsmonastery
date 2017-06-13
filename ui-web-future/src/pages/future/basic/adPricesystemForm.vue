@@ -32,7 +32,6 @@
     methods:{
       getData() {
       return {
-        isInit:false,
         isCreate: this.$route.query.id == null,
         submitDisabled: false,
         inputForm: {
@@ -57,8 +56,11 @@
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if (!this.isCreate) {
+                if (this.inputForm.isCreate) {
+                  Object.assign(this.$data,this.getData());
+                  this.initPage();
+                }else {
+                  this.submitDisabled = false ;
                   this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList")})
                 }
               }else {
@@ -75,18 +77,16 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/basic/adPricesystem/getForm').then((response)=> {
-            this.inputForm = response.data;
-            axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-              util.copyValue(response.data,this.inputForm);
-            });
+      },initPage(){
+        axios.get('/api/ws/future/basic/adPricesystem/getForm').then((response)=> {
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/basic/adPricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+            util.copyValue(response.data,this.inputForm);
           });
-        }
-      this.isInit = true;
+        });
+      }
+    },created () {
+      this.initPage();
     }
   }
 </script>

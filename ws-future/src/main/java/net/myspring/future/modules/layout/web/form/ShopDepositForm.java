@@ -18,9 +18,6 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
     private String outBillType;
     private String shopId;
 
-    private List<String> outBillTypeList;
-
-
     public LocalDate getBillDate() {
         return billDate;
     }
@@ -84,16 +81,6 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
     public void setShopId(String shopId) {
         this.shopId = shopId;
     }
-
-
-    public List<String> getOutBillTypeList() {
-        return outBillTypeList;
-    }
-
-    public void setOutBillTypeList(List<String> outBillTypeList) {
-        this.outBillTypeList = outBillTypeList;
-    }
-
 
     public boolean isImageAmountValid() {
         if (imageAmount != null && ! imageAmount.equals(BigDecimal.ZERO) ) {

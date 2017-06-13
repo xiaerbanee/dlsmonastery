@@ -19,7 +19,6 @@
         if(util.isBlank(query)) {
           return;
         }
-        this.itemList=[];
         this.remoteLoading = true;
         axios.get("/api/ws/future/basic/product/searchFullText", {params:{key:query}}).then((response)=>{
           var newList = new Array();

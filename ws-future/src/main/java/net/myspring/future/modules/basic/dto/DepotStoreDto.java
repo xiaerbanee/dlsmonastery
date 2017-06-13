@@ -24,6 +24,25 @@ public class DepotStoreDto extends DataDto<DepotStore>{
     @CacheInput(inputKey = "depots",inputInstance = "delegateDepotId",outputInstance = "name")
     private String delegateDepotName;
 
+    private String percentage;
+    private Integer qty=0;
+
+    public String getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
     public String getOfficeId() {
         return officeId;
     }
