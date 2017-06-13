@@ -53,6 +53,7 @@
           extra:{},
           dutyDate:'',
         },
+        initPromise:{},
         searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
@@ -85,16 +86,17 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },getQuery(){
-      axios.get('/api/basic/hr/dutyRest/getQuery').then((response) =>{
-         this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
-        this.pageRequest();
-    });
-  }
+      }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      this.getQuery();
+      this.initPromise = axios.get('/api/basic/hr/dutyRest/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated() {
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      })
     }
   };
 </script>
