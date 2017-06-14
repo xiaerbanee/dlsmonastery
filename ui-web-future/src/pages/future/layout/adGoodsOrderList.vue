@@ -5,55 +5,50 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adGoodsOrder:edit'">{{$t('adGoodsOrderList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form">
-        <el-form :model="formData">
+      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.id" auto-complete="off" :placeholder="$t('adGoodsOrderList.blankOrComma')"></el-input>
+              <el-form-item :label="$t('adGoodsOrderList.orderCode')">
+                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.createdDate"></date-range-picker>
+              <el-form-item :label="$t('adGoodsOrderList.createdDate')">
+                <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.billType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('adGoodsOrderList.billType')">
                 <el-select v-model="formData.billType" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
-                  <el-option v-for="item in formData.billTypes" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in formData.extra.billTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
+              <el-form-item :label="$t('adGoodsOrderList.remarks')">
+                <el-input v-model="formData.remarks" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy"></account-select>
+              <el-form-item :label="$t('adGoodsOrderList.createdBy')">
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="formLabel.parentId.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.parentId" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
+              <el-form-item :label="$t('adGoodsOrderList.parentId')">
+                <el-input v-model="formData.parentId" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.officeName.label" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
-              </el-form-item>
-              <el-form-item :label="formLabel.storeId.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.storeId" category="store"></depot-select>
-              </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
-              </el-form-item>
-              <el-form-item :label="formLabel.processStatus.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.processStatus" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
-                  <el-option v-for="item in formData.processFlows" :key="item.name" :label="item.name" :value="item.name"></el-option>
+              <el-form-item :label="$t('adGoodsOrderList.areaName')">
+                <el-select v-model="formData.shopAreaId" clearable>
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.areaType.label" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaType" filterable clearable :placeholder="$t('adGoodsOrderList.inputKey')">
-                  <el-option v-for="areaType in formData.areaTypes"  :key="areaType.name" :label="areaType.name" :value="areaType.name"></el-option>
-                </el-select>
+              <el-form-item :label="$t('adGoodsOrderList.storeName')">
+                <depot-select v-model="formData.storeId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="formLabel.billDateBTW.label" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.billDate"></date-range-picker>
+              <el-form-item :label="$t('adGoodsOrderList.shopName')">
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+              </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.billDate')">
+                <date-range-picker v-model="formData.billDateRange"></date-range-picker>
+              </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.processStatus')">
+                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -61,32 +56,32 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('adGoodsOrderList.sure')}}</el-button>
         </div>
-      </el-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="businessId" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
-        <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')"></el-table-column>
-        <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" ></el-table-column>
-        <el-table-column prop="billType" :label="$t('adGoodsOrderList.type')" ></el-table-column>
-        <el-table-column prop="outCode" :label="$t('adGoodsOrderList.outCode')" ></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('adGoodsOrderList.processStatus')"  ></el-table-column>
-        <el-table-column prop="storeName" :label="$t('adGoodsOrderList.storeName')"  ></el-table-column>
-        <el-table-column prop="officeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
-        <el-table-column prop="areaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
-        <el-table-column prop="areaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
-        <el-table-column prop="shopName" :label="$t('adGoodsOrderList.shopName')" ></el-table-column>
-        <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  ></el-table-column>
-        <el-table-column prop="expressOrderCode" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
+      </search-dialog>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column fixed prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
+        <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')" sortable></el-table-column>
+        <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" sortable></el-table-column>
+        <el-table-column prop="billType" :label="$t('adGoodsOrderList.type')" sortable></el-table-column>
+        <el-table-column prop="outCode" :label="$t('adGoodsOrderList.outCode')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('adGoodsOrderList.processStatus')" sortable></el-table-column>
+        <el-table-column prop="storeName" column-key="storeId" :label="$t('adGoodsOrderList.storeName')" sortable></el-table-column>
+        <el-table-column prop="shopOfficeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
+        <el-table-column prop="shopAreaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
+        <el-table-column prop="shopAreaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId" :label="$t('adGoodsOrderList.shopName')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  sortable></el-table-column>
+        <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
-        <el-table-column prop="createdByName" :label="$t('adGoodsOrderList.createdBy')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')" width="140">
+        <el-table-column prop="createdByName" column-key="createdBy" :label="$t('adGoodsOrderList.createdBy')" sortable></el-table-column>
+        <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')">
           <template scope="scope">
-            <el-button type="text" size="small" v-permit="'crm:adGoodsOrder:view'" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:edit'" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button>
-            <el-button type="text" size="small" v-if="scope.row.isEditable" v-permit="'crm:adGoodsOrder:delete'" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button>
+            <div class="action" v-permit="'crm:adGoodsOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:bill'"><el-button size="small" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:ship'"><el-button size="small" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -98,101 +93,84 @@
   import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
+  import processStatusSelect from 'components/general/process-status-select'
+
   export default {
     components:{
       officeSelect,
       accountSelect,
-      depotSelect
+      depotSelect,
+      processStatusSelect,
     },
     data() {
       return {
         pageLoading: false,
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          id:'',
-          createdDate:'',
-          billType:'',
-          remarks:'',
-          createdBy:'',
-          officeId:'',
-          storeId:'',
-          shopId:'',
-          processStatus:'',
-          areaType:'',
-          billDate:''
-        },formLabel:{
-          id:{label:this.$t('adGoodsOrderList.orderCode')},
-          createdDateBTW:{label:this.$t('adGoodsOrderList.createdDate')},
-          billType:{label:this.$t('adGoodsOrderList.billType')},
-          remarks:{label:this.$t('adGoodsOrderList.remarks')},
-          createdBy:{label:this.$t('adGoodsOrderList.createdBy')},
-          parentId:{label:this.$t('adGoodsOrderList.parentId')},
-          officeName:{label:this.$t('adGoodsOrderList.officeName')},
-          storeId:{label:this.$t('adGoodsOrderList.storeName'),value:''},
-          shopName:{label:this.$t('adGoodsOrderList.shopName')},
-          processStatus:{label:this.$t('adGoodsOrderList.processStatus')},
-          areaType:{label:this.$t('adGoodsOrderList.areaType')},
-          billDateBTW:{label:this.$t('adGoodsOrderList.billDate')},
+        searchText:'',
+        formData:{
+            extra:{},
         },
-        pickerDateOption:util.pickerDateOption,
-        formLabelWidth: '120px',
+        initPromise:{},
         formVisible: false,
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.storeId.value = util.getLabel(this.formData.stores, this.formData.storeId);
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("adGoodsOrderList", this.submitData);
-        axios.get('/api/ws/future/layout/adGoodsOrder', {params: this.submitData}).then((response) => {
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("adGoodsOrderList",submitData);
+        axios.get('/api/ws/future/layout/adGoodsOrder', {params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
+        });
       }, pageChange(pageNumber, pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
       }, sortChange(column) {
-        this.formData.order = util.getOrder(column);
+        this.formData.sort = util.getSort(column);
         this.formData.page = 0;
         this.pageRequest();
       }, search() {
         this.formVisible = false;
         this.pageRequest();
       }, itemAdd(){
-        this.$router.push({name: 'adGoodsOrderForm'})
+        this.$router.push({name: 'adGoodsOrderForm'});
       }, itemAction: function (id, action) {
-        console.log(id, action)
-        if (action == "edit") {
+        if (action === "edit") {
           this.$router.push({name: 'adGoodsOrderForm', query: {id: id}})
-        } else if (action == "detail") {
+        } else if (action === "detail") {
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
-        } else if (action == "audit") {
+        } else if (action === "audit") {
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "audit"}})
-        } else if (action == "bill") {
+        } else if (action === "bill") {
           this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
-        } else if (action == "发货") {
+        } else if (action === "发货") {
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
-        } else if (action == "签收") {
+        } else if (action === "签收") {
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
-        } else if (action == "delete") {
+        } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
             })
-          })
+          }).catch(()=>{});
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/layout/adGoodsOrder/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/layout/adGoodsOrder/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }

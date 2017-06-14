@@ -38,7 +38,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column  prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
+        <el-table-column prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
         <el-table-column prop="shopName" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('productImeUploadList.ime')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('productImeUploadList.updateDate')"></el-table-column>

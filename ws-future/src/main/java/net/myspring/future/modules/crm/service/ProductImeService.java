@@ -187,16 +187,16 @@ public class ProductImeService {
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
         reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         reportQuery.setDepotIdList(depotManager.filterDepotIds());
-        Map<String,List<String>>  childOfficeMap=Maps.newHashMap();
+        Map<String,List<String>>  lastRuleMap=Maps.newHashMap();
         if(StringUtils.isNotBlank(reportQuery.getOfficeId())){
             reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-            childOfficeMap=officeClient.getChildOfficeMap(reportQuery.getOfficeId());
+            lastRuleMap=officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(reportQuery);
         if(StringUtils.isNotBlank(reportQuery.getOfficeId())&&SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
             Map<String,ProductImeReportDto> map=Maps.newHashMap();
             for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
-                String key=getOfficeKey(childOfficeMap,productImeSaleReportDto.getOfficeId());
+                String key=getOfficeKey(lastRuleMap,productImeSaleReportDto.getOfficeId());
                 if(StringUtils.isNotBlank(key)){
                     if(map.containsKey(key)){
                         map.get(key).addQty(1);
@@ -206,7 +206,7 @@ public class ProductImeService {
                     }
                 }
             }
-            for(String officeId:childOfficeMap.keySet()){
+            for(String officeId:lastRuleMap.keySet()){
                 if(!map.containsKey(officeId)){
                     map.put(officeId,new ProductImeReportDto(officeId,0));
                 }

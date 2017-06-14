@@ -45,8 +45,14 @@ public class ReportScoreController {
     }
 
     @RequestMapping(value = "getForm")
-    public String getForm() {
-        return null;
+    public ReportScoreForm getForm(ReportScoreForm reportScoreForm) {
+        return reportScoreForm;
+    }
+
+    @RequestMapping(value = "findOne")
+    public ReportScoreDto findOne(ReportScoreDto reportScoreDto) {
+        reportScoreDto=reportScoreService.findOne(reportScoreDto);
+        return reportScoreDto;
     }
 
     @RequestMapping(value = "save")
@@ -56,25 +62,13 @@ public class ReportScoreController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(String id) {
-        reportScoreService.delete(id);
+    public RestResponse delete(ReportScoreForm reportScoreForm) {
+        reportScoreService.delete(reportScoreForm);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
-    @RequestMapping(value = "findDto")
-    public ReportScoreDto findDto(String id) {
-        if(StringUtils.isBlank(id)){
-            return new ReportScoreDto();
-        }
-
-        return reportScoreService.findDto(id);
-
-    }
-
-
     @RequestMapping(value = "getProductTypeNamesAndNotScores")
     public Map getProductTypeNamesAndNotScores() {
-
         Map result = new HashMap<>();
         result.put("productTypeNames",reportScoreService.getProductTypeNames());
         result.put("notScores",reportScoreService.getNotScores());

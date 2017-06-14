@@ -94,8 +94,6 @@ public class AccountController {
 
     @RequestMapping(value = "getForm")
     public AccountForm getForm(AccountForm accountForm) {
-        /*accountForm.setPositionDtoList(positionService.findAll());*/
-        /*accountForm.setBoolMap( BoolEnum.getMap());*/
         accountForm.getExtra().put("positionDtoList", positionService.findAll());
         accountForm.getExtra().put("boolMap", BoolEnum.getMap());
         return accountForm;

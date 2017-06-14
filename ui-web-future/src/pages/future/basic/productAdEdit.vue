@@ -1,6 +1,3 @@
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 <template>
   <div>
     <head-tab active="productAdEdit"></head-tab>
@@ -65,64 +62,61 @@
       productTypeSelect
     },
     data() {
-      return {
-        submitDisabled:false,
-        table:null,
-        settings: {
-          data:[],
-          colHeaders: ["id",this.$t('productAdEdit.code'),this.$t('productAdEdit.name'),this.$t('productAdEdit.visible'),this.$t('productAdEdit.allowOrder'),this.$t('productAdEdit.price2'),this.$t('productAdEdit.expiryDateRemarks'),this.$t('productAdEdit.volume'),this.$t('productAdEdit.remarks')],
-          rowHeaders:true,
-          allowInsertRow:false,
-          autoColumnSize:true,
-          columns: [
-            {data:"id", type: "autocomplete", readOnly: true, strict: true },
-            {data:"code", type: "autocomplete", readOnly: true, strict: true },
-            {data:"name", type: "autocomplete", readOnly: true, strict: true },
-            {data:"visible", type: "autocomplete",  strict: true, source:["true","false"]},
-            {data:"allowOrder", type: "autocomplete", strict: true, source:["true","false"]},
-            {data:"price2", type: "numeric"},
-            {data:"expiryDateRemarks", width:150},
-            {data:"volume", type: "numeric", format: '0.00'},
-            {data:"remarks", width:150},
-          ]
-        },
-        formData:{},
-        submitData:{
-          name:'',
-          type:'',
-          hasIme:'',
-          allowBill:'',
-          productTypeId:'',
-          allowOrder:'',
-          outGroupName:'',
-          netType:'',
-        },
-        formLabel:{
-          name:{label:this.$t('productAdEdit.name')},
-          hasIme:{label:this.$t('productAdEdit.hasIme'),value:""},
-          code:{label:this.$t('productAdEdit.code')},
-          allowBill:{label:this.$t('productAdEdit.allowBill'),value:""},
-          productType:{label:this.$t('productAdEdit.productType'),value:""},
-          allowOrder:{label:this.$t('productAdEdit.allowOrder'),value:""},
-          outGroupName:{label:this.$t('productAdEdit.outGroupName'),value:""},
-          netType:{label:this.$t('productAdEdit.netType'),value:""}
-        },
-        inputForm:{
-            productList:[],
-        },
-        formLabelWidth: '120px',
-        formVisible: false
-      };
-    },
-    mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      return this.getData();
     },
     methods: {
+        getData(){
+          return {
+            submitDisabled:false,
+            table:null,
+            settings: {
+              data:[],
+              colHeaders: ["id",this.$t('productAdEdit.code'),this.$t('productAdEdit.name'),this.$t('productAdEdit.visible'),this.$t('productAdEdit.allowOrder'),this.$t('productAdEdit.price2'),this.$t('productAdEdit.expiryDateRemarks'),this.$t('productAdEdit.volume'),this.$t('productAdEdit.remarks')],
+              rowHeaders:true,
+              allowInsertRow:false,
+              autoColumnSize:true,
+              columns: [
+                {data:"id",readOnly: true, strict: true },
+                {data:"code",readOnly: true, strict: true },
+                {data:"name",readOnly: true, strict: true },
+                {data:"visible", type: "autocomplete",  strict: true, source:[true,false]},
+                {data:"allowOrder", type: "autocomplete", strict: true, source:[true,false]},
+                {data:"price2", type: "numeric"},
+                {data:"expiryDateRemarks", width:150},
+                {data:"volume", type: "numeric", format: '0.00'},
+                {data:"remarks", width:150},
+              ]
+            },
+            formData:{},
+            submitData:{
+              name:'',
+              code:'',
+              hasIme:'',
+              allowBill:'',
+              productTypeId:'',
+              allowOrder:'',
+              outGroupName:'',
+              netType:'',
+            },
+            formLabel:{
+              name:{label:this.$t('productAdEdit.name')},
+              hasIme:{label:this.$t('productAdEdit.hasIme'),value:""},
+              code:{label:this.$t('productAdEdit.code')},
+              allowBill:{label:this.$t('productAdEdit.allowBill'),value:""},
+              productTypeId:{label:this.$t('productAdEdit.productType'),value:""},
+              allowOrder:{label:this.$t('productAdEdit.allowOrder'),value:""},
+              outGroupName:{label:this.$t('productAdEdit.outGroupName'),value:""},
+              netType:{label:this.$t('productAdEdit.netType'),value:""}
+            },
+            inputForm:{
+              productList:[],
+            },
+            formLabelWidth: '120px',
+            formVisible: false
+          };
+        },
       search() {
         this.formVisible = false;
-        this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
-        this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
-        this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
         util.copyValue(this.formData,this.submitData);
         util.setQuery("productList",this.submitData);
         axios.get('/api/ws/future/basic/product/filter',{params:this.submitData}).then((response) => {
@@ -130,27 +124,37 @@
           this.table.loadData(this.settings.data);
         });
       },formSubmit(){
-          this.submitDisabled = true;
-        this.table.validateCells(function(valid) {
-            if(valid){
-              this.inputForm.productList = this.table.getData();
-              axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
-                this.$message(response.data.message);
+            var that = this;
+            that.submitDisabled = true;
+            that.table.validateCells(function(valid) {
+            console.log(valid);
+            if(valid) {
+              that.inputForm.productList = JSON.stringify(that.table.getData());
+              axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(that.inputForm, {allowDots: true})).then((response) => {
+                that.$message(response.data.message);
               }).catch(function () {
-                this.submitDisabled = false;
+                that.submitDisabled = false;
               });
             }
-
         })
       }
-    },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
-        this.formData = response.data;
-        util.copyValue(this.$route.query,this.formData);
-        this.search();
-      });
+    },activated () {
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+        this.pageHeight = window.outerHeight - 320;
+        axios.get('/api/ws/future/basic/product/getQuery').then((response) => {
+          this.formData = response.data;
+          util.copyValue(this.$route.query, this.formData);
+          this.search();
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+      }
+      this.isInit = true;
     }
   };
 </script>
+
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
 

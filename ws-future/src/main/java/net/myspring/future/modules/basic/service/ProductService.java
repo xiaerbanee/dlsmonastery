@@ -35,8 +35,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -158,11 +161,44 @@ public class ProductService {
     }
 
     public void batchSave(ProductBatchForm productBatchForm){
-        List<Product> productList = Lists.newArrayList();
-        List<List<String>> products = productBatchForm.getProductList();
-        for(List<String> rows:products){
-            Product product = productRepository.findOne(rows.get(0));
-
+        String json = HtmlUtils.htmlUnescape(productBatchForm.getProductList());
+        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
+        List<Product> productList = productRepository.findAllEnabled();
+        Map<String,Product> productMap = CollectionUtil.extractToMap(productList,"id");
+        for(List<Object> rows:data){
+            Product product = productMap.get(StringUtils.toString(rows.get(0)).trim());
+            for (int i = 3; i < rows.size(); i++) {
+                String value = StringUtils.toString(rows.get(i)).trim();
+                switch (i) {
+                    case 3:
+                        product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                        break;
+                    case 4:
+                        product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                        break;
+                    case 5:
+                        if (StringUtils.isBlank(value)) {
+                            product.setPrice2(BigDecimal.ZERO);
+                        } else {
+                            product.setPrice2(new BigDecimal(value));
+                        }
+                    case 6:
+                        product.setExpiryDateRemarks(value);
+                        break;
+                    case 7:
+                        if (StringUtils.isBlank(value)) {
+                            product.setVolume(null);
+                        } else {
+                            product.setVolume(new BigDecimal(value));
+                        }
+                        break;
+                    case 8:
+                        product.setRemarks(value);
+                        break;
+                    default:
+                        break;
+                }
+            }
             productList.add(product);
         }
         productRepository.save(productList);
@@ -227,4 +263,6 @@ public class ProductService {
     public List<String> findNameList(String companyId) {
         return CollectionUtil.extractToList(productRepository.findByEnabledIsTrueAndCompanyId(companyId), "name");
     }
+
+
 }

@@ -48,7 +48,6 @@ const priceChangeImeForm  = r => require.ensure([], () => r(require('pages/futur
 const priceChangeImeDetail  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeImeDetail.vue')));
 const pricesystemChangeList= r => require.ensure([], () => r(require('pages/future/crm/pricesystemChangeList.vue')));
 const pricesystemChangeForm= r => require.ensure([], () => r(require('pages/future/crm/pricesystemChangeForm.vue')));
-const productAdEdit = r  => require.ensure([], () => r(require('pages/future/crm/productAdEdit.vue')));
 const productImeList = r => require.ensure([], () => r(require('pages/future/crm/productImeList.vue')));
 const productImeBatchQuery = r => require.ensure([], () => r(require('pages/future/crm/productImeBatchQuery.vue')));
 const productImeCreate = r => require.ensure([], () => r(require('pages/future/crm/productImeCreate.vue')));
@@ -134,7 +133,6 @@ let routes = [
   {path:'/future/crm/priceChangeImeDetail',component:priceChangeImeDetail,name:'priceChangeImeDetail',meta: {menu:"priceChangeImeList"}},
   {path:'/future/crm/pricesystemChangeList',component:pricesystemChangeList,name:'pricesystemChangeList'},
   {path:'/future/crm/pricesystemChangeForm',component:pricesystemChangeForm,name:'pricesystemChangeForm',meta: {menu:"pricesystemChangeList",keepAlive:true}},
-  {path:'/future/crm/productAdEdit',component:productAdEdit,name:'productAdEdit',meta: {menu:"productList"}},
   {path:'/future/crm/productImeList',component:productImeList,name:'productImeList'},
   {path:'/future/crm/productImeChange',component:productImeChange,name:'productImeChange', meta: {menu:"productImeList",keepAlive:true}},
   {path:'/future/crm/productImeCreate',component:productImeCreate,name:'productImeCreate',meta: {menu:"productImeList",keepAlive:true}},

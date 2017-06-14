@@ -88,14 +88,23 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (adApplyQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd """)
         }
+        if (StringUtils.isNotEmpty(adApplyQuery.productCode)) {
+            sb.append(""" and product.code like CONCAT('%', :productCode,'%') """)
+        }
         if (StringUtils.isNotEmpty(adApplyQuery.productName)) {
             sb.append(""" and product.name like CONCAT('%', :productName,'%') """)
         }
-        /*if (adApplyQuery.billed != null) {
-            sb.append("""
-                and t1.billed_qty
-            """)
-        }*/
+        if (adApplyQuery.isBilled != null) {
+            if(adApplyQuery.isBilled){
+                sb.append("""
+                    and t1.billed_qty > 0
+                """)
+            }else{
+                sb.append("""
+                    and t1.billed_qty = 0
+                """)
+            }
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(adApplyQuery), BeanPropertyRowMapper(AdApplyDto::class.java))

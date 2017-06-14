@@ -13,6 +13,7 @@ const expressCompanyForm  = r => require.ensure([], () => r(require('pages/futur
 const pricesystemList  = r => require.ensure([], () => r(require('pages/future/basic/pricesystemList.vue')));
 const pricesystemForm = r => require.ensure([], () => r(require('pages/future/basic/pricesystemForm.vue')));
 const pricesystemView = r => require.ensure([], () => r(require('pages/future/basic/pricesystemView.vue')));
+const productAdEdit = r  => require.ensure([], () => r(require('pages/future/basic/productAdEdit.vue')));
 const productList = r  => require.ensure([], () => r(require('pages/future/basic/productList.vue')));
 const productForm = r  => require.ensure([], () => r(require('pages/future/basic/productForm.vue')));
 const productTypeList  = r => require.ensure([], () => r(require('pages/future/basic/productTypeList.vue')));
@@ -27,6 +28,10 @@ const depotShopList  = r => require.ensure([], () => r(require('pages/future/bas
 const shopForm  = r => require.ensure([], () => r(require('pages/future/basic/shopForm.vue')));
 const depotStoreForm  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreForm.vue')));
 const depotStoreList  = r => require.ensure([], () => r(require('pages/future/basic/depotStoreList.vue')));
+
+const depotChangeForm  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeForm.vue')));
+const depotChangeList  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeList.vue')));
+const depotChangeDetail  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeDetail.vue')));
 
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
@@ -44,6 +49,7 @@ let routes = [
   {path:'/future/basic/pricesystemList',component:pricesystemList,name:'pricesystemList'},
   {path:'/future/basic/pricesystemForm',component:pricesystemForm,name:'pricesystemForm',meta: {menu:"pricesystemList",keepAlive:true}},
   {path:'/future/basic/pricesystemView',component:pricesystemView,name:'pricesystemView',meta: {menu:"pricesystemList"}},
+  {path:'/future/basic/productAdEdit',component:productAdEdit,name:'productAdEdit',meta: {menu:"productList",keepAlive:true}},
   {path:'/future/basic/productList',component:productList,name:'productList'},
   {path:'/future/basic/productForm',component:productForm,name:'productForm',meta: {menu:"productList",keepAlive:true}},
   {path:'/future/basic/productTypeList',component:productTypeList,name:'productTypeList'},
@@ -58,6 +64,10 @@ let routes = [
   {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/depotStoreList',component:depotStoreList,name:'depotStoreList'},
   {path:'/future/basic/depotStoreForm',component:depotStoreForm,name:'depotStoreForm',meta: {menu:"depotStoreList",keepAlive:true}},
+
+  {path:'/future/basic/depotChangeList',component:depotChangeList,name:'depotChangeList'},
+  {path:'/future/basic/depotChangeForm',component:depotChangeForm,name:'depotChangeForm',meta: {menu:"depotChangeList",keepAlive:true}},
+  {path:'/future/basic/depotChangeDetail',component:depotChangeDetail,name:'depotChangeDetail',meta: {menu:"depotChangeList",keepAlive:true}},
 ];
 
 export default routes;

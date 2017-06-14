@@ -109,26 +109,26 @@
         var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-
         form.validate((valid) => {
           if (valid) {
             var  goodsOrderDetailFormList = new Array();
             for(var index in this.filterDetailList) {
               var filterDetail = this.filterDetailList[index];
-              if(util.isNotBlank(filterDetail.goodsOrderDetailId) || util.isNotBlank(filterDetail.qty)) {
+              if(util.isNotBlank(filterDetail.id) || util.isNotBlank(filterDetail.qty)) {
                 goodsOrderDetailFormList.push(filterDetail);
               }
             }
-            this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
-            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            var submitData= util.deleteExtra(this.inputForm);
+            submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
+            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            if(!this.inputForm.create){
-              this.submitDisabled = false;
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-            }else{
-              Object.assign(this.$data, this.getData());
-              this.initPage();
-            }
+              if(this.inputForm.create){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              }else{
+                this.submitDisabled = false;
+                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+              }
           }).catch(function () {
               that.submitDisabled = false;
             });
@@ -163,7 +163,7 @@
         if(this.isCreate ) {
           if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
             this.pageLoading = true;
-            axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
+            axios.get('/api/ws/future/crm/goodsOrder/findDetailList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
               this.setGoodsOrderDetailList(response.data);
               this.pageLoading = false;
             });
@@ -198,7 +198,7 @@
           });
         });
         if(!this.isCreate){
-          axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/goodsOrder/findDetailList',{params: {id:this.$route.query.id}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
             this.initSummary();
           });

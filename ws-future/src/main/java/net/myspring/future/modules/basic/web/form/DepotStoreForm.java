@@ -15,7 +15,6 @@ public class DepotStoreForm extends BaseForm<DepotStore> {
     private DepotForm depotForm;
     private String type;
     private String storeGroup;
-    private List<String> depotStoreTypeList= Lists.newArrayList();
 
     public String getStoreGroup() {
         return storeGroup;
@@ -23,14 +22,6 @@ public class DepotStoreForm extends BaseForm<DepotStore> {
 
     public void setStoreGroup(String storeGroup) {
         this.storeGroup = storeGroup;
-    }
-
-    public List<String> getDepotStoreTypeList() {
-        return depotStoreTypeList;
-    }
-
-    public void setDepotStoreTypeList(List<String> depotStoreTypeList) {
-        this.depotStoreTypeList = depotStoreTypeList;
     }
 
     public String getType() {

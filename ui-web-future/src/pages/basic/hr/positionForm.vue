@@ -36,7 +36,6 @@
     methods:{
       getData(){
         return {
-          isInit: false,
           remoteLoading: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
@@ -57,12 +56,14 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-
             axios.post('/api/basic/hr/position/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
+              this.submitDisabled = false;
               if(!this.isCreate){
                 this.$router.push({name:'positionList',query:util.getQuery("positionList")})
+              }else {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -71,10 +72,8 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+      initPage() {
         axios.get('/api/basic/hr/position/getForm').then((response)=>{
           this.inputForm=response.data;
           axios.get('/api/basic/hr/position/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -82,7 +81,8 @@
           })
         })
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

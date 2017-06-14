@@ -146,7 +146,6 @@ public class DemoPhoneTypeService {
             demoPhoneTypeOfficeList.add(demoPhoneTypeOffice);
         }
         demoPhoneTypeOfficeRepository.save(demoPhoneTypeOfficeList);
-
         return demoPhoneType;
     }
 

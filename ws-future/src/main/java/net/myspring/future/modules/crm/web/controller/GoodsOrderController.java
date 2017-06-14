@@ -10,6 +10,7 @@ import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
@@ -67,9 +68,9 @@ public class GoodsOrderController {
         return goodsOrderForm;
     }
 
-    @RequestMapping(value = "findGoodsOrderDetailFormList")
-    public List<GoodsOrderDetailForm> findGoodsOrderDetailFormList(String id,String shopId,String netType,String shipType) {
-        return goodsOrderService.findGoodsOrderDetailFormList(id,shopId,netType,shipType);
+    @RequestMapping(value = "findDetailList")
+    public List<GoodsOrderDetailDto> findDetailList(String id, String shopId, String netType, String shipType) {
+        return goodsOrderService.findDetailList(id,shopId,netType,shipType);
     }
 
     @RequestMapping(value = "save")
@@ -79,14 +80,18 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
-    public GoodsOrderBillForm getBillForm(String id){
-        GoodsOrderBillForm goodsOrderBillForm = goodsOrderService.getGoodsOrderBillForm(id);
+    public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){
         //设置仓库
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderBillForm.getShipType());
         goodsOrderBillForm.setStoreList(depotService.findStoreList(depotQuery));
         goodsOrderBillForm.setExpressCompanyList(expressCompanyService.findAll());
         return goodsOrderBillForm;
+    }
+
+    @RequestMapping(value = "getBill")
+    public GoodsOrderDto getBill(String id) {
+        return goodsOrderService.getBill(id);
     }
 
 
