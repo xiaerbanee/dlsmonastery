@@ -12,11 +12,11 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('reportScoreAreaList.scoreDate')" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.scoreDate" type="date" align="right"  :picker-options="pickerDateOption"></el-date-picker>
+                <date-picker v-model="formData.scoreDate"></date-picker>
               </el-form-item>
               <el-form-item :label="$t('reportScoreAreaList.officeName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable >
-                  <el-option v-for="item in formData.extra.areas" :key="item" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -53,7 +53,6 @@
         formData:{
           extra:{}
         },
-        pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -72,8 +71,7 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("reportScoreAreaList",submitData);
-        this.formData.scoreDate = util.formatLocalDate(this.formData.scoreDate);
-        axios.get('/api/crm/reportScoreArea',{params:submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/reportScoreArea',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -93,7 +91,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-      axios.get('/api/crm/reportScoreArea/getQuery').then((response)=>{
+      axios.get('/api/ws/future/crm/reportScoreArea/getQuery').then((response)=>{
         this.formData = response.data;
       });
       this.pageRequest();
