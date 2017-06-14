@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.web.controller;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.DepotChangeEnum;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/depotChange")
