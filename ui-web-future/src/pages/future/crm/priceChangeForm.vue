@@ -38,7 +38,6 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id==null,
         action:this.$route.query.action,
         submitDisabled:false,
@@ -60,12 +59,14 @@
             }else{
               this.url = '/api/ws/future/crm/priceChange/save';
             }
-
             axios.post(this.url,qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
               if(!this.inputForm.create){
+                this.submitDisabled = false;
                 this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
+              }else{
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -74,10 +75,7 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      }, initPage(){
         axios.get('/api/ws/future/crm/priceChange/getForm').then((response)=>{
           this.inputForm = response.data;
         axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -85,7 +83,8 @@
       });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>
