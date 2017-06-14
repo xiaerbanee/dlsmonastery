@@ -65,13 +65,14 @@
           submitDisabled:false,
           loading: false,
           inputForm:{
-              extra:{}
+              extra:{},
+            processFlowList:[],
           },
           rules: {
             name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            createdPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            viewPositionIds: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            createdPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            viewPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
           }
         }
       },
@@ -129,10 +130,12 @@
           }
         } else {
             axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-              this.inputForm.processFlowList = response.data.processFlowList;
+              this.inputForm=response.data;
+              console.log(response.data)
             axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);
             });
+            console.log(this.inputForm)
           });
         }
       }
