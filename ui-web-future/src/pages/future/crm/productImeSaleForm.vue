@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeSaleForm"></head-tab>
     <div>
-      <el-form :model="productImeSale" ref="inputForm"   label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm"   label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item>
@@ -22,31 +22,31 @@
             </el-form-item>
             <div v-if="searched">
               <el-form-item :label="$t('productImeSaleForm.shopId')" prop="shopId" >
-                <depot-select v-model="productImeSale.shopId"  category="shop"></depot-select>
+                <depot-select v-model="inputForm.shopId"  category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyer')" prop="buyer" >
-                <el-input  v-model="productImeSale.buyer"></el-input>
+                <el-input  v-model="inputForm.buyer"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyerAge')" prop="buyerAge" >
-                <el-input  v-model="productImeSale.buyerAge"></el-input>
+                <el-input  v-model="inputForm.buyerAge"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyerSex')" prop="buyerSex"  >
-                <el-radio-group v-model="productImeSale.buyerSex">
+                <el-radio-group v-model="inputForm.buyerSex">
                   <el-radio :label="$t('productImeSaleForm.man')"></el-radio>
                   <el-radio :label="$t('productImeSaleForm.women')"></el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item  :label="$t('productImeSaleForm.buyerPhone')" prop="buyerPhone" >
-                <el-input  v-model="productImeSale.buyerPhone"></el-input>
+                <el-input  v-model="inputForm.buyerPhone"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyerSchool')" prop="buyerSchool" v-if=" companyName=='JXIMOO'">
-                <el-input  v-model="productImeSale.buyerSchool"></el-input>
+                <el-input  v-model="inputForm.buyerSchool"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.buyerGrade')" prop="buyerGrade" v-if=" companyName=='JXIMOO'">
-                <el-input  v-model="productImeSale.buyerGrade"></el-input>
+                <el-input  v-model="inputForm.buyerGrade"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.remarks')" prop="remarks" >
-                <el-input type="textarea" :rows="2" v-model="productImeSale.remarks"></el-input>
+                <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('productImeSaleForm.save')}}</el-button>
@@ -92,117 +92,103 @@
 
 
     },
-      data(){
-        return this.getData()
-      },
+    data(){
+      return this.getData()
+    },
     methods:{
       getData() {
-          return{
-            isInit:false,
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
+        return{
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          searched:false,
+          imeStr:'',
+          inputForm:{},
+          companyName:'',
+          errMsg:'',
+          productImeList:[],
+          productQtyList:[],
+          rules: {
+            imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
+          },
 
-            searched:false,
-            imeStr:'',
-            productImeSale:{},
-            companyName:'',
-
-            errMsg:'',
-            productImeList:[],
-            productQtyList:[],
-            submitData:{
-              imeStr:'',
-              shopId:'',
-              buyer:"",
-              buyerAge:"",
-              buyerSex:"",
-              buyerPhone:"",
-              buyerGrade:'',
-              buyerSchool:'',
-              remarks:''
-            },
-            rules: {
-              imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            },
-
-          }
+        }
       },
-        formSubmit(){
+      formSubmit(){
 
-          if (this.errMsg) {
-            this.$alert( this.$t('productImeSaleForm.formInvalid'), this.$t('productImeSaleForm.notify'));
-            return;
-          }
-
-          let form = this.$refs["inputForm"];
-          form.validate((valid) => {
-            if (valid) {
-              this.submitDisabled = true;
-              this.initSubmitDataBeforeSubmit();
-              axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.submitData)).then((response)=> {
-                this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if(response.data.success){
-                  if(!this.isCreate){
-                    this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
-                  }
-                }
-              }).catch( () => {
+        if (this.errMsg) {
+          this.$alert( this.$t('productImeSaleForm.formInvalid'), this.$t('productImeSaleForm.notify'));
+          return;
+        }
+        this.submitDisabled = true;
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.initSubmitDataBeforeSubmit();
+            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.inputForm)).then((response)=> {
+              this.$message(response.data.message);
+            if(response.data.success){
+              if(!this.inputForm.create){
                 this.submitDisabled = false;
-              });
-            }
-          })
-        }, initSubmitDataBeforeSubmit(){
-
-          this.submitData.imeStr = this.imeStr;
-          this.submitData.shopId = this.productImeSale.shopId;
-          this.submitData.buyer = this.productImeSale.buyer;
-          this.submitData.buyerAge = this.productImeSale.buyerAge;
-          this.submitData.buyerSex = this.productImeSale.buyerSex;
-          this.submitData.buyerPhone = this.productImeSale.buyerPhone;
-          this.submitData.buyerGrade = this.productImeSale.buyerGrade;
-          this.submitData.buyerSchool = this.productImeSale.buyerSchool;
-          this.submitData.remarks = this.productImeSale.remarks;
-
-        },onImeStrChange(){
-            this.searched = true;
-            axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.imeStr}}).then((response)=>{
-              this.errMsg=response.data;
-            });
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
-            this.productImeList=response.data;
-
-            let tmpMap = new Map();
-            if(this.productImeList){
-              for(let productIme of this.productImeList ){
-                if(!tmpMap.has(productIme.productId)){
-                  tmpMap.set(productIme.productId, {productName:productIme.productName, qty:0});
-                }
-                tmpMap.get(productIme.productId).qty+=1;
+                this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
+              }else{
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }
-            let tmpList = [];
-            for(let key of tmpMap.keys()){
-              tmpList.push(tmpMap.get(key));
+          }).catch( () => {
+              this.submitDisabled = false;
+          });
+          }
+        })
+      }, initSubmitDataBeforeSubmit(){
+
+        this.inputForm.imeStr = this.imeStr;
+        this.inputForm.shopId = this.inputForm.shopId;
+        this.inputForm.buyer = this.inputForm.buyer;
+        this.inputForm.buyerAge = this.inputForm.buyerAge;
+        this.inputForm.buyerSex = this.inputForm.buyerSex;
+        this.inputForm.buyerPhone = this.inputForm.buyerPhone;
+        this.inputForm.buyerGrade = this.inputForm.buyerGrade;
+        this.inputForm.buyerSchool = this.inputForm.buyerSchool;
+        this.inputForm.remarks = this.inputForm.remarks;
+
+      },onImeStrChange(){
+        this.searched = true;
+        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.imeStr}}).then((response)=>{
+          this.errMsg=response.data;
+      });
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
+          this.productImeList=response.data;
+
+        let tmpMap = new Map();
+        if(this.productImeList){
+          for(let productIme of this.productImeList ){
+            if(!tmpMap.has(productIme.productId)){
+              tmpMap.set(productIme.productId, {productName:productIme.productName, qty:0});
             }
-            this.productQtyList = tmpList;
-          });
-        },reset(){
-          this.searched = false;
-          this.imeStr = '';
-          this.errMsg='';
-          this.productImeList=[];
-          this.productQtyList = [];
-          this.$refs["inputForm"].resetFields();
+            tmpMap.get(productIme.productId).qty+=1;
+          }
         }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/crm/productImeSale/findDto').then((response)=>{
-            this.productImeSale=response.data;
-          });
+        let tmpList = [];
+        for(let key of tmpMap.keys()){
+          tmpList.push(tmpMap.get(key));
         }
-      this.isInit = true;
+        this.productQtyList = tmpList;
+      });
+      },reset(){
+        this.searched = false;
+        this.imeStr = '';
+        this.errMsg='';
+        this.productImeList=[];
+        this.productQtyList = [];
+        this.$refs["inputForm"].resetFields();
+      },initPage(){
+        axios.get('/api/ws/future/crm/productImeSale/getForm').then((response)=>{
+          this.inputForm=response.data;
+        });
       }
+    },created () {
+      this.initPage();
     }
+  }
 </script>
