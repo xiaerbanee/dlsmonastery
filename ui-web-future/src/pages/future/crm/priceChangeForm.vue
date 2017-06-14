@@ -46,6 +46,9 @@
         url:'',
         rules: {
           name: [{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
+          productTypeIdList:[{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
+          priceChangeDate:[{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
+          uploadEndDate:[{ required: true, message: this.$t('priceChangeForm.prerequisiteMessage')}],
         }
       }
     },

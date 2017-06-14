@@ -37,6 +37,15 @@ public class DepotDto extends DataDto<Depot> {
     private String areaId;
     private BigDecimal credit;
     private String areaType;
+    private Boolean rebate;
+
+    public Boolean getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(Boolean rebate) {
+        this.rebate = rebate;
+    }
 
     public String getOfficeId() {
         return officeId;
