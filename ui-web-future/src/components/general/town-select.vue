@@ -16,7 +16,7 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query) {
+        if(!query) {
             return;
         }
         this.remoteLoading = true;
