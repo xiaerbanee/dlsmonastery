@@ -30,7 +30,7 @@
         if(val) {
           this.innerId=val;
           this.remoteLoading = true;
-          axios.get('/api/general/sys/town/findById?id=' + this.innerId).then((response)=>{
+          axios.get('/api/general/sys/town/findOne?id=' + this.innerId).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
             this.$nextTick(()=>{
