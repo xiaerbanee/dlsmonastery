@@ -33,6 +33,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
       };
