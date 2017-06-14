@@ -120,7 +120,16 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
     """, nativeQuery = true)
     fun findByOutGroupIds(outGroupIds: MutableList<String>): MutableList<Product>
 
-    fun findByProductTypeId(productTypeId: String): MutableList<Product>
+    @Query("""
+        SELECT
+            t1
+        FROM
+            #{#entityName} t1
+        WHERE
+            t1.enabled = 1
+        AND t1.productTypeId in ?1
+    """)
+    fun findByProductTypeIds(productTypeIds: MutableList<String>): MutableList<Product>
 
     fun findByEnabledIsTrueAndProductTypeId(productTypeId: String): MutableList<Product>
 
