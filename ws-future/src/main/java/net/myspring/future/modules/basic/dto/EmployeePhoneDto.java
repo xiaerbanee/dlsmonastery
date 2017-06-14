@@ -1,4 +1,8 @@
-package net.myspring.basic.modules.hr.dto;
+package net.myspring.future.modules.basic.dto;
+
+import net.myspring.common.dto.DataDto;
+import net.myspring.future.modules.basic.domain.EmployeePhone;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -6,11 +10,14 @@ import java.time.LocalDateTime;
 /**
  * Created by lihx on 2017/4/14.
  */
-public class EmployeePhoneDto {
+public class EmployeePhoneDto extends DataDto<EmployeePhone>{
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
     private String depotId;
     private String depotName;
     private String employeeId;
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
     private BigDecimal depositAmount;
     private String status;
@@ -20,6 +27,14 @@ public class EmployeePhoneDto {
     private BigDecimal jobPrice;
     private String imeStr;
     private BigDecimal retailPrice;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getAreaName() {
         return areaName;

@@ -25,8 +25,8 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
     private List<ProcessFlowDto> processFlowList = Lists.newArrayList();
 
     public List<String> getViewPositionIdList() {
-        if(StringUtils.isBlank(viewPositionIds)&&CollectionUtil.isNotEmpty(viewPositionIdList)){
-            this.viewPositionIds=StringUtils.join(viewPositionIdList, CharConstant.COMMA);
+        if(CollectionUtil.isEmpty(viewPositionIdList)&&StringUtils.isNotBlank(viewPositionIds)){
+            this.createdPositionIdList=StringUtils.getSplitList(viewPositionIds, CharConstant.COMMA);
         }
         return viewPositionIdList;
     }
@@ -36,8 +36,8 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
     }
 
     public List<String> getCreatedPositionIdList() {
-        if(StringUtils.isBlank(createdPositionIds)&&CollectionUtil.isNotEmpty(createdPositionIdList)){
-            this.createdPositionIds=StringUtils.join(createdPositionIdList, CharConstant.COMMA);
+        if(CollectionUtil.isEmpty(createdPositionIdList)&&StringUtils.isNotBlank(createdPositionIds)){
+            this.createdPositionIdList=StringUtils.getSplitList(createdPositionIds, CharConstant.COMMA);
         }
         return createdPositionIdList;
     }

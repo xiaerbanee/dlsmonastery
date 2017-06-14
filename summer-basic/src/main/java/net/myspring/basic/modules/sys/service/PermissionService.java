@@ -13,12 +13,14 @@ import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -183,9 +185,11 @@ public class PermissionService {
         return accountPermissionList;
     }
 
-    @Transactional
-    public void logicDelete(String id) {
-        permissionRepository.logicDelete(id);
+    public void logicDelete(PermissionForm permissionForm) {
+        Permission permission=permissionRepository.findOne(permissionForm.getId());
+        permission.setEnabled(false);
+        permission.setPermission(permission.getPermission()+ LocalDateTimeUtils.format(LocalDateTime.now())+"废弃");
+        permissionRepository.save(permission);
     }
 
 }

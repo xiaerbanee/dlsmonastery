@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.future.common.enums.OfficeRuleEnum;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.crm.domain.ReportScoreOffice;
 import net.myspring.future.modules.crm.dto.ReportScoreOfficeDto;
 import net.myspring.future.modules.crm.service.ReportScoreOfficeService;
@@ -19,6 +21,8 @@ public class ReportScoreOfficeController {
 
     @Autowired
     ReportScoreOfficeService reportScoreOfficeService;
+    @Autowired
+    private OfficeClient officeClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ReportScoreOfficeDto> list(Pageable pageable, ReportScoreOfficeQuery reportScoreOfficeQuery){
@@ -28,6 +32,7 @@ public class ReportScoreOfficeController {
 
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
     public ReportScoreOfficeQuery getQuery(ReportScoreOfficeQuery reportScoreOfficeQuery){
+        reportScoreOfficeQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return reportScoreOfficeQuery;
     }
 }

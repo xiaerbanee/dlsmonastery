@@ -2,16 +2,12 @@ package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.general.common.utils.CacheUtils;
-import net.myspring.general.common.utils.RequestUtils;
-import net.myspring.general.modules.sys.domain.FolderFile;
 import net.myspring.general.modules.sys.domain.ProcessFlow;
 import net.myspring.general.modules.sys.domain.ProcessType;
-import net.myspring.general.modules.sys.dto.FolderFileDto;
 import net.myspring.general.modules.sys.dto.ProcessFlowDto;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.repository.ProcessFlowRepository;
 import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
-import net.myspring.general.modules.sys.web.form.ProcessFlowForm;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -23,14 +19,10 @@ import org.activiti.engine.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.Predicate;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -60,6 +52,8 @@ public class ProcessTypeService {
         if(!processTypeDto.isCreate()){
             ProcessType processType=processTypeRepository.findOne(processTypeDto.getId());
             processTypeDto=BeanUtil.map(processType,ProcessTypeDto.class);
+            List<ProcessFlow> processFlowList= processFlowRepository.findByProcessTypeId(processTypeDto.getId());
+            processTypeDto.setProcessFlowList(BeanUtil.map(processFlowList,ProcessFlowDto.class));
             cacheUtils.initCacheInput(processTypeDto);
         }
         return processTypeDto;

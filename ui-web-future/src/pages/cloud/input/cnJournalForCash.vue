@@ -36,7 +36,7 @@
           minSpareRows: 1,
           colHeaders: ["对方科目编码", "借方金额", "贷方金额", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
           columns: [
-            {type: "autocomplete", strict: true, allowEmpty: false, accountNumberFor:[],source: this.accountNumberFor},
+            {type: "autocomplete", strict: true, allowEmpty: false, accountNumber:[],source: this.accountNumber},
             {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
             {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
             {type: "text", allowEmpty: true, strict: true},
@@ -53,11 +53,11 @@
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 0) {
-                  let accountNumberFor = changes[i][3];
-                  if (accountNumberFor === ""){
+                  let accountNumber = changes[i][3];
+                  if (accountNumber === ""){
                     table.setDataAtCell(row, 4, '')
                   }else {
-                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumberFor).then((response) => {
+                    axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 4, account.fname);
                     });

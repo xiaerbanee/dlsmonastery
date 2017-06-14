@@ -33,6 +33,11 @@ const depotChangeForm  = r => require.ensure([], () => r(require('pages/future/b
 const depotChangeList  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeList.vue')));
 const depotChangeDetail  = r => require.ensure([], () => r(require('pages/future/basic/depotChangeDetail.vue')));
 
+const employeePhoneList = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneList.vue')));
+const employeePhoneForm = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneForm.vue')));
+const employeePhoneDepositList = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneDepositList.vue')));
+const employeePhoneDepositForm = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneDepositForm.vue')));
+
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
   {path:'/future/basic/adPricesystemForm',component:adPricesystemForm,name:'adPricesystemForm',meta: {menu:"adPricesystemList",keepAlive:true}},
@@ -58,7 +63,10 @@ let routes = [
   {path:'/future/basic/shopAdTypeForm',component:shopAdTypeForm,name:'shopAdTypeForm',meta: {menu:"shopAdTypeList",keepAlive:true}},
   {path:'/future/basic/shopAttributeList',component:shopAttributeList,name:'shopAttributeList'},
   {path:'/future/basic/shopAttributeForm',component:shopAttributeForm,name:'shopAttributeForm',meta: {menu:"shopAttributeList",keepAlive:true}},
-
+  {path:'/future/basic/employeePhoneList',component:employeePhoneList,name:'employeePhoneList'},
+  {path:'/future/basic/employeePhoneForm',component:employeePhoneForm,name:'employeePhoneForm',meta: {menu:"employeePhoneList",keepAlive:true}},
+  {path:'/future/basic/employeePhoneDepositList',component:employeePhoneDepositList,name:'employeePhoneDepositList'},
+  {path:'/future/basic/employeePhoneDepositForm',component:employeePhoneDepositForm,name:'employeePhoneDepositForm',meta: {menu:"employeePhoneDepositList",keepAlive:true}},
   {path:'/future/basic/depotShopList',component:depotShopList,name:'depotShopList'},
   {path:'/future/basic/depotShopForm',component:depotShopForm,name:'depotShopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList",keepAlive:true}},
