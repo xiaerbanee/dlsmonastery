@@ -13,14 +13,14 @@ public class ReportScoreOffice extends IdEntity<ReportScoreOffice> {
     private LocalDate scoreDate;
     private BigDecimal score;
     private BigDecimal monthScore;
-    private Integer saleQty;
-    private Integer monthSaleQty;
-    private Integer recentMonthSaleQty;
+    private Integer saleQty=0;
+    private Integer monthSaleQty=0;
+    private Integer recentMonthSaleQty=0;
     private Integer dateRank;
     private Integer monthRank;
-    private BigDecimal saleMoney;
-    private BigDecimal monthSaleMoney;
-    private BigDecimal recentMonthSaleMoney;
+    private BigDecimal saleMoney=BigDecimal.ZERO;
+    private BigDecimal monthSaleMoney=BigDecimal.ZERO;
+    private BigDecimal recentMonthSaleMoney=BigDecimal.ZERO;
     private String officeId;
 
     private String reportScoreAreaId;
