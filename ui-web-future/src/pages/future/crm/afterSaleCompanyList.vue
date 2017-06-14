@@ -102,6 +102,7 @@
         pageLoading: false,
         pageHeight:600,
         searchText:"",
+        initPromise:{},
         page:{},
         formData:{
         },
@@ -156,10 +157,13 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
+      this.initPromise =axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
         this.formData=response.data;
         this.formData.type="工厂录入"
         util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }
