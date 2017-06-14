@@ -16,8 +16,8 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(!query) {
-            return;
+        if(util.isBlank(query)) {
+          return;
         }
         this.remoteLoading = true;
         axios.get('/api/general/sys/town/search',{params:{name:query}}).then((response)=>{
