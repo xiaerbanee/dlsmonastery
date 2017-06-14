@@ -90,6 +90,7 @@ public class GoodsOrderService {
     @Autowired
     private CacheUtils cacheUtils;
 
+    @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
             goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
@@ -221,6 +222,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
+        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(RequestUtils.getCompanyId(),LocalDate.now()));
         goodsOrderRepository.save(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数

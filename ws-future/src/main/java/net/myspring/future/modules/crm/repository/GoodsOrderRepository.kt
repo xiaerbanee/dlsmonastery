@@ -8,6 +8,7 @@ import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
+import net.myspring.util.time.LocalDateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -21,23 +22,25 @@ import java.util.*
 
 
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
-
-    @Query("""
-        SELECT
-            MAX(t1.businessId)
-        FROM
-            #{#entityName} t1
-        WHERE
-            t1.billDate>=?1
-        """)
-    fun findMaxBusinessId(date: LocalDate): String
 }
 
 interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
+
+    fun findNextBusinessId(companyId:String,date: LocalDate): String
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+
+    override fun findNextBusinessId(companyId:String,date: LocalDate): String {
+        var sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date";
+        var maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),Long::class.java);
+        if (maxBusinessId == null) {
+            maxBusinessId =(companyId + LocalDateUtils.format(date,"yyyyMMdd") + "00000").toLong();
+        }
+        return (maxBusinessId + 1).toString();
+    }
+
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
         var sb = StringBuilder("select * from crm_goods_order where 1=1")
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.statusList)) {
