@@ -118,8 +118,9 @@
                 goodsOrderDetailFormList.push(filterDetail);
               }
             }
-            this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
-            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            var submitData= util.deleteExtra(this.inputForm);
+            submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
+            axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.inputForm.create){
                 Object.assign(this.$data, this.getData());
