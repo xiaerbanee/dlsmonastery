@@ -7,9 +7,9 @@
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加门店</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <search-tag  :submitData="formData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off"></el-input>
@@ -18,8 +18,8 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">过滤</el-button>
         </div>
-      </el-dialog>
-      <el-dialog title="过滤" v-model="synArea"  size="tiny" class="search-form">
+      </search-dialog>
+      <search-dialog title="过滤" v-model="synArea"  size="tiny" class="search-form" z-index="1500">
         <el-form :model="formData">
           <el-form-item label="门店名称" :label-width="formLabelWidth">
             <el-input v-model="synData.depotName" auto-complete="off"></el-input>
@@ -33,7 +33,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="synArea()">同步</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="depotName" label="门店名称" sortable width="120"></el-table-column>
         <el-table-column prop="areaType" label="地区属性"  />
@@ -75,6 +75,7 @@
         areaList:[],
         formLabelWidth: '120px',
         formVisible: false,
+        synArea:false,
         pageLoading: false,
         remoteLoading:false
       };
@@ -104,6 +105,7 @@
       },itemAddDepot(){
         this.$router.push({ name: 'shopForm'})
       },synArea(){
+        this.synArea = false;
         axios.get('/api/ws/future/basic/depot/synArea',{params:this.synData}).then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
@@ -122,7 +124,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/office/findByOfficeRuleName').then((response) =>{
+      axios.get('/api/basic/sys/office/findByOfficeRuleName').then((response) =>{
         this.areaList=response.data;
       });
       util.copyValue(this.$route.query,this.formData);
