@@ -87,6 +87,7 @@ public class DepotStoreService {
     }
 
     public List<DepotStoreDto> setReportData(List<DepotStoreDto> depotStoreList,ReportQuery reportQuery) {
+        reportQuery.setDepotIds(CollectionUtil.extractToList(depotStoreList,"depotId"));
         List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
         Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
         for(DepotStoreDto depotStore:depotStoreList){

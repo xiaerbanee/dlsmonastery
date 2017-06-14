@@ -69,7 +69,7 @@
       <div>
         <el-dialog title="详细" :visible.sync="detailVisible">
           <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
-          <el-table :data="productQtyMap">
+          <el-table :data="productTypeDetail">
           <el-table-column property="productName" label="货品" width="400"></el-table-column>
           <el-table-column property="qty" label="数量" ></el-table-column>
         </el-table>
@@ -109,7 +109,7 @@
         detailVisible: false,
         pageLoading: false,
         officeIds:[],
-        productQtyMap:[],
+        productTypeDetail:[],
         depotReportList:[],
         type:"销售报表",
       };
@@ -165,12 +165,12 @@
             axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
               this.depotReportList=response.data.depotReportList;
               let productQtyMap=response.data.productQtyMap;
-              let productQty=[];
+              let productTypeDetail=[];
               if(productQtyMap){
                 for(let key in productQtyMap){
-                  productQty.push({productName:key,qty:productQtyMap[key]})
+                  productTypeDetail.push({productName:key,qty:productQtyMap[key]})
                 }
-                this.productQtyMap=productQty;
+                this.productTypeDetail=productTypeDetail;
               }
             })
           }
