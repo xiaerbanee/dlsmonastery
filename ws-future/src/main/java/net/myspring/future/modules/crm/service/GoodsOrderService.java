@@ -187,6 +187,7 @@ public class GoodsOrderService {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
+        ReflectionUtil.copyProperties(goodsOrderBillForm,goodsOrder);
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
