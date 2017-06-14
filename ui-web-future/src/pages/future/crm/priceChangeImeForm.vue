@@ -7,7 +7,7 @@
           <el-col :span="10">
         <el-form-item :label="$t('priceChangeImeForm.priceChangeId')" prop="priceChangeId">
           <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
-            <el-option v-for="item in formProperty.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -79,10 +79,8 @@
               }]
             },
             inputForm: {
-              imeUploadList: [[]],
-              priceChangeId: ''
+              extra:{}
             },
-            formProperty: {},
             remoteLoading: false,
             rules: {
               name: [{required: true, message: '名称不能为空'}]
@@ -105,7 +103,7 @@
                   this.inputForm.imeUploadList.push(list[item]);
                 }
               }
-              axios.post('/api/ws/future/crm/priceChangeIme/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
+              axios.post('/api/ws/future/crm/priceChangeIme/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if (response.data.success) {
@@ -120,7 +118,7 @@
           })
         }, initPage(){
           axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response) => {
-            this.formProperty = response.data;
+            this.inputForm = response.data;
             this.table = new Handsontable(this.$refs["handsontable"], this.settings)
           });
         }
