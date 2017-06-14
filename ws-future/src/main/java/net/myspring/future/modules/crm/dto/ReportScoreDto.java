@@ -26,7 +26,15 @@ public class ReportScoreDto extends DataDto<ReportScore> {
     private Integer recentMonthSaleQty;
     private BigDecimal saleMoney;
     private BigDecimal monthSaleMoney;
+    private String productTypeNameStr;
 
+    public String getProductTypeNameStr() {
+        return productTypeNameStr;
+    }
+
+    public void setProductTypeNameStr(String productTypeNameStr) {
+        this.productTypeNameStr = productTypeNameStr;
+    }
 
     public LocalDate getScoreDate() {
         return scoreDate;

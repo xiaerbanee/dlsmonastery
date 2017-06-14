@@ -79,8 +79,6 @@
         inputForm:{},
         zmd:'',
         goodsOrder:{},
-        /*shop:{},
-        store:{},*/
         expressOrder:{},
         goodsOrderDetailList:[],
         goodsOrderImeList:[],
@@ -94,8 +92,6 @@
     methods:{
       findOne(){
         axios.get('/api/crm/goodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-
-
         this.zmd=response.data.zmd;
         this.imeMap=response.data.imeMap;
         this.meidMap=response.data.meidMap;
