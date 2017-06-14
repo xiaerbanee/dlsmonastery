@@ -7,7 +7,7 @@
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
               <el-select v-model="inputForm.storeId" clearable filterable @change="storeChange">
-                <el-option v-for="item in inputForm.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.extra.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
               <el-select v-model="inputForm.expressCompanyId" clearable  >
-                <el-option v-for="item in inputForm.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in inputForm.extra.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
@@ -197,7 +197,7 @@
           this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
           this.filterProducts();
           this.initSummary();
-          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:response.data.shopId}}).then((response)=>{
             this.shop = response.data;
           });
         });
