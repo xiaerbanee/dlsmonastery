@@ -69,6 +69,17 @@ public class DepotShopService {
         return depotShopForm;
     }
 
+    public DepotShopDto findOne(String id){
+        DepotShopDto depotShopDto;
+        if (StringUtils.isBlank(id)){
+            depotShopDto = new DepotShopDto();
+        }else {
+            DepotShop depotShop = depotShopRepository.findOne(id);
+            depotShopDto = BeanUtil.map(depotShop,DepotShopDto.class);
+        }
+        return depotShopDto;
+    }
+
     public DepotForm findDepotForm(DepotForm depotForm) {
         if (!depotForm.isCreate()) {
             Depot depot = depotRepository.findOne(depotForm.getId());
