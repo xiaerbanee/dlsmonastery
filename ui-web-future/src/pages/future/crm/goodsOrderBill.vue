@@ -113,7 +113,6 @@
         submitDisabled:false,
         filterValue:"",
         filterDetailList:[],
-        goodsOrderDetailList:[],
         inputForm:{
           extra:{}
         },
@@ -155,16 +154,16 @@
       },filterProducts(){
         let val=this.filterValue;
         if(util.isBlank(val)) {
-          this.filterDetailList = this.goodsOrderDetailList;
+          this.filterDetailList = this.inputForm.goodsOrderDetailList;
           return;
         }
         let tempList=[];
-        for(let detail of this.goodsOrderDetailList){
+        for(let detail of this.inputForm.goodsOrderDetailList){
           if(util.isNotBlank(detail.billQty)){
             tempList.push(detail);
           }
         }
-        for(let detail of this.goodsOrderDetailList){
+        for(let detail of this.inputForm.goodsOrderDetailList){
           if(util.contains(detail.productName, val) && util.isBlank(detail.billQty)){
             tempList.push(detail);
           }
@@ -195,7 +194,7 @@
         this.inputForm = response.data;
         axios.get('/api/ws/future/crm/goodsOrder/getBill',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
-          this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
+          this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
           this.filterProducts();
           this.initSummary();
           axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
