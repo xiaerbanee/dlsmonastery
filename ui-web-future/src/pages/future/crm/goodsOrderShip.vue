@@ -169,6 +169,10 @@
     },created(){
       axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/goodsOrderShip/getShip',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+          this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
+        });
       });
     }
   }
