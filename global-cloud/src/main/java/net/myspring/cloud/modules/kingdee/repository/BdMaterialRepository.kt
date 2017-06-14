@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -37,6 +38,32 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(BdMaterial::class.java))
+    }
+
+    fun findByModifyDate(modifyDate:LocalDateTime): MutableList<BdMaterial> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FMASTERID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FMATERIALGROUP,
+                t4.FNAME AS fmaterialGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_BD_MATERIAL t1,
+                T_BD_MATERIAL_L t2,
+                T_BD_MATERIALGROUP t3,
+                T_BD_MATERIALGROUP_L t4
+            WHERE
+                t1.FMATERIALID = t2.FMATERIALID
+                AND t1.FMATERIALGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FMODIFYDATE > :modifyDate
+        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
     fun findByName(name: String): BdMaterial {
