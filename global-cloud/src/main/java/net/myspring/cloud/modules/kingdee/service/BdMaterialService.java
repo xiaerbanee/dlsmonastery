@@ -7,6 +7,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,10 @@ public class BdMaterialService {
             return bdMaterialRepository.findByName(name);
         }
         return null;
+    }
+
+    public List<BdMaterial> findByModifyDate(LocalDateTime dateTime){
+        return bdMaterialRepository.findByModifyDate(dateTime);
     }
 
 }
