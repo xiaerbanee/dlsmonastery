@@ -1,66 +1,20 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
-/**
- * Created by zhangyf on 2017/5/13.
- */
+
 public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
 
-    private BigDecimal price;
-    private BigDecimal price2;
+    private String productId;
+    private String productName;
+    private String productCode;
+    private String productRemarks;
+    private BigDecimal productPrice2;
     private Integer qty;
     private Integer confirmQty;
-    private Integer billQty;
-    private Integer shippedQty;
-    private BigDecimal shouldPay;
-    private BigDecimal shouldGet;
-    private String productId;
-    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "name")
-    private String productName;
-    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "code")
-    private String productCode;
-    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "remarks")
-    private String productRemarks;
-    private String adGoodsOrderId;
-
-    public BigDecimal getPrice2() {
-        return price2;
-    }
-
-    public void setPrice2(BigDecimal price2) {
-        this.price2 = price2;
-    }
-
-    public String getProductRemarks() {
-        return productRemarks;
-    }
-
-    public void setProductRemarks(String productRemarks) {
-        this.productRemarks = productRemarks;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
 
     public Integer getConfirmQty() {
         return confirmQty;
@@ -68,38 +22,6 @@ public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
 
     public void setConfirmQty(Integer confirmQty) {
         this.confirmQty = confirmQty;
-    }
-
-    public Integer getBillQty() {
-        return billQty;
-    }
-
-    public void setBillQty(Integer billQty) {
-        this.billQty = billQty;
-    }
-
-    public Integer getShippedQty() {
-        return shippedQty;
-    }
-
-    public void setShippedQty(Integer shippedQty) {
-        this.shippedQty = shippedQty;
-    }
-
-    public BigDecimal getShouldPay() {
-        return shouldPay;
-    }
-
-    public void setShouldPay(BigDecimal shouldPay) {
-        this.shouldPay = shouldPay;
-    }
-
-    public BigDecimal getShouldGet() {
-        return shouldGet;
-    }
-
-    public void setShouldGet(BigDecimal shouldGet) {
-        this.shouldGet = shouldGet;
     }
 
     public String getProductId() {
@@ -126,11 +48,27 @@ public class AdGoodsOrderDetailDto extends DataDto<AdGoodsOrderDetail> {
         this.productCode = productCode;
     }
 
-    public String getAdGoodsOrderId() {
-        return adGoodsOrderId;
+    public String getProductRemarks() {
+        return productRemarks;
     }
 
-    public void setAdGoodsOrderId(String adGoodsOrderId) {
-        this.adGoodsOrderId = adGoodsOrderId;
+    public void setProductRemarks(String productRemarks) {
+        this.productRemarks = productRemarks;
+    }
+
+    public BigDecimal getProductPrice2() {
+        return productPrice2;
+    }
+
+    public void setProductPrice2(BigDecimal productPrice2) {
+        this.productPrice2 = productPrice2;
+    }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
     }
 }

@@ -42,7 +42,6 @@
     methods:{
       getData() {
           return{
-            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
@@ -58,24 +57,25 @@
               this.submitDisabled = true;
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
                 if(!this.inputForm.create){
+                  this.submitDisabled = false;
                   this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
+                }else{
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
                 }
               }).catch( () => {
                 that.submitDisabled = false;
               });
             }
           })
-        }
-      },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+        },initPage(){
         axios.get('/api/ws/future/crm/expressOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
           this.inputForm = response.data;
       })
       }
-      this.isInit = true;
-      }
+      },created () {
+      this.initPage();
+    }
     }
 </script>

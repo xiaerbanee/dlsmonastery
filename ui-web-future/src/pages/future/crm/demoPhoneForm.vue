@@ -43,7 +43,6 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{},
@@ -59,7 +58,6 @@
         rules: {
           shopId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
-          productImeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],
@@ -74,10 +72,13 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
-                this.$router.push({name:'demoPhoneList',query:util.getQuery("demoPhoneList")})
-              }
+            if (!this.inputForm.create) {
+              this.submitDisabled = false;
+              this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
+            } else {
+              Object.assign(this.$data, this.getData());
+              this.initPage();
+            }
             }).catch(function () {
               that.submitDisabled = false;
             });
@@ -95,15 +96,16 @@
         } else {
           this.productImes = [];
         }
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+        axios.get('/api/ws/future/crm/demoPhone/findOne').then((response)=>{
           this.inputForm = response.data;
+        axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=> {
+          util.copyValue(response.data, this.inputForm);
+           })
         })
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

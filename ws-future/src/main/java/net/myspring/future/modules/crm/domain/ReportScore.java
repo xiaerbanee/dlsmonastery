@@ -26,13 +26,6 @@ public class ReportScore extends CompanyEntity<ReportScore> {
     private BigDecimal monthSaleMoney=BigDecimal.ZERO;
     private BigDecimal recentMonthSaleMoney=BigDecimal.ZERO;
     private Integer version = 0;
-    private BigDecimal totalSaleMoney;
-    private BigDecimal totalMonthSaleMoney;
-    private Integer totalSaleQty;
-    private Integer totalMonthSaleQty;
-    private Integer totalScoreSaleQty;
-    private Integer totalMonthScoreSaleQty;
-
 
     public LocalDate getScoreDate() {
         return scoreDate;
@@ -152,54 +145,6 @@ public class ReportScore extends CompanyEntity<ReportScore> {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public BigDecimal getTotalSaleMoney() {
-        return totalSaleMoney;
-    }
-
-    public void setTotalSaleMoney(BigDecimal totalSaleMoney) {
-        this.totalSaleMoney = totalSaleMoney;
-    }
-
-    public BigDecimal getTotalMonthSaleMoney() {
-        return totalMonthSaleMoney;
-    }
-
-    public void setTotalMonthSaleMoney(BigDecimal totalMonthSaleMoney) {
-        this.totalMonthSaleMoney = totalMonthSaleMoney;
-    }
-
-    public Integer getTotalSaleQty() {
-        return totalSaleQty;
-    }
-
-    public void setTotalSaleQty(Integer totalSaleQty) {
-        this.totalSaleQty = totalSaleQty;
-    }
-
-    public Integer getTotalMonthSaleQty() {
-        return totalMonthSaleQty;
-    }
-
-    public void setTotalMonthSaleQty(Integer totalMonthSaleQty) {
-        this.totalMonthSaleQty = totalMonthSaleQty;
-    }
-
-    public Integer getTotalScoreSaleQty() {
-        return totalScoreSaleQty;
-    }
-
-    public void setTotalScoreSaleQty(Integer totalScoreSaleQty) {
-        this.totalScoreSaleQty = totalScoreSaleQty;
-    }
-
-    public Integer getTotalMonthScoreSaleQty() {
-        return totalMonthScoreSaleQty;
-    }
-
-    public void setTotalMonthScoreSaleQty(Integer totalMonthScoreSaleQty) {
-        this.totalMonthScoreSaleQty = totalMonthScoreSaleQty;
     }
 
 }

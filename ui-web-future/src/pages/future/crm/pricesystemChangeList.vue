@@ -38,7 +38,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')"  @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column column-key="productId" prop="productName":label="$t('pricesystemChangeList.productName')" width="150" sortable></el-table-column>
-        <el-table-column column-key="pricesystemId" prop="pricesystemId" :label="$t('pricesystemChangeList.pricesystemName')" sortable></el-table-column>
+        <el-table-column column-key="pricesystemId" prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" sortable></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('pricesystemChangeList.createdBy')" sortable></el-table-column>
@@ -74,6 +74,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         selects:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -134,10 +135,13 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/pricesystemChange/getQuery').then((response) =>{
+      this.initPromise=axios.get('/api/ws/future/crm/pricesystemChange/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
     }
   };

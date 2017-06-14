@@ -47,10 +47,10 @@
       return {
         page:{},
         formData:{
-          name:'',
           extra:{}
         },
         searchText:"",
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -101,6 +101,7 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
+    },activated() {
       this.pageRequest();
     }
   };

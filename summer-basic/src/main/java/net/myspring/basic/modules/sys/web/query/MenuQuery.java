@@ -10,11 +10,9 @@ import java.util.List;
  * Created by lihx on 2017/4/7.
  */
 public class MenuQuery extends BaseQuery {
-    private String category;
     private String name;
     private String menuCategoryId;
     private List<MenuCategoryDto> menuCategoryList= Lists.newArrayList();
-    private List<String> categoryList=Lists.newArrayList();
 
     public List<MenuCategoryDto> getMenuCategoryList() {
         return menuCategoryList;
@@ -22,22 +20,6 @@ public class MenuQuery extends BaseQuery {
 
     public void setMenuCategoryList(List<MenuCategoryDto> menuCategoryList) {
         this.menuCategoryList = menuCategoryList;
-    }
-
-    public List<String> getCategoryList() {
-        return categoryList;
-    }
-
-    public void setCategoryList(List<String> categoryList) {
-        this.categoryList = categoryList;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getName() {

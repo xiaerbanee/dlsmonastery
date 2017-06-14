@@ -63,6 +63,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
@@ -104,11 +105,14 @@
     },created () {
       const that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
+      that.initPromise=axios.get('/api/ws/future/crm/reportScoreOffice/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
     });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

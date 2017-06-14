@@ -22,7 +22,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneTypeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')" sortable></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('demoPhoneTypeList.name')" sortable ></el-table-column>
         <el-table-column prop="limitQty" :label="$t('demoPhoneTypeList.limitQty')" sortable></el-table-column>
         <el-table-column prop="productTypeNames" :label="$t('demoPhoneTypeList.productTypeNames')"></el-table-column>
         <el-table-column prop="applyEndDate" :label="$t('demoPhoneTypeList.applyEndDate')" sortable></el-table-column>
@@ -62,6 +62,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false
       };
@@ -109,12 +110,16 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/demoPhoneType/getQuery').then((response) => {
+      this.initPromise=axios.get('/api/ws/future/crm/demoPhoneType/getQuery').then((response) => {
         that.formData = response.data;
         util.copyValue(that.$route.query, that.formData);
         that.pageRequest();
       })
-    }
+    },activated(){
+    this.initPromise.then(()=>{
+      this.pageRequest();
+    });
+  }
   };
 </script>
 

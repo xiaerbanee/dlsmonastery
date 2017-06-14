@@ -6,13 +6,11 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('depotChangeForm.depotName')" prop="depotId">
-              <el-select v-model="inputForm.depotId" filterable remote :placeholder="$t('depotChangeForm.inputWord')" :remote-method="remoteDepot" :loading="remoteLoading" :clearable=true @change="getDepot(inputForm.depotId)">
-                <el-option v-for="depot in depots" :key="depot.id" :label="depot.name" :value="depot.id"></el-option>
-              </el-select>
+              <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.type')" prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('depotChangeForm.selectGroup')" @change="getOldValue">
-                <el-option v-for="item in formProperty.types" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.types" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.expiryDate')" prop="expiryDate">
@@ -25,14 +23,10 @@
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('depotChangeForm.newValue')" prop="newValue">
-              <el-select v-model="inputForm.newValue"  clearable :placeholder="$t('depotChangeForm.inputKey')">
-                <el-option v-for="(value,key) in formProperty.bools" :key="key" :label="value | bool2str" :value="key"></el-option>
-              </el-select>
+              <bool-select  v-model="inputForm.newValue"></bool-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='价格体系'" :label="$t('depotChangeForm.newValue')" prop="newValue" >
-              <el-select v-model="inputForm.newValue" filterable :placeholder="$t('depotChangeForm.selectGroup')">
-                <el-option v-for="item in formProperty.pricesystems" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <bool-select  v-model="inputForm.newValue"></bool-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -48,7 +42,10 @@
 </template>
 
 <script>
+  import depotSelect from 'components/future/depot-select'
+  import boolSelect from 'components/common/bool-select'
   export default{
+    components:{depotSelect,boolSelect},
     data(){
       return this.getData()
     },
@@ -58,18 +55,10 @@
         isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        formProperty:{},
-        depot:{},
-        depots:[],
         inputForm:{
-          id:'',
-          type:'',
-          depotId:"",
-          expiryDate:'',
-          oldValue:'',
-          newValue:'',
-          remarks:''
+            extra:{}
         },
+        shop:{},
         rules: {
           depotId: [{ required: true, message: this.$t('depotChangeForm.prerequisiteMessage')}],
           type: [{ required: true, message: this.$t('depotChangeForm.prerequisiteMessage')}],
@@ -82,10 +71,9 @@
         var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-        this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/depotChange/save', qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/crm/depotChange/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
@@ -100,43 +88,39 @@
             this.submitDisabled = false;
           }
         })
-      },remoteDepot(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/crm/depot/search', {params: {name: query}}).then((response)=> {
-            this.depots = response.data;
-            this.remoteLoading = false;
-          })
-        }
-      },getDepot(id){
-        if(id){
-          axios.get('/api/crm/depot/findOne',{params: {id:id}}).then((response)=>{
-            this.depot = response.data;
-          })
-        }
       },getOldValue(){
-        if(this.inputForm.type == "价格体系"){
-          this.inputForm.oldValue = this.depot.pricesystem.name;
-        }else if(this.inputForm.type == "名称"){
-          this.inputForm.oldValue = this.depot.name;
-        }else if(this.inputForm.type == "有无导购"){
-          this.inputForm.oldValue = this.depot.hasGuide?"是":"否";
-        }else if(this.inputForm.type == "是否让利"){
-          this.inputForm.oldValue = this.depot.rebate?"是":"否";
-        }else if(this.inputForm.type == "信用额度"){
-          this.inputForm.oldValue = this.depot.credit;
-        }
+          var that = this;
+          if(this.inputForm.depotId == null||this.inputForm.type == null){
+              return;
+          }
+          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.depotId}}).then((response)=>{
+            that.shop = response.data;
+          });
+          if(that.shop == null){
+              return;
+          }
+          console.log(that.shop);
+          if(this.inputForm.type == "价格体系"){
+            this.inputForm.oldValue = this.shop.pricesystemName;
+          }else if(this.inputForm.type == "名称"){
+            this.inputForm.oldValue = this.shop.name;
+          }else if(this.inputForm.type == "有无导购"){
+            this.inputForm.oldValue = this.shop.hasGuide;
+          }else if(this.inputForm.type == "是否让利"){
+            this.inputForm.oldValue = this.shop.rebate;
+          }else if(this.inputForm.type == "信用额度"){
+            this.inputForm.oldValue = this.shop.credit;
+          }
       }
     },activated () {
       if(!this.$route.query.headClick || !this.isInit) {
         Object.assign(this.$data, this.getData());
-        axios.get('/api/crm/depotChange/getForm').then((response)=>{
-          this.formProperty = response.data;
+        axios.get('/api/ws/future/crm/depotChange/getForm').then((response)=>{
+          this.inputForm = response.data;
         });
         if(!this.isCreate){
-          axios.get('/api/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-            this.depots = new Array(response.data.depot)
           })
         }
       }

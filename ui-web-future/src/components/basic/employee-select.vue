@@ -27,22 +27,24 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        if(this.innerId == val || val==""||typeof(val)=="undefined") {
-          return;
+        if(val){
+          this.innerId=val;
+          this.remoteLoading = true;
+          let idStr=this.innerId;
+          if(this.innerId instanceof Array){
+            idStr=this.innerId.join();
+          }
+          axios.get('/api/basic/hr/employee/findByIds?idStr='+idStr).then((response)=>{
+            this.itemList=response.data;
+            this.remoteLoading = false;
+            this.$nextTick(()=>{
+              this.$emit('afterInit');
+            });
+          })
+        }else{
+          this.innerId=[];
         }
-        this.innerId=val;
-        this.remoteLoading = true;
-        let idStr=this.innerId;
-        if(this.innerId instanceof Array){
-          idStr=this.innerId.join();
-        }
-        axios.get('/api/basic/hr/employee/findByIds?idStr='+idStr).then((response)=>{
-          this.itemList=response.data;
-          this.remoteLoading = false;
-          this.$nextTick(()=>{
-            this.$emit('afterInit');
-        });
-        })
+
       }
     },created () {
       this.setValue(this.value);

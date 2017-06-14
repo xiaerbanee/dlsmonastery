@@ -61,14 +61,14 @@
                 extra:{},
             },
             rules: {
-              name: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
-              reportName: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
-              code: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
-              scoreType: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}],
-              baokaPrice: [{  required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
-              price1: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
-              price2: [{required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
-              price3: [{required: true, message: this.$t('productTypeForm.prerequisiteMessage')}, {type: 'number',message: this.$t('productTypeForm.inputLegalValue')}],
+              name: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage'),trigger:"blur"}],
+              reportName: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage'),trigger:"blur"}],
+              code: [{ required: true, message: this.$t('productTypeForm.prerequisiteMessage'),trigger:"blur"}],
+              scoreType: [{ type:"boolean",required: true, message: this.$t('productTypeForm.prerequisiteMessage'),trigger: 'blur'}],
+              baokaPrice: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
+              price1: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
+              price2: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
+              price3: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
             }
           }
       },

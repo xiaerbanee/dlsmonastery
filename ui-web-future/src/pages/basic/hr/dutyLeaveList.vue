@@ -53,6 +53,7 @@
           dutyDate:'',
         },
         searchText:{},
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -84,16 +85,15 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },getQuery(){
-        axios.get('/api/basic/hr/dutyLeave/getQuery').then((response) =>{
-          this.formData = response.data;
-          util.copyValue(this.$route.query,this.formData);
-          this.pageRequest();
-        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      this.getQuery();
+      this.initPromise = axios.get('/api/basic/hr/dutyLeave/getQuery').then((response) =>{
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated() {
+      this.pageRequest();
     }
   };
 </script>

@@ -67,7 +67,6 @@
     methods:{
       getData() {
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           inputForm:{
@@ -97,12 +96,15 @@
             this.initSubmitDataBeforeSubmit();
             axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
             if(response.data.success) {
               if (!this.inputForm.create) {
+                this.submitDisabled = false;
                 this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
+              }else{
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
-            }
+              }
           }).catch( () => {
               that.submitDisabled = false;
           });
@@ -110,13 +112,13 @@
         })
       }, initSubmitDataBeforeSubmit(){
 
-        this.submitData.allotType = this.allotType;
-        this.submitData.fromStoreId = this.storeAllot.fromStoreId;
-        this.submitData.toStoreId = this.storeAllot.toStoreId;
-        this.submitData.shipType = this.storeAllot.shipType;
-        this.submitData.expressCompanyId = this.storeAllot.expressCompanyId;
-        this.submitData.syn = this.syn;
-        this.submitData.remarks = this.storeAllot.remarks;
+        this.inputForm.allotType = this.allotType;
+        this.inputForm.fromStoreId = this.inputForm.fromStoreId;
+        this.inputForm.toStoreId = this.inputForm.toStoreId;
+        this.inputForm.shipType = this.inputForm.shipType;
+        this.inputForm.expressCompanyId = this.inputForm.expressCompanyId;
+        this.inputForm.syn = this.syn;
+        this.inputForm.remarks = this.inputForm.remarks;
 
         if(this.storeAllotDetailList){
           let tempList=[];
@@ -137,17 +139,17 @@
             this.setStoreAllotDetailList(response.data);
           });
           axios.get('/api/ws/future/crm/storeAllot/findStoreAllotForFastAllot').then((response) => {
-            this.storeAllot.fromStoreId  = response.data.fromStoreId;
-            this.storeAllot.toStoreId  = response.data.toStoreId;
-            this.storeAllot.expressCompanyId  = response.data.expressCompanyId;
-            this.storeAllot.shipType  = response.data.shipType;
+            this.inputForm.fromStoreId  = response.data.fromStoreId;
+            this.inputForm.toStoreId  = response.data.toStoreId;
+            this.inputForm.expressCompanyId  = response.data.expressCompanyId;
+            this.inputForm.shipType  = response.data.shipType;
           });
 
         }else{
-          this.storeAllot.fromStoreId  = null;
-          this.storeAllot.toStoreId  = null;
-          this.storeAllot.expressCompanyId  = null;
-          this.storeAllot.shipType  = null;
+          this.inputForm.fromStoreId  = null;
+          this.inputForm.toStoreId  = null;
+          this.inputForm.expressCompanyId  = null;
+          this.inputForm.shipType  = null;
           this.syn = true;
           axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response) => {
             this.setStoreAllotDetailList(response.data);
@@ -162,7 +164,7 @@
 
         axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot', {
           params: {
-            fromStoreId: this.storeAllot.fromStoreId
+            fromStoreId: this.inputForm.fromStoreId
           }
         }).then((response) => {
           this.setStoreAllotDetailList(response.data);
@@ -196,10 +198,7 @@
           }
         }
         this.filterStoreAllotDetailList = tempList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm= response.data;
         //大库调拨只能新增和删除，不能修改，所以不用传id
@@ -212,7 +211,8 @@
       });
       });
       }
-      this.isInit = true;
-    }
+    },created () {
+       this.initPage();
+     }
   }
 </script>

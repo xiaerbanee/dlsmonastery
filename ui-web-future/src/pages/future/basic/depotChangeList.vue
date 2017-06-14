@@ -12,15 +12,15 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('depotChangeList.depotName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('depotChangeList.likeSearch')"></el-input>
+                <depot-select v-model="formData.depotId" category="store"></depot-select>
               </el-form-item>
                <el-form-item :label="$t('depotChangeList.type')" :label-width="formLabelWidth">
                  <el-select v-model="formData.type" clearable filterable :placeholder="$t('depotChangeList.selectGroup')">
-                   <el-option v-for="type in formProperty.types" :key="type" :label="type" :value="type"></el-option>
+                   <el-option v-for="type in formData.extra.types" :key="type" :label="type" :value="type"></el-option>
                  </el-select>
                </el-form-item>
               <el-form-item :label="$t('depotChangeList.createdDate')" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('depotChangeList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -32,17 +32,17 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('depotChangeList.unicode')" sortable width="100"></el-table-column>
-        <el-table-column prop="type" :label="$t('depotChangeList.type')" width="120"></el-table-column>
-        <el-table-column prop="depot.name" :label="$t('depotChangeList.depotName')"></el-table-column>
+        <el-table-column prop="type" :label="$t('depotChangeList.type')" sortable width="120"></el-table-column>
+        <el-table-column column-key="depotId" prop="depotName" :label="$t('depotChangeList.depotName')" sortable></el-table-column>
         <el-table-column prop="expiryDate" :label="$t('depotChangeList.expiryDate')"sortable width="120"></el-table-column>
-        <el-table-column prop="oldValue" :label="$t('depotChangeList.oldValue')"></el-table-column>
-        <el-table-column prop="newValue" :label="$t('depotChangeList.newValue')"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('depotChangeList.processStatus')"></el-table-column>
+        <el-table-column prop="oldValue" :label="$t('depotChangeList.oldValue')" sortable></el-table-column>
+        <el-table-column prop="newValue" :label="$t('depotChangeList.newValue')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('depotChangeList.processStatus')" sortable></el-table-column>
         <el-table-column fixed="right" :label="$t('depotChangeList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <div class="action" v-permit="'crm:depotChange:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('depotChangeList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.processStatus =='申请中'" v-permit="'crm:depotChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('depotChangeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -51,7 +51,9 @@
   </div>
 </template>
 <script>
+  import depotSelect from 'components/future/depot-select'
   export default {
+    components:{depotSelect},
     data() {
       return {
         page:{},
@@ -59,8 +61,8 @@
         formData:{
           extra:{}
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
+        initPromise:{},
+        pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -86,7 +88,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -97,24 +99,29 @@
       },exportData(){
 				window.location.href= "/api/ws/future/crm/depotChange/export?"+qs.stringify(this.formData);
       },itemAction:function(id,action){
-        if(action=="详细") {
+        if(action=="detail") {
           this.$router.push({ name: 'depotChangeDetail', query: { id: id,action:"detail" }})
-      } else if(action=="审核"){
+      } else if(action=="audit"){
           this.$router.push({ name: 'depotChangeDetail', query: { id: id,action:"audit" }})
-      }else if(action=="删除") {
-          axios.get('/api/ws/future/crm/depotChange/delete',{params:{id:id}}).then((response) =>{
-           this.$message(response.data.message);
-           this.pageRequest();
+      }else if(action=="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/crm/depotChange/delete', {params: {id: id}}).then((response) => {
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
           })
         }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
-        this.formProperty=response.data;
+      this.initPromise = axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
+        this.formData=response.data;
       });
-      this.pageRequest();
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

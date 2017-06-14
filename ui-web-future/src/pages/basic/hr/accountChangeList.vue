@@ -63,6 +63,7 @@
           extra:{},
           createdDate:'',
         },
+        initPromise:{},
         searchText:"",
         selects:[],
         formLabelWidth: '120px',
@@ -148,14 +149,17 @@
         return row.processStatus !== '已通过' && row.processStatus !== '未通过'
       }
     },created () {
-        var that=this;
+      var that=this;
       this.pageHeight = window.outerHeight -120;
-      axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(this.formData.extra.typeList);
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
       });
+    },activated() {
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      })
     }
   };
 </script>

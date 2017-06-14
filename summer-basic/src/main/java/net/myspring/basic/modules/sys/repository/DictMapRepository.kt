@@ -79,6 +79,10 @@ class DictMapRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if(dictMapQuery.createdDateEnd != null) {
             sb.append(" and created_date < :createdDateEnd ");
         }
+        if(dictMapQuery.value != null) {
+            sb.append(" and value = :value ");
+        }
+
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(dictMapQuery), BeanPropertyRowMapper(DictMapDto::class.java));

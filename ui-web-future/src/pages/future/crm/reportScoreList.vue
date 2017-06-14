@@ -37,7 +37,7 @@
         <el-table-column v-permit="'crm:reportScore:moneyView'"  prop="monthSaleMoney" :label="$t('reportScoreList.monthSaleMoney')"></el-table-column>
         <el-table-column fixed="right" :label="$t('reportScoreList.operation')" width="140">
           <template scope="scope">
-            <el-button  size="small" type="text" @click="itemAction(scope.row.id, 'delete')"  v-permit="'crm:reportScore:delete'">{{$t('reportScoreList.delete')}}</el-button>
+            <div class="action"  v-permit="'crm:reportScore:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"> {{$t('reportScoreList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -56,6 +56,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -102,15 +103,17 @@
         }
       }
     },created () {
-
       const that = this;
       that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      that.initPromise=axios.get('/api/ws/future/crm/reportScore/getQuery').then((response) =>{
+      that.formData=response.data;
+        that.formData.sort="scoreDate,desc"
+      util.copyValue(that.$route.query,that.formData);
       });
-
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

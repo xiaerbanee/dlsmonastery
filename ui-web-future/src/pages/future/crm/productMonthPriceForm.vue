@@ -60,10 +60,7 @@
             filterProductMonthPriceDetailList:[],
             productTypeName:"",
             inputForm:{
-              id:'',
-              month:'',
-              remarks:'',
-              productMonthPriceDetailList:[]
+              extra:{},
             },
             rules: {
               month: [{ required: true, message: this.$t('productMonthPriceForm.prerequisiteMessage')}]
@@ -76,26 +73,26 @@
             this.$alert( this.$t('productMonthPriceForm.formInvalid'), this.$t('productMonthPriceForm.notify'));
             return;
           }
-
+          this.submitDisabled = true;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.submitDisabled = true;
-              axios.post('/api/ws/future/crm/productMonthPrice/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
-                this.submitDisabled = false;
+              axios.post('/api/ws/future/crm/productMonthPrice/save',qs.stringify(util.deleteExtra(this.inputForm),{allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-
                 if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'productMonthPriceList', query: util.getQuery("productMonthPriceList")})
+                  if (this.isCreate) {
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
                   }else{
-
-
+                    this.submitDisabled = false;
+                    this.$router.push({name: 'productMonthPriceList', query: util.getQuery("productMonthPriceList")})
                   }
                 }
               }).catch(() => {
                 this.submitDisabled = false;
               });
+            }else{
+              this.submitDisabled = false;
             }
           })
         },onMonthChange(){
@@ -133,20 +130,27 @@
             }
           }
           this.filterProductMonthPriceDetailList = tempList;
+        },initPage(){
+
+          axios.get('/api/ws/future/crm/productMonthPrice/getForm').then((response)=>{
+            this.inputForm = response.data;
+            if(this.isCreate){
+              axios.get('/api/ws/future/crm/productMonthPrice/findDetailListForNew').then((response)=>{
+                this.setProductMonthPriceDetailList(response.data);
+              });
+            }else{
+              axios.get('/api/ws/future/crm/productMonthPrice/findDetailListForEdit',{params: {productMonthPriceId:this.$route.query.id}}).then((response)=>{
+                this.setProductMonthPriceDetailList(response.data);
+              });
+              axios.get('/api/ws/future/crm/productMonthPrice/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+                util.copyValue(response.data, this.inputForm);
+              });
+            }
+          });
+
         }
       },created () {
-        if(this.isCreate){
-          axios.get('/api/ws/future/crm/productMonthPrice/findDetailListForNew').then((response)=>{
-            this.setProductMonthPriceDetailList(response.data);
-          });
-        }else{
-          axios.get('/api/ws/future/crm/productMonthPrice/findDetailListForEdit',{params: {productMonthPriceId:this.$route.query.id}}).then((response)=>{
-            this.setProductMonthPriceDetailList(response.data);
-          });
-          axios.get('/api/ws/future/crm/productMonthPrice/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data, this.inputForm);
-          });
-        }
+          this.initPage();
       }
     }
 </script>

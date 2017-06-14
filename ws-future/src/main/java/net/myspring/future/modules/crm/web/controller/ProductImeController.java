@@ -13,7 +13,6 @@ import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.ProductService;
@@ -27,7 +26,6 @@ import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
-import net.myspring.future.modules.crm.web.query.ProductImeStockReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -40,7 +38,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
 
@@ -63,8 +60,7 @@ public class ProductImeController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page list(Pageable pageable,ProductImeQuery productImeQuery){
-        Page<ProductImeDto> page = productImeService.findPage(pageable,productImeQuery);
-        return page;
+        return productImeService.findPage(pageable,productImeQuery);
     }
 
     @RequestMapping(value="getQuery")
@@ -72,7 +68,6 @@ public class ProductImeController {
         productImeQuery.getExtra().put("inputTypeList",InputTypeEnum.getList());
         return productImeQuery;
     }
-
 
     @RequestMapping(value="getProductImeDetail")
     public ProductImeDto getProductImeDetail(String id) {

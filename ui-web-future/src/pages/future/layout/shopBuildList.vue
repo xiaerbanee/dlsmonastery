@@ -92,6 +92,7 @@
         formData:{
           auditType:1,
         },
+        initPromise:{},
         auditTypes:{
           0:this.$t('shopBuildList.all'),
           1:this.$t('shopBuildList.waitAudit')
@@ -179,13 +180,16 @@
       }
     },
     created () {
-        var that = this;
-        that.pageHeight = window.outerHeight -320;
-        axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
-           that.formData = response.data;
-           util.copyValue(that.$route.query,that.formData);
-           that.pageRequest();
-        });
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
+         that.formData = response.data;
+         util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

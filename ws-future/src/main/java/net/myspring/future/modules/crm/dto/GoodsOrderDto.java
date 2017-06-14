@@ -35,20 +35,26 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     //门店应收
     private BigDecimal shopShouldGet;
     private String netType;
-
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
     private String clientName;
-
     private String pricesystemId;
     @CacheInput(inputKey = "pricesystems",inputInstance = "pricesystemId",outputInstance = "name")
     private String pricesystemName;
     private String shopType;
     private Boolean enabled;
-
     private String  rebateRuleRemarks;
-
     private String expressOrderId;
+    private String expressCompanyId;
+    private Boolean syn;
+
+    private String address;
+    private String contator;
+    private String mobilePhone;
+
+    private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
+
+    private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
     public Boolean getUseTicket() {
         return isUseTicket;
@@ -67,10 +73,6 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     public void setExpressOrderId(String expressOrderId) {
         this.expressOrderId = expressOrderId;
     }
-
-    private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
-
-    private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
     public BigDecimal getShopCredit() {
         return shopCredit;
@@ -261,5 +263,45 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setGoodsOrderImeDtoList(List<GoodsOrderImeDto> goodsOrderImeDtoList) {
         this.goodsOrderImeDtoList = goodsOrderImeDtoList;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public Boolean getSyn() {
+        return syn;
+    }
+
+    public void setSyn(Boolean syn) {
+        this.syn = syn;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
     }
 }

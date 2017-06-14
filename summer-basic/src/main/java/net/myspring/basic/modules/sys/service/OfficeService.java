@@ -33,6 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -120,12 +121,29 @@ public class OfficeService {
         return BeanUtil.map(topOfficeRule,OfficeRuleDto.class);
     }
 
-    public Map<String,List<String>> getChildOfficeMap(String officeId){
-        Map<String,List<String>> map= Maps.newHashMap();
+    public Map<String,List<String>> getLastRuleMapByOfficeId(String officeId){
         List<Office> officeList=officeRepository.findByEnabledIsTrueAndParentId(officeId);
-        List<Office> childOfficeList=officeRepository.findByParentIdsListLike(CollectionUtil.extractToList(officeList,"id"));
-        if(CollectionUtil.isNotEmpty(childOfficeList)){
-            for(Office office:childOfficeList){
+        OfficeRule officeRule=officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
+        List<Office> lastRuleOfficeList=officeRepository.findByParentIdsListLikeAndOfficeRuleId(CollectionUtil.extractToList(officeList,"id"),officeRule.getId());
+        return getOfficeMap(officeList,lastRuleOfficeList);
+    }
+
+    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+        List<Office> officeList=officeRepository.findByOfficeRuleName(officeRuleName);
+        for(int i=officeList.size()-1;i>0;i--){
+            if(officeList.get(i).getPoint()==null||officeList.get(i).getPoint().compareTo(BigDecimal.ZERO)<=0){
+                officeList.remove(i);
+            }
+        }
+        OfficeRule officeRule=officeRuleRepository.findLastOfficeRule(new PageRequest(0,1)).getContent().get(0);
+        List<Office> lastRuleOfficeList=officeRepository.findByParentIdsListLikeAndOfficeRuleId(CollectionUtil.extractToList(officeList,"id"),officeRule.getId());
+        return getOfficeMap(officeList,lastRuleOfficeList);
+    }
+
+    private Map<String,List<String>> getOfficeMap(List<Office> officeList,List<Office> lastRuleOfficeList){
+        Map<String,List<String>> map=Maps.newHashMap();
+        if(CollectionUtil.isNotEmpty(lastRuleOfficeList)){
+            for(Office office:lastRuleOfficeList){
                 String key=getTopOfficeIdByParentIds(officeList,office.getParentIds());
                 if(StringUtils.isNotBlank(key)){
                     if(!map.containsKey(key)){
