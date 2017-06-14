@@ -39,8 +39,8 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(String id) {
-        permissionService.logicDelete(id);
+    public RestResponse delete(PermissionForm permissionForm) {
+        permissionService.logicDelete(permissionForm);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }

@@ -31,7 +31,7 @@
             </el-form-item>
             <el-form-item label="乡镇类型" prop="townType">
               <el-select v-model="inputForm.townType"  filterable   :clearable=true >
-                <el-option v-for="item in inputForm.townTypeList"  :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.townTypeList"  :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="乡镇名称" prop="townId" >
@@ -100,30 +100,8 @@
         isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        inputForm:{},
-        submitData:{
-          id:'',
-          townId:"",
-          hasGuide:false,
-          depotId:'',
-          areaType:'',
-          carrierType:'',
-          turnoverType:'',
-          businessType:'',
-          channelType:'',
-          salePointType:'',
-          townType:'',
-         bussinessCenter:false,
-         bussinessCenterName:"",
-         doorHead:"",
-         enableDate:"",
-         specialityStore:false,
-         specialityStoreType:"",
-         shopArea:"",
-         frameNum:0,
-         deskDoubleNum:0,
-         deskSingleNum:0,
-         cabinetNum:0,
+        inputForm:{
+          extra:{}
         },
         rules: {
           depotId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -139,19 +117,20 @@
           shopArea: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
-    },
-      formSubmit(){
+      },formSubmit(){
         var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/depotShop/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/basic/depotShop/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
-                this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")})
+              if(this.inputForm.isCreate){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              }else {
+                this.submitDisabled = false;
+                this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")});
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -160,15 +139,16 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/depotShop/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+        axios.get('/api/ws/future/basic/depotShop/getForm').then((response)=>{
           this.inputForm = response.data;
+          axios.get('/api/ws/future/basic/depotShop/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

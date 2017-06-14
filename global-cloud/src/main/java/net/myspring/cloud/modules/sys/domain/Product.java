@@ -18,7 +18,7 @@ public class Product extends CompanyEntity<Product> {
     private String outId;
     private String returnOutId;
     private LocalDateTime outDate;
-    private Integer version;
+    private Integer version = 0;
     private String kingdeeBookId;
 
     public String getName() {

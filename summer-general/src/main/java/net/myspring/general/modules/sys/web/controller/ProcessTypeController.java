@@ -1,18 +1,17 @@
 package net.myspring.general.modules.sys.web.controller;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.general.modules.sys.domain.ProcessType;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.service.ProcessFlowService;
 import net.myspring.general.modules.sys.service.ProcessTypeService;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,9 +42,6 @@ public class ProcessTypeController {
 
     @RequestMapping(value = "getForm")
     public ProcessTypeForm list(ProcessTypeForm processTypeForm){
-        if(!processTypeForm.isCreate()){
-            processTypeForm.getExtra().put("processFlowList",processFlowService.findByProcessTypeId(processTypeForm.getId()));
-        }
         return processTypeForm;
     }
 
@@ -58,6 +54,8 @@ public class ProcessTypeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ProcessTypeForm processTypeForm) {
+        processTypeForm.setCreatedPositionIds(StringUtils.join(processTypeForm.getCreatedPositionIdList(), CharConstant.COMMA));
+        processTypeForm.setViewPositionIds(StringUtils.join(processTypeForm.getViewPositionIdList(), CharConstant.COMMA));
         processTypeService.save(processTypeForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }

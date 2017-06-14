@@ -7,7 +7,6 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
@@ -69,9 +68,14 @@ public class DepotShopController {
 
     @RequestMapping(value = "getForm")
     public DepotShopForm getForm(DepotShopForm depotShopForm){
-        depotShopForm = depotShopService.getForm(depotShopForm);
-        depotShopForm.setTownTypeList(TownTypeEnum.getList());
+        depotShopForm.getExtra().put("townTypeList",TownTypeEnum.getList());
         return depotShopForm;
+    }
+
+    @RequestMapping(value = "findOne")
+    public DepotShopDto findOne(String id){
+        DepotShopDto depotShopDto = depotShopService.findOne(id);
+        return depotShopDto;
     }
 
     @RequestMapping(value = "findDepotForm")

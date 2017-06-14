@@ -1,4 +1,8 @@
-package net.myspring.basic.modules.hr.dto;
+package net.myspring.future.modules.basic.dto;
+
+import net.myspring.common.dto.DataDto;
+import net.myspring.future.modules.basic.domain.EmployeePhoneDeposit;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -6,12 +10,13 @@ import java.time.LocalDate;
 /**
  * Created by lihx on 2017/4/14.
  */
-public class EmployeePhoneDepositDto {
+public class EmployeePhoneDepositDto extends DataDto<EmployeePhoneDeposit> {
+    @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
+    private String employeeId;
     private String depotName;
     private String areaName;
     private String department;
-    private String bankId;
     private String bankName;
     private BigDecimal amount;
     private String outCode;
@@ -19,6 +24,23 @@ public class EmployeePhoneDepositDto {
     private String productName;
     private String status;
     private String locked;
+    private String depotOutId;
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getDepotOutId() {
+        return depotOutId;
+    }
+
+    public void setDepotOutId(String depotOutId) {
+        this.depotOutId = depotOutId;
+    }
 
     public String getEmployeeName() {
         return employeeName;
@@ -50,14 +72,6 @@ public class EmployeePhoneDepositDto {
 
     public void setDepartment(String department) {
         this.department = department;
-    }
-
-    public String getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(String bankId) {
-        this.bankId = bankId;
     }
 
     public String getBankName() {

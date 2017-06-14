@@ -34,6 +34,7 @@
           if(this.innerId instanceof Array){
             idStr=this.innerId.join();
           }
+          console.log("idStr"+idStr)
           axios.get('/api/basic/hr/position/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
