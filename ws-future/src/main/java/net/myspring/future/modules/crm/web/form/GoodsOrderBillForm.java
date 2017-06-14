@@ -24,11 +24,6 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
 
-    private List<DepotDto> storeList = Lists.newArrayList();
-
-    private List<ExpressCompanyDto> expressCompanyList = Lists.newArrayList();
-
-
     public String getStoreId() {
         return storeId;
     }
@@ -115,21 +110,5 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setGoodsOrderBillDetailFormList(List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList) {
         this.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
-    }
-
-    public List<DepotDto> getStoreList() {
-        return storeList;
-    }
-
-    public void setStoreList(List<DepotDto> storeList) {
-        this.storeList = storeList;
-    }
-
-    public List<ExpressCompanyDto> getExpressCompanyList() {
-        return expressCompanyList;
-    }
-
-    public void setExpressCompanyList(List<ExpressCompanyDto> expressCompanyList) {
-        this.expressCompanyList = expressCompanyList;
     }
 }

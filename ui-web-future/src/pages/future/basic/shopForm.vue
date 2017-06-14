@@ -3,6 +3,8 @@
     <head-tab active="shopForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+        <el-row :gutter="20">
+          <el-col :span="10">
         <el-form-item label="选择客户" prop="clientId">
           <el-select v-model="inputForm.clientId"  filterable remote  :remote-method="remoteClient" :loading="remoteLoading"  :clearable=true>
             <el-option v-for="item in clientList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -42,6 +44,8 @@
         <el-form-item label="额度" prop="credit">
           <el-input v-model="inputForm.credit" />
         </el-form-item>
+          </el-col>
+          <el-col :span="8">
         <el-form-item label="物料价格体系" prop="adPricesystemId">
           <el-select v-model="inputForm.adPricesystemId" filterable>
             <el-option v-for="item in inputForm.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -77,6 +81,8 @@
         <el-form-item>
           <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('dictMapForm.save')}}</el-button>
         </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
   </div>

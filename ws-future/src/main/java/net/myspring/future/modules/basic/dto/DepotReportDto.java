@@ -10,7 +10,7 @@ import java.util.Map;
 public class DepotReportDto {
     private String productId;
     private String productName;
-    private Integer qty;
+    private Integer qty=0;
     private String ime;
     private String depotId;
     private String depotName;
