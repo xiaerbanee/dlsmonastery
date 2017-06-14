@@ -17,6 +17,8 @@ import java.util.List;
 public class ReportScoreForm extends BaseForm<ReportScore> {
 
     private LocalDate scoreDate;
+    private BigDecimal score;
+    private BigDecimal monthScore;
     private BigDecimal companyScore;
     private BigDecimal companyMonthScore;
     private Integer cardQty;
@@ -29,6 +31,22 @@ public class ReportScoreForm extends BaseForm<ReportScore> {
 
     public void setScoreDate(LocalDate scoreDate) {
         this.scoreDate = scoreDate;
+    }
+
+    public BigDecimal getScore() {
+        return score;
+    }
+
+    public void setScore(BigDecimal score) {
+        this.score = score;
+    }
+
+    public BigDecimal getMonthScore() {
+        return monthScore;
+    }
+
+    public void setMonthScore(BigDecimal monthScore) {
+        this.monthScore = monthScore;
     }
 
     public BigDecimal getCompanyScore() {

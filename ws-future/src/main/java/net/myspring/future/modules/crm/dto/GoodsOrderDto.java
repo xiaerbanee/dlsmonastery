@@ -52,6 +52,10 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String contator;
     private String mobilePhone;
 
+    private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
+
+    private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
     public Boolean getUseTicket() {
         return isUseTicket;
     }
@@ -69,10 +73,6 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     public void setExpressOrderId(String expressOrderId) {
         this.expressOrderId = expressOrderId;
     }
-
-    private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
-
-    private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
     public BigDecimal getShopCredit() {
         return shopCredit;

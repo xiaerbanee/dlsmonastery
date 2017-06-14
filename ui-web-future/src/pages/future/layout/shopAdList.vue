@@ -107,6 +107,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -205,12 +206,15 @@
         return row.processStatus !== '已通过';
       }
     },created () {
-        this.pageHeight = window.outerHeight -320;
-        axios.get('/api/ws/future/layout/shopAd/getQuery').then((response)=>{
-          this.formData=response.data;
-          util.copyValue(this.$route.query,this.formData);
-          this.pageRequest();
-        });
+      this.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/ws/future/layout/shopAd/getQuery').then((response)=>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

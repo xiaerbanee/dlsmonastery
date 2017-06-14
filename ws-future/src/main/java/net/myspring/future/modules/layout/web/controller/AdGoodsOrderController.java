@@ -1,15 +1,19 @@
 package net.myspring.future.modules.layout.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.common.enums.OfficeRuleEnum;
+import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderService;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,17 +33,20 @@ public class  AdGoodsOrderController {
 
     @Autowired
     private AdGoodsOrderService adGoodsOrderService;
-
+    @Autowired
+    private ExpressCompanyService expressCompanyService;
+    @Autowired
+    private OfficeClient officeClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AdGoodsOrderDto> list(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
-       Page<AdGoodsOrderDto> page = adGoodsOrderService.findPage(pageable,adGoodsOrderQuery);
-        return page;
+        return adGoodsOrderService.findPage(pageable,adGoodsOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
-        adGoodsOrderQuery.setBillTypes(BillTypeEnum.getList());
+        adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
+        adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return adGoodsOrderQuery;
     }
 
@@ -64,7 +71,9 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "getForm", method = RequestMethod.GET)
     public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm) {
-        adGoodsOrderForm = adGoodsOrderService.getForm(adGoodsOrderForm);
+//        adGoodsOrderForm.setE
+//        adGoodsOrderForm = adGoodsOrderService.getForm(adGoodsOrderForm);
+        adGoodsOrderForm.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
         return adGoodsOrderForm;
     }
 
@@ -127,8 +136,13 @@ public class  AdGoodsOrderController {
         return new RestResponse("删除成功", ResponseCodeEnum.saved.name());
     }
 
-    private List<String> getActionList(AdGoodsOrder adGoodsOrder) {
-        List<String> actionList = Lists.newArrayList();
-        return actionList;
+    @RequestMapping(value = "findDetailListForNewOrEdit")
+    public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+
+        return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
+
     }
+
+
+
 }

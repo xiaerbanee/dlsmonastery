@@ -94,6 +94,9 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(reportQuery.depotIdList)) {
             sb.append(""" and t4.id in (:depotIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(reportQuery.depotIds)) {
+            sb.append(""" and t4.id in (:depotIds) """)
+        }
         if (StringUtils.isNotBlank(reportQuery.depotId)) {
             sb.append(""" and t4.id=:depotId """)
         }

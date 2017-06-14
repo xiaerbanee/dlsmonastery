@@ -74,13 +74,7 @@
   export default{
     data(){
       return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        inputForm:{},
-        zmd:'',
         goodsOrder:{},
-        /*shop:{},
-        store:{},*/
         expressOrder:{},
         goodsOrderDetailList:[],
         goodsOrderImeList:[],
@@ -92,15 +86,7 @@
       }
     },
     methods:{
-      findOne(){
-        axios.get('/api/crm/goodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
-
-
-        this.zmd=response.data.zmd;
-        this.imeMap=response.data.imeMap;
-        this.meidMap=response.data.meidMap;
-        })
-      },renderAction(createElement) {
+      renderAction(createElement) {
           return createElement(
             'a',{
                attrs: {

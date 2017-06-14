@@ -23,6 +23,15 @@ public class DepotChange extends CompanyEntity<DepotChange> {
     private String depotId;
     private String processTypeId;
     private String processFlowId;
+    private String processPositionId;
+
+    public String getProcessPositionId() {
+        return processPositionId;
+    }
+
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
+    }
 
     public String getType() {
         return type;

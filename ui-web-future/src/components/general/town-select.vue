@@ -16,8 +16,8 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"fullName")) {
-            return;
+        if(util.isBlank(query)) {
+          return;
         }
         this.remoteLoading = true;
         axios.get('/api/general/sys/town/search',{params:{name:query}}).then((response)=>{
@@ -28,9 +28,16 @@
         this.$emit('input', newVal);
       },setValue(val) {
         if(val) {
-          this.innerId=val;
+          this.innerId = val;
+          let idStr = this.innerId;
+          if (this.multiple && this.innerId) {
+            idStr = this.innerId.join();
+          }
+          if (util.isBlank(idStr)) {
+            return;
+          }
           this.remoteLoading = true;
-          axios.get('/api/general/sys/town/findById?id=' + this.innerId).then((response)=>{
+          axios.get('/api/general/sys/town/findOne?id=' + this.innerId).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
             this.$nextTick(()=>{

@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -17,8 +18,10 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class DataEntity<T> extends IdEntity<T> {
+    @Column(updatable = false)
     @CreatedBy
     protected String createdBy;
+    @Column(updatable = false)
     @CreatedDate
     protected LocalDateTime createdDate;
     @LastModifiedBy

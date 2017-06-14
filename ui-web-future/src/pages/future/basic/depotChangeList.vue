@@ -32,17 +32,17 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('depotChangeList.unicode')" sortable width="100"></el-table-column>
-        <el-table-column prop="type" :label="$t('depotChangeList.type')" width="120"></el-table-column>
-        <el-table-column prop="depotName" :label="$t('depotChangeList.depotName')"></el-table-column>
+        <el-table-column prop="type" :label="$t('depotChangeList.type')" sortable width="120"></el-table-column>
+        <el-table-column column-key="depotId" prop="depotName" :label="$t('depotChangeList.depotName')" sortable></el-table-column>
         <el-table-column prop="expiryDate" :label="$t('depotChangeList.expiryDate')"sortable width="120"></el-table-column>
-        <el-table-column prop="oldLabel" :label="$t('depotChangeList.oldValue')"></el-table-column>
-        <el-table-column prop="newLabel" :label="$t('depotChangeList.newValue')"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('depotChangeList.processStatus')"></el-table-column>
+        <el-table-column prop="oldValue" :label="$t('depotChangeList.oldValue')" sortable></el-table-column>
+        <el-table-column prop="newValue" :label="$t('depotChangeList.newValue')" sortable></el-table-column>
+        <el-table-column prop="processStatus" :label="$t('depotChangeList.processStatus')" sortable></el-table-column>
         <el-table-column fixed="right" :label="$t('depotChangeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:depotChange:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('depotChangeList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
             <div class="action" v-if="scope.row.processStatus =='申请中'" v-permit="'crm:depotChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('depotChangeList.delete')}}</el-button></div>
-
           </template>
         </el-table-column>
       </el-table>

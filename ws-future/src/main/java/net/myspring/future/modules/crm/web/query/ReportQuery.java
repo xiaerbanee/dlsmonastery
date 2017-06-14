@@ -38,8 +38,18 @@ public class ReportQuery extends BaseQuery{
     private Boolean isDetail=false;
     //需要导出的office的下级
     private List<String> officeIds=Lists.newArrayList();
+    //库存报表分页门店数据
+    private List<String> depotIds=Lists.newArrayList();
     private String exportType;
     private List<String> productTypeIdList;
+
+    public List<String> getDepotIds() {
+        return depotIds;
+    }
+
+    public void setDepotIds(List<String> depotIds) {
+        this.depotIds = depotIds;
+    }
 
     public List<String> getOfficeIds() {
         return officeIds;
