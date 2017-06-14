@@ -58,30 +58,30 @@
 <script>
   export default{
     data(){
-      return{
+      return {
         formLabelWidth: '120px',
-        submitDisabled:false,
-        remoteLoading:false,
-        inputForm:{
-          extra:[],
+        submitDisabled: false,
+        remoteLoading: false,
+        inputForm: {
+          extra: [],
         },
         rules: {
-          imeStr: [{ required: true, message: this.$t('afterSaleToCompany.prerequisiteMessage')}],
+          imeStr: [{required: true, message: this.$t('afterSaleToCompany.prerequisiteMessage')}],
         },
-        searchData:[],
-        message:'',
-        product:[]
+        searchData: [],
+        message: '',
+        product: []
       }
     },
-    methods:{
+    methods: {
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.toCompanyDate=util.formatLocalDate(this.inputForm.toCompanyDate)
-            let submitData=util.deleteExtra(this.inputForm)
-            axios.post('/api/ws/future/crm/afterSale/toCompany',qs.stringify(submitData)).then((response)=> {
+            this.inputForm.toCompanyDate = util.formatLocalDate(this.inputForm.toCompanyDate)
+            let submitData = util.deleteExtra(this.inputForm)
+            axios.post('/api/ws/future/crm/afterSale/toCompany', qs.stringify(submitData)).then((response) => {
               this.$message(response.data.message);
               form.resetFields();
               this.submitDisabled = false;
@@ -90,21 +90,31 @@
             });
           }
         })
-      },onchange(){
+      }, onchange(){
         this.message = '';
-        axios.get('/api/ws/future/crm/afterSale/searchImeMap',{params:{imeStr:this.inputForm.imeStr,type:this.inputForm.type}}).then((response)=>{
-          this.searchData=response.data;
-          var product=new Array();
-          for(let i in response.data.productQtyMap){
-            product.push({name:i,qty:response.data.productQtyMap[i]})
+        axios.get('/api/ws/future/crm/afterSale/searchImeMap', {
+          params: {
+            imeStr: this.inputForm.imeStr,
+            type: this.inputForm.type
           }
-        this.product=product;
+        }).then((response) => {
+          this.searchData = response.data;
+          var product = new Array();
+          for (let i in response.data.productQtyMap) {
+            product.push({name: i, qty: response.data.productQtyMap[i]})
+          }
+          this.product = product;
         })
+      },
+      initPage(){
+        axios.get('/api/ws/future/crm/afterSale/getToCompanyForm').then((response)=>
+        {
+          this.inputForm = response.data
+        }
+      )
       }
-    }, created(){
-      axios.get('/api/ws/future/crm/afterSale/getToCompanyForm').then((response)=>{
-        this.inputForm=response.data
-      })
+    }, created () {
+      this.initPage();
     }
   }
 </script>
