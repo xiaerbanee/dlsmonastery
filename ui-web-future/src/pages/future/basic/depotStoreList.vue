@@ -18,7 +18,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="depotName" label="名称" sortable width="120"></el-table-column>
+        <el-table-column  prop="depotName" label="名称" sortable ></el-table-column>
         <el-table-column prop="type" label="仓库类型"  />
         <el-table-column prop="storeGroup" label="分组"  />
         <el-table-column prop="officeName" label="机构"  />

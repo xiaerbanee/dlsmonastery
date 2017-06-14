@@ -74,6 +74,7 @@
           officeId:"",
           extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -122,13 +123,16 @@
         }
       }
     },created () {
-        var that = this;
-        that.pageHeight = window.outerHeight -320;
-        axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
-          that.formData=response.data;
-          util.copyValue(that.$route.query,that.formData);
-          that.pageRequest();
-        });
+      var that = this;
+      that.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/ws/future/layout/shopPrint/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

@@ -47,7 +47,6 @@
       return {
         page:{},
         formData:{
-          name:'',
           extra:{}
         },
         searchText:"",

@@ -34,7 +34,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
     fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
 
     @Query("select  t from #{#entityName} t where t.retailDate >= ?1 and t.retailDate<?2  and t.retailDate is not null ")
-    abstract fun findByRetailDate(dateStart: LocalDate, dateEnd: LocalDate): List<ProductIme>
+    fun findByRetailDate(dateStart: LocalDate, dateEnd: LocalDate): List<ProductIme>
 
 
     @Query("""
