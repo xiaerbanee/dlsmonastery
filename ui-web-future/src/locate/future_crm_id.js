@@ -538,6 +538,7 @@ export default {
     depotName: "gudang",
     type: "jenis",
     selectGroup: "pilih grup",
+    selectDate:"请选择时间",
     expiryDate: "tanggal jatuh tempo",
     oldValue: "sebelum dimodifikasi",
     newValue: "sesudah dimodifikasi",

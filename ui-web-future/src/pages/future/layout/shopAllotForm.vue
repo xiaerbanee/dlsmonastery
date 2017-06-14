@@ -54,7 +54,6 @@
             productName:'',
             filterShopAllotDetailList:[],
             errMsg:'',
-
             inputForm:{
                 extra:{},
             },
@@ -143,7 +142,9 @@
                 util.copyValue(response.data, this.inputForm);
               });
             }
+
           });
+
         }
     },created () {
       this.initPage();

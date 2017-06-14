@@ -91,6 +91,7 @@ public class DepotService {
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndIdIn(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
+        cacheUtils.initCacheInput(depotDtoList);
         return depotDtoList;
     }
 

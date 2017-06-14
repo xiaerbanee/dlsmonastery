@@ -1,11 +1,13 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.future.common.query.BaseQuery;
+
 import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/15.
  */
-public class PriceChangeImeQuery {
+public class PriceChangeImeQuery extends BaseQuery {
     private String status;
     private Boolean isCheck;
     private Boolean hasImage;

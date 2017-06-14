@@ -422,6 +422,7 @@ export default {
     depotName: "仓库",
     type: "调整项",
     selectGroup: "请选择分组",
+    selectDate:"请选择时间",
     expiryDate: "截止日期",
     oldValue: "修改前",
     newValue: "修改后",

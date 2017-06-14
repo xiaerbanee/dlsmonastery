@@ -9,14 +9,14 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('productTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('productTypeList.name')" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+              <el-form-item :label="$t('productTypeList.name')">
+                <el-input v-model="formData.name" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productTypeList.code')" :label-width="formLabelWidth">
-                <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+              <el-form-item :label="$t('productTypeList.code')">
+                <el-input v-model="formData.code" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -25,7 +25,7 @@
           <el-button type="primary" @click="search()">{{$t('productTypeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('productTypeList.name')"  width="150" sortable></el-table-column>
         <el-table-column prop="reportName" :label="$t('productTypeList.reportName')" sortable></el-table-column>
         <el-table-column prop="code" :label="$t('productTypeList.code')" sortable></el-table-column>
@@ -68,7 +68,6 @@
         formData:{},
         searchText:'',
         initPromise:{},
-        formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
@@ -123,14 +122,10 @@
 
       }
     },created () {
-
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/basic/productType/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
-
     },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();
@@ -138,5 +133,3 @@
     }
   };
 </script>
-
-0

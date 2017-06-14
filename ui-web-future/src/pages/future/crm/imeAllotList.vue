@@ -10,27 +10,27 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('imeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('imeAllotList.fromDepot')" :label-width="formLabelWidth">
-                <el-input v-model="formData.fromDepotName" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('imeAllotList.fromDepot')">
+                <el-input v-model="formData.fromDepotName" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('imeAllotList.toDepot')" :label-width="formLabelWidth">
-                <el-input v-model="formData.toDepotName" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('imeAllotList.toDepot')">
+                <el-input v-model="formData.toDepotName" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('imeAllotList.crossArea')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('imeAllotList.crossArea')" >
                 <bool-select v-model="formData.crossArea"   ></bool-select>
               </el-form-item>
-              <el-form-item :label="$t('imeAllotList.ime')" :label-width="formLabelWidth">
-                <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
+              <el-form-item :label="$t('imeAllotList.ime')">
+                <el-input v-model="formData.ime" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('imeAllotList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('imeAllotList.status')">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('imeAllotList.inputKey')">
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('imeAllotList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('imeAllotList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
             </el-col>
@@ -40,7 +40,7 @@
           <el-button type="primary" @click="search()">{{$t('imeAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column  prop="fromDepotName" column-key="fromDepotId"  :label="$t('imeAllotList.fromDepot')" width="150" sortable></el-table-column>
         <el-table-column prop="toDepotName" column-key="toDepotId" :label="$t('imeAllotList.toDepot')" sortable></el-table-column>
@@ -81,14 +81,13 @@
     data() {
       return {
         pageLoading: false,
-        pageHeight:600,
         page:{},
+        initPromise:{},
         searchText:"",
         formData:{
             extra:{}
         },
         selects:[],
-        formLabelWidth: '120px',
         formVisible: false,
       };
     },
@@ -96,12 +95,12 @@
       setSearchText() {
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
+        });
       },
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("imeAllotList",submitData);
         axios.get('/api/ws/future/crm/imeAllot?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -143,7 +142,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/imeAllot/export',{params:this.submitData}).then((response)=> {
+          axios.get('/api/ws/future/crm/imeAllot/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -172,15 +171,14 @@
       }
 
     },created () {
-
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
+      this.initPromise = axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
-
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

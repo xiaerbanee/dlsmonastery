@@ -95,6 +95,7 @@
             }
             axios.get('/api/ws/future/crm/shopDeposit/getDefaultDepartMent',{params:{shopId:this.inputForm.shopId}}).then((response)=>{
               this.inputForm.departMent=response.data;
+              console.log(this.inputForm.departMent)
             });
         },initPage(){
           axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{

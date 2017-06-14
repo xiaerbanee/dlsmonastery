@@ -31,6 +31,7 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class DutyAnnualService {
     }
 
     public String findSimpleExcelSheet(Workbook workbook) throws IOException {
-        List<Employee> employeeList = employeeRepository.findByStatusAndregularDate("在职", LocalDateTime.now().minusYears(1));
+        List<Employee> employeeList = employeeRepository.findByStatusAndregularDate("在职", LocalDate.now().minusYears(1));
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","用户名"));

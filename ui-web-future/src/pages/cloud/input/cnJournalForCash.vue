@@ -33,6 +33,7 @@
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
+          minSpareRows: 1,
           colHeaders: ["对方科目编码", "借方金额", "贷方金额", "摘要", "对方科目名称", "员工","部门","其他类","费用类"],
           columns: [
             {type: "autocomplete", strict: true, allowEmpty: false, accountNumberFor:[],source: this.accountNumberFor},
@@ -101,16 +102,17 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/cnJournalForCash/form').then((response)=>{
-        this.settings.columns[0].source = response.data.accountNumberForList;
-        this.settings.columns[5].source = response.data.staffNameList;
-        this.settings.columns[6].source = response.data.departmentNameList;
-        this.settings.columns[7].source = response.data.otherTypeNameList;
-        this.settings.columns[8].source = response.data.expenseTypeNameList;
-        var flag = response.data.customerForFlag;
+        let extra = response.data.extra;
+        this.settings.columns[0].source = extra.accountNumberList;
+        this.settings.columns[5].source = extra.staffNameList;
+        this.settings.columns[6].source = extra.departmentNameList;
+        this.settings.columns[7].source = extra.otherTypeNameList;
+        this.settings.columns[8].source = extra.expenseTypeNameList;
+        var flag = extra.customerForFlag;
         if(flag === true){
           this.settings.colHeaders.push("对方关联客户");
           this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});
-          this.settings.columns[9].source = response.data.customerNameForList;
+          this.settings.columns[9].source = extra.customerNameForList;
         }
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
