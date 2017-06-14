@@ -5,6 +5,7 @@ import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.util.cahe.CacheReadUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class OfficeUtil {
             officeDto.setParentId((String) map.get("parentId"));
             officeDto.setParentIds((String) map.get("parentIds"));
             officeDto.setType((String) map.get("type"));
+            officeDto.setPoint(new BigDecimal((double)((List) map.get("point")).get(1)));
             return officeDto;
         } else {
             return null;

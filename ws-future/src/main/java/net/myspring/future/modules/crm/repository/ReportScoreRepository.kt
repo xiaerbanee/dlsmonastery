@@ -84,7 +84,6 @@ class ReportScoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         if(reportScoreQuery.scoreDateEnd != null){
             sb.append("""  AND t1.score_date < :scoreDateEnd """)
         }
-        sb.append("""  order By rank""")
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         var paramMap = BeanPropertySqlParameterSource(reportScoreQuery)
