@@ -321,7 +321,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && netType.equals(product.getNetType())) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netType.equals(product.getNetType())) {
                 //是否允许下单
                 Boolean showNotAllow = true;
                 //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
@@ -398,7 +398,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
+            if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());

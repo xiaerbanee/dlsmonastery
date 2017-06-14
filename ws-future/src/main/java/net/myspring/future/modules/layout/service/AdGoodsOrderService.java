@@ -2,18 +2,17 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.BillTypeEnum;
-import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.domain.Client;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
@@ -24,13 +23,11 @@ import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
-import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
-import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +35,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,6 +45,8 @@ import java.util.List;
 public class AdGoodsOrderService {
     @Autowired
     private AdGoodsOrderRepository adGoodsOrderRepository;
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -116,74 +116,116 @@ public class AdGoodsOrderService {
 //    }
 
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
-        AdGoodsOrder adGoodsOrder;
-        //若是直营门店，则财务门店=下单门店
-        if(adGoodsOrderForm.getShopId()==null){
-            adGoodsOrderForm.setShopId(adGoodsOrderForm.getOutShopId());
-        }
-        adGoodsOrderForm.setBillType(BillTypeEnum.柜台.name());
-        String maxBusinessId  =adGoodsOrderRepository.findMaxBusinessId(LocalDate.now());
-        adGoodsOrderForm.setBussinessId(IdUtils.getNextBusinessId(maxBusinessId));
-        if(adGoodsOrderForm.isCreate()){
-            adGoodsOrder = BeanUtil.map(adGoodsOrderForm,AdGoodsOrder.class);
-            adGoodsOrderRepository.save(adGoodsOrder);
-        }else{
-            adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
-            ReflectionUtil.copyProperties(adGoodsOrderForm,adGoodsOrder);
-            adGoodsOrderRepository.save(adGoodsOrder);
-        }
 
-        //快递信息
-        ExpressOrder expressOrder;
-        ExpressOrderDto expressOrderDto = adGoodsOrderForm.getExpressOrderDto();
-        expressOrderDto.setToDepotId(adGoodsOrder.getShopId());
 
-        if(expressOrderDto.getId()==null){
-            expressOrderDto.setExtendBusinessId(adGoodsOrder.getBusinessId());
-            expressOrderDto.setExtendType(ExpressCompanyTypeEnum.物料订单.name());
-            expressOrderDto.setShipType(ShipTypeEnum.总部发货.name());
-            expressOrderDto.setPrintDate(LocalDate.now());
-            expressOrderDto.setExtendId(adGoodsOrder.getId());
-            expressOrder = BeanUtil.map(expressOrderDto,ExpressOrder.class);
-            expressOrderRepository.save(expressOrder);
-        }else{
-            expressOrder = expressOrderRepository.findOne(expressOrderDto.getId());
-            ReflectionUtil.copyProperties(expressOrderDto,expressOrder);
-            expressOrderRepository.save(expressOrder);
-        }
-        //物料订单详细信息,若是修改，先获取所有的detail>delete,再新增
-        List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtosBefore = adGoodsOrderDetailRepository.findByAdGoodsOrderIds(Arrays.asList(adGoodsOrder.getId()));
-        if(adGoodsOrderDetailDtosBefore!=null){
-            adGoodsOrderDetailRepository.deleteById(adGoodsOrder.getId());
-        }
-        AdGoodsOrderDetail adGoodsOrderDetail;
-        List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtos = adGoodsOrderForm.getAdGoodsOrderDetails();
-        if(adGoodsOrderDetailDtos!=null){
-            for(AdGoodsOrderDetailDto adGoodsOrderDetailDto:adGoodsOrderDetailDtos){
-                    adGoodsOrderDetailDto.setAdGoodsOrderId(adGoodsOrder.getId());
-                    adGoodsOrderDetailDto.setPrice(adGoodsOrderDetailDto.getPrice2());
-                    adGoodsOrderDetail = BeanUtil.map(adGoodsOrderDetailDto,AdGoodsOrderDetail.class);
-                adGoodsOrderDetailRepository.save(adGoodsOrderDetail);
+
+            Depot outShop=depotRepository.findOne(adGoodsOrderForm.getOutShopId());
+            Client client = clientRepository.findByDepotId(outShop.getId());
+            if(StringUtils.isBlank(client.getOutId())){
+                throw new ServiceException(outShop.getName()+" 没有关联财务账号，不能申请");
             }
-        }
-        adGoodsOrder.setExpressOrderId(expressOrder.getId());
 
-        //启动流程
-        if(adGoodsOrder.getId()!=null&&adGoodsOrder.getProcessInstanceId()==null){
-
-            ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货",adGoodsOrder.getId(),AdGoodsOrder.class.getSimpleName(),adGoodsOrder.getOutShopId()));
-            if(activitiStartDto!=null){
-                adGoodsOrder.setProcessFlowId(activitiStartDto.getProcessFlowId());
-                adGoodsOrder.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
-                adGoodsOrder.setProcessStatus(activitiStartDto.getProcessStatus());
-                adGoodsOrder.setProcessTypeId(activitiStartDto.getProcessTypeId());
-                adGoodsOrder.setProcessPositionId(activitiStartDto.getPositionId());
+            AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
+            if(StringUtils.isBlank(adGoodsOrderForm.getShopId())){
+                adGoodsOrder.setShopId(outShop.getId());
+            }else{
+                adGoodsOrder.setShopId(adGoodsOrderForm.getShopId());
             }
-        }
+            adGoodsOrder.setOutShopId(outShop.getId());
+            adGoodsOrder.setBillType(BillTypeEnum.柜台.name());
+            adGoodsOrder.setEmployeeId(adGoodsOrderForm.getEmployeeId());
+            adGoodsOrderRepository.save(adGoodsOrder);
 
+            saveAdGoodsOrderDetailList(adGoodsOrder.getId(), adGoodsOrderForm.getAdGoodsOrderDetailList());
+
+            List<AdGoodsOrderDetailDto> detailList = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrder.getId());
+            BigDecimal amount = BigDecimal.ZERO;
+            for (AdGoodsOrderDetailDto adGoodsOrderDetailDto : detailList) {
+                amount = amount.add(adGoodsOrderDetailDto.getProductPrice2().multiply(new BigDecimal(adGoodsOrderDetailDto.getConfirmQty())));
+            }
+            adGoodsOrder.setAmount(amount);
+
+            ExpressOrder savedExpressOrder = saveExpressOrder(adGoodsOrder, adGoodsOrderForm);
+            adGoodsOrder.setExpressOrderId(savedExpressOrder.getId());
+            adGoodsOrderRepository.save(adGoodsOrder);
+
+
+            if (adGoodsOrderForm.isCreate()) {
+                startAndSaveProcessFlow(adGoodsOrder);
+
+            }
+
+
+
+    }
+
+    private void startAndSaveProcessFlow(AdGoodsOrder adGoodsOrder) {
+
+        ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货",adGoodsOrder.getId(),AdGoodsOrder.class.getSimpleName(),adGoodsOrder.getOutShopId()));
+
+        adGoodsOrder.setProcessFlowId(activitiStartDto.getProcessFlowId());
+        adGoodsOrder.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
+        adGoodsOrder.setProcessStatus(activitiStartDto.getProcessStatus());
+        adGoodsOrder.setProcessTypeId(activitiStartDto.getProcessTypeId());
+        adGoodsOrder.setProcessPositionId(activitiStartDto.getPositionId());
 
         adGoodsOrderRepository.save(adGoodsOrder);
 
+    }
+
+    private ExpressOrder saveExpressOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
+
+        ExpressOrder expressOrder;
+
+        String expressOrderId = adGoodsOrder.getExpressOrderId();
+        if(StringUtils.isBlank(expressOrderId)){
+            expressOrder = new ExpressOrder();
+        }else{
+            expressOrder = expressOrderRepository.findOne(expressOrderId);
+        }
+
+        expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
+        expressOrder.setToDepotId(adGoodsOrder.getShopId());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
+        expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressCompanyId());
+        expressOrder.setShipType(ShipTypeEnum.总部发货.name());
+        expressOrder.setPrintDate(LocalDate.now());
+        expressOrder.setLocked(true);
+        expressOrder.setExtendId(adGoodsOrder.getId());
+
+        expressOrderRepository.save(expressOrder);
+
+        return expressOrder;
+    }
+
+    private void saveAdGoodsOrderDetailList(String adGoodsOrderId, List<AdGoodsOrderDetailDto> adGoodsOrderDetailList) {
+
+        List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
+        for(AdGoodsOrderDetailDto adGoodsOrderDetailDto : adGoodsOrderDetailList){
+            AdGoodsOrderDetail adGoodsOrderDetail;
+
+            if(adGoodsOrderDetailDto.getQty() !=null && adGoodsOrderDetailDto.getQty() < 0){
+                throw new ServiceException("订货数量不可以小于0");
+            }
+
+            if(StringUtils.isBlank(adGoodsOrderDetailDto.getId())){
+                adGoodsOrderDetail = new AdGoodsOrderDetail();
+                adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrderId);
+                adGoodsOrderDetail.setProductId(adGoodsOrderDetailDto.getProductId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailDto.getQty() == null ? 0 : adGoodsOrderDetailDto.getQty());
+                adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
+                adGoodsOrderDetail.setBillQty(0);
+                adGoodsOrderDetail.setShippedQty(0);
+                adGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
+                adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+            }else{
+                adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderDetailDto.getId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailDto.getQty() == null ? 0 : adGoodsOrderDetailDto.getQty());
+                adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
+            }
+            toBeSaved.add(adGoodsOrderDetail);
+        }
+        adGoodsOrderDetailRepository.save(toBeSaved);
     }
 
     public AdGoodsOrderDto findOne(String id) {
@@ -191,9 +233,9 @@ public class AdGoodsOrderService {
         if(id!=null){
             AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
             adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
-            if(adGoodsOrderDto.getExpressOrderId()!=null){
-                adGoodsOrderDto.setExpressOrderDto(expressOrderRepository.findDto(adGoodsOrderDto.getExpressOrderId()));
-            }
+//            if(adGoodsOrderDto.getExpressOrderId()!=null){
+//                adGoodsOrderDto.setExpressOrderDto(expressOrderRepository.findDto(adGoodsOrderDto.getExpressOrderId()));
+//            }
             cacheUtils.initCacheInput(adGoodsOrderDto);
         }
         return adGoodsOrderDto;
@@ -201,40 +243,41 @@ public class AdGoodsOrderService {
 
     public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm){
 
-        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
-        if(!adGoodsOrderForm.isCreate()){
-            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
-            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-        }else{
-           List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForNew(outGroupIds);
-            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-
-        }
-        cacheUtils.initCacheInput(adGoodsOrderForm);
+//        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+//
+//        if(!adGoodsOrderForm.isCreate()){
+//            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
+//            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
+//        }else{
+//           List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForNew(outGroupIds);
+//            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
+//
+//        }
+//        cacheUtils.initCacheInput(adGoodsOrderForm);
         return adGoodsOrderForm;
     }
 
     public void audit(AdGoodsOrderForm adGoodsOrderForm) {
-        if(!adGoodsOrderForm.isCreate()) {
-            ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
-            activitiCompleteForm.setPass(adGoodsOrderForm.getPass());
-            activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
-
-            activitiCompleteForm.setProcessTypeId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
-            activitiCompleteForm.setProcessInstanceId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
-
-            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
-
-            if(activitiCompleteDto!=null){
-                AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
-                adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
-                adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
-                adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-                adGoodsOrderRepository.save(adGoodsOrder);
-            }
-
-        }
+//        if(!adGoodsOrderForm.isCreate()) {
+//            ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+//            activitiCompleteForm.setPass(adGoodsOrderForm.getPass());
+//            activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
+//
+//            activitiCompleteForm.setProcessTypeId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
+//            activitiCompleteForm.setProcessInstanceId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
+//
+//            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+//
+//            if(activitiCompleteDto!=null){
+//                AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
+//                adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
+//                adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
+//                adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+//                adGoodsOrderRepository.save(adGoodsOrder);
+//            }
+//
+//        }
     }
     
 //    public AdGoodsOrder bill(AdGoodsOrder adGoodsOrder) {
@@ -323,6 +366,20 @@ public class AdGoodsOrderService {
 
     public void logicDelete(String id) {
         adGoodsOrderRepository.logicDelete(id);
+    }
+
+    public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+
+        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+
+        List<AdGoodsOrderDetailDto> result;
+        if(StringUtils.isBlank(adGoodsOrderId)){
+            result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIds, includeNotAllowOrderProduct);
+        }else{
+            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIds, includeNotAllowOrderProduct);
+        }
+        cacheUtils.initCacheInput(result);
+        return result;
     }
 
 
