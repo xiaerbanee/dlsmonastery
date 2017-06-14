@@ -91,6 +91,8 @@ public class DepotStoreController {
 
     @RequestMapping(value = "getReportQuery")
     public ReportQuery getReportQuery(ReportQuery reportQuery){
+        reportQuery.getExtra().put("typeList", ReportTypeEnum.getList());
+        reportQuery.getExtra().put("outTypeList", OutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap", BoolEnum.getMap());
         CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
