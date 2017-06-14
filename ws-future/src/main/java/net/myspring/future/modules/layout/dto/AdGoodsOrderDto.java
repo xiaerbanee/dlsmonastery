@@ -1,22 +1,14 @@
 package net.myspring.future.modules.layout.dto;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
-import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
-/**
- * Created by lihx on 2017/4/15.
- */
+
 public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String storeId;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
@@ -27,30 +19,27 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String shopId;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
-    private String officeId;
-    @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
-    private String officeName;
-    private String areaId;
-    @CacheInput(inputKey = "offices", inputInstance = "areaId", outputInstance = "name")
-    private String areaName;
+    private String shopOfficeId;
+    @CacheInput(inputKey = "offices", inputInstance = "shopOfficeId", outputInstance = "name")
+    private String shopOfficeName;
+    private String shopAreaId;
+    @CacheInput(inputKey = "offices", inputInstance = "shopAreaId", outputInstance = "name")
+    private String shopAreaName;
     private BigDecimal amount;
     private String outCode;
     private String billType;
     private LocalDate billDate;
-    private String processInstanceId;
+
     private String processStatus;
     private String businessId;
-    private Boolean splitBill;
-    private Boolean isUrgent;
-    private String expressOrderId;
-    private ExpressOrderDto expressOrderDto;
 
-    private String employeeId;
-    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "name")
-    private String employeeName;
-    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
-    private String employeePhone;
+    private String expressOrderExpressCodes;
     private String processPositionId;
+
+    public String getFormatId(){
+        //TODO 实现getFormatId
+        return getId();
+    }
 
     public String getStoreId() {
         return storeId;
@@ -59,7 +48,6 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     public void setStoreId(String storeId) {
         this.storeId = storeId;
     }
-
 
     public String getStoreName() {
         return storeName;
@@ -101,36 +89,36 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.shopName = shopName;
     }
 
-    public String getOfficeId() {
-        return officeId;
+    public String getShopOfficeId() {
+        return shopOfficeId;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public void setShopOfficeId(String shopOfficeId) {
+        this.shopOfficeId = shopOfficeId;
     }
 
-    public String getOfficeName() {
-        return officeName;
+    public String getShopOfficeName() {
+        return shopOfficeName;
     }
 
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
+    public void setShopOfficeName(String shopOfficeName) {
+        this.shopOfficeName = shopOfficeName;
     }
 
-    public String getAreaId() {
-        return areaId;
+    public String getShopAreaId() {
+        return shopAreaId;
     }
 
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
     }
 
-    public String getAreaName() {
-        return areaName;
+    public String getShopAreaName() {
+        return shopAreaName;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setShopAreaName(String shopAreaName) {
+        this.shopAreaName = shopAreaName;
     }
 
     public BigDecimal getAmount() {
@@ -165,14 +153,6 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.billDate = billDate;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
-
     public String getProcessStatus() {
         return processStatus;
     }
@@ -189,60 +169,12 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.businessId = businessId;
     }
 
-    public Boolean getSplitBill() {
-        return splitBill;
+    public String getExpressOrderExpressCodes() {
+        return expressOrderExpressCodes;
     }
 
-    public void setSplitBill(Boolean splitBill) {
-        this.splitBill = splitBill;
-    }
-
-    public Boolean getUrgent() {
-        return isUrgent;
-    }
-
-    public void setUrgent(Boolean urgent) {
-        isUrgent = urgent;
-    }
-
-    public String getExpressOrderId() {
-        return expressOrderId;
-    }
-
-    public void setExpressOrderId(String expressOrderId) {
-        this.expressOrderId = expressOrderId;
-    }
-
-    public String getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public ExpressOrderDto getExpressOrderDto() {
-        return expressOrderDto;
-    }
-
-    public void setExpressOrderDto(ExpressOrderDto expressOrderDto) {
-        this.expressOrderDto = expressOrderDto;
-    }
-
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-    public String getEmployeePhone() {
-        return employeePhone;
-    }
-
-    public void setEmployeePhone(String employeePhone) {
-        this.employeePhone = employeePhone;
+    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
+        this.expressOrderExpressCodes = expressOrderExpressCodes;
     }
 
     public String getProcessPositionId() {
@@ -253,19 +185,11 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
         this.processPositionId = processPositionId;
     }
 
-    public Boolean getIsAuditable(){
-        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
-            return true;
-        }else {
-            return false;
-        }
+    public Boolean getAuditable(){
+        return RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
     }
 
-    public Boolean getIsEditable(){
-        if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
-            return true;
-        }else {
-            return false;
-        }
+    public Boolean getEditable(){
+        return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
     }
 }
