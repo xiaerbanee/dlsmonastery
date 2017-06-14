@@ -28,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -89,18 +90,16 @@ public class PriceChangeService {
             priceChange.setStatus(PriceChangeStatusEnum.上报中.name());
             priceChangeRepository.save(priceChange);
 
-            List<String> productTypeIdList = priceChangeForm.getProductTypeIdList();
-            for(String productTypeId:productTypeIdList){
-                List<Product> productList = productRepository.findByProductTypeId(productTypeId);
-                List<String> productIdList = CollectionUtil.extractToList(productList,"id");
-                for(String productId:productIdList){
-                    PriceChangeProduct priceChangeProduct = new PriceChangeProduct();
-                    priceChangeProduct.setPriceChangeId(priceChange.getId());
-                    priceChangeProduct.setProductId(productId);
-                    priceChangeProduct.setProductTypeId(productTypeId);
-                    priceChangeProductRepository.save(priceChangeProduct);
-                }
+            List<Product> productList = productRepository.findByProductTypeIds(priceChangeForm.getProductTypeIdList());
+            List<PriceChangeProduct> priceChangeProducts = Lists.newArrayList();
+            for(Product product:productList){
+                PriceChangeProduct priceChangeProduct = new PriceChangeProduct();
+                priceChangeProduct.setPriceChangeId(priceChange.getId());
+                priceChangeProduct.setProductId(product.getId());
+                priceChangeProduct.setProductTypeId(product.getProductTypeId());
+                priceChangeProducts.add(priceChangeProduct);
             }
+            priceChangeProductRepository.save(priceChangeProducts);
         }else{
             priceChange = priceChangeRepository.findOne(priceChangeForm.getId());
             priceChange.setPriceChangeDate(priceChangeForm.getPriceChangeDate());

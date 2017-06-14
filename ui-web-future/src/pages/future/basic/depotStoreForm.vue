@@ -33,7 +33,7 @@
             </el-form-item>
             <el-form-item label="仓库类型" prop="type">
               <el-select v-model="inputForm.type" filterable>
-                <el-option v-for="item in inputForm.depotStoreTypeList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in inputForm.extra.depotStoreTypeList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="是否是广告仓库" prop="depotForm.popShop">
@@ -71,29 +71,10 @@
     methods:{
       getData() {
       return{
-        isInit:false,
-        isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        delegateDepotList:"",
-        inputForm:{depotForm:{}},
-        submitData:{
-          id:'',
-          depotForm:{
-            name:"",
-            popShop:"",
-            code:"",
-            officeId:"",
-            contator:"",
-            delegateDepotI:"",
-            mobilePhone:"",
-            address:"",
-            taxName:"",
-            delegateDepotId:"",
-            districtId:"",
-          },
-          type:"",
-          storeGroup:"",
-          remarks:"",
+        inputForm:{
+          depotForm:{},
+          extra:{}
         },
         rules: {
           "depotForm.name": [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -115,11 +96,13 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
+              if(this.inputForm.isCreate){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+              }else {
+                this.submitDisabled = false;
                 this.$router.push({name:'depotStoreList',query:util.getQuery("depotStoreList")})
               }
             }).catch(function () {
@@ -129,21 +112,19 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage() {
         axios.get('/api/ws/future/basic/depotStore/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        if(!response.data.depotForm){
-          this.inputForm.depotForm={};
-          this,inputForm.depotForm.popShop=0;
-        }else {
-          this.inputForm.depotForm.popShop=this.inputForm.depotForm.popShop?1:0;
-        }
-      });
+          if(!response.data.depotForm){
+            this.inputForm.depotForm={};
+            this,inputForm.depotForm.popShop=0;
+          }else {
+            this.inputForm.depotForm.popShop=this.inputForm.depotForm.popShop?1:0;
+          }
+        });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

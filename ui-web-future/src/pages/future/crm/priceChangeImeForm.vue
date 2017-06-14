@@ -7,7 +7,7 @@
           <el-col :span="10">
         <el-form-item :label="$t('priceChangeImeForm.priceChangeId')" prop="priceChangeId">
           <el-select v-model="inputForm.priceChangeId" filterable   :placeholder="$t('priceChangeImeForm.selectPriceChangeId')" >
-            <el-option v-for="item in formProperty.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.priceChangeDtos" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -30,105 +30,100 @@
       data(){
         return this.getData()
       },
-      methods:{
+      methods: {
         getData() {
-          return{
-            isInit:false,
-            submitDisabled:false,
-            table:null,
+          return {
+            submitDisabled: false,
+            table: null,
             settings: {
-                colHeaders: [this.$t('priceChangeImeForm.shopName'),this.$t('priceChangeImeForm.ime'),this.$t('priceChangeImeForm.remarks')],
-                rowHeaders:true,
-                minSpareRows:500,
-                startRows: 500,
-                maxRows:1000,
-                columns: [{
-                  type: "autocomplete",
-                  allowEmpty: false,
-                  strict: true,
-                  tempShopNames:[],
-                  source:function (query, process) {
-                      var that = this;
-                      if(that.tempShopNames.indexOf(query)>=0) {
-                          process(that.tempShopNames);
-                      } else {
-                        var shopNames = new Array();
-                        if(query.length>=2) {
-                          axios.get('/api/ws/future/basic/depot/shop?name='+query).then((response)=>{
-                              if(response.data.length>0) {
-                                for(var index in response.data) {
-                                  var shopName = response.data[index].name;
-                                  shopNames.push(shopName);
-                                  if(that.tempShopNames.indexOf(shopName)<0) {
-                                    that.tempShopNames.push(shopName);
-                                  }
-                                }
-                              }
-                              process(shopNames);
-                          });
-                        } else {
-                          process(shopNames);
+              colHeaders: [this.$t('priceChangeImeForm.shopName'), this.$t('priceChangeImeForm.ime'), this.$t('priceChangeImeForm.remarks')],
+              rowHeaders: true,
+              minSpareRows: 500,
+              startRows: 500,
+              maxRows: 1000,
+              columns: [{
+                type: "autocomplete",
+                allowEmpty: false,
+                strict: true,
+                tempShopNames: [],
+                source: function (query, process) {
+                  var that = this;
+                  if (that.tempShopNames.indexOf(query) >= 0) {
+                    process(that.tempShopNames);
+                  } else {
+                    var shopNames = new Array();
+                    if (query.length >= 2) {
+                      axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                        if (response.data.length > 0) {
+                          for (var index in response.data) {
+                            var shopName = response.data[index].name;
+                            shopNames.push(shopName);
+                            if (that.tempShopNames.indexOf(shopName) < 0) {
+                              that.tempShopNames.push(shopName);
+                            }
+                          }
                         }
-                      }
-                  },
-                  width:300
-                },{
-                  strict:true,
-                  width:200
-                },{
-                  width:200
+                        process(shopNames);
+                      });
+                    } else {
+                      process(shopNames);
+                    }
+                  }
+                },
+                width: 300
+              }, {
+                strict: true,
+                width: 200
+              }, {
+                width: 200
               }]
             },
-            inputForm:{
-              imeUploadList:[[]],
-              priceChangeId:''
+            inputForm: {
+              extra:{}
             },
-            formProperty:{},
-            remoteLoading:false,
+            remoteLoading: false,
             rules: {
-              name: [{ required: true, message: '名称不能为空'}]
+              name: [{required: true, message: '名称不能为空'}]
             }
           }
-      },
-      mounted () {
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
-      },
+        },
+        mounted () {
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+        },
         formSubmit(){
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-                this.inputForm.imeUploadList=new Array();
-                let list=this.table.getData()
-                for(var item in list){
-                  if(!this.table.isEmptyRow(item)){
-                    this.inputForm.imeUploadList.push(list[item]);
-                  }
+              this.inputForm.imeUploadList = new Array();
+              let list = this.table.getData()
+              for (var item in list) {
+                if (!this.table.isEmptyRow(item)) {
+                  this.inputForm.imeUploadList.push(list[item]);
                 }
-                axios.post('/api/ws/future/crm/priceChangeIme/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
-                  this.$message(response.data.message);
-                  this.submitDisabled = false;
-                if(response.data.success){
+              }
+              axios.post('/api/ws/future/crm/priceChangeIme/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+                this.$message(response.data.message);
+                this.submitDisabled = false;
+                if (response.data.success) {
                   Object.assign(this.$data, this.getData());
                 }
-                }).catch(function () {
-                  that.submitDisabled = false;
-                });
-            }else{
+              }).catch(function () {
+                that.submitDisabled = false;
+              });
+            } else {
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
-          axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
-            this.formProperty=response.data;
+        }, initPage(){
+          axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response) => {
+            this.inputForm = response.data;
+            this.table = new Handsontable(this.$refs["handsontable"], this.settings)
           });
         }
-        this.isInit = true;
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      }, created () {
+        this.initPage();
       }
     }
 </script>

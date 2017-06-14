@@ -38,7 +38,6 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         submitDisabled:false,
         table:null,
         settings: {
@@ -111,11 +110,7 @@
           }
           this.table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
-      }
-    },activated () {
-
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
 
         this.tableInit();
 
@@ -123,7 +118,8 @@
           this.formProperty=response.data;
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

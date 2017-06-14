@@ -25,57 +25,57 @@
   </div>
 </template>
 <script>
-    export default{
-      data(){
+    export default {
+      data() {
         return this.getData()
       },
-      methods:{
+      methods: {
         getData() {
-          return{
-            isInit:false,
-            isCreate:this.$route.query.id==null,
-            submitDisabled:false,
-            inputForm:{
-                extra:{}
+          return {
+            isCreate: this.$route.query.id == null,
+            submitDisabled: false,
+            inputForm: {
+              extra: {}
             },
             rules: {
-              category: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-              name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-              value: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+              category: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+              name: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+              value: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
             }
           }
         },
-        formSubmit(){
+        formSubmit() {
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/basic/sys/dictMap/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+              axios.post('/api/basic/sys/dictMap/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
-                  this.$router.push({name:'dictMapList',query:util.getQuery("dictMapList")})
+                if (this.isCreate) {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                } else {
+                  this.submitDisabled = false;
+                  this.$router.push({name: 'dictMapList', query: util.getQuery("dictMapList")});
                 }
               }).catch(function () {
                 that.submitDisabled = false;
               });
-            }else{
+            } else {
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/dictMap/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        }, initPage() {
+          axios.get('/api/basic/sys/dictMap/getForm', {params: {id: this.$route.query.id}}).then((response) => {
             this.inputForm = response.data;
-            axios.get('/api/basic/sys/dictMap/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm)
+            axios.get('/api/basic/sys/dictMap/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm)
             })
           })
         }
-        this.isInit = true;
+      }, created() {
+          this.initPage();
+        }
       }
-    }
 </script>

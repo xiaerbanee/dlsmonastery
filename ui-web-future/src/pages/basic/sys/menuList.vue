@@ -11,14 +11,9 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('menuList.menuCategoryId')" :label-width="formLabelWidth">
-                <el-select v-model="formData.menuCategoryId" filterable clearable>
-                  <el-option v-for="item in formData.extra.menuCategoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('menuList.category')" :label-width="formLabelWidth">
-                <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formData.extra.categoryList"  :key="category" :label="category" :value="category"></el-option>
+                <el-select v-model="formData.menuCategoryId" filterable clearable :placeholder="$t('menuList.inputKey')">
+                  <el-option v-for="item in formData.extra.menuCategoryList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('menuList.name')" :label-width="formLabelWidth">
@@ -75,6 +70,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
       };
@@ -122,11 +118,14 @@
     },created () {
       var that = this;
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/menu/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/basic/sys/menu/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.pageRequest();
       });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>

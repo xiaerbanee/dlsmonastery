@@ -102,11 +102,6 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
                     AND t1.name LIKE CONCAT('%',:name,'%')
                 """);
         }
-        if(menuQuery.category!=null){
-            sql.append("""
-                    AND t1.category =:category
-                """);
-        }
         if(menuQuery.menuCategoryId!=null){
             sql.append("""
                     AND t1.menu_category_id =:menuCategoryId
