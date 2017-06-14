@@ -2,7 +2,7 @@
   <div>
     <head-tab active="goodsOrderBill"></head-tab>
     <div>
-      <el-form :model="submitData" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
@@ -113,21 +113,12 @@
         submitDisabled:false,
         filterValue:"",
         filterDetailList:[],
-        inputForm:{},
+        goodsOrderDetailList:[],
+        inputForm:{
+          extra:{}
+        },
         shop:{},
         shouldGet:null,
-        submitData:{
-          id:'',
-          storeId:"",
-          billDate: '',
-          expressCompanyId:"",
-          syn:'',
-          contator:"",
-          address:"",
-          mobilePhone:"",
-          remarks:"",
-          goodsOrderBillDetailFormList:[]
-        },
         summary:"",
         rules: {},
         pageLoading:false
@@ -140,7 +131,7 @@
 
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
+            var submitData = util.deleteExtra(this.inputForm);
             var  goodsOrderBillDetailFormList = new Array();
             for(var index in this.filterDetailList) {
               var filterDetail = this.filterDetailList[index];
@@ -148,15 +139,11 @@
                 goodsOrderBillDetailFormList.push(filterDetail);
               }
             }
-            this.submitData.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
-            axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            submitData.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
+            axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
-              if(this.isCreate){
-                form.resetFields();
-              } else {
-                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-              }
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
             }).catch(function () {
               this.submitDisabled = false;
             });
@@ -168,16 +155,16 @@
       },filterProducts(){
         let val=this.filterValue;
         if(util.isBlank(val)) {
-          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
+          this.filterDetailList = this.goodsOrderDetailList;
           return;
         }
         let tempList=[];
-        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+        for(let detail of this.goodsOrderDetailList){
           if(util.isNotBlank(detail.billQty)){
             tempList.push(detail);
           }
         }
-        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+        for(let detail of this.goodsOrderDetailList){
           if(util.contains(detail.productName, val) && util.isBlank(detail.billQty)){
             tempList.push(detail);
           }
@@ -206,10 +193,14 @@
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
-        this.filterProducts();
-        this.initSummary();
-        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-          this.shop = response.data;
+        axios.get('/api/ws/future/crm/goodsOrder/getBill',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+          this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
+          this.filterProducts();
+          this.initSummary();
+          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+            this.shop = response.data;
+          });
         });
       });
     }
