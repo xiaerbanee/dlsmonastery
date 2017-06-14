@@ -398,7 +398,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
+            if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());

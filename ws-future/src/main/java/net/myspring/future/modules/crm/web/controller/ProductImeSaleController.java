@@ -115,4 +115,8 @@ public class ProductImeSaleController {
         return productImeSaleService.export(productImeSaleQuery);
     }
 
+    @RequestMapping(value="getForm")
+    public  ProductImeSaleForm getForm(ProductImeSaleForm productImeSaleForm) {
+        return productImeSaleForm;
+    }
 }

@@ -18,11 +18,6 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item label="汇总" :label-width="formLabelWidth">
-                <el-select v-model="formData.sumType" clearable filterable placeholder="请选择">
-                  <el-option v-for="item in formData.extra.sumTypeList" :key="item" :label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item label="类型" :label-width="formLabelWidth">
                 <el-select v-model="formData.type" clearable filterable placeholder="请选择">
                   <el-option v-for="item in formData.extra.typeList" :key="item" :label="item" :value="item"></el-option>
@@ -41,9 +36,6 @@
                   <el-option v-for="(key,value) in formData.extra.boolMap" :key="key" :label="value | bool2str" :value="key"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="货品" :label-width="formLabelWidth">
-                <product-type-select v-model="formData.productTypeIdList"></product-type-select>
-              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -51,13 +43,21 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange"  stripe border>
-        <el-table-column fixed prop="depotName" label="门店" sortable width="300"></el-table-column>
+      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="storeDetail" stripe border>
+        <el-table-column fixed prop="depotName" label="仓库" sortable width="300"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
-        <el-table-column prop="percent" label="占比(%)"></el-table-column>
+        <el-table-column prop="percentage" label="占比(%)"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
-
+    </div>
+    <div>
+      <el-dialog title="详细" :visible.sync="detailVisible">
+        <div style="width:100%;height:50px;text-align:center;font-size:20px">货品详情</div>
+        <el-table :data="productQtyMap">
+          <el-table-column property="productName" label="货品" width="400"></el-table-column>
+          <el-table-column property="qty" label="串码" ></el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -77,7 +77,9 @@
         },
         formLabelWidth: '120px',
         formVisible: false,
+        detailVisible:false,
         pageLoading: false,
+        productQtyMap:[],
         officeIds:[],
       };
     },
@@ -92,7 +94,7 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("storeInventoryReport",this.formData);
-        axios.get('/api/ws/future/basic/depotStore/depotReportDate?'+qs.stringify(submitData)).then((response) => {
+        axios.get('/api/ws/future/basic/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -107,6 +109,20 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },storeDetail(row, event, column){
+        this.detailVisible=true;
+        this.formData.isDetail=true;
+        this.formData.depotId=row.depotId;
+        axios.post('/api/ws/future/basic/depotStore/storeReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
+          let productList=response.data;
+          let productDetail=[];
+          if(productList){
+            for(let key in productList){
+              productDetail.push({productName:key,qty:productList[key]})
+            }
+            this.productQtyMap=productDetail;
+          }
+        })
       },exportData(command) {
       }
     },created () {
