@@ -91,7 +91,9 @@ public class DepotStoreService {
         Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
         for(DepotStoreDto depotStore:depotStoreList){
             DepotReportDto depotReportDto=map.get(depotStore.getDepotId());
-            depotStore.setQty(depotReportDto.getQty());
+            if(depotReportDto!=null){
+                depotStore.setQty(depotReportDto.getQty());
+            }
         }
         setPercentage(depotStoreList);
         return depotStoreList;
@@ -102,7 +104,7 @@ public class DepotStoreService {
         List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
         if(CollectionUtil.isNotEmpty(depotReportList)){
             for(DepotReportDto depotReport:depotReportList){
-                String key=depotReport.getProductTypeName();
+                String key=depotReport.getProductName();
                 if(!map.containsKey(key)){
                     map.put(key,0);
                 }
