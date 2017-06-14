@@ -2,39 +2,42 @@
   <div>
     <head-tab active="productImeUploadForm"></head-tab>
     <div>
-      <el-form :model="productImeUpload" ref="inputForm" label-width="120px" class="form input-form">
-        <el-row >
+      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
+        <el-row>
           <el-col :span="21">
             <el-form-item>
-              <su-alert :text="errMsg" type="danger"> </su-alert>
+              <su-alert :text="errMsg" type="danger"></su-alert>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeUploadForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeUploadForm.inputIme')"  ></el-input>
+              <el-input type="textarea" :rows="6" v-model="imeStr"
+                        :placeholder="$t('productImeUploadForm.inputIme')"></el-input>
             </el-form-item>
-            <el-form-item >
-              <el-button  type="primary" @click.native="onImeStrChange">{{$t('productImeUploadForm.search')}}</el-button>
-              <el-button  type="primary" @click.native="reset">{{$t('productImeUploadForm.reset')}}</el-button>
+            <el-form-item>
+              <el-button type="primary" @click.native="onImeStrChange">{{$t('productImeUploadForm.search')}}</el-button>
+              <el-button type="primary" @click.native="reset">{{$t('productImeUploadForm.reset')}}</el-button>
 
             </el-form-item>
             <div v-if="searched">
               <el-form-item :label="$t('productImeUploadForm.month')" prop="month">
-                <month-picker  v-model="productImeUpload.month"></month-picker>
+                <month-picker v-model="inputForm.month"></month-picker>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadForm.shopId')" prop="shopId">
-                <depot-select v-model="productImeUpload.shopId"  category="shop"></depot-select>
+                <depot-select v-model="inputForm.shopId" category="shop"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadForm.saleEmployee')" prop="employeeId">
-                <employee-select v-model="productImeUpload.employeeId" ></employee-select>
+                <employee-select v-model="inputForm.employeeId"></employee-select>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadForm.remarks')" prop="remarks">
-                <el-input type="textarea" v-model="productImeUpload.remarks"></el-input>
+                <el-input type="textarea" v-model="inputForm.remarks"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('productImeUploadForm.save')}}</el-button>
+                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">
+                  {{$t('productImeUploadForm.save')}}
+                </el-button>
               </el-form-item>
             </div>
 
@@ -51,14 +54,22 @@
                 <el-table-column prop="ime" :label="$t('productImeUploadForm.ime')"></el-table-column>
                 <el-table-column prop="productName" :label="$t('productImeUploadForm.productName')"></el-table-column>
                 <el-table-column prop="retailDate" :label="$t('productImeUploadForm.retailDate')"></el-table-column>
-                <el-table-column prop="productImeSaleEmployeeName" :label="$t('productImeUploadForm.saleCreatedFullName')"></el-table-column>
-                <el-table-column prop="productImeSaleCreatedDate" :label="$t('productImeUploadForm.saleCreatedDate')"></el-table-column>
-                <el-table-column prop="productImeSaleShopName" :label="$t('productImeUploadForm.saleShopName')"></el-table-column>
-                <el-table-column prop="productImeUploadCreatedByName" :label="$t('productImeUploadForm.updateDate')"></el-table-column>
-                <el-table-column prop="productImeUploadCreatedDate" :label="$t('productImeUploadForm.updateDate')"></el-table-column>
-                <el-table-column prop="productImeUploadStatus" :label="$t('productImeUploadForm.productImeUploadStatus')"></el-table-column>
-                <el-table-column prop="productImeUploadShopName" :label="$t('productImeUploadForm.uploadShopName')"></el-table-column>
-                <el-table-column prop="productImeUploadEmployeeName" :label="$t('productImeUploadForm.saleEmployee')"></el-table-column>
+                <el-table-column prop="productImeSaleEmployeeName"
+                                 :label="$t('productImeUploadForm.saleCreatedFullName')"></el-table-column>
+                <el-table-column prop="productImeSaleCreatedDate"
+                                 :label="$t('productImeUploadForm.saleCreatedDate')"></el-table-column>
+                <el-table-column prop="productImeSaleShopName"
+                                 :label="$t('productImeUploadForm.saleShopName')"></el-table-column>
+                <el-table-column prop="productImeUploadCreatedByName"
+                                 :label="$t('productImeUploadForm.updateDate')"></el-table-column>
+                <el-table-column prop="productImeUploadCreatedDate"
+                                 :label="$t('productImeUploadForm.updateDate')"></el-table-column>
+                <el-table-column prop="productImeUploadStatus"
+                                 :label="$t('productImeUploadForm.productImeUploadStatus')"></el-table-column>
+                <el-table-column prop="productImeUploadShopName"
+                                 :label="$t('productImeUploadForm.uploadShopName')"></el-table-column>
+                <el-table-column prop="productImeUploadEmployeeName"
+                                 :label="$t('productImeUploadForm.saleEmployee')"></el-table-column>
               </el-table>
             </template>
           </el-col>
@@ -68,7 +79,9 @@
   </div>
 </template>
 <style>
-  .el-table { margin-bottom: 50px;}
+  .el-table {
+    margin-bottom: 50px;
+  }
 </style>
 <script>
 
@@ -88,22 +101,14 @@
     methods: {
       getData() {
         return {
-          isInit: false,
           searched: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
           productImeList: [],
-          productImeUpload: {},
+          inputForm: {},
           imeStr: '',
           errMsg: '',
           productQtyList: [],
-          submitData: {
-            imeStr: '',
-            shopId: '',
-            month: "",
-            employeeId: "",
-            remarks: ''
-          },
           rules: {
             imeStr: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
             shopId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
@@ -115,36 +120,41 @@
       formSubmit(){
 
         if (this.errMsg) {
-          this.$alert( this.$t('productImeUploadForm.formInvalid'), this.$t('productImeUploadForm.notify'));
+          this.$alert(this.$t('productImeUploadForm.formInvalid'), this.$t('productImeUploadForm.notify'));
           return;
         }
 
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.submitDisabled = true;
-            util.copyValue(this.productImeUpload, this.submitData);
             this.submitData.imeStr = this.imeStr;
             axios.post('/api/ws/future/crm/productImeUpload/upload', qs.stringify(this.submitData)).then((response) => {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              if (response.data.success) {
-                if (!this.isCreate) {
-                  this.$router.push({name: 'productImeUploadList', query: util.getQuery("productImeUploadList")})
-                }
+            if (response.data.success) {
+              if (!this.inputForm.create) {
+                this.submitDisabled = false;
+                this.$router.push({name: 'productImeUploadList', query: util.getQuery("productImeUploadList")})
+              } else {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
-            }).catch(() => {
+            }
+          }).
+            catch(() => {
               this.submitDisabled = false;
-            });
+          });
           }
-        });
+        }
+      );
       }, onImeStrChange(){
-          this.searched = true;
-        axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.imeStr}}).then((response) => {
+        this.searched = true;
+        axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.imeStr}}).then((response) =>
+        {
           this.errMsg = response.data;
-        });
-
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) => {
+        }
+      );
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) =>
+        {
           this.productImeList = response.data;
 
           let tmpMap = new Map();
@@ -161,23 +171,22 @@
             tmpList.push(tmpMap.get(key));
           }
           this.productQtyList = tmpList;
-        });
-      },reset(){
+        }
+      );
+      }, reset(){
         this.searched = false;
         this.imeStr = '';
-        this.errMsg='';
-        this.productImeList=[];
+        this.errMsg = '';
+        this.productImeList = [];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
-      }
-    }, activated () {
-      if (!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      }, initPage(){
         axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response) => {
-          this.productImeUpload = response.data;
-        });
+          this.inputForm = response.data;
+      })
       }
-      this.isInit = true;
+    }, created () {
+      this.initPage();
     }
   }
 </script>
