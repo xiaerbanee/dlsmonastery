@@ -11,7 +11,6 @@ import java.util.List;
 
 public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String storeId;
-    private String shopId;
     private LocalDate billDate;
     private String expressCompanyId;
     private Boolean syn;
@@ -19,8 +18,8 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
     private String contator;
     private String address;
     private String mobilePhone;
-    private String shipType;
-    private String netType;
+
+    private String remarks;
 
     private List<GoodsOrderBillDetailForm> goodsOrderBillDetailFormList = Lists.newArrayList();
 
@@ -30,14 +29,6 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
-    }
-
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
     }
 
     public LocalDate getBillDate() {
@@ -88,20 +79,14 @@ public class GoodsOrderBillForm extends BaseForm<GoodsOrder> {
         this.mobilePhone = mobilePhone;
     }
 
-    public String getShipType() {
-        return shipType;
+    @Override
+    public String getRemarks() {
+        return remarks;
     }
 
-    public void setShipType(String shipType) {
-        this.shipType = shipType;
-    }
-
-    public String getNetType() {
-        return netType;
-    }
-
-    public void setNetType(String netType) {
-        this.netType = netType;
+    @Override
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public List<GoodsOrderBillDetailForm> getGoodsOrderBillDetailFormList() {

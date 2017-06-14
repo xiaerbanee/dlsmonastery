@@ -222,7 +222,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(RequestUtils.getCompanyId(),LocalDate.now()));
+        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(RequestUtils.getCompanyId(),goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数
