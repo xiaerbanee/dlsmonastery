@@ -88,7 +88,6 @@
     methods:{
       getData() {
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           pageLoading:false,
@@ -123,9 +122,12 @@
             this.submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-            if(!this.isCreate){
+            if(!this.inputForm.create){
+              this.submitDisabled = false;
               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+            }else{
+              Object.assign(this.$data, this.getData());
+              this.initPage();
             }
           }).catch(function () {
               that.submitDisabled = false;
@@ -183,29 +185,27 @@
           }
         }
         this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-        if(!this.isCreate) {
-          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-            this.shop = response.data;
+          axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(!this.isCreate) {
+              axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+                this.shop = response.data;
+              });
+            }
+          });
         });
-        }
-      });
-      });
         if(!this.isCreate){
           axios.get('/api/ws/future/crm/goodsOrder/findGoodsOrderDetailFormList',{params: {id:this.$route.query.id}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
-          this.initSummary();
-        });
+            this.initSummary();
+          });
         }
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>
