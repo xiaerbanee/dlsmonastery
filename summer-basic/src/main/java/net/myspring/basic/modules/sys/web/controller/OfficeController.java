@@ -153,11 +153,20 @@ public class OfficeController {
         return officeIds;
     }
 
-    @RequestMapping(value = "getChildOfficeMap")
-    public Map<String,List<String>> getNextLevelOfficeMap(String officeId){
+    @RequestMapping(value = "getLastRuleMapByOfficeId")
+    public Map<String,List<String>> getLastRuleMapByOfficeId(String officeId){
         Map<String,List<String>> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(officeId)){
-            map = officeService.getChildOfficeMap(officeId);
+            map = officeService.getLastRuleMapByOfficeId(officeId);
+        }
+        return map;
+    }
+
+    @RequestMapping(value = "getLastRuleMapByOfficeRuleName")
+    public Map<String,List<String>> getLastRuleMapByOfficeRuleName(String officeRuleName){
+        Map<String,List<String>> map= Maps.newHashMap();
+        if(StringUtils.isNotBlank(officeRuleName)){
+            map = officeService.getLastRuleMapByOfficeRuleName(officeRuleName);
         }
         return map;
     }

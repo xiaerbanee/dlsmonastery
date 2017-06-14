@@ -21,17 +21,17 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findByOfficeRuleName")
     List<OfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/getLastRuleMapByOfficeRuleName")
+    Map<String,List<String>> getLastRuleMapByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
+
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getSameAreaByOfficeId")
     List<String> getSameAreaByOfficeId(@RequestParam(value = "officeId") String officeId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeIds")
     List<String> getChildOfficeIds(@RequestParam(value = "officeId") String officeId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/checkLastLevel")
-    boolean checkLastLevel(@RequestParam(value = "officeId") String officeId);
-
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getChildOfficeMap")
-    Map<String,List<String>> getChildOfficeMap(@RequestParam(value = "officeId") String officeId);
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getLastRuleMapByOfficeId")
+    Map<String,List<String>> getLastRuleMapByOfficeId(@RequestParam(value = "officeId") String officeId);
 
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findById")
     List<OfficeDto> findById(@RequestParam(value = "id")String id);
