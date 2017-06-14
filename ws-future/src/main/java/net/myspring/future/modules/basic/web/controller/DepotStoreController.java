@@ -57,7 +57,7 @@ public class DepotStoreController {
     @RequestMapping(value = "getForm")
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm){
         depotStoreForm=depotStoreService.getForm(depotStoreForm);
-        depotStoreForm.setDepotStoreTypeList(DepotStoreTypeEnum.getList());
+        depotStoreForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
         return depotStoreForm;
     }
 
