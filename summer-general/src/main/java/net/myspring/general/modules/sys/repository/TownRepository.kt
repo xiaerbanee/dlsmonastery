@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 interface TownRepository : BaseRepository<Town, String> {
 
 
-    fun findTop20ByTownNameLike(townName: String): MutableList<Town>
+    fun findTop20ByTownNameContaining(townName: String): MutableList<Town>
 
 
 }
