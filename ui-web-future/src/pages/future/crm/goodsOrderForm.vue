@@ -114,7 +114,7 @@
             var  goodsOrderDetailFormList = new Array();
             for(var index in this.filterDetailList) {
               var filterDetail = this.filterDetailList[index];
-              if(util.isNotBlank(filterDetail.goodsOrderDetailId) || util.isNotBlank(filterDetail.qty)) {
+              if(util.isNotBlank(filterDetail.id) || util.isNotBlank(filterDetail.qty)) {
                 goodsOrderDetailFormList.push(filterDetail);
               }
             }
