@@ -11,14 +11,9 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('menuList.menuCategoryId')" :label-width="formLabelWidth">
-                <el-select v-model="formData.menuCategoryId" filterable clearable>
-                  <el-option v-for="item in formData.extra.menuCategoryList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('menuList.category')" :label-width="formLabelWidth">
-                <el-select v-model="formData.category" filterable clearable :placeholder="$t('menuList.inputKey')">
-                  <el-option v-for="category in formData.extra.categoryList"  :key="category" :label="category" :value="category"></el-option>
+                <el-select v-model="formData.menuCategoryId" filterable clearable :placeholder="$t('menuList.inputKey')">
+                  <el-option v-for="item in formData.extra.menuCategoryList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('menuList.name')" :label-width="formLabelWidth">

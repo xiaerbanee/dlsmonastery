@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.DepotChange;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -12,13 +13,22 @@ import java.time.LocalDate;
 public class DepotChangeDto extends DataDto<DepotChange>{
     private String type;
     private LocalDate expiryDate;
-    private String oldLabel;
-    private String newLabel;
+    private String oldValue;
+    private String newValue;
     private String depotId;
     @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
     private String depotName;
     private String processInstanceId;
     private String processStatus;
+    private String processPositionId;
+
+    public String getProcessPositionId() {
+        return processPositionId;
+    }
+
+    public void setProcessPositionId(String processPositionId) {
+        this.processPositionId = processPositionId;
+    }
 
     public String getType() {
         return type;
@@ -36,20 +46,20 @@ public class DepotChangeDto extends DataDto<DepotChange>{
         this.expiryDate = expiryDate;
     }
 
-    public String getOldLabel() {
-        return oldLabel;
+    public String getOldValue() {
+        return oldValue;
     }
 
-    public void setOldLabel(String oldLabel) {
-        this.oldLabel = oldLabel;
+    public void setOldValue(String oldValue) {
+        this.oldValue = oldValue;
     }
 
-    public String getNewLabel() {
-        return newLabel;
+    public String getNewValue() {
+        return newValue;
     }
 
-    public void setNewLabel(String newLabel) {
-        this.newLabel = newLabel;
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
     }
 
     public String getDepotId() {
@@ -82,5 +92,21 @@ public class DepotChangeDto extends DataDto<DepotChange>{
 
     public void setProcessStatus(String processStatus) {
         this.processStatus = processStatus;
+    }
+
+    public Boolean getIsAuditable(){
+        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public Boolean getIsEditable(){
+        if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

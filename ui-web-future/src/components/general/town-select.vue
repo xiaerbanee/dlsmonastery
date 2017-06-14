@@ -16,8 +16,8 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(!query) {
-            return;
+        if(util.isBlank(query)) {
+          return;
         }
         this.remoteLoading = true;
         axios.get('/api/general/sys/town/search',{params:{name:query}}).then((response)=>{
@@ -37,7 +37,6 @@
             return;
           }
           this.remoteLoading = true;
-          console.log(">>>>>>>"+this.innerId)
           axios.get('/api/general/sys/town/findOne?id=' + this.innerId).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;

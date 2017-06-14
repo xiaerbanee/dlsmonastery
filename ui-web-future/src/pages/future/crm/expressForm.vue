@@ -40,7 +40,6 @@
     methods:{
       getData() {
           return{
-            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
@@ -59,10 +58,13 @@
               util.copyValue(this.express,this.submitData);
               axios.post('/api/ws/future/crm/express/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
                 if(response.data.success) {
                   if (!this.inputForm.create) {
+                    this.submitDisabled = false;
                     this.$router.push({name: 'expressList', query: util.getQuery("expressList")});
+                  }else{
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
                   }
                 }
               }).catch( () => {
@@ -70,18 +72,16 @@
               });
             }
           })
-        }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/express/findDto').then((response)=> {
+        },initPage(){
+        axios.get('/api/ws/future/crm/express/getForm').then((response)=> {
           this.inputForm = response.data;
           axios.get('/api/ws/future/crm/express/findDto', {params: {id: this.$route.query.id}}).then((response) => {
             util.copyValue(response.data,this.inputForm);``
           });
         });
         }
-      this.isInit = true;
-      }
+      },created () {
+      this.initPage();
+    }
     }
 </script>
