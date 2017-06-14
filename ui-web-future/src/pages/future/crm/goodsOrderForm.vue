@@ -122,13 +122,13 @@
             submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.inputForm.create){
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }else{
-                this.submitDisabled = false;
-                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
-              }
+            if(this.inputForm.create){
+              Object.assign(this.$data, this.getData());
+              this.initPage();
+            }else{
+              this.submitDisabled = false;
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+            }
           }).catch(function () {
               that.submitDisabled = false;
             });
@@ -165,8 +165,8 @@
             this.pageLoading = true;
             axios.get('/api/ws/future/crm/goodsOrder/findDetailList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
               this.setGoodsOrderDetailList(response.data);
-              this.pageLoading = false;
-            });
+            this.pageLoading = false;
+          });
           }else{
             this.setGoodsOrderDetailList([]);
           }
@@ -188,20 +188,20 @@
       },initPage(){
         axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(!this.isCreate) {
-              axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-                this.shop = response.data;
-              });
-            }
-          });
+        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          util.copyValue(response.data,this.inputForm);
+        if(!this.isCreate) {
+          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+            this.shop = response.data;
         });
+        }
+      });
+      });
         if(!this.isCreate){
           axios.get('/api/ws/future/crm/goodsOrder/findDetailList',{params: {id:this.$route.query.id}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
-            this.initSummary();
-          });
+          this.initSummary();
+        });
         }
       }
     },created () {

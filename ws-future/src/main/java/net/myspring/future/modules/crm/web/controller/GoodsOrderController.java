@@ -82,10 +82,11 @@ public class GoodsOrderController {
     @RequestMapping(value = "getBillForm")
     public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){
         //设置仓库
+        GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());
         DepotQuery depotQuery = new DepotQuery();
-        depotQuery.setShipType(goodsOrderBillForm.getShipType());
-        goodsOrderBillForm.setStoreList(depotService.findStoreList(depotQuery));
-        goodsOrderBillForm.setExpressCompanyList(expressCompanyService.findAll());
+        depotQuery.setShipType(goodsOrderDto.getShipType());
+        goodsOrderBillForm.getExtra().put("storeList",depotService.findStoreList(depotQuery));
+        goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
         return goodsOrderBillForm;
     }
 
