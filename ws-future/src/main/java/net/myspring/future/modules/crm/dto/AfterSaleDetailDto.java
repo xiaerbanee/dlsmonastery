@@ -1,8 +1,5 @@
 package net.myspring.future.modules.crm.dto;
 
-import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.crm.domain.AfterSaleDetail;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -24,6 +21,15 @@ public class AfterSaleDetailDto{
     private String toDepotName;
     private String replaceProductIme;
     private String replaceProductName;
+    private String remarks;
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
     public String getType() {
         return type;
