@@ -6,12 +6,11 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
-import net.myspring.cloud.modules.input.web.form.BatchBillForm;
+import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
@@ -76,11 +75,11 @@ public class SalOutStockService {
     }
 
 
-    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm,KingdeeBook kingdeeBook,AccountKingdeeBook accountKingdeeBook) {
+    public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        String storeNumber = batchBillForm.getStoreNumber();
-        LocalDate date = batchBillForm.getBillDate();
-        String json = HtmlUtils.htmlUnescape(batchBillForm.getJson());
+        String storeNumber = salStockForm.getStoreNumber();
+        LocalDate date = salStockForm.getBillDate();
+        String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();
         for (List<Object> row : data){

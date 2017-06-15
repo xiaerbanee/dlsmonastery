@@ -102,7 +102,7 @@
         this.pageRequest();
       }, itemAction: function (id, action) {
         if(action==="detail") {
-          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.submitData.dateRange}});
+          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}});
         }
       }, exportAllDepots() {
 
