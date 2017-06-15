@@ -97,7 +97,7 @@
           this.productImes = [];
         }
       },initPage(){
-        axios.get('/api/ws/future/crm/demoPhone/findOne').then((response)=>{
+        axios.get('/api/ws/future/crm/demoPhone/getForm').then((response)=>{
           this.inputForm = response.data;
         axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=> {
           util.copyValue(response.data, this.inputForm);

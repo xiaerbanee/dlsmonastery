@@ -33,12 +33,12 @@
         </el-form-item>
         <el-form-item label="价格体系" prop="pricesystemId">
           <el-select v-model="inputForm.pricesystemId" filterable>
-            <el-option v-for="item in inputForm.pricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.pricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="连锁体系" prop="chainId">
           <el-select v-model="inputForm.chainId" filterable>
-            <el-option v-for="item in inputForm.chainList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.chainList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="额度" prop="credit">
@@ -48,7 +48,7 @@
           <el-col :span="8">
         <el-form-item label="物料价格体系" prop="adPricesystemId">
           <el-select v-model="inputForm.adPricesystemId" filterable>
-            <el-option v-for="item in inputForm.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option v-for="item in inputForm.extra.adPricesystemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="快递公司" prop="expressCompanyId">
@@ -100,41 +100,11 @@
     methods:{
       getData() {
       return{
-        isInit:false,
-        isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        inputForm:{},
-        adPricesystemList:[],
-        remoteLoading:false,
-        clientList:[],
-        chainList:[],
-        pricesystemList:[],
-        submitData:{
-          id:'',
-          districtId:"",
-          clientId:"",
-          code:"",
-          depotShopId:"",
-          name:"",
-          officeId:"",
-          contator:"",
-          mobilePhone:"",
-          address:"",
-          districtId:"",
-          pricesystemId:"",
-          credit:"",
-          chainId:"",
-          adPricesystemId:"",
-          expressCompanyId:"",
-          printPrice:false,
-          printType:"",
-          rebate:false,
-          taxName:"",
-          adShop:false,
-          isHidden:false,
-          popShop : false,
-          companyGroup:"",
+        inputForm:{
+          extra:{}
         },
+        remoteLoading:false,
         rules: {
           clientId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           code: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -166,13 +136,15 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/basic/depotShop/saveDepot', qs.stringify(this.submitData)).then((response)=> {
-              this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-            if(!this.isCreate){
-                this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")})
-              }
+            axios.post('/api/ws/future/basic/depotShop/saveDepot', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            this.$message(response.data.message);
+            if(this.inputForm.isCreate){
+              Object.assign(this.$data, this.getData());
+              this.initPage();
+            }else {
+              this.submitDisabled = false;
+              this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")})
+            }
             }).catch(function () {
               that.submitDisabled = false;
             });
@@ -188,15 +160,17 @@
             this.remoteLoading = false;
           });
         }
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/basic/depotShop/findDepotForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+        axios.get('/api/ws/future/basic/depotShop/findDepotForm').then((response)=>{
           this.inputForm = response.data;
-      });
+          axios.get('/api/ws/future/basic/depotShop/findShop',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
+        })
+
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>
