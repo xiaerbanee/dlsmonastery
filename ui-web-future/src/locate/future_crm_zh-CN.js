@@ -921,6 +921,7 @@ export default {
     loading: "拼命加载中",
     productName: "货品名称",
     hasIme: "包含串码",
+    finish: "发送完成",
     billQty: "开单数",
     returnQty: "退货数",
     shippedQty: "已发货数",

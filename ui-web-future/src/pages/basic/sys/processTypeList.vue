@@ -31,7 +31,7 @@
         </el-table-column>
         <el-table-column prop="enabled" :label="$t('processTypeList.enabled')" width="100">
           <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{!scope.row.enabled | bool2str}}</el-tag>
+            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" :label="$t('processTypeList.operation')" width="140">
