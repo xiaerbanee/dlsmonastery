@@ -48,7 +48,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
         and t1.id = t2.client_id
         and t2.id = ?1
     """, nativeQuery = true)
-    fun findByDepotId(depotId: String): Client
+    fun findByDepotId(depotId: String): Client?
 
     fun findByNameContaining(name: String): MutableList<Client>
 }

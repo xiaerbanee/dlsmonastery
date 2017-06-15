@@ -168,7 +168,7 @@ export default {
       adGoodsOrderForm: "orderan etalase",
       adGoodsOrderList: "pemesanan etalase",
       adGoodsOrderShip: "order bahan",
-      adGoodsOrderSign: "order barang",
+      adGoodsOrderSign: "货品订货签收",
       adPricesystemChangeForm: "formulir",
       adPricesystemChangeList: "Pengiriman Edit",
       adPricesystemForm: "BAHAN PENGIRIMAN",

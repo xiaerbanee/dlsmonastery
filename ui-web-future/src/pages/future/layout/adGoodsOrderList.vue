@@ -7,13 +7,11 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
-          <el-row :gutter="4">
+          <el-row :gutter="12">
             <el-col :span="12">
-              <el-form-item :label="$t('adGoodsOrderList.orderCode')">
-                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
-              </el-form-item>
+
               <el-form-item :label="$t('adGoodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
@@ -49,6 +47,9 @@
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
                 <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
+              </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
+                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -151,16 +152,16 @@
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "audit"}})
         } else if (action === "bill") {
           this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
-        } else if (action === "发货") {
+        } else if (action === "ship") {
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
-        } else if (action === "签收") {
+        } else if (action === "sign") {
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
-            })
+            });
           }).catch(()=>{});
         }
       }

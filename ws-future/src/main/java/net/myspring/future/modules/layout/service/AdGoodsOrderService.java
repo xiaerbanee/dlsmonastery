@@ -1,19 +1,23 @@
 package net.myspring.future.modules.layout.service;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.domain.Client;
-import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
@@ -21,11 +25,13 @@ import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
-import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
+import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
 import net.myspring.general.modules.sys.dto.ActivitiStartDto;
+import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
-import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +45,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -54,6 +61,8 @@ public class AdGoodsOrderService {
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
+    private ExpressRepository expressRepository;
+    @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private ShopDepositRepository shopDepositRepository;
@@ -61,6 +70,8 @@ public class AdGoodsOrderService {
     private AdPricesystemDetailRepository adPricesystemDetailRepository;
     @Autowired
     private AdpricesystemRepository adpricesystemRepository;
+    @Autowired
+    private ExpressOrderManager expressOrderManager;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -117,49 +128,48 @@ public class AdGoodsOrderService {
 
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
 
-
-
             Depot outShop=depotRepository.findOne(adGoodsOrderForm.getOutShopId());
             Client client = clientRepository.findByDepotId(outShop.getId());
-            if(StringUtils.isBlank(client.getOutId())){
+            if(client == null || StringUtils.isBlank(client.getOutId())){
                 throw new ServiceException(outShop.getName()+" 没有关联财务账号，不能申请");
             }
 
-            AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
+            AdGoodsOrder adGoodsOrder;
+            if(adGoodsOrderForm.isCreate()){
+                adGoodsOrder = new AdGoodsOrder();
+            }else{
+                adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
+            }
+
             if(StringUtils.isBlank(adGoodsOrderForm.getShopId())){
                 adGoodsOrder.setShopId(outShop.getId());
             }else{
                 adGoodsOrder.setShopId(adGoodsOrderForm.getShopId());
             }
             adGoodsOrder.setOutShopId(outShop.getId());
+            adGoodsOrder.setInvestInCause(adGoodsOrderForm.getInvestInCause());
             adGoodsOrder.setBillType(BillTypeEnum.柜台.name());
             adGoodsOrder.setEmployeeId(adGoodsOrderForm.getEmployeeId());
+        //TODO 确认下面的billAddress赋值语句是否正确
+            adGoodsOrder.setBillAddress(adGoodsOrderForm.getExpressOrderAddress());
+            adGoodsOrder.setSplitBill(false);
+            adGoodsOrder.setAmount(BigDecimal.ZERO);
+            adGoodsOrder.setSmallQty(0);
+            adGoodsOrder.setMediumQty(0);
+            adGoodsOrder.setLargeQty(0);
+            adGoodsOrder.setRemarks(adGoodsOrderForm.getRemarks());
             adGoodsOrderRepository.save(adGoodsOrder);
 
-            saveAdGoodsOrderDetailList(adGoodsOrder.getId(), adGoodsOrderForm.getAdGoodsOrderDetailList());
+            saveAdGoodsOrderDetailInfo(adGoodsOrder, adGoodsOrderForm.getAdGoodsOrderDetailList());
 
-            List<AdGoodsOrderDetailDto> detailList = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrder.getId());
-            BigDecimal amount = BigDecimal.ZERO;
-            for (AdGoodsOrderDetailDto adGoodsOrderDetailDto : detailList) {
-                amount = amount.add(adGoodsOrderDetailDto.getProductPrice2().multiply(new BigDecimal(adGoodsOrderDetailDto.getConfirmQty())));
-            }
-            adGoodsOrder.setAmount(amount);
-
-            ExpressOrder savedExpressOrder = saveExpressOrder(adGoodsOrder, adGoodsOrderForm);
-            adGoodsOrder.setExpressOrderId(savedExpressOrder.getId());
-            adGoodsOrderRepository.save(adGoodsOrder);
-
+            saveExpressOrderInfo(adGoodsOrder, adGoodsOrderForm);
 
             if (adGoodsOrderForm.isCreate()) {
-                startAndSaveProcessFlow(adGoodsOrder);
-
+                startAndSaveProcessFlowInfo(adGoodsOrder);
             }
-
-
-
     }
 
-    private void startAndSaveProcessFlow(AdGoodsOrder adGoodsOrder) {
+    private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货",adGoodsOrder.getId(),AdGoodsOrder.class.getSimpleName(),adGoodsOrder.getOutShopId()));
 
@@ -173,7 +183,7 @@ public class AdGoodsOrderService {
 
     }
 
-    private ExpressOrder saveExpressOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
+    private ExpressOrder saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
 
@@ -184,10 +194,13 @@ public class AdGoodsOrderService {
             expressOrder = expressOrderRepository.findOne(expressOrderId);
         }
 
+        expressOrder.setContator(adGoodsOrderForm.getExpressOrderContator());
+        expressOrder.setMobilePhone(adGoodsOrderForm.getExpressOrderMobilePhone());
+        expressOrder.setAddress(adGoodsOrderForm.getExpressOrderAddress());
         expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
         expressOrder.setToDepotId(adGoodsOrder.getShopId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
-        expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressCompanyId());
+        expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressOrderExpressCompanyId());
         expressOrder.setShipType(ShipTypeEnum.总部发货.name());
         expressOrder.setPrintDate(LocalDate.now());
         expressOrder.setLocked(true);
@@ -195,173 +208,55 @@ public class AdGoodsOrderService {
 
         expressOrderRepository.save(expressOrder);
 
+        adGoodsOrder.setExpressOrderId(expressOrder.getId());
+        adGoodsOrderRepository.save(adGoodsOrder);
+
         return expressOrder;
     }
 
-    private void saveAdGoodsOrderDetailList(String adGoodsOrderId, List<AdGoodsOrderDetailDto> adGoodsOrderDetailList) {
+    private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> adGoodsOrderDetailList) {
 
         List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
-        for(AdGoodsOrderDetailDto adGoodsOrderDetailDto : adGoodsOrderDetailList){
+        for(AdGoodsOrderDetailForm adGoodsOrderDetailForm : adGoodsOrderDetailList){
             AdGoodsOrderDetail adGoodsOrderDetail;
 
-            if(adGoodsOrderDetailDto.getQty() !=null && adGoodsOrderDetailDto.getQty() < 0){
+            if(adGoodsOrderDetailForm.getQty() !=null && adGoodsOrderDetailForm.getQty() < 0){
                 throw new ServiceException("订货数量不可以小于0");
             }
 
-            if(StringUtils.isBlank(adGoodsOrderDetailDto.getId())){
+            if(StringUtils.isBlank(adGoodsOrderDetailForm.getId())){
                 adGoodsOrderDetail = new AdGoodsOrderDetail();
-                adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrderId);
-                adGoodsOrderDetail.setProductId(adGoodsOrderDetailDto.getProductId());
-                adGoodsOrderDetail.setQty(adGoodsOrderDetailDto.getQty() == null ? 0 : adGoodsOrderDetailDto.getQty());
+                adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
+                adGoodsOrderDetail.setProductId(adGoodsOrderDetailForm.getProductId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailForm.getQty() == null ? 0 : adGoodsOrderDetailForm.getQty());
                 adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
                 adGoodsOrderDetail.setBillQty(0);
                 adGoodsOrderDetail.setShippedQty(0);
                 adGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
                 adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
             }else{
-                adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderDetailDto.getId());
-                adGoodsOrderDetail.setQty(adGoodsOrderDetailDto.getQty() == null ? 0 : adGoodsOrderDetailDto.getQty());
+                adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderDetailForm.getId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailForm.getQty() == null ? 0 : adGoodsOrderDetailForm.getQty());
                 adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
             }
             toBeSaved.add(adGoodsOrderDetail);
         }
         adGoodsOrderDetailRepository.save(toBeSaved);
-    }
 
-    public AdGoodsOrderDto findOne(String id) {
-        AdGoodsOrderDto adGoodsOrderDto = new AdGoodsOrderDto();
-        if(id!=null){
-            AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
-            adGoodsOrderDto = BeanUtil.map(adGoodsOrder,AdGoodsOrderDto.class);
-//            if(adGoodsOrderDto.getExpressOrderId()!=null){
-//                adGoodsOrderDto.setExpressOrderDto(expressOrderRepository.findDto(adGoodsOrderDto.getExpressOrderId()));
-//            }
-            cacheUtils.initCacheInput(adGoodsOrderDto);
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(toBeSaved, "productId"));
+        BigDecimal amount = BigDecimal.ZERO;
+        for (AdGoodsOrderDetail adGoodsOrderDetail : toBeSaved) {
+            amount = amount.add(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2().multiply(new BigDecimal(adGoodsOrderDetail.getConfirmQty())));
         }
+        adGoodsOrder.setAmount(amount);
+        adGoodsOrderRepository.save(adGoodsOrder);
+    }
+
+    public AdGoodsOrderDto findDto(String id) {
+
+        AdGoodsOrderDto adGoodsOrderDto = adGoodsOrderRepository.findDto(id);
+        cacheUtils.initCacheInput(adGoodsOrderDto);
         return adGoodsOrderDto;
-    }
-
-    public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm){
-
-
-//        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
-//
-//        if(!adGoodsOrderForm.isCreate()){
-//            List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForEdit(outGroupIds,adGoodsOrderForm.getId());
-//            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-//        }else{
-//           List<AdGoodsOrderDetailDto> adGoodsOrderDetails = adGoodsOrderDetailRepository.findByAdGoodsOrderForNew(outGroupIds);
-//            adGoodsOrderForm.setAdGoodsOrderDetails(adGoodsOrderDetails);
-//
-//        }
-//        cacheUtils.initCacheInput(adGoodsOrderForm);
-        return adGoodsOrderForm;
-    }
-
-    public void audit(AdGoodsOrderForm adGoodsOrderForm) {
-//        if(!adGoodsOrderForm.isCreate()) {
-//            ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
-//            activitiCompleteForm.setPass(adGoodsOrderForm.getPass());
-//            activitiCompleteForm.setComment(adGoodsOrderForm.getPassRemarks());
-//
-//            activitiCompleteForm.setProcessTypeId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessTypeId());
-//            activitiCompleteForm.setProcessInstanceId(adGoodsOrderRepository.findOne(adGoodsOrderForm.getId()).getProcessInstanceId());
-//
-//            ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
-//
-//            if(activitiCompleteDto!=null){
-//                AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
-//                adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
-//                adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
-//                adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
-//                adGoodsOrderRepository.save(adGoodsOrder);
-//            }
-//
-//        }
-    }
-    
-//    public AdGoodsOrder bill(AdGoodsOrder adGoodsOrder) {
-//        Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
-//        Depot shop=depotRepository.findOne(adGoodsOrder.getShopId());
-//        List<AdGoodsOrderDetail> adGoodsOrderDetailList=Lists.newArrayList();
-//        for (int i = adGoodsOrder.getAdGoodsOrderDetailList().size() - 1; i >= 0; i--) {
-//            AdGoodsOrderDetail agod = adGoodsOrder.getAdGoodsOrderDetailList().get(i);
-//            agod.setQty(agod.getQty()==null?0:agod.getQty());
-//            agod.setConfirmQty(agod.getConfirmQty()==null?0:agod.getConfirmQty());
-//            agod.setBillQty(agod.getBillQty()==null?0:agod.getBillQty());
-//            if(agod.getBillQty()!=null&&agod.getBillQty() > 0&&(agod.getQty() == null || agod.getQty() == 0)) {
-//                agod.setQty(0);
-//                agod.setShippedQty(0);
-//                agod.setAdGoodsOrderId(adGoodsOrder.getId());
-//                adGoodsOrderDetailList.add(agod);
-//            }else if(agod.getBillQty()!=null&&agod.getBillQty() > 0){
-//                adGoodsOrderDetailRepository.save(agod);
-//            }
-//        }
-//        //应付运费
-//        BigDecimal shouldPay = BigDecimal.ZERO;
-//        //应收运费
-//        BigDecimal shouldGet = BigDecimal.ZERO;
-//        BigDecimal amount = BigDecimal.ZERO;
-//        for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrder.getAdGoodsOrderDetailList()) {
-//            if(adGoodsOrderDetail.getBillQty()>0) {
-//                BigDecimal price2 = adGoodsOrderDetail.getProduct().getPrice2();
-//                amount = amount.add(new BigDecimal(adGoodsOrderDetail.getBillQty()).multiply(price2));
-//                if (priceMap.containsKey(adGoodsOrderDetail.getProductId())) {
-//                    adGoodsOrderDetail.setShouldPay(priceMap.get(adGoodsOrderDetail.getProductId()).getPrice());
-//                    adGoodsOrderDetail.setShouldGet(adGoodsOrderDetail.getProduct().getShouldGet());
-//                    shouldPay = shouldPay.add(adGoodsOrderDetail.getShouldPay().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
-//                    shouldGet = shouldGet.add(adGoodsOrderDetail.getShouldGet().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
-//                }
-//            }
-//        }
-//        if(adGoodsOrder.getParentId()==null){
-//            adGoodsOrder.setParentId(adGoodsOrder.getId());
-//        }
-//
-//        //分批开单
-//        if(adGoodsOrder.getSplitBill()){
-//            List<AdGoodsOrderDetail> newAdGoodsOrderDetails= Lists.newArrayList();
-//            for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrder.getAdGoodsOrderDetailList()){
-//                if(adGoodsOrderDetail.getConfirmQty()>adGoodsOrderDetail.getBillQty()){
-//                    AdGoodsOrderDetail newAdGoodsOrderDetail=new AdGoodsOrderDetail();
-//                    Integer billEnabledQty=adGoodsOrderDetail.getConfirmQty()-adGoodsOrderDetail.getBillQty();
-//                    newAdGoodsOrderDetail.setProduct(adGoodsOrderDetail.getProduct());
-//                    newAdGoodsOrderDetail.setQty(billEnabledQty);
-//                    newAdGoodsOrderDetail.setConfirmQty(billEnabledQty);
-//                    newAdGoodsOrderDetail.setBillQty(0);
-//                    newAdGoodsOrderDetail.setShippedQty(0);
-//                    newAdGoodsOrderDetails.add(newAdGoodsOrderDetail);
-//                }
-//            }
-//            if(CollectionUtil.isNotEmpty(newAdGoodsOrderDetails)){
-//            }
-//        }
-//        return adGoodsOrder;
-//    }
-//
-//    public Boolean ship(AdGoodsOrder adGoodsOrder) {
-//        for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrder.getAdGoodsOrderDetailList()) {
-//            if (adGoodsOrderDetail.getShipQty() != null && adGoodsOrderDetail.getShipQty() > 0) {
-//                Integer shippedQty = adGoodsOrderDetail.getShippedQty();
-//                Integer shipQty = adGoodsOrderDetail.getShipQty();
-//                adGoodsOrderDetail.setShippedQty(shippedQty + shipQty);
-//                adGoodsOrderDetailRepository.save(adGoodsOrderDetail);
-//            }
-//        }
-//        boolean isAllShipped = true;
-//        for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrder.getAdGoodsOrderDetailList()) {
-//            if (adGoodsOrderDetail.getBillQty()==adGoodsOrderDetail.getShippedQty()) {
-//                isAllShipped = false;
-//                break;
-//            }
-//        }
-//        expressOrderRepository.save(adGoodsOrder.getExpressOrder());
-//        adGoodsOrderRepository.save(adGoodsOrder);
-//        return true;
-//    }
-
-    public void sign(AdGoodsOrder adGoodsOrder) {
     }
 
     public void logicDelete(String id) {
@@ -370,16 +265,321 @@ public class AdGoodsOrderService {
 
     public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
 
-        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         List<AdGoodsOrderDetailDto> result;
         if(StringUtils.isBlank(adGoodsOrderId)){
-            result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIds, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
         }else{
-            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIds, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
         }
         cacheUtils.initCacheInput(result);
         return result;
+    }
+
+    public void audit(AdGoodsOrderAuditForm adGoodsOrderAuditForm) {
+
+        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+        activitiCompleteForm.setPass(adGoodsOrderAuditForm.getPass());
+        activitiCompleteForm.setComment(adGoodsOrderAuditForm.getRemarks());
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderAuditForm.getId());
+        activitiCompleteForm.setProcessTypeId(adGoodsOrder.getProcessTypeId());
+        activitiCompleteForm.setProcessInstanceId(adGoodsOrder.getProcessInstanceId());
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+
+        adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
+        adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
+        adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+        adGoodsOrder.setLocked(true);
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+    }
+
+    public List<AdGoodsOrderDetailDto> findDetailListForBill(String adGoodsOrderId) {
+
+        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+
+        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
+
+        cacheUtils.initCacheInput(result);
+        return result;
+    }
+
+    public List<AdGoodsOrderDetailDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
+
+        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrderId);
+        cacheUtils.initCacheInput(result);
+        return result;
+    }
+
+
+    public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
+
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
+        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(LocalDate.now().atStartOfDay())));
+        adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
+        adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
+        adGoodsOrder.setBillAddress(StringUtils.isBlank(adGoodsOrderBillForm.getBillAddress()) ? adGoodsOrderBillForm.getExpressOrderAddress() : adGoodsOrderBillForm.getBillAddress());
+        if(StringUtils.isBlank(adGoodsOrder.getParentId())){
+            adGoodsOrder.setParentId(adGoodsOrder.getId());
+        }
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+        saveDetailInfoWhenBill(adGoodsOrder, adGoodsOrderBillForm.getAdGoodsOrderDetailList());
+
+        if(Boolean.TRUE.equals(adGoodsOrderBillForm.getSplitBill())){
+            splitAdGoodsOrder(adGoodsOrder, adGoodsOrderBillForm);
+        }
+
+        saveExpressOrderInfoWhenBill(adGoodsOrder);
+
+
+        //如果有工作流，审批通过
+        if(StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+            doAndSaveProcessInfo(adGoodsOrder, true, "");
+        } else {
+            adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.待发货.name());
+            adGoodsOrderRepository.save(adGoodsOrder);
+        }
+
+        if(Boolean.TRUE.equals(adGoodsOrderBillForm.getSyn())) {
+            synWhenBill(adGoodsOrder);
+        }
+    }
+
+    private void saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> adGoodsOrderDetailList) {
+
+            Map<String, AdPricesystemDetail> priceMap = Maps.newHashMap();
+            Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
+            List<AdPricesystemDetail> adPricesystemDetailList = adPricesystemDetailRepository.findByAdPricesystemId(depot.getAdPricesystemId());
+            for(AdPricesystemDetail adPricesystemDetail : adPricesystemDetailList) {
+                    priceMap.put(adPricesystemDetail.getProductId(), adPricesystemDetail);
+            }
+            Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(adGoodsOrderDetailList, "productId"));
+
+            List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
+            for(AdGoodsOrderBillDetailForm adGoodsOrderBillDetailForm : adGoodsOrderDetailList){
+                AdGoodsOrderDetail adGoodsOrderDetail;
+
+                if(adGoodsOrderBillDetailForm.getBillQty() !=null && adGoodsOrderBillDetailForm.getBillQty() < 0){
+                    throw new ServiceException("开单数量不可以小于0");
+                }
+
+                if(StringUtils.isBlank(adGoodsOrderBillDetailForm.getId())){
+                    adGoodsOrderDetail = new AdGoodsOrderDetail();
+                    adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
+                    adGoodsOrderDetail.setProductId(adGoodsOrderBillDetailForm.getProductId());
+                    adGoodsOrderDetail.setQty(0);
+                    adGoodsOrderDetail.setConfirmQty(0);
+                    adGoodsOrderDetail.setBillQty(adGoodsOrderBillDetailForm.getBillQty() == null ? 0 : adGoodsOrderBillDetailForm.getBillQty());
+                    adGoodsOrderDetail.setShippedQty(0);
+
+                }else{
+                    adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderBillDetailForm.getId());
+                    adGoodsOrderDetail.setBillQty(adGoodsOrderBillDetailForm.getBillQty() == null ? 0 : adGoodsOrderBillDetailForm.getBillQty());
+                }
+
+                if (priceMap.containsKey(adGoodsOrderDetail.getProductId())) {
+                    adGoodsOrderDetail.setShouldPay(priceMap.get(adGoodsOrderDetail.getProductId()).getPrice());
+                    adGoodsOrderDetail.setShouldGet(productMap.get(adGoodsOrderDetail.getProductId()).getShouldGet());
+                }
+                if (adGoodsOrderDetail.getShouldPay() == null) {
+                    adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+                }
+                if (adGoodsOrderDetail.getShouldGet() == null) {
+                    adGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
+                }
+
+                toBeSaved.add(adGoodsOrderDetail);
+            }
+            adGoodsOrderDetailRepository.save(toBeSaved);
+
+            BigDecimal amount = BigDecimal.ZERO;
+            for (AdGoodsOrderDetail adGoodsOrderDetail : toBeSaved) {
+                amount = amount.add(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+            }
+            adGoodsOrder.setAmount(amount);
+            adGoodsOrderRepository.save(adGoodsOrder);
+    }
+
+    private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm) {
+
+        //开始保存拆分后的newAdGoodsOrder的基本信息
+        AdGoodsOrder newAdGoodsOrder=new AdGoodsOrder();
+        newAdGoodsOrder.setStoreId(adGoodsOrder.getStoreId());
+        newAdGoodsOrder.setOutShopId(adGoodsOrder.getOutShopId());
+        newAdGoodsOrder.setShopId(adGoodsOrder.getShopId());
+        newAdGoodsOrder.setBillType(BillTypeEnum.柜台.name());
+        newAdGoodsOrder.setCreatedBy(adGoodsOrder.getCreatedBy());
+        newAdGoodsOrder.setCreatedDate(adGoodsOrder.getCreatedDate());
+        newAdGoodsOrder.setRemarks(adGoodsOrder.getRemarks());
+        newAdGoodsOrder.setParentId(adGoodsOrder.getParentId());
+        newAdGoodsOrder.setSplitBill(false);
+        newAdGoodsOrder.setSmallQty(0);
+        newAdGoodsOrder.setMediumQty(0);
+        newAdGoodsOrder.setLargeQty(0);
+        newAdGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.待开单.name());
+        adGoodsOrderRepository.save(newAdGoodsOrder);
+
+        //开始保存拆分后的detail信息
+        List<AdGoodsOrderDetail> newAdGoodsOrderDetails= Lists.newArrayList();
+        List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+        for(AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrderDetailList){
+            if(adGoodsOrderDetail.getConfirmQty()>adGoodsOrderDetail.getBillQty()){
+                AdGoodsOrderDetail newAdGoodsOrderDetail=new AdGoodsOrderDetail();
+                Integer billEnabledQty=adGoodsOrderDetail.getConfirmQty()-adGoodsOrderDetail.getBillQty();
+                newAdGoodsOrderDetail.setProductId(adGoodsOrderDetail.getProductId());
+                newAdGoodsOrderDetail.setQty(billEnabledQty);
+                newAdGoodsOrderDetail.setConfirmQty(billEnabledQty);
+                newAdGoodsOrderDetail.setBillQty(0);
+                newAdGoodsOrderDetail.setShippedQty(0);
+                newAdGoodsOrderDetail.setAdGoodsOrderId(newAdGoodsOrder.getId());
+                newAdGoodsOrderDetails.add(newAdGoodsOrderDetail);
+            }
+        }
+        adGoodsOrderDetailRepository.save(newAdGoodsOrderDetails);
+
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(newAdGoodsOrderDetails, "productId"));
+        BigDecimal childAmount = BigDecimal.ZERO;
+        for (AdGoodsOrderDetail adGoodsOrderDetail : newAdGoodsOrderDetails) {
+            BigDecimal price2 = productMap.get(adGoodsOrderDetail.getProductId()).getPrice2();
+            childAmount = childAmount.add(price2.multiply(new BigDecimal(adGoodsOrderDetail.getConfirmQty())));
+        }
+        newAdGoodsOrder.setAmount(childAmount);
+        adGoodsOrderRepository.save(newAdGoodsOrder);
+
+        //开始保存拆分后的expressOrder信息
+        ExpressOrder expressOrder=new ExpressOrder();
+        expressOrder.setAddress(adGoodsOrderBillForm.getExpressOrderAddress());
+        expressOrder.setContator(adGoodsOrderBillForm.getExpressOrderContactor());
+        expressOrder.setMobilePhone(adGoodsOrderBillForm.getExpressOrderMobilePhone());
+        expressOrder.setToDepotId(newAdGoodsOrder.getShopId());
+        expressOrder.setLocked(true);
+        expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
+        expressOrder.setShipType(ShipTypeEnum.总部发货.name());
+        expressOrder.setPrintDate(LocalDate.now());
+        expressOrder.setExtendId(newAdGoodsOrder.getId());
+        expressOrderRepository.save(expressOrder);
+        newAdGoodsOrder.setExpressOrderId(expressOrder.getId());
+        adGoodsOrderRepository.save(newAdGoodsOrder);
+    }
+
+    private void synWhenBill(AdGoodsOrder adGoodsOrder) {
+          //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等
+//        K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.SAL_OUTSTOCK.name(),adGoodsOrder.getSaleOutstock(),adGoodsOrder.getId(),adGoodsOrder.getFormatId(), K3CloudSynEntity.ExtendType.柜台订货.name());
+//        k3cloudSynDao.save(k3CloudSynEntity);
+//        K3cloudUtils.save(k3CloudSynEntity);
+//        k3CloudSynEntity.setLocked(true);
+//        k3cloudSynDao.save(k3CloudSynEntity);
+//        adGoodsOrder.setK3CloudSynEntity(k3CloudSynEntity);
+//        adGoodsOrderDao.save(adGoodsOrder);
+//        if(adGoodsOrder.getExpressOrder()!=null){
+//            ExpressOrder exp=adGoodsOrder.getExpressOrder();
+//            exp.setOutCode(adGoodsOrder.getOutCode());
+//            expressOrderDao.save(exp);
+//        }
+    }
+
+    private void saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder) {
+
+        ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
+        expressOrder.setFromDepotId(adGoodsOrder.getStoreId());
+        expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
+        expressOrder.setExtendId(adGoodsOrder.getId());
+        expressOrder.setToDepotId(adGoodsOrder.getShopId());
+        expressOrder.setLocked(false);
+        expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
+        expressOrder.setShipType(ShipTypeEnum.总部发货.name());
+        expressOrder.setPrintDate(adGoodsOrder.getBillDate());
+
+        List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+
+        BigDecimal shouldPay = BigDecimal.ZERO;
+        BigDecimal shouldGet = BigDecimal.ZERO;
+        for(AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrderDetailList) {
+            if(adGoodsOrderDetail.getBillQty() != null && adGoodsOrderDetail.getBillQty()>0) {
+                shouldPay = shouldPay.add(adGoodsOrderDetail.getShouldPay().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+                shouldGet = shouldGet.add(adGoodsOrderDetail.getShouldGet().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+            }
+        }
+        expressOrder.setShouldGet(shouldGet);
+        expressOrder.setShouldPay(shouldPay);
+
+        expressOrderRepository.save(expressOrder);
+
+    }
+
+    public void ship(AdGoodsOrderShipForm adGoodsOrderShipForm) {
+
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderShipForm.getId());
+        adGoodsOrder.setSmallQty(adGoodsOrderShipForm.getSmallQty());
+        adGoodsOrder.setMediumQty(adGoodsOrderShipForm.getMediumQty());
+        adGoodsOrder.setLargeQty(adGoodsOrderShipForm.getLargeQty());
+
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+        Map<String, AdGoodsOrderShipDetailForm> adGoodsOrderShipFormMap = CollectionUtil.extractToMap(adGoodsOrderShipForm.getAdGoodsOrderDetailList(), "id");
+        List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrderShipForm.getId());
+
+        boolean isAllShipped = true;
+        for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrderDetailList) {
+            AdGoodsOrderShipDetailForm adGoodsOrderShipDetailForm = adGoodsOrderShipFormMap.get(adGoodsOrderDetail.getId());
+            if (adGoodsOrderShipDetailForm !=null && adGoodsOrderShipDetailForm.getShipQty() != null && adGoodsOrderShipDetailForm.getShipQty() > 0) {
+                adGoodsOrderDetail.setShippedQty(adGoodsOrderDetail.getShippedQty() + adGoodsOrderShipDetailForm.getShipQty());
+            }
+            if(adGoodsOrderDetail.getBillQty() - adGoodsOrderDetail.getShippedQty() > 0){
+                isAllShipped = false;
+            }
+        }
+
+        if (isAllShipped) {
+            //如果有工作流，审批通过
+            if(StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+                doAndSaveProcessInfo(adGoodsOrder, true, "");
+            } else {
+                adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.待签收.name());
+                adGoodsOrderRepository.save(adGoodsOrder);
+            }
+        }
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+
+            ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
+            expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressComapnyId());
+            expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
+            expressOrder.setShouldGet(adGoodsOrderShipForm.getExpressOrderShouldGet());
+            expressOrder.setShouldPay(adGoodsOrderShipForm.getExpressOrderShouldPay());
+            expressOrder.setRealPay(adGoodsOrderShipForm.getExpressOrderRealPay());
+            expressOrderRepository.save(expressOrder);
+
+            expressOrderManager.save(expressOrder.getExtendType(), expressOrder.getExtendId(), expressOrder.getExpressCodes(), expressOrder.getExpressCompanyId());
+
+    }
+
+    private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
+        ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
+        activitiCompleteForm.setPass(pass);
+        activitiCompleteForm.setComment(comment);
+        activitiCompleteForm.setProcessTypeId(adGoodsOrder.getProcessTypeId());
+        activitiCompleteForm.setProcessInstanceId(adGoodsOrder.getProcessInstanceId());
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
+
+        adGoodsOrder.setProcessPositionId(activitiCompleteDto.getPositionId());
+        adGoodsOrder.setProcessStatus(activitiCompleteDto.getProcessStatus());
+        adGoodsOrder.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
+        adGoodsOrder.setLocked(true);
+        adGoodsOrderRepository.save(adGoodsOrder);
+    }
+
+    public void sign(String id) {
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
+
+        if(StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {
+            doAndSaveProcessInfo(adGoodsOrder, true, "");
+        } else {
+            adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.已完成.name());
+            adGoodsOrderRepository.save(adGoodsOrder);
+        }
     }
 
 
