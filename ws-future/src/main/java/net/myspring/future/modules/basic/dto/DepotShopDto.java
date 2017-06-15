@@ -2,12 +2,8 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
-import net.myspring.util.cahe.annotation.CacheInput;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by wangzm on 2017/5/13.
@@ -37,6 +33,34 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String shopArea;
 
     private String depotName;
+
+    private String townId;
+    private LocalDate enableDate;
+    private String townName;
+
+    public String getTownName() {
+        return townName;
+    }
+
+    public void setTownName(String townName) {
+        this.townName = townName;
+    }
+
+    public String getTownId() {
+        return townId;
+    }
+
+    public void setTownId(String townId) {
+        this.townId = townId;
+    }
+
+    public LocalDate getEnableDate() {
+        return enableDate;
+    }
+
+    public void setEnableDate(LocalDate enableDate) {
+        this.enableDate = enableDate;
+    }
 
     public String getDepotId() {
         return depotId;
