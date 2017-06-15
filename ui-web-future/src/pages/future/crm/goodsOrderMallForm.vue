@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="goodsOrderForm"></head-tab>
+    <head-tab active="goodsOrderMallForm"></head-tab>
     <el-row v-if="alertError">
       <el-col :span="24">
         <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>
@@ -11,17 +11,13 @@
         <el-row>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderForm.shop')" prop="shopId">
-              <depot-select :disabled="!isCreate" v-model="inputForm.shopId" category="shop" @input="shopChange"></depot-select>
+              <depot-select  v-model="inputForm.shopId" category="shop" @input="shopChange(inputForm.shopId)"></depot-select>
             </el-form-item>
-            <el-form-item  :label="$t('goodsOrderForm.clientName')"  prop="clientName">
-              {{shop.clientName}}
+            <el-form-item  label="总店">
+              {{shop.name}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderForm.remarks')" prop="remarks">
-              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
-            </el-form-item>
-            <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-                <el-select  :disabled="!isCreate" v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
+                <el-select   v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
                   <el-option v-for="item in inputForm.extra.netTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -30,10 +26,20 @@
                   <el-option v-for="item in inputForm.extra.shipTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-            </div>
+            <el-form-item :label="$t('goodsOrderForm.remarks')"  prop="remarks  ">
+              <el-input type="textarea" v-model="inputForm.remarks"></el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="12">
-            <div v-show="inputForm.shopId">
+            <el-form-item label="商城门店" prop="carrierShopId">
+              <depot-select  v-model="inputForm.carrierShopId" category="shop"></depot-select>
+            </el-form-item>
+            <el-form-item label="商城单号" prop="carrierCodes">
+              <el-input  v-model="inputForm.carrierCodes"></el-input>
+            </el-form-item>
+            <el-form-item label="商城订单信息" prop="carrierDetails">
+              <el-input type="textarea" v-model="inputForm.carrierDetails"></el-input>
+            </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
                 {{shop.depotType}}
               </el-form-item>
@@ -46,7 +52,6 @@
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderForm.save')}}</el-button>
               </el-form-item>
-            </div>
           </el-col>
         </el-row>
       </el-form>
@@ -154,9 +159,9 @@
           }
         }
         this.filterDetailList = tempList;
-      },shopChange(){
-        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-          this.shop = response.data;
+      },shopChange(id){
+        axios.get('/api/ws/future/basic/depot/findOne',{params: {id:id}}).then((response)=>{
+            this.shop = response.data;
         });
         this.refreshDetailList();
       },refreshDetailList(){
