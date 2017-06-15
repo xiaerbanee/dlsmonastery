@@ -67,11 +67,10 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          storeNumber:'',
           json:[],
         },rules: {
-          storeNumber: [{ required: true, message: '请选择仓库'}],
-          billDate: [{ required: true, message: '请选择时间'}],
+          storeNumber: [{ required: true, message: '必填项'}],
+          billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',

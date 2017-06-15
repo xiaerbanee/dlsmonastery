@@ -3,7 +3,7 @@
     <head-tab active="cnJournalForCash"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -84,10 +84,8 @@
         formData:{
           billDate:new Date().toLocaleDateString(),
           json:[],
-        },formLabel:{
-          billDate:{label:"日期"},
         },rules: {
-          billDate: [{ required: true, message: '请选择时间'}],
+          billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',

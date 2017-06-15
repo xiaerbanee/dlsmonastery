@@ -3,12 +3,12 @@
     <head-tab active="stkMisDelivery"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item :label="formLabel.departmentNumber.label"  :label-width="formLabelWidth" prop="departmentNumber">
+        <el-form-item label="部门"  :label-width="formLabelWidth" prop="departmentNumber">
           <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
             <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -76,14 +76,10 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          departmentNumber:'',
           json:[],
-        },formLabel:{
-          billDate:{label:"日期"},
-          departmentNumber:{label:"部门"},
         },rules: {
-          departmentNumber: [{ required: true, message: '请选择部门'}],
-          billDate: [{ required: true, message: '请选择时间'}],
+          departmentNumber: [{ required: true, message: '必填项'}],
+          billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',

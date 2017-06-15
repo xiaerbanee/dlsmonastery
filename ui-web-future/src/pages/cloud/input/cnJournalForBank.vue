@@ -91,7 +91,6 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          accountNumber:'',
           json:[],
         },rules: {
           billDate: [{ required: true, message: '必填项'}],
