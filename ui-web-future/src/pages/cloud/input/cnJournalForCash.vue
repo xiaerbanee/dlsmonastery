@@ -2,18 +2,12 @@
   <div>
     <head-tab active="cnJournalForCash"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
-        <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
-              <date-picker v-model="formData.billDate"></date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          </el-col>
-        </el-row>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+        <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+          <date-picker v-model="formData.billDate"></date-picker>
+        </el-form-item>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
   </div>

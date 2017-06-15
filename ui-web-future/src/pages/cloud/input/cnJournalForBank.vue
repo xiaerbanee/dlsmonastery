@@ -2,25 +2,17 @@
   <div>
     <head-tab active="cnJournalForBank"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
-        <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
-              <date-picker v-model="formData.billDate"></date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="科目"  :label-width="formLabelWidth" prop="accountNumber">
-              <el-select v-model="formData.accountNumber" filterable placeholder="请选择">
-                <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          </el-col>
-        </el-row>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+          <date-picker v-model="formData.billDate"></date-picker>
+        </el-form-item>
+        <el-form-item label="科目"  :label-width="formLabelWidth" prop="accountNumber">
+          <el-select v-model="formData.accountNumber" filterable placeholder="请选择">
+            <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
   </div>
