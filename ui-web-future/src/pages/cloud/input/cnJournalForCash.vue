@@ -46,21 +46,21 @@
             {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
             {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
           ],
+          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            var that = this;
-            if (source === 'edit') {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 0) {
                   let accountNumber = changes[i][3];
-                  if (accountNumber === ""){
-                    table.setDataAtCell(row, 4, '')
-                  }else {
+                  if (util.isNotBlank(accountNumber)) {
                     axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 4, account.fname);
                     });
+                  } else {
+                    table.setDataAtCell(row, 4, null);
                   }
                 }
                 let data=table.getData();

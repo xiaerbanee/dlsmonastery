@@ -51,20 +51,32 @@
             {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
             {type: "text", allowEmpty: true, strict: true }
           ],
+          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            var that = this;
-            if (source === 'edit') {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 1) {
                   let productName = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
-                    let material = response.data;
-                    table.setDataAtCell(row, 0, material.fnumber);
-                  });
-                }else if(column == 0){
+                  if(util.isNotBlank(productName)){
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
+                      let material = response.data;
+                      table.setDataAtCell(row, 0, material.fnumber);
+                    });
+                  }else {
+                    table.setDataAtCell(row, 0, null);
+                  }
+                }else if(column === 0){
                   let productNumber = changes[i][3];
+                  if(util.isNotBlank(productNumber)){
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber?number=' + productNumber).then((response) => {
+                      let material = response.data;
+                      table.setDataAtCell(row, 1, material.fname);
+                    });
+                  }else {
+                    table.setDataAtCell(row, 1, null);
+                  }
                 }
               }
             }
@@ -88,10 +100,11 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/stkMisDelivery/form').then((response)=>{
-        this.settings.columns[0].source = response.data.materialNumberList;
-        this.settings.columns[1].source = response.data.materialNameList;
-        this.settings.columns[2].source = response.data.stockNameList;
-        this.settings.columns[4].source = response.data.stkMisDeliveryTypeEnums;
+        let extra = response.data.extra;
+        this.settings.columns[0].source = extra.materialNumberList;
+        this.settings.columns[1].source = extra.materialNameList;
+        this.settings.columns[2].source = extra.stockNameList;
+        this.settings.columns[4].source = extra.stkMisDeliveryTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },

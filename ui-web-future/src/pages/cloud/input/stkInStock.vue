@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <head-tab active="stkInStock"></head-tab>
@@ -73,20 +72,24 @@
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            if (source === 'edit') {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 1) {
                   let materialName = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + materialName).then((response) => {
-                    let material = response.data;
-                    table.setDataAtCell(row, 0, material.fnumber);
-                  });
+                  if (util.isNotBlank(materialName)){
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + materialName).then((response) => {
+                      let material = response.data;
+                      table.setDataAtCell(row, 0, material.fnumber);
+                    });
+                  }else {
+                    table.setDataAtCell(row, 0, null);
+                  }
                 }
                 if(column === 0){
                   let materialNumber = changes[i][3];
-                  if (materialNumber !== ''){
+                  if (util.isNotBlank(materialNumber)){
                     axios.get('/api/global/cloud/sys/product/findByCode?code=' + materialNumber).then((response) => {
                       let product = response.data;
                       if (product){
@@ -97,8 +100,11 @@
                       table.setDataAtCell(row, 6, typeList[1]);
                       table.setDataAtCell(row, 8, typeList[0]);
                     });
+                  }else {
+                    table.setDataAtCell(row, 2, null);
+                    table.setDataAtCell(row, 6, null);
+                    table.setDataAtCell(row, 8, null);
                   }
-
                 }
               }
             }
@@ -120,15 +126,16 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/stkInStock/form').then((response)=>{
-        this.settings.columns[1].source = response.data.materialNameList;
-        let kingdeeName = response.data.kingdeeName;
+        let extra = response.data.extra;
+        this.settings.columns[1].source = extra.materialNameList;
+        let kingdeeName = extra.kingdeeName;
         if(kingdeeName === "JXDJ"){
           this.settings.columns.push({type: "autocomplete", allowEmpty: true, strict: true, typeList:[], source: this.typeList});
-          this.settings.columns[8].source = response.data.typeList;
+          this.settings.columns[8].source = extra.typeList;
         }else{
           this.settings.columns.push({type: "text", readOnly: true, strict: true});
         }
-        typeList = response.data.typeList;
+        typeList = extra.typeList;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },

@@ -44,7 +44,7 @@
           minSpareRows: 1,
           colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
           columns: [
-            {type:"text", allowEmpty: false, strict: true},
+            {type:"text", allowEmpty: false, readOnly: true, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
             {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
@@ -52,18 +52,22 @@
             {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
             {type: "text", allowEmpty: true, strict: true }
           ],
+          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            var that = this;
-            if (source === 'edit') {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
-                let column = changes[i][1]==2;
-                if(column){
+                let column = changes[i][1];
+                if(column === 2){
                   let name = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
-                    let  material = response.data;
-                    table.setDataAtCell(row,0,material.fnumber);
-                  });
+                  if(util.isNotBlank(name)) {
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
+                      let material = response.data;
+                      table.setDataAtCell(row,0,material.fnumber);
+                    });
+                  } else {
+                    table.setDataAtCell(row,0,null);
+                  }
                 }
               }
             }
@@ -84,9 +88,10 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
-        this.settings.columns[1].source = response.data.bdCustomerNameList;
-        this.settings.columns[2].source = response.data.bdMaterialNameList;
-        this.settings.columns[5].source = response.data.outStockBillTypeEnums;
+        let extra = response.data.extra;
+        this.settings.columns[1].source = extra.bdCustomerNameList;
+        this.settings.columns[2].source = extra.bdMaterialNameList;
+        this.settings.columns[5].source = extra.outStockBillTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
