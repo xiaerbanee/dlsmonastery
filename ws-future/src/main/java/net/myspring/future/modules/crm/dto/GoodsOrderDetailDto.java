@@ -24,6 +24,10 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     //发货信息
     private Integer shippedQty;
 
+    private Integer shipQty=0;
+    private Integer leftQty;
+
+    private Integer realBillQty;
 
     public Integer getBillQty() {
         return billQty;
@@ -117,5 +121,29 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
 
     public void setShippedQty(Integer shippedQty) {
         this.shippedQty = shippedQty;
+    }
+
+    public Integer getShipQty() {
+        return shipQty;
+    }
+
+    public void setShipQty(Integer shipQty) {
+        this.shipQty = shipQty;
+    }
+
+    public Integer getLeftQty() {
+        return leftQty;
+    }
+
+    public void setLeftQty(Integer leftQty) {
+        this.leftQty = leftQty;
+    }
+
+    public Integer getRealBillQty() {
+        return realBillQty;
+    }
+
+    public void setRealBillQty(Integer realBillQty) {
+        this.realBillQty = realBillQty;
     }
 }
