@@ -113,29 +113,18 @@
         console.log(tempList);
         this.inputForm.adApplyDtos = tempList;
       },onchange(){
-          axios.get('api/ws/future/layout/adApply/getBillForm',{params:{billType:this.inputForm.billType}}).then((response) =>{
+          axios.get('api/ws/future/layout/adApply/ ',{params:{billType:this.inputForm.billType}}).then((response) =>{
             this.inputForm = response.data;
           });
-      },getShopTypeLabel(id) {
-        var arr = this.shops;
-        if(id){
-          for(var i in arr){
-            if(arr[i].id === id){
-              this.shopTypeLabel =  arr[i].typeLabel;
-              return;
-            }
-          }
-        }
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+      initPage(){
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getBillForm').then((response) =>{
           this.inputForm = response.data;
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

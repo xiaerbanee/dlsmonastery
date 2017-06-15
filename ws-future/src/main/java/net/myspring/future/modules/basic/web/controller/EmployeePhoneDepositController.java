@@ -1,11 +1,14 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
 import net.myspring.future.modules.basic.service.EmployeePhoneDepositService;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneDepositForm;
 import net.myspring.future.modules.basic.web.query.EmployeePhoneDepositQuery;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +24,7 @@ import java.util.List;
  * Created by admin on 2017/2/17.
  */
 @RestController
-@RequestMapping(value = "hr/employeePhoneDeposit")
+@RequestMapping(value = "basic/employeePhoneDeposit")
 public class EmployeePhoneDepositController {
 
     @Autowired
@@ -60,6 +63,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value = "findOne")
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto){
+        employeePhoneDepositDto=employeePhoneDepositService.findOne(employeePhoneDepositDto);
         return employeePhoneDepositDto;
     }
 
@@ -70,6 +74,13 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getQuery")
     public EmployeePhoneDepositQuery getListProperty(EmployeePhoneDepositQuery employeePhoneDepositQuery){
+        employeePhoneDepositQuery.getExtra().put("statusList", EmployeePhoneDepositStatusEnum.getList());
         return employeePhoneDepositQuery;
+    }
+
+    @RequestMapping(value = "export", method = RequestMethod.GET)
+    public String export(EmployeePhoneDepositQuery employeePhoneDepositQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return employeePhoneDepositService.export(workbook,employeePhoneDepositQuery);
     }
 }

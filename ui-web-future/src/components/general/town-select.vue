@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable remote  :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
-      <el-option v-for="item in itemList"  :key="item.townId" :label="item.fullName" :value="item.townId"></el-option>
+      <el-option v-for="item in itemList"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
@@ -27,6 +27,7 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
+        console.log(">>>>>>>>"+val)
         if(val) {
           this.innerId = val;
           let idStr = this.innerId;
@@ -37,7 +38,7 @@
             return;
           }
           this.remoteLoading = true;
-          axios.get('/api/general/sys/town/findOne?id=' + this.innerId).then((response)=>{
+          axios.get('/api/general/sys/town/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
             this.$nextTick(()=>{
@@ -47,7 +48,6 @@
         }else{
           this.innerId=[];
         }
-
       }
     },created () {
       this.setValue(this.value);

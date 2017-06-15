@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.sys.domain;
 
 import net.myspring.cloud.common.domain.CompanyEntity;
-import net.myspring.cloud.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,7 +18,6 @@ public class Voucher extends CompanyEntity<Voucher> {
     //返回的单号
     private String outCode;
     private KingdeeBook kingdeeBook;
-    private String companyId ;
     private String kingdeeBookId;
 
     public LocalDate getfDate() {
@@ -68,14 +66,6 @@ public class Voucher extends CompanyEntity<Voucher> {
 
     public void setKingdeeBook(KingdeeBook kingdeeBook) {
         this.kingdeeBook = kingdeeBook;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getKingdeeBookId() {

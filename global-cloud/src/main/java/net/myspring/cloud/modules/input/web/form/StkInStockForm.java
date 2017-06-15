@@ -1,6 +1,8 @@
 package net.myspring.cloud.modules.input.web.form;
 
 
+import com.google.common.collect.Lists;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class StkInStockForm{
     private String json;
 
     //附带属性
-    private List<String>  typeList;
+    private List<String>  typeList = Lists.newArrayList();
     private String kingdeeName;
     private List<String> materialNameList;
 

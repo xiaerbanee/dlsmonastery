@@ -27,6 +27,15 @@ public class EmployeePhoneDto extends DataDto<EmployeePhone>{
     private BigDecimal jobPrice;
     private String imeStr;
     private BigDecimal retailPrice;
+    private String productTypeName;
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
+    }
 
     public String getAreaId() {
         return areaId;

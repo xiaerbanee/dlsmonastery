@@ -17,11 +17,6 @@
               <el-form-item :label="$t('reportScoreOfficeList.officeName')" :label-width="formLabelWidth">
                  <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('reportScoreOfficeList.areaName')" :label-width="formLabelWidth">
-                <el-select v-model="formData.areaId" clearable filterable >
-                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
             </el-col>
           </el-row>
         </el-form>

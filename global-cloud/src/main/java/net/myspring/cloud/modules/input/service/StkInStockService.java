@@ -141,7 +141,6 @@ public class StkInStockService {
     }
 
     public StkInStockForm getForm(StkInStockForm stkInStockForm,KingdeeBook kingdeeBook){
-        Map<String,Object> map = Maps.newHashMap();
         List<String> typeList = Lists.newArrayList();
         if (KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
             typeList.add("电玩广告让利");

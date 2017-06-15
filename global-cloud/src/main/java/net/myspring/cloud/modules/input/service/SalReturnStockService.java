@@ -4,17 +4,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
-import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
-import net.myspring.cloud.modules.input.web.form.BatchBillForm;
-import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
@@ -83,12 +79,11 @@ public class SalReturnStockService {
         return kingdeeSynExtendDto;
     }
 
-
-    public List<KingdeeSynExtendDto> save (BatchBillForm batchBillForm,KingdeeBook kingdeeBook,AccountKingdeeBook accountKingdeeBook) {
+    public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        String storeNumber = batchBillForm.getStoreNumber();
-        LocalDate date = batchBillForm.getBillDate();
-        String json = HtmlUtils.htmlUnescape(batchBillForm.getJson());
+        String storeNumber = salStockForm.getStoreNumber();
+        LocalDate date = salStockForm.getBillDate();
+        String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> customerNameList = Lists.newArrayList();
         for (List<Object> row : data){
@@ -150,13 +145,14 @@ public class SalReturnStockService {
         return kingdeeSynExtendDtoList;
     }
 
-    public BatchBillQuery getForm(BatchBillQuery batchBillQuery){
-        batchBillQuery.setReturnStockBillTypeEnums(SalReturnStockBillTypeEnum.values());
-        List<String> customerNameList = bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
-        List<String> materialNameList = bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());
-        batchBillQuery.setBdCustomerNameList(customerNameList);
-        batchBillQuery.setBdMaterialNameList(materialNameList);
-        return batchBillQuery;
+    public SalStockForm getForm(){
+        SalStockForm salStockForm = new SalStockForm();
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
+        map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
+        map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        salStockForm.setExtra(map);
+        return salStockForm;
     }
 
 }

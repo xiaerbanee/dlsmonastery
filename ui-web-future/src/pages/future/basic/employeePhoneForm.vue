@@ -1,36 +1,39 @@
 <template>
   <div>
-    <head-tab active="accountList"></head-tab>
+    <head-tab active="employeePhoneForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
-        <el-form-item :label="$t('accountList.employeeName')" prop="employeeName">
-          <el-input v-model.number="inputForm.employeeName" readonly></el-input>
+        <el-form-item :label="$t('employeePhoneForm.employeeName')" prop="employeeName">
+          <el-input v-model.number="inputForm.employeeName" :readonly="true"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('accountList.depotName')" prop="depotId">
-          <depot-select v-model="inputForm.depotId"></depot-select>
+        <el-form-item :label="$t('employeePhoneForm.depotName')" prop="depotId">
+          <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
         </el-form-item>
-        <el-form-item :label="$t('accountList.depositAmount')" prop="depositAmount">
+        <el-form-item :label="$t('employeePhoneForm.depositAmount')" prop="depositAmount">
           <el-input v-model.number="inputForm.depositAmount"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('accountList.uploadTime')" :label-width="formLabelWidth">
-          <el-date-picker  v-model="inputForm.uploadTime" type="datetime" align="left" :placeholder="$t('employeePhoneForm.selectDate')" format="yyyy-MM-dd hh:mm:ss" ></el-date-picker>
+        <el-form-item :label="$t('employeePhoneForm.uploadTime')" :label-width="formLabelWidth">
+          <date-picker  v-model="inputForm.uploadTime" ></date-picker>
         </el-form-item>
-        <el-form-item :label="$t('accountList.productName')" prop="productId">
+        <el-form-item :label="$t('employeePhoneForm.productName')" prop="productId">
           <product-select v-model="inputForm.productId"></product-select>
         </el-form-item>
-        <el-form-item :label="$t('accountList.jobPrice')" prop="jobPrice">
+        <el-form-item :label="$t('employeePhoneForm.jobPrice')" prop="jobPrice">
           <el-input v-model.number="inputForm.jobPrice"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('accountList.retailPrice')" prop="retailPrice">
+        <el-form-item :label="$t('employeePhoneForm.retailPrice')" prop="retailPrice">
           <el-input v-model.number="inputForm.retailPrice"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('accountList.imeStr')" prop="imeStr">
-          <el-input v-model.number="inputForm.imeStr"></el-input>
+        <el-form-item :label="$t('employeePhoneForm.imeStr')" prop="imeStr">
+          <el-input v-model="inputForm.imeStr"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('accountList.status')" prop="status">
-          <el-select v-model="inputForm.status" filterable remote :placeholder="$t('employeePhoneForm.inputWord')" :clearable=true>
-            <el-option v-for="item in formProperty.status" :key="item" :label="item" :value="item"></el-option>
+        <el-form-item :label="$t('employeePhoneForm.status')" prop="status">
+          <el-select v-model="inputForm.status"  :placeholder="$t('employeePhoneForm.inputWord')" :clearable=true>
+            <el-option v-for="item in inputForm.extra.statusList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
+          <el-form-item v-permit="'hr:employeePhone:remarks'" label="备注" prop="remarks">
+            <el-input v-model="inputForm.remarks"></el-input>
+          </el-form-item>
         </el-form-item>
         <el-form-item>
           <el-button type="primary"  :disabled="submitDisabled" @click="formSubmit()">{{$t('employeePhoneForm.save')}}</el-button>
@@ -42,34 +45,19 @@
 <script>
   import productSelect from 'components/future/product-select'
   import depotSelect from 'components/future/depot-select'
-
   export default{
     components:{productSelect,depotSelect},
     data(){
-      return this.getData;
+      return this.getData()
     },
     methods:{
-      getData(){
+      getData() {
         return{
-          isInit:false,
-          isCreate:this.$route.query.id==null,
           submitDisabled:false,
-          formProperty:{},
           inputForm:{
-            id:this.$route.query.id,
-            employeeName:'',
-            depotId:'',
-            depositAmount:'',
-            uploadTime:'',
-            productId:'',
-            jobPrice:'',
-            retailPrice:'',
-            imeStr:'',
-            status:''
+            extra:{}
           },
           remoteLoading:false,
-          depots:[],
-          products:[],
           formLabelWidth: '120px',
           rules: {
             depot: [{ required: true, message: this.$t('employeePhoneForm.prerequisiteMessage')}],
@@ -87,36 +75,33 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.uploadTime=util.formatLocalDateTime(this.inputForm.uploadTime)
-            axios.get('/api/basic/hr/employeePhone/save',{params:this.inputForm}).then((response)=> {
+            axios.post('/api/ws/future/basic/employeePhone/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-            if(!this.isCreate){
-              this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
-            }
-          }).catch(function () {
+              if(this.inputForm.create){
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+              }else{
+                this.submitDisabled = false;
+                this.$router.push({name:'employeePhoneList',query:util.getQuery("employeePhoneList")})
+              }
+              }).catch(function () {
               that.submitDisabled = false;
-            });
+              });
           }else{
             this.submitDisabled = false;
-      }
+       }
       })
-      },initPage() {
-
-      }
-    },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          axios.get('/api/basic/hr/employeePhone/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+      },initPage(){
+        axios.get('/api/ws/future/basic/employeePhone/getForm').then((response)=>{
+          this.inputForm = response.data;
+          console.log(this.inputForm)
+          axios.get('/api/ws/future/basic/employeePhone/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-          if(response.data.depot!=null){
-            this.depots=new Array(response.data.depot)
-          }
-          if(response.data.product!=null){
-            this.products=new Array(response.data.product)
-          }
-        })
+          });
+        });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

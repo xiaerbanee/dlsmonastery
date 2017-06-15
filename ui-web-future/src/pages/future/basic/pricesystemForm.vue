@@ -42,6 +42,7 @@
         isInit:false,
         isCreate:this.$route.query.id == null,
         submitDisabled:false,
+        isCreate:this.$route.query.id==null,
         productName:'',
         pricesystemDetailList:[],
         filterPricesystemDetailList:[],

@@ -22,6 +22,15 @@ public class ReportScoreOffice extends IdEntity<ReportScoreOffice> {
     private BigDecimal monthSaleMoney=BigDecimal.ZERO;
     private BigDecimal recentMonthSaleMoney=BigDecimal.ZERO;
     private String officeId;
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     private String reportScoreAreaId;
 

@@ -21,10 +21,8 @@ public class EmployeePhone extends DataEntity<EmployeePhone> {
     private String status;
     private String imeStr;
     private Integer version = 0;
-    private Depot depot;
     private String depotId;
     private String employeeId;
-    private Product product;
     private String productId;
 
     public BigDecimal getDepositAmount() {
@@ -91,14 +89,6 @@ public class EmployeePhone extends DataEntity<EmployeePhone> {
         this.version = version;
     }
 
-    public Depot getDepot() {
-        return depot;
-    }
-
-    public void setDepot(Depot depot) {
-        this.depot = depot;
-    }
-
     public String getDepotId() {
         return depotId;
     }
@@ -113,14 +103,6 @@ public class EmployeePhone extends DataEntity<EmployeePhone> {
 
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getProductId() {

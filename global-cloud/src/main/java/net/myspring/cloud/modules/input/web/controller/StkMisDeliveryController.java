@@ -2,13 +2,8 @@ package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
-import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
-import net.myspring.cloud.modules.input.service.SalReturnStockService;
 import net.myspring.cloud.modules.input.service.StkMisDeliveryService;
-import net.myspring.cloud.modules.input.web.form.BatchBillForm;
 import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
-import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
-import net.myspring.cloud.modules.input.web.query.StkMisDeliveryQuery;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
@@ -36,9 +31,8 @@ public class StkMisDeliveryController {
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public StkMisDeliveryQuery form (StkMisDeliveryQuery stkMisDeliveryQuery) {
-        stkMisDeliveryQuery = stkMisDeliveryService.getForm(stkMisDeliveryQuery);
-        return stkMisDeliveryQuery;
+    public StkMisDeliveryForm form () {
+        return stkMisDeliveryService.getForm();
     }
 
     @RequestMapping(value = "save")

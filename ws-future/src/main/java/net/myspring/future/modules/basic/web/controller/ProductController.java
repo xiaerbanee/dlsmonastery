@@ -141,4 +141,9 @@ public class ProductController {
         productService.delete(productDto);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
+
+    @RequestMapping(value = "findAdProductAndAllowOrder")
+    public List<ProductDto> findAdProductAndAllowOrder(String billType){
+        return productService.findAdProductAndAllowOrder(billType);
+    }
 }
