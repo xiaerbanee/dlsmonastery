@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable remote  :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
-      <el-option v-for="item in itemList"  :key="item.townId" :label="item.fullName" :value="item.townId"></el-option>
+      <el-option v-for="item in itemList"  :key="item.id" :label="item.fullName" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
@@ -16,7 +16,7 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(util.isBlank(query)) {
+        if(query=="" || query == this.innerId) {
           return;
         }
         this.remoteLoading = true;
@@ -37,9 +37,11 @@
             return;
           }
           this.remoteLoading = true;
-          axios.get('/api/general/sys/town/findOne?id=' + this.innerId).then((response)=>{
+          console.log("response.data")
+          axios.get('/api/general/sys/town/findOne?id=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
+            console.log(response.data)
             this.$nextTick(()=>{
               this.$emit('afterInit');
             });

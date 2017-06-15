@@ -6,6 +6,7 @@ import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.client.TownClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -29,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +49,8 @@ public class DepotShopService {
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private TownClient townClient;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery) {
         depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
@@ -105,6 +107,9 @@ public class DepotShopService {
 
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
+        if(StringUtils.isNotBlank(depotShopForm.getTownId())){
+            depotShopForm.setTownName(townClient.findOne(depotShopForm.getTownId()).getTownName());
+        }
         if (depotShopForm.isCreate()) {
             depotShop = BeanUtil.map(depotShopForm, DepotShop.class);
             depotShopRepository.save(depotShop);
