@@ -7,6 +7,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
@@ -80,11 +81,16 @@ public class DepotShopController {
 
     @RequestMapping(value = "findDepotForm")
     public DepotForm findDepotForm(DepotForm depotForm){
-        depotForm = depotShopService.findDepotForm(depotForm);
-        depotForm.setAdPricesystemList(adPricesystemService.findAllEnabled());
-        depotForm.setPricesystemList(pricesystemService.findAllEnabled());
-        depotForm.setChainList(chainService.findAllEnabled());
+        depotForm.getExtra().put("adPricesystemList",adPricesystemService.findAllEnabled());
+        depotForm.getExtra().put("pricesystemList",pricesystemService.findAllEnabled());
+        depotForm.getExtra().put("chainList",chainService.findAllEnabled());
         return depotForm;
+    }
+
+    @RequestMapping(value = "findShop")
+    public DepotDto findShop(String id){
+        DepotDto depotDto = depotShopService.findShop(id);
+        return depotDto;
     }
 
     @RequestMapping(value = "depotReportDate")

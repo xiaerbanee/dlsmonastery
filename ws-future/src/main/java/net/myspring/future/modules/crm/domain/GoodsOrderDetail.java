@@ -20,8 +20,6 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     private String productId;
     private String goodsOrderId;
     @Transient
-    private Integer shipQty;
-    @Transient
     private Integer realBillQty;
 
     public BigDecimal getPrice() {
@@ -87,19 +85,8 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
         this.goodsOrderId = goodsOrderId;
     }
 
-    public Integer getShipQty() {
-        if(shipQty==null) {
-            shipQty=0;
-        }
-        return shipQty;
-    }
-
-    public void setShipQty(Integer shipQty) {
-        this.shipQty = shipQty;
-    }
-
     public Integer getRealBillQty() {
-        return getBillQty() - (getReturnQty()==null?0:getReturnQty());
+        return realBillQty;
     }
 
     public void setRealBillQty(Integer realBillQty) {
