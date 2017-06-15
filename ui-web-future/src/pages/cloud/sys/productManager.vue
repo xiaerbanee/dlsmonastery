@@ -2,16 +2,10 @@
   <div>
     <head-tab active="productManager"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" class="form input-form">
-        <el-row :gutter="24">
-          <el-col :span="12">
-            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          </el-col>
-          <el-col :span="12">
-            <el-button type="primary" @click="syn" icon="check">同步</el-button>
-          </el-col>
-        </el-row>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :inline="true">
+        <el-button type="primary" @click="syn" icon="check">同步</el-button>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px"></div>
       </el-form>
     </div>
   </div>
@@ -59,7 +53,6 @@
           json:[],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
       };
     },
     mounted() {

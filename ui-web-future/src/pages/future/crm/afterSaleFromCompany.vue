@@ -52,6 +52,7 @@
   import productTypeSelect from 'components/future/product-type-select';
   import dateRangePicker from 'components/common/date-range-picker';
   import SearchDialog from "../../../components/common/search-dialog.vue";
+  var table = null;
   export default{
     components:{
       SearchDialog,
@@ -70,7 +71,6 @@
         formLabelWidth: '120px',
         formVisible: false,
         remoteLoading:false,
-        table:null,
         settings: {
           colHeaders: [this.$t('afterSaleFromCompany.badProductName'),this.$t('afterSaleFromCompany.toAreaProductType'),"调换机串码","返还价格",this.$t('afterSaleFromCompany.toCompanyDate'),this.$t('afterSaleFromCompany.badProductIme'),this.$t('afterSaleFromCompany.areaDepot'),this.$t('afterSaleFromCompany.packageStatus'),this.$t('afterSaleFromCompany.toStoreType'),this.$t('afterSaleFromCompany.memory'),this.$t('afterSaleFromCompany.remarks')],
           rowHeaders:true,

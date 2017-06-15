@@ -51,7 +51,6 @@
         page:{},
         formData:{
           extra:{},
-          dutyDate:'',
         },
         initPromise:{},
         searchText:"",

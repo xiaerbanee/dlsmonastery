@@ -36,7 +36,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun save(position: Employee): Employee
 
 
-    fun findByEnabledIsTrueAndNameContaining(name: String): MutableList<Employee>
+    fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
 
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Employee>
@@ -108,13 +108,13 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sb.append(" AND employee.leave_date < :leaveDateEnd");
         }
         if(employeeQuery.positionId!=null) {
-            sb.append(" AND employee.account_id in(select t1.id from hr_account t1 where t1.enabled=1 and t1.position_id=:positionId");
+            sb.append(" AND employee.account_id in(select t1.id from hr_account t1 where t1.enabled=1 and t1.position_id=:positionId)");
         }
         if(StringUtils.isNotBlank(employeeQuery.officeId)) {
             sb.append(" and employee.office_id =:officeId");
         }
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
-            sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1");
+            sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

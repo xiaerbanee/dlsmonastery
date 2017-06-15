@@ -33,12 +33,10 @@ class ReportScoreOfficeRepositoryImpl @Autowired constructor(val namedParameterJ
         t1.date_rank >0
         and t1.month_rank >0
         """)
-//        if(reportScoreOfficeQuery.officeId !=null)
-//            sb.append("""  and t1.office_id =:officeId""")
-//        if(reportScoreOfficeQuery.scoreDate!=null)
-//            sb.append("""  and t1.score_date  =:scoreDate """)
-//        if(StringUtils.isNotEmpty(reportScoreOfficeQuery.areaId))
-//            sb.append("""  and t1.""")
+        if(reportScoreOfficeQuery.officeId !=null)
+            sb.append("""  and t1.office_id =:officeId""")
+        if(reportScoreOfficeQuery.scoreDate!=null)
+            sb.append("""  and t1.score_date  =:scoreDate """)
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(reportScoreOfficeQuery), BeanPropertyRowMapper(ReportScoreOfficeDto::class.java))

@@ -3,8 +3,7 @@ package net.myspring.cloud.modules.input.web.controller;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
-import net.myspring.cloud.modules.input.web.form.BatchBillForm;
-import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
+import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
@@ -31,16 +30,15 @@ public class SalOutStockController {
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public BatchBillQuery form (BatchBillQuery batchBillQuery) {
-        batchBillQuery = salOutStockService.getForm(batchBillQuery);
-        return batchBillQuery;
+    public SalStockForm form () {
+        return salOutStockService.getForm();
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(BatchBillForm batchBillForm) {
+    public RestResponse save(SalStockForm salStockForm) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(batchBillForm,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm,kingdeeBook,accountKingdeeBook);
         for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
             if (kingdeeSynExtendDto.getSuccess()){
                 return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);

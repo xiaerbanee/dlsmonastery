@@ -13,7 +13,6 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameContaining(name);
+        List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameLike("%"+name+"%");
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;

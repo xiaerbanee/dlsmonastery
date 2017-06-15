@@ -23,18 +23,21 @@ interface EmployeePhoneDepositRepositoryCustom{
 
     fun findPage(pageable: Pageable, employeePhoneDepositQuery: EmployeePhoneDepositQuery): Page<EmployeePhoneDepositDto>
 
+    fun findFilter(employeePhoneDepositQuery: EmployeePhoneDepositQuery): MutableList<EmployeePhoneDepositDto>
 }
 
 class EmployeePhoneDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):EmployeePhoneDepositRepositoryCustom{
-
-    override fun findPage(pageable: Pageable, employeePhoneDepositQuery: EmployeePhoneDepositQuery): Page<EmployeePhoneDepositDto> {
+    override fun findFilter(employeePhoneDepositQuery: EmployeePhoneDepositQuery): MutableList<EmployeePhoneDepositDto> {
         val sb = StringBuilder("""
              SELECT
-                t1.*
+                t1.*,t2.name as 'depotName',t3.name as 'bankName',t4.name as 'productName',t2.area_id
             FROM
-                 hr_employee_phone_deposit t1
+                 crm_employee_phone_deposit t1,crm_depot t2,crm_bank t3,crm_product t4
             WHERE
                 t1.enabled=1
+                and t1.depot_id=t2.id
+                and t1.bank_id=t3.id
+                and t1.product_id=t4.id
         """)
         if (StringUtils.isNotEmpty(employeePhoneDepositQuery.status)) {
             sb.append("""  and t1.status=:status """)
@@ -43,14 +46,40 @@ class EmployeePhoneDepositRepositoryImpl @Autowired constructor(val namedParamet
             sb.append("""  and t1.depot_id in (:depotIdList) """)
         }
         if (StringUtils.isNotEmpty(employeePhoneDepositQuery.depotName)) {
-            sb.append("""
-            and t1.depot_id=(
-                select id
-                from crm_depot
-                where enabled=1
-                and name=:depotName
-            )
-            """)
+            sb.append(""" and t2.name like concat('%',:depotName,'%') """)
+        }
+        if (StringUtils.isNotEmpty(employeePhoneDepositQuery.remarks)) {
+            sb.append("""  and t1.remarks=:remarks """)
+        }
+        if (employeePhoneDepositQuery.createdDateStart!=null) {
+            sb.append("""  and t1.created_date>=:createdDateStart """)
+        }
+        if (employeePhoneDepositQuery.createdDateEnd!=null) {
+            sb.append("""  and t1.created_date<=:createdDateEnd """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(employeePhoneDepositQuery), BeanPropertyRowMapper(EmployeePhoneDepositDto::class.java))
+    }
+
+    override fun findPage(pageable: Pageable, employeePhoneDepositQuery: EmployeePhoneDepositQuery): Page<EmployeePhoneDepositDto> {
+        val sb = StringBuilder("""
+             SELECT
+                t1.*,t2.name as 'depotName',t3.name as 'bankName',t4.name as 'productName',t2.area_id
+            FROM
+                 crm_employee_phone_deposit t1,crm_depot t2,crm_bank t3,crm_product t4
+            WHERE
+                t1.enabled=1
+                and t1.depot_id=t2.id
+                and t1.bank_id=t3.id
+                and t1.product_id=t4.id
+        """)
+        if (StringUtils.isNotEmpty(employeePhoneDepositQuery.status)) {
+            sb.append("""  and t1.status=:status """)
+        }
+        if (CollectionUtil.isNotEmpty(employeePhoneDepositQuery.depotIdList)) {
+            sb.append("""  and t1.depot_id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotEmpty(employeePhoneDepositQuery.depotName)) {
+            sb.append(""" and t2.name like concat('%',:depotName,'%') """)
         }
         if (StringUtils.isNotEmpty(employeePhoneDepositQuery.remarks)) {
             sb.append("""  and t1.remarks=:remarks """)

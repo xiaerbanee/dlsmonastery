@@ -54,7 +54,6 @@
       methods:{
         getData(){
           return{
-            isInit:false,
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{
@@ -76,8 +75,11 @@
             if (valid) {
               axios.post('/api/basic/sys/menu/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                Object.assign(this.$data,this.getData());
-                if(!this.isCreate){
+                if(this.isCreate){
+                  Object.assign(this.$data,this.getData());
+                  this.initPage();
+                }else{
+                  this.submitDisabled = false;
                   this.$router.push({name:'menuList',query:util.getQuery("menuList")})
                 }
               }).catch(function () {
@@ -87,18 +89,16 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data,this.getData());
-          axios.get('/api/basic/sys/menu/getForm').then((response)=>{
-            this.inputForm = response.data;
-            axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
+        },initPage(){
+            axios.get('/api/basic/sys/menu/getForm').then((response)=>{
+              this.inputForm = response.data;
+              axios.get('/api/basic/sys/menu/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+                util.copyValue(response.data,this.inputForm);
+              })
             })
-          })
         }
-        this.isInit = true;
-      }
+      },created(){
+      this.initPage();
+    }
     }
 </script>

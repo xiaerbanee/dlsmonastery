@@ -39,6 +39,7 @@
           name:"",
           extra:{}
         },
+        initPromise:{},
         searchText:'',
         formLabelWidth: '120px',
         formVisible: false,
@@ -76,8 +77,15 @@
       },
     },created () {
       this.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/basic/hr/dutyAnnual/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      })
+
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      })
     }
   };
 </script>

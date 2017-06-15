@@ -22,6 +22,10 @@ public class DutyAnnualController {
     @Autowired
     private DutyAnnualService dutyAnnualService;
 
+    @RequestMapping(value = "getQuery")
+    public DutyAnnualQuery getQuery(DutyAnnualQuery dutyAnnualQuery) {
+        return dutyAnnualQuery;
+    }
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
         dutyAnnualQuery.setCreatedBy(RequestUtils.getAccountId());
