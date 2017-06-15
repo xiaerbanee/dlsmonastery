@@ -44,7 +44,6 @@
             <el-form-item v-if="isAudit">
               <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopAdDetail.save')}}</el-button>
             </el-form-item>
-            <span v-html="inputForm.content"></span>
             <process-details v-model="inputForm.processInstanceId"></process-details>
           </el-col>
         </el-row>
@@ -81,9 +80,9 @@
             this.submitDisabled = true;
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/layout/shopAd/audit', qs.stringify(this.submitData)).then((response)=> {
-              this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
+                this.$message(response.data.message);
                 this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
               }
             }).catch(function () {
