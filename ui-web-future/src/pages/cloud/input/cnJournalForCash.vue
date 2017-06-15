@@ -2,18 +2,12 @@
   <div>
     <head-tab active="cnJournalForCash"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
-        <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
-              <date-picker v-model="formData.billDate"></date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          </el-col>
-        </el-row>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+        <el-form-item label="日期"  prop="billDate">
+          <date-picker v-model="formData.billDate"></date-picker>
+        </el-form-item>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
   </div>
@@ -46,21 +40,21 @@
             {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
             {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
           ],
+          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            var that = this;
-            if (source === 'edit') {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 0) {
                   let accountNumber = changes[i][3];
-                  if (accountNumber === ""){
-                    table.setDataAtCell(row, 4, '')
-                  }else {
+                  if (util.isNotBlank(accountNumber)) {
                     axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 4, account.fname);
                     });
+                  } else {
+                    table.setDataAtCell(row, 4, null);
                   }
                 }
                 let data=table.getData();
@@ -90,13 +84,10 @@
         formData:{
           billDate:new Date().toLocaleDateString(),
           json:[],
-        },formLabel:{
-          billDate:{label:"日期"},
         },rules: {
-          billDate: [{ required: true, message: '请选择时间'}],
+          billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
         remoteLoading:false
       };
     },
@@ -108,7 +99,7 @@
         this.settings.columns[6].source = extra.departmentNameList;
         this.settings.columns[7].source = extra.otherTypeNameList;
         this.settings.columns[8].source = extra.expenseTypeNameList;
-        var flag = extra.customerForFlag;
+        let flag = extra.customerForFlag;
         if(flag === true){
           this.settings.colHeaders.push("对方关联客户");
           this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});

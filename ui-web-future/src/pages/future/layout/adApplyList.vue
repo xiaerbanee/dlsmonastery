@@ -46,10 +46,10 @@
         <el-table-column column-key="productId" prop="productCode" :label="$t('adApplyList.productCode')" sortable></el-table-column>
         <el-table-column prop="expiryDateRemarks" :label="$t('adApplyList.expiryDateRemarks')"></el-table-column>
         <el-table-column column-key="productId" prop="productName" :label="$t('adApplyList.product')" sortable></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')" sortable></el-table-column>
-        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')" sortable></el-table-column>
-        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')" sortable></el-table-column>
-        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')" sortable></el-table-column>
+        <el-table-column prop="applyQty" :label="$t('adApplyList.applyQty')+'('+totalApplyQty+')'" sortable></el-table-column>
+        <el-table-column prop="confirmQty" :label="$t('adApplyList.confirmQty')+'('+totalConfirmQty+')'" sortable></el-table-column>
+        <el-table-column prop="billedQty" :label="$t('adApplyList.billedQty')+'('+totalBilledQty+')'" sortable></el-table-column>
+        <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')+'('+totalLeftQty+')'" sortable></el-table-column>
         <el-table-column prop="orderId" :label="$t('adApplyList.orderId')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
       </el-table>
@@ -77,7 +77,11 @@
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
-        remoteLoading: false
+        remoteLoading: false,
+        totalApplyQty:"0",
+        totalConfirmQty:"0",
+        totalBilledQty:"0",
+        totalLeftQty:"0"
       };
     },
     methods: {
@@ -92,6 +96,8 @@
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("adApplyList", submitData);
         axios.get('/api/ws/future/layout/adApply',{params:submitData}).then((response) => {
+          let content = response.data.content;
+          this.getTotalQty(content);
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -114,6 +120,33 @@
         this.$router.push({name: 'adApplyGoods'});
       },exportData(){
 				window.location.href= "/api/crm/adApply/export?"+qs.stringify(this.formData);
+      },getTotalQty(content){
+          if(content == null){
+              return;
+          }
+          let tempApplyQty = 0;
+          let tempConfirmQty = 0;
+          let tempBilledQty = 0;
+          let tempLeftQty = 0;
+          for(let index in content){
+            let detail=content[index];
+            if(util.isNotBlank(detail.applyQty)){
+              tempApplyQty += detail.applyQty;
+            }
+            if(util.isNotBlank(detail.confirmQty)){
+              tempConfirmQty += detail.confirmQty;
+            }
+            if(util.isNotBlank(detail.billedQty)){
+              tempBilledQty += detail.billedQty;
+            }
+            if(util.isNotBlank(detail.leftQty)){
+              tempLeftQty += detail.leftQty;
+            }
+          }
+          this.totalApplyQty = tempApplyQty;
+          this.totalConfirmQty = tempConfirmQty;
+          this.totalBilledQty = tempBilledQty;
+          this.totalLeftQty = tempLeftQty;
       }
     },created () {
         let that = this;

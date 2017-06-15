@@ -3,6 +3,7 @@ const kingdeeBookForm  = r => require.ensure([], () => r(require('pages/cloud/sy
 const accountKingdeeBookList  = r => require.ensure([], () => r(require('pages/cloud/sys/accountKingdeeBookList.vue')));
 const accountKingdeeBookForm  = r => require.ensure([], () => r(require('pages/cloud/sys/accountKingdeeBookForm.vue')));
 const productManager  = r => require.ensure([], () => r(require('pages/cloud/sys/productManager.vue')));
+const voucherList  = r => require.ensure([], () => r(require('pages/cloud/sys/voucherList.vue')));
 
 
 let routes = [
@@ -11,6 +12,7 @@ let routes = [
   {path: '/cloud/sys/accountKingdeeBookList',component: accountKingdeeBookList,name: 'accountKingdeeBookList'},
   {path: '/cloud/sys/accountKingdeeBookForm',component: accountKingdeeBookForm,name: 'accountKingdeeBookForm',meta:{menu:"accountKingdeeBookList"}},
   {path: '/cloud/sys/productManager',component: productManager,name: 'productManager'},
+  {path: '/cloud/sys/voucherList',component: voucherList,name: 'voucherList'},
 ];
 
 export default routes;

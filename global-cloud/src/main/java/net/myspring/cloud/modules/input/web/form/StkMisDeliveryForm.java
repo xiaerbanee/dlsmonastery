@@ -1,11 +1,14 @@
 package net.myspring.cloud.modules.input.web.form;
 
+import net.myspring.cloud.modules.input.dto.StkMisDeliveryDto;
+import net.myspring.common.form.BaseForm;
+
 import java.time.LocalDate;
 
 /**
  * Created by lihx on 2017/5/17.
  */
-public class StkMisDeliveryForm {
+public class StkMisDeliveryForm extends BaseForm<StkMisDeliveryDto>{
     private String departmentNumber;
     private LocalDate billDate;
     private String json;

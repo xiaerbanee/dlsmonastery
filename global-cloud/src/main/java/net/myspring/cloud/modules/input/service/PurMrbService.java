@@ -90,7 +90,8 @@ public class PurMrbService {
         return kingdeeSynDto;
     }
 
-    public PurMrbForm getForm(PurMrbForm purMrbForm){
+    public PurMrbForm getForm(){
+        PurMrbForm purMrbForm = new PurMrbForm();
         Map<String,Object> map = Maps.newHashMap();
         map.put("materialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         purMrbForm.setExtra(map);

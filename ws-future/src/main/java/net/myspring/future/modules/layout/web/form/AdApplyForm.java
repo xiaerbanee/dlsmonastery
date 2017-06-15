@@ -2,6 +2,8 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.modules.basic.web.form.ProductAdForm;
+import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.layout.domain.AdApply;
 
 import java.util.List;
@@ -13,11 +15,8 @@ public class AdApplyForm extends BaseForm<AdApply> {
     private String billType = BillTypeEnum.POP.name();
     private String shopId;
 
-    private List<Integer> applyQtys;
-    private List<String> productIds;
+    private List<ProductAdForm> productAdForms;
 
-    //下拉菜单
-    private List<String> billTypes;
 
     public String getBillType() {
         return billType;
@@ -35,27 +34,11 @@ public class AdApplyForm extends BaseForm<AdApply> {
         this.shopId = shopId;
     }
 
-    public List<Integer> getApplyQtys() {
-        return applyQtys;
+    public List<ProductAdForm> getProductAdForms() {
+        return productAdForms;
     }
 
-    public void setApplyQtys(List<Integer> applyQtys) {
-        this.applyQtys = applyQtys;
-    }
-
-    public List<String> getProductIds() {
-        return productIds;
-    }
-
-    public void setProductIds(List<String> productIds) {
-        this.productIds = productIds;
-    }
-
-    public List<String> getBillTypes() {
-        return billTypes;
-    }
-
-    public void setBillTypes(List<String> billTypes) {
-        this.billTypes = billTypes;
+    public void setProductAdForms(List<ProductAdForm> productAdForms) {
+        this.productAdForms = productAdForms;
     }
 }

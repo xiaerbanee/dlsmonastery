@@ -43,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
             .and()
-                .authorizeRequests().antMatchers("/uaa/**","/accountWeixin/bind").permitAll()
-                .antMatchers("/**").authenticated()
+                .authorizeRequests().antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
             .and()
                 .httpBasic();
     }
