@@ -5,46 +5,46 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:auditFile:edit'">{{$t('auditFileList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:auditFile:view'">{{$t('auditFileList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('auditFileList.filter')" v-model="formVisible" size="large" class="search-form">
-        <el-form :model="formData" method="get" >
+      <search-dialog :title="$t('auditFileList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData" method="get">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.id')" :label-width="formLabelWidth">
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('auditFileList.notZero')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.auditType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('auditFileList.inputKey')">
                   <el-option v-for="item in auditTypes" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.officeName.label"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.officeName')"  :label-width="formLabelWidth">
                 <el-input v-model="formData.officeName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.officeId.label"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.officeId')"  :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDate.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item :label="formLabel.createdByName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.applyAccount')" :label-width="formLabelWidth">
                 <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.stageName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.stageName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.stageName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.processTypeId.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.processTypeName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.processTypeId" filterable clearable :placeholder="$t('auditFileList.inputKey')">
                   <el-option v-for="item in formData.processTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.content.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.content')" :label-width="formLabelWidth">
                 <el-input v-model="formData.content" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.title.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.title')" :label-width="formLabelWidth">
                 <el-input v-model="formData.title" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -53,7 +53,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('auditFileList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('auditFileList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="id" :label="$t('auditFileList.id')" sortable></el-table-column>
         <el-table-column prop="createdByName":label="$t('auditFileList.applyAccount')"></el-table-column>
@@ -91,32 +91,11 @@
       return {
         page:{},
         formData:{
-          createdDate:'',
-        },submitData:{
-          page:0,
-          size:25,
-          id:'',
-          auditType:"全部",
-          officeName:'',
-          officeId:'',
-          createdDate:'',
-          createdByName:'',
-          stageName:'',
-          processTypeId:'',
-          content:'',
-          title:''
-        },formLabel:{
-          id:{label:this.$t('auditFileList.id')},
-          auditType:{label:this.$t('auditFileList.auditType'),value:''},
-          officeName:{label:this.$t('auditFileList.officeName')},
-          officeId:{label:this.$t('auditFileList.officeId'),value:''},
-          createdDate:{label:this.$t('auditFileList.createdDate')},
-          createdByName:{label:this.$t('auditFileList.applyAccount')},
-          stageName:{label:this.$t('auditFileList.stageName')},
-          processTypeId:{label:this.$t('auditFileList.processTypeName'),value:''},
-          content:{label:this.$t('auditFileList.content')},
-          title:{label:this.$t('auditFileList.title')}
-        },auditTypes:[
+          extra:{}
+        },
+        initPromise:{},
+        searchText:'',
+        auditTypes:[
           this.$t('auditFileList.all'),
           this.$t('auditFileList.waitAudit')
         ],
@@ -127,14 +106,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        });
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.auditType.value=this.auditTypes[this.formData.auditType];
-        this.formLabel.officeId.value=util.getLabel(this.offices,this.formData.officeId);
-        this.formLabel.processTypeId.value=util.getLabel(this.formData.processTypes,this.formData.processTypeId);
-        util.setQuery("auditFileList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/auditFile?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("auditFileList",submitData);
+        axios.get('/api/basic/hr/auditFile?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -168,13 +150,17 @@
         }
       }
     },created () {
-        var that=this;
+      var that=this;
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/hr/auditFile/getQuery').then((response) =>{
-      this.formData=response.data;
-      util.copyValue(that.$route.query,this.formData);
-      that.pageRequest();
-    });
+      this.initPromise = axios.get('/api/basic/hr/auditFile/getQuery').then((response) =>{
+        this.formData=response.data;
+        this.formData.auditType="全部";
+        util.copyValue(that.$route.query,this.formData);
+      });
+    },activated() {
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      })
     }
   };
 </script>

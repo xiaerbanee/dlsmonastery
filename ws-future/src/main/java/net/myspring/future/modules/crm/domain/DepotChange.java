@@ -12,26 +12,14 @@ import java.time.LocalDate;
 public class DepotChange extends CompanyEntity<DepotChange> {
     private String type;
     private LocalDate expiryDate;
-    private String oldLabel;
     private String oldValue;
-    private String newLabel;
     private String newValue;
     private Integer version = 0;
-    private String processInstanceId;
-    private String processStatus;
 
     private String depotId;
-    private String processTypeId;
-    private String processFlowId;
-    private String processPositionId;
 
-    public String getProcessPositionId() {
-        return processPositionId;
-    }
-
-    public void setProcessPositionId(String processPositionId) {
-        this.processPositionId = processPositionId;
-    }
+    private String status;
+    private String auditRemarks;
 
     public String getType() {
         return type;
@@ -49,13 +37,6 @@ public class DepotChange extends CompanyEntity<DepotChange> {
         this.expiryDate = expiryDate;
     }
 
-    public String getOldLabel() {
-        return oldLabel;
-    }
-
-    public void setOldLabel(String oldLabel) {
-        this.oldLabel = oldLabel;
-    }
 
     public String getOldValue() {
         return oldValue;
@@ -63,14 +44,6 @@ public class DepotChange extends CompanyEntity<DepotChange> {
 
     public void setOldValue(String oldValue) {
         this.oldValue = oldValue;
-    }
-
-    public String getNewLabel() {
-        return newLabel;
-    }
-
-    public void setNewLabel(String newLabel) {
-        this.newLabel = newLabel;
     }
 
     public String getNewValue() {
@@ -89,22 +62,6 @@ public class DepotChange extends CompanyEntity<DepotChange> {
         this.version = version;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
-
-    public String getProcessStatus() {
-        return processStatus;
-    }
-
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
-    }
-
     public String getDepotId() {
         return depotId;
     }
@@ -113,19 +70,19 @@ public class DepotChange extends CompanyEntity<DepotChange> {
         this.depotId = depotId;
     }
 
-    public String getProcessTypeId() {
-        return processTypeId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setProcessTypeId(String processTypeId) {
-        this.processTypeId = processTypeId;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getProcessFlowId() {
-        return processFlowId;
+    public String getAuditRemarks() {
+        return auditRemarks;
     }
 
-    public void setProcessFlowId(String processFlowId) {
-        this.processFlowId = processFlowId;
+    public void setAuditRemarks(String auditRemarks) {
+        this.auditRemarks = auditRemarks;
     }
 }

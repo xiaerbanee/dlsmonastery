@@ -18,16 +18,23 @@ public class DepotChangeDto extends DataDto<DepotChange>{
     private String depotId;
     @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
     private String depotName;
-    private String processInstanceId;
-    private String processStatus;
-    private String processPositionId;
+    private String status;
+    private String auditRemarks;
 
-    public String getProcessPositionId() {
-        return processPositionId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setProcessPositionId(String processPositionId) {
-        this.processPositionId = processPositionId;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAuditRemarks() {
+        return auditRemarks;
+    }
+
+    public void setAuditRemarks(String auditRemarks) {
+        this.auditRemarks = auditRemarks;
     }
 
     public String getType() {
@@ -78,29 +85,6 @@ public class DepotChangeDto extends DataDto<DepotChange>{
         this.depotName = depotName;
     }
 
-    public String getProcessInstanceId() {
-        return processInstanceId;
-    }
-
-    public void setProcessInstanceId(String processInstanceId) {
-        this.processInstanceId = processInstanceId;
-    }
-
-    public String getProcessStatus() {
-        return processStatus;
-    }
-
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
-    }
-
-    public Boolean getIsAuditable(){
-        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
-            return true;
-        }else {
-            return false;
-        }
-    }
 
     public Boolean getIsEditable(){
         if (RequestUtils.getAccountId().equals(getCreatedBy())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){

@@ -83,6 +83,7 @@
         formData:{
           extra:{},
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
@@ -102,7 +103,6 @@
         util.setQuery("depotInventoryReport",this.formData);
         axios.get('/api/ws/future/basic/depotShop/depotReportDate?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
-          console.log(this.page);
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
@@ -121,12 +121,16 @@
       },exportData(command) {
       }
     },created () {
-      axios.get('/api/ws/future/basic/depotShop/getReportQuery').then((response) => {
+      this.initPromise =axios.get('/api/ws/future/basic/depotShop/getReportQuery').then((response) => {
         this.formData = response.data;
-        console.log(this.formData.extra)
+        console.log(this.formData)
         util.copyValue(this.$route.query, this.formData);
         this.pageRequest();
       })
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

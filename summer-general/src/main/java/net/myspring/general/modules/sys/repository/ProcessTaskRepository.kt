@@ -52,6 +52,16 @@ class ProcessTaskRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
                 and t1.position_id =:positionId
             """)
         }
+        if (StringUtils.isNotBlank(processTaskQuery.name)) {
+            sb.append("""
+                and t1.name like concat('%',:name,'%')
+            """)
+        }
+        if (StringUtils.isNotBlank(processTaskQuery.status)) {
+            sb.append("""
+                and t1.status like concat('%',:status,'%')
+            """)
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(processTaskQuery),BeanPropertyRowMapper(ProcessTaskDto::class.java));

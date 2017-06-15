@@ -12,11 +12,11 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('reportScoreAreaList.scoreDate')" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.scoreDate" type="date" align="right"  :picker-options="pickerDateOption"></el-date-picker>
+                <date-picker v-model="formData.scoreDate"></date-picker>
               </el-form-item>
               <el-form-item :label="$t('reportScoreAreaList.officeName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable >
-                  <el-option v-for="item in formData.extra.areas" :key="item" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -28,7 +28,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('reportScoreAreaList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="scoreDate" :label="$t('reportScoreAreaList.scoreDate')" sortable></el-table-column>
-        <el-table-column prop="office.name" :label="$t('reportScoreAreaList.officeName')" width="180"></el-table-column>
+        <el-table-column prop="officeName" :label="$t('reportScoreAreaList.officeName')" width="180"></el-table-column>
         <el-table-column prop="score" :label="$t('reportScoreAreaList.score')"></el-table-column>
         <el-table-column prop="monthScore" :label="$t('reportScoreAreaList.monthScore')"></el-table-column>
         <el-table-column prop="dateRank" :label="$t('reportScoreAreaList.dateRank')"></el-table-column>
@@ -36,8 +36,8 @@
         <el-table-column prop="saleQty" :label="$t('reportScoreAreaList.saleQty')"></el-table-column>
         <el-table-column prop="monthSaleQty" :label="$t('reportScoreAreaList.monthSaleQty')"></el-table-column>
         <el-table-column prop="recentMonthSaleQty" :label="$t('reportScoreAreaList.recentMonthSaleQty')"></el-table-column>
-        <el-table-column prop="office.point"  :label="$t('reportScoreAreaList.point')"></el-table-column>
-        <el-table-column prop="monthSaleMoney" :label="$t('reportScoreAreaList.monthSaleMoney')"></el-table-column>
+        <el-table-column prop="officePoint"  :label="$t('reportScoreAreaList.point')"></el-table-column>
+        <el-table-column prop="monthSaleMoney" :label="$t('reportScoreAreaList.monthSaleMoney')" width="180"></el-table-column>
         <el-table-column prop="pointMonthSaleMoney" :label="$t('reportScoreAreaList.pointMonthSaleMoney')" width="180"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -53,7 +53,6 @@
         formData:{
           extra:{}
         },
-        pickerDateOption:util.pickerDateOption,
         productList:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -72,7 +71,6 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("reportScoreAreaList",submitData);
-        this.formData.scoreDate = util.formatLocalDate(this.formData.scoreDate);
         axios.get('/api/ws/future/crm/reportScoreArea',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

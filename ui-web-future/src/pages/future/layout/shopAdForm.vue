@@ -58,6 +58,7 @@
     methods:{
       getData(){
         return{
+          isCreate:this.$route.query.id==null,
           action:this.$route.query.action,
           submitDisabled:false,
           remoteLoading:false,
@@ -85,7 +86,7 @@
             axios.post('/api/ws/future/layout/shopAd/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
               if (response.data.success) {
-                if (this.inputForm.isCreate) {
+                if (this.isCreate) {
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{

@@ -58,12 +58,13 @@
       return {
         page:{},
         formData:{
-          dutyDate:'',
+          extra:{},
           month:'',
           formatMonth:'',
         },
         searchText:"",
         formLabelWidth: '120px',
+        initPromise:{},
         formVisible: false,
         exportVisible:false,
         pageLoading: false
@@ -104,9 +105,15 @@
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData)
+      this.initPromise = axios.get('/api/basic/hr/dutyWorktime/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query, this.formData);
+      });
+
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      });
     }
   };
 </script>

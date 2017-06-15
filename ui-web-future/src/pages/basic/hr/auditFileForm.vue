@@ -45,7 +45,6 @@
     methods:{
       getData(){
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           formProperty:{},
@@ -72,9 +71,12 @@
               if(response.data.message){
                 this.$message(response.data.message);
               }
-              Object.assign(this.$data,this.getData());
               if(!this.isCreate){
+                this.submitDisabled = false;
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})
+              } else {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -90,10 +92,8 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+      initPage() {
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
@@ -101,7 +101,8 @@
           this.processTypeList = response.data;
         })
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

@@ -60,7 +60,6 @@
     methods:{
       getData(){
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           loading: false,
@@ -84,9 +83,12 @@
           if (valid) {
             axios.post('/api/general/sys/processType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data,this.getData());
-              if(!this.inputForm.create){
-                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")})
+              if(this.isCreate){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+              }else{
+                this.submitDisabled = false;
+                this.$router.push({name:'processTypeList',query:util.getQuery("processTypeList")});
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -98,48 +100,44 @@
       },removeDomain(item) {
         var index = this.inputForm.processFlowList.indexOf(item)
         if (index !== -1) {
-          this.inputForm.processFlowList.splice(index, 1)
-        }
-      },renderAction(createElement) {
-        return createElement(
-          'a',{
-             attrs: {
-              class: 'el-button el-button--primary el-button--small'
-            }, domProps: {
-              innerHTML: '增加'
-            },on: {
-              click: this.addDomain
-            }
+        this.inputForm.processFlowList.splice(index, 1)
+      }
+    },renderAction(createElement) {
+      return createElement(
+        'a',{
+          attrs: {
+            class: 'el-button el-button--primary el-button--small'
+          }, domProps: {
+            innerHTML: '增加'
+          },on: {
+            click: this.addDomain
           }
-        );
-      },addDomain(){
+        }
+      );
+    },addDomain(){
         var sort = 10;
         if(this.inputForm.processFlowList.length>0 && this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort != null) {
           sort = this.inputForm.processFlowList[this.inputForm.processFlowList.length-1].sort + 10;
         }
         this.inputForm.processFlowList.push({name:"",sort:sort,positionId:""});
-      },initPage() {
-
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data,this.getData());
-        if(this.isCreate){
-          for(var i = 0;i<3;i++) {
-            this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
-          }
-        } else {
+      },initPage(){
+          if(this.isCreate){
+            for(var i = 0;i<3;i++) {
+              this.inputForm.processFlowList.push({name:"",sort:(i+1)*10,positionId:""});
+            }
+          } else {
             axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
               this.inputForm=response.data;
-              console.log(response.data)
-            axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
+              console.log(response.data);
+              axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+                util.copyValue(response.data,this.inputForm);
+              });
+              console.log(this.inputForm)
             });
-            console.log(this.inputForm)
-          });
-        }
+          }
       }
-      this.isInit = true;
+    },created(){
+      this.initPage();
     }
   }
 </script>

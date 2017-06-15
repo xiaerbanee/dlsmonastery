@@ -40,6 +40,9 @@ interface PricesystemRepository : BaseRepository<Pricesystem,String>,Pricesystem
     """)
     fun findAllEnabled(): MutableList<Pricesystem>
 
+
+    fun findByName(name:String):Pricesystem
+
     @Query("""
         SELECT t1
         FROM #{#entityName} t1

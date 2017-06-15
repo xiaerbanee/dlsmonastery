@@ -21,10 +21,38 @@ interface DepotChangeRepository : BaseRepository<DepotChange, String>,DepotChang
 }
 
 interface DepotChangeRepositoryCustom{
+    fun findFilter(depotChangeQuery: DepotChangeQuery):MutableList<DepotChangeDto>
+
     fun findPage(pageable: Pageable,depotChangeQuery: DepotChangeQuery):Page<DepotChangeDto>
 }
 
 class DepotChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotChangeRepositoryCustom{
+
+    override fun findFilter(depotChangeQuery: DepotChangeQuery):MutableList<DepotChangeDto>{
+        val sb = StringBuffer()
+        sb.append("""
+         SELECT
+            t1.*
+        FROM
+            crm_depot_change t1
+        WHERE
+            t1.enabled = 1
+        """)
+        if(StringUtils.isNotBlank(depotChangeQuery.depotId)){
+            sb.append("""  and t1.depot_id=:depotId  """)
+        }
+        if(StringUtils.isNotBlank(depotChangeQuery.type)){
+            sb.append("""  and t1.type = :type  """)
+        }
+        if(depotChangeQuery.createdDateStart != null){
+            sb.append("""  and t1.expiry_date >= :createdDateStart  """)
+        }
+        if(depotChangeQuery.createdDateEnd != null){
+            sb.append("""  and t1.expiry_date < :createdDateEnd  """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotChangeQuery), BeanPropertyRowMapper(DepotChangeDto::class.java))
+    }
+
     override fun findPage(pageable: Pageable,depotChangeQuery: DepotChangeQuery):Page<DepotChangeDto>{
         val sb = StringBuffer()
         sb.append("""
