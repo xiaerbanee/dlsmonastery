@@ -88,7 +88,6 @@
           billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
         remoteLoading:false
       };
     },
@@ -100,7 +99,7 @@
         this.settings.columns[6].source = extra.departmentNameList;
         this.settings.columns[7].source = extra.otherTypeNameList;
         this.settings.columns[8].source = extra.expenseTypeNameList;
-        var flag = extra.customerForFlag;
+        let flag = extra.customerForFlag;
         if(flag === true){
           this.settings.colHeaders.push("对方关联客户");
           this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerNameFor:[],source: this.customerNameFor});

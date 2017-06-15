@@ -66,7 +66,6 @@
           departmentNumber: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
         remoteLoading:false
       };
     },

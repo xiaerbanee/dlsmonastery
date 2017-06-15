@@ -53,7 +53,6 @@
           json:[],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
       };
     },
     mounted() {
