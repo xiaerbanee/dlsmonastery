@@ -114,16 +114,16 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/stkInStock/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[1].source = extra.materialNameList;
-        let kingdeeName = extra.kingdeeName;
+        this.settings.columns[1].source = response.data.materialNameList;
+        let kingdeeName = response.data.kingdeeName;
         if(kingdeeName === "JXDJ"){
           this.settings.columns.push({type: "autocomplete", allowEmpty: true, strict: true, typeList:[], source: this.typeList});
-          this.settings.columns[8].source = extra.typeList;
+          this.settings.columns[8].source = response.data.typeList;
         }else{
           this.settings.columns.push({type: "text", readOnly: true, strict: true});
         }
-        typeList = extra.typeList;
+        typeList = response.data.typeList;
+        console.log(typeList);
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
