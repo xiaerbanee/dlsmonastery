@@ -31,7 +31,7 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-
+  var table = null;
   export default{
     data(){
       return {
@@ -51,7 +51,6 @@
         formLabelWidth: '120px',
         formVisible: false,
         submitDisabled: false,
-        table: null,
         settings: {
           colHeaders: ['坏机串码', '坏机型号', '坏机门店', '退机类型', '包装', '内存', '坏机来源', '坏机所在库', '替换机串码', '替换机型号', '返还金额',"备注"],
           rowHeaders: true,

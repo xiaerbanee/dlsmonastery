@@ -7,7 +7,7 @@ import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.web.form.WeixinAccountForm;
+import net.myspring.uaa.web.form.AccountWeixinForm;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,11 @@ public class AccountWeixinService {
     private WeixinManager weixinManager;
 
 
-    public RestResponse bind(WeixinAccountForm weixinAccountForm) {
-        String loginName=weixinAccountForm.getLoginName();
+    public RestResponse bind(AccountWeixinForm accountWeixinForm) {
+        String loginName=accountWeixinForm.getLoginName();
         AccountDto account = accountRepository.findByLoginName(loginName);
-        if ((account != null && StringUtils.validatePassword(weixinAccountForm.getPassword(), account.getPassword())) || "xcxtest".equals(weixinAccountForm.getLoginName())) {
-            WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinAccountForm.getCode());
+        if ((account != null && StringUtils.validatePassword(accountWeixinForm.getPassword(), account.getPassword())) || "xcxtest".equals(accountWeixinForm.getLoginName())) {
+            WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(accountWeixinForm.getCode());
             AccountWeixinDto accountWeixin = accountWeixinDtoRepository.findByAccountId(account.getId());
             if (accountWeixin != null) {
                 if("xcxtest".equals(loginName)){

@@ -11,6 +11,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.web.form.ProductAdForm;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
@@ -70,7 +71,7 @@ public class AdApplyService {
         List<String> billTypes = new ArrayList<>();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
-        adApplyForm.setBillTypes(billTypes);
+        adApplyForm.getExtra().put("billTypes",billTypes);
         return adApplyForm;
     }
 
@@ -78,44 +79,28 @@ public class AdApplyService {
         List<String> billTypes = new ArrayList<>();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
-        adApplyBillForm.setBillTypes(billTypes);
-        if(adApplyBillForm.getBillType()==null){
-            adApplyBillForm.setBillType(BillTypeEnum.POP.name());
-        }
+        adApplyBillForm.getExtra().put("billTypes",billTypes);
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         return adApplyBillForm;
     }
 
-    public List<AdApplyDto> findAdApplyList(List<String> outGroupIds){
+    public List<AdApplyDto> findAdApplyList(String billType){
+        List<String> outGroupIds = Lists.newArrayList();
+        if(BillTypeEnum.POP.name().equalsIgnoreCase(billType)){
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+        }
+        if(BillTypeEnum.配件赠品.name().equalsIgnoreCase(billType)){
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+        }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         cacheUtils.initCacheInput(adApplyDtos);
         return adApplyDtos;
-    }
-
-    public List<ProductDto> findProductList(String billType){
-        List<ProductDto> productDtos = new ArrayList<>();
-        if(billType ==null){
-            billType = BillTypeEnum.POP.name();
-        }
-        if(billType.equalsIgnoreCase(BillTypeEnum.POP.name())){
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            productDtos = productRepository.findByOutGroupIdInAndAllowOrder(outGroupIds,true);
-        }
-        if(billType.equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            productDtos  = productRepository.findByOutGroupIdInAndAllowOrder(outGroupIds,true);
-        }
-        return productDtos;
     }
 
     public List<AdApply> findAdApplyGoodsList(){
@@ -128,13 +113,12 @@ public class AdApplyService {
     }
 
     public void save(AdApplyForm adApplyForm){
-        if(CollectionUtil.isEmpty(adApplyForm.getApplyQtys())){
+        if(CollectionUtil.isEmpty(adApplyForm.getProductAdForms())){
             return;
         }
-        Map<String,Product> productMap = productRepository.findMap(adApplyForm.getProductIds());
-        for(int i = 0;i<adApplyForm.getApplyQtys().size();i++){
-            String productId = adApplyForm.getProductIds().get(i);
-            Integer applyQty = adApplyForm.getApplyQtys().get(i);
+        List<AdApply> adApplyList = Lists.newArrayList();
+        for(ProductAdForm productAdForm:adApplyForm.getProductAdForms()){
+            Integer applyQty = productAdForm.getApplyQty();
             if(applyQty!=null&&applyQty>0){
                 AdApply adApply = new AdApply();
                 adApply.setApplyQty(applyQty);
@@ -142,11 +126,12 @@ public class AdApplyService {
                 adApply.setBilledQty(0);
                 adApply.setLeftQty(applyQty);
                 adApply.setShopId(adApplyForm.getShopId());
-                adApply.setProductId(productId);
+                adApply.setProductId(productAdForm.getId());
                 adApply.setRemarks(adApplyForm.getRemarks());
-                adApply.setExpiryDateRemarks(productMap.get(productId).getExpiryDateRemarks());
-                adApplyRepository.save(adApply);
+                adApply.setExpiryDateRemarks(productAdForm.getExpiryDateRemarks());
+                adApplyList.add(adApply);
             }
         }
+        adApplyRepository.save(adApplyList);
     }
 }

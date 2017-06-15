@@ -61,9 +61,9 @@ public class AdApplyController {
         return adApplyService.getBillForm(adApplyBillForm);
     }
 
-    @RequestMapping(value = "getBillAdApplyMap", method = RequestMethod.GET)
-    public String getBillAdApplyMap(String billType){
-        return null;
+    @RequestMapping(value = "findAdApplyList", method = RequestMethod.GET)
+    public List<AdApplyDto> findAdApplyList(String billType){
+        return adApplyService.findAdApplyList(billType);
     }
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(HttpServletRequest request) {

@@ -42,7 +42,8 @@ public class StkInStockController {
         if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
             Map<String,ProductDto> productOutIdMap = productService.findAll().stream().collect(Collectors.toMap(ProductDto::getOutId, ProductDto-> ProductDto));
             String returnOutId = productService.findReturnOutId();
-            stkInStockForm.getTypeList().add(productOutIdMap.get(returnOutId)==null?null:productOutIdMap.get(returnOutId).getName());
+            String type = productOutIdMap.get(returnOutId)==null?"":productOutIdMap.get(returnOutId).getName();
+            stkInStockForm.getTypeList().add(type);
         }
         stkInStockForm = stkInStockService.getForm(stkInStockForm,kingdeeBook);
         return stkInStockForm;

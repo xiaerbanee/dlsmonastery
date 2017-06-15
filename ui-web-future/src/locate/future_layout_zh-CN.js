@@ -850,7 +850,7 @@ export default {
     shopName: "门店",
     activityType: "活动类型",
     amount: "当日门店销售总额",
-    dayAmount: "当天销路OPPO",
+    dayAmount: "当天销量OPPO",
     salerComment: "人员投入描述",
     materialComment: "物料投入描述",
     comment: "销售人员描述",

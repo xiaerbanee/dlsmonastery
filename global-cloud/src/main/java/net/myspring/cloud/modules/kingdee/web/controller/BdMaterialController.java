@@ -20,4 +20,8 @@ public class BdMaterialController {
         return bdMaterialService.findByName(name);
     }
 
+    @RequestMapping(value = "findByNumber")
+    public BdMaterial findByNumber(String number){
+        return bdMaterialService.findByNumber(number);
+    }
 }

@@ -2,39 +2,27 @@
   <div>
     <head-tab active="purMrb"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
-        <el-row :gutter="24">
-          <el-col :span="4">
-            <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
-              <date-picker v-model="formData.billDate"></date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="供应商"  :label-width="formLabelWidth" prop="supplierNumber">
-              <el-select v-model="formData.supplierNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
-                <el-option v-for="item in supplierList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="仓库"  :label-width="formLabelWidth" prop="stockNumber">
-              <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
-                <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="部门"  :label-width="formLabelWidth" prop="departmentNumber">
-              <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
-                <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-button type="primary" @click="formSubmit" icon="check" style="margin-left: 80px">保存</el-button>
-          </el-col>
-        </el-row>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
+        <el-form-item label="日期"  prop="billDate">
+          <date-picker v-model="formData.billDate"></date-picker>
+        </el-form-item>
+        <el-form-item label="供应商"   prop="supplierNumber">
+          <el-select v-model="formData.supplierNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
+            <el-option v-for="item in supplierList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="仓库"   prop="stockNumber">
+          <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
+            <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门"   prop="departmentNumber">
+          <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
+            <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
   </div>
@@ -78,7 +66,6 @@
           departmentNumber: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
-        formLabelWidth: '120px',
         remoteLoading:false
       };
     },

@@ -1,13 +1,11 @@
 package net.myspring.cloud.modules.sys.domain;
 
 
-import com.google.common.collect.Lists;
 import net.myspring.cloud.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.List;
 
 
 @Entity
