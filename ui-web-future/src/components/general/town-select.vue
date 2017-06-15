@@ -16,7 +16,7 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query=="" || query == this.innerId) {
+        if(util.isBlank(query)) {
           return;
         }
         this.remoteLoading = true;
@@ -27,6 +27,7 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
+        console.log(">>>>>>>>"+val)
         if(val) {
           this.innerId = val;
           let idStr = this.innerId;
@@ -37,11 +38,9 @@
             return;
           }
           this.remoteLoading = true;
-          console.log("response.data")
-          axios.get('/api/general/sys/town/findOne?id=' + idStr).then((response)=>{
+          axios.get('/api/general/sys/town/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
-            console.log(response.data)
             this.$nextTick(()=>{
               this.$emit('afterInit');
             });
@@ -49,7 +48,6 @@
         }else{
           this.innerId=[];
         }
-
       }
     },created () {
       this.setValue(this.value);
