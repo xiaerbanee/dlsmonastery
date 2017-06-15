@@ -64,7 +64,7 @@
             }
             axios.post(this.url,qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(!this.inputForm.create){
+              if(!that.isCreate){
                 this.submitDisabled = false;
                 this.$router.push({name:'priceChangeList',query:util.getQuery("priceChangeList")})
               }else{

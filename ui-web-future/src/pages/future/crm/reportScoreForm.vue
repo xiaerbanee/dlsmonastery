@@ -71,7 +71,7 @@
             if (valid) {
               axios.post('/api/ws/future/crm/reportScore/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                if(this.inputForm.create){
+                if(that.isCreate){
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{

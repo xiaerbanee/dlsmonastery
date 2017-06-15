@@ -127,7 +127,7 @@
             submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            if(this.inputForm.create){
+            if(that.isCreate){
               Object.assign(this.$data, this.getData());
               this.initPage();
             }else{
