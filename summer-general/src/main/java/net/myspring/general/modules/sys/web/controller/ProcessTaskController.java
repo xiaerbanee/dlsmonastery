@@ -27,7 +27,10 @@ public class ProcessTaskController {
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
-
+    @RequestMapping(value = "getQuery")
+    public ProcessTaskQuery getQuery(ProcessTaskQuery processTaskQuery) {
+        return processTaskQuery;
+    }
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProcessTaskDto> list(ProcessTaskQuery processTaskQuery, Pageable pageable) {
         if(!adminIdList.contains(RequestUtils.getAccountId())){

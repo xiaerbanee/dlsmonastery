@@ -110,7 +110,6 @@
       this.initPromise = axios.get('/api/basic/sys/dictMap/getQuery').then((response) =>{
         this.formData = response.data;
         util.copyValue(this.$route.query,this.formData);
-        //this.pageRequest();
       });
     },activated(){
       this.initPromise.then(()=>{

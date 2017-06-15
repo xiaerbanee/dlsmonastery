@@ -42,7 +42,8 @@
           extra:{},
           dutyDate:'',
         },
-        searchText:{},
+        initPromise:{},
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -77,9 +78,15 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
+      this.initPromise = axios.get('/api/basic/hr/dutyTrip/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      })
+
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(() => {
+        this.pageRequest();
+      });
     }
   };
 </script>
