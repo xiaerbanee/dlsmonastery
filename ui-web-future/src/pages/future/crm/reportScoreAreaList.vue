@@ -73,7 +73,7 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("reportScoreAreaList",submitData);
         this.formData.scoreDate = util.formatLocalDate(this.formData.scoreDate);
-        axios.get('/api/crm/reportScoreArea',{params:submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/reportScoreArea',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -93,7 +93,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -325;
-      axios.get('/api/crm/reportScoreArea/getQuery').then((response)=>{
+      axios.get('/api/ws/future/crm/reportScoreArea/getQuery').then((response)=>{
         this.formData = response.data;
       });
       this.pageRequest();
