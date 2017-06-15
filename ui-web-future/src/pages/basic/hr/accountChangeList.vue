@@ -23,7 +23,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$t('accountChangeList.type')" :label-width="formLabelWidth">
-            <el-select v-model="formData.officeRuleName" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
+            <el-select v-model="formData.type" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
               <el-option v-for="officeRuleName in formData.extra.typeList" :key="officeRuleName" :label="officeRuleName" :value="officeRuleName"></el-option>
             </el-select>
           </el-form-item>
@@ -149,7 +149,7 @@
       }
     },created () {
       var that=this;
-      this.pageHeight = window.outerHeight -120;
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(this.formData.extra.typeList);
