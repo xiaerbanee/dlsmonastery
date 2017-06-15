@@ -78,7 +78,8 @@
                 that.inputForm.data = JSON.stringify(that.settings.data);
                 axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm, {allowDots: true})).then((response)=> {
                   this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
                 }).catch(function () {
                   that.submitDisabled = false;
                 });

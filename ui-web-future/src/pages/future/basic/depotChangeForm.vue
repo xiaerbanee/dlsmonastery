@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('depotChangeForm.depotName')" prop="depotId">
-              <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
+              <depot-select v-model="inputForm.depotId" category="shop" @input="getOldValue"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.type')" prop="type">
               <el-select v-model="inputForm.type" filterable clearable :placeholder="$t('depotChangeForm.selectGroup')" @change="getOldValue">
@@ -14,7 +14,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.expiryDate')" prop="expiryDate">
-              <el-date-picker v-model="inputForm.expiryDate" type="date" :placeholder="$t('depotChangeForm.selectDate')"></el-date-picker>
+              <date-picker v-model="inputForm.expiryDate"></date-picker>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.oldValue')" prop="oldValue">
               <el-input v-model="inputForm.oldValue" readonly></el-input>
@@ -26,7 +26,9 @@
               <bool-select  v-model="inputForm.newValue"></bool-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='价格体系'" :label="$t('depotChangeForm.newValue')" prop="newValue" >
-              <bool-select  v-model="inputForm.newValue"></bool-select>
+              <el-select v-model="inputForm.newValue" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
+                <el-option v-for="pricesystem in inputForm.extra.pricesystems" :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.name"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('depotChangeForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
@@ -73,12 +75,13 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/crm/depotChange/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
-            Object.assign(this.$data, this.getData());
+            axios.post('/api/ws/future/crm/depotChange/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            this.$message(response.data.message);
               if(this.isCreate){
+                Object.assign(this.$data, this.getData());
+                this.initPage;
+              }else{
+                this.submitDisabled = false;
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
               }
             }).catch(function () {
@@ -95,36 +98,35 @@
           }
           axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.depotId}}).then((response)=>{
             that.shop = response.data;
-          });
-          if(that.shop == null){
+            if(that.shop == null){
               return;
-          }
-          console.log(that.shop);
-          if(this.inputForm.type == "价格体系"){
-            this.inputForm.oldValue = this.shop.pricesystemName;
-          }else if(this.inputForm.type == "名称"){
-            this.inputForm.oldValue = this.shop.name;
-          }else if(this.inputForm.type == "有无导购"){
-            this.inputForm.oldValue = this.shop.hasGuide;
-          }else if(this.inputForm.type == "是否让利"){
-            this.inputForm.oldValue = this.shop.rebate;
-          }else if(this.inputForm.type == "信用额度"){
-            this.inputForm.oldValue = this.shop.credit;
-          }
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+            }
+            if(this.inputForm.type == "价格体系"){
+              this.inputForm.oldValue = that.shop.pricesystemName;
+            }else if(this.inputForm.type == "名称"){
+              this.inputForm.oldValue = that.shop.name;
+            }else if(this.inputForm.type == "有无导购"){
+              this.inputForm.oldValue = that.shop.hasGuide?"是":"否";
+            }else if(this.inputForm.type == "是否让利"){
+              this.inputForm.oldValue = that.shop.rebate?"是":"否";
+            }else if(this.inputForm.type == "信用额度"){
+              this.inputForm.oldValue = that.shop.credit;
+            }
+          });
+      },
+      initPage(){
         axios.get('/api/ws/future/crm/depotChange/getForm').then((response)=>{
           this.inputForm = response.data;
+          if(!this.isCreate){
+            axios.get('/api/ws/future/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            })
+          }
         });
-        if(!this.isCreate){
-          axios.get('/api/ws/future/crm/depotChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          })
-        }
+
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

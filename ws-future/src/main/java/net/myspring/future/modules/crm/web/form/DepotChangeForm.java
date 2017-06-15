@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.DepotChange;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 
@@ -11,9 +12,7 @@ import java.time.LocalDate;
 public class DepotChangeForm extends BaseForm<DepotChange> {
     private String type;
     private LocalDate expiryDate;
-    private String oldLabel;
     private String oldValue;
-    private String newLabel;
     private String newValue;
     private String depotId;
 
@@ -33,28 +32,12 @@ public class DepotChangeForm extends BaseForm<DepotChange> {
         this.expiryDate = expiryDate;
     }
 
-    public String getOldLabel() {
-        return oldLabel;
-    }
-
-    public void setOldLabel(String oldLabel) {
-        this.oldLabel = oldLabel;
-    }
-
     public String getOldValue() {
         return oldValue;
     }
 
     public void setOldValue(String oldValue) {
         this.oldValue = oldValue;
-    }
-
-    public String getNewLabel() {
-        return newLabel;
-    }
-
-    public void setNewLabel(String newLabel) {
-        this.newLabel = newLabel;
     }
 
     public String getNewValue() {
