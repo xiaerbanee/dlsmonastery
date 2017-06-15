@@ -46,9 +46,8 @@
         page: {},
         formData: {
           extra:{},
-          name: '',
-          status: ''
         },
+        initPromise:{},
         searchText: '',
         formLabelWidth: '120px',
         formVisible: false,
@@ -104,9 +103,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
+      this.initPromise = axios.get('/api/general/sys/processTask/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      })
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(()=> {
+        this.pageRequest();
+      })
     }
   };
 </script>

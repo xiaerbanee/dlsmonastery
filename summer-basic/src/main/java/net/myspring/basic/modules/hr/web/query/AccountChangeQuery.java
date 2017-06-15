@@ -1,21 +1,19 @@
 package net.myspring.basic.modules.hr.web.query;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.query.BaseQuery;
-import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * Created by liuj on 2017/3/19.
  */
 public class AccountChangeQuery extends BaseQuery {
 
-    private String officeName;
+    private String officeRuleName;
+    private String officeId;
     private String createdByName;
     private String accountId;
     private String createdDate;
@@ -29,6 +27,14 @@ public class AccountChangeQuery extends BaseQuery {
         this.id=id;
     }
 
+    public String getOfficeRuleName() {
+        return officeRuleName;
+    }
+
+    public void setOfficeRuleName(String officeRuleName) {
+        this.officeRuleName = officeRuleName;
+    }
+
     public String getId() {
         return id;
     }
@@ -37,12 +43,12 @@ public class AccountChangeQuery extends BaseQuery {
         this.id = id;
     }
 
-    public String getOfficeName() {
-        return officeName;
+    public String getOfficeId() {
+        return officeId;
     }
 
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 
     public String getType() {

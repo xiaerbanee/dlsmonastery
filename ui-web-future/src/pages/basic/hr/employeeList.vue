@@ -84,9 +84,6 @@
         page:{},
         formData:{
           extra:{},
-          entryDate:'',
-          regularDate:'',
-          leaveDate:''
         },
         searchText:"",
         initPromise:{},

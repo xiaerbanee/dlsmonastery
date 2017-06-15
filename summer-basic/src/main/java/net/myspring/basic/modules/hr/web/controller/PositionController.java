@@ -34,6 +34,9 @@ public class PositionController {
     @Autowired
     private RoleService roleService;
 
+    @RequestMapping( value = "getQuery")
+    public PositionQuery getQuery(PositionQuery positionQuery){ return positionQuery; }
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<PositionDto> findPage(Pageable pageable, PositionQuery positionQuery) {
         Page<PositionDto> page = positionService.findPage(pageable, positionQuery);

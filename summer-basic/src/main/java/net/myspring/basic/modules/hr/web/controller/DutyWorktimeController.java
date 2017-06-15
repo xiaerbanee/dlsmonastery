@@ -28,6 +28,11 @@ public class DutyWorktimeController {
     @Autowired
     private DutyWorktimeService dutyWorktimeService;
 
+    @RequestMapping(value = "getQuery")
+    public DutyWorktimeQuery getQuery(DutyWorktimeQuery dutyWorktimeQuery) {
+        return dutyWorktimeQuery;
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
         Page<DutyWorktimeDto> page = dutyWorktimeService.findPage(pageable,dutyWorktimeQuery);
