@@ -83,7 +83,7 @@
           if (valid) {
             axios.post('/api/general/sys/processType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.inputForm.create){
+              if(this.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else{

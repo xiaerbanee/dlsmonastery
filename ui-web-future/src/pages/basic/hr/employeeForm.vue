@@ -112,15 +112,13 @@
     methods:{
       getData(){
         return {
-          isInit: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
           employeeForm: {
             extra: {}
           },
           accountForm: {
-            extra: {},
-            type: "主账号"
+            extra: {}
           },
           remoteLoading: false,
           employeeRules: {
@@ -158,9 +156,12 @@
                   axios.post('/api/basic/hr/account/save', qs.stringify(util.deleteExtra(this.accountForm))).then((response)=> {
                     this.$message("账户"+response.data.message);
                   });
-                  Object.assign(this.$data, this.getData());
                   if(!this.isCreate){
+                    this.submitDisabled = false;
                     this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+                  } else {
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
                   }
                 }).catch(function () {
                   that.submitDisabled = false;
@@ -169,12 +170,9 @@
             })
           }else{
             this.submitDisabled = false;
-      }
-      })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+          }
+        })
+      },initPage() {
         axios.get('/api/basic/hr/employee/getForm').then((response)=>{
           this.employeeForm = response.data;
           axios.get('/api/basic/hr/account/getForm').then((response)=>{
@@ -184,12 +182,14 @@
               this.employeeForm.sex = response.data.sex == "男" ? 1 : 0;
               axios.get('/api/basic/hr/account/findOne',{params: {id:this.employeeForm.accountId}}).then((response)=>{
                 util.copyValue(response.data, this.accountForm);
+                this.accountForm.type="主账号"
               })
             })
           })
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

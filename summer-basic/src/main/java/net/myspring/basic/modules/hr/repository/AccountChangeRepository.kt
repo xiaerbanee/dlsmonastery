@@ -42,6 +42,11 @@ class AccountChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             and t1.account_id=account.id
             and account.office_id=office.id
         """)
+        if (StringUtils.isNotBlank(accountChangeQuery.officeId)) {
+            sb.append("""
+                and account.office_id = :officeId
+            """)
+        }
         if (accountChangeQuery.createdDate != null) {
             sb.append(" AND t1.created_date> :createdDateStart ")
         }

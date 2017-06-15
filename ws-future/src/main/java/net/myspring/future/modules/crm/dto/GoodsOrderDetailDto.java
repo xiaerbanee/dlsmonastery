@@ -113,9 +113,6 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getShippedQty() {
-        if(shippedQty==null) {
-            shippedQty = 0 ;
-        }
         return shippedQty;
     }
 
@@ -132,6 +129,7 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getLeftQty() {
+        leftQty = getRealBillQty() - (getShippedQty()==null?0:getShippedQty())- (getShipQty()==null?0:getShipQty());
         return leftQty;
     }
 
@@ -140,6 +138,7 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     }
 
     public Integer getRealBillQty() {
+        realBillQty = (getBillQty()==null?0:getBillQty()) - (getReturnQty()==null?0:getReturnQty());
         return realBillQty;
     }
 

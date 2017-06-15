@@ -37,7 +37,6 @@
     methods:{
       getData(){
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           fileList:[],
@@ -58,14 +57,17 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            /*this.inputForm.annualYear = util.formatLocalDate(this.inputForm.annualYear);*/
+            this.inputForm.annualYear = util.formatLocalDate(this.inputForm.annualYear);
             axios.post('/api/basic/hr/dutyAnnual/import', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);
               }
-              Object.assign(this.$data, this.getData())
-              if(!this.isCreate){
-                this.$router.push({name:'dutyAnnualList',query:util.getQuery("dutyAnnualList")})
+              if(!this.isCreate) {
+                this.submitDisabled = false;
+                this.$router.push({name: 'dutyAnnualList', query: util.getQuery("dutyAnnualList")})
+              } else{
+                Object.assign(this.$data, this.getData())
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -84,13 +86,12 @@
         axios.get('/api/basic/hr/dutyAnnual/import/template').then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
+      },
+      initPage() {
+        //初始化数据
       }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-
-      }
-      this.isInit = true;
+    },created() {
+      //加载initPage()方法
     }
   }
 </script>

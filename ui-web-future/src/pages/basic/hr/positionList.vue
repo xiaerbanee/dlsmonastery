@@ -47,7 +47,7 @@
       return {
         page:{},
         formData:{
-          extra:{}
+          extra:{},
         },
         searchText:"",
         initPromise:{},
@@ -100,9 +100,15 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
+      this.initPromise = axios.get('/api/basic/hr/position/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(() => {
+        this.pageRequest();
+      });
+
     }
   };
 </script>

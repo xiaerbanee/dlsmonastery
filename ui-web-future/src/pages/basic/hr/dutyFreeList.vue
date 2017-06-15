@@ -39,9 +39,9 @@
       return {
         page:{},
         formData:{
-          dutyDate:'',
           extra:{}
         },
+        initPromise:{},
         searchText:"",
         formLabel:{
           dutyDate:{label:this.$t('dutyFreeList.freeDate')},
@@ -80,9 +80,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
+      this.initPromise = axios.get('/api/basic/hr/dutyFree/getQuery').then((response)=> {
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
     },activated() {
-      this.pageRequest();
+      this.initPromise.then(() => {
+        this.pageRequest();
+      });
     }
   };
 </script>

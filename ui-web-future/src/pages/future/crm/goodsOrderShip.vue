@@ -141,9 +141,13 @@
           var shipQtyMap = this.shipResult.shipQtyMap;
           for(var index in this.goodsOrder.goodsOrderDetailDtoList) {
             var item = this.goodsOrder.goodsOrderDetailDtoList[index];
-
-            item.shipQty = shipQtyMap[item.productId];
-            item.leftQty = item.realBillQty - item.shippedQty - shipQty;
+            if(item.hasIme) {
+              item.shipQty = shipQtyMap[item.productId];
+              item.leftQty = item.realBillQty - item.shippedQty - shipQty;
+            } else {
+              item.shipQty = item.realBillQty-item.shippedQty;
+              item.leftQty = 0;
+            }
           }
 
           //如果提交表单

@@ -47,9 +47,6 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getShippedQty() {
-        if(shippedQty==null) {
-            shippedQty = 0;
-        }
         return shippedQty;
     }
 
@@ -58,9 +55,6 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getReturnQty() {
-        if(returnQty==null) {
-            returnQty = 0;
-        }
         return returnQty;
     }
 
@@ -86,6 +80,7 @@ public class GoodsOrderDetail extends IdEntity<GoodsOrderDetail> {
     }
 
     public Integer getRealBillQty() {
+        realBillQty = (getBillQty()==null?0:getBillQty()) - (getReturnQty()==null?0:getReturnQty());
         return realBillQty;
     }
 

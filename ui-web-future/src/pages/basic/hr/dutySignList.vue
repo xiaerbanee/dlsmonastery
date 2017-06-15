@@ -68,7 +68,6 @@
       return {
         page:{},
         formData:{
-          dutyDate:'',
           extra:{}
         },
         searchText:'',
