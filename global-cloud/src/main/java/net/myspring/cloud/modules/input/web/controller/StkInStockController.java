@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.StkInStockService;
@@ -38,10 +39,12 @@ public class StkInStockController {
     @RequestMapping(value = "form")
     public StkInStockForm form (StkInStockForm stkInStockForm) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        if (!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
+            Map<String,ProductDto> productOutIdMap = productService.findAll().stream().collect(Collectors.toMap(ProductDto::getOutId, ProductDto-> ProductDto));
+            String returnOutId = productService.findReturnOutId();
+            stkInStockForm.getTypeList().add(productOutIdMap.get(returnOutId)==null?null:productOutIdMap.get(returnOutId).getName());
+        }
         stkInStockForm = stkInStockService.getForm(stkInStockForm,kingdeeBook);
-        Map<String,ProductDto> productOutIdMap = productService.findAll().stream().collect(Collectors.toMap(ProductDto::getOutId, ProductDto-> ProductDto));
-        String returnOutId = productService.findReturnOutId();
-        stkInStockForm.getTypeList().add(productOutIdMap.get(returnOutId)==null?null:productOutIdMap.get(returnOutId).getName());
         return stkInStockForm;
     }
 
