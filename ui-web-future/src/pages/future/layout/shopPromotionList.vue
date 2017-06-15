@@ -67,6 +67,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -114,11 +115,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
-        this.pageRequest();
       });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>
