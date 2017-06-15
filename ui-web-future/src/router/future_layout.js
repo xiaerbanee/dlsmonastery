@@ -50,7 +50,7 @@ let routes = [
   {path:'/future/layout/adGoodsOrderBill',component:adGoodsOrderBill,name:'adGoodsOrderBill',meta: {menu:"adGoodsOrderList"}},
   {path:'/future/layout/adGoodsOrderShip',component:adGoodsOrderShip,name:'adGoodsOrderShip',meta: {menu:"adGoodsOrderList"}},
   {path:'/future/layout/adGoodsOrderSign',component:adGoodsOrderSign,name:'adGoodsOrderSign',meta: {menu:"adGoodsOrderList"}},
-  {path:'/future/layout/adGoodsOrderPrint',component:adGoodsOrderPrint,name:'adGoodsOrderPrint',meta: {menu:"adGoodsOrderList"}},
+  {path:'/future/layout/adGoodsOrderPrint',component:adGoodsOrderPrint,name:'adGoodsOrderPrint',meta: {hidden: true}},
   {path:'/future/layout/adPricesystemChangeList',component:adPricesystemChangeList,name:'adPricesystemChangeList'},
   {path:'/future/layout/adPricesystemChangeForm',component:adPricesystemChangeForm,name:'adPricesystemChangeForm',meta: {menu:"adPricesystemChangeList",keepAlive:true}},
   {path:'/future/layout/shopAdList',component:shopAdList,name:'shopAdList'},
