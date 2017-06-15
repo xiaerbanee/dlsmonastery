@@ -1,14 +1,10 @@
 package net.myspring.cloud.modules.kingdee.web.controller;
 
-import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.service.BdMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.

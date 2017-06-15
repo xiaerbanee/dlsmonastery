@@ -39,6 +39,17 @@ interface ProductRepository : BaseRepository<Product,String>{
         WHERE
         t1.enabled=1
         AND  t1.companyId = :companyId
+        and t1.code = :code
+    """)
+    fun findByCodeAndCompanyId(@Param("companyId")companyId: String,@Param("code")code: String): Product?
+
+    @Query("""
+        SELECT
+        t1
+        FROM  #{#entityName} t1
+        WHERE
+        t1.enabled=1
+        AND  t1.companyId = :companyId
     """)
     fun findByCompanyId(@Param("companyId")companyId: String): MutableList<Product>
 

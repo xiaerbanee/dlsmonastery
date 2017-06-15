@@ -14,10 +14,7 @@ const dutyWorktimeList = r => require.ensure([],() => r(require('pages/basic/hr/
 const dutyWorktimeForm = r => require.ensure([],() => r(require('pages/basic/hr/dutyWorktimeForm.vue')));
 const dutyTaskList = r => require.ensure([],() => r(require('pages/basic/hr/dutyTaskList.vue')));
 const dutyTaskForm = r => require.ensure([],() => r(require('pages/basic/hr/dutyTaskForm.vue')));
-const employeePhoneList = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneList.vue')));
-const employeePhoneForm = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneForm.vue')));
-const employeePhoneDepositList = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneDepositList.vue')));
-const employeePhoneDepositForm = r => require.ensure([],() => r(require('pages/basic/hr/employeePhoneDepositForm.vue')));
+
 
 const recruitList = r => require.ensure([],() => r(require('pages/basic/hr/recruitList.vue')));
 const recruitForm = r => require.ensure([],() => r(require('pages/basic/hr/recruitForm.vue')));
@@ -49,10 +46,6 @@ let routes = [
   {path:'/basic/hr/employeeList',component:employeeList,name:'employeeList'},
   {path:'/basic/hr/employeeForm',component:employeeForm,name:'employeeForm',meta: {menu:"employeeList",keepAlive:true}},
   {path:'/basic/hr/employeeEditForm',component:employeeEditForm,name:'employeeEditForm',meta: {menu:"employeeList",keepAlive:true}},
-  {path:'/basic/hr/employeePhoneList',component:employeePhoneList,name:'employeePhoneList'},
-  {path:'/basic/hr/employeePhoneForm',component:employeePhoneForm,name:'employeePhoneForm',meta: {menu:"employeePhoneList",keepAlive:true}},
-  {path:'/basic/hr/employeePhoneDepositList',component:employeePhoneDepositList,name:'employeePhoneDepositList'},
-  {path:'/basic/hr/employeePhoneDepositForm',component:employeePhoneDepositForm,name:'employeePhoneDepositForm',meta: {menu:"employeePhoneDepositList",keepAlive:true}},
   {path:'/basic/hr/positionList',component:positionList,name:'positionList'},
   {path:'/basic/hr/positionForm',component:positionForm,name:'positionForm',meta: {menu:"positionList",keepAlive:true}},
   {path:'/basic/hr/dutySignList',component:dutySignList,name:'dutySignList'},
