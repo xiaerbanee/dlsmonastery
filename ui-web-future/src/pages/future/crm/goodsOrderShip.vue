@@ -13,7 +13,7 @@
               <el-input v-model="inputForm.formatId"></el-input>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.storeName')" prop="storeId">
-              {{inputForm.storeName}}
+              {{goodsOrder.storeName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
               <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner">
@@ -25,7 +25,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.shopName')" prop="shopId">
-              {{inputForm.shopName}}
+              {{goodsOrder.shopName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderShip.remarks')" prop="remarks">
               {{inputForm.remarks}}
@@ -45,7 +45,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="inputForm.goodsOrderDetailList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+        <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
           <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
             <template scope="scope">
@@ -93,20 +93,12 @@
           inputForm:{},
           goodsOrder:{},
           shipResult:{},
-          submitData:{
-            id:'',
-            boxImeStr:'',
-            expressCodes:'',
-            imeStr:'',
-            shipRemarks:''
-          },
           rules: {}
         }
       },
       formSubmit() {
         var that = this;
-        util.copyValue(this.inputForm,this.submitData);
-        axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(this.submitData)).then((response)=> {
+        axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
           this.$message(response.data.message);
           if(!this.continueShip){
             Object.assign(this.$data, this.getData());
@@ -141,9 +133,10 @@
             }
           }
           //设置发货数和待发货数
-          for(var index in this.inputForm.goodsOrderDetailList) {
-            var item = this.inputForm.goodsOrderDetailList[index];
-            item.shipQty = 0;
+          for(var index in this.goodsOrder.goodsOrderDetailDtoList) {
+            var item = this.goodsOrder.goodsOrderDetailDtoList[index];
+
+            item.shipQty = 2;
             item.leftQty = 1;
           }
 
@@ -171,7 +164,7 @@
         this.inputForm = response.data;
         axios.get('/api/ws/future/crm/goodsOrderShip/getShip',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
-          this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
+          this.goodsOrder = response.data;
         });
       });
     }

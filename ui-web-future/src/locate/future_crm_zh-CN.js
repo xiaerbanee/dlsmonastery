@@ -475,7 +475,7 @@ export default {
     processStatus: "状态",
     depotName: "仓库",
     expiryDate: "截止日期",
-    oldLabel: "修改前",
+    oldValue: "修改前",
     newValue: "修改后",
     pass: "是否通过",
     remarks: "备注",

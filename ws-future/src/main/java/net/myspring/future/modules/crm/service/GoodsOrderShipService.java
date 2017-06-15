@@ -12,7 +12,8 @@ import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.repository.*;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
@@ -30,20 +31,15 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -94,11 +90,12 @@ public class GoodsOrderShipService {
         Integer totalShippedQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"productId");
+        List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
+        Map<String,GoodsOrderDetailDto> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailDtoList,"productId");
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
-        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
-            if (goodsOrderDetail.getBillQty() > 0 && productMap.get(goodsOrderDetail.getProductId()).getHasIme()) {
-                goodsOrderDetail.setShipQty(0);
+        for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtoList) {
+            if (goodsOrderDetailDto.getBillQty() > 0 && productMap.get(goodsOrderDetailDto.getProductId()).getHasIme()) {
+                goodsOrderDetailDto.setShipQty(0);
             }
         }
         ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
@@ -134,16 +131,16 @@ public class GoodsOrderShipService {
                 restResponse.getErrors().add(new RestErrorField("串码：" + ime + "，在仓库不存在","ime_error","ime"));
             }
         }
-        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
-            totalShouldShipQty = totalShouldShipQty +goodsOrderDetail.getRealBillQty();
-            totalShippedQty = totalShippedQty + goodsOrderDetail.getShippedQty() + goodsOrderDetail.getShipQty();
-            Integer qty = goodsOrderDetail.getShippedQty() + goodsOrderDetail.getShipQty();
-            Integer realBillQty=goodsOrderDetail.getRealBillQty();
+        for (GoodsOrderDetailDto goodsOrderDetailDto: goodsOrderDetailDtoList) {
+            totalShouldShipQty = totalShouldShipQty +goodsOrderDetailDto.getRealBillQty();
+            totalShippedQty = totalShippedQty + goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
+            Integer qty = goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
+            Integer realBillQty=goodsOrderDetailDto.getRealBillQty();
             if (qty > realBillQty) {
-                StringBuilder errorMessage = new StringBuilder("货品:"+ productMap.get(goodsOrderDetail.getProductId()).getName() +"总发货数："+ qty+ "大于实际开单数："  + realBillQty + "串码：");
+                StringBuilder errorMessage = new StringBuilder("货品:"+ productMap.get(goodsOrderDetailDto.getProductId()).getName() +"总发货数："+ qty+ "大于实际开单数："  + realBillQty + "串码：");
                 //显示发货不对的串码
                 for (ProductIme productIme : productImeList) {
-                    if (productIme.getProductId().equals(goodsOrderDetail.getProductId())) {
+                    if (productIme.getProductId().equals(goodsOrderDetailDto.getProductId())) {
                         errorMessage.append(productIme.getIme()).append(CharConstant.TAB);
                     }
                 }
@@ -155,8 +152,8 @@ public class GoodsOrderShipService {
             result.put("warnMsg", "货品总开单数"+totalShouldShipQty+ ",和实际发货数"+totalShippedQty + "不一致");
         }
         Map<String, Integer> shipQtyMap = Maps.newHashMap();
-        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
-            shipQtyMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail.getShipQty());
+        for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailMap.values()) {
+            shipQtyMap.put(goodsOrderDetailDto.getProductId(), goodsOrderDetailDto.getShipQty());
         }
         result.put("restResponse", restResponse);
         result.put("shipQtyMap", shipQtyMap);

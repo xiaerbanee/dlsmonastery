@@ -37,12 +37,12 @@
         <el-table-column prop="expiryDate" :label="$t('depotChangeList.expiryDate')"sortable width="120"></el-table-column>
         <el-table-column prop="oldValue" :label="$t('depotChangeList.oldValue')" sortable></el-table-column>
         <el-table-column prop="newValue" :label="$t('depotChangeList.newValue')" sortable></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('depotChangeList.processStatus')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('depotChangeList.processStatus')" sortable></el-table-column>
         <el-table-column fixed="right" :label="$t('depotChangeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:depotChange:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('depotChangeList.detail')}}</el-button></div>
-            <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
-            <div class="action" v-if="scope.row.processStatus =='申请中'" v-permit="'crm:depotChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('depotChangeList.delete')}}</el-button></div>
+            <div class="action" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:depotChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('depotChangeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +77,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("depotChangeList",submitData);
         axios.get('/api/ws/future/crm/depotChange',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -97,7 +97,9 @@
       },itemAdd(){
         this.$router.push({ name: 'depotChangeForm'})
       },exportData(){
-				window.location.href= "/api/ws/future/crm/depotChange/export?"+qs.stringify(this.formData);
+        axios.get('/api/ws/future/crm/depotChange/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       },itemAction:function(id,action){
         if(action=="detail") {
           this.$router.push({ name: 'depotChangeDetail', query: { id: id,action:"detail" }})
