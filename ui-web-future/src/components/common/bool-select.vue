@@ -15,7 +15,6 @@
       };
     },methods:{
       handleChange(newVal) {
-        console.log(newVal);
         this.$emit('input', newVal);
       },
       setValue(val){
