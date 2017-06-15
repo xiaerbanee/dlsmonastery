@@ -61,7 +61,6 @@
         page:{},
         formData:{
           extra:{},
-          createdDate:'',
         },
         initPromise:{},
         searchText:"",
