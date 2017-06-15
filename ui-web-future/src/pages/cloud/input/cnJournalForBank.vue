@@ -3,10 +3,10 @@
     <head-tab active="cnJournalForBank"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
-        <el-form-item label="科目"  :label-width="formLabelWidth" prop="accountNumber">
+        <el-form-item label="科目"   prop="accountNumber">
           <el-select v-model="formData.accountNumber" filterable placeholder="请选择">
             <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>

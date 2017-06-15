@@ -3,12 +3,12 @@
     <head-tab active="stkMisDelivery"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="部门"  :label-width="formLabelWidth" prop="departmentNumber">
+        <el-form-item label="部门"   prop="departmentNumber">
           <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
             <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>

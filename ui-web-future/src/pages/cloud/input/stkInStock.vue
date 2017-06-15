@@ -3,20 +3,20 @@
     <head-tab active="stkInStock"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
-        <el-form-item label="供应商"  :label-width="formLabelWidth" prop="supplierNumber">
+        <el-form-item label="供应商"   prop="supplierNumber">
           <el-select v-model="formData.supplierNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
             <el-option v-for="item in supplierList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="仓库"  :label-width="formLabelWidth" prop="stockNumber">
+        <el-form-item label="仓库"   prop="stockNumber">
           <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
             <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门"  :label-width="formLabelWidth" prop="departmentNumber">
+        <el-form-item label="部门"   prop="departmentNumber">
           <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
             <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
           </el-select>

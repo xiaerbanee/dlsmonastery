@@ -3,7 +3,7 @@
     <head-tab active="cnJournalForCash"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+        <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
