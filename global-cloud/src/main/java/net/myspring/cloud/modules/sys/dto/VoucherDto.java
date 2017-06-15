@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.sys.dto;
 import com.google.common.collect.Lists;
 import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.Voucher;
-import net.myspring.cloud.modules.sys.domain.VoucherEntry;
 
 import java.util.List;
 
@@ -11,9 +10,12 @@ import java.util.List;
  * Created by lihx on 2017/4/5.
  */
 public class VoucherDto extends DataDto<Voucher> {
+    private String FDate;
     private String createdName;
     private String companyId;
     private String status;
+    private String outCode;
+    private String kingdeeBookId;
     //明细
     private List<VoucherEntryDto> voucherEntryDtoList = Lists.newArrayList();
     private List<String> voucherEntryIdList = Lists.newArrayList();
@@ -44,6 +46,30 @@ public class VoucherDto extends DataDto<Voucher> {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFDate() {
+        return FDate;
+    }
+
+    public void setFDate(String FDate) {
+        this.FDate = FDate;
+    }
+
+    public String getOutCode() {
+        return outCode;
+    }
+
+    public void setOutCode(String outCode) {
+        this.outCode = outCode;
+    }
+
+    public String getKingdeeBookId() {
+        return kingdeeBookId;
+    }
+
+    public void setKingdeeBookId(String kingdeeBookId) {
+        this.kingdeeBookId = kingdeeBookId;
     }
 
     public List<VoucherEntryDto> getVoucherEntryDtoList() {

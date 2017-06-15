@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -59,6 +58,26 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private Integer deskSingleNum=0;
     //展柜数量
     private Integer cabinetNum=0;
+
+    private String townId;
+
+    private String townName;
+
+    public String getTownName() {
+        return townName;
+    }
+
+    public void setTownName(String townName) {
+        this.townName = townName;
+    }
+
+    public String getTownId() {
+        return townId;
+    }
+
+    public void setTownId(String townId) {
+        this.townId = townId;
+    }
 
     public String getDepotId() {
         return depotId;
