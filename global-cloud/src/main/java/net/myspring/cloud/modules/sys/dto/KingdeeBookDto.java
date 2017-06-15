@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.common.dto.DataDto;
+import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 
 /**
