@@ -5,49 +5,45 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employeePhoneDeposit:edit'">{{$t('employeePhoneList.employeePhoneDepositList')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:employeePhoneDeposit:view'">{{$t('employeePhoneList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('employeePhoneList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="formLabel.depotName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeePhoneList.depotName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('employeePhoneList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.areaName.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.areaName" auto-complete="off" :placeholder="$t('employeePhoneList.likeSearch')"></el-input>
-              </el-form-item>
-              <el-form-item :label="formLabel.status.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeePhoneList.status')" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('employeePhoneList.selectStatus')">
-                  <el-option  v-for="item in formData.status" :key="item" :label="item" :value="item"></el-option>
+                  <el-option  v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('employeePhoneList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('employeePhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="areaName" :label="$t('employeePhoneList.areaName')"  width="150"></el-table-column>
-        <el-table-column prop="depot.name" :label="$t('employeePhoneList.depotName')"></el-table-column>
-        <el-table-column prop="employee.name" :label="$t('employeePhoneList.employeeName')" width="100"></el-table-column>
+        <el-table-column prop="depotName" :label="$t('employeePhoneList.depotName')"></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('employeePhoneList.employeeName')" width="100"></el-table-column>
         <el-table-column prop="depositAmount" :label="$t('employeePhoneList.depositAmount')"  width="100"></el-table-column>
         <el-table-column prop="status" :label="$t('employeePhoneList.status')"  width="100"></el-table-column>
         <el-table-column prop="uploadTime" :label="$t('employeePhoneList.uploadTime')"></el-table-column>
-        <el-table-column prop="product.name" :label="$t('employeePhoneList.productName')" width="120"></el-table-column>
+        <el-table-column prop="productName" :label="$t('employeePhoneList.productName')" width="120"></el-table-column>
         <el-table-column prop="jobPrice" :label="$t('employeePhoneList.jobPrice')" ></el-table-column>
         <el-table-column prop="imeStr" :label="$t('employeePhoneList.imeStr')" width="120"></el-table-column>
         <el-table-column prop="retailPrice" :label="$t('employeePhoneList.retailPrice')"></el-table-column>
         <el-table-column prop="createdDate" :label="$t('employeePhoneList.createdDate')" width="120"></el-table-column>
-        <el-table-column prop="created.fullName" :label="$t('employeePhoneList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('employeePhoneList.createdBy')"></el-table-column>
+        <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" :label="$t('employeePhoneList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -61,30 +57,26 @@
       return {
         page:{},
         formData:{
-        },submitData:{
-          page:0,
-          size:25,
-          name:'',
-          status:'',
-          areaName:'',
-          depotName:""
-        },formLabel:{
-          name:{label:this.$t('employeePhoneList.name')},
-          status:{label:this.$t('employeePhoneList.status')},
-          areaName:{label:this.$t('employeePhoneList.areaName')},
-          depotName:{label:this.$t('employeePhoneList.depotName')},
+          extra:{}
         },
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("employeePhoneList",this.submitData);
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/employeePhone?'+qs.stringify(this.submitData)).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("bankList",submitData);
+        axios.get('/api/ws/future/basic/employeePhone?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -102,13 +94,19 @@
       },itemAdd(){
         this.$router.push({ name: 'employeePhoneDepositList'})
       },itemAction:function(id,action){
-        if(action=="修改") {
+        if(action=="edit") {
           this.$router.push({ name: 'employeePhoneForm', query: { id: id }})
         }
+      },exportData(){
+        this.formVisible = false;
+        var submitData = util.deleteExtra(this.formData);
+        axios.get('/api/ws/future/basic/employeePhone/export?'+qs.stringify(submitData)).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/hr/employeePhone/getQuery').then((response) =>{
+      axios.get('/api/ws/future/basic/employeePhone/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
         this.pageRequest();
