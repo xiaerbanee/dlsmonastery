@@ -185,6 +185,7 @@ public class ReportScoreService {
                     ReportScoreOffice reportScoreOffice = new ReportScoreOffice();
                     reportScoreOffice.setOfficeId(officeId);
                     reportScoreOffice.setScoreDate(date);
+                    reportScoreOffice.setReportScoreAreaId(areaId);
                     reportScoreOfficeMap.put(officeId, reportScoreOffice);
                     map.put(officeId, reportScoreArea);
                 }

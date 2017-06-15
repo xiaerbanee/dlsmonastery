@@ -14,11 +14,10 @@ public class ReportScoreOfficeDto extends DataDto<ReportScoreOffice> {
 
     private LocalDate scoreDate;//日期
     private String officeId;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "parentId")
-    private String parentId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;//考核区域
-    @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;//办事处
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "point")
     private BigDecimal officePoint;//点位
@@ -31,6 +30,13 @@ public class ReportScoreOfficeDto extends DataDto<ReportScoreOffice> {
     private Integer recentMonthSaleQty;//最近月销量
     private BigDecimal monthSaleMoney;//月累计销售
 
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public LocalDate getScoreDate() {
         return scoreDate;
@@ -46,14 +52,6 @@ public class ReportScoreOfficeDto extends DataDto<ReportScoreOffice> {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
     }
 
     public String getAreaName() {
