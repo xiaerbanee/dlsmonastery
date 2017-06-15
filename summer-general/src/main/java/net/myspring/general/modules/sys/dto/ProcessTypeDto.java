@@ -19,7 +19,6 @@ public class ProcessTypeDto extends DataDto<ProcessType> {
     private String viewPositionIds;
     private String createdPositionIds;
     private Boolean auditFileType;
-
     private List<ProcessFlowDto> processFlowList=Lists.newArrayList();
     private List<String> viewPositionIdList=Lists.newArrayList();
     private List<String> createdPositionIdList=Lists.newArrayList();

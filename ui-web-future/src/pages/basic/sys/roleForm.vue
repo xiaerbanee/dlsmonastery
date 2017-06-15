@@ -42,72 +42,72 @@
     data:function () {
       return this.getData();
     },
-    methods:{
-      getData(){
-        return{
-          isInit:false,
-          remoteLoading:false,
-          isCreate:this.$route.query.id==null,
-          submitDisabled:false,
-          inputForm:{
-              extra:{}
+    methods: {
+      getData() {
+        return {
+          remoteLoading: false,
+          isCreate: this.$route.query.id == null,
+          submitDisabled: false,
+          inputForm: {
+            extra: {}
           },
           rules: {
-            name: [{ required: true, message: this.$t('roleForm.prerequisiteMessage')}],
-            permission: [{ required: true, message: this.$t('roleForm.prerequisiteMessage')}],
+            name: [{required: true, message: this.$t('roleForm.prerequisiteMessage')}],
+            permission: [{required: true, message: this.$t('roleForm.prerequisiteMessage')}],
           },
-          backendList:[],
-          treeData:[],
-          checked:[],
+          backendList: [],
+          treeData: [],
+          checked: [],
           defaultProps: {
             label: 'label',
             children: 'children'
           }
         };
       },
-      formSubmit(){
+      formSubmit() {
         var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/sys/role/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/basic/sys/role/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
-              Object.assign(this.$data,this.getData());
-              if(!this.inputForm.create){
-                this.$router.push({name:'roleList',query:util.getQuery("roleList")})
+              if (this.inputForm.create) {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              } else {
+                this.submitDisabled = false;
+                this.$router.push({name: 'roleList', query: util.getQuery("roleList")})
               }
             }).catch(function () {
               that.submitDisabled = false;
             });
-          }else{
+          } else {
             this.submitDisabled = false;
           }
         })
       },
       handleCheckChange(data, checked, indeterminate) {
-        var modules=new Array()
-        var check=this.$refs.tree.getCheckedKeys();
-        for(var index in check){
+        var modules = new Array()
+        var check = this.$refs.tree.getCheckedKeys();
+        for (var index in check) {
           if (check[index].match("\^(0|[1-9][0-9]*)$") && check[index] != 0) {
             modules.push(check[index])
           }
         }
-        this.inputForm.moduleIdList=modules;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data,this.getData());
+        this.inputForm.moduleIdList = modules;
+      }, initPage() {
         axios.get('/api/basic/sys/role/getForm', {params: {id: this.$route.query.id}}).then((response) => {
           this.inputForm = response.data;
           this.treeData = new Array(response.data.extra.treeNode);
           this.checked = response.data.moduleIdList;
           axios.get('/api/basic/sys/role/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-            util.copyValue(response.data,this.inputForm);
+            util.copyValue(response.data, this.inputForm);
           })
         })
       }
-      this.isInit = true;
-    }
+    },created(){
+        this.initPage();
+      }
   }
 </script>

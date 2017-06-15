@@ -27,6 +27,7 @@
         pageHeight:600,
         formData:{},
         submitData:{},
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         processList:[]
@@ -42,9 +43,13 @@
       util.copyValue(this.$route.query,this.submitData);
       util.setQuery("processList",this.submitData);
       util.copyValue(this.formData,this.submitData);
-      axios.get('/api/general/sys/activiti/processList?'+qs.stringify(this.submitData)).then((response) => {
+      this.initPromise = axios.get('/api/general/sys/activiti/processList?'+qs.stringify(this.submitData)).then((response) => {
         this.processList = response.data;
         this.pageLoading = false;
+      })
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       })
     }
   };

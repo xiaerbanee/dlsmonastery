@@ -90,6 +90,7 @@ public class GoodsOrderService {
     @Autowired
     private CacheUtils cacheUtils;
 
+    @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
             goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
@@ -186,6 +187,7 @@ public class GoodsOrderService {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
+        ReflectionUtil.copyProperties(goodsOrderBillForm,goodsOrder);
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
@@ -221,6 +223,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
+        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(RequestUtils.getCompanyId(),goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数

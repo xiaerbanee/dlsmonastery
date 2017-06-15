@@ -31,7 +31,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-button type="primary" @click="formSubmit" icon="check" style="overflow:hidden;">保存</el-button>
+            <el-button type="primary" @click="formSubmit" icon="check" style="margin-left: 80px">保存</el-button>
           </el-col>
         </el-row>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
@@ -69,14 +69,13 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          accountNumber:'',
           json:[],
         },
         rules: {
           billDate: [{ required: true, message: '必填项'}],
           supplierNumber: [{ required: true, message: '必填项'}],
           stockNumber: [{ required: true, message: '必填项'}],
-          departmentList: [{ required: true, message: '必填项'}],
+          departmentNumber: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         formLabelWidth: '120px',

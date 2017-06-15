@@ -7,6 +7,9 @@
           <el-col :span="12">
             <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
           </el-col>
+          <el-col :span="12">
+            <el-button type="primary" @click="syn" icon="check">同步</el-button>
+          </el-col>
         </el-row>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
       </el-form>
@@ -91,6 +94,11 @@
           }
         })
       },
+      syn(){
+        axios.post('/api/global/cloud/sys/product/syn').then((response)=> {
+          this.$message(response.data.message);
+        })
+      }
     }
   }
 </script>
