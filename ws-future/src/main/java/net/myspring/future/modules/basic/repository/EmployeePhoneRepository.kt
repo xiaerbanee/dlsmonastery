@@ -23,18 +23,22 @@ interface EmployeePhoneRepositoryCustom{
 
     fun findPage(pageable: Pageable, employeePhoneQuery: EmployeePhoneQuery): Page<EmployeePhoneDto>
 
+    fun findFilter(employeePhoneQuery: EmployeePhoneQuery): MutableList<EmployeePhoneDto>
+
 }
 
 class EmployeePhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):EmployeePhoneRepositoryCustom{
-
-    override fun findPage(pageable: Pageable, employeePhoneQuery: EmployeePhoneQuery): Page<EmployeePhoneDto> {
+    override fun findFilter(employeePhoneQuery: EmployeePhoneQuery): MutableList<EmployeePhoneDto> {
         val sb = StringBuilder("""
              SELECT
-                t1.*
+                t1.*,t2.name as 'depotName',t2.area_id as 'areaId',t3.name as productName,t4.name as 'productTypeName'
             FROM
-                 hr_employee_phone t1
+                 crm_employee_phone t1,crm_depot t2,crm_product t3,crm_product_type t4
             WHERE
                 t1.enabled=1
+                and t1.depot_id=t2.id
+               and t1.product_id=t3.id
+                and t3.product_type_id=t4.id
         """)
         if (StringUtils.isNotEmpty(employeePhoneQuery.status)) {
             sb.append("""  and t1.status=:status """)
@@ -44,12 +48,32 @@ class EmployeePhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         }
         if (StringUtils.isNotEmpty(employeePhoneQuery.depotName)) {
             sb.append("""
-            and t1.depot_id=(
-                select id
-                from crm_depot
-                where enabled=1
-                and name=:depotName
-            )
+                and t2.name like concat('%',:depotName,'%')
+            """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(employeePhoneQuery), BeanPropertyRowMapper(EmployeePhoneDto::class.java))
+    }
+
+    override fun findPage(pageable: Pageable, employeePhoneQuery: EmployeePhoneQuery): Page<EmployeePhoneDto> {
+        val sb = StringBuilder("""
+             SELECT
+                t1.*,t2.name as 'depotName',t2.area_id as 'areaId',t3.name as productName
+            FROM
+                 crm_employee_phone t1,crm_depot t2,crm_product t3
+            WHERE
+                t1.enabled=1
+                and t1.depot_id=t2.id
+               and t1.product_id=t3.id
+        """)
+        if (StringUtils.isNotEmpty(employeePhoneQuery.status)) {
+            sb.append("""  and t1.status=:status """)
+        }
+        if (CollectionUtil.isNotEmpty(employeePhoneQuery.depotIdList)) {
+            sb.append("""  and t1.depot_id in (:depotIdList) """)
+        }
+        if (StringUtils.isNotEmpty(employeePhoneQuery.depotName)) {
+            sb.append("""
+                and t2.name like concat('%',:depotName,'%')
             """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

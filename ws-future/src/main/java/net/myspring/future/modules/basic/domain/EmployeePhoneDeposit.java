@@ -20,11 +20,8 @@ public class EmployeePhoneDeposit extends DataEntity<EmployeePhoneDeposit> {
     private String outBillType;
     private Integer version = 0;
     private String employeeId;
-    private Bank bank;
     private String bankId;
-    private Product product;
     private String productId;
-    private Depot depot;
     private String depotId;
     private String cloudSynId;
 
@@ -92,14 +89,6 @@ public class EmployeePhoneDeposit extends DataEntity<EmployeePhoneDeposit> {
         this.employeeId = employeeId;
     }
 
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
-    }
-
     public String getBankId() {
         return bankId;
     }
@@ -108,28 +97,12 @@ public class EmployeePhoneDeposit extends DataEntity<EmployeePhoneDeposit> {
         this.bankId = bankId;
     }
 
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
-    }
-
-    public Depot getDepot() {
-        return depot;
-    }
-
-    public void setDepot(Depot depot) {
-        this.depot = depot;
     }
 
     public String getDepotId() {

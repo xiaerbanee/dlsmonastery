@@ -5,14 +5,14 @@
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="formLabel.storeNumber.label"  :label-width="formLabelWidth" prop="storeNumber">
+            <el-form-item label="仓库"  :label-width="formLabelWidth" prop="storeNumber">
               <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
                 <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+            <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
               <date-picker v-model="formData.billDate"></date-picker>
             </el-form-item>
           </el-col>
@@ -73,9 +73,6 @@
           billDate:new Date().toLocaleDateString(),
           storeNumber:'',
           json:[],
-        },formLabel:{
-          billDate:{label:"日期"},
-          storeNumber:{label:"仓库"},
         },rules: {
           storeNumber: [{ required: true, message: '请选择仓库'}],
           billDate: [{ required: true, message: '请选择时间'}],

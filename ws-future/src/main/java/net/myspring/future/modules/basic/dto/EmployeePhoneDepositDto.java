@@ -1,11 +1,12 @@
 package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.modules.basic.domain.EmployeePhoneDeposit;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by lihx on 2017/4/14.
@@ -15,16 +16,44 @@ public class EmployeePhoneDepositDto extends DataDto<EmployeePhoneDeposit> {
     private String employeeName;
     private String employeeId;
     private String depotName;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
+    private String areaId;
     private String department;
+    private String depotId;
     private String bankName;
     private BigDecimal amount;
     private String outCode;
-    private LocalDate billDate;
+    private LocalDateTime billDate;
+    private String productId;
     private String productName;
     private String status;
-    private String locked;
+    private boolean locked;
     private String depotOutId;
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -98,11 +127,11 @@ public class EmployeePhoneDepositDto extends DataDto<EmployeePhoneDeposit> {
         this.outCode = outCode;
     }
 
-    public LocalDate getBillDate() {
+    public LocalDateTime getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(LocalDate billDate) {
+    public void setBillDate(LocalDateTime billDate) {
         this.billDate = billDate;
     }
 
@@ -122,11 +151,19 @@ public class EmployeePhoneDepositDto extends DataDto<EmployeePhoneDeposit> {
         this.status = status;
     }
 
-    public String getLocked() {
+    public boolean getLocked() {
         return locked;
     }
 
-    public void setLocked(String locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
+
+    public boolean isEdit(){
+        if(!locked&& EmployeePhoneDepositStatusEnum.省公司审核.name().equals(status)){
+            return true;
+        }
+        return false;
+    }
+
 }

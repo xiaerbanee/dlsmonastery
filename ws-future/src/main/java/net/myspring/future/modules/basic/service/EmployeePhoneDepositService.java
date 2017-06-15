@@ -1,31 +1,46 @@
 package net.myspring.future.modules.basic.service;
 
+import com.google.common.collect.Lists;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.common.enums.EmployeePhoneStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.EmployeePhone;
 import net.myspring.future.modules.basic.domain.EmployeePhoneDeposit;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.repository.EmployeePhoneDepositRepository;
 import net.myspring.future.modules.basic.repository.EmployeePhoneRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneDepositForm;
 import net.myspring.future.modules.basic.web.query.EmployeePhoneDepositQuery;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by admin on 2017/2/17.
@@ -42,6 +57,16 @@ public class EmployeePhoneDepositService {
     private EmployeePhoneRepository employeePhoneRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OfficeClient officeClient;
+    @Autowired
+    private DepotManager depotManager;
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private GridFsTemplate storageGridFsTemplate;
 
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto) {
         if(!employeePhoneDepositDto.isCreate()){
@@ -98,6 +123,7 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
+            Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 String otherTypes = "其他应付款-导购业务机押金";
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
@@ -108,10 +134,11 @@ public class EmployeePhoneDepositService {
                         employeePhoneDepositRepository.save(employeePhoneDeposit);
                         if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                             EmployeePhone employeePhone = new EmployeePhone();
-                            Product product = employeePhoneDeposit.getProduct();
+                            Product product = productMap.get(employeePhoneDeposit.getProductId());
                             employeePhone.setProductId(employeePhoneDeposit.getProductId());
                             employeePhone.setJobPrice(product.getPrice2());
                             employeePhone.setRetailPrice(product.getRetailPrice());
+                            employeePhone.setDepositAmount(employeePhoneDeposit.getAmount());
                             employeePhone.setDepotId(employeePhoneDeposit.getDepotId());
                             employeePhone.setEmployeeId(employeePhoneDeposit.getEmployeeId());
                             employeePhone.setUploadTime(employeePhoneDeposit.getCreatedDate());
@@ -122,5 +149,28 @@ public class EmployeePhoneDepositService {
                 }
             }
         }
+    }
+
+    public String export(Workbook workbook, EmployeePhoneDepositQuery employeePhoneDepositQuery){
+        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds());
+        List<EmployeePhoneDepositDto> employeePhoneDepositDtoList= employeePhoneDepositRepository.findFilter(employeePhoneDepositQuery);
+        cacheUtils.initCacheInput(employeePhoneDepositDtoList);
+        List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employeeName","员工姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"department","部门"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"bankName","银行"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"amount","收款金额"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"outCode","外部编号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"billDate","开单时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"status","状态"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productName","手机型号"));
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导购用机",employeePhoneDepositDtoList,simpleExcelColumnList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"导购用机"+ LocalDateTimeUtils.format(LocalDateTime.now())+".xlsx",simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
     }
 }

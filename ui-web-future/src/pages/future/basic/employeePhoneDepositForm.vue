@@ -7,7 +7,7 @@
           <employee-select  v-model="inputForm.employeeId"></employee-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.depotName')" prop="depotId">
-          <depot-select v-model="inputForm.depotId"></depot-select>
+          <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.amount')" prop="amount">
           <el-input v-model.number="inputForm.amount"></el-input>
@@ -23,7 +23,6 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('employeePhoneDepositForm.save')}}</el-button>
-        </el-form-item>
         </el-form-item>
       </el-form>
     </div>
@@ -48,30 +47,17 @@
       methods:{
         getData(){
           return{
-            isInit:false,
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             formProperty:{},
-            inputForm:{
-              id:this.$route.query.id,
-              employeeId:'',
-              depotId:'',
-              amount:2000,
-              productId:'',
-              department:'',
-              status:''
-            },
+            inputForm:{},
             remoteLoading:false,
-            depots:[],
-            products:[],
-            employees:[],
             formLabelWidth: '120px',
             rules: {
-              depotId: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
-              depositAmount: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')},{ type: 'number', message: this.$t('expressOrderList.inputLegalValue')}],
-              productId: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
-              department: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
-              employeeId: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
+              depotId: [{ required: true, message: this.$t('employeePhoneDepositForm.prerequisiteMessage')}],
+              depositAmount: [{ required: true, message: this.$t('employeePhoneDepositForm.prerequisiteMessage')},{ type: 'number', message: this.$t('employeePhoneDepositForm.inputLegalValue')}],
+              productId: [{ required: true, message: this.$t('employeePhoneDepositForm.prerequisiteMessage')}],
+              department: [{ required: true, message: this.$t('employeePhoneDepositForm.prerequisiteMessage')}],
+              employeeId: [{ required: true, message: this.$t('employeePhoneDepositForm.prerequisiteMessage')}],
             }
           }
         },
@@ -81,10 +67,13 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/basic/hr/employeePhoneDeposit/save',{params:this.inputForm}).then((response)=> {
+              axios.post('/api/ws/future/basic/employeePhoneDeposit/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                Object.assign(this.$data, this.getData());
-                if(!this.isCreate){
+                if(this.inputForm.create){
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }else{
+                  this.submitDisabled = false;
                   this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
                 }
               }).catch(function () {
@@ -94,25 +83,17 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          axios.get('/api/basic/hr/employeePhoneDeposit/getForm').then((response)=>{
-            this.formProperty=response.data;
-          });
-          if(!this.isCreate){
-            axios.get('/api/basic/hr/employeePhoneDeposit/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        },initPage(){
+          axios.get('/api/ws/future/basic/employeePhoneDeposit/getForm').then((response)=>{
+            this.inputForm = response.data;
+            axios.get('/api/ws/future/basic/employeePhoneDeposit/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data,this.inputForm);
-              if(response.data.depot!=null){
-                this.depots=new Array(response.data.depot)
-              }
-              if(response.data.product!=null){
-                this.products=new Array(response.data.product)
-              }
-            })
-          }
+            });
+            console.log(this.inputForm);
+          });
         }
-        this.isInit = true;
+      },created () {
+        this.initPage();
       }
     }
 </script>

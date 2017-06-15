@@ -36,7 +36,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
     fun save(position: Employee): Employee
 
 
-    fun findByEnabledIsTrueAndNameContaining(name: String): MutableList<Employee>
+    fun findByEnabledIsTrueAndNameLike(name: String): MutableList<Employee>
 
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Employee>
