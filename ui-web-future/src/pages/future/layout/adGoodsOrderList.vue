@@ -83,6 +83,7 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -156,6 +157,8 @@
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
         } else if (action === "sign") {
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
+        } else if (action === "print") {
+          this.$router.push({name: 'adGoodsOrderPrint', query: {id: id}})
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
@@ -163,6 +166,12 @@
               this.pageRequest();
             });
           }).catch(()=>{});
+        }
+      },stypeOfPrintBtn(isPrint){
+        if(!isPrint){
+          return "color:#ff0000;";
+        }else {
+          return "";
         }
       }
     },created () {

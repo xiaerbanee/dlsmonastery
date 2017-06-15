@@ -43,7 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -580,6 +582,16 @@ public class AdGoodsOrderService {
             adGoodsOrder.setProcessStatus(AdGoodsOrderStatusEnum.已完成.name());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
+    }
+
+    public void print(String id) {
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
+        ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
+        if(expressOrder != null && expressOrder.getOutPrintDate() == null ){
+            expressOrder.setOutPrintDate(LocalDateTime.now());
+            expressOrderRepository.save(expressOrder);
+        }
+
     }
 
 

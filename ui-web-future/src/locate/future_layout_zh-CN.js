@@ -191,6 +191,7 @@ export default {
     bill:"开单",
     ship:"发货",
     sign:"签收",
+    print:"打印",
   },
   adGoodsOrderForm: {
     adGoodsOrderForm: "物料订单编辑",

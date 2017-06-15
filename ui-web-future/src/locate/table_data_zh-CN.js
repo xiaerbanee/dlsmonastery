@@ -174,6 +174,7 @@ export default {
       adGoodsOrderList: "柜台订货",
       adGoodsOrderShip: "柜台订货发货",
       adGoodsOrderSign: "货品订货签收",
+      adGoodsOrderPrint: "物料打印",
       adPricesystemChangeForm: "物料运费调整申请",
       adPricesystemChangeList: "运费修改",
       adPricesystemForm: "物料运费编辑",

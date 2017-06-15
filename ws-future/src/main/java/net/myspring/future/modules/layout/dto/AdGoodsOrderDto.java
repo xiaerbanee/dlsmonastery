@@ -19,6 +19,9 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String shopId;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "address")
+    private String shopAddress;
+
     private String shopOfficeId;
     @CacheInput(inputKey = "offices", inputInstance = "shopOfficeId", outputInstance = "name")
     private String shopOfficeName;
@@ -38,8 +41,9 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String expressOrderAddress;
     private String expressOrderMobilePhone;
     private String expressOrderExpressCompanyId;
+    private LocalDate expressOrderOutPrintDate;
     private String expressOrderId;
-    private String employeeId;
+
     private String processPositionId;
     private String processInstanceId;
     private String investInCause;
@@ -49,6 +53,44 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private Integer smallQty;
     private Integer mediumQty;
     private Integer largeQty;
+
+    private String employeeId;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "name")
+    private String employeeName;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
+    private String employeeMobilePhone;
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmployeeMobilePhone() {
+        return employeeMobilePhone;
+    }
+
+    public void setEmployeeMobilePhone(String employeeMobilePhone) {
+        this.employeeMobilePhone = employeeMobilePhone;
+    }
+
+    public LocalDate getExpressOrderOutPrintDate() {
+        return expressOrderOutPrintDate;
+    }
+
+    public void setExpressOrderOutPrintDate(LocalDate expressOrderOutPrintDate) {
+        this.expressOrderOutPrintDate = expressOrderOutPrintDate;
+    }
 
     public String getExpressOrderId() {
         return expressOrderId;
@@ -309,5 +351,9 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
 
     public Boolean getEditable(){
         return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+    }
+
+    public boolean getPrint(){
+        return expressOrderOutPrintDate != null;
     }
 }

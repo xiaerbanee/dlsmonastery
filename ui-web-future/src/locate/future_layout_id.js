@@ -216,6 +216,7 @@ export default {
     bill:"penagihan",
     ship:"pengiriman",
     sign:"tanda",
+    print:"打印",
   },
   adGoodsOrderShip: {
     adGoodsOrderShip: "order bahan",

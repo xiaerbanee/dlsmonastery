@@ -164,6 +164,13 @@ public class  AdGoodsOrderController {
         return new RestResponse("签收成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "print")
+    public RestResponse print(String id) {
+
+        adGoodsOrderService.print(id);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "delete")
     public RestResponse delete(AdGoodsOrderForm adGoodsOrderForm) {
         adGoodsOrderService.logicDelete(adGoodsOrderForm.getId());

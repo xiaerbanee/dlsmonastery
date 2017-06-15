@@ -49,6 +49,7 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                 expressOrder.contator expressOrderContator,
                 expressOrder.address expressOrderAddress,
                 expressOrder.express_company_id expressOrderExpressCompanyId,
+                expressOrder.out_print_date expressOrderOutPrintDate,
                 t1.*
             FROM
                 crm_ad_goods_order t1
@@ -72,6 +73,7 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                 expressOrder.contator expressOrderContator,
                 expressOrder.address expressOrderAddress,
                 expressOrder.express_company_id expressOrderExpressCompanyId,
+                expressOrder.out_print_date expressOrderOutPrintDate,
                 t1.*
             FROM
                 crm_ad_goods_order t1
