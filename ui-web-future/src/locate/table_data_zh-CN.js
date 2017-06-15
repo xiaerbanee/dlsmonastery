@@ -106,6 +106,7 @@ export default {
       accountKingdeeBookList:"金蝶用户管理",
       accountKingdeeBookForm:"金蝶用户管理编辑",
       productManager:"货品管理",
+      voucherList:"凭证管理",
       404: "404",
       companyConfigForm: "参数设置编辑",
       companyConfigList: "参数设置",

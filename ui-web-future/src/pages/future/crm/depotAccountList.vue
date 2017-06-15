@@ -102,26 +102,26 @@
         this.pageRequest();
       }, itemAction: function (id, action) {
         if(action==="detail") {
-          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}});
+          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dutyDateRange}});
         }
       }, exportAllDepots() {
 
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.submitData.dutyDateRange}}).then((response)=> {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.formData.dutyDateRange}}).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportConfirmation(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore}}).then((response) => {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportDetail(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore}}).then((response) => {
           window.location.href = "/api/general/sys/folderFile/download?id=" + response.data;
         });
       }).catch(()=>{});
