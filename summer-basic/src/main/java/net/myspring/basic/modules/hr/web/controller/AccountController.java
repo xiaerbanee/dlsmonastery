@@ -1,6 +1,5 @@
 package net.myspring.basic.modules.hr.web.controller;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -28,14 +27,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -147,7 +143,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        List<BackendMenuDto> menus = menuService.getMenuMap();
+        List<BackendMenuDto> menus = menuService.getMenusMap(RequestUtils.getAccountId());
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);

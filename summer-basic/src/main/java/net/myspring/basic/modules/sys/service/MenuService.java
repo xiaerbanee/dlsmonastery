@@ -1,16 +1,18 @@
 package net.myspring.basic.modules.sys.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
-import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.sys.domain.Menu;
+import net.myspring.basic.modules.sys.domain.MenuCategory;
 import net.myspring.basic.modules.sys.domain.Permission;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.repository.BackendRepository;
+import net.myspring.basic.modules.sys.repository.MenuCategoryRepository;
 import net.myspring.basic.modules.sys.repository.MenuRepository;
 import net.myspring.basic.modules.sys.repository.PermissionRepository;
 import net.myspring.basic.modules.sys.web.form.MenuForm;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -45,6 +48,8 @@ public class MenuService {
     private BackendRepository backendRepository;
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
+    @Autowired
+    private MenuCategoryRepository menuCategoryRepository;
     @Value("${setting.adminIdList}")
     private String adminIdList;
 
@@ -68,7 +73,7 @@ public class MenuService {
                 List<Permission> permissionList = permissionRepository.findByMenuId(menuDto.getId());
                 String permissionStr = "";
                 for (Permission permission : permissionList) {
-                    permissionStr = permissionStr + permission.getName() + CharConstant.SPACE+ permission.getPermission() + CharConstant.ENTER;
+                    permissionStr = permissionStr + permission.getName() + CharConstant.SPACE + permission.getPermission() + CharConstant.ENTER;
                 }
                 menuDto.setPermissionStr(permissionStr);
             }
@@ -95,7 +100,7 @@ public class MenuService {
             menuRepository.save(menu);
         } else {
             menu = menuRepository.findOne(menuForm.getId());
-            ReflectionUtil.copyProperties(menuForm,menu);
+            ReflectionUtil.copyProperties(menuForm, menu);
             menuRepository.save(menu);
             oldPermissions = Sets.newHashSet(permissionRepository.findByMenuId(menuForm.getId()));
         }
@@ -124,40 +129,58 @@ public class MenuService {
                 }
             }
         }
-        List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions,"id"),CollectionUtil.extractToList(permissions,"id"));
-        if(CollectionUtil.isNotEmpty(removePermissionIds)){
+        List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions, "id"), CollectionUtil.extractToList(permissions, "id"));
+        if (CollectionUtil.isNotEmpty(removePermissionIds)) {
             permissionRepository.logicDeleteByIds(removePermissionIds);
         }
         return menu;
     }
 
-    public List<BackendMenuDto> getMenuMap() {
-        return getMenusMap(false);
+    public List<Map<String, Object>> findMobileMenus(String accountId) {
+        List<Map<String, Object>> list = Lists.newArrayList();
+        List<String> menuIdList = getMenuIdList(accountId);
+        List<Menu> menuList = menuRepository.findByMenuIdsAndMobile(menuIdList, true);
+        if (CollectionUtil.isNotEmpty(menuList)) {
+            Map<String, List<Menu>> menuMap = CollectionUtil.extractToMapList(menuList, "menuCategoryId");
+            List<MenuCategory> menuCategoryList = menuCategoryRepository.findAll(CollectionUtil.extractToList(menuList, "menuCategoryId"));
+            for (MenuCategory menuCategory : menuCategoryList) {
+                Map<String, Object> item = Maps.newHashMap();
+                item.put("category", menuCategory);
+                item.put("menus", menuMap.get(menuCategory.getId()));
+                list.add(item);
+            }
+        }
+        return list;
     }
 
-    private List<BackendMenuDto> getMenusMap(boolean isMobile) {
+    public List<BackendMenuDto> getMenusMap(String accountId) {
         List<BackendMenuDto> backendList = Lists.newLinkedList();
-        List<String> menuIdList;
-        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
-            List<Menu> menuList = menuRepository.findAllEnabled();
-            menuIdList=CollectionUtil.extractToList(menuList,"id");
-        } else {
-            String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
-            List<Permission> permissionList;
-            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccount(RequestUtils.getAccountId());
-            if(CollectionUtil.isNotEmpty(accountPermissions)){
-                permissionList=permissionRepository.findByRoleAndAccount(roleId, RequestUtils.getAccountId());
-            }else {
-                permissionList=permissionRepository.findByRoleId(roleId);
-            }
-            menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
-            List<Menu> permissionIsEmptyMenus = menuRepository.findByPermissionIsEmpty();
-            menuIdList = CollectionUtil.union(menuIdList, CollectionUtil.extractToList(permissionIsEmptyMenus,"id"));
-            menuIdList = Lists.newArrayList(Sets.newHashSet(menuIdList));
-        }
-        if(CollectionUtil.isNotEmpty(menuIdList)){
+        List<String> menuIdList = getMenuIdList(accountId);
+        if (CollectionUtil.isNotEmpty(menuIdList)) {
             backendList = backendRepository.findByMenuList(menuIdList);
         }
         return backendList;
+    }
+
+    private List<String> getMenuIdList(String accountId) {
+        List<String> menuIdList = Lists.newArrayList();
+        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
+            List<Menu> menuList = menuRepository.findAllEnabled();
+            menuIdList = CollectionUtil.extractToList(menuList, "id");
+        } else {
+            String roleId = roleManager.findIdByAccountId(accountId);
+            List<Permission> permissionList;
+            List<String> accountPermissions = accountPermissionRepository.findPermissionIdByAccount(accountId);
+            if (CollectionUtil.isNotEmpty(accountPermissions)) {
+                permissionList = permissionRepository.findByRoleAndAccount(roleId, accountId);
+            } else {
+                permissionList = permissionRepository.findByRoleId(roleId);
+            }
+            menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
+            List<Menu> permissionIsEmptyMenus = menuRepository.findByPermissionIsEmpty();
+            menuIdList = CollectionUtil.union(menuIdList, CollectionUtil.extractToList(permissionIsEmptyMenus, "id"));
+            menuIdList = Lists.newArrayList(Sets.newHashSet(menuIdList));
+        }
+        return menuIdList;
     }
 }
