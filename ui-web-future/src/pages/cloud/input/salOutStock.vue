@@ -54,10 +54,14 @@
                 let column = changes[i][1]==2;
                 if(column){
                   let name = changes[i][3];
-                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
-                    let material = response.data;
-                    table.setDataAtCell(row,0,material.fnumber);
-                  });
+                  if(util.isNotBlank(name)) {
+                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
+                      let material = response.data;
+                      table.setDataAtCell(row,0,material.fnumber);
+                    });
+                  } else {
+                    table.setDataAtCell(row,0,null);
+                  }
                 }
               }
             }
