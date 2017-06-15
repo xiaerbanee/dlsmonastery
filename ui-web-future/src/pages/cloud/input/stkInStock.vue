@@ -46,6 +46,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table = null;
+  var typeList = [];
   export default {
     data() {
       return {
@@ -67,8 +68,8 @@
             {type: 'numeric', format:"0,0", allowEmpty: false, strict: true},
             {type: 'text',allowEmpty: false, strict:true},
             {type: 'numeric', format:"0,0.00", strict: true},
-            {type: 'numeric',format:"0,0.00", strict: true},
-            {type: 'text',readOnly: true, strict: true}
+            {type: 'text',readOnly: true, strict: true},
+            {type: 'numeric', format:"0,0.00", strict: true}
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
@@ -93,6 +94,8 @@
                       }else {
                         table.setDataAtCell(row, 2, '');
                       }
+                      table.setDataAtCell(row, 6, typeList[1]);
+                      table.setDataAtCell(row, 8, typeList[0]);
                     });
                   }
 
@@ -125,6 +128,7 @@
         }else{
           this.settings.columns.push({type: "text", readOnly: true, strict: true});
         }
+        typeList = response.data.typeList;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
