@@ -8,6 +8,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
@@ -87,6 +88,19 @@ public class DepotShopService {
             cacheUtils.initCacheInput(depotForm);
         }
         return depotForm;
+    }
+
+    public DepotDto findShop(String id){
+        DepotDto depotDto;
+        if (StringUtils.isBlank(id)){
+            depotDto = new DepotDto();
+        }
+        else{
+            Depot depot = depotRepository.findOne(id);
+            depotDto = BeanUtil.map(depot,DepotDto.class);
+            cacheUtils.initCacheInput(depotDto);
+        }
+        return depotDto;
     }
 
     public DepotShop save(DepotShopForm depotShopForm) {
