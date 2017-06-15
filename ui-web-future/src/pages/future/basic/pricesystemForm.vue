@@ -41,6 +41,7 @@
       return{
         isInit:false,
         submitDisabled:false,
+        isCreate:this.$route.query.id==null,
         productName:'',
         pricesystemDetailList:[],
         filterPricesystemDetailList:[],
@@ -71,7 +72,7 @@
             this.inputForm.enabled = true;
             axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.inputForm.isCreate){
+              if(this.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage;
               }else {
