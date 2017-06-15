@@ -58,7 +58,14 @@ public class StkInStockService {
         String supplierNumber = stkInStockForm.getSupplierNumber();
         String json = HtmlUtils.htmlUnescape(stkInStockForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-
+        List<String> materialNameForADList = Lists.newArrayList();
+        List<String> materialNameForSHList = Lists.newArrayList();
+        for (List<Object> row : data){
+            materialNameForADList.add(HandsontableUtils.getValue(row,6));
+            materialNameForSHList.add(HandsontableUtils.getValue(row,8));
+        }
+        Map<String,String> materialNameForADMap = bdMaterialRepository.findByNameList(materialNameForADList).stream().collect(Collectors.toMap(BdMaterial::getFName, BdMaterial::getFNumber));
+        Map<String,String> materialNameForSHMap = bdMaterialRepository.findByNameList(materialNameForSHList).stream().collect(Collectors.toMap(BdMaterial::getFName, BdMaterial::getFNumber));
         List<PurMrbFEntityDto> purMrbFEntryDtoList = Lists.newArrayList();
         StkInStockDto stkInStockDto = new StkInStockDto();
         stkInStockDto.setCreator(accountKingdeeBook.getUsername());
@@ -94,7 +101,7 @@ public class StkInStockService {
 
                 PurMrbFEntityDto purMrbFEntityDto = new PurMrbFEntityDto();
                 purMrbFEntityDto.setStockNumber(stockNumber);
-                purMrbFEntityDto.setMaterialNumber(productNumber);
+                purMrbFEntityDto.setMaterialNumber(materialNameForADMap.get(productType));
                 purMrbFEntityDto.setPrice(returnAmount);
                 purMrbFEntityDto.setQty(1);
                 purMrbFEntityDto.setNote(productName+", "+qty+", "+remarks);
@@ -107,7 +114,7 @@ public class StkInStockService {
 
                 PurMrbFEntityDto purMrbFEntityDto = new PurMrbFEntityDto();
                 purMrbFEntityDto.setStockNumber(stockNumber);
-                purMrbFEntityDto.setMaterialNumber(productNumber);
+                purMrbFEntityDto.setMaterialNumber(materialNameForSHMap.get(afterSaleType));
                 purMrbFEntityDto.setPrice(returnAmount);
                 purMrbFEntityDto.setQty(1);
                 purMrbFEntityDto.setNote(productName+", "+qty+", "+remarks);
@@ -125,7 +132,7 @@ public class StkInStockService {
                 purMrbDto.setSupplierNumber(supplierNumber);
                 purMrbDto.setDepartmentNumber(departmentNumber);
                 purMrbDto.getEntityDtoList().addAll(purMrbFEntryDtoList);
-                kingdeeSynDtoList.add( purMrbService.save(purMrbDto,kingdeeBook));
+                kingdeeSynDtoList.add(purMrbService.save(purMrbDto,kingdeeBook));
             }
         }else{
             kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
