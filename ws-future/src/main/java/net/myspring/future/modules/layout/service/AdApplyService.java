@@ -4,19 +4,33 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.DictEnumDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.common.enums.ExpressOrderTypeEnum;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.web.form.DepotAdApplyForm;
 import net.myspring.future.modules.basic.web.form.ProductAdForm;
+import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
+import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
+import net.myspring.future.modules.layout.web.form.AdApplyDetailForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
+import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -32,6 +46,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +58,15 @@ public class AdApplyService {
     @Autowired
     private AdApplyRepository adApplyRepository;
     @Autowired
+    private AdGoodsOrderRepository adGoodsOrderRepository;
+    @Autowired
+    private AdGoodsOrderDetailRepository adGoodsOrderDetailRepository;
+    @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -103,13 +126,10 @@ public class AdApplyService {
         return adApplyDtos;
     }
 
-    public List<AdApply> findAdApplyGoodsList(){
-        Map<String,Object> filter = Maps.newHashMap();
-        filter.put("adShop",true);
-        List<String> adApplyIdList = adApplyRepository.findAllId();
-        List<AdApply> adApplys = Lists.newArrayList();
-
-        return adApplys;
+    public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
+        List<DepotAdApplyForm> depotAdApplyForms = BeanUtil.map(depotRepository.findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse(),DepotAdApplyForm.class);
+        adApplyGoodsForm.setDepotAdApplyForms(depotAdApplyForms);
+        return adApplyGoodsForm;
     }
 
     public void save(AdApplyForm adApplyForm){
@@ -133,5 +153,100 @@ public class AdApplyService {
             }
         }
         adApplyRepository.save(adApplyList);
+    }
+
+    public void billSave(AdApplyBillForm adApplyBillForm){
+
+        List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
+        Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");
+        List<AdApply> adApplyList = adApplyRepository.findAll(adApplyId);
+        Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
+        List<AdGoodsOrderDetail> adGoodsOrderDetails = Lists.newArrayList();
+        List<AdGoodsOrder> adGoodsOrders = Lists.newArrayList();
+        if(adApplyList == null){
+            return;
+        }
+
+        //生成AdGoodsOrder
+        for(AdApply adApply:adApplyList){
+            if(!adGoodsOrderMap.containsKey(adApply.getShopId())){
+                AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
+                adGoodsOrder.setBillType(adApplyBillForm.getBillType());
+                adGoodsOrder.setStoreId(adApplyBillForm.getStoreId());
+                adGoodsOrder.setOutShopId(adApply.getShopId());
+                adGoodsOrder.setShopId(adApply.getShopId());
+                adGoodsOrder.setBillDate(adApplyBillForm.getBillDate());
+                adGoodsOrder.setLocked(true);
+                adGoodsOrder.setBillRemarks(adApplyBillForm.getRemarks());
+                adGoodsOrderMap.put(adApply.getShopId(), adGoodsOrder);
+                adGoodsOrderRepository.save(adGoodsOrder);
+            }
+            AdGoodsOrder adGoodsOrder = adGoodsOrderMap.get(adApply.getShopId());
+            adGoodsOrders.add(adGoodsOrder);
+            Product product = productRepository.findOne(adApply.getProductId());
+            AdGoodsOrderDetail adGoodsOrderDetail = new AdGoodsOrderDetail();
+            adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
+            adGoodsOrderDetail.setProductId(adApply.getProductId());
+            adGoodsOrderDetail.setPrice(product.getPrice2());
+            adGoodsOrderDetail.setShouldGet(product.getShouldGet());
+            adGoodsOrderDetail.setQty(adApply.getApplyQty());
+            adGoodsOrderDetail.setConfirmQty(adApply.getConfirmQty());
+            adGoodsOrderDetail.setBillQty(adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty());
+            adGoodsOrderDetails.add(adGoodsOrderDetail);
+        }
+        adGoodsOrderDetailRepository.save(adGoodsOrderDetails);
+
+        //自动开单
+        String maxBusinessId = adGoodsOrderRepository.findMaxBusinessId(adApplyBillForm.getBillDate());
+        for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
+            adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+            BigDecimal amount = BigDecimal.ZERO;
+            List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+            for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
+                amount = amount.add(adGoodsOrderDetail.getPrice().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+            }
+            adGoodsOrder.setAmount(amount);
+            adGoodsOrder.setProcessStatus(GoodsOrderStatusEnum.待发货.name());
+
+            Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
+            ExpressOrder expressOrder = new ExpressOrder();
+            expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
+            expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
+            expressOrder.setExtendId(adGoodsOrder.getId());
+            expressOrder.setFromDepotId(adGoodsOrder.getStoreId());
+            expressOrder.setExpressCompanyId(adApplyBillForm.getExpressCompanyId());
+            expressOrder.setToDepotId(adGoodsOrder.getShopId());
+            expressOrder.setContator(depot.getContator());
+            expressOrder.setAddress(depot.getAddress());
+            expressOrder.setMobilePhone(depot.getMobilePhone());
+            expressOrder.setPrintDate(adApplyBillForm.getBillDate());
+            if(BillTypeEnum.POP.name().equalsIgnoreCase(adApplyBillForm.getBillType())){
+                expressOrder.setExpressPrintQty(0);
+            }else{
+                expressOrder.setExpressPrintQty(1);
+            }
+
+            expressOrderRepository.save(expressOrder);
+            adGoodsOrder.setExpressOrderId(expressOrder.getId());
+            adGoodsOrderRepository.save(adGoodsOrder);
+        }
+
+        //保存adApply
+        List<AdApply> newAdApplys = Lists.newArrayList();
+        for(AdApply adApply:adApplyList){
+            AdGoodsOrder adGoodsOrder = adGoodsOrderMap.get(adApply.getShopId());
+            AdApplyDetailForm adApplyDetailForm = adApplyDetailFormMap.get(adApply.getId());
+            adApply.setBilledQty(adApply.getBilledQty()+adApplyDetailForm.getNowBilledQty());
+            if(StringUtils.isBlank(adApply.getOrderId())){
+                adApply.setOrderId(adGoodsOrder.getId());
+            }else{
+                adApply.setOrderId(adApply.getOrderId()+ CharConstant.COMMA+adGoodsOrder.getId());
+            }
+            adApply.setLeftQty(adApply.getConfirmQty()-adApply.getBilledQty());
+            newAdApplys.add(adApply);
+        }
+        adApplyRepository.save(newAdApplys);
+
+        //TODO 调用金蝶接口
     }
 }
