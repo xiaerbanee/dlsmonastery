@@ -71,6 +71,7 @@
     methods:{
       getData() {
       return{
+        isCreate:this.$route.query.id == null,
         submitDisabled:false,
         inputForm:{
           depotForm:{},
@@ -98,7 +99,7 @@
           if (valid) {
             axios.post('/api/ws/future/basic/depotStore/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.inputForm.isCreate){
+              if(this.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else {
