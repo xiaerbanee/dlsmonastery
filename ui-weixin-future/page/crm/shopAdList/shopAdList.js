@@ -15,22 +15,37 @@ Page({
   onLoad: function (option) {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/shopAd/getQuery"),
+      url: $util.getUrl("ws/future/layout/shopAd/getQuery"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        that.setData({ 'formProperty.shopAdTypeList': res.data.shopAdTypes, 'formProperty.processList': res.data.processFlows })
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
+      }
+    });
+    wx.request({
+      url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=广告申请"),
+      data: {},
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ 'formProperty.processList': res.data })
       }
     })
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function(){
+    app.autoLogin(function () {
       that.initPage()
     });
   },
-  initPage:function() {
+  initPage: function () {
     var that = this;
     that.pageRequest();
   },
@@ -42,8 +57,11 @@ Page({
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("crm/shopAd"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("ws/future/layout/shopAd"),
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
           data: that.data.formData,
           success: function (res) {
             that.setData({ page: res.data });
@@ -94,8 +112,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -106,33 +122,32 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
-    var itemList = that.data.activeItem.actionList;
-    if (!itemList) {
-      return;
-    }
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: ["修改", "详细", "删除", "审核"],
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "修改") {
+          if (res.tapIndex == 0) {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=update&id=' + id
             })
-          } else if (itemList[res.tapIndex] == "详细") {
+          } else if (res.tapIndex == 1) {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=detail&id=' + id
             })
           }
-          else if (itemList[res.tapIndex] == "删除") {
+          else if (res.tapIndex == 2) {
             wx.request({
               url: $util.getUrl("crm/shopAd/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId },
+              header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              },
               success: function (res) {
                 that.pageRequest();
               }
             })
-          }else if(itemList[res.tapIndex] == "审核"){
+          } else if (res.tapIndex == 3) {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=audit&id=' + id
             })
@@ -143,32 +158,32 @@ Page({
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

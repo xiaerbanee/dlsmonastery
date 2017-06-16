@@ -4,7 +4,6 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderDetailService;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
