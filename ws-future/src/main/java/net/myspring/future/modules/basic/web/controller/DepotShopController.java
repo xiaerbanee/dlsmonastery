@@ -3,6 +3,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
@@ -58,13 +59,13 @@ public class DepotShopController {
     @RequestMapping(value = "save")
     public RestResponse list(DepotShopForm depotShopForm){
         depotShopService.save(depotShopForm);
-        return new RestResponse("保存成功",null);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "saveDepot")
     public RestResponse saveDepot(DepotForm depotForm){
         depotShopService.saveDepot(depotForm);
-        return new RestResponse("保存成功",null);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getForm")
@@ -77,6 +78,12 @@ public class DepotShopController {
     public DepotShopDto findOne(String id){
         DepotShopDto depotShopDto = depotShopService.findOne(id);
         return depotShopDto;
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id){
+        depotShopService.logicDelete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "findDepotForm")
