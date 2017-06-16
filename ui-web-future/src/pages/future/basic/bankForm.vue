@@ -31,6 +31,7 @@
     methods:{
       getData() {
         return{
+          isCreate:this.$route.query.id == null,
           submitDisabled:false,
           remoteLoading:false,
           inputForm:{
@@ -50,7 +51,7 @@
             axios.post('/api/ws/future/basic/bank/save',qs.stringify(util.deleteExtra(that.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success) {
-                if (this.inputForm.isCreate) {
+                if (this.isCreate) {
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
