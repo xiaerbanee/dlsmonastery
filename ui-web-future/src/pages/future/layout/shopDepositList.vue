@@ -84,6 +84,7 @@
         searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
+        pageHeight: 600,
       };
     },
     methods: {

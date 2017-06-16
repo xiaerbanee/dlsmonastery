@@ -87,6 +87,7 @@
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
+        pageHeight: 600,
       };
     },
     methods: {
@@ -134,14 +135,12 @@
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
-
       }
     },created () {
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
+      this.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/crm/express/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

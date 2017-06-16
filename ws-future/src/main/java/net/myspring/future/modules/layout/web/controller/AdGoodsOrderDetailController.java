@@ -4,7 +4,6 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderDetailService;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "crm/adGoodsOrderDetail")
+@RequestMapping(value = "layout/adGoodsOrderDetail")
 public class AdGoodsOrderDetailController {
 
     @Autowired
@@ -24,7 +23,7 @@ public class AdGoodsOrderDetailController {
     @Autowired
     private AdGoodsOrderDetailService adGoodsOrderDetailService;
 
-    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public Page<AdGoodsOrderDetailDto> list(Pageable pageable, AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
         return adGoodsOrderDetailService.findPage(pageable, adGoodsOrderDetailQuery);
     }

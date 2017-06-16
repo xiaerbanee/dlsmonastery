@@ -4,15 +4,15 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     formData: {
-      specialArea:false,
+      specialArea: false,
     },
-    formProperty:{},
-    response:{},
-    submitDisabled:false,
-    submitHidden:false,
-    auditDisabled:false,
-    auditHidden:false,
-    options:null
+    formProperty: {},
+    response: {},
+    submitDisabled: false,
+    submitHidden: false,
+    auditDisabled: false,
+    auditHidden: false,
+    options: null
   },
   onLoad: function (options) {
     var that = this;
@@ -25,22 +25,25 @@ Page({
     var that = this;
     var options = that.data.options;
     wx.request({
-      url: $util.getUrl("crm/shopAd/getForm"),
+      url: $util.getUrl("ws/future/layout/shopAd/getForm"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
-      success: function(res){
-        that.setData({'formProperty.shopAdTypeList':res.data.shopAdTypes})
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypeFormList })
       }
     })
     if (options.action == "update") {
       that.detail();
-    }else if(options.action=="detail"){
+    } else if (options.action == "detail") {
       that.detail();
-      that.setData({submitHidden:true})
-    }else if(options.action =="audit"){
+      that.setData({ submitHidden: true })
+    } else if (options.action == "audit") {
       that.detail();
-      that.setData({auditHidden:true,submitHidden:true})
+      that.setData({ auditHidden: true, submitHidden: true })
     }
   },
   bindAdType: function (e) {
@@ -50,43 +53,49 @@ Page({
       'formData.shopAdType.name': that.data.formProperty.shopAdTypeList[e.detail.value].name
     })
   },
-  bindShop:function(e){
+  bindShop: function (e) {
     wx.navigateTo({
       url: '/page/crm/depotSearch/depotSearch'
     })
   },
-  switchChange: function(e) {
-    var that=this;
-    that.setData({'formData.specialArea':e.detail.value})
+  switchChange: function (e) {
+    var that = this;
+    that.setData({ 'formData.specialArea': e.detail.value })
   },
   formSubmit: function (e) {
     var that = this;
-    var event=e.detail.target.dataset.event;
-    if(event=="submit"){
+    var event = e.detail.target.dataset.event;
+    if (event == "submit") {
       that.setData({ submitDisabled: true });
       wx.request({
-      url: $util.getUrl("crm/shopAd/save"),
-      data: e.detail.value,
-      header: {'x-auth-token': app.globalData.sessionId},
-      success: function (res) {
-        if (res.data.success) {
-          wx.navigateBack();
-        } else {
-          that.setData({ 'response.data': res.data ,submitDisabled: false });
+        url: $util.getUrl("ws/future/layout/shopAd/save"),
+        data: e.detail.value,
+        header: {
+          'x-auth-token': app.globalData.sessionId,
+          'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
+        success: function (res) {
+          if (res.data.success) {
+            wx.navigateBack();
+          } else {
+            that.setData({ 'response.data': res.data, submitDisabled: false });
+          }
         }
-      }
-    })
-    }else if(event=="audit"){
+      })
+    } else if (event == "audit") {
       that.setData({ auditDisabled: true });
       wx.request({
-        url: $util.getUrl("crm/shopAd/audit"),
+        url: $util.getUrl("ws/future/layout/shopAd/audit"),
         data: e.detail.value,
-        header: {'x-auth-token': app.globalData.sessionId},
-        success: function(res){
-         if (res.data.success) {
-           wx.navigateBack();
-          }else{
-            that.setData({auditDisabled:false})
+        header: {
+          'x-auth-token': app.globalData.sessionId,
+          'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
+        success: function (res) {
+          if (res.data.success) {
+            wx.navigateBack();
+          } else {
+            that.setData({ auditDisabled: false })
           }
         }
       })
@@ -97,7 +106,7 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if(responseData && responseData.errors && responseData.errors[key] != null) {
+    if (responseData && responseData.errors && responseData.errors[key] != null) {
       that.setData({ "response.error": responseData.errors[key].message });
       delete responseData.errors[key];
       that.setData({ "response.data": responseData })
@@ -105,20 +114,22 @@ Page({
       that.setData({ "response.error": '' })
     }
   },
-  detail:function(e){
-    var that=this;
+  detail: function (e) {
+    var that = this;
     wx.request({
-        url: $util.getUrl("crm/shopAd/detail"),
-        data: { id: that.data.options.id },
-        method: 'GET',
-        header: { 'x-auth-token': app.globalData.sessionId },
-        success: function (res) {
-          that.setData({
-             formData:res.data.shopAd,
-            'formData.shop.name': res.data.shopAd.shop.name,
-            'formData.shopAdType.name':res.data.shopAd.shopAdType.name
-          })
-        }
-      })
+      url: $util.getUrl("ws/future/layout/shopAd/findOne"),
+      data: { id: that.data.options.id },
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        console.log(res)
+        that.setData({
+          formData: res.data
+        })
+      }
+    })
   }
 })
