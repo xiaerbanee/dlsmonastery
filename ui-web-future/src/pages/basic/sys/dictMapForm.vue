@@ -32,15 +32,14 @@
       methods: {
         getData() {
           return {
-            isCreate: this.$route.query.id == null,
             submitDisabled: false,
             inputForm: {
               extra: {}
             },
             rules: {
-              category: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-              name: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-              value: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage')}]
+              category: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage'),trigger:"blur"}],
+              name: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage'),trigger:"blur"}],
+              value: [{required: true, message: this.$t('dictMapForm.prerequisiteMessage'),trigger:"blur"}]
             }
           }
         },
@@ -52,7 +51,7 @@
             if (valid) {
               axios.post('/api/basic/sys/dictMap/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
                 this.$message(response.data.message);
-                if (this.isCreate) {
+                if (this.inputForm.isCreate) {
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 } else {
