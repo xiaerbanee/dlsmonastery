@@ -167,6 +167,7 @@ export default {
       adGoodsOrderDetail: "perincian bahan",
       adGoodsOrderForm: "orderan etalase",
       adGoodsOrderList: "pemesanan etalase",
+      adGoodsOrderDetailList: "订货详细",
       adGoodsOrderShip: "order bahan",
       adGoodsOrderSign: "货品订货签收",
       adGoodsOrderPrint: "物料打印",

@@ -20,9 +20,6 @@
               <el-form-item :label="$t('adGoodsOrderDetailList.billDateRange')">
                 <date-range-picker v-model="formData.adGoodsOrderBillDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('adGoodsOrderDetailList.shipDateRange')">
-                <date-range-picker v-model="formData.adGoodsOrderShipDateRange"></date-range-picker>
-              </el-form-item>
               <el-form-item :label="$t('adGoodsOrderDetailList.processStatus')">
                 <process-status-select v-model="formData.adGoodsOrderProcessStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
@@ -60,8 +57,12 @@
           <el-button type="primary" @click="search()">{{$t('adGoodsOrderDetailList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderDetailList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="adGoodsOrderFormatId" column-key="adGoodsOrderId" :label="$t('adGoodsOrderDetailList.adGoodsOrderFormatId')" sortable></el-table-column>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderDetailList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column prop="adGoodsOrderFormatId" column-key="adGoodsOrderId" :label="$t('adGoodsOrderDetailList.adGoodsOrderFormatId')" sortable>
+          <template scope="scope">
+            <div class="action" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" size="small" @click.native="itemAction(scope.row.adGoodsOrderId,'detail')">{{scope.row.adGoodsOrderFormatId}}</el-button></div>
+          </template>
+        </el-table-column>
         <el-table-column prop="adGoodsOrderCreatedDate" :label="$t('adGoodsOrderDetailList.createdDate')" ></el-table-column>
         <el-table-column prop="adGoodsOrderBillDate" :label="$t('adGoodsOrderDetailList.billDate')" ></el-table-column>
         <el-table-column prop="adGoodsOrderBillType" :label="$t('adGoodsOrderDetailList.type')" ></el-table-column>
@@ -74,7 +75,7 @@
         <el-table-column prop="qty" :label="$t('adGoodsOrderDetailList.qty')"></el-table-column>
         <el-table-column prop="confirmQty" :label="$t('adGoodsOrderDetailList.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderDetailList.billQty')"></el-table-column>
-        <el-table-column prop="price" :label="$t('adGoodsOrderDetailList.price')"></el-table-column>
+        <el-table-column prop="productPrice2" :label="$t('adGoodsOrderDetailList.price')"></el-table-column>
         <el-table-column prop="adGoodsOrderRemarks" :label="$t('adGoodsOrderDetailList.adGoodsOrderRemarks')" ></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -106,13 +107,14 @@
         },
         initPromise:{},
         formVisible: false,
+        pageHeight:600,
       };
     },
     methods: {
       setSearchText() {
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
+        });
       },
       pageRequest() {
         this.pageLoading = true;
@@ -140,8 +142,13 @@
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
+      }, itemAction: function (id, action) {
+        if (action === "detail") {
+          this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
+        }
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/layout/adGoodsOrderDetail/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

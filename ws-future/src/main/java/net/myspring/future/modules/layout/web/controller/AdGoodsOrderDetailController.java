@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "crm/adGoodsOrderDetail")
+@RequestMapping(value = "layout/adGoodsOrderDetail")
 public class AdGoodsOrderDetailController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class AdGoodsOrderDetailController {
     @Autowired
     private AdGoodsOrderDetailService adGoodsOrderDetailService;
 
-    @RequestMapping(value = "getQuery", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public Page<AdGoodsOrderDetailDto> list(Pageable pageable, AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
         return adGoodsOrderDetailService.findPage(pageable, adGoodsOrderDetailQuery);
     }
