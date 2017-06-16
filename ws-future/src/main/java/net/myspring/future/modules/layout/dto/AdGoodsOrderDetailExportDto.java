@@ -1,6 +1,5 @@
 package net.myspring.future.modules.layout.dto;
 
-import ma.glasnost.orika.impl.util.StringUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.IdDto;
 import net.myspring.future.common.utils.RequestUtils;

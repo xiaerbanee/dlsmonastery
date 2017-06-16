@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 
 import java.util.List;
 
