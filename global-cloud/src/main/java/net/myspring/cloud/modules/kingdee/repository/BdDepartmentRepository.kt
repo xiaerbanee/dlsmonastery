@@ -87,4 +87,27 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
                 and t2.FFULLNAME in (:nameList)
         """, Collections.singletonMap("nameList",nameList),BeanPropertyRowMapper(BdDepartment::class.java))
     }
+
+    fun findByCustId(custId:String): BdDepartment {
+        return namedParameterJdbcTemplate.queryForObject("""
+            select
+                t1.FDEPTID,
+                t1.FNUMBER,
+                t2.FFULLNAME,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            from
+                T_BD_DEPARTMENT t1,
+                T_BD_DEPARTMENT_L t2
+            where
+                t1.FDEPTID = t2.FDEPTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FDEPTID in (
+                        select t3.FSALDEPTID
+                        from T_BD_CUSTOMER t3
+                        where t3.FCUSTID = :custId
+                    )
+        """,Collections.singletonMap("custId",custId), BeanPropertyRowMapper(BdDepartment::class.java))
+    }
 }
