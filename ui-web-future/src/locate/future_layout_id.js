@@ -217,6 +217,7 @@ export default {
     ship:"pengiriman",
     sign:"tanda",
     print:"打印",
+    export:"导出",
   },
   adGoodsOrderShip: {
     adGoodsOrderShip: "order bahan",
