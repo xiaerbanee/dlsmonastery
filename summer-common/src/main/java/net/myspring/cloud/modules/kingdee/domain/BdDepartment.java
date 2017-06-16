@@ -1,23 +1,24 @@
-package net.myspring.general.modules.sys.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
-import java.time.LocalDate;
 
-public class CnBankAcnt {
-    private String FBankAcntId;
+/**
+ * Created by lihx on 2017/4/6.
+ */
+public class BdDepartment {
+    private String FDeptId;
     private String FNumber;
-    private String FName;
-    private LocalDate FModeifyDate;
+    private String FFullName;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
     private String FForbidStatus;
 
-    public String getFBankAcntId() {
-        return FBankAcntId;
+    public String getFDeptId() {
+        return FDeptId;
     }
 
-    public void setFBankAcntId(String FBankAcntId) {
-        this.FBankAcntId = FBankAcntId;
+    public void setFDeptId(String FDeptId) {
+        this.FDeptId = FDeptId;
     }
 
     public String getFNumber() {
@@ -28,20 +29,12 @@ public class CnBankAcnt {
         this.FNumber = FNumber;
     }
 
-    public String getFName() {
-        return FName;
+    public String getFFullName() {
+        return FFullName;
     }
 
-    public void setFName(String FName) {
-        this.FName = FName;
-    }
-
-    public LocalDate getFModeifyDate() {
-        return FModeifyDate;
-    }
-
-    public void setFModeifyDate(LocalDate FModeifyDate) {
-        this.FModeifyDate = FModeifyDate;
+    public void setFFullName(String FFullName) {
+        this.FFullName = FFullName;
     }
 
     public String getFDocumentStatus() {

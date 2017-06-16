@@ -1,26 +1,23 @@
-package net.myspring.general.modules.sys.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
-/**
- * 辅助资料
- * Created by lihx on 2017/4/11.
- */
-public class BasAssistant {
-    private String FEntryId;
-    //编码
+import java.time.LocalDate;
+
+public class CnBankAcnt {
+    private String FBankAcntId;
     private String FNumber;
-    //名称
-    private String FDataValue;
+    private String FName;
+    private LocalDate FModeifyDate;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
     private String FForbidStatus;
 
-    public String getFEntryId() {
-        return FEntryId;
+    public String getFBankAcntId() {
+        return FBankAcntId;
     }
 
-    public void setFEntryId(String FEntryId) {
-        this.FEntryId = FEntryId;
+    public void setFBankAcntId(String FBankAcntId) {
+        this.FBankAcntId = FBankAcntId;
     }
 
     public String getFNumber() {
@@ -31,12 +28,20 @@ public class BasAssistant {
         this.FNumber = FNumber;
     }
 
-    public String getFDataValue() {
-        return FDataValue;
+    public String getFName() {
+        return FName;
     }
 
-    public void setFDataValue(String FDataValue) {
-        this.FDataValue = FDataValue;
+    public void setFName(String FName) {
+        this.FName = FName;
+    }
+
+    public LocalDate getFModeifyDate() {
+        return FModeifyDate;
+    }
+
+    public void setFModeifyDate(LocalDate FModeifyDate) {
+        this.FModeifyDate = FModeifyDate;
     }
 
     public String getFDocumentStatus() {

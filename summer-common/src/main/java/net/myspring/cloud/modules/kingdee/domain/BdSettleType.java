@@ -1,15 +1,25 @@
-package net.myspring.general.modules.sys.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
 /**
- * Created by lihx on 2017/4/11.
+ * 结算方式
+ * Created by lihx on 2017/4/10.
  */
-public class HrEmpInfo {
+public class BdSettleType{
+    private String FId;
     private String FNumber;
     private String FName;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
     private String FForbidStatus;
+
+    public String getFId() {
+        return FId;
+    }
+
+    public void setFId(String FId) {
+        this.FId = FId;
+    }
 
     public String getFNumber() {
         return FNumber;
@@ -43,3 +53,4 @@ public class HrEmpInfo {
         this.FForbidStatus = FForbidStatus;
     }
 }
+

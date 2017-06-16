@@ -1,24 +1,26 @@
-package net.myspring.general.modules.sys.domain;
+package net.myspring.cloud.modules.kingdee.domain;
 
 /**
- * 结算方式
- * Created by lihx on 2017/4/10.
+ * 辅助资料
+ * Created by lihx on 2017/4/11.
  */
-public class BdSettleType{
-    private String FId;
+public class BasAssistant {
+    private String FEntryId;
+    //编码
     private String FNumber;
-    private String FName;
+    //名称
+    private String FDataValue;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
     private String FForbidStatus;
 
-    public String getFId() {
-        return FId;
+    public String getFEntryId() {
+        return FEntryId;
     }
 
-    public void setFId(String FId) {
-        this.FId = FId;
+    public void setFEntryId(String FEntryId) {
+        this.FEntryId = FEntryId;
     }
 
     public String getFNumber() {
@@ -29,12 +31,12 @@ public class BdSettleType{
         this.FNumber = FNumber;
     }
 
-    public String getFName() {
-        return FName;
+    public String getFDataValue() {
+        return FDataValue;
     }
 
-    public void setFName(String FName) {
-        this.FName = FName;
+    public void setFDataValue(String FDataValue) {
+        this.FDataValue = FDataValue;
     }
 
     public String getFDocumentStatus() {
@@ -53,4 +55,3 @@ public class BdSettleType{
         this.FForbidStatus = FForbidStatus;
     }
 }
-
