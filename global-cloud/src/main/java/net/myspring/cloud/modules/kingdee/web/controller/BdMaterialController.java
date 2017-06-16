@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by lihx on 2017/5/12.
  */
@@ -23,5 +25,10 @@ public class BdMaterialController {
     @RequestMapping(value = "findByNumber")
     public BdMaterial findByNumber(String number){
         return bdMaterialService.findByNumber(number);
+    }
+
+    @RequestMapping(value = "findAll")
+    public List<BdMaterial> findAll( ){
+        return bdMaterialService.findAll();
     }
 }
