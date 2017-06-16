@@ -32,7 +32,7 @@ interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOr
     WHERE
         t1.billDate = ?1
     """)
-    fun findMaxBusinessId(localDate: LocalDate): String
+    fun findMaxBusinessId(billDate: LocalDate): String
 }
 
 interface AdGoodsOrderRepositoryCustom{
