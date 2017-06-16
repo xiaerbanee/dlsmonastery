@@ -9,7 +9,6 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
@@ -21,17 +20,13 @@ import net.myspring.future.modules.layout.web.form.AdGoodsOrderBillForm;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderShipForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -165,10 +160,8 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "print")
-    public RestResponse print(String id) {
-
-        adGoodsOrderService.print(id);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    public AdGoodsOrderDto print(String id) {
+        return adGoodsOrderService.print(id);
     }
 
     @RequestMapping(value = "delete")
@@ -179,24 +172,24 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
     public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
-
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
-
     }
 
     @RequestMapping(value = "findDetailListForBill")
     public List<AdGoodsOrderDetailDto> findDetailListForBill(String adGoodsOrderId) {
-
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
-
     }
 
     @RequestMapping(value = "findDetailListByAdGoodsOrderId")
     public List<AdGoodsOrderDetailDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
-
         return adGoodsOrderService.findDetailListByAdGoodsOrderId(adGoodsOrderId);
-
     }
+
+    @RequestMapping(value="export")
+    public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
+        return adGoodsOrderService.export(adGoodsOrderQuery);
+    }
+
 
 
 }

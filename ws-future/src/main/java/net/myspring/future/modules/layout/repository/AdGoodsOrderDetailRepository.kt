@@ -1,8 +1,10 @@
 package net.myspring.future.modules.layout.repository
 
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -23,11 +25,58 @@ interface AdGoodsOrderDetailRepositoryCustom{
 
     fun findDtoListByAdGoodsOrderId(adGoodsOrderId :String): MutableList<AdGoodsOrderDetailDto>
 
-
     fun findDetailListForBill(adGoodsOrderId: String, companyId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailDto>
+
+    fun findDtoListForExport(adGoodsOrderIdList: List<String>, limit: Int): List<AdGoodsOrderDetailExportDto>
 }
 
 class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdGoodsOrderDetailRepositoryCustom{
+
+    override fun findDtoListForExport(adGoodsOrderIdList: List<String>, limit: Int): List<AdGoodsOrderDetailExportDto> {
+
+        val params = HashMap<String, Any>()
+        params.put("adGoodsOrderIdList", adGoodsOrderIdList)
+        params.put("limit", limit)
+        return namedParameterJdbcTemplate.query("""
+        SELECT t2.out_code adGoodsOrderOutCode,
+                    t2.out_shop_id adGoodsOrderOutShopId,
+                    t2.id adGoodsOrderId,
+                    t2.parent_id adGoodsOrderParentId,
+                    t2.shop_id adGoodsOrderShopId,
+                    t2.bill_address adGoodsOrderBillAddress,
+                    t2.employee_id adGoodsOrderEmployeeId,
+                    t2.bill_remarks adGoodsOrderBillRemarks,
+                    t2.process_status adGoodsOrderProcessStatus,
+                    t2.created_by adGoodsOrderCreatedBy,
+                    t2.created_date adGoodsOrderCreatedDate,
+                    t2.bill_date adGoodsOrderBillDate,
+                    t2.bill_remarks adGoodsOrderBillRemarks,
+                    t2.parent_id adGoodsOrderParentId,
+                    t4.area_type adGoodsOrderDepotShopAreaType,
+                    t5.contator expressOrderContator,
+                    t5.mobile_phone expressOrderMobilePhone,
+                    t5.express_company_id expressOrderExpressCompanyId,
+                    t5.should_pay expressOrderShouldPay,
+                    t5.should_get expressOrderShouldGet,
+                    t5.real_pay expressOrderRealPay,
+                    t6.price2 productPrice2,
+                    t6.code productCode,
+                    t6.name productName,
+                    t6.volume productVolume,
+                    t1.*
+        FROM  crm_ad_goods_order_detail t1
+                  LEFT JOIN crm_ad_goods_order t2 ON t1.ad_goods_order_id = t2.id
+                  LEFT JOIN crm_depot t3 ON t2.shop_id = t3.id
+                  LEFT JOIN crm_depot_shop t4 ON t3.depot_shop_id = t4.id
+                  LEFT JOIN crm_express_order t5 ON t2.express_order_id = t5.id
+                  LEFT JOIN crm_product t6 ON t1.product_id = t6.id
+        where t1.ad_goods_order_id IN (:adGoodsOrderIdList)
+        ORDER BY t1.ad_goods_order_id DESC
+        limit 0, :limit
+          """, params, MyBeanPropertyRowMapper(AdGoodsOrderDetailExportDto::class.java))
+    }
+
+
     override fun findDetailListForBill(adGoodsOrderId: String, companyId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailDto> {
 
         val paramMap = HashMap<String, Any>()

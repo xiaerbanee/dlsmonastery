@@ -1,9 +1,11 @@
 package net.myspring.future.modules.layout.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,21 +30,29 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String shopAreaId;
     @CacheInput(inputKey = "offices", inputInstance = "shopAreaId", outputInstance = "name")
     private String shopAreaName;
+    private String depotShopAreaType;
     private BigDecimal amount;
     private String outCode;
     private String billType;
     private LocalDate billDate;
+    private String billRemarks;
 
     private String processStatus;
     private String businessId;
+    private String parentId;
 
     private String expressOrderExpressCodes;
     private String expressOrderContator;
     private String expressOrderAddress;
     private String expressOrderMobilePhone;
     private String expressOrderExpressCompanyId;
+    @CacheInput(inputKey = "expressCompanies", inputInstance = "expressOrderExpressCompanyId", outputInstance = "name")
+    private String expressOrderExpressCompanyName;
     private LocalDate expressOrderOutPrintDate;
     private String expressOrderId;
+    private BigDecimal expressOrderShouldPay;
+    private BigDecimal expressOrderShouldGet;
+    private BigDecimal expressOrderRealPay;
 
     private String processPositionId;
     private String processInstanceId;
@@ -59,6 +69,62 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String employeeName;
     @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
     private String employeeMobilePhone;
+
+    public BigDecimal getExpressOrderShouldPay() {
+        return expressOrderShouldPay;
+    }
+
+    public void setExpressOrderShouldPay(BigDecimal expressOrderShouldPay) {
+        this.expressOrderShouldPay = expressOrderShouldPay;
+    }
+
+    public BigDecimal getExpressOrderShouldGet() {
+        return expressOrderShouldGet;
+    }
+
+    public void setExpressOrderShouldGet(BigDecimal expressOrderShouldGet) {
+        this.expressOrderShouldGet = expressOrderShouldGet;
+    }
+
+    public BigDecimal getExpressOrderRealPay() {
+        return expressOrderRealPay;
+    }
+
+    public void setExpressOrderRealPay(BigDecimal expressOrderRealPay) {
+        this.expressOrderRealPay = expressOrderRealPay;
+    }
+
+    public String getBillRemarks() {
+        return billRemarks;
+    }
+
+    public void setBillRemarks(String billRemarks) {
+        this.billRemarks = billRemarks;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getDepotShopAreaType() {
+        return depotShopAreaType;
+    }
+
+    public void setDepotShopAreaType(String depotShopAreaType) {
+        this.depotShopAreaType = depotShopAreaType;
+    }
+
+    public String getExpressOrderExpressCompanyName() {
+        return expressOrderExpressCompanyName;
+    }
+
+    public void setExpressOrderExpressCompanyName(String expressOrderExpressCompanyName) {
+        this.expressOrderExpressCompanyName = expressOrderExpressCompanyName;
+    }
 
     public String getShopAddress() {
         return shopAddress;
@@ -197,8 +263,10 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     }
 
     public String getFormatId(){
-        //TODO 实现getFormatId
-        return getId();
+        if(StringUtils.isBlank(parentId) || parentId.equals(getId())){
+            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(getId());
+        }
+        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(parentId)+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(getId());
     }
 
     public String getStoreId() {
