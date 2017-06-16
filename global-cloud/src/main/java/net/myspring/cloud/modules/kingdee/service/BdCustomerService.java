@@ -38,4 +38,8 @@ public class BdCustomerService {
     public List<NameValueDto> findCustomerGroupList(){
         return bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName();
     }
+
+    public List<BdCustomer> findAll(){
+        return bdCustomerRepository.findAll();
+    }
 }

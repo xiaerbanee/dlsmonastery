@@ -40,4 +40,9 @@ public class BdCustomerController {
         return bdCustomerService.findCustomerGroupList();
     }
 
+    @RequestMapping(value = "findAll")
+    public List<BdCustomer>  findAll(){
+        return bdCustomerService.findAll();
+    }
+
 }

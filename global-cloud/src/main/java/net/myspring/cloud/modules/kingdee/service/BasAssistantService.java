@@ -1,9 +1,12 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.modules.kingdee.domain.BasAssistant;
 import net.myspring.cloud.modules.kingdee.repository.BasAssistantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -18,5 +21,9 @@ public class BasAssistantService {
 
     public String findNumberSubByName(String name){
         return basAssistantRepository.findByName(name).getFNumber().substring(0,4);
+    }
+
+    public List<BasAssistant> findByType(String type){
+        return basAssistantRepository.findByType(type);
     }
 }

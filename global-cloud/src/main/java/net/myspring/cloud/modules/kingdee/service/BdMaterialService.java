@@ -38,4 +38,8 @@ public class BdMaterialService {
         return bdMaterialRepository.findByModifyDate(dateTime);
     }
 
+    public List<BdMaterial> findAll(){
+        return bdMaterialRepository.findAll();
+    }
+
 }

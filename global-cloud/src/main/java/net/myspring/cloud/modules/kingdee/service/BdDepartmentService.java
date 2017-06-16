@@ -24,4 +24,8 @@ public class BdDepartmentService {
         }
         return null;
     }
+
+    public List<BdDepartment> findAll() {
+        return bdDepartmentRepository.findAll();
+    }
 }

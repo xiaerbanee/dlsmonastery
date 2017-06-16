@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.sys.dto;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 
@@ -16,13 +17,13 @@ public class VoucherDto extends DataDto<Voucher> {
     private String status;
     private String outCode;
     private String kingdeeBookId;
+    private List<BdFlexItemGroup> bdFlexItemGroupList;
     //明细
     private List<VoucherEntryDto> voucherEntryDtoList = Lists.newArrayList();
     private List<String> voucherEntryIdList = Lists.newArrayList();
 
     private Boolean deletable = false;
     private Boolean editable = false;
-    private List<String> actionList;
 
     public String getCreatedName() {
         return createdName;
@@ -104,11 +105,11 @@ public class VoucherDto extends DataDto<Voucher> {
         this.editable = editable;
     }
 
-    public List<String> getActionList() {
-        return actionList;
+    public List<BdFlexItemGroup> getBdFlexItemGroupList() {
+        return bdFlexItemGroupList;
     }
 
-    public void setActionList(List<String> actionList) {
-        this.actionList = actionList;
+    public void setBdFlexItemGroupList(List<BdFlexItemGroup> bdFlexItemGroupList) {
+        this.bdFlexItemGroupList = bdFlexItemGroupList;
     }
 }
