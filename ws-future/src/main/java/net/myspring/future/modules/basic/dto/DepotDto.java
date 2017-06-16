@@ -3,7 +3,6 @@ package net.myspring.future.modules.basic.dto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
@@ -11,117 +10,58 @@ import java.math.BigDecimal;
  * Created by lihx on 2017/4/17.
  */
 public class DepotDto extends DataDto<Depot> {
+    private String clientId;
+    //寄售对应
+    private String delegateDepotId;
+    //编码
     private String code;
+    //对应store_id
+    private String depotStoreId;
+    //对应shop_id
+    private String depotShopId;
     // 名称
     private String name;
     // 拼音
     private String namePinyin;
-    private String depotType;
-
-    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
-    private String areaName;
+    //区域/办事处
+    private String areaId;
     // 部门
     private String officeId;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "jointType")
-    private String jointType;
-
-    private String clientId;
-    @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
-    private String clientName;
-    private String pricesystemId;
-    @CacheInput(inputKey = "pricesystems",inputInstance = "pricesystemId",outputInstance = "name")
-    private String pricesystemName;
-
+    // 负责人【货品收货人】
     private String contator;
-    private String address;
+    // 手机号
     private String mobilePhone;
-    private String areaId;
+    // 地址
+    private String address;
+    // 省市区
+    private String districtId;
+
+    // 价格体系
+    private String pricesystemId;
+    // 额度
     private BigDecimal credit;
-    private String areaType;
+    // 连锁体系
+    private String chainId;
+    //物料价格体系
+    private String adPricesystemId;
+    // 快递公司
+    private String expressCompanyId;
+    //是否打印价格
+    private Boolean printPrice;
+    // 打印类型，批量打印时用于分批打印
+    private String printType;
+    // 是否让利
     private Boolean rebate;
-
-    public Boolean getRebate() {
-        return rebate;
-    }
-
-    public void setRebate(Boolean rebate) {
-        this.rebate = rebate;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
-
-    public String getOfficeId() {
-        return officeId;
-    }
-
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
-
-    public String getJointType() {
-        return jointType;
-    }
-
-    public void setJointType(String jointType) {
-        this.jointType = jointType;
-    }
-
-    public String getAreaType() {
-        return areaType;
-    }
-
-    public void setAreaType(String areaType) {
-        this.areaType = areaType;
-    }
-
-    public BigDecimal getCredit() {
-        return credit;
-    }
-
-    public void setCredit(BigDecimal credit) {
-        this.credit = credit;
-    }
-
-    public Boolean isDepositStore(){
-        return Boolean.TRUE;
-    }
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getContator() {
-        return contator;
-    }
-
-    public void setContator(String contator) {
-        this.contator = contator;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
+    //税务名称
+    private String taxName;
+    //是否是广告门店
+    private Boolean adShop=false;
+    //是否隐藏
+    private Boolean isHidden=false;
+    //是否是广告仓库
+    private Boolean popShop = false;
+    //公司分组（imoo，电玩，oppo不写）
+    private String companyGroup;
 
     public String getClientId() {
         return clientId;
@@ -131,36 +71,12 @@ public class DepotDto extends DataDto<Depot> {
         this.clientId = clientId;
     }
 
-    public String getPricesystemId() {
-        return pricesystemId;
+    public String getDelegateDepotId() {
+        return delegateDepotId;
     }
 
-    public void setPricesystemId(String pricesystemId) {
-        this.pricesystemId = pricesystemId;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getDepotType() {
-        return depotType;
-    }
-
-    public void setDepotType(String depotType) {
-        this.depotType = depotType;
-    }
-
-    public String getPricesystemName() {
-        return pricesystemName;
-    }
-
-    public void setPricesystemName(String pricesystemName) {
-        this.pricesystemName = pricesystemName;
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
     }
 
     public String getCode() {
@@ -169,6 +85,22 @@ public class DepotDto extends DataDto<Depot> {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getDepotStoreId() {
+        return depotStoreId;
+    }
+
+    public void setDepotStoreId(String depotStoreId) {
+        this.depotStoreId = depotStoreId;
+    }
+
+    public String getDepotShopId() {
+        return depotShopId;
+    }
+
+    public void setDepotShopId(String depotShopId) {
+        this.depotShopId = depotShopId;
     }
 
     public String getName() {
@@ -185,6 +117,158 @@ public class DepotDto extends DataDto<Depot> {
 
     public void setNamePinyin(String namePinyin) {
         this.namePinyin = namePinyin;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getPricesystemId() {
+        return pricesystemId;
+    }
+
+    public void setPricesystemId(String pricesystemId) {
+        this.pricesystemId = pricesystemId;
+    }
+
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
+
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getAdPricesystemId() {
+        return adPricesystemId;
+    }
+
+    public void setAdPricesystemId(String adPricesystemId) {
+        this.adPricesystemId = adPricesystemId;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public Boolean getPrintPrice() {
+        return printPrice;
+    }
+
+    public void setPrintPrice(Boolean printPrice) {
+        this.printPrice = printPrice;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
+    }
+
+    public Boolean getRebate() {
+        return rebate;
+    }
+
+    public void setRebate(Boolean rebate) {
+        this.rebate = rebate;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
+    }
+
+    public Boolean getAdShop() {
+        return adShop;
+    }
+
+    public void setAdShop(Boolean adShop) {
+        this.adShop = adShop;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
+    }
+
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
+    public String getCompanyGroup() {
+        return companyGroup;
+    }
+
+    public void setCompanyGroup(String companyGroup) {
+        this.companyGroup = companyGroup;
     }
 
     public String getFullName() {

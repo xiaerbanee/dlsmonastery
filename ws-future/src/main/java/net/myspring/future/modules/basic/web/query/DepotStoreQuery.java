@@ -2,8 +2,6 @@ package net.myspring.future.modules.basic.web.query;
 
 import net.myspring.future.common.query.BaseQuery;
 
-import java.util.List;
-
 /**
  * Created by Lenovo on 2017/5/17.
  */
@@ -15,8 +13,15 @@ public class DepotStoreQuery extends BaseQuery {
     private Boolean ScoreType;
     private String sumType;
     private String officeId;
-    private List<String> productTypeIdList;
+    private String jointLevel;
 
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
+    }
 
     public String getName() {
         return name;
@@ -64,13 +69,5 @@ public class DepotStoreQuery extends BaseQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
-    }
-
-    public List<String> getProductTypeIdList() {
-        return productTypeIdList;
-    }
-
-    public void setProductTypeIdList(List<String> productTypeIdList) {
-        this.productTypeIdList = productTypeIdList;
     }
 }
