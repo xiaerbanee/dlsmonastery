@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017-03-08.
  */
-@FeignClient("cloud")
+@FeignClient("global-cloud")
 public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
@@ -40,8 +41,8 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findDepartByCustomer")
     String findDepartByCustomer(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outId") String outId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAllDepartments")
-    String findAllDepartments(@RequestParam(value = "companyName") String companyName);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
+    List<BdDepartment> findAll();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findBdInventorys")
     String findBdInventorys(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "stockIds") List<String> stockIds);

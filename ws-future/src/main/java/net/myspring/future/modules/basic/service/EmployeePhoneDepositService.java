@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
-import net.myspring.cloud.modules.kingdee.domain.BdSettleType;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.common.enums.EmployeePhoneStatusEnum;
@@ -168,10 +168,10 @@ public class EmployeePhoneDepositService {
         }
         List<List<String>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
         List<EmployeePhoneDeposit> employeePhoneDeposits = Lists.newArrayList();
-        List<BdSettleType> bdSettleTypes = cloudClient.findAllDepartments();
+        List<BdDepartment> departments = cloudClient.findAll();
         Map<String, String> departMentMap = Maps.newHashMap();
-        for (BdSettleType bdSettleType : bdSettleTypes) {
-            departMentMap.put(bdSettleType.getFName(), bdSettleType.getFNumber());
+        for (BdDepartment bdDepartment : departments) {
+            departMentMap.put(bdDepartment.getFFullName(), bdDepartment.getFNumber());
         }
         List<String> loginNameList=Lists.newArrayList();
         List<String> depotNameList=Lists.newArrayList();
