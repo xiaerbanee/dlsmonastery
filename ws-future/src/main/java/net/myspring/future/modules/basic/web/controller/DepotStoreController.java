@@ -4,20 +4,18 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.JointLevelEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.*;
+import net.myspring.future.common.enums.DepotStoreTypeEnum;
+import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
+import net.myspring.future.common.enums.ReportTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotStore;
-import net.myspring.future.modules.basic.dto.DepotReportDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,10 +51,16 @@ public class DepotStoreController {
         return page;
     }
 
+    @RequestMapping(value = "findOne")
+    public DepotStoreDto findOne(DepotStoreDto depotStoreDto){
+        depotStoreDto=depotStoreService.findOne(depotStoreDto);
+        return depotStoreDto;
+    }
+
     @RequestMapping(value = "getForm")
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm){
-        depotStoreForm=depotStoreService.getForm(depotStoreForm);
         depotStoreForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
+        depotStoreForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
         return depotStoreForm;
     }
 

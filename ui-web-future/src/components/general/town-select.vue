@@ -27,7 +27,6 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
-        console.log(">>>>>>>>"+val)
         if(val) {
           this.innerId = val;
           let idStr = this.innerId;
