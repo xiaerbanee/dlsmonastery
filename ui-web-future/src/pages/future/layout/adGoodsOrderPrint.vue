@@ -46,7 +46,7 @@
         <td></td>
         <td>{{totalBillQty}}</td>
         <td></td>
-        <td>{{adGoodsOrder.amount}}</td>
+        <td>{{totalPrice}}</td>
       </tr>
       </tbody>
     </table>
@@ -86,13 +86,17 @@
           this.adGoodsOrderDetailList = findDetailListRes.data;
           this.adGoodsOrder = printRes.data;
 
-          let result = 0;
+          let resultQty = 0;
+          let resultPrice = 0;
+
           if(this.adGoodsOrderDetailList){
             for(let adGoodsOrderDetail of this.adGoodsOrderDetailList){
-              result += adGoodsOrderDetail.billQty;
+              resultQty += adGoodsOrderDetail.billQty;
+              resultPrice += adGoodsOrderDetail.billQty * adGoodsOrderDetail.productPrice2;
             }
           }
-          this.totalBillQty = result;
+          this.totalBillQty = resultQty;
+          this.totalPrice = resultPrice;
 
           this.$nextTick(()=>{
             window.print();

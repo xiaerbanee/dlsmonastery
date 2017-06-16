@@ -2,6 +2,7 @@ package net.myspring.general.modules.sys.repository
 
 import net.myspring.general.common.repository.BaseRepository
 import net.myspring.general.modules.sys.domain.District
+import net.myspring.general.modules.sys.domain.Town
 import org.springframework.data.jpa.repository.Query
 
 
@@ -15,4 +16,7 @@ interface DistrictRepository : BaseRepository<District, String> {
     fun findByNameLike(name: String): MutableList<District>
 
     fun findByProvinceAndCityAndCounty(province: String,city: String,county: String): District
+
+    fun findByIdIn(idList: MutableList<String>): MutableList<District>
+
 }

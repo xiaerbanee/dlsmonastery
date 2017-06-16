@@ -16,8 +16,8 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"fullName")) {
-            return;
+        if(util.isBlank(query)) {
+          return;
         }
         this.remoteLoading = true;
         axios.get('/api/general/sys/district/search',{params:{key:query}}).then((response)=>{
@@ -28,17 +28,26 @@
         this.$emit('input', newVal);
       },setValue(val) {
         if(val) {
-          this.innerId=val;
+          this.innerId = val;
+          let idStr = this.innerId;
+          if (this.multiple && this.innerId) {
+            idStr = this.innerId.join();
+          }
+          if (util.isBlank(idStr)) {
+            return;
+          }
           this.remoteLoading = true;
-          axios.get('/api/general/sys/district/findOne?id=' + this.innerId).then((response)=>{
+          axios.get('/api/general/sys/district/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
+            console.log(this.itemList)
             this.remoteLoading = false;
             this.$nextTick(()=>{
               this.$emit('afterInit');
             });
           })
+        }else{
+          this.innerId=[];
         }
-
       }
     },created () {
       this.setValue(this.value);

@@ -1,7 +1,9 @@
 package net.myspring.general.modules.sys.service;
 
 import net.myspring.general.modules.sys.domain.District;
+import net.myspring.general.modules.sys.domain.Town;
 import net.myspring.general.modules.sys.dto.DistrictDto;
+import net.myspring.general.modules.sys.dto.TownDto;
 import net.myspring.general.modules.sys.repository.DistrictRepository;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +31,11 @@ public class DistrictService {
         District district = districtRepository.findOne(id);
         DistrictDto districtDto= BeanUtil.map(district,DistrictDto.class);
         return districtDto;
+    }
+
+    public List<DistrictDto> findByIds(List<String> ids){
+        List<District> districtList=districtRepository.findByIdIn(ids);
+        List<DistrictDto> districtDtoList=BeanUtil.map(districtList,DistrictDto.class);
+        return districtDtoList;
     }
 }
