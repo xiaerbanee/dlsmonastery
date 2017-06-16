@@ -5,8 +5,8 @@ Page({
   data: {
     page: {},
     formData: {
-      pageNumber: 0,
-      pageSize: 10
+      page: 0,
+      size: 10
     },
     activeItem: null,
     searchHidden: true
@@ -15,11 +15,11 @@ Page({
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function(){
+    app.autoLogin(function () {
       that.initPage()
     });
   },
-  initPage:function() {
+  initPage: function () {
     var that = this;
     that.pageRequest();
   },
@@ -32,9 +32,10 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("basic/hr/dutyOvertime"),
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
-            },
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
           data: that.data.formData,
           success: function (res) {
             that.setData({ page: res.data });
@@ -43,39 +44,6 @@ Page({
         })
       }
     })
-  },
-  toFirstPage: function () {
-    var that = this;
-    that.setData({ "formData.pageNumber": 0 });
-    that.pageRequest();
-  },
-  toPreviousPage: function () {
-    var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
-    that.pageRequest();
-  },
-  toNextPage: function () {
-    var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
-    that.pageRequest();
-  },
-  toLastPage: function () {
-    var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
-    that.pageRequest();
-  },
-  toPage: function () {
-    var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
-    wx.showActionSheet({
-      itemList: itemList,
-      success: function (res) {
-        if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
-          that.pageRequest();
-        }
-      }
-    });
   },
   add: function () {
     wx.navigateTo({
@@ -91,10 +59,10 @@ Page({
   bindDateChange: function (e) {
     var that = this;
     var name = e.currentTarget.dataset.name;
-    if (name == 'dutyDateStart') {
-      that.setData({ "formData.dutyDateStart": e.detail.value });
+    if (name == 'dateStart') {
+      that.setData({ "formData.dateStart": e.detail.value });
     } else {
-      that.setData({ "formData.dutyDateEnd": e.detail.value });
+      that.setData({ "formData.dateEnd": e.detail.value });
     }
   },
   itemActive: function (e) {
@@ -104,8 +72,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -116,19 +82,18 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
-    var itemList = that.data.activeItem.actionList;
-    if (!itemList) { return; }
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: ["删除"],
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "删除") {
+          if (res.tapIndex == 0) {
             wx.request({
               url: $util.getUrl("basic/hr/dutyOvertime/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
-                },
+              header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              },
               success: function (res) {
                 that.pageRequest();
               }
@@ -143,4 +108,37 @@ Page({
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
     that.pageRequest();
   },
+  toFirstPage: function () {
+    var that = this;
+    that.setData({ "formData.page": 0 });
+    that.pageRequest();
+  },
+  toPreviousPage: function () {
+    var that = this;
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
+    that.pageRequest();
+  },
+  toNextPage: function () {
+    var that = this;
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
+    that.pageRequest();
+  },
+  toLastPage: function () {
+    var that = this;
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
+    that.pageRequest();
+  },
+  toPage: function () {
+    var that = this;
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
+    wx.showActionSheet({
+      itemList: itemList,
+      success: function (res) {
+        if (!res.cancel) {
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
+          that.pageRequest();
+        }
+      }
+    });
+  }
 })
