@@ -5,7 +5,9 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
+import net.myspring.future.modules.third.domain.OppoCustomerAllot;
 import net.myspring.future.modules.third.domain.OppoPlantSendImeiPpsel;
+import net.myspring.tool.modules.oppo.repository.OppoCustomerAllotRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,8 @@ public class OppoService {
     private OppoClient oppoClient;
     @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private OppoCustomerAllotRepository oppoCustomerAllotRepository;
 
     public String synIme(String date){
         String imeStr=oppoClient.findSynImeList("2017-05-16");
@@ -95,5 +100,11 @@ public class OppoService {
 //            commonMapper.updateProduct(updateId);
 //        }
         return "串码同步成功";
+    }
+
+
+    public List<OppoCustomerAllot> findOppoCustomerAllots(LocalDateTime dateStart,LocalDateTime dateEnd,String companyId){
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(dateStart,dateEnd,companyId);
+        return oppoCustomerAllots;
     }
 }
