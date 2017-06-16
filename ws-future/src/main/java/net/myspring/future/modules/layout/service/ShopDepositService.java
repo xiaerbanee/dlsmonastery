@@ -87,4 +87,9 @@ public class ShopDepositService {
         cacheUtils.initCacheInput(shopDepositDto);
         return shopDepositDto;
     }
+
+    public BigDecimal findLeftAmount(String type, String depotId) {
+        ShopDeposit latest = shopDepositRepository.findLatest(type, depotId);
+        return (latest == null ? BigDecimal.ZERO : latest.getLeftAmount());
+    }
 }

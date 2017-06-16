@@ -1,11 +1,11 @@
 package net.myspring.future.modules.layout.dto;
 
-import net.myspring.common.dto.DataDto;
+import net.myspring.common.dto.IdDto;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
 import java.math.BigDecimal;
 
-public class ShopAllotDetailDto extends DataDto<ShopAllotDetail> {
+public class ShopAllotDetailDto extends IdDto<ShopAllotDetail> {
 
     private String shopAllotId;
     private String productId;

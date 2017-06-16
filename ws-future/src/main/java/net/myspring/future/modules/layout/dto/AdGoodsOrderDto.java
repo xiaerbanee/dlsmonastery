@@ -11,14 +11,17 @@ import java.time.LocalDate;
 
 public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String storeId;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
+    @CacheInput(inputKey = "depots", inputInstance = "storeId", outputInstance = "name")
     private String storeName;
     private String outShopId;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
+    @CacheInput(inputKey = "depots", inputInstance = "outShopId", outputInstance = "name")
     private String outShopName;
     private String shopId;
     @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "address")
+    private String shopAddress;
+
     private String shopOfficeId;
     @CacheInput(inputKey = "offices", inputInstance = "shopOfficeId", outputInstance = "name")
     private String shopOfficeName;
@@ -34,7 +37,164 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String businessId;
 
     private String expressOrderExpressCodes;
+    private String expressOrderContator;
+    private String expressOrderAddress;
+    private String expressOrderMobilePhone;
+    private String expressOrderExpressCompanyId;
+    private LocalDate expressOrderOutPrintDate;
+    private String expressOrderId;
+
     private String processPositionId;
+    private String processInstanceId;
+    private String investInCause;
+    private String billAddress;
+    private Boolean splitBill;
+
+    private Integer smallQty;
+    private Integer mediumQty;
+    private Integer largeQty;
+
+    private String employeeId;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "name")
+    private String employeeName;
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
+    private String employeeMobilePhone;
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
+    }
+
+    public String getEmployeeMobilePhone() {
+        return employeeMobilePhone;
+    }
+
+    public void setEmployeeMobilePhone(String employeeMobilePhone) {
+        this.employeeMobilePhone = employeeMobilePhone;
+    }
+
+    public LocalDate getExpressOrderOutPrintDate() {
+        return expressOrderOutPrintDate;
+    }
+
+    public void setExpressOrderOutPrintDate(LocalDate expressOrderOutPrintDate) {
+        this.expressOrderOutPrintDate = expressOrderOutPrintDate;
+    }
+
+    public String getExpressOrderId() {
+        return expressOrderId;
+    }
+
+    public void setExpressOrderId(String expressOrderId) {
+        this.expressOrderId = expressOrderId;
+    }
+
+    public Integer getSmallQty() {
+        return smallQty;
+    }
+
+    public void setSmallQty(Integer smallQty) {
+        this.smallQty = smallQty;
+    }
+
+    public Integer getMediumQty() {
+        return mediumQty;
+    }
+
+    public void setMediumQty(Integer mediumQty) {
+        this.mediumQty = mediumQty;
+    }
+
+    public Integer getLargeQty() {
+        return largeQty;
+    }
+
+    public void setLargeQty(Integer largeQty) {
+        this.largeQty = largeQty;
+    }
+
+    public Boolean getSplitBill() {
+        return splitBill;
+    }
+
+    public void setSplitBill(Boolean splitBill) {
+        this.splitBill = splitBill;
+    }
+
+    public String getBillAddress() {
+        return billAddress;
+    }
+
+    public void setBillAddress(String billAddress) {
+        this.billAddress = billAddress;
+    }
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+
+    public String getExpressOrderExpressCompanyId() {
+        return expressOrderExpressCompanyId;
+    }
+
+    public void setExpressOrderExpressCompanyId(String expressOrderExpressCompanyId) {
+        this.expressOrderExpressCompanyId = expressOrderExpressCompanyId;
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getExpressOrderContator() {
+        return expressOrderContator;
+    }
+
+    public void setExpressOrderContator(String expressOrderContator) {
+        this.expressOrderContator = expressOrderContator;
+    }
+
+    public String getExpressOrderAddress() {
+        return expressOrderAddress;
+    }
+
+    public void setExpressOrderAddress(String expressOrderAddress) {
+        this.expressOrderAddress = expressOrderAddress;
+    }
+
+    public String getExpressOrderMobilePhone() {
+        return expressOrderMobilePhone;
+    }
+
+    public void setExpressOrderMobilePhone(String expressOrderMobilePhone) {
+        this.expressOrderMobilePhone = expressOrderMobilePhone;
+    }
+
+    public String getInvestInCause() {
+        return investInCause;
+    }
+
+    public void setInvestInCause(String investInCause) {
+        this.investInCause = investInCause;
+    }
 
     public String getFormatId(){
         //TODO 实现getFormatId
@@ -191,5 +351,9 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
 
     public Boolean getEditable(){
         return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+    }
+
+    public boolean getPrint(){
+        return expressOrderOutPrintDate != null;
     }
 }

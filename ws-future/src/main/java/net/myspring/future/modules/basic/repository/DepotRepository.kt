@@ -68,10 +68,33 @@ interface DepotRepositoryCustom{
     fun findByAccountId(accountId: String): MutableList<Depot>
 
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
+
+    fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto>
 }
 
 @Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
+        val params = HashMap<String, Any>()
+        params.put("companyId", companyId)
+        params.put("outGroupId", outGroupId)
+
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.*
+            FROM
+                crm_depot t1,
+                crm_depot_store t2
+            WHERE
+                t1.depot_store_id = t2.id
+            AND t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.company_id = :companyId
+            AND t2.out_group_id = :outGroupId
+            AND t1.is_hidden = 0
+          """, params, BeanPropertyRowMapper(DepotDto::class.java))
+    }
+
     override fun findByFilter(depotQuery: DepotQuery): MutableList<Depot> {
         val sb = StringBuffer("""
             SELECT

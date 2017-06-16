@@ -12,13 +12,13 @@
               {{adGoodsOrder.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderSign.outShopName')">
-              {{adGoodsOrder.outShop.name}}
+              {{adGoodsOrder.outShopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderSign.shopName')">
-              {{adGoodsOrder.shop.name}}
+              {{adGoodsOrder.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderSign.expressCodes')">
-              {{adGoodsOrder.expressOrder.expressCodes}}
+              {{adGoodsOrder.expressOrderExpressCodes}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -26,7 +26,7 @@
               {{adGoodsOrder.billRemarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderSign.createdByName')">
-              {{adGoodsOrder.createdBy.name}}
+              {{adGoodsOrder.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderSign.createdDate')" >
               {{adGoodsOrder.createdDate}}
@@ -39,10 +39,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="adGoodsOrder.adGoodsOrderDetailList" style="margin-top:5px;"  stripe border >
-          <el-table-column prop="product.code" :label="$t('adGoodsOrderSign.code')" ></el-table-column>
-          <el-table-column prop="product.name" :label="$t('adGoodsOrderSign.productName')" ></el-table-column>
-          <el-table-column prop="orderQty" :label="$t('adGoodsOrderSign.orderQty')"></el-table-column>
+        <el-table :data="adGoodsOrderDetailList" style="margin-top:5px;"  stripe border >
+          <el-table-column prop="productCode" :label="$t('adGoodsOrderSign.code')" ></el-table-column>
+          <el-table-column prop="productName" :label="$t('adGoodsOrderSign.productName')" ></el-table-column>
+          <el-table-column prop="qty" :label="$t('adGoodsOrderSign.orderQty')"></el-table-column>
           <el-table-column prop="confirmQty" :label="$t('adGoodsOrderSign.confirmQty')"></el-table-column>
           <el-table-column prop="billQty" :label="$t('adGoodsOrderSign.billQty')"></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('adGoodsOrderSign.shippedQty')"></el-table-column>
@@ -55,29 +55,32 @@
   export default{
     data(){
       return{
-        adGoodsOrder:"",
+        adGoodsOrder:{},
+        adGoodsOrderDetailList:[],
       }
     },
     methods:{
       formSubmit(){
         this.submitDisabled = true;
-          if (valid) {
-            axios.post('/api/crm/adGoodsOrder/sign',{id:this.$route.query.id}).then((response)=> {
-              this.$message(response.data.message);
-              this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
-            }).catch(function () {
-              this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
+        axios.post('/api/ws/future/layout/adGoodsOrder/sign?id='+this.$route.query.id).then((response)=> {
+          this.$message(response.data.message);
+          this.submitDisabled = false;
+          if(response.data.success){
+            this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")});
           }
-      }, findOne(){
-        axios.get('/api/crm/adGoodsOrder/sign',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.adGoodsOrder=response.data.adGoodsOrder;
-        })
+        }).catch( () => {
+          this.submitDisabled = false;
+        });
+      }, initPage(){
+        axios.get('/api/ws/future/layout/adGoodsOrder/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.adGoodsOrder = response.data;
+        });
+        axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListByAdGoodsOrderId',{params: {adGoodsOrderId:this.$route.query.id}}).then((response)=>{
+          this.adGoodsOrderDetailList = response.data;
+        });
       }
     },created(){
-      this.findOne();
+      this.initPage();
     }
   }
 </script>

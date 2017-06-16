@@ -3,7 +3,7 @@ package net.myspring.uaa.web.form;
 /**
  * Created by wangzm on 2017/4/20.
  */
-public class WeixinAccountForm {
+public class AccountWeixinForm {
     private String code;
     private String loginName;
     private String password;

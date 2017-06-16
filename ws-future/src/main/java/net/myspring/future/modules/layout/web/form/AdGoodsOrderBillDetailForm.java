@@ -4,9 +4,9 @@ import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 
 
-public class AdGoodsOrderDetailForm extends BaseForm<AdGoodsOrderDetail> {
+public class AdGoodsOrderBillDetailForm extends BaseForm<AdGoodsOrderDetail> {
     private String productId;
-    private Integer qty;
+    private Integer billQty;
 
     public String getProductId() {
         return productId;
@@ -16,11 +16,11 @@ public class AdGoodsOrderDetailForm extends BaseForm<AdGoodsOrderDetail> {
         this.productId = productId;
     }
 
-    public Integer getQty() {
-        return qty;
+    public Integer getBillQty() {
+        return billQty;
     }
 
-    public void setQty(Integer qty) {
-        this.qty = qty;
+    public void setBillQty(Integer billQty) {
+        this.billQty = billQty;
     }
 }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping(value = "crm/shopDeposit")
 public class ShopDepositController {
@@ -63,6 +65,12 @@ public class ShopDepositController {
     public RestResponse save(ShopDepositForm shopDepositForm) {
         shopDepositService.save(shopDepositForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "findLeftAmount")
+    public BigDecimal findLeftAmount(String type, String depotId) {
+        return shopDepositService.findLeftAmount(type, depotId);
+
     }
 
 }

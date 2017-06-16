@@ -7,13 +7,11 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
-          <el-row :gutter="4">
+          <el-row :gutter="12">
             <el-col :span="12">
-              <el-form-item :label="$t('adGoodsOrderList.orderCode')">
-                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
-              </el-form-item>
+
               <el-form-item :label="$t('adGoodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
@@ -50,6 +48,9 @@
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
                 <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
+                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -82,6 +83,7 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -151,17 +153,25 @@
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "audit"}})
         } else if (action === "bill") {
           this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
-        } else if (action === "发货") {
+        } else if (action === "ship") {
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
-        } else if (action === "签收") {
+        } else if (action === "sign") {
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
+        } else if (action === "print") {
+          this.$router.push({name: 'adGoodsOrderPrint', query: {id: id}})
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
-            })
+            });
           }).catch(()=>{});
+        }
+      },stypeOfPrintBtn(isPrint){
+        if(!isPrint){
+          return "color:#ff0000;";
+        }else {
+          return "";
         }
       }
     },created () {

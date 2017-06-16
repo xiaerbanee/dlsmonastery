@@ -79,24 +79,24 @@ public class AdApplyService {
         List<String> billTypes = new ArrayList<>();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
-        adApplyBillForm.setBillTypes(billTypes);
-        if(adApplyBillForm.getBillType()==null){
-            adApplyBillForm.setBillType(BillTypeEnum.POP.name());
-        }
+        adApplyBillForm.getExtra().put("billTypes",billTypes);
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
             adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
-            List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            //adApplyBillForm.setAdApplyDtos(findAdApplyList(outGroupIds));
         }
         return adApplyBillForm;
     }
 
-    public List<AdApplyDto> findAdApplyList(List<String> outGroupIds){
+    public List<AdApplyDto> findAdApplyList(String billType){
+        List<String> outGroupIds = Lists.newArrayList();
+        if(BillTypeEnum.POP.name().equalsIgnoreCase(billType)){
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+        }
+        if(BillTypeEnum.配件赠品.name().equalsIgnoreCase(billType)){
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+        }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         cacheUtils.initCacheInput(adApplyDtos);

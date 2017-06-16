@@ -3,6 +3,8 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -30,6 +32,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +50,8 @@ public class DepotService {
     private DepotRepository depotRepository;
     @Autowired
     private OfficeClient officeClient;
-
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -225,5 +229,13 @@ public class DepotService {
             depot.setAreaId(depotDtoMap.get(depot.getId()).getAreaId());
             depotRepository.save(depot);
         }
+    }
+
+    public List<DepotDto> findAdStoreDtoList() {
+        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
+        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(RequestUtils.getCompanyId(), outGroupId);
+        cacheUtils.initCacheInput(adStoreDtoList);
+        return adStoreDtoList;
+
     }
 }
