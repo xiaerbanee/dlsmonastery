@@ -6,10 +6,12 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
+import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,25 +78,33 @@ public class DutyService {
     public Object findDutyItem(String id, String dutyType) {
         Object item;
         if (DutyTypeEnum.请假.name().equals(dutyType)) {
-            item = dutyLeaveRepository.findOne(id);
+            DutyLeave dutyLeave = dutyLeaveRepository.findOne(id);
+            item= BeanUtil.map(dutyLeave, DutyLeaveDto.class);
         } else if (DutyTypeEnum.免打卡.name().equals(dutyType)) {
-            item = dutyFreeRepository.findOne(id);
+            DutyFree dutyFree = dutyFreeRepository.findOne(id);
+            item= BeanUtil.map(dutyFree, DutyLeaveDto.class);
         } else if (DutyTypeEnum.加班.name().equals(dutyType)) {
-            item = dutyOvertimeRepository.findOne(id);
+            DutyOvertime dutyOvertime = dutyOvertimeRepository.findOne(id);
+            item= BeanUtil.map(dutyOvertime, DutyLeaveDto.class);
         } else if (DutyTypeEnum.公休.name().equals(dutyType)) {
-            item = dutyPublicFreeRepository.findOne(id);
+            DutyPublicFree dutyPublicFree = dutyPublicFreeRepository.findOne(id);
+            item= BeanUtil.map(dutyPublicFree, DutyLeaveDto.class);
         } else if (DutyTypeEnum.出差.name().equals(dutyType)) {
-            item = dutyTripRepository.findOne(id);
+            DutyTrip dutyTrip = dutyTripRepository.findOne(id);
+            item= BeanUtil.map(dutyTrip, DutyLeaveDto.class);
         } else if (DutyTypeEnum.签到.name().equals(dutyType)) {
-            item = dutySignRepository.findOne(id);
+            DutySign dutySign = dutySignRepository.findOne(id);
+            item= BeanUtil.map(dutySign, DutyLeaveDto.class);
         } else {
-            item = dutyRestRepository.findOne(id);
+            DutyRest dutyRest = dutyRestRepository.findOne(id);
+            item= BeanUtil.map(dutyRest, DutyLeaveDto.class);
         }
+        cacheUtils.initCacheInput(item);
         return item;
     }
     public void audit(Map<String,String> map){
         for(Map.Entry<String,String> entry:map.entrySet()){
-            audit(entry.getKey(),entry.toString(),true,null);
+            audit(entry.getKey(),entry.getValue(),true,null);
         }
     }
 

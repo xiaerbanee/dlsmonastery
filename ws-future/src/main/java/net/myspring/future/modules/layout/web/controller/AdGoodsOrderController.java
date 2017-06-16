@@ -12,7 +12,7 @@ import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderService;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderAuditForm;
@@ -171,17 +171,17 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
-    public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
     }
 
     @RequestMapping(value = "findDetailListForBill")
-    public List<AdGoodsOrderDetailDto> findDetailListForBill(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
     }
 
     @RequestMapping(value = "findDetailListByAdGoodsOrderId")
-    public List<AdGoodsOrderDetailDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListByAdGoodsOrderId(adGoodsOrderId);
     }
 

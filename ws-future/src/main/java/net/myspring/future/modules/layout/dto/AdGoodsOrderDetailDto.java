@@ -1,61 +1,136 @@
 package net.myspring.future.modules.layout.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.IdDto;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 
 public class AdGoodsOrderDetailDto extends IdDto<AdGoodsOrderDetail> {
 
+    private String adGoodsOrderRemarks;
+    private String adGoodsOrderParentId;
+    private String adGoodsOrderId;
+    private LocalDate adGoodsOrderCreatedDate;
+    private LocalDate adGoodsOrderBillDate;
+    private String adGoodsOrderBillType;
+    private String adGoodsOrderProcessStatus;
+    private String adGoodsOrderShopAreaId;
+    @CacheInput(inputKey = "offices", inputInstance = "adGoodsOrderShopAreaId", outputInstance = "name")
+    private String adGoodsOrderShopAreaName;
+    private String adGoodsOrderShopId;
+    @CacheInput(inputKey = "depots", inputInstance = "adGoodsOrderShopId", outputInstance = "name")
+    private String adGoodsOrderShopName;
+
     private String productId;
     private String productName;
     private String productCode;
-    private String productRemarks;
     private BigDecimal productPrice2;
+
     private Integer qty;
     private Integer confirmQty;
     private Integer billQty;
-    private Integer stock;
-    private Integer shippedQty;
+    private BigDecimal price;
 
-    public Integer getWaitShipQty(){
-        if(shippedQty != null && billQty != null){
-            return billQty - shippedQty;
+
+    public String getAdGoodsOrderFormatId(){
+        if(StringUtils.isBlank(adGoodsOrderParentId) || adGoodsOrderParentId.equals(adGoodsOrderId)){
+            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderId);
         }
-
-        return null;
-    }
-    public Integer getShippedQty() {
-        return shippedQty;
+        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderParentId)+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrderId);
     }
 
-    public void setShippedQty(Integer shippedQty) {
-        this.shippedQty = shippedQty;
+    public String getAdGoodsOrderRemarks() {
+        return adGoodsOrderRemarks;
     }
 
-    public Integer getStock() {
-        return stock;
+    public void setAdGoodsOrderRemarks(String adGoodsOrderRemarks) {
+        this.adGoodsOrderRemarks = adGoodsOrderRemarks;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public String getAdGoodsOrderParentId() {
+        return adGoodsOrderParentId;
     }
 
-    public Integer getBillQty() {
-        return billQty;
+    public void setAdGoodsOrderParentId(String adGoodsOrderParentId) {
+        this.adGoodsOrderParentId = adGoodsOrderParentId;
     }
 
-    public void setBillQty(Integer billQty) {
-        this.billQty = billQty;
+    public String getAdGoodsOrderId() {
+        return adGoodsOrderId;
     }
 
-    public Integer getConfirmQty() {
-        return confirmQty;
+    public void setAdGoodsOrderId(String adGoodsOrderId) {
+        this.adGoodsOrderId = adGoodsOrderId;
     }
 
-    public void setConfirmQty(Integer confirmQty) {
-        this.confirmQty = confirmQty;
+    public LocalDate getAdGoodsOrderCreatedDate() {
+        return adGoodsOrderCreatedDate;
+    }
+
+    public void setAdGoodsOrderCreatedDate(LocalDate adGoodsOrderCreatedDate) {
+        this.adGoodsOrderCreatedDate = adGoodsOrderCreatedDate;
+    }
+
+    public LocalDate getAdGoodsOrderBillDate() {
+        return adGoodsOrderBillDate;
+    }
+
+    public void setAdGoodsOrderBillDate(LocalDate adGoodsOrderBillDate) {
+        this.adGoodsOrderBillDate = adGoodsOrderBillDate;
+    }
+
+    public String getAdGoodsOrderBillType() {
+        return adGoodsOrderBillType;
+    }
+
+    public void setAdGoodsOrderBillType(String adGoodsOrderBillType) {
+        this.adGoodsOrderBillType = adGoodsOrderBillType;
+    }
+
+    public String getAdGoodsOrderProcessStatus() {
+        return adGoodsOrderProcessStatus;
+    }
+
+    public void setAdGoodsOrderProcessStatus(String adGoodsOrderProcessStatus) {
+        this.adGoodsOrderProcessStatus = adGoodsOrderProcessStatus;
+    }
+
+    public String getAdGoodsOrderShopAreaId() {
+        return adGoodsOrderShopAreaId;
+    }
+
+    public void setAdGoodsOrderShopAreaId(String adGoodsOrderShopAreaId) {
+        this.adGoodsOrderShopAreaId = adGoodsOrderShopAreaId;
+    }
+
+    public String getAdGoodsOrderShopAreaName() {
+        return adGoodsOrderShopAreaName;
+    }
+
+    public void setAdGoodsOrderShopAreaName(String adGoodsOrderShopAreaName) {
+        this.adGoodsOrderShopAreaName = adGoodsOrderShopAreaName;
+    }
+
+    public String getAdGoodsOrderShopId() {
+        return adGoodsOrderShopId;
+    }
+
+    public void setAdGoodsOrderShopId(String adGoodsOrderShopId) {
+        this.adGoodsOrderShopId = adGoodsOrderShopId;
+    }
+
+    public String getAdGoodsOrderShopName() {
+        return adGoodsOrderShopName;
+    }
+
+    public void setAdGoodsOrderShopName(String adGoodsOrderShopName) {
+        this.adGoodsOrderShopName = adGoodsOrderShopName;
     }
 
     public String getProductId() {
@@ -82,14 +157,6 @@ public class AdGoodsOrderDetailDto extends IdDto<AdGoodsOrderDetail> {
         this.productCode = productCode;
     }
 
-    public String getProductRemarks() {
-        return productRemarks;
-    }
-
-    public void setProductRemarks(String productRemarks) {
-        this.productRemarks = productRemarks;
-    }
-
     public BigDecimal getProductPrice2() {
         return productPrice2;
     }
@@ -104,5 +171,29 @@ public class AdGoodsOrderDetailDto extends IdDto<AdGoodsOrderDetail> {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public Integer getConfirmQty() {
+        return confirmQty;
+    }
+
+    public void setConfirmQty(Integer confirmQty) {
+        this.confirmQty = confirmQty;
+    }
+
+    public Integer getBillQty() {
+        return billQty;
+    }
+
+    public void setBillQty(Integer billQty) {
+        this.billQty = billQty;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

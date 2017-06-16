@@ -3,6 +3,7 @@ const adApplyForm = r => require.ensure([], () => r(require('pages/future/layout
 const adApplyGoods = r => require.ensure([], () => r(require('pages/future/layout/adApplyGoods.vue')));
 const adApplyBillForm = r => require.ensure([], () => r(require('pages/future/layout/adApplyBillForm.vue')));
 const adGoodsOrderList = r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderList.vue')));
+const adGoodsOrderDetailList = r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderDetailList.vue')));
 const adGoodsOrderForm= r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderForm.vue')));
 const adGoodsOrderDetail= r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderDetail.vue')));
 const adGoodsOrderBill= r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderBill.vue')));
@@ -45,6 +46,7 @@ let routes = [
   {path:'/future/layout/adApplyGoods',component:adApplyGoods,name:'adApplyGoods',meta: {menu:"adApplyList"}},
   {path:'/future/layout/adApplyBillForm',component:adApplyBillForm,name:'adApplyBillForm',meta: {menu:"adApplyList",keepAlive:true}},
   {path:'/future/layout/adGoodsOrderList',component:adGoodsOrderList,name:'adGoodsOrderList'},
+  {path:'/future/layout/adGoodsOrderDetailList',component:adGoodsOrderDetailList,name:'adGoodsOrderDetailList'},
   {path:'/future/layout/adGoodsOrderForm',component:adGoodsOrderForm,name:'adGoodsOrderForm',meta: {menu:"adGoodsOrderList",keepAlive:true}},
   {path:'/future/layout/adGoodsOrderDetail',component:adGoodsOrderDetail,name:'adGoodsOrderDetail',meta: {menu:"adGoodsOrderList"}},
   {path:'/future/layout/adGoodsOrderBill',component:adGoodsOrderBill,name:'adGoodsOrderBill',meta: {menu:"adGoodsOrderList"}},
