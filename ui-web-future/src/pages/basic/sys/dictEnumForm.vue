@@ -38,9 +38,9 @@
             extra:{}
           },
           rules: {
-            category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}],
-            sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue')}],
-            value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage')}]
+            category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}],
+            sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue'),trigger:"blur"}],
+            value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}]
           }
         }
       },
