@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
+import net.myspring.cloud.modules.kingdee.domain.BdSettleType;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,7 +42,7 @@ public interface CloudClient {
     String findDepartByCustomer(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outId") String outId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findAllDepartments")
-    String findAllDepartments(@RequestParam(value = "companyName") String companyName);
+    List<BdSettleType> findAllDepartments();
 
     @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findBdInventorys")
     String findBdInventorys(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "stockIds") List<String> stockIds);

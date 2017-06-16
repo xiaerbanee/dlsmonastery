@@ -77,7 +77,7 @@
           }
         })
       }, remoteAccount(query){
-        if (query !== '') {
+        if (query !== ''&&query.length>=2) {
           this.remoteLoading = true;
           axios.get('/api/basic/hr/account/searchFilter', {params: {loginName: query}}).then((response) => {
             this.accountList = response.data;

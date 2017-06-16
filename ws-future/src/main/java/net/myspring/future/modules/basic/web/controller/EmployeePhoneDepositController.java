@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,6 +71,12 @@ public class EmployeePhoneDepositController {
         return new RestResponse("批量审核成功",null);
     }
 
+    @RequestMapping(value = "batchSave")
+    public RestResponse batchSave(String data) {
+        RestResponse restResponse = employeePhoneDepositService.batchSave(data);
+        return restResponse;
+    }
+
     @RequestMapping(value = "findOne")
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto){
         employeePhoneDepositDto=employeePhoneDepositService.findOne(employeePhoneDepositDto);
@@ -83,8 +90,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getBatchForm")
     public EmployeePhoneDepositForm getBatchForm(EmployeePhoneDepositForm employeePhoneDepositForm){
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
-        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAllDepartments(cloudName));
+        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAllDepartments());
         return employeePhoneDepositForm;
     }
 
