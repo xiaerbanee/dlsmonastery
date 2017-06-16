@@ -21,4 +21,9 @@ public class StkInventoryController {
     public List<StkInventory> findByStockIds(List<String> stockIds){
         return stkInventoryService.findByStockIds(stockIds);
     }
+
+    @RequestMapping(value = "findByStockIdAndMaterialId")
+    public StkInventory findByStockIdAndMaterialId(String stockId,String materialId){
+        return stkInventoryService.findByStockIdAndMaterialId(stockId,materialId);
+    }
 }

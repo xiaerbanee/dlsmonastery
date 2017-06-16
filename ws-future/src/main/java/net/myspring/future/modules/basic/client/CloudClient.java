@@ -1,9 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
-import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
-import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
-import net.myspring.cloud.modules.kingdee.domain.BdStock;
+import net.myspring.cloud.modules.kingdee.domain.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,31 +24,31 @@ public interface CloudClient {
     List<BdMaterial> getSynProductData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
-    String getSynBankData();
+    List<CnBankAcnt> getSynBankData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findReceivableBillNo")
     String findReceivableBillNo(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outStockBillNo") String outStockBillNo);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/hrEmpInfo/findByName")
-    String findHrEmpinfo(@RequestParam(value = "name") String name);
+    HrEmpInfo findHrEmpinfo(@RequestParam(value = "name") String name);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdAccount/findByName")
-    String findAccountFNumber(@RequestParam(value = "name") String name);
+    BdAccount findAccountFNumber(@RequestParam(value = "name") String name);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAssistantCode")
     String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findCustId")
-    BdDepartment findDepartByCustomer( @RequestParam(value = "custId") String custId);
+    BdDepartment findDepartByCustomer( @RequestParam(value = "custId") String outId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
     List<BdDepartment> findAll();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
-    String findBdInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
+    List<StkInventory> findBdInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findBdInventoryByDepotAndProduct")
-    String findBdInventoryByDepotAndProduct(@RequestParam(value = "depotId") String depotId, @RequestParam(value = "productId") String productId);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIdAndMaterialId")
+    StkInventory findBdInventoryByDepotAndProduct(@RequestParam(value = "stockId") String depotId, @RequestParam(value = "materialId") String productId);
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/receivableReportForSummaryList")
