@@ -15,8 +15,8 @@ public class DutyOvertimeQuery extends BaseQuery {
     private String createdBy;
     private String dutyDate;
     private List<String> officeIds;
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
+    private LocalDate dutyDateStart;
+    private LocalDate dutyDateEnd;
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -42,35 +42,29 @@ public class DutyOvertimeQuery extends BaseQuery {
         this.officeIds = officeIds;
     }
 
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
+    }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.dutyDateEnd = dutyDateEnd;
+    }
+
     public LocalDate getDutyDateStart() {
-        if(StringUtils.isNotBlank(dutyDate)) {
+        if(dutyDateStart==null&&StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+        } else if(dutyDateStart!=null){
+            return dutyDateStart;
         }
+        return null;
     }
 
     public LocalDate getDutyDateEnd() {
-        if(StringUtils.isNotBlank(dutyDate)) {
+        if(dutyDateEnd==null&&StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
+        } else if(dutyDateEnd!=null){
+            return dutyDateEnd.plusDays(1);
         }
-    }
-
-    public LocalDate getDateStart() {
-        return dateStart;
-    }
-
-    public void setDateStart(LocalDate dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public LocalDate getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
+        return null;
     }
 }
