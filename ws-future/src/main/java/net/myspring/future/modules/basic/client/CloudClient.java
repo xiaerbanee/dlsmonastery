@@ -21,7 +21,7 @@ public interface CloudClient {
     String getSynCustomerData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
-    String getSynProductData();
+    String getSynProductData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/getSynBankData")
     String getSynBankData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);

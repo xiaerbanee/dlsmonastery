@@ -2,8 +2,10 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
@@ -35,6 +37,8 @@ public class ShopImageService {
     private CacheUtils cacheUtils;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private OfficeClient officeClient;
 
     public Page findPage(Pageable pageable, ShopImageQuery shopImageQuery){
         Page<ShopImageDto> page=shopImageRepository.findPage(pageable,shopImageQuery);
@@ -59,6 +63,7 @@ public class ShopImageService {
     }
 
     public ShopImageQuery getQuery(ShopImageQuery shopImageQuery){
+        shopImageQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return shopImageQuery;
     }
 

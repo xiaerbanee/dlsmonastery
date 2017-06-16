@@ -21,7 +21,7 @@ Page({
         var depotName = value.substring(indexOf + 1);
         var currentPages = getCurrentPages();
         var previousPage = currentPages[currentPages.length - 2];
-        previousPage.setData({ 'formData.shop.id': depotId, 'formData.shop.name': depotName });
+        previousPage.setData({ 'formData.shopId': depotId, 'formData.shopName': depotName });
         wx.navigateBack({
             delta: 1
         })
