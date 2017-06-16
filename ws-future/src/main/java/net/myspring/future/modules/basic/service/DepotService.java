@@ -8,6 +8,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
@@ -225,5 +226,11 @@ public class DepotService {
             depot.setAreaId(depotDtoMap.get(depot.getId()).getAreaId());
             depotRepository.save(depot);
         }
+    }
+
+    public List<CustomerDto>  getCustomerList(){
+        List<CustomerDto> customerDtoList=depotRepository.getCustomer();
+        cacheUtils.initCacheInput(customerDtoList);
+        return customerDtoList;
     }
 }
