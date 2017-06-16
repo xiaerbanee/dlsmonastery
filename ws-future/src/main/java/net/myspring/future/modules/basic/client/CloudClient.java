@@ -14,13 +14,13 @@ import java.util.List;
 public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
-    String getSynStockData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    String getSynStockData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
-    String getSynCustomerData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    String getSynCustomerData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
-    String getSynProductData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    String getSynProductData();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/getSynBankData")
     String getSynBankData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
