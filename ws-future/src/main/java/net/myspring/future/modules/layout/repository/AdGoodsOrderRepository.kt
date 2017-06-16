@@ -4,7 +4,7 @@ import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto
 import net.myspring.future.modules.layout.domain.AdGoodsOrder
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery
@@ -30,9 +30,9 @@ interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOr
     FROM
         #{#entityName} t1
     WHERE
-        t1.createdDate >= ?1
+        t1.billDate = ?1
     """)
-    fun findMaxBusinessId(localDateTime: LocalDateTime): String
+    fun findMaxBusinessId(localDate: LocalDate): String
 }
 
 interface AdGoodsOrderRepositoryCustom{

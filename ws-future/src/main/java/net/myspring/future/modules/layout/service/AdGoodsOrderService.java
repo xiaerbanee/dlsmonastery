@@ -21,7 +21,7 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
@@ -277,11 +277,11 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.logicDelete(id);
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
-        List<AdGoodsOrderDetailDto> result;
+        List<AdGoodsOrderDetailSimpleDto> result;
         if(StringUtils.isBlank(adGoodsOrderId)){
             result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
         }else{
@@ -309,19 +309,19 @@ public class AdGoodsOrderService {
 
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListForBill(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
-        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
+        List<AdGoodsOrderDetailSimpleDto>  result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
 
         cacheUtils.initCacheInput(result);
         return result;
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
 
-        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrderId);
+        List<AdGoodsOrderDetailSimpleDto>  result = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrderId);
         cacheUtils.initCacheInput(result);
         return result;
     }
@@ -330,7 +330,7 @@ public class AdGoodsOrderService {
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
-        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(LocalDate.now().atStartOfDay())));
+        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate())));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
         adGoodsOrder.setBillAddress(StringUtils.isBlank(adGoodsOrderBillForm.getBillAddress()) ? adGoodsOrderBillForm.getExpressOrderAddress() : adGoodsOrderBillForm.getBillAddress());
