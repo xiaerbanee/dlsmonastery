@@ -79,6 +79,9 @@ class DictEnumRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
         if(dictEnumQuery.createdDateEnd != null) {
             sb.append(" and created_date < :createdDateEnd ");
         }
+        if(StringUtils.isNotBlank(dictEnumQuery.value)) {
+            sb.append(" and value = :value ");
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql,BeanPropertySqlParameterSource(dictEnumQuery),BeanPropertyRowMapper(DictEnumDto::class.java));
