@@ -41,7 +41,7 @@
           <el-button type="primary" @click="search()">{{$t('shopAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="id" :label="$t('shopAllotList.billCode')" width="180" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('shopAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
@@ -107,6 +107,7 @@
         initPromise:{},
         formVisible: false,
         pageLoading: false,
+        pageHeight:600,
       };
     },
     methods: {
@@ -159,6 +160,7 @@
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

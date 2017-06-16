@@ -38,7 +38,7 @@
           <el-button type="primary" @click="search()">{{$t('productImeSaleList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeSaleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="shopName" column-key="shopId" :label="$t('productImeSaleList.saleShopName')" width="180" sortable></el-table-column>
         <el-table-column prop="productImeIme"  :label="$t('productImeSaleList.ime')" ></el-table-column>
         <el-table-column prop="productImeProductName" :label="$t('productImeSaleList.productName')"></el-table-column>
@@ -66,6 +66,7 @@
     data() {
       return {
         pageLoading: false,
+        pageHeight: 600,
         page:{},
         initPromise:{},
         searchText:"",
@@ -125,6 +126,7 @@
         }
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/productImeSale/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

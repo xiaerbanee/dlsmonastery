@@ -172,6 +172,7 @@ export default {
       adGoodsOrderDetail: "柜台订货详细",
       adGoodsOrderForm: "物料订单编辑",
       adGoodsOrderList: "柜台订货",
+      adGoodsOrderDetailList: "订货详细",
       adGoodsOrderShip: "柜台订货发货",
       adGoodsOrderSign: "货品订货签收",
       adGoodsOrderPrint: "物料打印",

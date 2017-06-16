@@ -326,7 +326,6 @@ public class AdGoodsOrderService {
         return result;
     }
 
-
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
@@ -346,7 +345,6 @@ public class AdGoodsOrderService {
         }
 
         saveExpressOrderInfoWhenBill(adGoodsOrder);
-
 
         //如果有工作流，审批通过
         if(StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {

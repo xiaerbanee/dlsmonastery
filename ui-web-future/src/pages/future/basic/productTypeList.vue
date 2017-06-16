@@ -25,7 +25,7 @@
           <el-button type="primary" @click="search()">{{$t('productTypeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('productTypeList.name')"  width="150" sortable></el-table-column>
         <el-table-column prop="reportName" :label="$t('productTypeList.reportName')" sortable></el-table-column>
         <el-table-column prop="code" :label="$t('productTypeList.code')" sortable></el-table-column>
@@ -69,6 +69,7 @@
         searchText:'',
         initPromise:{},
         formVisible: false,
+        pageHeight: 600,
         pageLoading: false
       };
     },
@@ -119,9 +120,9 @@
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
-
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/basic/productType/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

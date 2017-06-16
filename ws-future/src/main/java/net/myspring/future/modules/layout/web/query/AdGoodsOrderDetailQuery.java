@@ -15,7 +15,6 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
     private String adGoodsOrderIdStr;
     private String adGoodsOrderCreatedDateRange;
     private String adGoodsOrderBillDateRange;
-    private String adGoodsOrderShipDateRange;
     private String adGoodsOrderProcessStatus;
     private String adGoodsOrderRemarks;
     private String productId;
@@ -47,14 +46,6 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
 
     public void setAdGoodsOrderBillDateRange(String adGoodsOrderBillDateRange) {
         this.adGoodsOrderBillDateRange = adGoodsOrderBillDateRange;
-    }
-
-    public String getAdGoodsOrderShipDateRange() {
-        return adGoodsOrderShipDateRange;
-    }
-
-    public void setAdGoodsOrderShipDateRange(String adGoodsOrderShipDateRange) {
-        this.adGoodsOrderShipDateRange = adGoodsOrderShipDateRange;
     }
 
     public String getAdGoodsOrderProcessStatus() {
@@ -162,19 +153,4 @@ public class AdGoodsOrderDetailQuery extends BaseQuery {
         }
     }
 
-    public LocalDate getAdGoodsOrderShipDateStart() {
-        if(StringUtils.isNotBlank(adGoodsOrderShipDateRange)) {
-            return LocalDateUtils.parse(adGoodsOrderShipDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
-        }
-    }
-
-    public LocalDate getAdGoodsOrderShipDateEnd() {
-        if(StringUtils.isNotBlank(adGoodsOrderShipDateRange)) {
-            return LocalDateUtils.parse(adGoodsOrderShipDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
-        }
-    }
 }
