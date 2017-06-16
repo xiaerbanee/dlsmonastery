@@ -112,12 +112,14 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         sb.append("""
             SELECT
                 t2.*, t1.id AS 'depotId',
+                t1.name as 'depotName',
                 t1.office_id AS 'officeId',
                 t1.tax_name AS 'taxName',
                 t1.delegate_depot_id AS 'delegateDepotId',
+                depot.name as 'delegateDepotName',
                 t1.pop_shop AS 'popShop'
             FROM
-                crm_depot t1,
+                crm_depot t1 left join crm_depot depot on t1.delegate_depot_id=depot.id,
                 crm_depot_store t2
             WHERE
                 t1.enabled = 1

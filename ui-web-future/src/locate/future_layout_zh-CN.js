@@ -192,6 +192,7 @@ export default {
     ship:"发货",
     sign:"签收",
     print:"打印",
+    export:"导出",
   },
   adGoodsOrderForm: {
     adGoodsOrderForm: "物料订单编辑",

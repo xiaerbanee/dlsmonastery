@@ -7,6 +7,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:employeePhoneDeposit:view'">{{$t('employeePhoneDepositList.filter')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'hr:employeePhoneDeposit:audit'">{{$t('employeePhoneDepositList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchNoPass" icon="close" v-permit="'hr:employeePhoneDeposit:audit'">{{$t('employeePhoneDepositList.batchNoPass')}}</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'hr:employeePhoneDeposit:edit'">批量添加</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('employeePhoneDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -106,6 +107,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'employeePhoneDepositForm'})
+      },itemBatchAdd(){
+        this.$router.push({ name: 'employeePhoneDepositBatchForm'})
       },itemAction:function(id,action){
         if(action=="修改") {
           this.$router.push({ name: 'employeePhoneDepositForm', query: { id: id }})

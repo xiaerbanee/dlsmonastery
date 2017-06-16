@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -11,21 +10,59 @@ import net.myspring.util.cahe.annotation.CacheInput;
 public class DepotStoreDto extends DataDto<DepotStore>{
 
     private String depotId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    protected String officeName;
     private String type;
+    private String depotName;
     private String officeId;
     private String taxName;
     private String delegateDepotId;
-    //分组
-    private String storeGroup;
-    @CacheInput(inputKey = "depots",inputInstance = "depotId",outputInstance = "name")
-    private String depotName;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
-    private String officeName;
-    @CacheInput(inputKey = "depots",inputInstance = "delegateDepotId",outputInstance = "name")
     private String delegateDepotName;
-
+    private String storeGroup;
+    private String jointLevel;
+    private Boolean popShop;
     private String percentage;
     private Integer qty=0;
+
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
+    public String getDepotName() {
+        return depotName;
+    }
+
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
+    }
+
+    public String getDelegateDepotName() {
+        return delegateDepotName;
+    }
+
+    public void setDelegateDepotName(String delegateDepotName) {
+        this.delegateDepotName = delegateDepotName;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
+    }
 
     public String getPercentage() {
         return percentage;
@@ -73,30 +110,6 @@ public class DepotStoreDto extends DataDto<DepotStore>{
 
     public void setStoreGroup(String storeGroup) {
         this.storeGroup = storeGroup;
-    }
-
-    public String getOfficeName() {
-        return officeName;
-    }
-
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
-
-    public String getDelegateDepotName() {
-        return delegateDepotName;
-    }
-
-    public void setDelegateDepotName(String delegateDepotName) {
-        this.delegateDepotName = delegateDepotName;
-    }
-
-    public String getDepotName() {
-        return depotName;
-    }
-
-    public void setDepotName(String depotName) {
-        this.depotName = depotName;
     }
 
     public String getDepotId() {

@@ -2,14 +2,13 @@ package net.myspring.general.modules.sys.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.general.common.query.BaseQuery;
-import net.myspring.general.modules.sys.domain.ProcessTask;
 
 import java.util.List;
 
 /**
  * Created by wangzm on 2017/6/5.
  */
-public class ProcessTaskQuery {
+public class ProcessTaskQuery extends BaseQuery{
     private String positionId;
     private String name;
     private String status;

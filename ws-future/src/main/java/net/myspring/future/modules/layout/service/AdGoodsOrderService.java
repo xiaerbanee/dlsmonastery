@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -20,7 +21,8 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
@@ -32,20 +34,28 @@ import net.myspring.general.modules.sys.dto.ActivitiStartDto;
 import net.myspring.general.modules.sys.form.ActivitiCompleteForm;
 import net.myspring.general.modules.sys.form.ActivitiStartForm;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +90,8 @@ public class AdGoodsOrderService {
     private ActivitiClient activitiClient;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private GridFsTemplate tempGridFsTemplate;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderRepository.findPage(pageable, adGoodsOrderQuery);
@@ -265,11 +277,11 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.logicDelete(id);
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
-        List<AdGoodsOrderDetailDto> result;
+        List<AdGoodsOrderDetailSimpleDto> result;
         if(StringUtils.isBlank(adGoodsOrderId)){
             result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
         }else{
@@ -297,19 +309,19 @@ public class AdGoodsOrderService {
 
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListForBill(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
-        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
+        List<AdGoodsOrderDetailSimpleDto>  result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
 
         cacheUtils.initCacheInput(result);
         return result;
     }
 
-    public List<AdGoodsOrderDetailDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
+    public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
 
-        List<AdGoodsOrderDetailDto>  result = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrderId);
+        List<AdGoodsOrderDetailSimpleDto>  result = adGoodsOrderDetailRepository.findDtoListByAdGoodsOrderId(adGoodsOrderId);
         cacheUtils.initCacheInput(result);
         return result;
     }
@@ -318,7 +330,7 @@ public class AdGoodsOrderService {
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
-        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(LocalDate.now().atStartOfDay())));
+        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate())));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
         adGoodsOrder.setBillAddress(StringUtils.isBlank(adGoodsOrderBillForm.getBillAddress()) ? adGoodsOrderBillForm.getExpressOrderAddress() : adGoodsOrderBillForm.getBillAddress());
@@ -584,25 +596,90 @@ public class AdGoodsOrderService {
         }
     }
 
-    public void print(String id) {
+    public AdGoodsOrderDto print(String id) {
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         if(expressOrder != null && expressOrder.getOutPrintDate() == null ){
             expressOrder.setOutPrintDate(LocalDateTime.now());
-            expressOrderRepository.save(expressOrder);
+            expressOrderRepository.saveAndFlush(expressOrder);
         }
+
+        return findDto(id);
 
     }
 
+    public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
 
-//    public void print(AdGoodsOrder adGoodsOrder) {
-//        ExpressOrder expressOrder = adGoodsOrder.getExpressOrder();
-//        if(expressOrder != null){
-//            if(expressOrder.getOutPrintDate() == null){
-//                expressOrder.setOutPrintDate(LocalDateTime.now());
-//            }
-//            expressOrderRepository.save(expressOrder);
-//        }
-//    }
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SimpleExcelColumn> adGoodsOrderColumnList = Lists.newArrayList();
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "id", "订单号"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "outCode", "财务编号"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "outShopName", "财务门店"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "depotShopAreaType", "区域类型"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "当前状态"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderExpressCompanyName", "快递公司"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderExpressCodes", "快递单号"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "shopAddress", "门店地址"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "billAddress", "目的地"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderContator", "联系人"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderMobilePhone", "手机"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "billDate", "开单时间"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "billRemarks", "开单备注"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderShouldPay", "应付运费"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderRealPay", "实付运费"));
+        adGoodsOrderColumnList.add(new SimpleExcelColumn(workbook, "expressOrderShouldGet", "应收运费"));
+
+        List<AdGoodsOrderDto> adGoodsOrderDtoList = findPage(new PageRequest(0,10000), adGoodsOrderQuery).getContent();
+        simpleExcelSheetList.add(new SimpleExcelSheet("订单数据", adGoodsOrderDtoList, adGoodsOrderColumnList));
+
+
+        List<SimpleExcelColumn> adGoodsOrderDetailColumnList = Lists.newArrayList();
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderFormatId", "订单号"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderOutCode", "财务编号"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderOutShopName", "财务门店"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderShopName", "门店"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderDepotShopAreaType", "区域类型"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderShopAddress", "门店地址"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillAddress", "目的地"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderContator", "联系人"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderMobilePhone", "手机"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderEmployeeName", "业务"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderEmployeeMobilePhone", "业务电话"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillRemarks", "开单备注"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderProcessStatus", "当前状态"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderExpressCompanyName", "货运部"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productCode", "货品编码"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productName", "货品"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "confirmQty", "订货数"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "billQty", "开单数"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "shippedQty", "发货数"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productPrice2", "价格"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "amount", "总金额"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productVolume", "体积"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderShouldPay", "应付运费"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderRealPay", "实付运费"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderShouldGet", "应收运费"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderCreatedByName", "创建人"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderCreatedDate", "创建时间"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillDate", "开单时间"));
+        List<AdGoodsOrderDetailExportDto> adGoodsOrderDetailExportDtoList = adGoodsOrderDetailRepository.findDtoListForExport(CollectionUtil.extractToList(adGoodsOrderDtoList, "id"), 10000);
+        cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
+        simpleExcelSheetList.add(new SimpleExcelSheet("订单明细", adGoodsOrderDetailExportDtoList, adGoodsOrderDetailColumnList));
+
+
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"物料订货数据"+LocalDate.now()+".xlsx", simpleExcelSheetList);
+        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        return StringUtils.toString(gridFSFile.getId());
+
+    }
 
 }

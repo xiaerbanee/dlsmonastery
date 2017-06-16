@@ -5,7 +5,6 @@ import net.myspring.future.common.domain.CompanyEntity;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -27,6 +26,16 @@ public class DepotStore extends CompanyEntity<DepotStore> {
     private String outGroupName;
     //财务同步日期
     private LocalDate outDate;
+
+    private String jointLevel;
+
+    public String getJointLevel() {
+        return jointLevel;
+    }
+
+    public void setJointLevel(String jointLevel) {
+        this.jointLevel = jointLevel;
+    }
 
     public String getDepotId() {
         return depotId;

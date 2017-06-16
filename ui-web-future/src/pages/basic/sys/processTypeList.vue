@@ -94,10 +94,12 @@
         if(action=="详细") {
           this.$router.push({ name: 'processTypeForm', query: { id: id }})
         } else if(action=="删除") {
-          axios.get('/api/general/sys/processType/delete',{params:{id:id}}).then((response) =>{
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/general/sys/processType/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
-            this.pageRequest();
-          })
+              this.pageRequest();
+            })
+          }).catch(()=>{});
         }
       }
     },created () {

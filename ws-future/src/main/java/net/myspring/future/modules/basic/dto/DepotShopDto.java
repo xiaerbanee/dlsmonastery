@@ -11,32 +11,55 @@ import java.time.LocalDate;
 public class DepotShopDto extends DataDto<DepotShop>{
 
     private String depotId;
-    // 地区属性
     private String areaType;
-
     private Boolean hasGuide;
-
-    //门店各种属性
-    //运营商营业厅类型
     private String carrierType;
-    //营业额分类
     private String turnoverType;
-    //经营方式
     private String businessType;
-    //运营商类型移动社会渠道
     private String channelType;
-    //门店类型
     private String salePointType;
-    //乡镇类型
     private String townType;
-    //面积大小
     private String shopArea;
-
+    private Integer frameNum=0;
+    private Integer deskDoubleNum=0;
+    private Integer deskSingleNum=0;
+    private Integer cabinetNum=0;
     private String depotName;
-
     private String townId;
     private LocalDate enableDate;
     private String townName;
+
+    public Integer getFrameNum() {
+        return frameNum;
+    }
+
+    public void setFrameNum(Integer frameNum) {
+        this.frameNum = frameNum;
+    }
+
+    public Integer getDeskDoubleNum() {
+        return deskDoubleNum;
+    }
+
+    public void setDeskDoubleNum(Integer deskDoubleNum) {
+        this.deskDoubleNum = deskDoubleNum;
+    }
+
+    public Integer getDeskSingleNum() {
+        return deskSingleNum;
+    }
+
+    public void setDeskSingleNum(Integer deskSingleNum) {
+        this.deskSingleNum = deskSingleNum;
+    }
+
+    public Integer getCabinetNum() {
+        return cabinetNum;
+    }
+
+    public void setCabinetNum(Integer cabinetNum) {
+        this.cabinetNum = cabinetNum;
+    }
 
     public String getTownName() {
         return townName;
