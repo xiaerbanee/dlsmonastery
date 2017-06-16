@@ -5,8 +5,8 @@ Page({
   data: {
     page: {},
     formData: {
-      pageNumber: 0,
-      pageSize: 10
+      page: 0,
+      size: 10
     },
     formProperty: {},
     searchHidden: true,
@@ -22,7 +22,7 @@ Page({
                 'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ 'formProperty.restList': res.data.restList, 'formProperty.dateList': res.data.dateList })
+        that.setData({ 'formProperty.restList': res.data.extra.restList, 'formProperty.dateList': res.data.extra.dateList })
       }
     })
   },
@@ -52,7 +52,6 @@ Page({
             },
           data: that.data.formData,
           success: function (res) {
-            console.log(res)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -96,8 +95,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -108,13 +105,11 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
-    var itemList = that.data.activeItem.actionList;
-    if (!itemList) { return; }
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: ["删除"],
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "删除") {
+          if (res.tapIndex==0) {
             wx.request({
               url: $util.getUrl("basic/hr/dutyRest/delete"),
               data: { id: id },
@@ -132,37 +127,37 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

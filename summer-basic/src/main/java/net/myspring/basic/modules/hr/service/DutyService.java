@@ -223,7 +223,7 @@ public class DutyService {
                }
             } else {
                 restHour = DutyDateTypeEnum.全天.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
-                DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(dutyRest.getEmployeeId()).get(0);
+                DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployeeId(dutyRest.getEmployeeId()).get(0);
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
                     return false;
                 }

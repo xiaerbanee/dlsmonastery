@@ -59,10 +59,10 @@ Page({
   bindDateChange: function (e) {
     var that = this;
     var name = e.currentTarget.dataset.name;
-    if (name == 'dateStart') {
-      that.setData({ "formData.dateStart": e.detail.value });
+    if (name == 'dutyDateStart') {
+      that.setData({ "formData.dutyDateStart": e.detail.value });
     } else {
-      that.setData({ "formData.dateEnd": e.detail.value });
+      that.setData({ "formData.dutyDateEnd": e.detail.value });
     }
   },
   itemActive: function (e) {

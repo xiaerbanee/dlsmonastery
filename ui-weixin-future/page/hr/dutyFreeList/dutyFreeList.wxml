@@ -9,8 +9,8 @@
           <view class="weui-label">免打开始</view>
         </view>
         <view class="weui-cell__bd ">
-          <picker mode="date" name="freeDateStart" value="{{formData.freeDateStart}}" data-name="freeDateStart" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.freeDateStart}}</view>
+          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart}}" data-name="dutyDateStart" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateStart}}</view>
           </picker>
         </view>
       </view>
@@ -19,8 +19,8 @@
           <view class="weui-label">免打结束</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="freeDateEnd" value="{{formData.freeDateEnd}}" data-name="freeDateEnd" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.freeDateEnd}}</view>
+          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd}}" data-name="dutyDateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateEnd}}</view>
           </picker>
         </view>
       </view>
