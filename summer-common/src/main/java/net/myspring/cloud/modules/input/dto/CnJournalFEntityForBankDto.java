@@ -27,7 +27,7 @@ public class CnJournalFEntityForBankDto {
     //贷方金额
     private BigDecimal creditAmount;
     //摘要
-    private String remarks;
+    private String comment;
 
     public String getAccountNumber() {
         return accountNumber;
@@ -109,11 +109,11 @@ public class CnJournalFEntityForBankDto {
         this.creditAmount = creditAmount;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getComment() {
+        return comment;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

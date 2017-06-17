@@ -2,7 +2,6 @@ package net.myspring.cloud.modules.report.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Created by liuj on 2017/5/11.

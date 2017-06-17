@@ -77,7 +77,6 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -94,9 +93,11 @@
                   this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
                 }
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(()=> {
+              this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         });
       },
