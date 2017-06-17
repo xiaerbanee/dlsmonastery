@@ -41,6 +41,7 @@
             },
             rules: {
               name: [{ required: true, message: this.$t('shopAdTypeForm.prerequisiteMessage')}],
+              totalPriceType: [{ required: true, message: this.$t('shopAdTypeForm.prerequisiteMessage')}],
               price: [{ required: true, message: this.$t('shopAdTypeForm.prerequisiteMessage')},{ type: 'number', message: this.$t('shopAdTypeForm.inputLegalValue')}]
             }
           }
@@ -71,9 +72,11 @@
         }, initPage () {
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
             this.formData = response.data;
-            axios.get('/api/ws/future/basic/shopAdType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.formData);
-            });
+            if(!this.isCreate) {
+              axios.get('/api/ws/future/basic/shopAdType/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+                util.copyValue(response.data, this.formData);
+              });
+            }
           });
         }
       },created(){

@@ -43,7 +43,6 @@
         }
       },
       formSubmit(){
-        var that = this;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
@@ -55,12 +54,12 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.submitDisabled = false ;
+                  this.submitDisabled = false;
                   this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
                 }
               }
             }).catch(() => {
-              that.submitDisabled = false;
+              this.submitDisabled = false;
             });
           }
         });

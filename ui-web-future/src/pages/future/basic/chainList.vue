@@ -53,6 +53,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         loading:false
@@ -67,7 +68,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("chainList",submitData);
         axios.get('/api/ws/future/basic/chain',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -100,12 +101,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/chain/getQuery').then((response) => {
+      this.initPromise = axios.get('/api/ws/future/basic/chain/getQuery').then((response) => {
         this.formData = response.data;
         util.copyValue(this.$route.query,this.formData);
-        this.pageRequest();
       });
-
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
   };
 </script>
