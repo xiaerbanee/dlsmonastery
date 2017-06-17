@@ -71,38 +71,42 @@
       }
     }, methods:{
 
-      findDetailList() {
-        return axios.get('/api/ws/future/crm/goodsOrderShip/findDetailListByAdGoodsOrderId',{params: {adGoodsOrderId:this.$route.query.id}});
-      },
-      print() {
-        return axios.get('/api/ws/future/crm/goodsOrderShip/print', {params: {id: this.$route.query.id}});
-      }
+//      findDetailList() {
+//        return axios.get('/api/ws/future/crm/goodsOrderShip/findDetailListByAdGoodsOrderId',{params: {adGoodsOrderId:this.$route.query.id}});
+//      },
+//      print() {
+//        return axios.get('/api/ws/future/crm/goodsOrderShip/print', {params: {id: this.$route.query.id}});
+//      }
     },
 
     created(){
 
-      axios.all([this.findDetailList(), this.print()])
-        .then(axios.spread( (findDetailListRes, printRes) => {
-          this.adGoodsOrderDetailList = findDetailListRes.data;
-          this.adGoodsOrder = printRes.data;
+      axios.get('/api/ws/future/crm/goodsOrderShip/print', {params: {id: this.$route.query.id}}).then((response)=>{
+        consoel.log(response.data)
+      });
 
-          let resultQty = 0;
-          let resultPrice = 0;
-
-          if(this.adGoodsOrderDetailList){
-            for(let adGoodsOrderDetail of this.adGoodsOrderDetailList){
-              resultQty += adGoodsOrderDetail.billQty;
-              resultPrice += adGoodsOrderDetail.billQty * adGoodsOrderDetail.productPrice2;
-            }
-          }
-          this.totalBillQty = resultQty;
-          this.totalPrice = resultPrice;
-
-          this.$nextTick(()=>{
-            window.print();
-            this.$router.push({ name: 'adGoodsOrderList'});
-          });
-        }));
+//      axios.all([this.findDetailList(), this.print()])
+//        .then(axios.spread( (findDetailListRes, printRes) => {
+//          this.adGoodsOrderDetailList = findDetailListRes.data;
+//          this.adGoodsOrder = printRes.data;
+//
+//          let resultQty = 0;
+//          let resultPrice = 0;
+//
+//          if(this.adGoodsOrderDetailList){
+//            for(let adGoodsOrderDetail of this.adGoodsOrderDetailList){
+//              resultQty += adGoodsOrderDetail.billQty;
+//              resultPrice += adGoodsOrderDetail.billQty * adGoodsOrderDetail.productPrice2;
+//            }
+//          }
+//          this.totalBillQty = resultQty;
+//          this.totalPrice = resultPrice;
+//
+//          this.$nextTick(()=>{
+//            window.print();
+//            this.$router.push({ name: 'adGoodsOrderList'});
+//          });
+//        }));
     }
   }
 </script>
