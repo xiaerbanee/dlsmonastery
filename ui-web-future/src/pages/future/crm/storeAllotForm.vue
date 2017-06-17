@@ -97,7 +97,7 @@
             axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
             if(response.data.success) {
-              if (!this.inputForm.create) {
+              if (!that.isCreate) {
                 this.submitDisabled = false;
                 this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
               }else{

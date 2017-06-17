@@ -36,9 +36,9 @@
         <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')" ></el-table-column>
         <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')" ></el-table-column>
         <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')" ></el-table-column>
-        <el-table-column prop="billedQty" :label="$t('adApplyBillForm.billQty')" >
+        <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')" >
           <template scope="scope">
-            <el-input v-model="scope.row.billedQty"></el-input>
+            <el-input v-model="scope.row.nowBilledQty"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="storeQty" sortable :label="$t('adApplyBillForm.financeQty')" ></el-table-column>
@@ -62,9 +62,6 @@
           submitDisabled: false,
           productOrShopName: "",
           filterAdApplyList:[],
-          applyQtys: "",
-          leftQtys: "",
-          confirmQtys: "",
           inputForm: {
               extra:{}
           },
@@ -78,18 +75,18 @@
         };
       },
       formSubmit(){
-        var that = this;
-        this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let that = this;
+        that.submitDisabled = true;
+        let form = that.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let submitData = util.deleteExtra(this.inputForm);
             submitData.adApplyDetailForms = this.getProductForSubmit();
-            axios.post('/api/ws/future/layout/adApply/billSave',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
-              this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
-                this.$router.push({name:'adApplyList',query:util.getQuery("adApplyList")})
+            axios.post('/api/ws/future/layout/adApply/billSave',qs.stringify(submitData,{allowDots:true})).then((response)=> {
+              that.$message(response.data.message);
+              if(response.data.success){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -105,7 +102,7 @@
           let tempList=new Array();
           for(let index in this.adApplyList){
             let detail=this.adApplyList[index];
-            if(util.isNotBlank(detail.applyQty)){
+            if(util.isNotBlank(detail.nowBilledQty)){
               tempList.push(detail);
             }
           }
@@ -120,12 +117,21 @@
         var tempList=new Array();
         for(var index in this.adApplyList){
           var detail=this.adApplyList[index];
-          if(util.contains(detail.shopName,val)||util.contains(detail.productName,val)){
+          if(util.isNotBlank(detail.nowBilledQty)){
+            tempList.push(detail)
+          }
+        }
+        for(var index in this.adApplyList){
+          var detail=this.adApplyList[index];
+          if((util.contains(detail.shopName,val)||util.contains(detail.productName,val))&&util.isBlank(detail.nowBilledQty)){
             tempList.push(detail)
           }
         }
         this.filterAdApplyList = tempList;
       },onchange(){
+          if(this.inputForm.billType == null){
+              return;
+          }
           axios.get('api/ws/future/layout/adApply/findAdApplyList',{params:{billType:this.inputForm.billType}}).then((response) =>{
             this.setProductList(response.data);
           });

@@ -39,7 +39,7 @@
           },
           rules: {
             category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}],
-            sort: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"},{ type: 'number', message: this.$t('dictEnumForm.inputLegalValue'),trigger:"blur"}],
+            sort: [{ type: 'number',required:true, message: this.$t('dictEnumForm.inputLegalValue'),trigger:"blur"}],
             value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}]
           }
         }

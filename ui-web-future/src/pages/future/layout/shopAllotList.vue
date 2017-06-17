@@ -49,20 +49,18 @@
         <el-table-column prop="toShopName" column-key="toShopId" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
         <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable>
           <template scope="scope">
-            <el-button
-              @click.native.prevent="print(scope.row.id, 'returnPrint')"
-              type="text">
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;"
+              @click="print(scope.row.id, 'returnPrint')">
               {{ scope.row.outReturnCode}}
-            </el-button>
+            </a>
           </template>
         </el-table-column>
         <el-table-column prop="outSaleCode" :label="$t('shopAllotList.outSaleCode')" sortable>
           <template scope="scope">
-            <el-button
-              @click.native.prevent="print(scope.row.id, 'salePrint')"
-              type="text">
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;"
+              @click="print(scope.row.id, 'salePrint')">
               {{ scope.row.outSaleCode}}
-            </el-button>
+            </a>
           </template>
         </el-table-column>
 
@@ -140,9 +138,9 @@
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
         if(action==="returnPrint") {
-          window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=returnPrint", '', '').print();
+          this.$router.push({ name: 'shopAllotShipPrint', query: { id: id ,printType:'returnPrint'}});
         } else if(action==="salePrint") {
-          window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=salePrint", '', '').print();
+          this.$router.push({ name: 'shopAllotShipPrint', query: { id: id ,printType:'salePrint'}});
         }
       },itemAction:function(id, action){
         if(action==="edit") {
