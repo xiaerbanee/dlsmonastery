@@ -43,7 +43,7 @@ public class StkMisDeliveryService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    public KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
+    private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.STK_MisDelivery.name(),
                 stkMisDeliveryDto.getJson(),
@@ -54,7 +54,6 @@ public class StkMisDeliveryService {
 
     public List<KingdeeSynDto> save(StkMisDeliveryForm stkMisDeliveryForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         Map<String, StkMisDeliveryDto> misDeliveryMap = Maps.newLinkedHashMap();
-        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         String departmentNumber = stkMisDeliveryForm.getDepartmentNumber();
         LocalDate billDate = stkMisDeliveryForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(stkMisDeliveryForm.getJson());
@@ -91,6 +90,11 @@ public class StkMisDeliveryService {
             }
         }
         List<StkMisDeliveryDto> billList = Lists.newArrayList(misDeliveryMap.values());
+        return save(billList,kingdeeBook,accountKingdeeBook);
+    }
+
+    public List<KingdeeSynDto> save(List<StkMisDeliveryDto> billList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {

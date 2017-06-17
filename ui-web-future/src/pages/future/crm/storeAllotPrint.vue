@@ -71,6 +71,9 @@
       }
     },
 
+    mounted(){
+      setTimeout("window.print()",2000)
+    },
     created(){
 
       axios.all([this.findDetailList(), this.print()])

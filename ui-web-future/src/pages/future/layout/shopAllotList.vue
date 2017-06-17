@@ -49,18 +49,12 @@
         <el-table-column prop="toShopName" column-key="toShopId" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
         <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable>
           <template scope="scope">
-            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;"
-              @click="print(scope.row.id, 'returnPrint')">
-              {{ scope.row.outReturnCode}}
-            </a>
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="print(scope.row.id, 'returnPrint')">{{ scope.row.outReturnCode}}</a>
           </template>
         </el-table-column>
         <el-table-column prop="outSaleCode" :label="$t('shopAllotList.outSaleCode')" sortable>
           <template scope="scope">
-            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;"
-              @click="print(scope.row.id, 'salePrint')">
-              {{ scope.row.outSaleCode}}
-            </a>
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="print(scope.row.id, 'salePrint')">{{ scope.row.outSaleCode}}</a>
           </template>
         </el-table-column>
 
@@ -138,9 +132,9 @@
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
         if(action==="returnPrint") {
-          this.$router.push({ name: 'shopAllotShipPrint', query: { id: id ,printType:'returnPrint'}});
+          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
         } else if(action==="salePrint") {
-          this.$router.push({ name: 'shopAllotShipPrint', query: { id: id ,printType:'salePrint'}});
+          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
         }
       },itemAction:function(id, action){
         if(action==="edit") {

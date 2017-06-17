@@ -78,7 +78,6 @@ public class ShopAllotService {
     }
 
     public ShopAllotDto findDto(String id) {
-
         ShopAllotDto shopAllotDto = shopAllotRepository.findShopAllotDto(id);
         cacheUtils.initCacheInput(shopAllotDto);
         return shopAllotDto;

@@ -5,6 +5,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -40,9 +41,6 @@ interface AdGoodsOrderDetailRepositoryCustom{
     fun findPage(pageable: Pageable, adGoodsOrderDetailQuery: AdGoodsOrderDetailQuery): Page<AdGoodsOrderDetailDto>
 }
 
-class AdGoodsOrderDetailSimpleDto {
-
-}
 
 class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdGoodsOrderDetailRepositoryCustom{
     override fun findPage(pageable: Pageable, adGoodsOrderDetailQuery: AdGoodsOrderDetailQuery): Page<AdGoodsOrderDetailDto> {

@@ -53,7 +53,7 @@ public class CnJournalForBankService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto,KingdeeBook kingdeeBook) {
+    private KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto,KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.CN_JOURNAL.name(),
                 cnJournalForBankDto.getJson(),
