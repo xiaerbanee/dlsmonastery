@@ -97,6 +97,7 @@
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderShipList.sreturn')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderShipList.delete')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'fromStore')">出库单</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -169,6 +170,8 @@
         //todo
       }else if(action =="delete"){
        //todo
+      }else if(action=="fromStore"){
+        this.$router.push({name:"goodsOrderFromStorePrint",query:{id:id}})
       }
     }
  },created () {

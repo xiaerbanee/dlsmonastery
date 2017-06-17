@@ -119,7 +119,9 @@
       },grain(){
         this.$router.push({name: 'adApplyGoods'});
       },exportData(){
-				window.location.href= "/api/crm/adApply/export?"+qs.stringify(this.formData);
+        axios.get('/api/ws/future/layout/adApply/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
       },getTotalQty(content){
           if(content == null){
               return;
