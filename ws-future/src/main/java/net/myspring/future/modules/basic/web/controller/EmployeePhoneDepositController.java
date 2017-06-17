@@ -7,6 +7,7 @@ import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
 import net.myspring.future.modules.basic.service.EmployeePhoneDepositService;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneDepositForm;
 import net.myspring.future.modules.basic.web.query.EmployeePhoneDepositQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -86,7 +87,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getBatchForm")
     public EmployeePhoneDepositForm getBatchForm(EmployeePhoneDepositForm employeePhoneDepositForm){
-        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAll());
+        employeePhoneDepositForm.getExtra().put("departments", CollectionUtil.extractToList(cloudClient.findAll(),"FFullName"));
         return employeePhoneDepositForm;
     }
 
@@ -100,5 +101,10 @@ public class EmployeePhoneDepositController {
     public String export(EmployeePhoneDepositQuery employeePhoneDepositQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
         return employeePhoneDepositService.export(workbook,employeePhoneDepositQuery);
+    }
+
+    @RequestMapping(value = "searchDepartment")
+    public String searchDepartment(String depotName){
+        return null;
     }
 }
