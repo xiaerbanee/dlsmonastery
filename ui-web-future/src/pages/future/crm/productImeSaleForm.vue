@@ -120,7 +120,7 @@
             axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
             if(response.data.success){
-              if(!this.inputForm.create){
+              if(!this.isCreate){
                 this.submitDisabled = false;
                 this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
               }else{

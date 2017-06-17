@@ -25,7 +25,6 @@ import org.springframework.web.util.HtmlUtils;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -101,7 +100,8 @@ public class CnJournalForBankService {
         cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
         cnJournalForBankDto.setDate(billDate);
         cnJournalForBankDto.setAccountNumberForBank(accountNumberForBank);
-        cnJournalForBankDto.setKingdeeBook(kingdeeBook);
+        cnJournalForBankDto.setKingdeeName(kingdeeBook.getName());
+        cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());
         for (List<Object> row : data) {
             String accountNumber = HandsontableUtils.getValue(row, 0);
             String settleTypeName = HandsontableUtils.getValue(row,1);
@@ -125,7 +125,7 @@ public class CnJournalForBankService {
             cnJournalFEntityForBankDto.setDebitAmount(debitAmount);
             cnJournalFEntityForBankDto.setCreditAmount(creditAmount);
             cnJournalFEntityForBankDto.setBankAccountNumber(bankAcntNameMap.get(bankAcountName));
-            cnJournalFEntityForBankDto.setRemarks(remarks);
+            cnJournalFEntityForBankDto.setComment(remarks);
             cnJournalFEntityForBankDto.setEmpInfoNumber(empInfoNameMap.get(empInfoName));
             cnJournalFEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
             cnJournalFEntityForBankDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
@@ -133,6 +133,10 @@ public class CnJournalForBankService {
             cnJournalFEntityForBankDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
             cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
         }
+        return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
+    }
+
+    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {

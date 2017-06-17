@@ -12,6 +12,7 @@ public class MenuDto extends DataDto<Menu> {
     private String name;
     private Integer sort;
     private Boolean mobile;
+    private Boolean visible;
     private String code;
     private boolean locked;
     private boolean enabled;
@@ -19,6 +20,14 @@ public class MenuDto extends DataDto<Menu> {
     private String menuCategoryName;
 
     private String permissionStr;
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public String getCode() {
         return code;

@@ -81,7 +81,18 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/general/sys/processType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            var processFlowList=new Array();
+            for(var index in this.inputForm.processFlowList){
+              if(this.inputForm.processFlowList[index].name){
+                processFlowList.push(this.inputForm.processFlowList[index])
+              }
+            }
+            if(processFlowList.length==0){
+              this.$message.error('请设置流程节点');
+            }
+            var submitData=util.deleteExtra(this.inputForm);
+            submitData.processFlowList=processFlowList;
+            axios.post('/api/general/sys/processType/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data,this.getData());
@@ -132,7 +143,6 @@
               axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
                 util.copyValue(response.data,this.inputForm);
               });
-              console.log(this.inputForm)
             });
           }
       }

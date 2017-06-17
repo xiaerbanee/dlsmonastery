@@ -3,18 +3,11 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
-import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.dto.GoodsOrderPrintDto;
 import net.myspring.future.modules.crm.service.GoodsOrderShipService;
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -70,5 +62,15 @@ public class GoodsOrderShipController {
     @RequestMapping(value = "getShip")
     public GoodsOrderDto getShip(String id) {
         return goodsOrderShipService.getShip(id);
+    }
+
+    @RequestMapping(value = "print")
+    public GoodsOrderPrintDto print(String goodsOrderId) {
+        return goodsOrderShipService.print(goodsOrderId);
+    }
+
+    @RequestMapping(value = "shipPrint")
+    public GoodsOrderPrintDto shipPrint(String goodsOrderId) {
+        return goodsOrderShipService.shipPrint(goodsOrderId);
     }
 }

@@ -45,9 +45,9 @@
           return{
             isCreate:this.$route.query.id==null,
             submitDisabled:false,
-            roleList:[],
             inputForm:{
-                extra:{}
+                extra:{},
+                roleIdList:[],
             },
             rules: {
               menuId: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
@@ -67,7 +67,6 @@
             if (valid) {
               axios.post('/api/basic/sys/permission/save' ,qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-
                 if(this.isCreate){
                   Object.assign(this.$data,this.getData());
                   this.initPage();

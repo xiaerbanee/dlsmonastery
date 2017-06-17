@@ -16,6 +16,7 @@ const shopAdList= r => require.ensure([], () => r(require('pages/future/layout/s
 const shopAdForm= r => require.ensure([], () => r(require('pages/future/layout/shopAdForm.vue')));
 const shopAdDetail= r => require.ensure([], () => r(require('pages/future/layout/shopAdDetail.vue')));
 const shopAllotList = r => require.ensure([], () => r(require('pages/future/layout/shopAllotList.vue')));
+const shopAllotShipPrint = r => require.ensure([], () => r(require('pages/future/layout/shopAllotShipPrint.vue')));
 const shopAllotForm = r => require.ensure([], () => r(require('pages/future/layout/shopAllotForm.vue')));
 const shopAllotDetail = r => require.ensure([], () => r(require('pages/future/layout/shopAllotDetail.vue')));
 const shopBuildList  = r => require.ensure([], () => r(require('pages/future/layout/shopBuildList.vue')));
@@ -59,6 +60,7 @@ let routes = [
   {path:'/future/layout/shopAdForm',component:shopAdForm,name:'shopAdForm',meta: {menu:"shopAdList",keepAlive:true}},
   {path:'/future/layout/shopAdDetail',component:shopAdDetail,name:'shopAdDetail',meta: {menu:"shopAdList"}},
   {path:'/future/layout/shopAllotList',component:shopAllotList,name:'shopAllotList'},
+  {path:'/future/layout/shopAllotShipPrint',component:shopAllotShipPrint,name:'shopAllotShipPrint',meta: {hidden: true}},
   {path:'/future/layout/shopAllotForm',component:shopAllotForm,name:'shopAllotForm',meta: {menu:"shopAllotList",keepAlive:true}},
   {path:'/future/layout/shopAllotDetail',component:shopAllotDetail,name:'shopAllotDetail',meta: {menu:"shopAllotList"}},
   {path:'/future/layout/shopBuildList',component:shopBuildList,name:'shopBuildList'},
