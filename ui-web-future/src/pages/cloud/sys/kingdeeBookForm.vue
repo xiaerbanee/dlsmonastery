@@ -64,8 +64,7 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/global/cloud/sys/kingdeeBook/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/global/cloud/sys/kingdeeBook/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(!this.inputForm.id){
