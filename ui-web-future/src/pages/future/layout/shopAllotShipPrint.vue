@@ -120,7 +120,7 @@
         <td colspan="2"></td>
         <td>
           <div v-if="shopAllot.fromJointType === '委托代销' && printType === 'returnPrint' ">-</div>
-          {{shopAllot.totalQty }}
+          {{shopAllot }}
         </td>
         <td></td>
         <td>
@@ -213,6 +213,9 @@
       findTotalPrice() {
         return axios.get('/api/ws/future/crm/shopAllot/findTotalPrice', {params: {id: this.$route.query.id}});
       }
+    },
+    mounted(){
+      setTimeout("window.print()",2000);
     },
 
     created(){
