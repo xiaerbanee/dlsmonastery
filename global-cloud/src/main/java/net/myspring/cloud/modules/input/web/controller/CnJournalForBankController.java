@@ -12,7 +12,9 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -51,8 +53,8 @@ public class CnJournalForBankController {
         return restResponse;
     }
 
-    @RequestMapping(value = "saveForDto")
-    public RestResponse saveForDto(CnJournalForBankDto cnJournalForBankDto) {
+    @RequestMapping(value = "saveForDto", method= RequestMethod.POST)
+    public RestResponse saveForDto(@RequestBody CnJournalForBankDto cnJournalForBankDto) {
         RestResponse restResponse;
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());

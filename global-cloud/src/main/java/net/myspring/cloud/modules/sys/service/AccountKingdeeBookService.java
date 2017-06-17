@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.service;
 
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lihx on 2017/5/9.
@@ -39,12 +41,14 @@ public class AccountKingdeeBookService {
         return accountKingdeeBookRepository.findByAccountId(accountId);
     }
 
-    public AccountKingdeeBookQuery getQueryProperty(){
+    public AccountKingdeeBookQuery getQuery(){
         AccountKingdeeBookQuery accountKingdeeBookQuery = new AccountKingdeeBookQuery();
         List<String> nameList = kingdeeBookRepository.findNames();
         List<String> typeList = kingdeeBookRepository.findTypes();
-        accountKingdeeBookQuery.setKingdeeBookNameList(nameList);
-        accountKingdeeBookQuery.setKingdeeBookTypeList(typeList);
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("kingdeeBookNameList",nameList);
+        map.put("kingdeeBookTypeList",typeList);
+        accountKingdeeBookQuery.setExtra(map);
         return accountKingdeeBookQuery;
     }
 

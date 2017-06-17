@@ -149,7 +149,7 @@ public class StkInStockService {
         }else if(KingdeeNameEnum.INAVIVO.name().equals(kingdeeBook.getName())){
             typeList.add("vivo售后服务费");
         }
-        stkInStockForm.setTypeList(typeList);
+        stkInStockForm.getTypeList().addAll(typeList);
         stkInStockForm.setKingdeeName(kingdeeBook.getName());
         stkInStockForm.setMaterialNameList(bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         return stkInStockForm;

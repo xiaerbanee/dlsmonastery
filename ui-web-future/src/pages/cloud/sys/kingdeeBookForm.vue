@@ -39,21 +39,14 @@
 <script>
     export default{
       data(){
+          return this.getData()
+      },
+      methods:{
+        getData(){
           return{
             submitDisabled:false,
             inputForm:{},
-            submitData:{
-              id:'',
-              companyId:'',
-              name:'',
-              type:'',
-              kingdeeUrl:'',
-              kingdeePostUrl:'',
-              kingdeeUsername:'',
-              kingdeePassword:'',
-              kingdeeDbid:'',
-              remarks:'',
-            },
+            submitData:{},
             rules: {
               companyId: [{ required: true, message: "必填信息"}],
               name: [{ required: true, message: "必填信息"}],
@@ -65,8 +58,7 @@
               kingdeeDbid: [{ required: true, message: "必填信息"}],
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];

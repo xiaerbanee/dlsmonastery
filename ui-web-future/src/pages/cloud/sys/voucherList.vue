@@ -7,25 +7,29 @@
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog title="过滤" v-model="formVisible" size="tiny"  class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-col :span="24">
               <el-form-item label="编号" :label-width="formLabelWidth">
                 <el-input v-model="formData.id"  placeholder="模糊匹配查询"></el-input>
               </el-form-item>
+          </el-row>
+          <el-row :gutter="4">
               <el-form-item label="凭证日期" :label-width="formLabelWidth">
                 <date-picker v-model="formData.fdate"></date-picker>
               </el-form-item>
+          </el-row>
+          <el-row :gutter="4">
               <el-form-item label="状态" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" filterable clearable placeholder="请选择">
                   <el-option v-for="status in formData.extra.statusList" :key="status" :label="status" :value="status"></el-option>
                 </el-select>
               </el-form-item>
+          </el-row>
+          <el-row :gutter="4">
               <el-form-item label="创建人" :label-width="formLabelWidth">
                 <el-input v-model="formData.createdBy" placeholder="模糊匹配查询"></el-input>
               </el-form-item>
-            </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -61,7 +65,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '100px',
+        formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
       };
@@ -75,7 +79,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("voucherList",submitData);
         axios.get('/api/global/cloud/sys/voucher?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -101,7 +105,7 @@
           this.$router.push({ name: 'voucherForm', query: { id: id }})
         }else if(action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/basic/sys/dictEnum/delete',{params:{id:id}}).then((response) =>{
+            axios.get('/api/global/cloud/sys/voucher/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
             });
