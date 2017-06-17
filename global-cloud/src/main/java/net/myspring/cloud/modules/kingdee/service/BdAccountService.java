@@ -22,6 +22,10 @@ public class BdAccountService {
         return bdAccountRepository.findByNumber(number);
     }
 
+    public BdAccount findByName(String name){
+        return bdAccountRepository.findByName(name);
+    }
+
     public List<BdAccount> findAll(){
         return bdAccountRepository.findAll();
     }

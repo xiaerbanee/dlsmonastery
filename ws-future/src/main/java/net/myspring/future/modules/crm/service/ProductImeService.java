@@ -166,7 +166,7 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());

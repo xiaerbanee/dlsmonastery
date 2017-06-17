@@ -609,11 +609,11 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (productImeQuery.retailDateEnd != null) {
             sb.append("""  AND t1.retail_date <  :retailDateEnd  """)
         }
-        if (productImeQuery.createTimeStart != null) {
-            sb.append("""  AND t1.create_time >= :createTimeStart  """)
+        if (productImeQuery.createdTimeStart != null) {
+            sb.append("""  AND t1.created_time >= :createdTimeStart  """)
         }
-        if (productImeQuery.createTimeEnd != null) {
-            sb.append("""  AND t1.create_time < :createTimeEnd  """)
+        if (productImeQuery.createdTimeEnd != null) {
+            sb.append("""  AND t1.created_time < :createdTimeEnd  """)
         }
         if (StringUtils.isNotBlank(productImeQuery.depotId )) {
             sb.append("""  and t1.depot_id = :depotId  """)

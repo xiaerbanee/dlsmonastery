@@ -21,10 +21,10 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.*;
@@ -326,7 +326,6 @@ public class AdGoodsOrderService {
         return result;
     }
 
-
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
@@ -346,7 +345,6 @@ public class AdGoodsOrderService {
         }
 
         saveExpressOrderInfoWhenBill(adGoodsOrder);
-
 
         //如果有工作流，审批通过
         if(StringUtils.isNotBlank(adGoodsOrder.getProcessInstanceId())) {

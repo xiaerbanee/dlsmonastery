@@ -21,4 +21,8 @@ public class HrEmpInfoService {
     public List<HrEmpInfo> findAll(){
         return hrEmpInfoRepository.findAll();
     }
+
+    public HrEmpInfo findByName(String name){
+        return hrEmpInfoRepository.findByName(name);
+    }
 }

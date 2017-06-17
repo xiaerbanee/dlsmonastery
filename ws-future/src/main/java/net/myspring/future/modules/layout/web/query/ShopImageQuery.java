@@ -8,6 +8,9 @@ import net.myspring.future.common.query.BaseQuery;
 public class ShopImageQuery extends BaseQuery {
     private String shopId;
     private String officeId;
+    private String shopName;
+    private String createdDateStart;
+    private String createdDateEnd;
 
     public String getShopId() {
         return shopId;
@@ -23,5 +26,29 @@ public class ShopImageQuery extends BaseQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getCreatedDateStart() {
+        return createdDateStart;
+    }
+
+    public void setCreatedDateStart(String createdDateStart) {
+        this.createdDateStart = createdDateStart;
+    }
+
+    public String getCreatedDateEnd() {
+        return createdDateEnd;
+    }
+
+    public void setCreatedDateEnd(String createdDateEnd) {
+        this.createdDateEnd = createdDateEnd;
     }
 }

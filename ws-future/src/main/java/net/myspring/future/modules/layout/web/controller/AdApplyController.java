@@ -8,7 +8,9 @@ import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.service.AdApplyService;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
+import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
+import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +57,12 @@ public class AdApplyController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "billSave")
+    public RestResponse billSave(AdApplyBillForm adApplyBillForm){
+        adApplyService.billSave(adApplyBillForm);
+        return new RestResponse("开单申请成功", ResponseCodeEnum.saved.name());
+    }
+
 
     @RequestMapping(value = "getBillForm", method = RequestMethod.GET)
     public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
@@ -63,8 +71,22 @@ public class AdApplyController {
 
     @RequestMapping(value = "findAdApplyList", method = RequestMethod.GET)
     public List<AdApplyDto> findAdApplyList(String billType){
+        if(StringUtils.isBlank(billType)){
+            return null;
+        }
         return adApplyService.findAdApplyList(billType);
     }
+
+    @RequestMapping(value = "getAdApplyGoodsList")
+    public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
+        return adApplyService.getAdApplyGoodsList(adApplyGoodsForm);
+    }
+    @RequestMapping(value = "goodsSave")
+    public RestResponse  goodsSave(AdApplyGoodsForm adApplyGoodsForm){
+        adApplyService.goodsSave(adApplyGoodsForm);
+        return new RestResponse("分货成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(HttpServletRequest request) {
         return null;
