@@ -5,7 +5,6 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -41,6 +40,10 @@ interface AdGoodsOrderDetailRepositoryCustom{
     fun findPage(pageable: Pageable, adGoodsOrderDetailQuery: AdGoodsOrderDetailQuery): Page<AdGoodsOrderDetailDto>
 }
 
+class AdGoodsOrderDetailSimpleDto {
+
+}
+
 class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdGoodsOrderDetailRepositoryCustom{
     override fun findPage(pageable: Pageable, adGoodsOrderDetailQuery: AdGoodsOrderDetailQuery): Page<AdGoodsOrderDetailDto> {
 
@@ -49,11 +52,12 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
              SELECT
                     t2.parent_id adGoodsOrderParentId,
                     t2.shop_id adGoodsOrderShopId,
+                    shop.area_id adGoodsOrderShopAreaId,
                     t2.bill_remarks adGoodsOrderBillRemarks,
                     t2.process_status adGoodsOrderProcessStatus,
                     t2.created_date adGoodsOrderCreatedDate,
                     t2.bill_date adGoodsOrderBillDate,
-                    t2.parent_id adGoodsOrderParentId,
+                    t2.bill_type adGoodsOrderBillType,
                     t3.price2 productPrice2,
                     t3.code productCode,
                     t3.name productName,
@@ -82,12 +86,6 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         }
         if (adGoodsOrderDetailQuery.adGoodsOrderBillDateEnd != null) {
             sb.append("""  and t2.bill_date < :adGoodsOrderBillDateEnd """)
-        }
-        if (adGoodsOrderDetailQuery.adGoodsOrderShipDateStart != null) {
-            sb.append("""  and t2.ship_date  >= :adGoodsOrderShipDateStart """)
-        }
-        if (adGoodsOrderDetailQuery.adGoodsOrderShipDateEnd != null) {
-            sb.append("""  and t2.ship_date < :adGoodsOrderShipDateEnd """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.adGoodsOrderProcessStatus)) {
             sb.append("""  and t2.process_status = :adGoodsOrderProcessStatus """)

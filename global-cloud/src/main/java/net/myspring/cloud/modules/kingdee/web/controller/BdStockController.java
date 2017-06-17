@@ -21,4 +21,9 @@ public class BdStockController {
     public List<BdStock> findByNameLike(String name){
         return bdStockService.findByNameLike(name);
     }
+
+    @RequestMapping(value = "findAll")
+    public List<BdStock> findAll(){
+        return bdStockService.findAll();
+    }
 }

@@ -29,8 +29,17 @@ interface VoucherRepositoryCustom{
 class VoucherRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): VoucherRepositoryCustom{
     override fun findPage(pageable: Pageable, voucherQuery: VoucherQuery): Page<VoucherDto>? {
         var sb = StringBuilder("select * from sys_gl_voucher where enabled=1 ");
-        if(StringUtils.isNotBlank(voucherQuery.companyId)) {
-            sb.append(" and companyId = :companyId ");
+        if(StringUtils.isNotBlank(voucherQuery.id)) {
+            sb.append(" and id = :id ");
+        }
+        if(voucherQuery.fdate != null){
+            sb.append(" and fdate = :fdate ")
+        }
+        if(StringUtils.isNotBlank(voucherQuery.status)){
+            sb.append(" and status = :status ")
+        }
+        if(StringUtils.isNotBlank(voucherQuery.createdBy)){
+            sb.append(" and createdBy = :createdBy ")
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

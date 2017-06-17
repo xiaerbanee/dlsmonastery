@@ -110,6 +110,8 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product
 
+    fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Product>
+
     fun findByOutId(outId: String): Product
 
 

@@ -80,4 +80,27 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
                 and t1.FNUMBER = :number
         """,Collections.singletonMap("number",number),BeanPropertyRowMapper(BdAccount::class.java))
     }
+
+    fun findByName(name:String):BdAccount?{
+        return namedParameterJdbcTemplate.queryForObject("""
+            select
+                t1.FACCTID,
+                t2.FFULLNAME,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FITEMDETAILID,
+                t1.FISBANK,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            from
+                T_BD_ACCOUNT t1,
+                T_BD_ACCOUNT_L t2
+            where
+                t1.FACCTID=t2.FACCTID
+                and t2.FLOCALEID=2052
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                and t2.FNAME = :name
+        """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdAccount::class.java))
+    }
 }

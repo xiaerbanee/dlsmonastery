@@ -17,7 +17,8 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-  export default{
+  var table=null
+    export default{
     data(){
       return{
         formData:{},
@@ -25,7 +26,6 @@
           data:null
         },
         rules:{},
-        table:null,
         settings: {
           colHeaders: ["员工","门店","收款金额","部门","手机型号","备注"],
           rowHeaders:true,
@@ -74,7 +74,6 @@
           },{
             data:"department",
             type: 'autocomplete',
-            source:departments,
             strict: true,
             allowEmpty:false,
             width:200
@@ -145,9 +144,14 @@
           }
         })
       }
+    },created(){
+        axios.get('/api/ws/future/basic/employeePhoneDeposit/getBatchForm').then((response)=> {
+          this.settings.columns[3].source=response.data.extra.departments;
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+        })
     }
   }
 </script>
 <style>
-  @import "~handsontable/dist/handsontable.full.css";
+  @import "../../../../node_modules/handsontable/dist/handsontable.full.css";
 </style>

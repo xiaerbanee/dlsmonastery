@@ -21,14 +21,14 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("basic/hr/dutyFree/getForm"),
+      url: $util.getUrl("basic/hr/dutyFree/findOne"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId,
                 'authorization': "Bearer" + wx.getStorageSync('token').access_token
        },
       success: function (res) {
-        that.setData({ 'formProperty.dateList': res.data.dateList })
+        that.setData({ 'formProperty.dateList': res.data.extra.dateList })
       }
     })
   },

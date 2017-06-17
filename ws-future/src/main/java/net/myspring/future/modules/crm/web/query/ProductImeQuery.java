@@ -20,7 +20,7 @@ public class ProductImeQuery extends BaseQuery{
     private String imeOrMeids;
     private String createdDateRange;
     private String retailDateRange;
-    private String createTimeRange;
+    private String createdTimeRange;
     private String inputType;
 
     private List<String> inputTypeList;
@@ -58,12 +58,12 @@ public class ProductImeQuery extends BaseQuery{
         this.retailDateRange = retailDateRange;
     }
 
-    public String getCreateTimeRange() {
-        return createTimeRange;
+    public String getCreatedTimeRange() {
+        return createdTimeRange;
     }
 
-    public void setCreateTimeRange(String createTimeRange) {
-        this.createTimeRange = createTimeRange;
+    public void setCreatedTimeRange(String createdTimeRange) {
+        this.createdTimeRange = createdTimeRange;
     }
 
     public String getImeReverse() {
@@ -162,17 +162,17 @@ public class ProductImeQuery extends BaseQuery{
         }
     }
 
-    public LocalDate getCreateTimeStart() {
-        if(StringUtils.isNotBlank(createTimeRange)) {
-            return LocalDateUtils.parse(createTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+    public LocalDate getCreatedTimeStart() {
+        if(StringUtils.isNotBlank(createdTimeRange)) {
+            return LocalDateUtils.parse(createdTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else {
             return null;
         }
     }
 
-    public LocalDate getCreateTimeEnd() {
-        if(StringUtils.isNotBlank(createTimeRange)) {
-            return LocalDateUtils.parse(createTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+    public LocalDate getCreatedTimeEnd() {
+        if(StringUtils.isNotBlank(createdTimeRange)) {
+            return LocalDateUtils.parse(createdTimeRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
             return null;
         }

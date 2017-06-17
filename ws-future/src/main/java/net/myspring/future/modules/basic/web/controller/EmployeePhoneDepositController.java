@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
 import net.myspring.future.modules.basic.service.EmployeePhoneDepositService;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneDepositForm;
@@ -12,6 +13,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +31,10 @@ public class EmployeePhoneDepositController {
 
     @Autowired
     private EmployeePhoneDepositService employeePhoneDepositService;
+    @Autowired
+    private CloudClient cloudClient;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<EmployeePhoneDepositDto> list(Pageable pageable, EmployeePhoneDepositQuery employeePhoneDepositQuery){
@@ -61,6 +67,12 @@ public class EmployeePhoneDepositController {
         return new RestResponse("批量审核成功",null);
     }
 
+    @RequestMapping(value = "batchSave")
+    public RestResponse batchSave(String data) {
+        RestResponse restResponse = employeePhoneDepositService.batchSave(data);
+        return restResponse;
+    }
+
     @RequestMapping(value = "findOne")
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto){
         employeePhoneDepositDto=employeePhoneDepositService.findOne(employeePhoneDepositDto);
@@ -69,6 +81,12 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getForm")
     public EmployeePhoneDepositForm getForm(EmployeePhoneDepositForm employeePhoneDepositForm){
+        return employeePhoneDepositForm;
+    }
+
+    @RequestMapping(value="getBatchForm")
+    public EmployeePhoneDepositForm getBatchForm(EmployeePhoneDepositForm employeePhoneDepositForm){
+        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAll());
         return employeePhoneDepositForm;
     }
 
