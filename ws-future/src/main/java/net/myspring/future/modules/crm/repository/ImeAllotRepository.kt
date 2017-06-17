@@ -3,7 +3,6 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ImeAllot
 import net.myspring.future.modules.crm.dto.ImeAllotDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -14,16 +13,11 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 
 interface ImeAllotRepository : BaseRepository<ImeAllot, String>,ImeAllotRepositoryCustom {
-
-    fun findByProductImeId(productImeId: String): MutableList<ImeAllot>
-
 }
-
-
-
 
 interface ImeAllotRepositoryCustom{
 
@@ -35,7 +29,18 @@ interface ImeAllotRepositoryCustom{
 
 class ImeAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ImeAllotRepositoryCustom{
     override fun findDto(id: String): ImeAllotDto {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT
+           t2.product_id productImeProductId,
+           t2.ime productImeIme,
+           t1.*
+        FROM
+            crm_ime_allot t1
+            LEFT JOIN crm_product_ime t2 ON t1.product_ime_id = t2.id
+        WHERE
+            t1.id = :id
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ImeAllotDto::class.java))
+
     }
 
     override fun findPage(pageable: Pageable, imeAllotQuery: ImeAllotQuery): Page<ImeAllotDto> {
