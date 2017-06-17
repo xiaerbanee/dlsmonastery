@@ -2,8 +2,8 @@
 <view class="page">
   <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
-      <input type="hidden" name="pageNumber" value="{{formData.pageNumber}}" class="hidden" />
-      <input type="hidden" name="pageSize" value="{{formData.pageSize}}" class="hidden" />
+      <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
+      <input type="hidden" name="Size" value="{{formData.Size}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">日期</view>
@@ -19,8 +19,8 @@
           <view class="weui-label">办事处</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="areaId" range="{{fromProperty.areaList}}" range-key="name" value="{{formData.area.id}}" bindchange="bindArea">
-            <view class="weui-input">{{formData.area.name}}</view>
+          <picker name="areaId" range="{{fromProperty.areaList}}" range-key="name" value="{{formData.areaId}}" bindchange="bindArea">
+            <view class="weui-input">{{formData.areaName}}</view>
           </picker>
         </view>
       </view>
@@ -76,7 +76,7 @@
                 </view>
                 <view wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" class="rowspan">
                   <view class="tr">
-                    <view class="td" style="border-bottom:0">{{item.office.name}}</view>
+                    <view class="td" style="border-bottom:0">{{item.officeName}}</view>
                     <view class="td">按日</view>
                     <view class="td">{{item.dateRank}}</view>
                     <view class="td">{{item.score}}</view>
