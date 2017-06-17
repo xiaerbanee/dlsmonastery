@@ -6,6 +6,7 @@ import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +36,15 @@ public class StoreAllotDto extends DataDto<StoreAllot> {
     private String expressOrderExpressCodes;
     private String expressOrderOutPrintDate;
     private String expressOrderExpressPrintDate;
+    private LocalDate billDate;
 
+    public LocalDate getBillDate() {
+        return billDate;
+    }
 
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
+    }
 
     private List<StoreAllotImeDto> storeAllotImeDtoList = new ArrayList<>();
     private List<StoreAllotDetailDto> storeAllotDetailDtoList = new ArrayList<>();

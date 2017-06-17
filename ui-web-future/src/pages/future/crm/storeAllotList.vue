@@ -138,9 +138,9 @@
         }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
         }else if(action==="print"){
-          this.$router.push({ name: 'storeAllotPrint', query: { id: id }});
+           window.open('/#/future/crm/storeAllotPrint?id=' + id, '', '');
         }else if(action==="shipPrint"){
-          this.$router.push({ name: 'storeAllotShipPrint', query: { id: id }});
+           window.open('/#/future/crm/storeAllotShipPrint?id=' + id, '', '');
         }else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/storeAllot/delete',{params:{id:id}}).then((response) =>{

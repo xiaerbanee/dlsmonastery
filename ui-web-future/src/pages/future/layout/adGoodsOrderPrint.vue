@@ -72,6 +72,7 @@
     }, methods:{
 
       findDetailList() {
+
         return axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListByAdGoodsOrderId',{params: {adGoodsOrderId:this.$route.query.id}});
       },
       print() {
@@ -79,6 +80,9 @@
       }
     },
 
+    mounted(){
+      setTimeout("window.print()",2000);
+    },
     created(){
 
       axios.all([this.findDetailList(), this.print()])
