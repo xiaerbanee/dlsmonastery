@@ -10,6 +10,7 @@ import net.myspring.general.modules.sys.repository.ProcessFlowRepository;
 import net.myspring.general.modules.sys.repository.ProcessTypeRepository;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.activiti.bpmn.BpmnAutoLayout;
@@ -73,6 +74,9 @@ public class ProcessTypeService {
             if (StringUtils.isBlank(processFlowDto.getName())) {
                 processTypeForm.getProcessFlowList().remove(i);
             }
+        }
+        if(CollectionUtil.isEmpty(processTypeForm.getProcessFlowList())){
+            return;
         }
         ProcessType processType = BeanUtil.map(processTypeForm,ProcessType.class);
         processTypeRepository.save(processType);
