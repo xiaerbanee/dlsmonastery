@@ -12,6 +12,8 @@ import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -88,7 +91,8 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(HttpServletRequest request) {
-        return null;
+    public String export(AdApplyQuery adApplyQuery) throws IOException {
+        Workbook workbook = new SXSSFWorkbook(10000);
+        return adApplyService.findSimpleExcelSheets(workbook,adApplyQuery);
     }
 }
