@@ -127,10 +127,15 @@ public class DepotController {
         return depotService.depotAccountExportAllDepots(depotAccountQuery);
     }
 
-
     @RequestMapping(value="depotAccountDetailList")
     public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
-        return depotService.depotAccountDetailList(depotAccountQuery);
+
+
+//TODO 獲取明細
+//        Depot depot = depotService.findOne(depotId);
+//        List<CustomerAccount> customerAccounts = k3cloudService.findCustomerAccount(AccountUtils.getCompany().getOutDbname(),depot.getOutId(), depot.getName(), dateStart, dateEnd);
+
+        return null;
     }
 
 
