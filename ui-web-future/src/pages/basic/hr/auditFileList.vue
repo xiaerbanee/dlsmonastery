@@ -36,11 +36,6 @@
               <el-form-item :label="$t('auditFileList.stageName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.stageName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.processTypeName')" :label-width="formLabelWidth">
-                <el-select v-model="formData.processTypeId" filterable clearable :placeholder="$t('auditFileList.inputKey')">
-                  <el-option v-for="item in formData.processTypes" :key="item.id" :label="item.name" :value="item.id"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('auditFileList.content')" :label-width="formLabelWidth">
                 <el-input v-model="formData.content" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>

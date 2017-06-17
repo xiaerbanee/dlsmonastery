@@ -103,7 +103,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
                 and t1.employee_id in (
                 select t2.id
                 from hr_employee t2
-                where t2.name LIKE CONCAT('%',:employeeName,'%')
+                where t2.name LIKE CONCAT('%',:employeeName,'%')        )
                 """);
         }
         if(dutySignQuery.officeName!=null){
@@ -124,7 +124,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
                 from hr_employee t2 , hr_account t3, hr_position t4
                 where t2.account_id = t3.id
                 and t3.position_id = t4.id
-                and t4.name like CONCAT('%',:positionName,'%')
+                and t4.name like CONCAT('%',:positionName,'%')        )
                 """);
         }
         return namedParameterJdbcTemplate.query(sql.toString(), BeanPropertySqlParameterSource(dutySignQuery), BeanPropertyRowMapper(DutySignDto::class.java))

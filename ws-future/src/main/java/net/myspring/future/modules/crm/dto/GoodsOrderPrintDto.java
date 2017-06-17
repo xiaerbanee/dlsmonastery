@@ -7,7 +7,7 @@ import java.util.List;
 
 public class GoodsOrderPrintDto {
     private String outCode;
-    private LocalDate billData;
+    private LocalDate billDate;
     private String storeName;
     private String businessId;
     private String shopName;
@@ -59,12 +59,12 @@ public class GoodsOrderPrintDto {
         this.outCode = outCode;
     }
 
-    public LocalDate getBillData() {
-        return billData;
+    public LocalDate getBillDate() {
+        return billDate;
     }
 
-    public void setBillData(LocalDate billData) {
-        this.billData = billData;
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
     }
 
     public String getStoreName() {

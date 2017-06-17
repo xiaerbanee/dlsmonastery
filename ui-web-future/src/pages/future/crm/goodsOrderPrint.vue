@@ -29,17 +29,10 @@
       </tr>
       <tr v-for="item in goodsOrder.productList">
         <td>{{item.productName}}</td>
-        <td>套</td>
+        <td>{{item.unit}}</td>
         <td>{{item.qty}}</td>
         <td>{{item.price}}</td>
-        <td>{{item.qty*item.price}}</td>ist
-      </tr>
-      <tr>
-        <td>合计</td>
-        <td></td>
-        <td>{{goodsOrder.totalQty}}</td>
-        <td></td>
-        <td>{{goodsOrder.totalPrice}}</td>
+        <td>{{item.total}}</td>
       </tr>
       </tbody>
     </table>
@@ -68,7 +61,7 @@
       }
     },
     mounted() {
-      setTimeout("window.print()",10000);
+      setTimeout("window.print()",1000);
     },
     methods:{
       findOne(){

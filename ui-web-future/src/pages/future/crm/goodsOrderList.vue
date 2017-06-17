@@ -180,7 +180,6 @@
       })
       }else if(action=="delivery"){
         var newWindow = window.open('/#/future/crm/goodsOrderPrint?id=' + id, '', '');
-        newWindow.print();
       }else if(action=="express"){
         this.$router.push({name:'goodsOrderShipPrint',query:{id:id}})
       }
