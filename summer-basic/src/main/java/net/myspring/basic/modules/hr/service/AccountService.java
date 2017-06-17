@@ -148,7 +148,7 @@ public class AccountService {
         if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())){
             permissionList=permissionRepository.findAllEnabled();
         }else {
-            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccount(accountId);
+            List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
             if(CollectionUtil.isNotEmpty(accountPermissions)){
                 permissionList=permissionRepository.findByRoleAndAccount(roleId,accountId);
             }else {
@@ -189,7 +189,8 @@ public class AccountService {
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){
-        List<String> permissionIdList=accountPermissionRepository.findPermissionIdByAccount(accountForm.getId());
+        accountPermissionRepository.setEnabledByAccountId(true, accountForm.getId());
+        List<String> permissionIdList=accountPermissionRepository.findPermissionIdByAccountId(accountForm.getId());
         if (CollectionUtil.isNotEmpty(accountForm.getPermissionIdList())) {
             List<String> removeIdList = CollectionUtil.subtract(permissionIdList, accountForm.getPermissionIdList());
             List<String> addIdList = CollectionUtil.subtract(accountForm.getPermissionIdList(), permissionIdList);
@@ -197,7 +198,6 @@ public class AccountService {
             for (String permissionId : addIdList) {
                 addAccountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
             }
-            accountPermissionRepository.setEnabledByAccountId(true, accountForm.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
                 accountPermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
             }
