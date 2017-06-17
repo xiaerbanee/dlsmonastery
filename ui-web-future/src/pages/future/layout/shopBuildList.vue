@@ -112,7 +112,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopBuildList",submitData);
         axios.get('/api/ws/future/layout/shopBuild',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -160,19 +160,23 @@
           this.$message(this.$t('shopBuildList.noSelectionFound'));
           return ;
         }
-        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }).catch(()=>{});
     },batchBack(){
         if(!this.multipleSelection || this.multipleSelection.length < 1){
           this.$message(this.$t('shopBuildList.noSelectionFound'));
           return ;
         }
-        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        util.confirmBeforeBatchNotPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }).catch(()=>{});
     },
       checkSelectable(row) {
         return row.processStatus.indexOf('通过')<0;
@@ -182,8 +186,8 @@
       var that = this;
       that.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
-         that.formData = response.data;
-         util.copyValue(that.$route.query,that.formData);
+        this.formData = response.data;
+         util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

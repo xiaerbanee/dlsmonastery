@@ -53,9 +53,10 @@ interface DictEnumRepository :BaseRepository<DictEnum,String>,DictEnumRepository
         FROM  #{#entityName} t
         WHERE
         t.enabled=1
+        and t.category=:category
         and t.value=:value
      """)
-    fun findByValue(@Param("value")value:String): DictEnum
+    fun findByValue(@Param("value")value:String,@Param("category")category:String): DictEnum
 
 
 }
