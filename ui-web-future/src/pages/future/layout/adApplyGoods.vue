@@ -57,9 +57,9 @@
                 tempList.push(detail)
                }
             }
-           this.inputForm.depotAdApplyForms = tempList;
-
-            axios.post('/api/ws/future/layout/adApply/goodsSave',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+           let submitData = util.deleteExtra(this.inputForm);
+            submitData.depotAdApplyForms = tempList;
+            axios.post('/api/ws/future/layout/adApply/goodsSave',qs.stringify(submitData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success){
                 Object.assign(this.$data, this.getData());

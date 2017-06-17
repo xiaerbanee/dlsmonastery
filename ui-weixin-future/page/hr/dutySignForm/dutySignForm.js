@@ -39,9 +39,9 @@ Page({
           that.setData({ "submitHidden": true });
           var images = new Array();
           images.push({
-            id: res.data.attachment,
-            preview: $util.getUrl('basic/sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + res.data.attachment),
-            view: $util.getUrl('basic/sys/folderFile/view?x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token +"&id=" + res.data.attachment)
+            id: res.data.mongoPreviewId,
+            preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + id),
+            view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token +"&id=" + id)
           })
           that.setData({ "formProperty.images": images })
         }
@@ -66,7 +66,7 @@ Page({
           }
         })
         wx.request({
-          url: $util.getUrl("basic/api/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
+          url: $util.getUrl("basic/sys/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
           method: 'GET',
           header: { 'x-auth-token': app.globalData.sessionId,
                     'authorization':'Bearer'+wx.getStorageSync('token').access_token 
@@ -98,7 +98,7 @@ Page({
         console.log(res);
         var tempFilePaths = res.tempFilePaths
         wx.uploadFile({
-          url: $util.getUrl('basic/sys/folderFile/upload'),
+          url: $util.getUrl('general/sys/folderFile/upload'),
           header: {
             'x-auth-token': app.globalData.sessionId,
             'authorization':'Bearer' + wx.getStorageSync('token').access_token 
@@ -112,9 +112,8 @@ Page({
             console.log(res);
             var folderFile = JSON.parse(res.data)[0];
             images.push({
-              id: folderFile.id,
-              preview: $util.getUrl('basic/sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.id),
-              view: $util.getUrl('basic/sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.id)
+              preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId),
+              view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId)
             })
             that.setData({ "formProperty.images": images })
           }
