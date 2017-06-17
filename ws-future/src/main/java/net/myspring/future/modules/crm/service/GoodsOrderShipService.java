@@ -192,7 +192,7 @@ public class GoodsOrderShipService {
             productPrintDto.setQty(goodsOrderDetail.getRealBillQty());
             productPrintDto.setUnit("套");
             totalQty+=productPrintDto.getQty();
-            if(shop.getPrintPrice()){
+            if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
                 Product product=productMap.get(goodsOrderDetail.getProductId());
                 productPrintDto.setPrice(product.getRetailPrice());
                 productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
