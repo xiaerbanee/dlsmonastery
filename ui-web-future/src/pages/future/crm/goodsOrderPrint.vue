@@ -15,7 +15,7 @@
     </div>
     <div class="row">
       <div class="span10">
-        收货单位：{{goodsOrder.name}}&nbsp;总店：	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}
+        收货单位：{{goodsOrder.shopName}}&nbsp;总店：	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}
       </div>
     </div>
     <table class="table table-bordered">
@@ -66,7 +66,6 @@
     methods:{
       findOne(){
         axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-          console.log(response.data)
           this.goodsOrder=response.data;
         })
       }

@@ -1,14 +1,14 @@
 <template>
   <div style="width:794px;height:400px;margin:auto;">
     <div style="margin-top: 215px;">
-      <span style="margin-left:  110px;">{{goodsOrder.shop.contator}}</span>
-      <span style="margin-left:  118px;">{{goodsOrder.shop.mobilePhone}}</span>
+      <span style="margin-left:  110px;">{{goodsOrder.contator}}</span>
+      <span style="margin-left:  118px;">{{goodsOrder.mobilePhone}}</span>
     </div>
     <div style="margin-top: 3px;">
-      <span style="margin-left:  110px;width:350px;">{{goodsOrder.shop.name}}</span>
+      <span style="margin-left:  110px;width:350px;">{{goodsOrder.name}}</span>
     </div>
     <div style="margin-top: 5px;">
-      <span style="margin-left:  110px;width:350px;">{{goodsOrder.shop.address}}</span>
+      <span style="margin-left:  110px;width:350px;">{{goodsOrder.address}}</span>
     </div>
   </div>
 </template>
@@ -18,14 +18,7 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        goodsOrder:{
-            shop:{
-              contator:"",
-              mobilePhone:"",
-              name:"",
-              address:"",
-            }
-        },
+        goodsOrder:{},
         rules: {
           pass: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
         },
@@ -33,11 +26,11 @@
       }
     },
     mounted() {
-      setTimeout("window.print()",2000);
+      setTimeout("window.print()",500);
     },
     methods:{
       findOne(){
-        axios.get('/api/crm/goodsOrder/print',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/goodsOrderShip/shipPrint',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
           this.goodsOrder=response.data;
         })
       }
