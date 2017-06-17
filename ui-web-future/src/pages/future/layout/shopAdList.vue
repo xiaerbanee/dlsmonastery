@@ -124,7 +124,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopAdList",submitData);
         axios.get('/api/ws/future/layout/shopAd',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -143,8 +143,7 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/layout/shopAd/export?'+qs.stringify(this.submitData)).then((response)=> {
+        axios.get('/api/ws/future/layout/shopAd/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       },batchPass(){
