@@ -19,15 +19,18 @@ import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -221,5 +224,25 @@ public class ShopAllotService {
 //            shopAllot.getToShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getToShop().getOutId()));
 //        }
         return shopAllotDto;
+    }
+
+    public Map<String,Object> findTotalPrice(String id) {
+
+        BigDecimal returnTotalPrice = BigDecimal.ZERO;
+        BigDecimal saleTotalPrice = BigDecimal.ZERO;
+        List<ShopAllotDetailDto> shopAllotDetailDtoList = shopAllotDetailRepository.getShopAllotDetailListForViewOrAudit(id);
+        for(ShopAllotDetailDto shopAllotDetailDto : shopAllotDetailDtoList){
+            returnTotalPrice = returnTotalPrice.add(shopAllotDetailDto.getReturnAmount());
+            saleTotalPrice = saleTotalPrice.add(shopAllotDetailDto.getSaleAmount());
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("returnTotalPrice",  returnTotalPrice);
+        result.put("saleTotalPrice",  saleTotalPrice);
+        result.put("chineseReturnTotalPrice",  StringUtils.getChineseMoney(returnTotalPrice));
+        result.put("chineseSaleTotalPrice",  StringUtils.getChineseMoney(saleTotalPrice));
+
+        return result;
+
     }
 }
