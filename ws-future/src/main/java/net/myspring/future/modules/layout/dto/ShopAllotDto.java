@@ -28,16 +28,6 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private BigDecimal fromShopShouldGet;
     private BigDecimal toShopShouldGet;
 
-    public String getFromJointType() {
-        //TODO 有一種情況是委托代銷
-        return "现销";
-    }
-
-    public String getToJointType() {
-        //TODO 有一種情況是委托代銷
-        return "现销";
-    }
-
     public BigDecimal getFromShopShouldGet() {
         return fromShopShouldGet;
     }
