@@ -22,25 +22,7 @@ public class ShopAdForm extends BaseForm<ShopAd> {
     private String attachment;
     private BigDecimal price;
     private String processInstanceId;
-    private Boolean pass = false;
-    private String passRemarks;
 
-
-    public Boolean getPass() {
-        return pass;
-    }
-
-    public void setPass(Boolean pass) {
-        this.pass = pass;
-    }
-
-    public String getPassRemarks() {
-        return passRemarks;
-    }
-
-    public void setPassRemarks(String passRemarks) {
-        this.passRemarks = passRemarks;
-    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

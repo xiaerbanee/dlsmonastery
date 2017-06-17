@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.repository.ShopAdRepository;
+import net.myspring.future.modules.layout.web.form.ShopAdAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -101,15 +102,15 @@ public class ShopAdService {
     }
 
 
-    public String audit(ShopAdForm shopAdForm) {
+    public String audit(ShopAdAuditForm shopAdAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopAd shopAd;
-        if(!shopAdForm.isCreate()){
-            shopAd = shopAdRepository.findOne(shopAdForm.getId());
+        if(!shopAdAuditForm.isCreate()){
+            shopAd = shopAdRepository.findOne(shopAdAuditForm.getId());
             activitiCompleteForm.setProcessInstanceId(shopAd.getProcessInstanceId());
             activitiCompleteForm.setProcessTypeId(shopAd.getProcessTypeId());
-            activitiCompleteForm.setComment(shopAdForm.getPassRemarks());
-            activitiCompleteForm.setPass(shopAdForm.getPass());
+            activitiCompleteForm.setComment(shopAdAuditForm.getPassRemarks());
+            activitiCompleteForm.setPass(shopAdAuditForm.getPass());
             try {
                 ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
 
@@ -132,13 +133,13 @@ public class ShopAdService {
             return null;
         }
         List<String> idList = Arrays.asList(ids);
-        ShopAdForm shopAdForm = new ShopAdForm();
-        shopAdForm.setPass(pass);
-        shopAdForm.setPassRemarks("批量操作");
+        ShopAdAuditForm shopAdAuditForm = new ShopAdAuditForm();
+        shopAdAuditForm.setPass(pass);
+        shopAdAuditForm.setPassRemarks("批量操作");
         String message = null;
         for (String id:idList){
-            shopAdForm.setId(id);
-            message = audit(shopAdForm);
+            shopAdAuditForm.setId(id);
+            message = audit(shopAdAuditForm);
             if(message!=null){
                 message += StringUtils.join(message, CharConstant.COMMA);
             }
