@@ -57,7 +57,7 @@ Page({
       duration: 10000,
       success: function () {
         wx.request({
-          url: $util.getUrl("crm/imeSaleReport/officeInventory"),
+          url: $util.getUrl("ws/future/crm/imeSaleReport/officeInventory"),
           data: {
             parentOfficeId: parentIdArr[parentIdArr.length - 1],
             reportDateStart: formData.reportDateStart,
@@ -65,7 +65,8 @@ Page({
             productName: formData.productName
           },
           method: 'GET',
-          header: { 'x-auth-token': app.globalData.sessionId },
+          header: { 'x-auth-token': app.globalData.sessionId,
+          'authorization': "Bearer" + wx.getStorageSync('token').access_token },
           success: function (res) {
             if (that.data.parentIdArr.length > 1) {
               that.setData({ hideButton: true })
