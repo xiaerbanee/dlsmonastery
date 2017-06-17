@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
+import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
@@ -14,9 +15,11 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +83,11 @@ public class ShopAllotController {
 
         return result;
 
+    }
+
+    @RequestMapping(value="findTotalPrice")
+    public Map<String, Object> findTotalPrice(String id) {
+        return  shopAllotService.findTotalPrice(id);
     }
 
     @RequestMapping(value="findDetailListForViewOrAudit")

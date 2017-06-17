@@ -9,7 +9,7 @@ import net.myspring.future.modules.layout.domain.AdApply;
 public class AdApplyDetailForm extends BaseForm<AdApply>{
 
     private String shopId;
-    private Integer billedQty;
+    private Integer nowBilledQty;
 
     public String getShopId() {
         return shopId;
@@ -19,12 +19,11 @@ public class AdApplyDetailForm extends BaseForm<AdApply>{
         this.shopId = shopId;
     }
 
-    public Integer getBilledQty() {
-        return billedQty;
+    public Integer getNowBilledQty() {
+        return nowBilledQty;
     }
 
-    public void setBilledQty(Integer billedQty) {
-        this.billedQty = billedQty;
+    public void setNowBilledQty(Integer nowBilledQty) {
+        this.nowBilledQty = nowBilledQty;
     }
-
 }

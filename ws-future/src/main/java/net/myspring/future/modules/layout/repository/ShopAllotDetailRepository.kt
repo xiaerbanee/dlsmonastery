@@ -6,12 +6,15 @@ import net.myspring.future.modules.layout.dto.ShopAllotDetailDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.math.BigDecimal
 import java.util.*
 
 
 interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>, ShopAllotDetailRepositoryCustom{
 
     fun deleteByShopAllotId(shopAllotId: String)
+
+    fun findByShopAllotId(shopAllotId: String) :List<ShopAllotDetail>
 
 }
 
@@ -23,10 +26,10 @@ interface ShopAllotDetailRepositoryCustom{
 
     fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto>
 
-
 }
 
 class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ShopAllotDetailRepositoryCustom {
+
     override fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("fromDepotId",fromDepotId)
