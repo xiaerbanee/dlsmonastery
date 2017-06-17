@@ -31,8 +31,8 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
     List<CnBankAcnt> getSynBankData();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findReceivableBillNo")
-    String findReceivableBillNo(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outStockBillNo") String outStockBillNo);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
+    ArReceivable findReceivableBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/hrEmpInfo/findByName")
     HrEmpInfo findHrEmpinfo(@RequestParam(value = "name") String name);

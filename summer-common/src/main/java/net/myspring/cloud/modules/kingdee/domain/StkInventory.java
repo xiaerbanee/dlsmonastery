@@ -7,7 +7,7 @@ package net.myspring.cloud.modules.kingdee.domain;
 public class StkInventory {
     private String FStockId;
     private String FMaterialId;
-    private Integer qty;
+    private Integer FBaseQty;
 
     public String getFStockId() {
         return FStockId;
@@ -25,11 +25,11 @@ public class StkInventory {
         this.FMaterialId = FMaterialId;
     }
 
-    public Integer getQty() {
-        return qty;
+    public Integer getFBaseQty() {
+        return FBaseQty;
     }
 
-    public void setQty(Integer qty) {
-        this.qty = qty;
+    public void setFBaseQty(Integer FBaseQty) {
+        this.FBaseQty = FBaseQty;
     }
 }
