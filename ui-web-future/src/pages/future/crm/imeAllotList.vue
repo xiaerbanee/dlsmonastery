@@ -40,7 +40,7 @@
           <el-button type="primary" @click="search()">{{$t('imeAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('imeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column  prop="fromDepotName" column-key="fromDepotId"  :label="$t('imeAllotList.fromDepot')" width="150" sortable></el-table-column>
         <el-table-column prop="toDepotName" column-key="toDepotId" :label="$t('imeAllotList.toDepot')" sortable></el-table-column>
@@ -89,6 +89,7 @@
         },
         selects:[],
         formVisible: false,
+        pageHeight: 600,
       };
     },
     methods: {
@@ -171,6 +172,7 @@
       }
 
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

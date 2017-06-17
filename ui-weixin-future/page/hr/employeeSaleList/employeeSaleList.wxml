@@ -9,8 +9,8 @@
           <view class="weui-label">开始日期</view>
         </view>
         <view class="weui-cell__bd ">
-          <picker mode="date" name="dateStart" placeholder="串码核销开始时间" value="{{formData.dateStart}}" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dateStart}}</view>
+          <picker mode="date" name="dutyDateStart" placeholder="串码核销开始时间" value="{{formData.dutyDateStart}}" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateStart}}</view>
           </picker>
         </view>
       </view>
@@ -19,8 +19,8 @@
           <view class="weui-label">结束日期</view>
         </view>
         <view class="weui-cell__bd ">
-          <picker mode="date" name="dateEnd" placeholder="串码核销结束时间" value="{{formData.dateEnd}}" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dateEnd}}</view>
+          <picker mode="date" name="dutyDateEnd" placeholder="串码核销结束时间" value="{{formData.dutyDateEnd}}" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.dutyDateEnd}}</view>
           </picker>
         </view>
       </view>

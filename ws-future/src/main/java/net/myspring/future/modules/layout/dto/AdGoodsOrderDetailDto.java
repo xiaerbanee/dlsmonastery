@@ -35,8 +35,6 @@ public class AdGoodsOrderDetailDto extends IdDto<AdGoodsOrderDetail> {
     private Integer qty;
     private Integer confirmQty;
     private Integer billQty;
-    private BigDecimal price;
-
 
     public String getAdGoodsOrderFormatId(){
         if(StringUtils.isBlank(adGoodsOrderParentId) || adGoodsOrderParentId.equals(adGoodsOrderId)){
@@ -189,11 +187,4 @@ public class AdGoodsOrderDetailDto extends IdDto<AdGoodsOrderDetail> {
         this.billQty = billQty;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }

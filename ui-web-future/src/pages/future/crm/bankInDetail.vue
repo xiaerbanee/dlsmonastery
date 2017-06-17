@@ -127,17 +127,17 @@
             axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
               this.bankIn = response.data;
 
-              if(!this.bankIn.billDate){
-                //TODO 默认设置为今天
+              this.inputForm.id = this.bankIn.id;
+
+              this.inputForm.billDate = this.bankIn.billDate;
+              if(!this.inputForm.billDate){
+                this.inputForm.billDate = this.inputForm.extra.defaultBillDate;
               }
             });
           });
-
-
       }
     },created(){
           this.initPage();
-
       }
     }
 </script>

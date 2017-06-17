@@ -24,7 +24,7 @@ public class BdCustomerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<BdCustomer> list(Pageable pageable, BdCustomerQuery bdCustomerQuery){
-        Page<BdCustomer> page = bdCustomerService.findPageIncloudForbid(pageable,bdCustomerQuery);
+        Page<BdCustomer> page = bdCustomerService.findPageIncloudeForbid(pageable,bdCustomerQuery);
         return page;
     }
 
@@ -38,6 +38,11 @@ public class BdCustomerController {
     @RequestMapping(value = "findCustomerGroupList")
     public List<NameValueDto> getCustomerGroupList(){
         return bdCustomerService.findCustomerGroupList();
+    }
+
+    @RequestMapping(value = "findAll")
+    public List<BdCustomer>  findAll(){
+        return bdCustomerService.findAll();
     }
 
 }

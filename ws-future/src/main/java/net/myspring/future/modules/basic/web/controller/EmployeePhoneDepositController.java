@@ -1,10 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
 import net.myspring.future.modules.basic.service.EmployeePhoneDepositService;
@@ -70,6 +67,12 @@ public class EmployeePhoneDepositController {
         return new RestResponse("批量审核成功",null);
     }
 
+    @RequestMapping(value = "batchSave")
+    public RestResponse batchSave(String data) {
+        RestResponse restResponse = employeePhoneDepositService.batchSave(data);
+        return restResponse;
+    }
+
     @RequestMapping(value = "findOne")
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto){
         employeePhoneDepositDto=employeePhoneDepositService.findOne(employeePhoneDepositDto);
@@ -83,8 +86,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getBatchForm")
     public EmployeePhoneDepositForm getBatchForm(EmployeePhoneDepositForm employeePhoneDepositForm){
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
-        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAllDepartments(cloudName));
+        employeePhoneDepositForm.getExtra().put("departments",cloudClient.findAll());
         return employeePhoneDepositForm;
     }
 

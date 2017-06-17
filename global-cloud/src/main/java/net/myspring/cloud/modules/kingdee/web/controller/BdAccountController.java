@@ -20,4 +20,10 @@ public class BdAccountController {
         BdAccount bdAccount = bdAccountService.findByNumber(number);
         return bdAccount;
     }
+
+    @RequestMapping(value = "findByName")
+    public BdAccount findByName(String name){
+        BdAccount bdAccount = bdAccountService.findByName(name);
+        return bdAccount;
+    }
 }

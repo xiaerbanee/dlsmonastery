@@ -25,4 +25,8 @@ public class BdSupplierService {
         }
         return null;
     }
+
+    public List<BdSupplier> findAll(){
+        return bdSupplierRepository.findAll();
+    }
 }

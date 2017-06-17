@@ -22,4 +22,14 @@ public class BdDepartmentController {
         List<BdDepartment> bdDepartmentList = bdDepartmentService.findByNameLike(name);
         return bdDepartmentList;
     }
+
+    @RequestMapping(value = "findAll")
+    public List<BdDepartment> findAll(){
+        return bdDepartmentService.findAll();
+    }
+
+    @RequestMapping(value = "findCustId")
+    public BdDepartment findCustId(String custId){
+        return bdDepartmentService.findByCustId(custId);
+    }
 }

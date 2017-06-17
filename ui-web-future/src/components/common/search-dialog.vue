@@ -88,7 +88,7 @@
     watch: {
       visible(val) {
         this.$emit('update:visible', val);
-        console.log("searchdialog")
+
         if (val) {
           this.$emit('open');
           this.$el.addEventListener('scroll', this.updatePopper);

@@ -2,14 +2,16 @@ package net.myspring.cloud.modules.sys.web.query;
 
 import net.myspring.cloud.common.query.BaseQuery;
 
+import java.time.LocalDate;
+
 /**
  * Created by lihx on 2017/4/10.
  */
 public class VoucherQuery extends BaseQuery {
     private String id;
-    private String createdName;
+    private LocalDate fdate;
     private String status;
-    private String companyId;
+    private String createdBy;
 
     public String getId() {
         return id;
@@ -19,12 +21,12 @@ public class VoucherQuery extends BaseQuery {
         this.id = id;
     }
 
-    public String getCreatedName() {
-        return createdName;
+    public LocalDate getFdate() {
+        return fdate;
     }
 
-    public void setCreatedName(String createdName) {
-        this.createdName = createdName;
+    public void setFdate(LocalDate fdate) {
+        this.fdate = fdate;
     }
 
     public String getStatus() {
@@ -35,11 +37,11 @@ public class VoucherQuery extends BaseQuery {
         this.status = status;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

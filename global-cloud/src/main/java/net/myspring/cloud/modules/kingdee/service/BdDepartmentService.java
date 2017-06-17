@@ -24,4 +24,12 @@ public class BdDepartmentService {
         }
         return null;
     }
+
+    public List<BdDepartment> findAll() {
+        return bdDepartmentRepository.findAll();
+    }
+
+    public BdDepartment findByCustId(String custId){
+        return bdDepartmentRepository.findByCustId(custId);
+    }
 }
