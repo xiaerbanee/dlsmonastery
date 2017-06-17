@@ -77,11 +77,6 @@ class MenuCategoryRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                     AND t1.name LIKE CONCAT('%',:name,'%')
                 """);
         }
-        if(menuCategoryQuery.sort!=null){
-            sql.append("""
-                    AND t1.sort =:sort
-                """);
-        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sql.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sql.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(menuCategoryQuery), BeanPropertyRowMapper(MenuCategoryDto::class.java))

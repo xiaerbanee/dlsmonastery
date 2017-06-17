@@ -35,6 +35,7 @@ public class RequestUtils {
             requestEntity.setPositionId(securityMap.get("positionId"));
             requestEntity.setOfficeId(securityMap.get("officeId"));
             requestEntity.setEmployeeId(securityMap.get("employeeId"));
+            requestEntity.setCompanyName(securityMap.get("companyName"));
         }
         request.setAttribute(REQEUST_ENTITY,requestEntity);
         return requestEntity;

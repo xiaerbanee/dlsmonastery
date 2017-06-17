@@ -72,7 +72,7 @@
             util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-            if (!this.inputForm.create) {
+            if (!this.isCreate) {
               this.submitDisabled = false;
               this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
             } else {
