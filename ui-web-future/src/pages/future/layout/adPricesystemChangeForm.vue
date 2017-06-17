@@ -4,42 +4,42 @@
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
       <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
-      <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+      <span v-html="searchText"></span>
     </el-row>
-    <el-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form">
+    <search-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
       <el-form :model="formData">
-        <el-form-item :label="formLabel.productName.label">
+        <el-form-item :label="$t('adPricesystemChangeForm.productName')">
           <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
       </div>
-    </el-dialog>
+    </search-dialog>
     <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top:20px"></div>
   </div>
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   import productSelect from 'components/future/product-select';
+  var table = null;
 
   export default{
     components:{productSelect},
     data(){
       return this.getData();
-
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       getData(){
         return {
-          isInit: false,
-          formData: {},
-          submitData: {
-            productName: '',
-          },
-          formLabel: {
-            productName: {label: this.$t('adPricesystemChangeForm.productName')},
-            productCode: {label: this.$t('adPricesystemChangeForm.productCode')}
+          searchText:'',
+          formData: {
+            extra:{}
           },
           inputForm: {
             data: []
@@ -49,7 +49,6 @@
           adPricesystem: {},
           formVisible: false,
           submitDisabled: false,
-          table: null,
           settings: {
             colHeaders: [this.$t('adPricesystemChangeForm.id'), this.$t('adPricesystemChangeForm.productCode'), this.$t('adPricesystemChangeForm.productName'), this.$t('adPricesystemChangeForm.volume'), this.$t('adPricesystemChangeForm.shouldGet')],
             rowHeaders: true,
@@ -81,9 +80,9 @@
         var that = this;
         this.submitDisabled = true;
         this.inputForm.data = new Array();
-        let list = this.table.getData();
+        let list = table.getData();
         for (var item in list) {
-          if (!this.table.isEmptyRow(item)) {
+          if (!table.isEmptyRow(item)) {
             this.inputForm.data.push(list[item]);
           }
         }
@@ -97,37 +96,40 @@
           that.submitDisabled = false;
         });
       }, search() {
+        this.setSearchText();
         this.formVisible = false;
         this.getTableData();
       }, getTableData(){
-        util.copyValue(this.formData, this.submitData);
-        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter', {params: this.submitData}).then((response) => {
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("adPricesystemChangeForm", submitData);
+        axios.get('/api/ws/future/layout/adPricesystemChange/findFilter', {params: submitData}).then((response) => {
           this.settings.data = response.data;
-          this.table.loadData(this.settings.data);
+          table.loadData(this.settings.data);
         });
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      },initPage() {
         axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response)=>{
           this.formData=response.data;
           util.copyValue(this.$route.query,this.formData);
-          this.getTableData();
         });
-        axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
-          this.adPricesystem = response.data;
-          for(let key in this.adPricesystem){
-            this.settings.colHeaders.push(this.adPricesystem[key].name);
-            this.settings.columns.push({
-              type:"numeric",
-              width:300
-            })
-          }
-        })
       }
-        this.isInit = true;
+    },mounted() {
+      axios.get('/api/ws/future/layout/adPricesystemChange/findAdPricesystem').then((response)=>{
+        this.adPricesystem = response.data;
+        //完善表格列
+        for(let key in this.adPricesystem){
+          this.settings.colHeaders.push(this.adPricesystem[key].name);
+          this.settings.columns.push({
+            type:"numeric",
+            width:300
+          })
+        };
+        //创建表格对象
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+        this.getTableData();
+      });
 
+    },created () {
+      this.initPage();
       }
   }
 </script>

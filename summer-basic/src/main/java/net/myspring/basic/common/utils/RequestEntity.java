@@ -9,6 +9,15 @@ public class RequestEntity {
     private String positionId;
     private String officeId;
     private String employeeId;
+    private String companyName;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getAccountId() {
         return accountId;

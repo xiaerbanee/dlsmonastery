@@ -59,7 +59,7 @@
               axios.post('/api/ws/future/crm/express/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(response.data.success) {
-                  if (!this.inputForm.create) {
+                  if (!that.isCreate) {
                     this.submitDisabled = false;
                     this.$router.push({name: 'expressList', query: util.getQuery("expressList")});
                   }else{

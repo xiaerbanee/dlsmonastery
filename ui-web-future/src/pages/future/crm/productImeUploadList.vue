@@ -37,7 +37,7 @@
           <el-button type="primary" @click="search()">{{$t('productImeUploadList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productImeUploadList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="month" :label="$t('productImeUploadList.month')" width="180" ></el-table-column>
         <el-table-column prop="shopName" :label="$t('productImeUploadList.updateShopName')"  ></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('productImeUploadList.ime')"></el-table-column>
@@ -67,6 +67,7 @@
     data() {
       return {
         pageLoading: false,
+        pageHeight: 600,
         page:{},
         initPromise:{},
         searchText:"",
@@ -120,6 +121,7 @@
         }).catch(()=>{});
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/productImeUpload/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

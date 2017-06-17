@@ -6,6 +6,7 @@ import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -17,6 +18,8 @@ import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.layout.domain.ShopDeposit;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -37,11 +40,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -56,6 +57,8 @@ public class DepotService {
     private CacheUtils cacheUtils;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private ShopDepositRepository shopDepositRepository;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
 
@@ -117,13 +120,20 @@ public class DepotService {
             throw new ServiceException("查询条件请选择为70天以内");
         }
 
-        depotAccountQuery.setAccountTaxPermitted(true);
-        //TODO  判断是否有tax权限
-        Page<DepotAccountDto> depotAccountDtoList = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
-        //TODO 设置应收项
-        cacheUtils.initCacheInput(depotAccountDtoList.getContent());
+        Page<DepotAccountDto> page = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
+        cacheUtils.initCacheInput(page.getContent());
 
-        return depotAccountDtoList;
+        //TODO 獲取应收项
+        List<String> clientOutIdList = CollectionUtil.extractToList(page.getContent(), "clientOutId");
+        Map<String,BigDecimal> qcysMap = new HashMap<>();//期初
+        Map<String,BigDecimal> qmysMap = new HashMap<>();//期末
+
+        for(DepotAccountDto depotAccountDto : page){
+            depotAccountDto.setQcys(qcysMap.get(depotAccountDto.getClientOutId()));
+            depotAccountDto.setQmys(qmysMap.get(depotAccountDto.getClientOutId()));
+        }
+
+        return page;
     }
 
     public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
