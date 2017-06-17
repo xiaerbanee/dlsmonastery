@@ -1,12 +1,12 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class CnBankAcnt {
     private String FBankAcntId;
     private String FNumber;
     private String FName;
-    private LocalDate FModifyDate;
+    private LocalDateTime FModifyDate;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
@@ -36,11 +36,11 @@ public class CnBankAcnt {
         this.FName = FName;
     }
 
-    public LocalDate getFModifyDate() {
+    public LocalDateTime getFModifyDate() {
         return FModifyDate;
     }
 
-    public void setFModifyDate(LocalDate FModifyDate) {
+    public void setFModifyDate(LocalDateTime FModifyDate) {
         this.FModifyDate = FModifyDate;
     }
 

@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  *客户表
@@ -18,7 +18,7 @@ public class BdCustomer {
     //客户分组名称
     private String FPrimaryGroupName;
     //修改客户时间
-    private LocalDate FModifyDate;
+    private LocalDateTime FModifyDate;
     //部门ID
     private String FSalDeptId;
     //审核状态
@@ -66,11 +66,11 @@ public class BdCustomer {
         this.FPrimaryGroupName = FPrimaryGroupName;
     }
 
-    public LocalDate getFModifyDate() {
+    public LocalDateTime getFModifyDate() {
         return FModifyDate;
     }
 
-    public void setFModifyDate(LocalDate FModifyDate) {
+    public void setFModifyDate(LocalDateTime FModifyDate) {
         this.FModifyDate = FModifyDate;
     }
 
