@@ -37,6 +37,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -166,7 +167,7 @@ public class EmployeePhoneDepositService {
         if (StringUtils.isBlank(data)) {
             return new RestResponse("保存失败，没有任何数据",null);
         }
-        List<List<String>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
+        List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         List<EmployeePhoneDeposit> employeePhoneDeposits = Lists.newArrayList();
         List<BdDepartment> departments = cloudClient.findAll();
         Map<String, String> departMentMap = Maps.newHashMap();
@@ -184,7 +185,6 @@ public class EmployeePhoneDepositService {
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
         List<Product> productList=productRepository.findByEnabledIsTrueAndNameIn(productNameList);
         List<AccountCommonDto> accountList=accountClient.findByLoginNameList(loginNameList);
-        Map<String, DepotShop> depotShopMap = depotShopRepository.findMap(CollectionUtil.extractToList(depotList, "depotShopId"));
         Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
         Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"name");
         Map<String,AccountCommonDto> accountMap=CollectionUtil.extractToMap(accountList,"loginName");

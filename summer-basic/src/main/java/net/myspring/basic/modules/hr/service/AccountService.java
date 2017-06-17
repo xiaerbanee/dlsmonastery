@@ -222,4 +222,10 @@ public class AccountService {
         return account == null || (account.getId().equals(accountQuery.getId()));
     }
 
+    public List<AccountDto> findByLoginNameList(List<String> loginNameList){
+        List<Account> accountList=accountRepository.findByLoginNameList(loginNameList);
+        List<AccountDto> accountDtoList=BeanUtil.map(accountList,AccountDto.class);
+        return accountDtoList;
+    }
+
 }
