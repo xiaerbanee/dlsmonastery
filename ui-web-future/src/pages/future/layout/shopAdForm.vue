@@ -110,14 +110,16 @@
       },initPage(){
         axios.get('/api/ws/future/layout/shopAd/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(this.inputForm.attachment !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-                this.fileList= response.data;
-              });
-            }
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/layout/shopAd/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (this.inputForm.attachment != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.attachment}}).then((response) => {
+                  this.fileList = response.data;
+                });
+              }
+            });
+          }
         });
       }
     },created () {

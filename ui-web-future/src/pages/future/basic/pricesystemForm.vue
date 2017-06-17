@@ -74,7 +74,7 @@
               this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data,this.getData());
-                this.initPage;
+                this.initPage();
               }else {
                 this.submitDisabled = false ;
                 this.$router.push({name:'pricesystemList',query:util.getQuery("pricesystemList")})
@@ -107,9 +107,11 @@
           this.inputForm = response.data;
           this.pricesystemDetailList = response.data.pricesystemDetailList;
           this.filterPricesystemDetailList = this.pricesystemDetailList;
-          axios.get('/api/ws/future/basic/pricesystem/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/basic/pricesystem/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+            });
+          }
         });
       }
     },created () {

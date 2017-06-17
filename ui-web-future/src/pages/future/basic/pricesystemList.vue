@@ -70,7 +70,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("pricesystemList",submitData);
         axios.get('/api/ws/future/basic/pricesystem',{params:submitData}).then((response) => {
           this.page = response.data;

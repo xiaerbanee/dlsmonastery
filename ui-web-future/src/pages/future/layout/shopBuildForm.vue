@@ -124,20 +124,22 @@
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(this.inputForm.id != null){
-              this.shopDisabled = true;
-            }
-            if(this.inputForm.fixtureType!=null){
-              this.shopChange();
-            }
-            if(this.inputForm.scenePhoto !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-                this.fileList= response.data;
-              });
-            }
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (this.inputForm.id != null) {
+                this.shopDisabled = true;
+              }
+              if (this.inputForm.fixtureType != null) {
+                this.shopChange();
+              }
+              if (this.inputForm.scenePhoto != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.scenePhoto}}).then((response) => {
+                  this.fileList = response.data;
+                });
+              }
+            });
+          }
         });
       }
     },created () {
