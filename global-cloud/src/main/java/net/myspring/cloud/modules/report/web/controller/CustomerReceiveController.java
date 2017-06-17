@@ -6,12 +6,10 @@ import net.myspring.cloud.modules.report.service.CustomerReceiveService;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by liuj on 2017/5/11.
@@ -23,7 +21,7 @@ public class CustomerReceiveController {
     private CustomerReceiveService customerReceiveService;
 
     @RequestMapping(value = "list")
-    public List<CustomerReceiveDto> list(CustomerReceiveQuery customerReceiveQuery) {
+    public List<CustomerReceiveDto> list(@RequestParam(value = "customerReceiveQuery")CustomerReceiveQuery customerReceiveQuery) {
         List<CustomerReceiveDto> customerReceiveDtoList =  customerReceiveService.findCustomerReceiveDtoList(customerReceiveQuery);
         return customerReceiveDtoList;
     }

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ShopBuildDetailOrAuditForm extends BaseForm<ShopBuild> {
 
-    private Boolean pass;
+    private Boolean pass = false;
 
     private String passRemarks;
 

@@ -167,7 +167,7 @@
           this.$message(this.$t('shopAdList.noSelectionFound'));
           return ;
         }
-        util.confirmBeforeBatchPass(this).then(() => {
+        util.confirmBeforeBatchNotPass(this).then(() => {
           axios.get('/api/ws/future/layout/shopAd/batchAudit', {
             params: {
               pass: false,

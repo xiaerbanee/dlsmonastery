@@ -39,7 +39,7 @@
         <el-table-column prop="outCode" label="外部编码"></el-table-column>
         <el-table-column prop="createdBy" label="创建人"></el-table-column>
         <el-table-column prop="createdDate" label="创建时间"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="150">
+        <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
@@ -61,7 +61,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '100px',
         formVisible: false,
         pageLoading: false
       };

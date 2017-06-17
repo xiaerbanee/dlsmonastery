@@ -185,26 +185,31 @@ public class GoodsOrderShipService {
         Map<String,Product> productMap=productRepository.findMap(productIdList);
         List<ProductPrintDto> productPrintDtoList=Lists.newArrayList();
         Integer totalQty=0;
-        BigDecimal totalPirce=BigDecimal.ZERO;
+        BigDecimal totalPrice=BigDecimal.ZERO;
         BigDecimal total=BigDecimal.ZERO;
         for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList){
-            ProductPrintDto productPrintDto=new ProductPrintDto();
-            productPrintDto.setQty(goodsOrderDetail.getRealBillQty());
-            productPrintDto.setUnit("套");
-            totalQty+=productPrintDto.getQty();
-            if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
+            if(goodsOrderDetail.getRealBillQty()>0){
+                ProductPrintDto productPrintDto=new ProductPrintDto();
+                productPrintDto.setQty(goodsOrderDetail.getRealBillQty());
+                productPrintDto.setUnit("套");
+                totalQty+=productPrintDto.getQty();
                 Product product=productMap.get(goodsOrderDetail.getProductId());
-                productPrintDto.setPrice(product.getRetailPrice());
-                productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
-                totalPirce=totalPirce.add(productPrintDto.getPrice());
-                total=total.add(productPrintDto.getTotal());
+                productPrintDto.setProductName(product.getName());
+                if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
+                    productPrintDto.setPrice(product.getRetailPrice());
+                    productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
+                    totalPrice=totalPrice.add(productPrintDto.getPrice());
+                    total=total.add(productPrintDto.getTotal());
+                }
+                productPrintDtoList.add(productPrintDto);
             }
         }
         ProductPrintDto productPrintDto=new ProductPrintDto();
         productPrintDto.setProductName("合计");
         productPrintDto.setQty(totalQty);
-        productPrintDto.setPrice(totalPirce);
-        productPrintDto.setTotal(total);
+        productPrintDto.setPrice(totalPrice.compareTo(BigDecimal.ZERO)<=0?null:totalPrice);
+        productPrintDto.setTotal(total.compareTo(BigDecimal.ZERO)<=0?null:total);
+        productPrintDtoList.add(productPrintDto);
         goodsOrderPrintDto.setProductList(productPrintDtoList);
         return goodsOrderPrintDto;
     }

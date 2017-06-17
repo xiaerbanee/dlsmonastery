@@ -7,13 +7,13 @@
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
         <el-form-item label="备注"  prop="remarks">
-          <el-input v-model="formData.remarks"></el-input>
+          <el-input v-model="formData.remarks" type="textarea" style="width: 200px;"></el-input>
         </el-form-item>
         <el-form-item label="借方金额">
-          <el-input v-model="debit"></el-input>
+          {{debit}}
         </el-form-item>
-        <el-form-item label="贷方金额">
-          <el-input v-model="credit"></el-input>
+        <el-form-item label="贷方金额" >
+          {{credit}}
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -37,30 +37,16 @@
     data() {
       return {
         table:null,
-        debit:'',
-        credit:'',
+        debit:0,
+        credit:0,
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
           minSpareRows: 1,
           height: 650,
-          colHeaders: [
-//              '摘要','科目名称','供应商','客户','银行账号','其他类','部门','费用类','员工','借方金额','贷方金额'
-          ],
-          columns: [
-//            {type: 'text', allowEmpty: false, strict: true},
-//            {type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, bankAccountName:[],source: this.bankAccountName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
-//            {type: "autocomplete", strict: true, allowEmpty: false, empInfoName:[],source: this.empInfoName},
-//            {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-//            {type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true},
-          ],
+          colHeaders: [],
+          columns: [],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
@@ -90,39 +76,31 @@
         this.settings.columns[1].source = extra.accountNameList;
         let colHeaders = extra.headerList;
         for (let i=0;i<colHeaders.length;i++){
-            switch (colHeaders[i]){
-              case "供应商":
-                  this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName});
-                  this.settings.columns[i+2].source = extra.supplierNameList;
-              case "客户":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName});
-                this.settings.columns[i+2].source = extra.customerNameList;
-              case "银行账号":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, bankAccountName:[],source: this.bankAccountName});
-                this.settings.columns[i+2].source = extra.bankAcntNameList;
-              case "其他类":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName});
-                this.settings.columns[i+2].source = extra.otherTypeNameList;
-              case "部门":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, departmentName:[],source: this.departmentName});
-                this.settings.columns[i+2].source = extra.departmentNameList;
-              case "费用类":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName});
-                this.settings.columns[i+2].source = extra.expenseTypeNameList;
-              case "员工":
-                this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, empInfoName:[],source: this.empInfoName});
-                this.settings.columns[i+2].source = extra.empInfoNameList;
+            if(colHeaders[i] === "供应商") {
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName});
+              this.settings.columns[i].source = extra.supplierNameList;
+            }else if(colHeaders[i] === "客户"){
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName});
+              this.settings.columns[i].source = extra.customerNameList;
+            }else if(colHeaders[i] === "银行账号"){
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, bankAccountName:[],source: this.bankAccountName});
+              this.settings.columns[i].source = extra.bankAcntNameList;
+            }else if(colHeaders[i] === "其他类"){
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName});
+              this.settings.columns[i].source = extra.otherTypeNameList;
+            }else if(colHeaders[i] === "部门") {
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, departmentName: [], source: this.departmentName});
+              this.settings.columns[i].source = extra.departmentNameList;
+            }else if(colHeaders[i] === "费用类") {
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName});
+              this.settings.columns[i].source = extra.expenseTypeNameList;
+            }else if(colHeaders[i] === "员工") {
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, empInfoName:[],source: this.empInfoName})
+              this.settings.columns[i].source = extra.empInfoNameList;
             }
         }
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true});
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true});
-//        this.settings.columns[2].source = extra.supplierNameList;
-//        this.settings.columns[3].source = extra.customerNameList;
-//        this.settings.columns[4].source = extra.bankAcntNameList;
-//        this.settings.columns[5].source = extra.otherTypeNameList;
-//        this.settings.columns[6].source = extra.departmentNameList;
-//        this.settings.columns[7].source = extra.expenseTypeNameList;
-//        this.settings.columns[8].source = extra.empInfoNameList;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },

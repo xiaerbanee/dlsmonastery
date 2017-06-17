@@ -9,6 +9,7 @@ import net.myspring.cloud.modules.sys.dto.VoucherDto;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
+import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,9 +81,15 @@ public class VoucherController {
                 case "员工":   map.put("empInfoNameList",hrEmpInfoService.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
             }
         }
-        map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
+        map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
         voucherService.getForm(map);
         voucherForm.setExtra(map);
         return voucherForm;
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(VoucherForm voucherForm) {
+
+        return voucherService.save(voucherForm);
     }
 }

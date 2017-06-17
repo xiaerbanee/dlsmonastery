@@ -9,6 +9,7 @@ import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
+import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,11 @@ public class ShopDepositController {
     @RequestMapping(value = "findLeftAmount")
     public BigDecimal findLeftAmount(String type, String depotId) {
         return shopDepositService.findLeftAmount(type, depotId);
+    }
 
+    @RequestMapping(value="exportLatest")
+    public String exportLatest() {
+        return shopDepositService.exportLatest();
     }
 
 }

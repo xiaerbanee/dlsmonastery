@@ -12,7 +12,8 @@ public class DepotAccountDto extends DataDto<Depot> {
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-    //TODO 获取areaName
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
@@ -25,6 +26,14 @@ public class DepotAccountDto extends DataDto<Depot> {
     private BigDecimal scbzj; //市场保证金
     private BigDecimal xxbzj; //形象保证金
     private BigDecimal ysjyj; //演示机押金
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getClientOutId() {
         return clientOutId;

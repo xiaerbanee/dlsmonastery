@@ -679,7 +679,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    exportLatest: "导出最新",
   },
   shopGoodsDepositForm: {
     shopGoodsDepositForm: "piutang deposit",
