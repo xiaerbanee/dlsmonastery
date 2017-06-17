@@ -13,7 +13,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('dutyWorktimeList.dutyDate')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.dutyDate"></date-range-picker>
+                <date-range-picker v-model="formData.dutyDate" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -22,16 +22,15 @@
           <el-button type="primary" @click="search()">{{$t('dutyWorktimeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <search-dialog :title="$t('dutyWorktimeList.export')" v-model="exportVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('dutyWorktimeList.export')" v-model="exportVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('dutyWorktimeList.yearMonth')" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.month" type="month" align="right" :placeholder="$t('dutyWorktimeList.selectMonth')" ></el-date-picker>
+                <el-date-picker v-model="month" type="month" :placeholder="$t('dutyWorktimeList.selectMonth')"></el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
-
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="exportData()">{{$t('dutyWorktimeList.export')}}</el-button>
@@ -59,9 +58,9 @@
         page:{},
         formData:{
           extra:{},
-          month:'',
-          formatMonth:'',
+          formatMonth:""
         },
+        month:"",
         searchText:"",
         formLabelWidth: '120px',
         initPromise:{},
@@ -100,7 +99,7 @@
         this.$router.push({ name: 'dutyWorktimeForm'})
       },exportData(){
         this.exportVisible = false;
-        this.formData.formatMonth = util.formatLocalMonth(this.formData.month);
+        this.formData.formatMonth = util.formatLocalMonth(this.month);
         window.location.href="/api/basic/hr/dutyWorktime/export?formatMonth="+this.formData.formatMonth;
 			}
     },created () {
