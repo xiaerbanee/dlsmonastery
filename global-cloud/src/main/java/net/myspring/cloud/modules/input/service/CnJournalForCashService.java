@@ -49,7 +49,7 @@ public class CnJournalForCashService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    public KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook kingdeeBook) {
+    private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.CN_JOURNAL.name(),
                 cnJournalForCashDto.getJson(),
@@ -116,6 +116,10 @@ public class CnJournalForCashService {
             cnJournalFEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
             cnJournalForCashDto.getfEntityDtoList().add(cnJournalFEntityForCashDto);
         }
+        return save(cnJournalForCashDto,kingdeeBook,accountKingdeeBook);
+    }
+
+    public KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {
