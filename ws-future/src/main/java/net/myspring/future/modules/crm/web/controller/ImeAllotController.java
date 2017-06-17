@@ -6,16 +6,11 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.crm.domain.ImeAllot;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.service.ImeAllotService;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
-import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -27,13 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "crm/imeAllot")
 public class ImeAllotController {
-
 
     @Autowired
     private ImeAllotService imeAllotService;
@@ -43,11 +36,6 @@ public class ImeAllotController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<ImeAllotDto> list(Pageable pageable, ImeAllotQuery imeAllotQuery) {
         return imeAllotService.findPage(pageable, imeAllotQuery);
-    }
-
-    @RequestMapping(value = "detail")
-    public String detail(ImeAllot imeAllot) {
-        return null;
     }
 
     @RequestMapping(value = "checkForImeAllot")
@@ -91,7 +79,6 @@ public class ImeAllotController {
     public RestResponse batchAllot(ImeAllotBatchForm  imeAllotBatchForm){
 
         imeAllotService.batchAllot(imeAllotBatchForm);
-
         return new RestResponse("串码批量调拨成功", ResponseCodeEnum.saved.name());
 
     }
@@ -118,7 +105,6 @@ public class ImeAllotController {
 
     @RequestMapping(value="export")
     public String export(ImeAllotQuery imeAllotQuery) {
-
         return imeAllotService.export(imeAllotQuery);
     }
 

@@ -213,10 +213,6 @@ public class DepotService {
 
     }
 
-    public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
-        return null;
-    }
-
     public void scheduleSynArea(){
         List<Depot> depotList=depotRepository.findAll();
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);

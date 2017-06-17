@@ -685,6 +685,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    exportLatest: "导出最新",
   },
   shopGoodsDepositForm: {
     shopGoodsDepositForm: "订金收款编辑",
