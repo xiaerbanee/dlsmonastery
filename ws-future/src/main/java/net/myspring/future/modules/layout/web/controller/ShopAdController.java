@@ -5,6 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
 import net.myspring.future.modules.layout.service.ShopAdService;
+import net.myspring.future.modules.layout.web.form.ShopAdAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -51,14 +52,19 @@ public class ShopAdController {
         return shopAdService.getForm(shopAdForm);
     }
 
+    @RequestMapping(value = "getAuditForm")
+    public ShopAdAuditForm getAuditForm(ShopAdAuditForm shopAdAuditForm){
+        return shopAdAuditForm;
+    }
+
     @RequestMapping(value = "findOne")
     public ShopAdDto detail(String id){
         return shopAdService.findOne(id);
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(ShopAdForm shopAdForm) {
-        String message = shopAdService.audit(shopAdForm);
+    public RestResponse audit(ShopAdAuditForm shopAdAuditForm) {
+        String message = shopAdService.audit(shopAdAuditForm);
         if(message !=null){
             return new RestResponse("审批失败,原因："+message, ResponseCodeEnum.audited.name(),false);
         }else{

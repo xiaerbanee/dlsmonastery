@@ -2,6 +2,9 @@ package net.myspring.future.modules.basic.client;
 
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.response.RestResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,14 +56,11 @@ public interface CloudClient {
     StkInventory findBdInventoryByDepotAndProduct(@RequestParam(value = "stockId") String depotId, @RequestParam(value = "materialId") String productId);
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/receivableReportForSummaryList")
-    String receivableReportForSummaryList(@RequestParam(value = "dateRange") String dateRange, @RequestParam(value = "companyName") String companyName);
+    @RequestMapping(method = RequestMethod.GET, value = "/report/customerReceive/detail")
+    List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(@RequestParam(value = "dateRange")String dateRange,@RequestParam(value = "customerId")String customerId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/receivableReportForDetailList")
-    String receivableReportForDetailList(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "customerId") String customerId, @RequestParam(value = "dateRange") String dateRange);
-
-    @RequestMapping(method = RequestMethod.POST, value = "/kingdee/basicData/shouldGet")
-    String findShouldGet(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "customerIds") List<String> customerIds, @RequestParam(value = "dateEndStr") String dateEndStr);
+    @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
+    List<CustomerReceiveDto> getCustomerReceiveList(@RequestParam(value = "customerReceiveQuery")CustomerReceiveQuery customerReceiveQuery);
 
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForDto")
     RestResponse synForJournalForBank(@RequestParam(value = "cnJournalForBankDto")CnJournalForBankDto cnJournalForBankDto);

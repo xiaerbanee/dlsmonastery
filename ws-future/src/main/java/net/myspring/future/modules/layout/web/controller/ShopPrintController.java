@@ -67,7 +67,7 @@ public class ShopPrintController {
     @RequestMapping(value = "audit")
     public RestResponse audit(ShopPrintAuditForm shopPrintAuditFormForm) {
         shopPrintService.audit(shopPrintAuditFormForm);
-        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
+        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.audited.name());
         return restResponse;
     }
 
