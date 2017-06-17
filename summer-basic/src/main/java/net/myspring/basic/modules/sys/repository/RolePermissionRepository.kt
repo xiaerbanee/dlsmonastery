@@ -55,8 +55,9 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
         SELECT t
         FROM  #{#entityName} t
         where  t.permissionId=?1
+        and t.enabled=1
      """)
-    fun findAllByPermissionId(permissionId: String): MutableList<RolePermission>
+    fun findByPermissionId(permissionId: String): MutableList<RolePermission>
 
     @Query("""
        UPDATE  #{#entityName} t

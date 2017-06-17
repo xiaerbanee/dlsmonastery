@@ -170,7 +170,7 @@ public class MenuService {
         } else {
             String roleId = roleManager.findIdByAccountId(accountId);
             List<Permission> permissionList;
-            List<String> accountPermissions = accountPermissionRepository.findPermissionIdByAccount(accountId);
+            List<String> accountPermissions = accountPermissionRepository.findPermissionIdByAccountId(accountId);
             if (CollectionUtil.isNotEmpty(accountPermissions)) {
                 permissionList = permissionRepository.findByRoleAndAccount(roleId, accountId);
             } else {

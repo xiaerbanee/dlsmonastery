@@ -139,7 +139,7 @@ public class EmployeePhoneDepositService {
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
             CnJournalForBankDto journalForBankDto = new CnJournalForBankDto();
-            journalForBankDto.setCreator("test");//做单人姓名
+            journalForBankDto.setCreator(RequestUtils.getAccountId());//做单人姓名
             journalForBankDto.setDate(LocalDate.now());
             journalForBankDto.setAccountNumberForBank("1002");//银行存款
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
