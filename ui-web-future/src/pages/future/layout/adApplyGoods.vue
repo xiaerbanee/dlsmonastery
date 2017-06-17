@@ -50,23 +50,20 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-
             var tempList = new Array();
-            for(var index in this.inputForm.adApplyList){
-              var detail = this.inputForm.adApplyList[index];
+            for(var index in this.inputForm.depotAdApplyForms){
+              var detail = this.inputForm.depotAdApplyForms[index];
               if(util.isNotBlank(detail.applyQty)){
                 tempList.push(detail)
                }
             }
-           this.inputForm.adApplyList = tempList;
+           this.inputForm.depotAdApplyForms = tempList;
 
             axios.post('/api/ws/future/layout/adApply/goodsSave',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.isCreate){
-                form.resetFields();
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name:'adApplyList',query:util.getQuery("adApplyList")})
+              if(response.data.success){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch(function () {
               this.submitDisabled = false;

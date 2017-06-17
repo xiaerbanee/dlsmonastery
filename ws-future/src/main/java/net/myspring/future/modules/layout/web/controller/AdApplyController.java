@@ -81,6 +81,12 @@ public class AdApplyController {
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
         return adApplyService.getAdApplyGoodsList(adApplyGoodsForm);
     }
+    @RequestMapping(value = "goodsSave")
+    public RestResponse  goodsSave(AdApplyGoodsForm adApplyGoodsForm){
+        adApplyService.goodsSave(adApplyGoodsForm);
+        return new RestResponse("分货成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public ModelAndView export(HttpServletRequest request) {
         return null;

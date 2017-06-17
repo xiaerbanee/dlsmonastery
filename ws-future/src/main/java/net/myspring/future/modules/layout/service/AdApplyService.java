@@ -155,6 +155,30 @@ public class AdApplyService {
         adApplyRepository.save(adApplyList);
     }
 
+    public void goodsSave(AdApplyGoodsForm adApplyGoodsForm){
+        if(adApplyGoodsForm.getDepotAdApplyForms() == null){
+            return;
+        }
+        Product product = productRepository.findOne(adApplyGoodsForm.getProductId());
+        if(product == null){
+            return;
+        }
+        List<AdApply> adApplyList = Lists.newArrayList();
+        for (DepotAdApplyForm depotAdApplyForm:adApplyGoodsForm.getDepotAdApplyForms()){
+            AdApply adApply = new AdApply();
+            adApply.setProductId(adApplyGoodsForm.getProductId());
+            adApply.setShopId(depotAdApplyForm.getId());
+            adApply.setApplyQty(depotAdApplyForm.getApplyQty());
+            adApply.setConfirmQty(depotAdApplyForm.getApplyQty());
+            adApply.setBilledQty(0);
+            adApply.setLeftQty(depotAdApplyForm.getApplyQty());
+            adApply.setExpiryDateRemarks(product.getExpiryDateRemarks());
+            adApply.setRemarks(adApplyGoodsForm.getRemarks());
+            adApplyList.add(adApply);
+        }
+        adApplyRepository.save(adApplyList);
+    }
+
     public void billSave(AdApplyBillForm adApplyBillForm){
 
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
