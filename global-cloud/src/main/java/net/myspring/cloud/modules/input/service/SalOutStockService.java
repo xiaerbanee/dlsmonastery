@@ -64,7 +64,7 @@ public class SalOutStockService {
                 if(salOutStockDto.getBillType().contains("现销")){
                     return null;
                 }else{
-                    return arReceivableRepository.findBySourceBillNo(getBillNo()).get(0).getFBillNo();
+                    return arReceivableRepository.findTopOneBySourceBillNo(getBillNo()).getFBillNo();
                 }
 
             }

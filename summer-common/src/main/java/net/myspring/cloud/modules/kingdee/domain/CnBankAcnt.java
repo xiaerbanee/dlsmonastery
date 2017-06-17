@@ -6,7 +6,7 @@ public class CnBankAcnt {
     private String FBankAcntId;
     private String FNumber;
     private String FName;
-    private LocalDate FModeifyDate;
+    private LocalDate FModifyDate;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
@@ -36,12 +36,12 @@ public class CnBankAcnt {
         this.FName = FName;
     }
 
-    public LocalDate getFModeifyDate() {
-        return FModeifyDate;
+    public LocalDate getFModifyDate() {
+        return FModifyDate;
     }
 
-    public void setFModeifyDate(LocalDate FModeifyDate) {
-        this.FModeifyDate = FModeifyDate;
+    public void setFModifyDate(LocalDate FModifyDate) {
+        this.FModifyDate = FModifyDate;
     }
 
     public String getFDocumentStatus() {

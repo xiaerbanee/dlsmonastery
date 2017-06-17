@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
-import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -27,8 +26,10 @@ public class CnJournalForBankDto {
     private LocalDate date;
     //对方账户（科目）
     private String accountNumberForBank;
-    //本线程金蝶数据源
-    private KingdeeBook kingdeeBook;
+    //账套名称
+    private String kingdeeName;
+    //账套类型
+    private String kingdeeType;
 
     private List<CnJournalFEntityForBankDto> fEntityDtoList = Lists.newArrayList();
 
@@ -56,12 +57,20 @@ public class CnJournalForBankDto {
         this.date = date;
     }
 
-    public KingdeeBook getKingdeeBook() {
-        return kingdeeBook;
+    public String getKingdeeName() {
+        return kingdeeName;
     }
 
-    public void setKingdeeBook(KingdeeBook kingdeeBook) {
-        this.kingdeeBook = kingdeeBook;
+    public void setKingdeeName(String kingdeeName) {
+        this.kingdeeName = kingdeeName;
+    }
+
+    public String getKingdeeType() {
+        return kingdeeType;
+    }
+
+    public void setKingdeeType(String kingdeeType) {
+        this.kingdeeType = kingdeeType;
     }
 
     public List<CnJournalFEntityForBankDto> getfEntityDtoList() {
@@ -99,9 +108,9 @@ public class CnJournalForBankDto {
             detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", fEntityDto.getOtherTypeNumber()));
             detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", fEntityDto.getExpenseTypeNumber()));
             if (StringUtils.isNotBlank(fEntityDto.getCustomerNumberFor())){
-                if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())) {
+                if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeName())) {
                     detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberFor()));
-                }else if (KingdeeTypeEnum.proxy.name().equals(kingdeeBook.getType())){
+                }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeType())){
                     detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberFor()));
                 }
             }
@@ -112,7 +121,7 @@ public class CnJournalForBankDto {
             detail.put("FVOUCHERGROUPID", CollectionUtil.getMap("FNumber", "PRE001"));
             detail.put("FBANKACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getBankAccountNumber()));
             detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getAccountNumber()));
-            detail.put("FCOMMENT", fEntityDto.getRemarks());
+            detail.put("FCOMMENT", fEntityDto.getComment());
             entity.add(detail);
             debitAmounts = debitAmounts.add(fEntityDto.getDebitAmount());
             creditAmounts = creditAmounts.add(fEntityDto.getCreditAmount());

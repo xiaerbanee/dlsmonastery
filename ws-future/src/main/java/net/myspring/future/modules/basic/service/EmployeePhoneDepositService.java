@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
+import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
@@ -41,6 +43,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,14 +138,31 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
+            CnJournalForBankDto journalForBankDto = new CnJournalForBankDto();
+            journalForBankDto.setCreator(RequestUtils.getAccountId());//做单人姓名
+            journalForBankDto.setDate(LocalDate.now());
+            journalForBankDto.setAccountNumberForBank("1002");//银行存款
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
-                String otherTypes = "其他应付款-导购业务机押金";
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
                     if (StringUtils.isNotBlank(employeePhoneDeposit.getOutBillType()) && "手工日记账".equals(employeePhoneDeposit.getOutBillType())) {
                         employeePhoneDeposit.setStatus(EmployeePhoneDepositStatusEnum.已通过.name());
                         employeePhoneDeposit.setLocked(true);
                         employeePhoneDeposit.setBillDate(LocalDateTime.now());
+                        CnJournalFEntityForBankDto entityForBankDto = new CnJournalFEntityForBankDto();
+                        entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
+                        entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
+                        entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
+                        entityForBankDto.setEmpInfoNumber("0001");//员工
+                        Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
+                        entityForBankDto.setBankAccountNumber(bank.getCode());
+                        entityForBankDto.setAccountNumber("2241");//其他应付款
+                        entityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
+                        entityForBankDto.setExpenseTypeNumber("6602.000");//无
+                        entityForBankDto.setSettleTypeNumber("JSFS04_SYS");//电汇
+                        Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
+                        entityForBankDto.setComment(depot.getName());
+                        journalForBankDto.getfEntityDtoList().add(entityForBankDto);
                         employeePhoneDepositRepository.save(employeePhoneDeposit);
                         if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                             EmployeePhone employeePhone = new EmployeePhone();
@@ -160,6 +180,7 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
+            RestResponse restResponse = cloudClient.synForJournalForBank(journalForBankDto);
         }
     }
 

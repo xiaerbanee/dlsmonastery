@@ -59,6 +59,7 @@
 </template>
 <script>
   import officeSelect from 'components/basic/office-select'
+  import util from "../../../utils/util";
 
   export default {
     components:{officeSelect},
@@ -109,8 +110,9 @@
       },itemAdd(){
         this.$router.push({ name: 'accountForm'})
       },exportData(){
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/basic/hr/account/export?'+qs.stringify(this.submitData)).then((response)=> {
+        this.formVisible = false;
+        var submitData = util.deleteExtra(this.formData);
+        axios.get('/api/basic/hr/account/export?'+qs.stringify(submitData)).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       },itemAuthAdd(){
