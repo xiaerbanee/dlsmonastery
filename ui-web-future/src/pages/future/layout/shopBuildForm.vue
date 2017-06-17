@@ -76,16 +76,16 @@
           rules: {
             shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            fixtureType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-            accountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
           headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -103,13 +103,15 @@
                     this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
                   }
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch(() => {
+                this.submitDisabled = false;
               });
+          }else{
+            this.submitDisabled = false;
           }
         })
       },shopChange(){
-        axios.get('/api/basic/sys/dictEnum/findByValue?value=' + this.inputForm.fixtureType).then((response)=>{
+        axios.get('/api/basic/sys/dictEnum/findByValue',{params: {value:this.inputForm.fixtureType,category:'装修类别'}}).then((response)=>{
           this.fixtureContent=response.data;
         })
       },

@@ -86,7 +86,7 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "findByValue")
-    public String findByValue(String value){
-        return dictEnumService.findByValue(value);
+    public String findByValue(String value,String category){
+        return dictEnumService.findByValue(value,category);
     }
 }
