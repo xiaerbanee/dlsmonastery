@@ -38,6 +38,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(companyId :String): MutableList<Depot>
 
+    fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>
+
     fun findByChainId(chainId: String): MutableList<Depot>
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Depot>
@@ -73,7 +75,7 @@ interface DepotRepositoryCustom{
 }
 
 @Suppress("UNCHECKED_CAST")
-class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
     override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
         val params = HashMap<String, Any>()
         params.put("companyId", companyId)
