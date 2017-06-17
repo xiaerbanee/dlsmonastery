@@ -19,7 +19,7 @@
           <el-input v-model="inputForm.reachPlace" type="textarea"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.shouldGetRule')" prop="shouldGetRule">
-          <el-input v-model="inputForm.shouldGetRule"></el-input>
+          <el-input v-model="inputForm.shouldGetRule" type="textarea"></el-input>
         </el-form-item>
         <el-form-item :label="$t('expressCompanyForm.address')" prop="address">
           <el-input v-model="inputForm.address" type="textarea"></el-input>
@@ -61,7 +61,13 @@
             extra:{}
           },
           rules: {
-            name: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}]
+            name: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
+            expressType: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
+            districtId: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
+            address: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
+            contator: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
+            phone: [{ type: 'number', message: this.$t('expressCompanyForm.inputLegalValue')}],
+            mobilePhone: [{ type: 'number', message: this.$t('expressCompanyForm.inputLegalValue')}]
           }
         }
       },formSubmit(){
@@ -90,9 +96,11 @@
       },initPage () {
         axios.get('/api/ws/future/basic/expressCompany/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/basic/expressCompany/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/basic/expressCompany/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+            });
+          }
         });
       }
     },created(){

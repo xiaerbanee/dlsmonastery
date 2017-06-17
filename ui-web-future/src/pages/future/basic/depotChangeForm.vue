@@ -70,7 +70,6 @@
       }
     },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -84,8 +83,8 @@
                 this.submitDisabled = false;
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;

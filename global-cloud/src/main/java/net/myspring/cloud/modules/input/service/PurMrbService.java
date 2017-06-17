@@ -80,6 +80,10 @@ public class PurMrbService {
             purMrbFEntityDto.setNote(note);
             purMrbDto.getEntityDtoList().add(purMrbFEntityDto);
         }
+        return save(purMrbDto,kingdeeBook,accountKingdeeBook);
+    }
+
+    public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {

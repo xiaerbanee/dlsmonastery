@@ -40,7 +40,7 @@ public class BankController {
     @RequestMapping(value = "syn")
     public RestResponse syn(){
         bankService.syn();
-        return new RestResponse("同步成功",null);
+        return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
     }
 
     @RequestMapping(value = "delete")

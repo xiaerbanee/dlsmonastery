@@ -95,21 +95,23 @@
       },initPage(){
           axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
             this.inputForm = response.data;
-            axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
-              if(this.isCreate){
-                this.shopDisabled = false;
-              }else{
-                this.shopDisabled = true;
-              }
-              if(this.inputForm.image != null) {
-                axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-                  this.fileList= response.data;
-                });
-              }else{
-                this.fileList = [];
-              }
-            });
+            if(!this.isCreate) {
+              axios.get('/api/ws/future/layout/shopImage/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+                util.copyValue(response.data, this.inputForm);
+                if (this.isCreate) {
+                  this.shopDisabled = false;
+                } else {
+                  this.shopDisabled = true;
+                }
+                if (this.inputForm.image != null) {
+                  axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.image}}).then((response) => {
+                    this.fileList = response.data;
+                  });
+                } else {
+                  this.fileList = [];
+                }
+              });
+            }
           });
       }
     },created(){

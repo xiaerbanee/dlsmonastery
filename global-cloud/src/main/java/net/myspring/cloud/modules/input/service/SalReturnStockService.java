@@ -54,7 +54,7 @@ public class SalReturnStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    public KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
+    private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 KingdeeFormIdEnum.SAL_RETURNSTOCK.name(),
                 salReturnStockDto.getJson(),
@@ -80,7 +80,6 @@ public class SalReturnStockService {
     }
 
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         String storeNumber = salStockForm.getStoreNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
@@ -132,6 +131,11 @@ public class SalReturnStockService {
         }
 
         List<SalReturnStockDto> batchBills = Lists.newArrayList(billMap.values());
+        return save(batchBills,kingdeeBook,accountKingdeeBook);
+    }
+
+    public List<KingdeeSynExtendDto> save (List<SalReturnStockDto> batchBills, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
         if (CollectionUtil.isNotEmpty(batchBills)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());

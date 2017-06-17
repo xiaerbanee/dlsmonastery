@@ -147,36 +147,38 @@
       }, initPage(){
         axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.shopId!=null){
-              this.shopDisabled = true;
-            }else {
-              this.shopDisabled=false;
-            }
-            if(this.inputForm.activityImage1 !=null) {
-              console.log(this.fileList1);
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-                this.fileList1= response.data;
-              });
-            }else {
-              this.fileList1=[];
-            }
-            if(this.inputForm.activityImage2 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-                this.fileList2= response.data;
-              });
-            }else {
-              this.fileList2=[];
-            }
-            if(this.inputForm.activityImage3 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-                this.fileList3= response.data;
-              });
-            }else {
-              this.fileList3=[];
-            }
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/layout/shopPromotion/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (response.data.shopId != null) {
+                this.shopDisabled = true;
+              } else {
+                this.shopDisabled = false;
+              }
+              if (this.inputForm.activityImage1 != null) {
+                console.log(this.fileList1);
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage1}}).then((response) => {
+                  this.fileList1 = response.data;
+                });
+              } else {
+                this.fileList1 = [];
+              }
+              if (this.inputForm.activityImage2 != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage2}}).then((response) => {
+                  this.fileList2 = response.data;
+                });
+              } else {
+                this.fileList2 = [];
+              }
+              if (this.inputForm.activityImage3 != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage3}}).then((response) => {
+                  this.fileList3 = response.data;
+                });
+              } else {
+                this.fileList3 = [];
+              }
+            });
+          }
         });
       }
     },created () {

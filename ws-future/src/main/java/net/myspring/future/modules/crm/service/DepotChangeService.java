@@ -122,10 +122,10 @@ public class DepotChangeService {
     public String findSimpleExcelSheets(Workbook workbook, DepotChangeQuery depotChangeQuery) {
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depot.name", "门店"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "type", "调整项"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "newValue", "最新数据"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModified.loginName", "修改人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "修改人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "修改时间"));
 
         List<DepotChangeDto> depotChangeDtos = depotChangeRepository.findFilter(depotChangeQuery);

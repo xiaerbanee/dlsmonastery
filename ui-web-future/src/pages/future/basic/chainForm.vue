@@ -43,7 +43,6 @@
       }
     },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -57,8 +56,8 @@
                 this.submitDisabled = false;
                 this.$router.push({name:'chainList',query:util.getQuery("chainList")})
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch( ()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -67,9 +66,11 @@
       },initPage(){
         axios.get('/api/ws/future/basic/chain/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          });
+          if(!this.isCreate){
+            axios.get('/api/ws/future/basic/chain/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            });
+          }
         });
       }
     },created () {
