@@ -33,8 +33,8 @@
         <el-table-column fixed prop="businessId" :label="$t('shopPromotionList.businessId')" sortable width="150"></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('shopPromotionList.shopName')" sortable></el-table-column>
         <el-table-column prop="activityType" :label="$t('shopPromotionList.activityType')" sortable></el-table-column>
-        <el-table-column prop="amount" :label="$t('shopPromotionList.amount')" sortable></el-table-column>
-        <el-table-column prop="dayAmount" :label="$t('shopPromotionList.dayAmount')" sortable></el-table-column>
+        <el-table-column prop="dayAmount" :label="$t('shopPromotionList.amount')" sortable></el-table-column>
+        <el-table-column prop="amount" :label="$t('shopPromotionList.dayAmount')" sortable></el-table-column>
         <el-table-column prop="salerComment" :label="$t('shopPromotionList.salerComment')" sortable></el-table-column>
         <el-table-column prop="materialComment" :label="$t('shopPromotionList.materialComment')" sortable></el-table-column>
         <el-table-column prop="activityImage1" :label="$t('shopPromotionList.activityImage1')" sortable></el-table-column>

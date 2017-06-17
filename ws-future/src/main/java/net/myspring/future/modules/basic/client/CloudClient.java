@@ -1,6 +1,8 @@
 package net.myspring.future.modules.basic.client;
 
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
+import net.myspring.common.response.RestResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,4 +61,8 @@ public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/kingdee/basicData/shouldGet")
     String findShouldGet(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "customerIds") List<String> customerIds, @RequestParam(value = "dateEndStr") String dateEndStr);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForDto")
+    RestResponse synForJournalForBank(@RequestParam(value = "cnJournalForBankDto")CnJournalForBankDto cnJournalForBankDto);
+
 }
