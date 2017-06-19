@@ -21,31 +21,31 @@ import java.util.List;
 public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
-    List<BdStock> getSynStock();
+    List<BdStock> getAllStock();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
-    List<BdCustomer> getSynCustomer();
+    List<BdCustomer> getAllCustomer();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
-    List<BdMaterial> getSynProduct();
+    List<BdMaterial> getAllProduct();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
-    List<CnBankAcnt> getSynBank();
+    List<CnBankAcnt> getAllBank();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
-    ArReceivable findReceivableBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
+    ArReceivable findReceivableByBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/hrEmpInfo/findByName")
-    HrEmpInfo findHrEmpinfo(@RequestParam(value = "name") String name);
+    HrEmpInfo findEmpInfoByName(@RequestParam(value = "name") String name);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdAccount/findByName")
-    BdAccount findAccountFNumber(@RequestParam(value = "name") String name);
+    BdAccount findAccountByName(@RequestParam(value = "name") String name);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAssistantCode")
-    String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
+//    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAssistantCode")
+//    String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findCustId")
-    BdDepartment findDepartByCustomer( @RequestParam(value = "custId") String outId);
+    BdDepartment findDepartmentByOutId( @RequestParam(value = "custId") String outId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
     List<BdDepartment> findAllDepartment();
