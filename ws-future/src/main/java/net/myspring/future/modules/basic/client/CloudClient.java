@@ -48,10 +48,10 @@ public interface CloudClient {
     BdDepartment findDepartByCustomer( @RequestParam(value = "custId") String outId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
-    List<BdDepartment> findAll();
+    List<BdDepartment> findAllDepartmemt();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
-    List<StkInventory> findBdInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
+    List<StkInventory> findInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
     List<StkInventory> findInventoryByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
