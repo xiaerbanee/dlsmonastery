@@ -48,7 +48,6 @@
             inputForm:{},
             submitData:{},
             rules: {
-              companyId: [{ required: true, message: "必填信息"}],
               name: [{ required: true, message: "必填信息"}],
               type: [{ required: true, message: "必填信息"}],
               kingdeeUrl: [{ required: true, message: "必填信息"}],
