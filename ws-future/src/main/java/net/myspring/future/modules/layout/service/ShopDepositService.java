@@ -172,16 +172,4 @@ public class ShopDepositService {
 
     }
 
-    public String getDefaultDepartMent(String shopId) {
-        ClientDto clientDto = clientRepository.findByDepotId(shopId);
-        if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
-            return null;
-        }
-        BdDepartment bdDepartment = cloudClient.findDepartmentByOutId(clientDto.getOutId());
-        if(bdDepartment == null){
-            return null;
-        }
-        return bdDepartment.getFNumber();
-
-    }
 }

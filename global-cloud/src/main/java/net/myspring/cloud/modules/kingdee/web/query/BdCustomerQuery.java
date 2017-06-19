@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/16.
  */
-public class BdCustomerQuery extends BaseQuery {
+public class BdCustomerQuery extends BaseQuery{
     private String customerGroup;
     private List<String> customerIdList = Lists.newArrayList();
 

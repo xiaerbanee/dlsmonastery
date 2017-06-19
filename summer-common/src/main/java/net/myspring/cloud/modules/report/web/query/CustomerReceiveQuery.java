@@ -1,9 +1,7 @@
 package net.myspring.cloud.modules.report.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
+import net.myspring.common.query.BaseQuery;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,25 +9,17 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class CustomerReceiveQuery {
+public class CustomerReceiveQuery extends BaseQuery{
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private String dateRange;
     private List<String> customerIdList = Lists.newArrayList();
     private Boolean queryDetail = false;
 
-    public String getDateRange() {
-        return dateRange;
-    }
-
-    public void setDateRange(String dateRange) {
-        this.dateRange = dateRange;
-    }
     public LocalDate getDateStart() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        if(dateStart != null) {
+            return dateStart;
         } else {
-            return null;
+            return LocalDate.now().minusMonths(1L);
         }
     }
 
@@ -38,23 +28,15 @@ public class CustomerReceiveQuery {
     }
 
     public LocalDate getDateEnd() {
-        if(StringUtils.isNotBlank(dateRange)) {
-            return LocalDateUtils.parse(dateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        if(dateEnd != null) {
+            return dateEnd;
         } else {
-            return null;
+            return LocalDate.now();
         }
     }
 
     public void setDateEnd(LocalDate dateEnd) {
         this.dateEnd = dateEnd;
-    }
-
-    public List<String> getCustomerIdList() {
-        return customerIdList;
-    }
-
-    public void setCustomerIdList(List<String> customerIdList) {
-        this.customerIdList = customerIdList;
     }
 
     public Boolean getQueryDetail() {
@@ -63,5 +45,13 @@ public class CustomerReceiveQuery {
 
     public void setQueryDetail(Boolean queryDetail) {
         this.queryDetail = queryDetail;
+    }
+
+    public List<String> getCustomerIdList() {
+        return customerIdList;
+    }
+
+    public void setCustomerIdList(List<String> customerIdList) {
+        this.customerIdList = customerIdList;
     }
 }

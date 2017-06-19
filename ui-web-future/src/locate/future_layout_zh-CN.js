@@ -650,6 +650,7 @@ export default {
     save: "保存",
     filter: "过滤",
     prerequisiteMessage: "必填信息",
+    prerequisiteAndNumberMessage: "请输入合法数字",
     inputLegalValue: "请输入合法的数值",
   },
   shopDepositList: {
@@ -701,6 +702,7 @@ export default {
     save: "保存",
     filter: "过滤",
     prerequisiteMessage: "必填信息",
+    prerequisiteAndNumberMessage: "请输入合法数字",
     inputLegalValue: "请输入合法的数值",
   },
   shopGoodsDepositList: {

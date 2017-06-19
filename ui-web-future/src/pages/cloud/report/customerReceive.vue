@@ -4,32 +4,40 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-row :gutter="7">
-            <el-col :span="12">
-              <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.dateRange"></date-range-picker>
-              </el-form-item>
-              <el-form-item :label="formLabel.customerGroup.label" :label-width="formLabelWidth">
+          <el-row :gutter="8">
+            <el-form-item label="日期范围" :label-width="formLabelWidth">
+              <el-col :span="7">
+                <date-picker placeholder="选择开始日期" v-model="formData.dateStart" style="width: 50px"></date-picker>
+              </el-col>
+              <el-col class="line" :span="1">-</el-col>
+              <el-col :span="7">
+                <date-picker placeholder="选择截止日期" v-model="formData.dateEnd" style="width: 50px"></date-picker>
+              </el-col>
+            </el-form-item>
+          </el-row>
+          <el-row :gutter="4">
+              <el-form-item label="客户分组" :label-width="formLabelWidth">
                 <el-select v-model="formData.customerGroup" placeholder="请选择客户分组">
-                  <el-option v-for="item in formData.customerGroupList" :key="item.value" :label="item.name" :value="item.value"></el-option>
+                  <el-option v-for="item in formData.extra.customerGroupList" :key="item.value" :label="item.name" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.customerIdList.label" :label-width="formLabelWidth">
+          </el-row>
+          <el-row :gutter="4">
+              <el-form-item label="客户名称" :label-width="formLabelWidth">
                 <el-select v-model="formData.customerIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteCustomer" :loading="remoteLoading">
                   <el-option v-for="item in customers" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-dialog v-model="detailVisible" size="large">
         <el-table :data="detail" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
           <el-table-column prop="billType" label="业务类型"></el-table-column>
@@ -86,27 +94,13 @@
         summary: [],
         detail: [],
         formData: {
-          dateRange: [new Date().toDateString(),new Date().toDateString()],
-          customerGroup:'',
-          customerIdList:[],
-          customerGroupList:[],
-        },
-        submitData: {
-          page:0,
-          size:25,
-          sort:'t1.fcustid',
-          dateRange: '',
-          customerGroup:'',
+          extra:{},
           customerIdList:[],
         },
+        searchText:"",
+        initPromise:{},
         submitDetail: {
-          dateRange: '',
           customerId: '',
-        },
-        formLabel:{
-          dateRange:{label:"日期"},
-          customerGroup:{label:"客户分组",value:''},
-          customerIdList:{label:"客户名称",value:''}
         },
         formLabelWidth: '120px',
         remoteLoading:false,
@@ -118,30 +112,33 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
-        var that = this;
-        that.pageLoading = true;
-        util.getQuery("customerReceive");
-        util.setQuery("customerReceive",that.formData);
-        if(that.formData.dateRange) {
-          that.formData.dateRange = util.formatDateRange(that.formData.dateRange);
-          util.copyValue(that.formData, that.submitData);
-          axios.get('/api/global/cloud/kingdee/bdCustomer?' + qs.stringify(that.submitData)).then((response) => {
+        this.pageLoading = true;
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("customerReceive", submitData);
+          axios.get('/api/global/cloud/kingdee/bdCustomer?'+ qs.stringify(submitData)).then((response) => {
             let customerIdList = new Array();
             let customers = response.data.content;
             for (let item in customers) {
               customerIdList.push(customers[item].fcustId);
             }
-            that.submitData.customerIdList = customerIdList;
-            if (that.submitData.customerIdList.length !== 0) {
-              axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(that.submitData)).then((response) => {
+            this.formData.customerIdList = customerIdList;
+            if (this.formData.customerIdList.length !== 0) {
+              let submitData = util.deleteExtra(this.formData);
+              axios.post('/api/global/cloud/report/customerReceive/list', qs.stringify(submitData)).then((response) => {
+                this.summary = response.data;
                 this.summary = response.data;
               });
             }
-            that.customerPage = response.data;
+            this.customerPage = response.data;
             this.pageLoading = false;
           })
-        }
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -188,12 +185,17 @@
           this.customers = {};
         }
       },
-    },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/global/cloud/kingdee/bdCustomer/findCustomerGroupList').then((response) => {
-        this.formData.customerGroupList = response.data;
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
       });
-      this.pageRequest();
+    },created () {
+      let that = this;
+      that.pageHeight = window.outerHeight -320;
+      that.initPromise = axios.get('/api/global/cloud/report/customerReceive/getQuery').then((response) =>{
+        this.formData = response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
     }
   };
 </script>

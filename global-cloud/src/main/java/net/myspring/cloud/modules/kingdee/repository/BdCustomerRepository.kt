@@ -175,7 +175,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
-    fun findPageIncloudeForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
+    fun findPageIncludeForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
         var sb = StringBuilder("""
              SELECT
                 t1.FCUSTID,

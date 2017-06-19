@@ -40,14 +40,6 @@ public class ShopDepositController {
         return shopDepositQuery;
     }
 
-    @RequestMapping(value = "getDefaultDepartMent")
-    public String getDefaultDepartMent(String shopId) {
-        if(StringUtils.isBlank(shopId)){
-            return null;
-        }
-        return shopDepositService.getDefaultDepartMent(shopId);
-    }
-
     @RequestMapping(value = "getForm")
     public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         shopDepositForm.getExtra().put("outBillTypeList",OutBillTypeEnum.getList());

@@ -9,31 +9,31 @@
         <el-button type="primary" @click="exportData"  v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-Index="1500">
-        <el-form :model="formData">
+      <search-dialog :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('shopGoodsDepositList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopGoodsDepositList.shopName')">
+                <el-input v-model="formData.shopName" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.remarks')" :label-width="formLabelWidth">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopGoodsDepositList.remarks')">
+                <el-input v-model="formData.remarks" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.bank')" :label-width="formLabelWidth">
-                <el-input v-model="formData.bankName" auto-complete="off" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopGoodsDepositList.bank')">
+                <el-input v-model="formData.bankName" :placeholder="$t('shopGoodsDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.status')">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('shopGoodsDepositList.inputStatus')">
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.Deposit')" :label-width="formLabelWidth">
-                <el-input v-model="formData.amount" auto-complete="off" :placeholder="$t('shopGoodsDepositList.preciseSearch')"></el-input>
+              <el-form-item :label="$t('shopGoodsDepositList.Deposit')">
+                <el-input v-model="formData.amount" :placeholder="$t('shopGoodsDepositList.preciseSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopGoodsDepositList.outBillType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopGoodsDepositList.outBillType')">
                 <el-select v-model="formData.outBillType" clearable filterable :placeholder="$t('shopGoodsDepositList.inputStatus')">
                   <el-option v-for="item in formData.extra.outBillTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -93,7 +93,6 @@
           extra:{},
         },
         selects:[],
-        formLabelWidth: '120px',
         formVisible: false,
 
       };
@@ -174,14 +173,11 @@
       }
 
     },created () {
-
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
-
     },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();

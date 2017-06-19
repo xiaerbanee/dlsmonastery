@@ -151,7 +151,13 @@ public class StkInStockService {
         }
         stkInStockForm.getTypeList().addAll(typeList);
         stkInStockForm.setKingdeeName(kingdeeBook.getName());
-        stkInStockForm.setMaterialNameList(bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        List<BdMaterial> materialList = bdMaterialRepository.findAll();
+        for (BdMaterial material : materialList){
+            //过滤 FMaterialGroupName=其他收入费用类 FMaterialGroupNumber=13000
+            if (!material.getFMaterialGroupNumber().equals("13000")){
+                stkInStockForm.getMaterialNameList().add(material.getFName());
+            }
+        }
         return stkInStockForm;
     }
 }
