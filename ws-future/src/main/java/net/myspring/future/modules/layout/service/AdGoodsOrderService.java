@@ -13,7 +13,10 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
@@ -143,8 +146,8 @@ public class AdGoodsOrderService {
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
 
             Depot outShop=depotRepository.findOne(adGoodsOrderForm.getOutShopId());
-            Client client = clientRepository.findByDepotId(outShop.getId());
-            if(client == null || StringUtils.isBlank(client.getOutId())){
+            ClientDto clientDto = clientRepository.findByDepotId(outShop.getId());
+            if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
                 throw new ServiceException(outShop.getName()+" 没有关联财务账号，不能申请");
             }
 
@@ -329,6 +332,11 @@ public class AdGoodsOrderService {
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
+
+        if (!AdGoodsOrderStatusEnum.待开单.name().equals(adGoodsOrder.getProcessStatus())) {
+            throw new ServiceException("该订单状态不为："+AdGoodsOrderStatusEnum.待开单.name()+"，不能开单");
+        }
+
         adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate())));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
@@ -477,7 +485,7 @@ public class AdGoodsOrderService {
     }
 
     private void synWhenBill(AdGoodsOrder adGoodsOrder) {
-          //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等
+          //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
 //        K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.SAL_OUTSTOCK.name(),adGoodsOrder.getSaleOutstock(),adGoodsOrder.getId(),adGoodsOrder.getFormatId(), K3CloudSynEntity.ExtendType.柜台订货.name());
 //        k3cloudSynDao.save(k3CloudSynEntity);
 //        K3cloudUtils.save(k3CloudSynEntity);

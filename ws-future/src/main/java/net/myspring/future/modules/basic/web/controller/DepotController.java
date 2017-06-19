@@ -2,8 +2,8 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
@@ -33,6 +33,8 @@ public class DepotController {
     private DepotService depotService;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private CloudClient cloudClient;
     @Autowired
     private DepotShopService depotShopService;
 
@@ -126,18 +128,6 @@ public class DepotController {
     public String depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
         return depotService.depotAccountExportAllDepots(depotAccountQuery);
     }
-
-    @RequestMapping(value="depotAccountDetailList")
-    public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
-
-
-//TODO 獲取明細
-//        Depot depot = depotService.findOne(depotId);
-//        List<CustomerAccount> customerAccounts = k3cloudService.findCustomerAccount(AccountUtils.getCompany().getOutDbname(),depot.getOutId(), depot.getName(), dateStart, dateEnd);
-
-        return null;
-    }
-
 
     @RequestMapping(value = "findOne")
     public DepotDto findOne(String id) {

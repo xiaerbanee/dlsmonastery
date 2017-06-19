@@ -43,7 +43,7 @@
         <el-table-column prop="ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
         <el-table-column fixed="right" :label="$t('depotAccountList.operation')" >
           <template scope="scope">
-            <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('depotAccountList.detail')}}</el-button></div>
+            <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemDetail(scope.row.clientOutId)">{{$t('depotAccountList.detail')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -103,10 +103,8 @@
       }, search() {
         this.formVisible = false;
         this.pageRequest();
-      }, itemAction: function (id, action) {
-        if(action==="detail") {
-          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dutyDateRange}});
-        }
+      }, itemDetail(clientOutId) {
+          this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dutyDateRange: this.formData.dutyDateRange}});
       }, exportAllDepots() {
 
       util.confirmBeforeExportData(this).then(() => {

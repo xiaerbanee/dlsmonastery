@@ -6,12 +6,11 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.ClientDto;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.web.query.ClientQuery;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.ClientForm;
+import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -30,18 +29,11 @@ public class ClientService {
     @Autowired
     private DepotShopRepository depotShopRepository;
     @Autowired
-    private DepotManager depotManager;
-    @Autowired
     private DepotRepository depotRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
-
-    public Client findOne(String id){
-        Client client=clientRepository.findOne(id);
-        return client;
-    }
 
     public Page<ClientDto> findPage(Pageable pageable, ClientQuery clientQuery) {
         Page<ClientDto> page = clientRepository.findPage(pageable, clientQuery);
@@ -74,13 +66,14 @@ public class ClientService {
         return client;
     }
 
-    public ClientDto findOne(ClientDto clientDto){
-        if(!clientDto.isCreate()){
-            Client client=clientRepository.findOne(clientDto.getId());
-            clientDto= BeanUtil.map(client,ClientDto.class);
-            cacheUtils.initCacheInput(clientDto);
+    public ClientDto findOne(String id){
+        ClientDto result = new ClientDto();
+        if(StringUtils.isNotBlank(id)){
+            Client client=clientRepository.findOne(id);
+            result = BeanUtil.map(client,ClientDto.class);
+            cacheUtils.initCacheInput(result);
        }
-       return clientDto;
+       return result;
     }
 
     public void delete(String id){
@@ -88,8 +81,11 @@ public class ClientService {
     }
 
     public String getClientName(String depotId) {
-        Client c = clientRepository.findByDepotId(depotId);
-        return c.getName();
+        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        if(clientDto == null) {
+            return null;
+        }
+        return clientDto.getName();
     }
 
     public List<ClientDto> findByNameContaining(String name){

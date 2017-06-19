@@ -3,9 +3,13 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDateTime;
 
 public class CnBankAcnt {
+    //对应业务系统的outId
     private String FBankAcntId;
+    //对应业务系统的outCode
     private String FNumber;
+    //
     private String FName;
+    //
     private LocalDateTime FModifyDate;
     //审核状态
     private String FDocumentStatus;

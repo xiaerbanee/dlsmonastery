@@ -5,9 +5,9 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/11.
  */
 public class BdAccount {
-    //账户Id
+    //账户Id--对应业务系统outId
     private String FAcctId;
-
+    //编码--对应业务系统outCode
     private String FNumber;
 
     private String  FFullName;

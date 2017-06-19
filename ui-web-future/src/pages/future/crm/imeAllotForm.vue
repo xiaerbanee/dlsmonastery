@@ -93,10 +93,6 @@
         formSubmit(){
 
           this.submitDisabled = true;
-          if (this.errMsg) {
-            this.$alert( this.$t('imeAllotForm.formInvalid'), this.$t('imeAllotForm.notify'));
-            return;
-          }
 
           let form = this.$refs["inputForm"];
           form.validate((valid) => {

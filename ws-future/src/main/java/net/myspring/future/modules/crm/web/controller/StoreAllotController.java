@@ -51,10 +51,11 @@ public class StoreAllotController {
 //            return new Message("message_store_allot_no_bind_finance",Message.Type.danger);
 //        }
         if(!storeAllotForm.isCreate()){
-            throw new ServiceException("error.storeAllot.cantEdit");
+            throw new ServiceException("大库调拨不可编辑");
         }
 
         storeAllotService.saveForm(storeAllotForm);
+//        TODO 同步金蝶
 //        if(storeAllotForm.getSyn()){
 //            k3cloudSynService.syn(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name());
 //            if(store.getExpressOrder()!=null){
@@ -177,13 +178,10 @@ public class StoreAllotController {
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
-
     @RequestMapping(value="export")
     public String export(StoreAllotQuery storeAllotQuery) {
 
         return storeAllotService.export(storeAllotQuery);
     }
-
-
 
 }

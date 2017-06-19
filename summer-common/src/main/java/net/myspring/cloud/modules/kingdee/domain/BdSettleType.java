@@ -5,8 +5,11 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/10.
  */
 public class BdSettleType{
+    //对应业务系统的outId
     private String FId;
+    //对应业务系统的outCode
     private String FNumber;
+    //
     private String FName;
     //审核状态
     private String FDocumentStatus;

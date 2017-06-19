@@ -9,8 +9,17 @@ import net.myspring.future.modules.basic.domain.Client;
 public class ClientDto extends DataDto<Client> {
     private String name;
     private String mobilePhone;
+    private String outId;
     private Boolean locked;
     private Boolean enabled;
+
+    public String getOutId() {
+        return outId;
+    }
+
+    public void setOutId(String outId) {
+        this.outId = outId;
+    }
 
     public String getName() {
         return name;

@@ -5,8 +5,11 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/6.
  */
 public class StkInventory {
+    //仓库--对应业务系统的outId
     private String FStockId;
+    //物料--对应业务系统的outId
     private String FMaterialId;
+    //库存
     private Integer FBaseQty;
 
     public String getFStockId() {

@@ -22,7 +22,7 @@ public class StkInventoryService {
         return stkInventoryRepository.findByStockIds(stockIds);
     }
 
-    public StkInventory findByStockIdAndMaterialId(String stockId,String materialId){
-        return stkInventoryRepository.findByStockIdAndMaterialId(stockId,materialId);
+    public List<StkInventory> findByMaterialIdList(List<String> materialId){
+        return stkInventoryRepository.findByMaterialIdList(materialId);
     }
 }

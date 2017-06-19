@@ -6,7 +6,7 @@ package net.myspring.cloud.modules.kingdee.domain;
  */
 public class BasAssistant {
     private String FEntryId;
-    //编码
+    //编码--对应业务系统outCode
     private String FNumber;
     //名称
     private String FDataValue;

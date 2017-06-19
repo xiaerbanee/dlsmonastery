@@ -3,9 +3,9 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDateTime;
 
 public class BdMaterial {
-    //物料id
+    //物料id--对应业务系统product的outId
     private String FMasterId;
-    //物料编码
+    //物料编码--对应业务系统product的outCode
     private String FNumber;
     //物料名称
     private String FName;
