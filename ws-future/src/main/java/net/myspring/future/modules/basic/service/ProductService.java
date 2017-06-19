@@ -218,7 +218,7 @@ public class ProductService {
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
         Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
         List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
-        List<Product> saveProduct = Lists.newArrayList();
+        List<Product> synProduct = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(bdMaterials)){
             for(BdMaterial bdMaterial:bdMaterials){
                 Product product = productMapByOutId.get(bdMaterial.getFMasterId());
@@ -226,29 +226,41 @@ public class ProductService {
                     product = productMapByName.get(bdMaterial.getFName());
                     if(product == null){
                         product = new Product();
-                        product.setAllowOrder(false);
-                        product.setAllowBill(false);
                         product.setCreatedBy(RequestUtils.getAccountId());
-                        if(CollectionUtil.isNotEmpty(goodsOrderIds)&&goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
-                            product.setHasIme(true);
-                        }else{
-                            product.setHasIme(false);
-                        }
                     }else{
                         product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
                 }
-                product.setOldName(product.getName());
-                product.setOldOutId(product.getOutId());
+                if(product.isCreate()){
+                    product.setAllowOrder(false);
+                    product.setAllowBill(false);
+                    if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
+                        product.setHasIme(true);
+                    }else{
+                        product.setHasIme(false);
+                    }
+                }else{
+                    product.setOldName(product.getName());
+                    product.setOldOutId(product.getOutId());
+                }
+                if(bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")){
+                    if(bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())){
+                        product.setNetType(NetTypeEnum.移动.name());
+                    }else{
+                        product.setNetType(NetTypeEnum.联信.name());
+                    }
+                }else{
+                    product.setNetType(NetTypeEnum.全网通.name());
+                }
                 product.setOutDate(bdMaterial.getFModifyDate());
                 product.setName(bdMaterial.getFName());
                 product.setOutId(bdMaterial.getFMasterId());
                 product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
                 product.setOutGroupName(bdMaterial.getFMaterialGroupName());
                 product.setCode(bdMaterial.getFNumber());
-                saveProduct.add(product);
+                synProduct.add(product);
             }
-            productRepository.save(saveProduct);
+            productRepository.save(synProduct);
         }
     }
 

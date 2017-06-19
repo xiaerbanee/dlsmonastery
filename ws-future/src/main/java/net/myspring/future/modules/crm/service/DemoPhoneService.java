@@ -70,16 +70,9 @@ public class DemoPhoneService {
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请日期"));
-        /*simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.office.name", "办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.district.province", "地区"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.district.city", "城市"));*/
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "使用人姓名"));
-        /*simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employee.mobilePhone", "联系电话"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shop.name", "用途"));*/
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "demoPhoneType", "演示机型"));
-        /*simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productIme.product.name", "货品机型"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productIme.ime2", "机身条码"));*/
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "IMEI码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
