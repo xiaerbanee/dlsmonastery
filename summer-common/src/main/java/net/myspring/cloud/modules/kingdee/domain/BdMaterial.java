@@ -9,11 +9,13 @@ public class BdMaterial {
     private String FNumber;
     //物料名称
     private String FName;
-    //物料分组
+    //物料分组Id
     private Long FMaterialGroup;
     //物料分组名称
     private String FMaterialGroupName;
-    //
+    //物料分组编码
+    private String FMaterialGroupNumber;
+
     private LocalDateTime FModifyDate;
     //审核状态
     private String FDocumentStatus;
@@ -58,6 +60,14 @@ public class BdMaterial {
 
     public void setFMaterialGroupName(String FMaterialGroupName) {
         this.FMaterialGroupName = FMaterialGroupName;
+    }
+
+    public String getFMaterialGroupNumber() {
+        return FMaterialGroupNumber;
+    }
+
+    public void setFMaterialGroupNumber(String FMaterialGroupNumber) {
+        this.FMaterialGroupNumber = FMaterialGroupNumber;
     }
 
     public LocalDateTime getFModifyDate() {

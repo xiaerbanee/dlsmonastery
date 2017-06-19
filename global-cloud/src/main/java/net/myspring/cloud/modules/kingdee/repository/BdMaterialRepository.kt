@@ -22,7 +22,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FNUMBER,
                 t2.FNAME,
                 t1.FMATERIALGROUP,
-                t4.FNAME AS fmaterialGroupName,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
                 t1.FMODIFYDATE,
                 t1.FFORBIDSTATUS,
                 t1.FDOCUMENTSTATUS
@@ -47,7 +48,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FNUMBER,
                 t2.FNAME,
                 t1.FMATERIALGROUP,
-                t4.FNAME AS fmaterialGroupName,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
                 t1.FMODIFYDATE,
                 t1.FFORBIDSTATUS,
                 t1.FDOCUMENTSTATUS
@@ -73,7 +75,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FNUMBER,
                 t2.FNAME,
                 t1.FMATERIALGROUP,
-                t4.FNAME AS fmaterialGroupName,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
                 t1.FMODIFYDATE,
                 t1.FFORBIDSTATUS,
                 t1.FDOCUMENTSTATUS
@@ -99,7 +102,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FNUMBER,
                 t2.FNAME,
                 t1.FMATERIALGROUP,
-                t4.FNAME AS fmaterialGroupName,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
                 t1.FMODIFYDATE,
                 t1.FFORBIDSTATUS,
                 t1.FDOCUMENTSTATUS
@@ -125,7 +129,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 t1.FNUMBER,
                 t2.FNAME,
                 t1.FMATERIALGROUP,
-                t4.FNAME AS fmaterialGroupName,
+                t4.FNAME AS FMaterialGroupName,
+                t3.FNUMBER as FMaterialGroupNumber,
                 t1.FMODIFYDATE,
                 t1.FFORBIDSTATUS,
                 t1.FDOCUMENTSTATUS
