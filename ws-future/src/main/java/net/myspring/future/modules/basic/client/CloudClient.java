@@ -1,13 +1,12 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.response.RestResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +62,7 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForDto")
-    RestResponse synForJournalForBank(CnJournalForBankDto cnJournalForBankDto);
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEntityList")
+    RestResponse synForJournalForBank(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList);
 
 }

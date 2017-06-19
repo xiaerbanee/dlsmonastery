@@ -6,20 +6,20 @@ import java.math.BigDecimal;
  * Created by lihx on 2017/6/8.
  */
 public class CnJournalFEntityForBankDto {
-    //对方科目编码
-    private String accountNumber;
+    //科目编码
+    private String accountNumberK3;
     //部门编码
     private String departmentNumber;
     //员工编码
-    private String empInfoNumber;
+    private String empInfoNumberK3;
     //其他类编码
-    private String otherTypeNumber;
+    private String otherTypeNumberK3;
     //费用类编码
-    private String expenseTypeNumber;
-    //对方客户编码
-    private String customerNumberFor;
+    private String expenseTypeNumberK3;
+    //客户编码
+    private String customerNumberK3;
     //结算方式
-    private String settleTypeNumber;
+    private String settleTypeNumberK3;
     //银行账户编码
     private String bankAccountNumber;
     //借方金额
@@ -29,14 +29,6 @@ public class CnJournalFEntityForBankDto {
     //摘要
     private String comment;
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
     public String getDepartmentNumber() {
         return departmentNumber;
     }
@@ -45,44 +37,52 @@ public class CnJournalFEntityForBankDto {
         this.departmentNumber = departmentNumber;
     }
 
-    public String getEmpInfoNumber() {
-        return empInfoNumber;
+    public String getAccountNumberK3() {
+        return accountNumberK3;
     }
 
-    public void setEmpInfoNumber(String empInfoNumber) {
-        this.empInfoNumber = empInfoNumber;
+    public void setAccountNumberK3(String accountNumberK3) {
+        this.accountNumberK3 = accountNumberK3;
     }
 
-    public String getOtherTypeNumber() {
-        return otherTypeNumber;
+    public String getEmpInfoNumberK3() {
+        return empInfoNumberK3;
     }
 
-    public void setOtherTypeNumber(String otherTypeNumber) {
-        this.otherTypeNumber = otherTypeNumber;
+    public void setEmpInfoNumberK3(String empInfoNumberK3) {
+        this.empInfoNumberK3 = empInfoNumberK3;
     }
 
-    public String getExpenseTypeNumber() {
-        return expenseTypeNumber;
+    public String getOtherTypeNumberK3() {
+        return otherTypeNumberK3;
     }
 
-    public void setExpenseTypeNumber(String expenseTypeNumber) {
-        this.expenseTypeNumber = expenseTypeNumber;
+    public void setOtherTypeNumberK3(String otherTypeNumberK3) {
+        this.otherTypeNumberK3 = otherTypeNumberK3;
     }
 
-    public String getCustomerNumberFor() {
-        return customerNumberFor;
+    public String getExpenseTypeNumberK3() {
+        return expenseTypeNumberK3;
     }
 
-    public void setCustomerNumberFor(String customerNumberFor) {
-        this.customerNumberFor = customerNumberFor;
+    public void setExpenseTypeNumberK3(String expenseTypeNumberK3) {
+        this.expenseTypeNumberK3 = expenseTypeNumberK3;
     }
 
-    public String getSettleTypeNumber() {
-        return settleTypeNumber;
+    public String getCustomerNumberK3() {
+        return customerNumberK3;
     }
 
-    public void setSettleTypeNumber(String settleTypeNumber) {
-        this.settleTypeNumber = settleTypeNumber;
+    public void setCustomerNumberK3(String customerNumberK3) {
+        this.customerNumberK3 = customerNumberK3;
+    }
+
+    public String getSettleTypeNumberK3() {
+        return settleTypeNumberK3;
+    }
+
+    public void setSettleTypeNumberK3(String settleTypeNumberK3) {
+        this.settleTypeNumberK3 = settleTypeNumberK3;
     }
 
     public String getBankAccountNumber() {
