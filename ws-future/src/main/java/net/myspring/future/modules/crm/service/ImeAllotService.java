@@ -58,10 +58,6 @@ public class ImeAllotService {
     @Autowired
     private ProductImeRepository productImeRepository;
 
-    public void logicDelete(String id) {
-        imeAllotRepository.logicDelete(id);
-    }
-
     public Page<ImeAllotDto> findPage(Pageable pageable, ImeAllotQuery imeAllotQuery) {
         Page<ImeAllotDto> page = imeAllotRepository.findPage(pageable,imeAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
@@ -110,16 +106,16 @@ public class ImeAllotService {
             if(productIme == null) {
                 sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
+                Depot depot = depotRepository.findOne(productIme.getDepotId());
                 if(productIme.getProductImeSaleId() !=null) {
                     sb.append("串码：").append(ime).append("已核销；");
                 }else if(productIme.getProductImeUploadId() != null) {
                     sb.append("串码：").append(ime).append("已上报；");
                 }else{
                     if(checkAccess) {
-                        //TODO 需要增加判断，判断门店是否可以核销
-//                        if(!DepotUtils.isAccess(productIme.getDepot(), true)) {
-//                            message.addText("message_ime_allot_no_depot",productIme.getDepot().getName(),"message_ime_allot_no_allot_permission");
-//                        }
+                        if(!depotManager.isAccess(depot, true)) {
+                            sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的调拨权限，将自动生成调拨申请单；");
+                        }
                     }
                 }
             }
@@ -132,11 +128,6 @@ public class ImeAllotService {
     public void allot(ImeAllotForm imeAllotForm) {
 
         List<String> imeList = imeAllotForm.getImeList();
-
-        String errMsg = checkForImeAllot(imeList, true);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
-        }
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Depot toDepot = depotRepository.findOne(imeAllotForm.getToDepotId());
@@ -213,6 +204,12 @@ public class ImeAllotService {
     }
 
     public void batchAllot(ImeAllotBatchForm imeAllotBatchForm) {
+
+        List<String> imeList =  CollectionUtil.extractToList(imeAllotBatchForm.getImeAllotSimpleFormList(),"ime");
+        String errMsg = checkForImeAllot(imeList, true);
+        if(StringUtils.isNotBlank(errMsg)){
+            throw new ServiceException(errMsg);
+        }
 
         for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
 
