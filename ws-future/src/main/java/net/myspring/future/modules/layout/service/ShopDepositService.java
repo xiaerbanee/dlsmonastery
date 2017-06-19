@@ -177,7 +177,7 @@ public class ShopDepositService {
         if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
             return null;
         }
-        BdDepartment bdDepartment = cloudClient.findDepartByCustomer(clientDto.getOutId());
+        BdDepartment bdDepartment = cloudClient.findDepartmentByOutId(clientDto.getOutId());
         if(bdDepartment == null){
             return null;
         }
