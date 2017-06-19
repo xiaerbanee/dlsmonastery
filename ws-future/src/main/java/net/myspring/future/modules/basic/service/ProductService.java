@@ -213,12 +213,12 @@ public class ProductService {
     }
 
     public void syn() {
-        List<BdMaterial> bdMaterials = cloudClient.getSynProductData();
+        List<BdMaterial> bdMaterials = cloudClient.getAllProduct();
         List<Product> products = productRepository.findAllEnabled();
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
         Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
         List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
-
+        List<Product> saveProduct = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(bdMaterials)){
             for(BdMaterial bdMaterial:bdMaterials){
                 Product product = productMapByOutId.get(bdMaterial.getFMasterId());
@@ -238,47 +238,18 @@ public class ProductService {
                         product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
                 }
+                product.setOldName(product.getName());
+                product.setOldOutId(product.getOutId());
                 product.setOutDate(bdMaterial.getFModifyDate());
                 product.setName(bdMaterial.getFName());
                 product.setOutId(bdMaterial.getFMasterId());
                 product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
                 product.setOutGroupName(bdMaterial.getFMaterialGroupName());
                 product.setCode(bdMaterial.getFNumber());
+                saveProduct.add(product);
             }
+            productRepository.save(saveProduct);
         }
-        /*LocalDateTime dateTime=productRepository.getMaxOutDate();
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();*/
-//        String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
-//        String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
-//        List<String> outGroupIds = IdUtils.getIdList(value);
-//        List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
-//        if(CollectionUtil.isNotEmpty(dataList)) {
-//            for (Map<String, Object> map : dataList) {
-//                Product product = productRepository.findByOutId(map.get("outId").toString());
-//                if(product==null) {
-//                    product = productRepository.findByName(map.get("name").toString());
-//                    if(product ==null) {
-//                        product = new Product();
-//                        product.setAllowBill(false);
-//                        product.setAllowOrder(false);
-//                        if(CollectionUtil.isNotEmpty(outGroupIds) && outGroupIds.contains(map.get("fgroup").toString())) {
-//                            product.setHasIme(true);
-//                        }else {
-//                            product.setHasIme(false);
-//                        }
-//                        productRepository.save(product);
-//                    }
-//                }
-//                product.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
-//                product.setName(map.get("name").toString());
-//                product.setOutId(map.get("outId").toString());
-//                product.setOutGroupId(map.get("fgroup").toString());
-//                product.setOutGroupName(map.get("groupName").toString());
-//                product.setCode(map.get("code").toString());
-//                productRepository.save(product);
-//
-//            }
-//        }
     }
 
 
