@@ -3,8 +3,11 @@ package net.myspring.cloud.modules.kingdee.domain;
 import java.time.LocalDate;
 
 public class BdStock {
+    //对应业务系统的outId
     private String FStockId;
+    //对应业务系统的outCode
     private String FNumber;
+    //
     private String FName;
     //分组
     private Long FGroup;

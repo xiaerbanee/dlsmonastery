@@ -2,10 +2,13 @@ package net.myspring.cloud.modules.kingdee.domain;
 
 
 /**
+ * 部门
  * Created by lihx on 2017/4/6.
  */
 public class BdDepartment {
+    //部门Id--对应业务系统部门outId
     private String FDeptId;
+    //部门编码--对应业务系统部门outCode
     private String FNumber;
     private String FFullName;
     //审核状态
