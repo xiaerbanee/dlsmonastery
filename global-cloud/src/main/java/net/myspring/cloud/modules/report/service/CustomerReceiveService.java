@@ -17,6 +17,8 @@ import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -70,7 +72,7 @@ public class CustomerReceiveService {
         if(customerReceiveQuery.getQueryDetail()) {
             CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
             customerReceiveDetailQuery.setCustomerIdList(customerIdList);
-            customerReceiveDetailQuery.setDateRange(customerReceiveQuery.getDateRange());
+//            customerReceiveDetailQuery.setDateRange(customerReceiveQuery.getDateRange());
             Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
             for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
                 customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
@@ -205,5 +207,12 @@ public class CustomerReceiveService {
             }
         }
         return result;
+    }
+
+    public CustomerReceiveQuery getQuery(){
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setSort("t1.fcustid,DESC");
+        customerReceiveQuery.getExtra().put("customerGroupList",bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName());
+        return customerReceiveQuery;
     }
 }
