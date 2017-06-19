@@ -66,7 +66,7 @@ public class BankService {
 
 
     public void syn(){
-        List<CnBankAcnt> cnBankAcnts = cloudClient.getSynBankData();
+        List<CnBankAcnt> cnBankAcnts = cloudClient.getSynBank();
         List<Bank> banks = bankRepository.findAllEnabled();
         Map<String,Bank> bankOutIdMap = CollectionUtil.extractToMap(banks,"outId");
         Map<String,Bank> bankNameMap = CollectionUtil.extractToMap(banks,"name");

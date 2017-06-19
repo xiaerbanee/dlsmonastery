@@ -21,16 +21,16 @@ import java.util.List;
 public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
-    List<BdStock> getSynStockData();
+    List<BdStock> getSynStock();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
-    List<BdCustomer> getSynCustomerData();
+    List<BdCustomer> getSynCustomer();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
-    List<BdMaterial> getSynProductData();
+    List<BdMaterial> getSynProduct();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
-    List<CnBankAcnt> getSynBankData();
+    List<CnBankAcnt> getSynBank();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
     ArReceivable findReceivableBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
@@ -61,7 +61,7 @@ public interface CloudClient {
     List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(@RequestParam(value = "dateRange")String dateRange,@RequestParam(value = "customerId")String customerId);
 
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
-    List<CustomerReceiveDto> getCustomerReceiveList(@RequestBody CustomerReceiveQuery customerReceiveQuery);
+    List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
 
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForDto")
     RestResponse synForJournalForBank(CnJournalForBankDto cnJournalForBankDto);
