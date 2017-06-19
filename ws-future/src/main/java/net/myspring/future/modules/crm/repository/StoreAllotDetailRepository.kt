@@ -25,10 +25,6 @@ interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> 
 
 interface StoreAllotDetailRepositoryCustom{
 
-    fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto>
-
-    fun findStoreAllotDtoById(id: String): StoreAllotDto
-
     fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String,  companyId: String): MutableList<SimpleStoreAllotDetailDto>
 
     fun findByStoreAllotIds(storeAllotIdList: MutableList<String>): MutableList<StoreAllotDetailDto>
@@ -90,25 +86,5 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
         ORDER BY result.billQty DESC
                 """, params, MyBeanPropertyRowMapper(SimpleStoreAllotDetailDto::class.java))
     }
-
-    override fun findStoreAllotDtoById(id: String): StoreAllotDto {
-        return namedParameterJdbcTemplate.queryForObject("""
-            SELECT
-                t2.express_codes expressOrderExpressCodes,
-                t2.express_company_id,
-                t1.*
-            FROM
-                crm_store_allot t1
-                LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
-            WHERE
-                t1.enabled = 1
-                AND t1.id =  :id
-                """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(StoreAllotDto::class.java))
-    }
-
-    override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
 }

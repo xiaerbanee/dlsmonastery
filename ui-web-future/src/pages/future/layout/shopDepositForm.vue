@@ -12,7 +12,9 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.department')" prop="departMent" >
-          <office-select v-model = "inputForm.departMent" ></office-select>
+          <el-select v-model="inputForm.departMent" clearable :placeholder="$t('shopDepositForm.inputKey')">
+            <el-option v-for="item in inputForm.extra.departMentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('shopDepositForm.bank')" prop="bankId" v-if="inputForm.outBillType==='手工日记账'" >
           <bank-select v-model = "inputForm.bankId"></bank-select>
@@ -41,12 +43,10 @@
 </template>
 <script>
   import bankSelect from 'components/future/bank-select';
-  import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
     export default{
         components:{
           bankSelect,
-          officeSelect,
           depotSelect,
         },
       data(){

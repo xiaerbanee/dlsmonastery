@@ -7,8 +7,8 @@ import net.myspring.future.modules.crm.dto.ProductImeForReportScoreDto
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto
 import net.myspring.future.modules.crm.dto.ProductImeReportDto
 import net.myspring.future.modules.crm.web.query.ProductImeQuery
-import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery
+import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -27,15 +27,9 @@ import java.util.*
 
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
-    fun findByIme(ime: String): ProductIme
-
     fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
     fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
-
-    @Query("select  t from #{#entityName} t where t.retailDate >= ?1 and t.retailDate<?2  and t.retailDate is not null ")
-    fun findByRetailDate(dateStart: LocalDate, dateEnd: LocalDate): List<ProductIme>
-
 
     @Query("""
     SELECT

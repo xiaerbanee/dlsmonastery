@@ -7,15 +7,11 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
-import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
-import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.ImeAllotRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
@@ -41,7 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -52,6 +50,8 @@ public class ImeAllotService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private DepotManager depotManager;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
@@ -60,11 +60,6 @@ public class ImeAllotService {
 
     public void logicDelete(String id) {
         imeAllotRepository.logicDelete(id);
-    }
-
-    private boolean getCrossArea(String toDepotId,String productImeDepotId){
-        //TODO 需要实现是否跨地区
-        return true;
     }
 
     public Page<ImeAllotDto> findPage(Pageable pageable, ImeAllotQuery imeAllotQuery) {
@@ -144,18 +139,20 @@ public class ImeAllotService {
         }
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        Depot toDepot = depotRepository.findOne(imeAllotForm.getToDepotId());
 
         for(ProductIme productIme:productImes) {
             if(productIme.getProductImeSaleId()==null && productIme.getDepotId()!=null&&!productIme.getDepotId().equals(imeAllotForm.getToDepotId())) {
                 Depot fromDepot = depotRepository.findOne(productIme.getDepotId());
-                if(true) { //TODO 修改判断逻辑DepotUtils.isAccess(fromDepot,true)
+
+                if(depotManager.isAccess(fromDepot, true)) {
                     ImeAllot imeAllot = new ImeAllot();
                     imeAllot.setProductImeId(productIme.getId());
                     imeAllot.setFromDepotId(fromDepot.getId());
                     imeAllot.setToDepotId(imeAllotForm.getToDepotId());
                     imeAllot.setStatus(AuditStatusEnum.已通过.name());
                     imeAllot.setRemarks(imeAllotForm.getRemarks());
-                    imeAllot.setCrossArea(getCrossArea(imeAllotForm.getToDepotId(),productIme.getDepotId()));
+                    imeAllot.setCrossArea(!fromDepot.getAreaId().equals(toDepot.getAreaId()));
                     imeAllot.setAuditRemarks(imeAllotForm.getRemarks());
                     imeAllot.setAuditBy(RequestUtils.getAccountId());
                     imeAllot.setAuditDate(LocalDateTime.now());
@@ -172,7 +169,7 @@ public class ImeAllotService {
                     imeAllot.setToDepotId(imeAllotForm.getToDepotId());
                     imeAllot.setStatus(AuditStatusEnum.申请中.name());
                     imeAllot.setRemarks(imeAllotForm.getRemarks());
-                    imeAllot.setCrossArea(getCrossArea(imeAllotForm.getToDepotId(),productIme.getDepotId()));
+                    imeAllot.setCrossArea(!fromDepot.getAreaId().equals(toDepot.getAreaId()));
                     imeAllotRepository.save(imeAllot);
                 }
             }
