@@ -53,8 +53,8 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
     List<StkInventory> findBdInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIdAndMaterialId")
-    StkInventory findBdInventoryByDepotAndProduct(@RequestParam(value = "stockId") String depotId, @RequestParam(value = "materialId") String productId);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
+    List<StkInventory> findInventoryByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/report/customerReceive/detail")
