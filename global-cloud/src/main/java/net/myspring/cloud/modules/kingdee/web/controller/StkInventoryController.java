@@ -4,6 +4,7 @@ import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.kingdee.service.StkInventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class StkInventoryController {
         return stkInventoryService.findByStockIds(stockIds);
     }
 
-    @RequestMapping(value = "findByMaterialIds")
+    @RequestMapping(value = "findByMaterialIds",method = RequestMethod.GET)
     public List<StkInventory> findByMaterialIdList(List<String> materialIdList){
         return stkInventoryService.findByMaterialIdList(materialIdList);
     }
