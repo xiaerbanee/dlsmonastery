@@ -149,4 +149,13 @@ public class DepotController {
         depotService.synArea(depotQuery);
         return new RestResponse("同步成功",null);
     }
+
+
+    @RequestMapping(value = "getDefaultDepartMent")
+    public String getDefaultDepartMent(String depotId) {
+        if(StringUtils.isBlank(depotId)){
+            return null;
+        }
+        return depotService.getDefaultDepartMent(depotId);
+    }
 }

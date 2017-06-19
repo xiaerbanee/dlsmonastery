@@ -88,62 +88,6 @@ public class ReportScoreService {
 
     }
 
-    public String getNotScores() {
-        List<String> notScores = findNotScoreItemNumbers(LocalDateTime.now());
-        if (CollectionUtil.isEmpty(notScores)) {
-            return "";
-        }
-        return StringUtils.join(notScores, CharConstant.COMMA_FULL);
-
-    }
-
-    //查找当月不参与打分但产生电子保卡的数据
-    private List<String> findNotScoreItemNumbers(LocalDateTime localDateTime) {
-        List<String> result = Lists.newArrayList();
-        LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(localDateTime).toLocalDate();
-        LocalDate dateEnd = localDateTime.toLocalDate().plusDays(1);
-        //TODO 需要继续实现findNotScoreItemNumbers
-//
-//        List<NameQty> monthList = null;
-//        //物料编码-颜色编码对应表
-//        Map<String,String> itemNumberMap = Maps.newHashMap();
-//        Map<String,ProductType> map = Maps.newHashMap();
-//        if(CompanyBrand.OPPO.name().equals(account.getCompany().getBrand())) {
-//            monthList = oppoPlantProductItemelectronSelRepository.findNameQtyList(firstDayOfMonth, dateEnd);
-//            List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoPlantAgentProductSelRepository.findAll();
-//            itemNumberMap = CollectionsUtil.extractToMap(oppoPlantAgentProductSels, "itemNumber","colorId");
-//            for(OppoPlantAgentProductSel item:oppoPlantAgentProductSels) {
-//                if(item.getProduct() != null && item.getProduct().getProductType() != null) {
-//                    ProductType productType = item.getProduct().getProductType();
-//                    if(productType !=null) {
-//                        map.put(item.getColorId(), productType);
-//                    }
-//                }
-//            }
-//        } else if (CompanyBrand.vivo.name().equals(account.getCompany().getBrand())) {
-//            monthList = vivoPlantElectronicsnRepository.findNameQtyList(firstDayOfMonth, dateEnd);
-//            List<VivoPlantProducts> vivoPlantProducts = vivoPlantProductsRepository.findAll();
-//            itemNumberMap = CollectionsUtil.extractToMap(vivoPlantProducts, "itemNumber","colorId");
-//            for(VivoPlantProducts item:vivoPlantProducts) {
-//                if(item.getProduct() != null && item.getProduct().getProductType() != null) {
-//                    ProductType productType = item.getProduct().getProductType();
-//                    if(productType !=null) {
-//                        map.put(item.getColorId(), productType);
-//                    }
-//                }
-//            }
-//        }
-//        if(CollectionsUtil.isNotEmpty(monthList)){
-//            for(NameQty nameQty:monthList) {
-//                String colorId = itemNumberMap.get(nameQty.getName());
-//                if(!map.containsKey(colorId) && org.apache.commons.lang.StringUtils.isNotBlank(nameQty.getName())) {
-//                    result.add(nameQty.getName());
-//                }
-//            }
-//        }
-        return result;
-    }
-
     public ReportScoreDto findOne(ReportScoreDto reportScoreDto) {
         if (!reportScoreDto.isCreate()) {
             ReportScore reportScore = reportScoreRepository.getOne(reportScoreDto.getId());

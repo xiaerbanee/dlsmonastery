@@ -6,7 +6,6 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.service.ImeAllotService;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
@@ -30,8 +29,6 @@ public class ImeAllotController {
 
     @Autowired
     private ImeAllotService imeAllotService;
-    @Autowired
-    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ImeAllotDto> list(Pageable pageable, ImeAllotQuery imeAllotQuery) {
@@ -60,6 +57,11 @@ public class ImeAllotController {
         List<String> imeList = imeAllotForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");
+        }
+
+        String errMsg = imeAllotService.checkForImeAllot(imeList, false);
+        if(StringUtils.isNotBlank(errMsg)){
+            throw new ServiceException(errMsg);
         }
 
         imeAllotService.allot(imeAllotForm);

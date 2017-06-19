@@ -21,22 +21,13 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('productForm.hasIme')" prop="hasIme">
-              <el-radio-group v-model="inputForm.hasIme">
-                <el-radio :label=1>{{$t('productForm.true')}}</el-radio>
-                <el-radio :label=0>{{$t('productForm.false')}}</el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.hasIme"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('productForm.allowOrder')" prop="allowOrder">
-              <el-radio-group v-model="inputForm.allowOrder">
-                <el-radio :label=1>{{$t('productForm.true')}}</el-radio>
-                <el-radio :label=0 checked>{{$t('productForm.false')}}</el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.allowOrder"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('productForm.allowBill')" prop="allowBill">
-              <el-radio-group v-model="inputForm.allowBill">
-                <el-radio :label=1>{{$t('productForm.true')}}</el-radio>
-                <el-radio :label=0>{{$t('productForm.false')}}</el-radio>
-              </el-radio-group>
+              <bool-radio-group v-model="inputForm.allowBill"></bool-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -72,9 +63,11 @@
 </template>
 <script>
   import productTypeSelect from 'components/future/product-type-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
   export default{
     components:{
-      productTypeSelect
+      productTypeSelect,
+      boolRadioGroup
     },
     data(){
       return this.getData()
@@ -96,57 +89,46 @@
       }
     },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
             axios.post('/api/ws/future/basic/product/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
-                this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
+              this.$message(response.data.message);
               if(!this.isCreate){
                 this.$router.push({name:'productList',query:util.getQuery("productList")})
+              }else{
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },remoteProductType(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/productType/search',{params:{name:query}}).then((response)=>{
-            this.productTypeList = response.data;
-            this.remoteLoading = false;
-          })
-        }
       },handlePreview(file) {
         window.open(file.url);
       },handleChange(file, fileList) {
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/ws/future/basic/product/getForm').then((response)=>{
           this.inputForm = response.data;
-        axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-        this.inputForm.hasIme = response.data.hasIme?1:0;
-        this.inputForm.allowOrder = response.data.allowOrder?1:0;
-        this.inputForm.allowBill = response.data.allowBill?1:0;
-        if(response.data.productType != null){
-          this.productTypeList = new Array(response.data.productType)
-        }
-      });
+          if(!this.isCreate){
+            axios.get('/api/ws/future/basic/product/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+              if(response.data.productType != null){
+                this.productTypeList = response.data.productType;
+              }
+            });
+          }
         });
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

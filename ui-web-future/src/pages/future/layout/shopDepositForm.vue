@@ -2,7 +2,7 @@
   <div>
     <head-tab active="shopDepositForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" label-width="120px"  class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('shopDepositForm.shopName')" prop="shopId">
           <depot-select v-model ="inputForm.shopId"  category="directShop" @input="shopChanged"></depot-select>
         </el-form-item>
@@ -57,29 +57,29 @@
           return{
             submitDisabled:false,
             inputForm:{
-                extra:{}
+              extra:{}
             },
 
             rules: {
               shopId: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
               departMent: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
+              bankId: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
               outBillType: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
-              marketAmount: [{ type: 'number', message: this.$t('shopDepositForm.inputLegalValue')}],
-              imageAmount: [{ type: 'number', message: this.$t('shopDepositForm.inputLegalValue')}],
-              demoPhoneAmount: [{ type: 'number', message: this.$t('shopDepositForm.inputLegalValue')}]
+              billDate: [{ required: true, message: this.$t('shopDepositForm.prerequisiteMessage')}],
+              marketAmount: [{ required: true, type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}],
+              imageAmount: [{ required: true, type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}],
+              demoPhoneAmount: [{ required: true,  type: 'number', message: this.$t('shopDepositForm.prerequisiteAndNumberMessage')}]
             }
           }
         },
         formSubmit(){
-
+          this.submitDisabled = true;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.submitDisabled = true;
               axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
-
                 if(response.data.success) {
                   Object.assign(this.$data, this.getData());
                   this.initPage();
@@ -87,23 +87,21 @@
               }).catch( () => {
                 this.submitDisabled = false;
               });
+            }else{
+              this.submitDisabled = false;
             }
           })
         },shopChanged(){
             if(!this.inputForm.shopId || this.inputForm.shopId === ''){
                 return ;
             }
-            axios.get('/api/ws/future/crm/shopDeposit/getDefaultDepartMent',{params:{shopId:this.inputForm.shopId}}).then((response)=>{
+            axios.get('/api/ws/future/basic/depot/getDefaultDepartMent',{params:{depotId:this.inputForm.shopId}}).then((response)=>{
               this.inputForm.departMent=response.data;
-              console.log(this.inputForm.departMent)
             });
         },initPage(){
+          //押金列表只能增加，不能修改
           axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
             this.inputForm = response.data;
-            //押金列表只能增加，不能修改
-            axios.get('/api/ws/future/crm/shopDeposit/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-              util.copyValue(response.data,this.inputForm);
-            });
           });
         }
       },created () {
