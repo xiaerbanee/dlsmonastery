@@ -89,7 +89,7 @@ public class BankService {
                 bank.setOldOutId(bank.getOutId());
                 bank.setCompanyId(RequestUtils.getCompanyId());
                 bank.setName(cnBankacnt.getFName());
-                //bank.setOutDate(cnBankacnt.getFModifyDate());
+                bank.setOutDate(cnBankacnt.getFModifyDate());
                 bank.setOutId(cnBankacnt.getFBankAcntId());
                 bank.setCode(cnBankacnt.getFNumber());
                 saveBanks.add(bank);

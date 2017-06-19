@@ -3,6 +3,8 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -200,8 +202,8 @@ public class ProductService {
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){
-        productQuery.setNetTypeList(NetTypeEnum.getList());
-        productQuery.setOutGroupNameList(productRepository.findByOutName());
+        productQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
+        productQuery.getExtra().put("outGroupNameList",productRepository.findByOutName());
         return productQuery;
     }
 
@@ -211,8 +213,41 @@ public class ProductService {
     }
 
     public void syn() {
-        LocalDateTime dateTime=productRepository.getMaxOutDate();
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
+        List<BdMaterial> bdMaterials = cloudClient.getSynProductData();
+        List<Product> products = productRepository.findAllEnabled();
+        Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
+        Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
+        List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
+
+        if(CollectionUtil.isNotEmpty(bdMaterials)){
+            for(BdMaterial bdMaterial:bdMaterials){
+                Product product = productMapByOutId.get(bdMaterial.getFMasterId());
+                if(product == null){
+                    product = productMapByName.get(bdMaterial.getFName());
+                    if(product == null){
+                        product = new Product();
+                        product.setAllowOrder(false);
+                        product.setAllowBill(false);
+                        product.setCreatedBy(RequestUtils.getAccountId());
+                        if(CollectionUtil.isNotEmpty(goodsOrderIds)&&goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
+                            product.setHasIme(true);
+                        }else{
+                            product.setHasIme(false);
+                        }
+                    }else{
+                        product.setLastModifiedBy(RequestUtils.getAccountId());
+                    }
+                }
+                product.setOutDate(bdMaterial.getFModifyDate());
+                product.setName(bdMaterial.getFName());
+                product.setOutId(bdMaterial.getFMasterId());
+                product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
+                product.setOutGroupName(bdMaterial.getFMaterialGroupName());
+                product.setCode(bdMaterial.getFNumber());
+            }
+        }
+        /*LocalDateTime dateTime=productRepository.getMaxOutDate();
+        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();*/
 //        String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
 //        String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
 //        List<String> outGroupIds = IdUtils.getIdList(value);
