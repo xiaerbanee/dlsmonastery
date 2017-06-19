@@ -645,6 +645,7 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
+    prerequisiteAndNumberMessage: "请输入合法数字",
     inputLegalValue: "请输入合法的数值",
   },
   shopDepositList: {
@@ -696,6 +697,7 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
+    prerequisiteAndNumberMessage: "请输入合法数字",
     inputLegalValue: "silahkan masukkan angka yang valid"
   },
   shopGoodsDepositList: {

@@ -5,8 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
-import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
-import net.myspring.future.modules.layout.dto.ShopDepositDto;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.service.ShopGoodsDepositService;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -30,6 +28,8 @@ public class ShopGoodsDepositController {
 
     @Autowired
     private ShopGoodsDepositService shopGoodsDepositService;
+    @Autowired
+    private CloudClient cloudClient;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -86,22 +86,8 @@ public class ShopGoodsDepositController {
 
     @RequestMapping(value = "getForm")
     public ShopGoodsDepositForm getForm(ShopGoodsDepositForm shopGoodsDepositForm) {
-
-        //TODO 需要修改获取departMentList的方法
-        shopGoodsDepositForm.getExtra().put("departMentList", new ArrayList<>());
-
+        shopGoodsDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartment());
         return shopGoodsDepositForm;
-    }
-
-    @RequestMapping(value = "findDefaultDepartMent")
-    public String findDefaultDepartMent(String shopId) {
-
-        if(StringUtils.isBlank(shopId)){
-            return "";
-        }
-        //TODO 需要从金蝶获取shopId对应的默认departMent
-
-        return "defaultDepartMent";
     }
 
     @RequestMapping(value="export")

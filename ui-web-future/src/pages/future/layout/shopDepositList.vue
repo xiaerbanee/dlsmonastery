@@ -8,26 +8,26 @@
         <el-button type="primary" @click="exportLatest"  v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.exportLatest')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-Index="1500">
-        <el-form :model="formData">
+      <search-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('shopDepositList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopDepositList.shopName')">
+                <el-input v-model="formData.shopName" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('shopDepositList.type')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.type')">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('shopDepositList.inputKey')">
                   <el-option v-for="item in formData.extra.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('shopDepositList.createdBy')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.createdBy')">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="$t('shopDepositList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('shopDepositList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('shopDepositList.remarks')" :label-width="formLabelWidth">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
+              <el-form-item :label="$t('shopDepositList.remarks')">
+                <el-input v-model="formData.remarks" :placeholder="$t('shopDepositList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -83,7 +83,6 @@
         },
         initPromise:{},
         searchText:"",
-        formLabelWidth: '120px',
         formVisible: false,
         pageHeight: 600,
       };

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -13,6 +14,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -244,4 +246,16 @@ public class DepotService {
 
     }
 
+    public String getDefaultDepartMent(String depotId) {
+        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
+            return null;
+        }
+        BdDepartment bdDepartment = cloudClient.findDepartmentByOutId(clientDto.getOutId());
+        if(bdDepartment == null){
+            return null;
+        }
+        return bdDepartment.getFNumber();
+
+    }
 }

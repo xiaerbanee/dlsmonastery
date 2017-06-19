@@ -97,7 +97,7 @@ class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         params.put("type", type)
         params.put("shopId", shopId)
 
-        return namedParameterJdbcTemplate.queryForObject("""
+        val resultList = namedParameterJdbcTemplate.query("""
         SELECT
             t1.*
         FROM
@@ -108,6 +108,13 @@ class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         AND t1.enabled = 1
         AND t1.locked = 0
           """, params, BeanPropertyRowMapper(ShopDeposit::class.java))
+
+        if(resultList.size > 0){
+            return resultList[0]
+        }else{
+            return null
+        }
+
     }
 
     override fun findPage(pageable: Pageable, shopDepositQuery: ShopDepositQuery): Page<ShopDepositDto> {
