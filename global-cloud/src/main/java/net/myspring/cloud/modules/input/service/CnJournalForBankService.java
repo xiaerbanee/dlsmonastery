@@ -18,6 +18,7 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -98,7 +99,7 @@ public class CnJournalForBankService {
         }
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
         cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
-        cnJournalForBankDto.setDate(billDate);
+        cnJournalForBankDto.setDate(LocalDateUtils.formatLocalDate(billDate,"yyyy-M-d"));
         cnJournalForBankDto.setAccountNumberForBank(accountNumberForBank);
         cnJournalForBankDto.setKingdeeName(kingdeeBook.getName());
         cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());

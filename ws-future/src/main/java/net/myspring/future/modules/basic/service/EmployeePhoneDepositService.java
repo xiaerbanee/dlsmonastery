@@ -32,6 +32,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -140,7 +141,7 @@ public class EmployeePhoneDepositService {
         } else {
             CnJournalForBankDto journalForBankDto = new CnJournalForBankDto();
             journalForBankDto.setCreator(RequestUtils.getAccountId());//做单人姓名
-            journalForBankDto.setDate(LocalDate.now());
+            journalForBankDto.setDate(LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-M-d"));
             journalForBankDto.setAccountNumberForBank("1002");//银行存款
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
@@ -190,7 +191,7 @@ public class EmployeePhoneDepositService {
         }
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         List<EmployeePhoneDeposit> employeePhoneDeposits = Lists.newArrayList();
-        List<BdDepartment> departments = cloudClient.findAll();
+        List<BdDepartment> departments = cloudClient.findAllDepartmemt();
         Map<String, String> departMentMap = Maps.newHashMap();
         for (BdDepartment bdDepartment : departments) {
             departMentMap.put(bdDepartment.getFFullName(), bdDepartment.getFNumber());

@@ -23,7 +23,7 @@ public class CnJournalForBankDto {
     //创建人
     private String creator;
     //日期
-    private LocalDate date;
+    private String date;
     //对方账户（科目）
     private String accountNumberForBank;
     //账套名称
@@ -41,8 +41,12 @@ public class CnJournalForBankDto {
         this.creator = creator;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getAccountNumberForBank() {
@@ -53,9 +57,6 @@ public class CnJournalForBankDto {
         this.accountNumberForBank = accountNumberForBank;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
     public String getKingdeeName() {
         return kingdeeName;
@@ -88,11 +89,11 @@ public class CnJournalForBankDto {
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDATE",  LocalDateUtils.format(getDate(),"yyyy-M-d"));
+        model.put("FDATE",  LocalDateUtils.parse(getDate(),"yyyy-M-d"));
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SGRJZ01_SYS"));
         model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
         model.put("FAcctBookId", CollectionUtil.getMap("FNumber", "001"));
-        model.put("FSTARTPERIOD", LocalDateUtils.format(getDate(),"yyyy.M"));
+        model.put("FSTARTPERIOD", LocalDateUtils.parse(getDate(),"yyyy.M"));
         model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getAccountNumberForBank()));
         model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FMAINBOOKID", CollectionUtil.getMap("FNumber", "PRE001"));
