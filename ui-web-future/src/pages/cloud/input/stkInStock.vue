@@ -122,7 +122,6 @@
           this.settings.columns.push({type: "text", readOnly: true, strict: true});
         }
         typeList = response.data.typeList;
-        console.log(typeList);
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },

@@ -13,10 +13,10 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeSaleForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeSaleForm.inputIme')"></el-input>
+              <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('productImeSaleForm.inputIme')"></el-input>
             </el-form-item>
             <el-form-item >
-              <el-button  type="primary" @click.native="onImeStrChange">{{$t('productImeSaleForm.search')}}</el-button>
+              <el-button  type="primary" @click.native="searchImeStr">{{$t('productImeSaleForm.search')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeSaleForm.reset')}}</el-button>
 
             </el-form-item>
@@ -95,7 +95,6 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           searched:false,
-          imeStr:'',
           inputForm:{},
           errMsg:'',
           productImeList:[],
@@ -116,8 +115,8 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.initSubmitDataBeforeSubmit();
-            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(this.inputForm)).then((response)=> {
+
+            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
             if(response.data.success){
               if(!this.isCreate){
@@ -132,25 +131,13 @@
               this.submitDisabled = false;
           });
           }
-        })
-      }, initSubmitDataBeforeSubmit(){
-
-        this.inputForm.imeStr = this.imeStr;
-        this.inputForm.shopId = this.inputForm.shopId;
-        this.inputForm.buyer = this.inputForm.buyer;
-        this.inputForm.buyerAge = this.inputForm.buyerAge;
-        this.inputForm.buyerSex = this.inputForm.buyerSex;
-        this.inputForm.buyerPhone = this.inputForm.buyerPhone;
-        this.inputForm.buyerGrade = this.inputForm.buyerGrade;
-        this.inputForm.buyerSchool = this.inputForm.buyerSchool;
-        this.inputForm.remarks = this.inputForm.remarks;
-
-      },onImeStrChange(){
+        });
+      },searchImeStr(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.errMsg=response.data;
       });
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.productImeList=response.data;
 
         let tmpMap = new Map();
@@ -170,13 +157,12 @@
       });
       },reset(){
         this.searched = false;
-        this.imeStr = '';
         this.errMsg='';
         this.productImeList=[];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
       },initPage(){
-        axios.get('/api/ws/future/crm/productImeSale/getForm').then((response)=>{
+        axios.get('/api/ws/future/crm/productImeSale/getSaleForm').then((response)=>{
           this.inputForm=response.data;
         });
       }

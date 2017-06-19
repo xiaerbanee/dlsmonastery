@@ -47,7 +47,7 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            axios.post('/api/ws/future/basic/bank/save',qs.stringify(util.deleteExtra(that.inputForm))).then((response)=> {
+            axios.post('/api/ws/future/basic/bank/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(response.data.success) {
                 if (this.isCreate) {
@@ -61,14 +61,18 @@
             }).catch(() => {
               this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         });
       },initPage(){
         axios.get('/api/ws/future/basic/bank/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-          });
+          if(!this.isCreate){
+            axios.get('/api/ws/future/basic/bank/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            });
+          }
         });
       }
     },created () {

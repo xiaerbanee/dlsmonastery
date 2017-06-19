@@ -18,6 +18,7 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -53,13 +54,19 @@ public class CnJournalForBankService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    private KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto,KingdeeBook kingdeeBook) {
-        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
-                KingdeeFormIdEnum.CN_JOURNAL.name(),
-                cnJournalForBankDto.getJson(),
-                kingdeeBook) {
-        };
-        kingdeeManager.save(kingdeeSynDto);
+    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = new KingdeeSynDto(
+                    KingdeeFormIdEnum.CN_JOURNAL.name(),
+                    cnJournalForBankDto.getJson(),
+                    kingdeeBook) {
+            };
+            kingdeeManager.save(kingdeeSynDto);
+        }else{
+            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+        }
         return kingdeeSynDto;
     }
 
@@ -97,11 +104,11 @@ public class CnJournalForBankService {
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-        cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
-        cnJournalForBankDto.setDate(billDate);
-        cnJournalForBankDto.setAccountNumberForBank(accountNumberForBank);
-        cnJournalForBankDto.setKingdeeName(kingdeeBook.getName());
-        cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());
+        cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
+        cnJournalForBankDto.setDateK3(billDate);
+        cnJournalForBankDto.setAccountNumberForBankK3(accountNumberForBank);
+        cnJournalForBankDto.setKingdeeNameK3(kingdeeBook.getName());
+        cnJournalForBankDto.setKingdeeTypeK3(kingdeeBook.getType());
         for (List<Object> row : data) {
             String accountNumber = HandsontableUtils.getValue(row, 0);
             String settleTypeName = HandsontableUtils.getValue(row,1);
@@ -120,31 +127,39 @@ public class CnJournalForBankService {
                 customerNameFor =  HandsontableUtils.getValue(row, 11);
             }
             CnJournalFEntityForBankDto cnJournalFEntityForBankDto = new CnJournalFEntityForBankDto();
-            cnJournalFEntityForBankDto.setAccountNumber(accountNumber);
-            cnJournalFEntityForBankDto.setSettleTypeNumber(settleTypeNameMap.get(settleTypeName));
+            cnJournalFEntityForBankDto.setAccountNumberK3(accountNumber);
+            cnJournalFEntityForBankDto.setSettleTypeNumberK3(settleTypeNameMap.get(settleTypeName));
             cnJournalFEntityForBankDto.setDebitAmount(debitAmount);
             cnJournalFEntityForBankDto.setCreditAmount(creditAmount);
             cnJournalFEntityForBankDto.setBankAccountNumber(bankAcntNameMap.get(bankAcountName));
             cnJournalFEntityForBankDto.setComment(remarks);
-            cnJournalFEntityForBankDto.setEmpInfoNumber(empInfoNameMap.get(empInfoName));
+            cnJournalFEntityForBankDto.setEmpInfoNumberK3(empInfoNameMap.get(empInfoName));
             cnJournalFEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForBankDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForBankDto.setExpenseTypeNumber(expenseNameMap.get(expenseTypeName));
-            cnJournalFEntityForBankDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
+            cnJournalFEntityForBankDto.setOtherTypeNumberK3(otherTypeNameMap.get(otherTypeName));
+            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(expenseNameMap.get(expenseTypeName));
+            cnJournalFEntityForBankDto.setCustomerNumberK3(customerNameMap.get(customerNameFor));
             cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
         }
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = save(cnJournalForBankDto, kingdeeBook);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+    public KingdeeSynDto save(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+        cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
+        cnJournalForBankDto.setDateK3(LocalDate.now());
+        cnJournalForBankDto.setAccountNumberForBankK3("1002");//银行存款
+        cnJournalForBankDto.setKingdeeNameK3(kingdeeBook.getName());
+        cnJournalForBankDto.setKingdeeTypeK3(kingdeeBook.getType());
+        for (CnJournalFEntityForBankDto cnJournalFEntityForBankDto : cnJournalFEntityForBankDtoList) {
+            cnJournalFEntityForBankDto.setAccountNumberK3("2241");//其他应付款
+            cnJournalFEntityForBankDto.setSettleTypeNumberK3("JSFS04_SYS");//电汇
+            cnJournalFEntityForBankDto.setEmpInfoNumberK3("0001");//员工
+            cnJournalFEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
+            cnJournalFEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
+            cnJournalFEntityForBankDto.setCustomerNumberK3(null);
+            cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
         }
-        return kingdeeSynDto;
+        return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
     public CnJournalForBankForm getForm(KingdeeBook kingdeeBook){

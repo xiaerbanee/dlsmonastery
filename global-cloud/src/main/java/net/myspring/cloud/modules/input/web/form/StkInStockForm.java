@@ -20,7 +20,7 @@ public class StkInStockForm{
     //附带属性
     private List<String>  typeList = Lists.newArrayList();
     private String kingdeeName;
-    private List<String> materialNameList;
+    private List<String> materialNameList = Lists.newArrayList();
 
     public LocalDate getBillDate() {
         return billDate;

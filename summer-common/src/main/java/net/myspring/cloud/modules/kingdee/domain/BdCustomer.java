@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
  * Created by lihx on 2017/4/11.
  */
 public class BdCustomer {
-    //客户ID
+    //客户ID--对应业务系统客户outId
     private String FCustId;
-    //客户编码
+    //客户编码--对应业务系统客户outCode
     private String FNumber;
     //客户名称
     private String FName;
@@ -19,7 +19,7 @@ public class BdCustomer {
     private String FPrimaryGroupName;
     //修改客户时间
     private LocalDateTime FModifyDate;
-    //部门ID
+    //部门ID--对应业务系统部门outId
     private String FSalDeptId;
     //审核状态
     private String FDocumentStatus;

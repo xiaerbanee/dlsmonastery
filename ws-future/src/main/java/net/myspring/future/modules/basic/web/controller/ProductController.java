@@ -117,7 +117,7 @@ public class ProductController {
     @RequestMapping(value = "syn")
     public RestResponse syn() {
         productService.syn();
-        return new RestResponse("同步成功",null);
+        return new RestResponse("同步成功",ResponseCodeEnum.updated.name());
     }
 
     @RequestMapping(value = "findOne")

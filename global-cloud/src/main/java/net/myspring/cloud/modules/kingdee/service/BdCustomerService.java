@@ -23,8 +23,8 @@ public class BdCustomerService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
 
-    public Page<BdCustomer> findPageIncloudeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncloudeForbid(pageable,bdCustomerQuery);
+    public Page<BdCustomer> findPageIncludeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
+         Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncludeForbid(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
 
@@ -33,10 +33,6 @@ public class BdCustomerService {
             return bdCustomerRepository.findByNameLike(name);
         }
         return null;
-    }
-
-    public List<NameValueDto> findCustomerGroupList(){
-        return bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName();
     }
 
     public List<BdCustomer> findAll(){

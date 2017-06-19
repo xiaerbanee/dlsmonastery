@@ -23,8 +23,6 @@ public class ProductQuery extends BaseQuery {
     private Boolean allowOrder;  //允许开单
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
-    private List<String> netTypeList = Lists.newArrayList();
-    private List<String> outGroupNameList = Lists.newArrayList();
 
     public String getId() {
         return id;
@@ -56,22 +54,6 @@ public class ProductQuery extends BaseQuery {
 
     public void setAllowOrder(Boolean allowOrder) {
         this.allowOrder = allowOrder;
-    }
-
-    public List<String> getNetTypeList() {
-        return netTypeList;
-    }
-
-    public void setNetTypeList(List<String> netTypeList) {
-        this.netTypeList = netTypeList;
-    }
-
-    public List<String> getOutGroupNameList() {
-        return outGroupNameList;
-    }
-
-    public void setOutGroupNameList(List<String> outGroupNameList) {
-        this.outGroupNameList = outGroupNameList;
     }
 
     public String getName() {

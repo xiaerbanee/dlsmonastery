@@ -114,7 +114,7 @@
               if(response.data.success){
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if (!this.inputForm.create) {
+                if (!that.isCreate) {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
                 }
               }else {

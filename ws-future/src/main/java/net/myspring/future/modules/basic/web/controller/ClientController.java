@@ -2,16 +2,16 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.Chain;
-import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.service.ClientService;
-import net.myspring.future.modules.basic.web.query.ClientQuery;
 import net.myspring.future.modules.basic.web.form.ClientForm;
+import net.myspring.future.modules.basic.web.query.ClientQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,8 +24,7 @@ public class ClientController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ClientDto> list(Pageable pageable, ClientQuery clientQuery) {
-        Page<ClientDto> page = clientService.findPage(pageable, clientQuery);
-        return page;
+        return clientService.findPage(pageable, clientQuery);
     }
 
     @RequestMapping(value = "getQuery")
@@ -40,9 +39,8 @@ public class ClientController {
     }
 
     @RequestMapping(value = "findOne")
-    public ClientDto findOne(ClientDto clientDto) {
-        clientDto=clientService.findOne(clientDto);
-        return clientDto;
+    public ClientDto findOne(String id) {
+        return clientService.findOne(id);
     }
 
     @RequestMapping(value = "delete")
@@ -59,8 +57,7 @@ public class ClientController {
 
     @RequestMapping(value = "search")
     public List<ClientDto> search(String name){
-        List<ClientDto> clientDtoList=clientService.findByNameContaining(name);
-        return clientDtoList;
+        return clientService.findByNameContaining(name);
     }
 
     @RequestMapping(value = "getForm")

@@ -5,11 +5,10 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
-import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
-import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,8 @@ public class ShopDepositController {
 
     @Autowired
     private ShopDepositService shopDepositService;
+    @Autowired
+    private CloudClient cloudClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopDepositDto> list(Pageable pageable, ShopDepositQuery shopDepositQuery){
@@ -39,15 +40,10 @@ public class ShopDepositController {
         return shopDepositQuery;
     }
 
-    @RequestMapping(value = "getDefaultDepartMent")
-    public String getDefaultDepartMent(String shopId) {
-//TODO 需要查金蝶获取结果
-        return "ceshi";
-    }
-
     @RequestMapping(value = "getForm")
     public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         shopDepositForm.getExtra().put("outBillTypeList",OutBillTypeEnum.getList());
+        shopDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartment());
         return shopDepositForm;
 
     }

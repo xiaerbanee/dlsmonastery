@@ -16,14 +16,12 @@ import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.ProductTypeRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.dto.ProductImeReportDto;
-import net.myspring.future.modules.crm.dto.ProductImeReportExportDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
@@ -50,10 +48,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -73,8 +71,6 @@ public class ProductImeService {
     private OfficeClient officeClient;
     @Autowired
     private DepotManager depotManager;
-    @Autowired
-    private DepotShopRepository depotShopRepository;
     @Autowired
     private ProductTypeRepository productTypeRepository;
 
@@ -146,12 +142,6 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "billId", "工厂订单编号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdTime", "工厂发货时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-
-//            TODO 在companyConfig上增加配置
-//        if(Const.HAS_PROVINCE){
-//            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotRegionName", "大区"));
-//            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotProvinceName", "省份"));
-//        }
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotOfficeName", "考核区域"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotAreaType", "区域属性"));

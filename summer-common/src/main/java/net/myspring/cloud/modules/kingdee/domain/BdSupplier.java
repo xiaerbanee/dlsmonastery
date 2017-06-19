@@ -4,8 +4,11 @@ package net.myspring.cloud.modules.kingdee.domain;
  * Created by lihx on 2017/4/11.
  */
 public class BdSupplier{
+    //对应业务系统的outId
     private String FSupplierId;
+    //对应业务系统的outCode
     private String FNumber;
+    //
     private String FName;
     //审核状态
     private String FDocumentStatus;

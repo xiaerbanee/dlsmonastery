@@ -4,21 +4,24 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -40,15 +43,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional
 public class DepotService {
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
@@ -59,6 +66,8 @@ public class DepotService {
     private DepotManager depotManager;
     @Autowired
     private ShopDepositRepository shopDepositRepository;
+    @Autowired
+    private CloudClient cloudClient;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
 
@@ -84,16 +93,6 @@ public class DepotService {
         }
         return depotRepository.findStoreList(depotQuery);
     }
-
-
-
-    public List<DepotDto> findStoreList(String shipType) {
-        //TODO  需要完成根據shipType選擇倉庫
-        return findStoreList(new DepotQuery());
-
-    }
-
-
 
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndIdIn(ids);
@@ -123,14 +122,16 @@ public class DepotService {
         Page<DepotAccountDto> page = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
         cacheUtils.initCacheInput(page.getContent());
 
-        //TODO 獲取应收项
-        List<String> clientOutIdList = CollectionUtil.extractToList(page.getContent(), "clientOutId");
-        Map<String,BigDecimal> qcysMap = new HashMap<>();//期初
-        Map<String,BigDecimal> qmysMap = new HashMap<>();//期末
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+//        customerReceiveQuery.setDateRange(depotAccountQuery.getDutyDateRange());
+        customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
 
-        for(DepotAccountDto depotAccountDto : page){
-            depotAccountDto.setQcys(qcysMap.get(depotAccountDto.getClientOutId()));
-            depotAccountDto.setQmys(qmysMap.get(depotAccountDto.getClientOutId()));
+        for(DepotAccountDto depotAccountDto : page.getContent()){
+            CustomerReceiveDto customerReceiveDto = customerReceiveDtoMap.get(depotAccountDto.getClientOutId());
+            depotAccountDto.setQcys(customerReceiveDto.getBeginShouldGet());
+            depotAccountDto.setQmys(customerReceiveDto.getEndShouldGet());
         }
 
         return page;
@@ -242,6 +243,19 @@ public class DepotService {
         List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(RequestUtils.getCompanyId(), outGroupId);
         cacheUtils.initCacheInput(adStoreDtoList);
         return adStoreDtoList;
+
+    }
+
+    public String getDefaultDepartMent(String depotId) {
+        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
+            return null;
+        }
+        BdDepartment bdDepartment = cloudClient.findDepartmentByOutId(clientDto.getOutId());
+        if(bdDepartment == null){
+            return null;
+        }
+        return bdDepartment.getFNumber();
 
     }
 }

@@ -48,27 +48,25 @@
     },
     methods:{
       getData() {
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        inputForm:{
-            extra:{}
-        },
-        demoPhoneTypeOfficeDtos:[],
-        remoteLoading:false,
-        productTypes:[],
-        rules: {
-          name: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
-          productType: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
-          applyEndDate: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}]
-        },
-        pickerDateOption:util.pickerDateOption
-      }
-    },
+        return{
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          inputForm:{
+              extra:{}
+          },
+          demoPhoneTypeOfficeDtos:[],
+          remoteLoading:false,
+          productTypes:[],
+          rules: {
+            name: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
+            productType: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
+            applyEndDate: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}]
+          }
+        }
+      },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let demoPhoneTypeOfficeList = new Array();
@@ -81,26 +79,18 @@
                 this.$message(response.data.message);
                 if(!this.isCreate){
                   this.submitDisabled = false;
-                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
+                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")});
                 }else{
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch( ()=> {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
           }
         })
-      },remoteProduct(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/crm/demoPhoneType/search',{params:{name:query}}).then((response)=>{
-            this.productTypes = response.data;
-            this.remoteLoading = false;
-          });
-        }
       },showQty(){
           let sum = this.inputForm.limitQty;
           let realSum = 0;
@@ -119,13 +109,13 @@
         }
         this.inputForm.limitQty  = realSum;
       },
-    initPage(){
+      initPage(){
         axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.demoPhoneTypeOfficeDtos = response.data.demoPhoneTypeOfficeDtos;
-        this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-            });
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
     },created () {

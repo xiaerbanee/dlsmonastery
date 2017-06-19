@@ -66,7 +66,7 @@ public class BankService {
 
 
     public void syn(){
-        List<CnBankAcnt> cnBankAcnts = cloudClient.getSynBankData();
+        List<CnBankAcnt> cnBankAcnts = cloudClient.getAllBank();
         List<Bank> banks = bankRepository.findAllEnabled();
         Map<String,Bank> bankOutIdMap = CollectionUtil.extractToMap(banks,"outId");
         Map<String,Bank> bankNameMap = CollectionUtil.extractToMap(banks,"name");
@@ -89,7 +89,7 @@ public class BankService {
                 bank.setOldOutId(bank.getOutId());
                 bank.setCompanyId(RequestUtils.getCompanyId());
                 bank.setName(cnBankacnt.getFName());
-                //bank.setOutDate(cnBankacnt.getFModifyDate());
+                bank.setOutDate(cnBankacnt.getFModifyDate());
                 bank.setOutId(cnBankacnt.getFBankAcntId());
                 bank.setCode(cnBankacnt.getFNumber());
                 saveBanks.add(bank);

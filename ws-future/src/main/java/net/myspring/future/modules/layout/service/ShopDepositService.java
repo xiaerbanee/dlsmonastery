@@ -2,11 +2,17 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
+import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.repository.ClientRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto;
@@ -41,6 +47,12 @@ public class ShopDepositService {
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
+    private CloudClient cloudClient;
+    @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public Page<ShopDepositDto> findPage(Pageable pageable, ShopDepositQuery shopDepositQuery) {
@@ -65,11 +77,6 @@ public class ShopDepositService {
             saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount());
         }
 
-        if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
-            //        TODO 同步到金蝶
-//            k3cloudSynService.syn(idList, K3CloudSynEntity.ExtendType.押金列表.name());
-       }
-
     }
 
     private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
@@ -86,13 +93,28 @@ public class ShopDepositService {
         BigDecimal leftAmount = (latest == null ? BigDecimal.ZERO : latest.getLeftAmount()).add(amount);
         shopDeposit.setLeftAmount(leftAmount);
 
-        //TODO 保存之前調用金蝶
-
         shopDepositRepository.save(shopDeposit);
 
         if(latest != null){
             latest.setLocked(true);
             shopDepositRepository.save(latest);
+        }
+
+        if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
+//TODO 同步金蝶
+//                String otherTypes="其他应付款-客户押金（批发）-市场保证金";
+//                if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
+//                    K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.AR_OtherRecAble.name(),item.getAROtherRecAbleImage(otherTypes),item.getId(),item.getIdStr(), K3CloudSynEntity.ExtendType.押金列表.name());
+//                    k3cloudSynDao.save(k3CloudSynEntity);
+//                    item.setK3CloudSynEntity(k3CloudSynEntity);
+//                } else {
+//                    K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.CN_JOURNAL.name(),item.getBankJournal(otherTypes),item.getId(),item.getIdStr(), K3CloudSynEntity.ExtendType.押金列表.name());
+//                    k3cloudSynDao.save(k3CloudSynEntity);
+//                    item.setK3CloudSynEntity(k3CloudSynEntity);
+//                }
+//                shopDepositDao.save(item);
+//
+//            list.add(item.getId());
         }
 
     }
@@ -149,4 +171,5 @@ public class ShopDepositService {
         return StringUtils.toString(gridFSFile.getId());
 
     }
+
 }

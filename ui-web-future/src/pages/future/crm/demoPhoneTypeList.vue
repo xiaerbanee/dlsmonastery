@@ -76,7 +76,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("demoPhoneTypeList",submitData);
         axios.get('/api/ws/future/crm/demoPhoneType',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -111,9 +111,8 @@
       var that = this;
       that.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/crm/demoPhoneType/getQuery').then((response) => {
-        that.formData = response.data;
-        util.copyValue(that.$route.query, that.formData);
-        that.pageRequest();
+        this.formData = response.data;
+        util.copyValue(this.$route.query, this.formData);
       })
     },activated(){
     this.initPromise.then(()=>{

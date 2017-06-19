@@ -21,56 +21,56 @@ import java.util.Map;
  */
 public class CnJournalForBankDto {
     //创建人
-    private String creator;
+    private String creatorK3;
     //日期
-    private LocalDate date;
+    private LocalDate dateK3;
     //对方账户（科目）
-    private String accountNumberForBank;
+    private String accountNumberForBankK3;
     //账套名称
-    private String kingdeeName;
+    private String kingdeeNameK3;
     //账套类型
-    private String kingdeeType;
+    private String kingdeeTypeK3;
 
     private List<CnJournalFEntityForBankDto> fEntityDtoList = Lists.newArrayList();
 
-    public String getCreator() {
-        return creator;
+    public String getCreatorK3() {
+        return creatorK3;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setCreatorK3(String creatorK3) {
+        this.creatorK3 = creatorK3;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getDateK3() {
+        return dateK3;
     }
 
-    public String getAccountNumberForBank() {
-        return accountNumberForBank;
+    public void setDateK3(LocalDate dateK3) {
+        this.dateK3 = dateK3;
     }
 
-    public void setAccountNumberForBank(String accountNumberForBank) {
-        this.accountNumberForBank = accountNumberForBank;
+    public String getAccountNumberForBankK3() {
+        return accountNumberForBankK3;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setAccountNumberForBankK3(String accountNumberForBankK3) {
+        this.accountNumberForBankK3 = accountNumberForBankK3;
     }
 
-    public String getKingdeeName() {
-        return kingdeeName;
+    public String getKingdeeNameK3() {
+        return kingdeeNameK3;
     }
 
-    public void setKingdeeName(String kingdeeName) {
-        this.kingdeeName = kingdeeName;
+    public void setKingdeeNameK3(String kingdeeNameK3) {
+        this.kingdeeNameK3 = kingdeeNameK3;
     }
 
-    public String getKingdeeType() {
-        return kingdeeType;
+    public String getKingdeeTypeK3() {
+        return kingdeeTypeK3;
     }
 
-    public void setKingdeeType(String kingdeeType) {
-        this.kingdeeType = kingdeeType;
+    public void setKingdeeTypeK3(String kingdeeTypeK3) {
+        this.kingdeeTypeK3 = kingdeeTypeK3;
     }
 
     public List<CnJournalFEntityForBankDto> getfEntityDtoList() {
@@ -84,16 +84,16 @@ public class CnJournalForBankDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreator());
+        root.put("Creator", getCreatorK3());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDATE",  LocalDateUtils.format(getDate(),"yyyy-M-d"));
+        model.put("FDATE",  LocalDateUtils.format(getDateK3(),"yyyy-M-d"));
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SGRJZ01_SYS"));
         model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
         model.put("FAcctBookId", CollectionUtil.getMap("FNumber", "001"));
-        model.put("FSTARTPERIOD", LocalDateUtils.format(getDate(),"yyyy.M"));
-        model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getAccountNumberForBank()));
+        model.put("FSTARTPERIOD", LocalDateUtils.format(getDateK3(),"yyyy.M"));
+        model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getAccountNumberForBankK3()));
         model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FMAINBOOKID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FEXCHANGETYPE", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
@@ -104,23 +104,23 @@ public class CnJournalForBankDto {
         for (CnJournalFEntityForBankDto fEntityDto : fEntityDtoList){
             Map<String, Object> detail = Maps.newLinkedHashMap();
             detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", fEntityDto.getDepartmentNumber()));
-            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", fEntityDto.getEmpInfoNumber()));
-            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", fEntityDto.getOtherTypeNumber()));
-            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", fEntityDto.getExpenseTypeNumber()));
-            if (StringUtils.isNotBlank(fEntityDto.getCustomerNumberFor())){
-                if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeName())) {
-                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberFor()));
-                }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeType())){
-                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberFor()));
+            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", fEntityDto.getEmpInfoNumberK3()));
+            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", fEntityDto.getOtherTypeNumberK3()));
+            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", fEntityDto.getExpenseTypeNumberK3()));
+            if (StringUtils.isNotBlank(fEntityDto.getCustomerNumberK3())){
+                if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeNameK3())) {
+                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberK3()));
+                }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeTypeK3())){
+                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberK3()));
                 }
             }
-            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", fEntityDto.getSettleTypeNumber()));
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", fEntityDto.getSettleTypeNumberK3()));
             detail.put("FCREDITAMOUNT", fEntityDto.getCreditAmount());
             // 借方
             detail.put("FDEBITAMOUNT", fEntityDto.getDebitAmount());
             detail.put("FVOUCHERGROUPID", CollectionUtil.getMap("FNumber", "PRE001"));
             detail.put("FBANKACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getBankAccountNumber()));
-            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getAccountNumber()));
+            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getAccountNumberK3()));
             detail.put("FCOMMENT", fEntityDto.getComment());
             entity.add(detail);
             debitAmounts = debitAmounts.add(fEntityDto.getDebitAmount());
