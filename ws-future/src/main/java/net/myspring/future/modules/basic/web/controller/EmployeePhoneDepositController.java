@@ -87,7 +87,7 @@ public class EmployeePhoneDepositController {
 
     @RequestMapping(value="getBatchForm")
     public EmployeePhoneDepositForm getBatchForm(EmployeePhoneDepositForm employeePhoneDepositForm){
-        employeePhoneDepositForm.getExtra().put("departments", CollectionUtil.extractToList(cloudClient.findAllDepartmemt(),"FFullName"));
+        employeePhoneDepositForm.getExtra().put("departments", CollectionUtil.extractToList(cloudClient.findAllDepartment(),"FFullName"));
         return employeePhoneDepositForm;
     }
 

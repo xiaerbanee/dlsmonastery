@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
@@ -139,10 +138,7 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
-            CnJournalForBankDto journalForBankDto = new CnJournalForBankDto();
-            journalForBankDto.setCreator(RequestUtils.getAccountId());//做单人姓名
-            journalForBankDto.setDate(LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-M-d"));
-            journalForBankDto.setAccountNumberForBank("1002");//银行存款
+            List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList = Lists.newArrayList();
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
@@ -154,16 +150,11 @@ public class EmployeePhoneDepositService {
                         entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
                         entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
                         entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-                        entityForBankDto.setEmpInfoNumber("0001");//员工
                         Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
                         entityForBankDto.setBankAccountNumber(bank.getCode());
-                        entityForBankDto.setAccountNumber("2241");//其他应付款
-                        entityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
-                        entityForBankDto.setExpenseTypeNumber("6602.000");//无
-                        entityForBankDto.setSettleTypeNumber("JSFS04_SYS");//电汇
                         Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
                         entityForBankDto.setComment(depot.getName());
-                        journalForBankDto.getfEntityDtoList().add(entityForBankDto);
+                        cnJournalFEntityForBankDtoList.add(entityForBankDto);
                         employeePhoneDepositRepository.save(employeePhoneDeposit);
                         if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                             EmployeePhone employeePhone = new EmployeePhone();
@@ -181,7 +172,7 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
-            RestResponse restResponse = cloudClient.synForJournalForBank(journalForBankDto);
+            RestResponse restResponse = cloudClient.synForJournalForBank(cnJournalFEntityForBankDtoList);
         }
     }
 
@@ -191,7 +182,7 @@ public class EmployeePhoneDepositService {
         }
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         List<EmployeePhoneDeposit> employeePhoneDeposits = Lists.newArrayList();
-        List<BdDepartment> departments = cloudClient.findAllDepartmemt();
+        List<BdDepartment> departments = cloudClient.findAllDepartment();
         Map<String, String> departMentMap = Maps.newHashMap();
         for (BdDepartment bdDepartment : departments) {
             departMentMap.put(bdDepartment.getFFullName(), bdDepartment.getFNumber());
