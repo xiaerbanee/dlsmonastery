@@ -191,7 +191,7 @@ public class EmployeePhoneDepositService {
         }
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
         List<EmployeePhoneDeposit> employeePhoneDeposits = Lists.newArrayList();
-        List<BdDepartment> departments = cloudClient.findAllDepartmemt();
+        List<BdDepartment> departments = cloudClient.findAllDepartment();
         Map<String, String> departMentMap = Maps.newHashMap();
         for (BdDepartment bdDepartment : departments) {
             departMentMap.put(bdDepartment.getFFullName(), bdDepartment.getFNumber());

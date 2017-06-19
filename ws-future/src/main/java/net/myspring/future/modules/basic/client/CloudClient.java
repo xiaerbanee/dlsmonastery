@@ -48,7 +48,7 @@ public interface CloudClient {
     BdDepartment findDepartByCustomer( @RequestParam(value = "custId") String outId);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
-    List<BdDepartment> findAllDepartmemt();
+    List<BdDepartment> findAllDepartment();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
     List<StkInventory> findInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
