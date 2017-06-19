@@ -51,7 +51,7 @@ public class ShopDepositController {
     @RequestMapping(value = "getForm")
     public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         shopDepositForm.getExtra().put("outBillTypeList",OutBillTypeEnum.getList());
-        shopDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartmemt());
+        shopDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartment());
         return shopDepositForm;
 
     }
