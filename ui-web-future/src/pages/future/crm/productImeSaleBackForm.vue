@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeSaleBackForm"></head-tab>
     <div>
-      <el-form :model="productImeSale" ref="inputForm"   label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm"   label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item >
@@ -13,15 +13,15 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeSaleBackForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr" :placeholder="$t('productImeSaleBackForm.inputIme')"></el-input>
+              <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('productImeSaleBackForm.inputIme')"></el-input>
             </el-form-item>
             <el-form-item >
-              <el-button  type="primary" @click.native="onImeStrChange">{{$t('productImeSaleBackForm.search')}}</el-button>
+              <el-button  type="primary" @click.native="searchImeStr">{{$t('productImeSaleBackForm.search')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeSaleBackForm.reset')}}</el-button>
             </el-form-item>
             <div v-if="searched">
               <el-form-item :label="$t('productImeSaleBackForm.remarks')" prop="remarks" >
-                <el-input type="textarea" :rows="2" v-model="productImeSale.remarks"></el-input>
+                <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('productImeSaleBackForm.save')}}</el-button>
@@ -29,8 +29,6 @@
             </div>
           </el-col>
           <el-col :span="18" v-if="searched">
-
-
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('productImeSaleBackForm.name')"></el-table-column>
@@ -63,12 +61,9 @@
 
   import depotSelect from 'components/future/depot-select'
 
-
   export default{
     components: {
       depotSelect,
-
-
     },
     data(){
       return this.getData()
@@ -76,24 +71,18 @@
     methods: {
       getData() {
         return {
-          isInit: false,
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
-
           searched: false,
-          imeStr: '',
-          productImeSale: {},
+          inputForm: {
+              extra:{},
+          },
           errMsg: '',
           productImeList: [],
           productQtyList: [],
-          submitData: {
-            imeStr: '',
-            remarks: ''
-          },
           rules: {
             imeStr: [{required: true, message: this.$t('productImeSaleBackForm.prerequisiteMessage')}],
           },
-
         }
       },
       formSubmit(){
@@ -102,36 +91,30 @@
           this.$alert( this.$t('productImeSaleBackForm.formInvalid'), this.$t('productImeSaleBackForm.notify'));
           return;
         }
-
+        this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.submitDisabled = true;
-            this.initSubmitDataBeforeSubmit();
-            axios.post('/api/ws/future/crm/productImeSale/saleBack', qs.stringify(this.submitData)).then((response) => {
+
+            axios.post('/api/ws/future/crm/productImeSale/saleBack', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
               if (response.data.success) {
-                if (!this.isCreate) {
-                  this.$router.push({name: 'productImeSaleList', query: util.getQuery("productImeSaleList")})
-                }
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
             }).catch( () => {
               this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         })
-      }, initSubmitDataBeforeSubmit(){
-
-        this.submitData.imeStr = this.imeStr;
-        this.submitData.remarks = this.productImeSale.remarks;
-
-      }, onImeStrChange(){
+      }, searchImeStr(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productImeSale/checkForSaleBack', {params: {imeStr: this.imeStr}}).then((response) => {
+        axios.get('/api/ws/future/crm/productImeSale/checkForSaleBack', {params: {imeStr: this.inputForm.imeStr}}).then((response) => {
           this.errMsg = response.data;
         });
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) => {
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.inputForm.imeStr}}).then((response) => {
           this.productImeList = response.data;
 
           let tmpMap = new Map();
@@ -151,20 +134,17 @@
         });
       }, reset(){
         this.searched = false;
-        this.imeStr = '';
         this.errMsg = '';
         this.productImeList = [];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
+      },initPage(){
+        axios.get('/api/ws/future/crm/productImeSale/getSaleBackForm').then((response) => {
+          this.inputForm = response.data;
+        });
       }
-    }, activated () {
-      if (!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/crm/productImeSale/findDto').then((response) => {
-          this.productImeSale = response.data;
-        })
-      }
-      this.isInit = true;
+    }, created () {
+        this.initPage();
     }
   }
 </script>

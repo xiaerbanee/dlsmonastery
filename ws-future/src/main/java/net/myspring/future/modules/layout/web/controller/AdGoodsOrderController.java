@@ -2,9 +2,12 @@ package net.myspring.future.modules.layout.web.controller;
 
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.RequestUtils;
@@ -123,11 +126,11 @@ public class  AdGoodsOrderController {
     public RestResponse bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         //TODO 开单前校验
-//        if (!OrderStatus.待开单.name().equals(adGoodsOrder.getProcessStatus())) {
-//            return new Message("message_ad_goods_order_not_bill_status", Message.Type.danger);
-//        }
+
 //        // 检查用户
-//        if (adGoodsOrder.getSyn()) {
+//        if (adGoodsOrderBillForm.getSyn()!=null && adGoodsOrderBillForm.getSyn()) {
+//            RequestUtils.getRequestEntity().get
+//            AccountCommonDto accN
 //            if (StringUtils.isBlank(AccountUtils.getAccount().getOutId())) {
 //                return new Message("message_ad_goods_order_not_finance", Message.Type.danger);
 //            }
