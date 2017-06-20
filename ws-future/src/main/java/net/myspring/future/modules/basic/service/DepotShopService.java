@@ -77,8 +77,8 @@ public class DepotShopService {
         if (StringUtils.isBlank(id)){
             depotShopDto = new DepotShopDto();
         }else {
-            DepotShop depotShop = depotShopRepository.findOne(id);
-            depotShopDto = BeanUtil.map(depotShop,DepotShopDto.class);
+            depotShopDto = depotShopRepository.findDto(id);
+            cacheUtils.initCacheInput(depotShopDto);
         }
         return depotShopDto;
     }

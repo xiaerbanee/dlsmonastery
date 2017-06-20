@@ -91,8 +91,8 @@
                 {data:"id",readOnly: true, strict: true ,width: 50 },
                 {data:"code",readOnly: true, strict: true, width: 300 },
                 {data:"name",readOnly: true, strict: true, width: 450 },
-                {data:"visible", type: "autocomplete", source:[true,false], width: 70},
-                {data:"allowOrder", type: "autocomplete", source:[true,false], width: 80},
+                {data:"visible", type: "autocomplete", strict: true, source:['是','否'], width: 70},
+                {data:"allowOrder", type: "autocomplete", strict: true, source:['是','否'], width: 80},
                 {data:"price2", type: "numeric", width: 70},
                 {data:"expiryDateRemarks", width:150},
                 {data:"volume", type: "numeric", format: '0.00', width: 50},
@@ -116,6 +116,12 @@
         util.setQuery("productList",submitData);
         axios.get('/api/ws/future/basic/product/filter',{params:submitData}).then((response) => {
           this.settings.data  = response.data;
+          for (var i= 0; i<this.settings.data.length;i++) {
+             let vis = this.settings.data[i].visible;
+             let ao = this.settings.data[i].allowOrder;
+            this.settings.data[i].visible = vis ? '是' : '否';
+            this.settings.data[i].allowOrder = ao ? '是' : '否';
+          }
           table.loadData(this.settings.data);
         });
       },formSubmit(){

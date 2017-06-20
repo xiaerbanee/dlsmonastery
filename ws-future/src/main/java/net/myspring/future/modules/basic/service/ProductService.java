@@ -168,10 +168,12 @@ public class ProductService {
                 String value = StringUtils.toString(rows.get(i)).trim();
                 switch (i) {
                     case 3:
-                        product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                        /* product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setVisible("是".equals(value));
                         break;
                     case 4:
-                        product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                       /* product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setAllowOrder("是".equals(value));
                         break;
                     case 5:
                         if (StringUtils.isBlank(value)) {

@@ -30,7 +30,7 @@ Page({
             duration: 10000,
             success: function () {
                 wx.request({
-                    url: $util.getUrl("ws/future/basic/depotStore"),
+                    url: $util.getUrl("ws/future/basic/depotShop"),
                     header: {
                         'x-auth-token': app.globalData.sessionId,
                         'authorization': "Bearer" + wx.getStorageSync('token').access_token
