@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
@@ -13,9 +14,11 @@ import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.ArRefundBillForm;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.kingdee.domain.BdSettleType;
 import net.myspring.cloud.modules.kingdee.domain.CnBankAcnt;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdSettleTypeRepository;
 import net.myspring.cloud.modules.kingdee.repository.CnBankAcntRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -25,6 +28,7 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
@@ -38,6 +42,8 @@ import java.util.stream.Collectors;
  * 收款退款单
  * Created by lihx on 2017/6/20.
  */
+@Service
+@KingdeeDataSource
 public class ArRefundBillService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
@@ -45,6 +51,8 @@ public class ArRefundBillService {
     private CnBankAcntRepository cnBankAcntRepository;
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
+    @Autowired
+    private BdSettleTypeRepository bdSettleTypeRepository;
     @Autowired
     private KingdeeManager kingdeeManager;
 
@@ -170,6 +178,7 @@ public class ArRefundBillService {
         ArRefundBillForm arRefundBillForm = new ArRefundBillForm();
         map.put("banAcntNameList",cnBankAcntRepository.findAll().stream().map(CnBankAcnt::getFName).collect(Collectors.toList()));
         map.put("customerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
+        map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));
         arRefundBillForm.setExtra(map);
         return arRefundBillForm;
     }
