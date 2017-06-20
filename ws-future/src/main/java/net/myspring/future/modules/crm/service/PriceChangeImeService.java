@@ -70,7 +70,7 @@ public class PriceChangeImeService {
     }
 
     public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
-        List<PriceChange> priceChange = priceChangeRepository.findByPriceChangeIme(PriceChangeStatusEnum.上报中.name());
+        List<PriceChange> priceChange = priceChangeRepository.findAll();
         priceChangeImeForm.getExtra().put("priceChangeDtos",BeanUtil.map(priceChange, PriceChangeDto.class));
         return priceChangeImeForm;
     }
@@ -153,7 +153,7 @@ public class PriceChangeImeService {
                 priceChangeIme.setShopId(depotMap.get(shopNameList.get(i)).getId());
                 priceChangeIme.setSaleDate(productImeDtos.get(i).getProductImeSaleCreatedDate());
                 priceChangeIme.setUploadDate(productImeDtos.get(i).getProductImeUploadCreatedDate());
-                priceChangeIme.setStatus(AuditStatusEnum.已通过.toString());
+                priceChangeIme.setStatus(AuditStatusEnum.申请中.name());
                 priceChangeIme.setRemarks(remarksList.get(i));
                 priceChangeIme.setIsCheck(false);
                 priceChangeImes.add(priceChangeIme);

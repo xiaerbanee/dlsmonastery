@@ -80,16 +80,15 @@ public class CnJournalForBankService {
         List<String> bankAcntNameList = Lists.newArrayList();
         List<String> empInfoNameList = Lists.newArrayList();
         List<String> departmentNameList = Lists.newArrayList();
-        List<String> otherTypeNameList = Lists.newArrayList();
-        List<String> expenseTypeNameList = Lists.newArrayList();
+        List<String> assistantNameList = Lists.newArrayList();
         List<String> customerNameForList = Lists.newArrayList();
         for (List<Object> row : data){
             settleTypeNameList.add(HandsontableUtils.getValue(row,1));
             bankAcntNameList.add(HandsontableUtils.getValue(row,4));
             empInfoNameList.add(HandsontableUtils.getValue(row, 7));
             departmentNameList.add(HandsontableUtils.getValue(row, 8));
-            otherTypeNameList.add(HandsontableUtils.getValue(row, 9));
-            expenseTypeNameList.add(HandsontableUtils.getValue(row, 10));
+            assistantNameList.add(HandsontableUtils.getValue(row, 9));
+            assistantNameList.add(HandsontableUtils.getValue(row, 10));
             if (row.size() > 11) {
                 customerNameForList.add(HandsontableUtils.getValue(row, 11));
             }
@@ -98,8 +97,16 @@ public class CnJournalForBankService {
         Map<String, String> bankAcntNameMap = cnBankAcntRepository.findByNameList(bankAcntNameList).stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber));
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
-        Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
-        Map<String, String> expenseNameMap = basAssistantRepository.findByNameList(expenseTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
+        List<BasAssistant> basAssistantList = basAssistantRepository.findByNameList(assistantNameList);
+        Map<String, String> otherTypeNameMap = Maps.newHashMap();
+        Map<String, String> expenseTypeNameMap = Maps.newHashMap();
+        for (BasAssistant basAssistant :basAssistantList){
+            if ("其他类".equals(basAssistant.getFType())){
+                otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }else if("费用类".equals(basAssistant.getFType())){
+                expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }
+        }
         if (customerNameForList.size() > 0){
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
@@ -136,7 +143,7 @@ public class CnJournalForBankService {
             cnJournalFEntityForBankDto.setEmpInfoNumberK3(empInfoNameMap.get(empInfoName));
             cnJournalFEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
             cnJournalFEntityForBankDto.setOtherTypeNumberK3(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(expenseNameMap.get(expenseTypeName));
+            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(expenseTypeNameMap.get(expenseTypeName));
             cnJournalFEntityForBankDto.setCustomerNumberK3(customerNameMap.get(customerNameFor));
             cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
         }
@@ -162,8 +169,7 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public CnJournalForBankForm getForm(KingdeeBook kingdeeBook){
-        CnJournalForBankForm cnJournalForBankForm = new CnJournalForBankForm();
+    public CnJournalForBankForm getForm(CnJournalForBankForm cnJournalForBankForm,KingdeeBook kingdeeBook){
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));

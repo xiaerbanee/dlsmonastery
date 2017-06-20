@@ -75,7 +75,6 @@
             extra:{}
         },
         initPromise:{},
-        formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
 

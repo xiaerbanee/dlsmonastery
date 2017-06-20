@@ -39,7 +39,7 @@ public class PurMrbService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
+    private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.PUR_MRB.name(),
                 purMrbDto.getJson(),
@@ -94,8 +94,7 @@ public class PurMrbService {
         return kingdeeSynDto;
     }
 
-    public PurMrbForm getForm(){
-        PurMrbForm purMrbForm = new PurMrbForm();
+    public PurMrbForm getForm(PurMrbForm purMrbForm){
         Map<String,Object> map = Maps.newHashMap();
         map.put("materialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         purMrbForm.setExtra(map);

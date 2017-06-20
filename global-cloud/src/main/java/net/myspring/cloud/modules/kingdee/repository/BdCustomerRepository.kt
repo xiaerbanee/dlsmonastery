@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -175,7 +176,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(NameValueDto::class.java))
     }
 
-    fun findPageIncloudeForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
+    fun findPageIncludeForbid(pageable: Pageable, bdCustomerQuery: BdCustomerQuery): Page<BdCustomer>? {
         var sb = StringBuilder("""
              SELECT
                 t1.FCUSTID,
@@ -208,5 +209,32 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(bdCustomerQuery), BeanPropertyRowMapper(BdCustomer::class.java));
         var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(bdCustomerQuery),Long::class.java);
         return PageImpl(list,pageable,count);
+    }
+
+    fun findByMaxModifyDate(modifyDate: LocalDateTime): MutableList<BdCustomer> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
+            WHERE
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FMODIFYDATE > :modifyDate
+        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdCustomer::class.java))
     }
 }

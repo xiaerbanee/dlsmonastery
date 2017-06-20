@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 采购入库
  * Created by lihx on 2017/6/13.
  */
 public class StkInStockDto {
@@ -88,6 +89,12 @@ public class StkInStockDto {
         for (StkInStockFEntryDto entry : getStkInStockFEntryDtoList()){
             Map<String, Object> detail = Maps.newLinkedHashMap();
             detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entry.getMaterialNumber()));
+            //计价单位
+            detail.put("FPriceUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
+            //库存单位
+            detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
+            //采购单位
+            detail.put("FRemainInStockUnitId", CollectionUtil.getMap("FNumber", "Pcs"));
             detail.put("FRealQty", entry.getQty());
             detail.put("FPriceUnitQty", entry.getQty());
             detail.put("FBaseUnitQty", entry.getQty());

@@ -64,7 +64,6 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             AND t.confirm_qty > t.billed_qty
             AND t.created_date > :dateStart
             AND product.out_group_id IN (:outGroupIds)
-            ORDER BY t.created_date DESC
         """,params,MyBeanPropertyRowMapper(AdApplyDto::class.java))
     }
 
@@ -83,7 +82,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append("""  and t1.shop_id = :shopId """)
         }
         if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
-            sb.append("""  and t1.create_by = :createdBy """)
+            sb.append("""  and t1.created_by = :createdBy """)
         }
         if (adApplyQuery.createdDateStart != null) {
             sb.append("""  and t1.created_date  >= :createdDateStart """)
@@ -127,7 +126,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append("""  and t1.shop_id = :shopId """)
         }
         if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
-            sb.append("""  and t1.create_by = :createdBy """)
+            sb.append("""  and t1.created_by = :createdBy """)
         }
         if (adApplyQuery.createdDateStart != null) {
             sb.append("""  and t1.created_date  >= :createdDateStart """)

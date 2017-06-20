@@ -6,6 +6,7 @@ import net.myspring.future.modules.basic.dto.DepotReportDto
 import net.myspring.future.modules.basic.dto.DepotShopDto
 import net.myspring.future.modules.basic.web.query.DepotQuery
 import net.myspring.future.modules.crm.web.query.ReportQuery
+import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by zhangyf on 2017/5/24.
@@ -34,9 +36,31 @@ interface DepotShopRepositoryCustom{
     fun findStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
     fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
+    
+    fun findDto(id:String):DepotShopDto;
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
+    override fun findDto(id: String): DepotShopDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+              SELECT
+                t1.id AS 'depotId',
+                t1.name as 'depotName',
+                t1.contator,
+                t1.mobile_phone,
+                t1.address,
+                t1.office_id,
+                t2.*
+            FROM
+                crm_depot t1,
+                crm_depot_shop t2
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.depot_shop_id = t2.id
+            AND t1.id=:id
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(DepotShopDto::class.java))
+    }
 
     override fun findBaokaStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
@@ -326,13 +350,13 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             SELECT
                 t1.id AS 'depotId',
                 t1.name as 'depotName',
+                t1.office_id,
                 t2.*
             FROM
                 crm_depot t1,
                 crm_depot_shop t2
             WHERE
                 t1.enabled = 1
-            AND t2.enabled = 1
             AND t1.depot_shop_id = t2.id
         """)
         if (StringUtils.isNotEmpty(depotQuery.name)) {

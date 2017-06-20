@@ -20,7 +20,8 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
     private Integer buyerAge;
     private String buyerSex;
     private String buyerPhone;
-
+    private String buyerGrade;
+    private String buyerSchool;
 
     public List<String> getImeList(){
         if(imeStr == null){
@@ -77,4 +78,19 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
         this.buyerPhone = buyerPhone;
     }
 
+    public String getBuyerGrade() {
+        return buyerGrade;
+    }
+
+    public void setBuyerGrade(String buyerGrade) {
+        this.buyerGrade = buyerGrade;
+    }
+
+    public String getBuyerSchool() {
+        return buyerSchool;
+    }
+
+    public void setBuyerSchool(String buyerSchool) {
+        this.buyerSchool = buyerSchool;
+    }
 }

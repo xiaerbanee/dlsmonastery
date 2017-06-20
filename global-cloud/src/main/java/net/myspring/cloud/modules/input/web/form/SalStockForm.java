@@ -1,13 +1,11 @@
 package net.myspring.cloud.modules.input.web.form;
 
-import net.myspring.common.form.BaseForm;
-
 import java.time.LocalDate;
 
 /**
  * Created by liuj on 2017/5/11.
  */
-public class SalStockForm extends BaseForm<SalStockForm>{
+public class SalStockForm {
     private String storeNumber;
     private LocalDate billDate;
     private String json;

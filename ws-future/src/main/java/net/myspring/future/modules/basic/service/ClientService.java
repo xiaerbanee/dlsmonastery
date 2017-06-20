@@ -1,7 +1,10 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotShop;
@@ -11,6 +14,7 @@ import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -34,6 +39,8 @@ public class ClientService {
     private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Page<ClientDto> findPage(Pageable pageable, ClientQuery clientQuery) {
         Page<ClientDto> page = clientRepository.findPage(pageable, clientQuery);
@@ -95,5 +102,26 @@ public class ClientService {
             clientDtoList=BeanUtil.map(clientList,ClientDto.class);
         }
         return clientDtoList;
+    }
+
+    public void syn(){
+        List<BdCustomer> bdCustomers=cloudClient.getAllCustomer();
+        List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
+        Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");
+        for(BdCustomer bdCustomer:bdCustomers){
+            Client outClient=outIdClientMap.get(bdCustomer.getFCustId());
+            if(outClient==null){
+                outClient=new Client();
+            }
+            outClient.setCompanyId(RequestUtils.getCompanyId());
+            outClient.setName(bdCustomer.getFName().trim());
+            outClient.setOutId(bdCustomer.getFCustId());
+            outClient.setOutGroupId(bdCustomer.getFPrimaryGroup());
+            outClient.setOutGroupName(bdCustomer.getFPrimaryGroupName());
+            outClient.setOutCode(bdCustomer.getFNumber());
+            outClient.setOutDate(bdCustomer.getFModifyDate());
+            outClient.setEnabled(true);
+            clientRepository.save(outClient);
+        }
     }
 }

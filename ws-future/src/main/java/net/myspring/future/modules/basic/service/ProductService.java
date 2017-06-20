@@ -128,11 +128,12 @@ public class ProductService {
     }
 
     public List<ProductDto> findByOutGroupIds(List<String> outGroupIds){
-        List<ProductDto> productDtoList= BeanUtil.map(productRepository.findByOutGroupIdIn(outGroupIds),ProductDto.class);
+        List<Product> productList = productRepository.findByOutGroupIds(outGroupIds);
+        List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
-    public  List<ProductDto> findAdProductAndAllowOrder(String billType){
+    public  List<Product> findAdProduct(String billType,AdApplyForm adApplyForm){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
@@ -141,8 +142,12 @@ public class ProductService {
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
-        List<ProductDto> adProductDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductDto.class);
-        return adProductDtos;
+        List<Product> adProducts  = productRepository.findByOutGroupIds(outGroupIds);
+        if(adApplyForm.getShopId() != null){
+            Depot depot = depotRepository.findOne(adApplyForm.getShopId());
+            //adApplyForm.setShop(depot);
+        }
+        return adProducts;
     }
 
     public void save(ProductForm productForm) {
@@ -168,10 +173,12 @@ public class ProductService {
                 String value = StringUtils.toString(rows.get(i)).trim();
                 switch (i) {
                     case 3:
-                        product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                        /* product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setVisible("是".equals(value));
                         break;
                     case 4:
-                        product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                       /* product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setAllowOrder("是".equals(value));
                         break;
                     case 5:
                         if (StringUtils.isBlank(value)) {
@@ -218,7 +225,7 @@ public class ProductService {
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
         Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
         List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
-        List<Product> saveProduct = Lists.newArrayList();
+        List<Product> synProduct = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(bdMaterials)){
             for(BdMaterial bdMaterial:bdMaterials){
                 Product product = productMapByOutId.get(bdMaterial.getFMasterId());
@@ -226,29 +233,41 @@ public class ProductService {
                     product = productMapByName.get(bdMaterial.getFName());
                     if(product == null){
                         product = new Product();
-                        product.setAllowOrder(false);
-                        product.setAllowBill(false);
                         product.setCreatedBy(RequestUtils.getAccountId());
-                        if(CollectionUtil.isNotEmpty(goodsOrderIds)&&goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
-                            product.setHasIme(true);
-                        }else{
-                            product.setHasIme(false);
-                        }
                     }else{
                         product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
                 }
-                product.setOldName(product.getName());
-                product.setOldOutId(product.getOutId());
+                if(product.isCreate()){
+                    product.setAllowOrder(false);
+                    product.setAllowBill(false);
+                    if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
+                        product.setHasIme(true);
+                    }else{
+                        product.setHasIme(false);
+                    }
+                }else{
+                    product.setOldName(product.getName());
+                    product.setOldOutId(product.getOutId());
+                }
+                if(bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")){
+                    if(bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())){
+                        product.setNetType(NetTypeEnum.移动.name());
+                    }else{
+                        product.setNetType(NetTypeEnum.联信.name());
+                    }
+                }else{
+                    product.setNetType(NetTypeEnum.全网通.name());
+                }
                 product.setOutDate(bdMaterial.getFModifyDate());
                 product.setName(bdMaterial.getFName());
                 product.setOutId(bdMaterial.getFMasterId());
                 product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
                 product.setOutGroupName(bdMaterial.getFMaterialGroupName());
                 product.setCode(bdMaterial.getFNumber());
-                saveProduct.add(product);
+                synProduct.add(product);
             }
-            productRepository.save(saveProduct);
+            productRepository.save(synProduct);
         }
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,8 +24,8 @@ public class BdCustomerService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
 
-    public Page<BdCustomer> findPageIncloudeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncloudeForbid(pageable,bdCustomerQuery);
+    public Page<BdCustomer> findPageIncludeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
+         Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncludeForbid(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
 
@@ -35,11 +36,11 @@ public class BdCustomerService {
         return null;
     }
 
-    public List<NameValueDto> findCustomerGroupList(){
-        return bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName();
-    }
-
     public List<BdCustomer> findAll(){
         return bdCustomerRepository.findAll();
+    }
+
+    public List<BdCustomer> findByMaxModifyDate(LocalDateTime modifyDate){
+        return bdCustomerRepository.findByMaxModifyDate(modifyDate);
     }
 }

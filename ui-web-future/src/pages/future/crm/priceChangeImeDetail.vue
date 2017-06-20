@@ -73,7 +73,7 @@
       methods:{
         formSubmit(){
           this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
                 this.inputForm.image = util.getFolderFileIdStr(this.fileList)
@@ -108,8 +108,7 @@
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
-        }
-      },created(){
+        },initPage(){
           axios.get('/api/ws/future/crm/priceChangeIme/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
             if(this.inputForm.image != null) {
@@ -118,9 +117,12 @@
               });
             }
           })
-        axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
-          this.formProperty=response.data;
-        });
+          axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response)=>{
+            this.formProperty=response.data;
+          });
+        }
+      },created(){
+          this.initPage();
       }
     }
 </script>

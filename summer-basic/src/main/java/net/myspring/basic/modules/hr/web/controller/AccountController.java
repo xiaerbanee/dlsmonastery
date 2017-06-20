@@ -37,6 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -148,7 +150,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        List<BackendMenuDto> menus = menuService.getMenusMap(RequestUtils.getAccountId());
+        List<BackendMenuDto> menus = menuService.getMenuMap();
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);

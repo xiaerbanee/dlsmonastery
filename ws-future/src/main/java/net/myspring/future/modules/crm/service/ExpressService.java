@@ -101,7 +101,7 @@ public class ExpressService {
     private ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 
         ExpressOrder eo = expressOrderRepository.findOne(expressOrderId);
-        List<Express> expressList = expressRepository.findByEnabledIsTrueAndExpressOrderId(expressOrderId);
+        List<Express> expressList = expressRepository.findByExpressOrderId(expressOrderId);
         eo.setExpressCodes(StringUtils.join(CollectionUtil.extractToList(expressList, "code"), CharConstant.COMMA));
         expressOrderRepository.save(eo);
         return eo;

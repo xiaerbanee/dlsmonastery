@@ -6,12 +6,10 @@ import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.CalendarEventDto;
-import net.myspring.basic.modules.hr.dto.DutyLeaveDto;
 import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,33 +76,25 @@ public class DutyService {
     public Object findDutyItem(String id, String dutyType) {
         Object item;
         if (DutyTypeEnum.请假.name().equals(dutyType)) {
-            DutyLeave dutyLeave = dutyLeaveRepository.findOne(id);
-            item= BeanUtil.map(dutyLeave, DutyLeaveDto.class);
+            item = dutyLeaveRepository.findOne(id);
         } else if (DutyTypeEnum.免打卡.name().equals(dutyType)) {
-            DutyFree dutyFree = dutyFreeRepository.findOne(id);
-            item= BeanUtil.map(dutyFree, DutyLeaveDto.class);
+            item = dutyFreeRepository.findOne(id);
         } else if (DutyTypeEnum.加班.name().equals(dutyType)) {
-            DutyOvertime dutyOvertime = dutyOvertimeRepository.findOne(id);
-            item= BeanUtil.map(dutyOvertime, DutyLeaveDto.class);
+            item = dutyOvertimeRepository.findOne(id);
         } else if (DutyTypeEnum.公休.name().equals(dutyType)) {
-            DutyPublicFree dutyPublicFree = dutyPublicFreeRepository.findOne(id);
-            item= BeanUtil.map(dutyPublicFree, DutyLeaveDto.class);
+            item = dutyPublicFreeRepository.findOne(id);
         } else if (DutyTypeEnum.出差.name().equals(dutyType)) {
-            DutyTrip dutyTrip = dutyTripRepository.findOne(id);
-            item= BeanUtil.map(dutyTrip, DutyLeaveDto.class);
+            item = dutyTripRepository.findOne(id);
         } else if (DutyTypeEnum.签到.name().equals(dutyType)) {
-            DutySign dutySign = dutySignRepository.findOne(id);
-            item= BeanUtil.map(dutySign, DutyLeaveDto.class);
+            item = dutySignRepository.findOne(id);
         } else {
-            DutyRest dutyRest = dutyRestRepository.findOne(id);
-            item= BeanUtil.map(dutyRest, DutyLeaveDto.class);
+            item = dutyRestRepository.findOne(id);
         }
-        cacheUtils.initCacheInput(item);
         return item;
     }
     public void audit(Map<String,String> map){
         for(Map.Entry<String,String> entry:map.entrySet()){
-            audit(entry.getKey(),entry.getValue(),true,null);
+            audit(entry.getKey(),entry.toString(),true,null);
         }
     }
 
@@ -233,7 +223,7 @@ public class DutyService {
                }
             } else {
                 restHour = DutyDateTypeEnum.全天.toString().equals(dutyRest.getDateType()) ? 8.0 : 4.0;
-                DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployeeId(dutyRest.getEmployeeId()).get(0);
+                DutyAnnual dutyAnnual = dutyAnnualRepository.findByEmployee(dutyRest.getEmployeeId()).get(0);
                 if(dutyAnnual==null||dutyAnnual.getLeftHour()<restHour){
                     return false;
                 }

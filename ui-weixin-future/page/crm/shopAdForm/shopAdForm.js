@@ -49,8 +49,8 @@ Page({
   bindAdType: function (e) {
     var that = this;
     that.setData({
-      'formData.shopAdType.id': that.data.formProperty.shopAdTypeList[e.detail.value].id,
-      'formData.shopAdType.name': that.data.formProperty.shopAdTypeList[e.detail.value].name
+      'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
+      'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name
     })
   },
   bindShop: function (e) {

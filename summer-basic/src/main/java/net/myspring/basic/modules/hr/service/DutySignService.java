@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -10,25 +9,19 @@ import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.repository.DutySignRepository;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
-import net.myspring.util.excel.ExcelUtils;
-import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by liuj on 2016/11/18.
@@ -41,10 +34,7 @@ public class DutySignService {
     private DutySignRepository dutySignRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
+
 
     public DutySign save(DutySignForm dutySignForm) {
         dutySignForm.setDutyDate(LocalDate.now());
@@ -63,9 +53,10 @@ public class DutySignService {
     }
 
     public List<DutySignDto> findByFilter(DutySignQuery dutySignQuery) {
-        List<DutySignDto> dutySignList =  dutySignRepository.findByFilter(dutySignQuery);
-        cacheUtils.initCacheInput(dutySignList);
-        return  dutySignList;
+        List<DutySign> dutySignList =  dutySignRepository.findByFilter(dutySignQuery);
+        List<DutySignDto> dutySignDtoList= BeanUtil.map(dutySignList,DutySignDto.class);
+        cacheUtils.initCacheInput(dutySignDtoList);
+        return  dutySignDtoList;
     }
 
     public void logicDelete(String id) {
@@ -86,12 +77,12 @@ public class DutySignService {
         return dutySignForm;
     }
 
-    public String findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){
-        List<DutySignDto> dutySignList = dutySignRepository.findByFilter(dutySignQuery);
+    public SimpleExcelSheet findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){
+        List<DutySign> dutySignList = dutySignRepository.findByFilter(dutySignQuery);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employeeName","姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employee.name","姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"dutyDate","日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"week","星期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extendMap.week","星期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"dutyTime","时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"address","地址"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"uuid","手机识别码"));
@@ -100,9 +91,6 @@ public class DutySignService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"status","状态"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("签到列表",dutySignList,simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"签到列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return simpleExcelSheet;
     }
 }

@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopPrintList.officeId')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.printType')" :label-width="formLabelWidth">
                 <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>
@@ -21,7 +21,7 @@
                 <process-status-select v-model="formData.processStatus" type="广告物料及制作申请"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.createdBy')" :label-width="formLabelWidth">
-                <account-select  v-model="formData.createdBy"></account-select>
+                <account-select  v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
             </el-form-item>
             </el-col>
           </el-row>

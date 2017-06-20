@@ -25,6 +25,15 @@ public class ShopPromotionForm extends BaseForm<ShopPromotion> {
     private String activityImage3;
     private String comment;
     private String phone;
+    private List<String> activityTypeList;
+
+    public List<String> getActivityTypeList() {
+        return activityTypeList;
+    }
+
+    public void setActivityTypeList(List<String> activityTypeList) {
+        this.activityTypeList = activityTypeList;
+    }
 
     public String getShopId() {
         return shopId;

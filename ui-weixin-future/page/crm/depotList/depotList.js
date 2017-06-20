@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
     data: {
         page: {},
-        formData: {
-            page: 0,
-            size: 10
-        },
+        formData: {},
         searchHidden: true,
         activeItem: null
     },
@@ -30,7 +27,7 @@ Page({
             duration: 10000,
             success: function () {
                 wx.request({
-                    url: $util.getUrl("ws/future/basic/depotStore"),
+                    url: $util.getUrl("ws/future/basic/depotShop"),
                     header: {
                         'x-auth-token': app.globalData.sessionId,
                         'authorization': "Bearer" + wx.getStorageSync('token').access_token

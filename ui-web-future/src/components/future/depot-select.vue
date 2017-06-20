@@ -47,12 +47,11 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-          if(newVal !== this.value){
-            this.$emit('input', newVal);
-          }
-
+        this.$emit('input', newVal);
       },setValue(val) {
-
+        if(this.innerId===val){
+          return;
+        }
         if(val){
           this.innerId=val;
           let idStr=this.innerId;
@@ -72,6 +71,9 @@
           })
         }else{
           this.innerId=[];
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+          });
         }
 
       }

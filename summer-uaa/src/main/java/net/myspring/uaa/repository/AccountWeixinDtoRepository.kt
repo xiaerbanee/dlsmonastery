@@ -26,8 +26,8 @@ class AccountWeixinDtoRepository @Autowired constructor(val namedParameterJdbcTe
                 """, Collections.singletonMap("openId",openId),BeanPropertyRowMapper(AccountWeixinDto::class.java));
     }
 
-    fun findByAccountId(accountId: String): MutableList<AccountWeixinDto> {
-        return namedParameterJdbcTemplate.query("""
+    fun findByAccountId(accountId: String): AccountWeixinDto {
+        return namedParameterJdbcTemplate.queryForObject("""
                     SELECT
                     t1.company_id,
                     t1.account_id,

@@ -2,16 +2,24 @@
   <div>
     <head-tab active="stkMisDelivery"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="部门"   prop="departmentNumber">
-          <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
-            <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="日期"  prop="billDate">
-          <date-picker v-model="formData.billDate"></date-picker>
-        </el-form-item>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
+        <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item :label="formLabel.departmentNumber.label"  :label-width="formLabelWidth" prop="departmentNumber">
+              <el-select v-model="formData.departmentNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
+                <el-option v-for="item in departmentList" :key="item.fnumber" :label="item.ffullName" :value="item.fnumber"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item :label="formLabel.billDate.label" :label-width="formLabelWidth" prop="billDate">
+              <date-picker v-model="formData.billDate"></date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          </el-col>
+        </el-row>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
       </el-form>
     </div>
@@ -43,32 +51,20 @@
             {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
             {type: "text", allowEmpty: true, strict: true }
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            if (source !== 'loadData') {
+            var that = this;
+            if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
                 if(column === 1) {
                   let productName = changes[i][3];
-                  if(util.isNotBlank(productName)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
-                      let material = response.data;
-                      table.setDataAtCell(row, 0, material.fnumber);
-                    });
-                  }else {
-                    table.setDataAtCell(row, 0, null);
-                  }
-                }else if(column === 0){
+                  axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
+                    let material = response.data;
+                    table.setDataAtCell(row, 0, material.fnumber);
+                  });
+                }else if(column == 0){
                   let productNumber = changes[i][3];
-                  if(util.isNotBlank(productNumber)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber?number=' + productNumber).then((response) => {
-                      let material = response.data;
-                      table.setDataAtCell(row, 1, material.fname);
-                    });
-                  }else {
-                    table.setDataAtCell(row, 1, null);
-                  }
                 }
               }
             }
@@ -76,22 +72,26 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
+          departmentNumber:'',
           json:[],
+        },formLabel:{
+          billDate:{label:"日期"},
+          departmentNumber:{label:"部门"},
         },rules: {
-          departmentNumber: [{ required: true, message: '必填项'}],
-          billDate: [{ required: true, message: '必填项'}],
+          departmentNumber: [{ required: true, message: '请选择部门'}],
+          billDate: [{ required: true, message: '请选择时间'}],
         },
         submitDisabled:false,
+        formLabelWidth: '120px',
         remoteLoading:false
       };
     },
     mounted() {
       axios.get('/api/global/cloud/input/stkMisDelivery/form').then((response)=>{
-        let extra = response.data.extra;
-        this.settings.columns[0].source = extra.materialNumberList;
-        this.settings.columns[1].source = extra.materialNameList;
-        this.settings.columns[2].source = extra.stockNameList;
-        this.settings.columns[4].source = extra.stkMisDeliveryTypeEnums;
+        this.settings.columns[0].source = response.data.materialNumberList;
+        this.settings.columns[1].source = response.data.materialNameList;
+        this.settings.columns[2].source = response.data.stockNameList;
+        this.settings.columns[4].source = response.data.stkMisDeliveryTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },

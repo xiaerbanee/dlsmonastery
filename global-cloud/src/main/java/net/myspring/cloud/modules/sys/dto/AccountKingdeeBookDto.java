@@ -1,12 +1,12 @@
 package net.myspring.cloud.modules.sys.dto;
 
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
-import net.myspring.cloud.common.dto.DataDto;
+import net.myspring.common.dto.IdDto;
 
 /**
  * Created by lihx on 2017/5/9.
  */
-public class AccountKingdeeBookDto extends DataDto<AccountKingdeeBook> {
+public class AccountKingdeeBookDto extends IdDto<AccountKingdeeBook> {
     private String accountId;
     private String username;
     private String companyId;

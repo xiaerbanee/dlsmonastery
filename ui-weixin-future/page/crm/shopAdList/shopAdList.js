@@ -5,8 +5,8 @@ Page({
   data: {
     page: {},
     formData: {
-      pageNumber: 0,
-      pageSize: 10
+      page: 0,
+      size: 10
     },
     formProperty: {},
     searchHidden: true,
@@ -64,6 +64,7 @@ Page({
           },
           data: that.data.formData,
           success: function (res) {
+            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -82,14 +83,14 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   bindAdType: function (e) {
     var that = this;
     that.setData({
-      'formData.shopAdType.id': that.data.formProperty.shopAdTypeList[e.detail.value].id,
-      'formData.shopAdType.name': that.data.formProperty.shopAdTypeList[e.detail.value].name
+      'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
+      'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name
     })
   },
   bindStatus: function (e) {

@@ -13,7 +13,7 @@
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('pricesystemForm.save')}}{{isCreate}}</el-button>
         </el-form-item>
         <el-input v-model="productName" @change="searchDetail" :placeholder="$t('pricesystemForm.inputKey')" style="width:200px;"></el-input>
           <el-table :data="filterPricesystemDetailList"  style="margin-top:5px;"   stripe border >
@@ -40,7 +40,6 @@
       getData() {
       return{
         isInit:false,
-        isCreate:this.$route.query.id == null,
         submitDisabled:false,
         productName:'',
         pricesystemDetailList:[],
@@ -72,7 +71,7 @@
             this.inputForm.enabled = true;
             axios.post('/api/ws/future/basic/pricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.isCreate){
+              if(this.inputForm.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage();
               }else {

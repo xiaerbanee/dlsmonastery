@@ -2,17 +2,25 @@
   <div>
     <head-tab active="cnJournalForBank"></head-tab>
     <div>
-      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期"  prop="billDate">
-          <date-picker v-model="formData.billDate"></date-picker>
-        </el-form-item>
-        <el-form-item label="科目"   prop="accountNumber">
-          <el-select v-model="formData.accountNumber" filterable placeholder="请选择">
-            <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" class="form input-form">
+        <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item label="日期" :label-width="formLabelWidth" prop="billDate">
+              <date-picker v-model="formData.billDate"></date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="科目"  :label-width="formLabelWidth" prop="accountNumber">
+              <el-select v-model="formData.accountNumber" filterable placeholder="请选择">
+                <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          </el-col>
+        </el-row>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
       </el-form>
     </div>
   </div>
@@ -48,21 +56,20 @@
             {type: "autocomplete", strict: true, allowEmpty: false, otherTypeName:[],source: this.otherTypeName},
             {type: "autocomplete", strict: true, allowEmpty: false, expenseTypeName:[],source: this.expenseTypeName},
           ],
-          contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
-            if (source !== 'loadData') {
+            if (source === 'edit') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
-                if (column === 0) {
+                if(column === 0) {
                   let accountNumber = changes[i][3];
-                  if (util.isNotBlank(accountNumber)) {
+                  if (accountNumber === ""){
+                    table.setDataAtCell(row, 6, '')
+                  }else {
                     axios.get('/api/global/cloud/kingdee/bdAccount/findByNumber?number=' + accountNumber).then((response) => {
                       let account = response.data;
                       table.setDataAtCell(row, 6, account.fname);
                     });
-                  } else {
-                    table.setDataAtCell(row, 6, null);
                   }
                 }
               }
@@ -81,7 +88,8 @@
                     let number = response.data;
                     if (accountNumber !== number){
                       table.setDataAtCell(i, 9, '');
-                      alert("其他类的编码前4位必须和对应科目的编码一致");
+                      let j = i=1;
+                      alert('第'+j+"其他类的编码前4位必须和对应科目的编码一致");;
                     }
                   });
                 }
@@ -98,6 +106,7 @@
           accountNumber: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
+        formLabelWidth: '120px',
         remoteLoading:false
       };
     },

@@ -41,7 +41,7 @@ public class StkInStockService {
     @Autowired
     private PurMrbService purMrbService;
 
-    public KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook) {
+    private KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.STK_InStock.name(),
                 stkInStockDto.getJson(),
@@ -122,22 +122,28 @@ public class StkInStockService {
             }
         }
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDtoList.add(save(stkInStockDto, kingdeeBook));
-            if (CollectionUtil.isNotEmpty(purMrbFEntryDtoList)) {
-                PurMrbDto purMrbDto = new PurMrbDto();
-                purMrbDto.setCreator(accountKingdeeBook.getUsername());
-                purMrbDto.setDate(billDate);
-                purMrbDto.setSupplierNumber(supplierNumber);
-                purMrbDto.setDepartmentNumber(departmentNumber);
-                purMrbDto.getEntityDtoList().addAll(purMrbFEntryDtoList);
-                kingdeeSynDtoList.add(purMrbService.save(purMrbDto,kingdeeBook));
-            }
-        }else{
-            kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
+        kingdeeSynDtoList.add(save(stkInStockDto, kingdeeBook,accountKingdeeBook));
+        if (CollectionUtil.isNotEmpty(purMrbFEntryDtoList)) {
+            PurMrbDto purMrbDto = new PurMrbDto();
+            purMrbDto.setCreator(accountKingdeeBook.getUsername());
+            purMrbDto.setDate(billDate);
+            purMrbDto.setSupplierNumber(supplierNumber);
+            purMrbDto.setDepartmentNumber(departmentNumber);
+            purMrbDto.getEntityDtoList().addAll(purMrbFEntryDtoList);
+            kingdeeSynDtoList.add(purMrbService.save(purMrbDto,kingdeeBook,accountKingdeeBook));
         }
         return kingdeeSynDtoList;
+    }
+
+    public KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = save(stkInStockDto, kingdeeBook);
+        }else{
+            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+        }
+        return kingdeeSynDto;
     }
 
     public StkInStockForm getForm(StkInStockForm stkInStockForm,KingdeeBook kingdeeBook){
@@ -151,7 +157,13 @@ public class StkInStockService {
         }
         stkInStockForm.getTypeList().addAll(typeList);
         stkInStockForm.setKingdeeName(kingdeeBook.getName());
-        stkInStockForm.setMaterialNameList(bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        List<BdMaterial> materialList = bdMaterialRepository.findAll();
+        for (BdMaterial material : materialList){
+            //过滤 FMaterialGroupName=其他收入费用类 FMaterialGroupNumber=13000
+            if (!material.getFMaterialGroupNumber().equals("13000")){
+                stkInStockForm.getMaterialNameList().add(material.getFName());
+            }
+        }
         return stkInStockForm;
     }
 }

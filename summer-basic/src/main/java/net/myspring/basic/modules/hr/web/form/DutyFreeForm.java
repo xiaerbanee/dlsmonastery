@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.modules.hr.domain.DutyFree;
 import net.myspring.common.form.BaseForm;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -15,8 +14,15 @@ import java.util.List;
 public class DutyFreeForm extends BaseForm<DutyFree> {
     private String employeeId;
     private String Status;
-    private LocalDate freeDate;
-    private String dateType;
+    private List<String> dateList= Lists.newArrayList();
+
+    public List<String> getDateList() {
+        return dateList;
+    }
+
+    public void setDateList(List<String> dateList) {
+        this.dateList = dateList;
+    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -32,21 +38,5 @@ public class DutyFreeForm extends BaseForm<DutyFree> {
 
     public void setStatus(String status) {
         Status = status;
-    }
-
-    public LocalDate getFreeDate() {
-        return freeDate;
-    }
-
-    public void setFreeDate(LocalDate freeDate) {
-        this.freeDate = freeDate;
-    }
-
-    public String getDateType() {
-        return dateType;
-    }
-
-    public void setDateType(String dateType) {
-        this.dateType = dateType;
     }
 }

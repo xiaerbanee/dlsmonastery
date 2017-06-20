@@ -25,7 +25,7 @@ Page({
        },
       success: function (res) {
         console.log(res);
-        that.setData({ 'formProperty.restList': res.data.extra.restList, 'formProperty.dateList': res.data.extra.dateList, 'fromProperty': res.data})
+        that.setData({ 'formProperty.restList': res.data.restList, 'formProperty.dateList': res.data.dateList, 'fromProperty.dutyRest': res.data.dutyRest, 'fromProperty.expiredHour': res.data.expiredHour })
       }
     })
   },

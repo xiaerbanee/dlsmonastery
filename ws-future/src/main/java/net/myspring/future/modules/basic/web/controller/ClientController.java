@@ -4,6 +4,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.service.ClientService;
+import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.ClientForm;
 import net.myspring.future.modules.basic.web.query.ClientQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
+    @Autowired
+    private DepotStoreService depotStoreService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ClientDto> list(Pageable pageable, ClientQuery clientQuery) {
@@ -63,6 +66,13 @@ public class ClientController {
     @RequestMapping(value = "getForm")
     public ClientForm getForm(ClientForm clientForm){
         return clientForm;
+    }
+
+    @RequestMapping(value = "syn")
+    public RestResponse syn(){
+        clientService.syn();
+        depotStoreService.syn();
+        return new RestResponse("同步成功",null);
     }
 
 }

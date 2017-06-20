@@ -240,7 +240,6 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                 and t2.enabled=1
                 and t3.enabled=1
                 and t4.enabled=1
-                and t4.visible=1
                 and t4.id IN (:menuList)
             """, Collections.singletonMap("menuList",menuList));
         var backendMenuDtoMap = Maps.newLinkedHashMap<String,BackendMenuDto>();

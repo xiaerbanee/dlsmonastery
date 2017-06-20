@@ -70,6 +70,8 @@ Page({
             var item = that.data.page.content[index];
             if (item.id == id) {
                 that.data.activeItem = item;
+            }
+            if (item.id == id && item.hasOwnProperty('actionList')) {
                 item.active = true;
             } else {
                 item.active = false;
@@ -80,11 +82,13 @@ Page({
     showActionSheet: function (e) {
         var that = this;
         var id = e.currentTarget.dataset.id;
+        var itemList = that.data.activeItem.actionList;
+        if (!itemList) { return; }
         wx.showActionSheet({
-            itemList: ["删除"],
+            itemList: itemList,
             success: function (res) {
                 if (!res.cancel) {
-                    if (res.tapIndex == 0) {
+                    if (itemList[res.tapIndex] == "删除") {
                         wx.request({
                             url: $util.getUrl("basic/hr/dutyTrip/delete"),
                             data: { id: id },

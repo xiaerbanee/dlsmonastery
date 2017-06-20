@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopPromotionList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -67,7 +67,6 @@
         formData:{
           extra:{}
         },
-        initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -115,14 +114,11 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      this.initPromise = axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
+      axios.get('/api/ws/future/layout/shopPromotion/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
-      });
-    },activated(){
-      this.initPromise.then(()=>{
         this.pageRequest();
-      })
+      });
     }
   };
 </script>

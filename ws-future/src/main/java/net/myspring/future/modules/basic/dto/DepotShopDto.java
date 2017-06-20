@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
@@ -24,10 +25,83 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private Integer deskDoubleNum=0;
     private Integer deskSingleNum=0;
     private Integer cabinetNum=0;
+    private Boolean bussinessCenter=false;
+    private String bussinessCenterName;
     private String depotName;
     private String townId;
     private LocalDate enableDate;
     private String townName;
+    private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    private String contator;
+    private String mobilePhone;
+    private String address;
+    private String chainType;
+
+    public String getChainType() {
+        return chainType;
+    }
+
+    public void setChainType(String chainType) {
+        this.chainType = chainType;
+    }
+
+    public Boolean getBussinessCenter() {
+        return bussinessCenter;
+    }
+
+    public void setBussinessCenter(Boolean bussinessCenter) {
+        this.bussinessCenter = bussinessCenter;
+    }
+
+    public String getBussinessCenterName() {
+        return bussinessCenterName;
+    }
+
+    public void setBussinessCenterName(String bussinessCenterName) {
+        this.bussinessCenterName = bussinessCenterName;
+    }
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
     public Integer getFrameNum() {
         return frameNum;

@@ -405,30 +405,30 @@ public class StoreAllotService {
     }
 
     public StoreAllotDto print(String id) {
-        StoreAllot storeAllot = storeAllotRepository.findOne(id);
+        StoreAllotDto storeAllotDto = findDto(id);
 
-        if(StringUtils.isNotBlank(storeAllot.getExpressOrderId())){
-            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllot.getExpressOrderId());
+        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
             if(expressOrder != null && expressOrder.getOutPrintDate() == null){
                 expressOrder.setOutPrintDate(LocalDateTime.now());
-                expressOrderRepository.saveAndFlush(expressOrder);
+                expressOrderRepository.save(expressOrder);
             }
         }
 
-        return findDto(id);
+        return storeAllotDto;
     }
 
     public StoreAllotDto shipPrint(String id) {
-        StoreAllot storeAllot = storeAllotRepository.findOne(id);
+        StoreAllotDto storeAllotDto = findDto(id);
 
-        if(StringUtils.isNotBlank(storeAllot.getExpressOrderId())){
-            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllot.getExpressOrderId());
+        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
             if(expressOrder != null && expressOrder.getExpressPrintDate() == null){
                 expressOrder.setExpressPrintDate(LocalDateTime.now());
-                expressOrderRepository.saveAndFlush(expressOrder);
+                expressOrderRepository.save(expressOrder);
             }
         }
 
-        return findDto(id);
+        return storeAllotDto;
     }
 }

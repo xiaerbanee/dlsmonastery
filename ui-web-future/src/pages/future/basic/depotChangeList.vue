@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('depotChangeList.depotName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.depotId" category="store"></depot-select>
+                <depot-select v-model="formData.depotId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
                <el-form-item :label="$t('depotChangeList.type')" :label-width="formLabelWidth">
                  <el-select v-model="formData.type" clearable filterable :placeholder="$t('depotChangeList.selectGroup')">

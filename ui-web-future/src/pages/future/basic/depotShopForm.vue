@@ -109,6 +109,7 @@
           carrierType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           turnoverType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           bussinessCenter: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           doorHead: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           enableDate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],

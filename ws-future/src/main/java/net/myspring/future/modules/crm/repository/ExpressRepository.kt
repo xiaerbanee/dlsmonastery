@@ -19,9 +19,7 @@ import java.util.*
 
 interface ExpressRepository : BaseRepository<Express, String>,ExpressRepositoryCustom {
 
-    fun findByEnabledIsTrueAndExpressOrderId(expressOrderId: String): MutableList<Express>
-
-    fun findByEnabledIsTrueAndExpressOrderIdAndCodeNotIn(expressOrderId: String, codeList :List<String>): MutableList<Express>
+    fun findByExpressOrderId(expressOrderId: String): MutableList<Express>
 
     fun deleteByExpressOrderId(expressOrderId: String);
 

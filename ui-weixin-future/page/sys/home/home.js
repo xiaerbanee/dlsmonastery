@@ -16,17 +16,15 @@ Page({
         })
     }, initPage: function () {
         var that = this;
-        console.log("initMenu")
         that.setData({ weixinAccountsHidden: true })
         if (that.data.menuList == null) {
             wx.request({
-                url: $util.getUrl('basic/sys/menu/getMobileMenus'),
+                url: $util.getUrl('basic/sys/menu/getMenus'),
                 header: {
                     'x-auth-token': app.globalData.sessionId,
                     'authorization': "Bearer" + wx.getStorageSync('token').access_token
                 },
                 success: function (res) {
-                    console.log(res)
                     that.setData({ menuList: res.data });
                 }
             });

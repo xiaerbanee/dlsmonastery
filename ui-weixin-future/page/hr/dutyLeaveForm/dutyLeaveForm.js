@@ -21,14 +21,13 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("basic/hr/dutyLeave/findOne"),
+      url: $util.getUrl("basic/hr/dutyLeave/getForm"),
       data: {},
       method: 'GET',
       header: { 'x-auth-token': app.globalData.sessionId,
                 'authorization': "Bearer" + wx.getStorageSync('token').access_token
        },
       success: function (res) {
-        console.log(res)
         that.setData({
           'formProperty.dateList': res.data.dateList,
           'formProperty.leaveList': res.data.leaveList
