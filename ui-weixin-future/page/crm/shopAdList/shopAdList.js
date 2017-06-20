@@ -6,7 +6,7 @@ Page({
     page: {},
     formData: {
       page: 0,
-      pageSize: 10
+      size: 10
     },
     formProperty: {},
     searchHidden: true,
@@ -64,6 +64,7 @@ Page({
           },
           data: that.data.formData,
           success: function (res) {
+            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }

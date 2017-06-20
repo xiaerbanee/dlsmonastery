@@ -1,14 +1,14 @@
 <view class="page">
-  <view class="tip">可用加班调休时间:<text class="red">{{fromProperty.overtimeLeftHour}}Hour</text>,
-  可用年假时间:<text class="red">{{fromProperty.annualLeftHour}}Hour</text>,本月即将到期时间:<text class="red">{{fromProperty.expiredHour}}Hour</text>
+  <view class="tip">可用加班调休时间:<text class="red">{{fromProperty.dutyRest.overtimeLeftHour}}Hour</text>,
+  可用年假时间:<text class="red">{{fromProperty.dutyRest.annualLeftHour}}Hour</text>,本月即将到期时间:<text class="red">{{fromProperty.expiredHour}}Hour</text>
     </view>
       <form class="page__bd" catchsubmit="formSubmit">
-        <input class="hidden" name="annualLeftHour" value="{{fromProperty.annualLeftHour}}" />
-        <input class="hidden" name="overtimeLeftHour" value="{{fromProperty.overtimeLeftHour}}" />
+        <input class="hidden" name="annualLeftHour" value="{{fromProperty.dutyRest.annualLeftHour}}" />
+        <input class="hidden" name="overtimeLeftHour" value="{{fromProperty.dutyRest.overtimeLeftHour}}" />
         <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
         <view class="weui-cells weui-cells_after-title form_bd">
           <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
-          <view class="weui-cell weui-cell_input" bindtap="showError" data-key="restType">
+          <view class="weui-cell weui-cell_input" bindtap="showError" data-key="type">
             <view class="weui-cell__hd">
               <view class="weui-label">调休类型</view>
             </view>

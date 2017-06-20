@@ -108,14 +108,19 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByName(name: String): Product
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product
+    fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product?
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Product>
 
     fun findByOutId(outId: String): Product
 
-
-    fun findByOutGroupIdIn(outGroupIds: MutableList<String>): MutableList<Product>
+    @Query("""
+        SELECT t1.*
+        FROM crm_product t1
+        where t1.enabled=1
+        and t1.out_group_id in ?1
+    """, nativeQuery = true)
+    fun findByOutGroupIds(outGroupIds: MutableList<String>): MutableList<Product>
 
     @Query("""
         SELECT
@@ -134,7 +139,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
 //    fun updateProductTypeToNull(productTypeId: String): Int
 
-    fun findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds: MutableList<String>): MutableList<Product>
+    fun findByOutGroupIdInAndAllowOrder(outGroupIds: MutableList<String>, allowOrder: Boolean): MutableList<ProductDto>
 
     @Query("""
         select

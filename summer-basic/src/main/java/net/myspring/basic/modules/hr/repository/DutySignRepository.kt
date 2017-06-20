@@ -44,7 +44,7 @@ interface DutySignRepositoryCustom{
 
     fun findPage(pageable: Pageable, dutySignQuery: DutySignQuery): Page<DutySignDto>
 
-    fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySignDto>
+    fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySign>
 }
 class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): DutySignRepositoryCustom{
     override fun findByAuditable(leaderId: String, status: String, dateStart: LocalDateTime): MutableList<DutyDto> {
@@ -63,19 +63,17 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         """, paramMap, BeanPropertyRowMapper(DutyDto::class.java))
     }
 
-    override fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySignDto> {
+    override fun findByFilter(dutySignQuery: DutySignQuery): MutableList<DutySign> {
         var sql = StringBuilder("""
                 SELECT
-                t1.*,t2.name as 'employeeName'
+                t1.*
                 FROM
                 hr_duty_sign t1,
-                hr_employee t2,
                 hr_account account,
                 sys_office office
                 WHERE
                 t1.created_by=account.id
                 and account.office_id=office.id
-                and t1.employee_id=t2.id
                 and t1.enabled=1
             """);
         if(dutySignQuery.createdBy!=null){
@@ -95,7 +93,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(dutySignQuery.dutyDateEnd!=null){
             sql.append("""
-                   AND t1.duty_date < :dutyDateEnd
+                   AND t1.duty_date &lt; :dutyDateEnd
                 """);
         }
         if(dutySignQuery.employeeName!=null){
@@ -110,7 +108,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sql.append("""
                 and t1.employee_id in (
                 select t2.id
-                from hr_employee t2 , hr_account t3, sys_office t4
+                from hr_employee t2 , hr_account t3 ,sys_office t4
                 where t2.account_id = t3.id
                 and t3.office_id = t4.id
                 and t4.name like CONCAT('%',:officeName,'%')
@@ -127,22 +125,21 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
                 and t4.name like CONCAT('%',:positionName,'%')        )
                 """);
         }
-        return namedParameterJdbcTemplate.query(sql.toString(), BeanPropertySqlParameterSource(dutySignQuery), BeanPropertyRowMapper(DutySignDto::class.java))
+        val list = namedParameterJdbcTemplate.query(sql.toString(), BeanPropertySqlParameterSource(dutySignQuery), BeanPropertyRowMapper(DutySign::class.java))
+        return list;
     }
 
     override fun findPage(pageable: Pageable, dutySignQuery: DutySignQuery): Page<DutySignDto> {
         var sql = StringBuilder("""
                 SELECT
-                t1.*,t2.name as 'employeeName'
+                t1.*
                 FROM
                 hr_duty_sign t1,
-                hr_employee t2,
                 hr_account account,
                 sys_office office
                 WHERE
                 t1.created_by=account.id
                 and account.office_id=office.id
-                and t1.employee_id=t2.id
                 and t1.enabled=1
             """);
         if(dutySignQuery.createdBy!=null){

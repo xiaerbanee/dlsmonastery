@@ -6,12 +6,10 @@ import net.myspring.general.modules.sys.repository.TownRepository;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class TownService {
 
     @Autowired
@@ -23,13 +21,7 @@ public class TownService {
         return townDtoList;
     }
 
-    public List<TownDto> findByIds(List<String> ids){
-        List<Town> townList=townRepository.findByIdIn(ids);
-        List<TownDto> townDtoList=BeanUtil.map(townList,TownDto.class);
-        return townDtoList;
-    }
-
-    public TownDto findOne(String id){
+    public TownDto findDto(String id){
         Town town=townRepository.findOne(id);
         TownDto townDto=BeanUtil.map(town,TownDto.class);
         return townDto;

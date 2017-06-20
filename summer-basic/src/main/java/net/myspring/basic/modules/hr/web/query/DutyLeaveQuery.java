@@ -18,9 +18,6 @@ public class DutyLeaveQuery extends BaseQuery {
     private String dutyDate;
     private String dateType;
     private String leaveType;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
-
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
@@ -56,26 +53,16 @@ public class DutyLeaveQuery extends BaseQuery {
     public LocalDate getDutyDateStart() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else if(dutyDateStart!=null){
-            return dutyDateStart;
+        } else {
+            return null;
         }
-        return null;
     }
 
     public LocalDate getDutyDateEnd() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else if(dutyDateEnd!=null){
-            return dutyDateEnd.plusDays(1);
+        } else {
+            return null;
         }
-        return null;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
     }
 }

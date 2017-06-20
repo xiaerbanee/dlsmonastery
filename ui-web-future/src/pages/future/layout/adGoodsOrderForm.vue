@@ -6,16 +6,16 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
-              <depot-select v-model="inputForm.outShopId" category="adShop" @input="shopChange"></depot-select>
+              <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="adShop" @input="outShopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isAdShop">
-              <depot-select v-model="inputForm.shopId" category="delegateShop"></depot-select>
+              <depot-select :disabled="afterBill" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.recentSaleQty')" >
-              {{recentSaleQty}}
+              {{recentSaleDescription}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.investInCause')" prop="investInCause">
-              <el-input v-model="inputForm.investInCause" ></el-input>
+              <el-input v-model="inputForm.investInCause" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.employeeName')" prop="employeeId">
               <employee-select v-model="inputForm.employeeId" ></employee-select>
@@ -26,18 +26,23 @@
             <el-form-item :label="$t('adGoodsOrderForm.address')" prop="expressOrderAddress">
               <el-input v-model="inputForm.expressOrderAddress" type="textarea"></el-input>
             </el-form-item>
+            <div v-if="processStatus==='待签收' && hasShipPermission">
+              <el-form-item :label="$t('adGoodsOrderForm.expressCodes')" prop="expressOrderExpressCodes">
+                <el-input v-model="inputForm.expressOrderExpressCodes" type="textarea" :placeholder="$t('adGoodsOrderForm.enter')"></el-input>
+              </el-form-item>
+            </div>
             </el-col>
             <el-col :span="8">
-            <el-form-item :label="$t('adGoodsOrderForm.contact')" prop="expressContator">
+            <el-form-item :label="$t('adGoodsOrderForm.contact')" prop="expressOrderContator">
               <el-input v-model="inputForm.expressOrderContator"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.mobilePhone')" prop="mobilePhone">
+            <el-form-item :label="$t('adGoodsOrderForm.mobilePhone')" prop="expressOrderMobilePhone">
               <el-input v-model="inputForm.expressOrderMobilePhone"></el-input>
             </el-form-item>
               <el-form-item :label="$t('adGoodsOrderForm.remarks')" prop="remarks">
                 <el-input v-model="inputForm.remarks" type="textarea"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('adGoodsOrderForm.summery')" prop="summery">
+              <el-form-item :label="$t('adGoodsOrderForm.summery')">
                 <div style="color:red" >{{$t('adGoodsOrderForm.totalQty')}}：{{totalQty}},{{$t('adGoodsOrderForm.totalAmount')}}：{{totalPrice}}</div>
               </el-form-item>
               <el-form-item>
@@ -51,7 +56,8 @@
         <el-table-column  prop="productCode" :label="$t('adGoodsOrderForm.code')" ></el-table-column>
         <el-table-column prop="qty" :label="$t('adGoodsOrderForm.qty')">
           <template scope="scope">
-            <el-input  v-model="scope.row.qty" @input="refreshSummary()"></el-input>
+            <div v-if="afterBill">{{scope.row.qty}}</div>
+            <div v-else><el-input v-model.number="scope.row.qty" @input="refreshSummary()"></el-input></div>
           </template>
         </el-table-column>
         <el-table-column prop="productName" :label="$t('adGoodsOrderForm.productName')"></el-table-column>
@@ -77,29 +83,41 @@
     data(){
       return this.getData();
     },
+    computed:{
+      hasShipPermission: function () {
+        return util.isPermit("crm:adGoodsOrder:ship");
+      },
+      afterBill : function(){
+          return !this.isCreate && this.processStatus && this.processStatus.indexOf('审核') < 0 && this.processStatus !== '待开单';
+      }
+    },
     methods: {
       getData(){
         return {
 
           isCreate: this.$route.query.id == null,
-          recentSaleQty:'',
+          recentSaleDescription:'',
           submitDisabled: false,
           productName: "",
           filterAdGoodsOrderDetailList: [],
           isAdShop: false,
           pageLoading: false,
+          processStatus: '',
           inputForm: {
               extra:{},
           },
           rules: {
             outShopId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            shopId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            investInCause: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             employeeId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderContator: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-            expressOrderMobilePhone: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}]
+            expressOrderMobilePhone: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
           },
-          totalQty: '',
-          totalPrice: ''
+          totalQty: 0,
+          totalPrice: 0,
         }
       },
       formSubmit(){
@@ -128,14 +146,47 @@
             this.submitDisabled = false;
           }
         })
-      },
-      shopChange(){
+      }, outShopChanged(){
+          if(util.isBlank(this.inputForm.outShopId)){
+            this.isAdShop = false;
+            this.inputForm.shopId = null;
+            this.recentSaleDescription='';
+            return;
+          }
+
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
           if (response.data.jointType === '代理') {
             this.isAdShop = true;
+            this.inputForm.shopId = null;
+            this.recentSaleDescription='';
+          }else{
+            this.isAdShop = false;
+            this.inputForm.shopId = this.inputForm.outShopId;
+            this.refreshRecentMonthSaleAmount();
           }
-        })
-      }, searchDetail(){
+        });
+      },  shopChanged(){
+        this.refreshRecentMonthSaleAmount();
+      } ,
+      refreshRecentMonthSaleAmount(){
+        if(util.isBlank(this.inputForm.shopId)){
+          this.recentSaleDescription='';
+          return;
+        }
+
+        axios.get('/api/ws/future/basic/depot/getRecentMonthSaleAmount' , {params: {depotId: this.inputForm.shopId, monthQty:3}}).then((response) => {
+          if(response.data){
+            let tmp = '';
+            for(let key in response.data){
+              tmp = tmp + key +"销量："+  response.data[key] +"台；";
+            }
+            this.recentSaleDescription=tmp;
+          }else{
+            this.recentSaleDescription='';
+          }
+        });
+      },
+      searchDetail(){
         let val = this.productName;
         if(!val){
           this.filterAdGoodsOrderDetailList = this.inputForm.adGoodsOrderDetailList;
@@ -154,16 +205,16 @@
         }
         this.filterAdGoodsOrderDetailList = tempList;
       }, refreshSummary(){
-        let totalQty = 0;
-        let totalPrice = 0;
+        let tmpTotalQty = 0;
+        let tmpTotalPrice = 0;
         for (let adGoodsOrderDetail of  this.inputForm.adGoodsOrderDetailList) {
           if (adGoodsOrderDetail.qty && adGoodsOrderDetail.productPrice2) {
-            totalQty = totalQty + parseInt(adGoodsOrderDetail.qty);
-            totalPrice = totalPrice + parseInt(adGoodsOrderDetail.qty) * parseInt(adGoodsOrderDetail.productPrice2);
+            tmpTotalQty = tmpTotalQty + parseInt(adGoodsOrderDetail.qty);
+            tmpTotalPrice = tmpTotalPrice + parseInt(adGoodsOrderDetail.qty) * parseInt(adGoodsOrderDetail.productPrice2);
           }
         }
-        this.totalQty = totalQty;
-        this.totalPrice = totalPrice;
+        this.totalQty = tmpTotalQty;
+        this.totalPrice = tmpTotalPrice;
       },setAdGoodsOrderDetailList(list){
         this.inputForm.adGoodsOrderDetailList = list;
         this.searchDetail();
@@ -192,9 +243,12 @@
               this.inputForm.employeeId = response.data.employeeId;
               this.inputForm.expressOrderExpressCompanyId = response.data.expressOrderExpressCompanyId;
               this.inputForm.expressOrderAddress = response.data.expressOrderAddress;
+              this.inputForm.expressOrderExpressCodes = response.data.expressOrderExpressCodes;
               this.inputForm.expressOrderContator = response.data.expressOrderContator;
               this.inputForm.expressOrderMobilePhone = response.data.expressOrderMobilePhone;
               this.inputForm.remarks = response.data.remarks;
+              this.processStatus = response.data.processStatus;
+              this.refreshRecentMonthSaleAmount();
 
             });
           }

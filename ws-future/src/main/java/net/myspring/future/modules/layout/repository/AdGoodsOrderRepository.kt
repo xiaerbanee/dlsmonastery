@@ -1,10 +1,7 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.crm.dto.StoreAllotImeDto
 import net.myspring.future.modules.layout.domain.AdGoodsOrder
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
@@ -19,7 +16,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOrderRepositoryCustom{

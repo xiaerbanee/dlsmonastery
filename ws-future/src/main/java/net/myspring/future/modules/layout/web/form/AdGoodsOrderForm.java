@@ -13,10 +13,19 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
     private String employeeId;
     private String investInCause;
     private String expressOrderExpressCompanyId;
+    private String expressOrderExpressCodes;
     private String expressOrderAddress;
     private String expressOrderContator;
     private String expressOrderMobilePhone;
     private List<AdGoodsOrderDetailForm> adGoodsOrderDetailList;
+
+    public String getExpressOrderExpressCodes() {
+        return expressOrderExpressCodes;
+    }
+
+    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
+        this.expressOrderExpressCodes = expressOrderExpressCodes;
+    }
 
     public String getInvestInCause() {
         return investInCause;

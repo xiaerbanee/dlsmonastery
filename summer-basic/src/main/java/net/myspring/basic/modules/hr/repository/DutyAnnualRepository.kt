@@ -25,7 +25,7 @@ interface DutyAnnualRepository : BaseRepository<DutyAnnual,String>,DutyAnnualRep
         where t.employeeId=?1
         order by annualYear desc
     """)
-    fun findByEmployeeId(employeeId: String): List<DutyAnnual>
+    fun findByEmployee(employeeId: String): List<DutyAnnual>
 }
 interface DutyAnnualRepositoryCustom{
     fun findPage(pageable: Pageable, dutyAnnualQuery: DutyAnnualQuery): Page<DutyAnnualDto>

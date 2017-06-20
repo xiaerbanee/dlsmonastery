@@ -14,7 +14,7 @@
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'审核',scope.row.dutyType)">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'审核')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -40,14 +40,10 @@
           this.pageLoading = false;
         })
       },batchPass(){
-        util.confirmBeforeBatchPass(this).then(() => {
-          this.pageLoading = true;
-          axios.get('/api/basic/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
+        axios.get('/api/basic/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           })
-        }).catch(()=>{});
-
       },itemAction:function(id,action,dutyType){
         if(action=="审核") {
           this.$router.push({ name: 'dutyTaskForm', query: { id: id, dutyType: dutyType}})

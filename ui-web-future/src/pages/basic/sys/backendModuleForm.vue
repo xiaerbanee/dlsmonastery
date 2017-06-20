@@ -32,7 +32,6 @@
       methods:{
         getData(){
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{
                 extra:{}
@@ -52,7 +51,7 @@
             if (valid) {
               axios.post('/api/basic/sys/backendModule/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
+                if(this.inputForm.create){
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
