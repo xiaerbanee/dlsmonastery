@@ -16,13 +16,13 @@
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productList.hasIme')" :label-width="formLabelWidth">
-                <bool-select v-model="formData.hasIme" @afterInit="setSearchText"></bool-select>
+                <bool-select v-model="formData.hasIme" ></bool-select>
               </el-form-item>
               <el-form-item :label="$t('productList.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productList.allowBill')" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowBill" @afterInit="setSearchText"></bool-select>
+                <bool-select v-model="formData.allowBill" ></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -30,7 +30,7 @@
                 <product-type-select v-model="formData.productTypeId" @afterInit="setSearchText"></product-type-select>
               </el-form-item>
               <el-form-item :label="$t('productList.allowOrder')" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowOrder" @afterInit="setSearchText"></bool-select>
+                <bool-select v-model="formData.allowOrder" ></bool-select>
               </el-form-item>
               <el-form-item :label="$t('productList.outGroupName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productList.inputWord')">
