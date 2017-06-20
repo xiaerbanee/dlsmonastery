@@ -16,7 +16,7 @@
           <office-select v-model="inputForm.department"></office-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.productName')" prop="productId">
-          <product-select v-model="inputForm.productId"></product-select>
+          <product-select v-model="inputForm.productId" :hasIme=true></product-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneDepositForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>

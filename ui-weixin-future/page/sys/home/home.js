@@ -16,7 +16,6 @@ Page({
         })
     }, initPage: function () {
         var that = this;
-        console.log("initMenu")
         that.setData({ weixinAccountsHidden: true })
         if (that.data.menuList == null) {
             wx.request({
@@ -26,7 +25,6 @@ Page({
                     'authorization': "Bearer" + wx.getStorageSync('token').access_token
                 },
                 success: function (res) {
-                    console.log(res)
                     that.setData({ menuList: res.data });
                 }
             });

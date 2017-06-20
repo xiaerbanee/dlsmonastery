@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"  :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled'],
+    props: ['value','multiple','disabled',"hasIme"],
     data() {
       return {
         innerId:this.value,
@@ -20,7 +20,7 @@
           return;
         }
         this.remoteLoading = true;
-        axios.get("/api/ws/future/basic/product/searchFullText", {params:{key:query}}).then((response)=>{
+        axios.get("/api/ws/future/basic/product/filter", {params:{name:query,hasIme:this.hasIme}}).then((response)=>{
           var newList = new Array();
           var idList = new Array();
           if(this.multiple && this.innerId) {
@@ -50,15 +50,15 @@
       },setValue(val) {
         if (val) {
           this.innerId = val;
-          let idStr = this.innerId;
-          if (this.multiple && this.innerId) {
-            idStr = this.innerId.join();
+          let ids = this.innerId;
+          if (!this.multiple && this.innerId) {
+            ids = new Array(this.innerId);
           }
-          if (util.isBlank(idStr)) {
+          if (util.isBlank(ids)) {
             return;
           }
           this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/product/findByIds?idStr=' + idStr).then((response) => {
+          axios.get('/api/ws/future/basic/product/filter?ids=' + ids).then((response) => {
             this.itemList = response.data;
             this.remoteLoading = false;
             this.$nextTick(() => {
@@ -74,7 +74,7 @@
     },watch: {
       value :function (newVal) {
           this.setValue(newVal);
-      }
+      },
     }
   };
 </script>

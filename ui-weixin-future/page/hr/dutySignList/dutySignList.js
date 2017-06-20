@@ -25,7 +25,6 @@ Page({
   },
   pageRequest: function () {
     var that = this
-    console.log( wx.getStorageSync('token').access_token)
     wx.showToast({
       title: '加载中',
       icon: 'loading',

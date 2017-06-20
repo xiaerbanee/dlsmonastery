@@ -43,13 +43,12 @@ interface DepotShopRepositoryCustom{
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
     override fun findDto(id: String): DepotShopDto {
         return namedParameterJdbcTemplate.queryForObject("""
-       SELECT
               SELECT
                 t1.id AS 'depotId',
                 t1.name as 'depotName',
-                t1.contator;
-                t1.mobile_phone;
-                t1.address;
+                t1.contator,
+                t1.mobile_phone,
+                t1.address,
                 t1.office_id,
                 t2.*
             FROM
@@ -59,6 +58,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.enabled = 1
             AND t2.enabled = 1
             AND t1.depot_shop_id = t2.id
+            AND t1.id=:id
           """, Collections.singletonMap("id", id), BeanPropertyRowMapper(DepotShopDto::class.java))
     }
 
