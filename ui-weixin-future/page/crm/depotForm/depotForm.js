@@ -20,7 +20,7 @@ Page({
         var options = that.data.options;
         if (options.action == 'edit') {
             wx.request({
-                url: $util.getUrl("ws/future/basic/depotStore/findOne"),
+                url: $util.getUrl("ws/future/basic/depotShop/findOne"),
                 data: { id: options.id },
                 header: {
                     'x-auth-token': app.globalData.sessionId,
@@ -29,11 +29,8 @@ Page({
                 success: function (res) {
                     console.log(res.data)
                     that.setData({ formData: res.data });
-                    if (res.data.townId != null) {
-                        that.setData({ "formData.town.name": res.data.town.provinceName + res.data.town.cityName + res.data.town.countyName + res.data.town.townName })
-                    }
                     wx.request({
-                        url: $util.getUrl("ws/future/basic/depotStore/getForm"),
+                        url: $util.getUrl("ws/future/basic/depotShop/getForm"),
                         header: { 'x-auth-token': app.globalData.sessionId,
                         'authorization': "Bearer" + wx.getStorageSync('token').access_token
                          },
