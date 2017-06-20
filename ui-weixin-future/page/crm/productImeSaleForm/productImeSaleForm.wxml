@@ -74,7 +74,12 @@
           <view class="weui-label">性别</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="buyerSex" class="weui-input" value="{{formData.buyerSex}}" />
+        <radio-group name="buyerSex" class="radio-group" >
+          <label class="weui-input">
+            <radio value="男"/>男
+            <radio value="女"/>女
+          </label>
+          </radio-group>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -103,7 +108,7 @@
       </view>
     </view>
     <view class="weui-btn-area">
-      <button disabled="{{submitDisabled?'disabled':''}}" formType="submit" class="weui-btn " type="primary" >确定</button>
+      <button disabled="{{submitDisabled?'disabled':''}}" formType="submit" class="weui-btn " type="primary">确定</button>
     </view>
   </form>
   <view class="weui-panel">
