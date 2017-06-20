@@ -38,6 +38,25 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
     private String parentId;
 
     private String processPositionId;
+    private String investInCause;
+    private String billAddress;
+
+    public String getBillAddress() {
+        return billAddress;
+    }
+
+    public void setBillAddress(String billAddress) {
+        this.billAddress = billAddress;
+    }
+
+    public String getInvestInCause() {
+        return investInCause;
+    }
+
+    public void setInvestInCause(String investInCause) {
+        this.investInCause = investInCause;
+    }
+
 
     public String getProcessPositionId() {
         return processPositionId;
