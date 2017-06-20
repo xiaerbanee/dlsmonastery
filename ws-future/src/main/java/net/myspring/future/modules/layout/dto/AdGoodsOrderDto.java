@@ -418,7 +418,7 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     }
 
     public Boolean getEditable(){
-        return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+        return RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1") ;
     }
 
     public boolean getPrint(){

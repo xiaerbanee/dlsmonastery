@@ -7,11 +7,13 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
@@ -24,6 +26,8 @@ import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
+import net.myspring.future.modules.crm.web.form.ProductImeChangeForm;
+import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -145,6 +149,24 @@ public class ProductImeController {
 
     @RequestMapping(value = "batchCreate")
     public RestResponse batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm){
+        if(CollectionUtil.isEmpty(productImeBatchCreateForm.getProductImeCreateFormList())){
+            throw new ServiceException("请录入需要添加的串码信息");
+        }
+
+        for(ProductImeCreateForm productImeCreateForm : productImeBatchCreateForm.getProductImeCreateFormList()){
+            if(StringUtils.isBlank(productImeCreateForm.getIme())){
+                throw new ServiceException("串码不可以为空");
+            }
+            if(StringUtils.isBlank(productImeCreateForm.getProductName())){
+                throw new ServiceException("货品不可以为空");
+            }
+            if(StringUtils.isBlank(productImeCreateForm.getStoreName())){
+                throw new ServiceException("仓库不可以为空");
+            }
+            if(StringUtils.isBlank(productImeCreateForm.getCreatedTimeStr())){
+                throw new ServiceException("工厂录入时间不可以为空");
+            }
+        }
 
         productImeService.batchCreate(productImeBatchCreateForm);
 
@@ -161,6 +183,17 @@ public class ProductImeController {
 
     @RequestMapping(value = "batchChange")
     public RestResponse batchChange(ProductImeBatchChangeForm  productImeBatchChangeForm){
+        if(CollectionUtil.isEmpty(productImeBatchChangeForm.getProductImeChangeFormList())){
+            throw new ServiceException("请录入需要调整的串码");
+        }
+        for(ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()){
+            if(StringUtils.isBlank(productImeChangeForm.getIme())){
+                throw new ServiceException("串码不可以为空");
+            }
+            if(StringUtils.isBlank(productImeChangeForm.getProductName())){
+                throw new ServiceException("调整后型号不可以为空");
+            }
+        }
 
         productImeService.batchChange(productImeBatchChangeForm);
 
