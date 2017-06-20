@@ -42,14 +42,6 @@ public class DutyOvertimeQuery extends BaseQuery {
         this.officeIds = officeIds;
     }
 
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
-    }
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
-    }
-
     public LocalDate getDutyDateStart() {
         if(dutyDateStart==null&&StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
@@ -59,6 +51,10 @@ public class DutyOvertimeQuery extends BaseQuery {
         return null;
     }
 
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
+    }
+
     public LocalDate getDutyDateEnd() {
         if(dutyDateEnd==null&&StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
@@ -66,5 +62,9 @@ public class DutyOvertimeQuery extends BaseQuery {
             return dutyDateEnd.plusDays(1);
         }
         return null;
+    }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.dutyDateEnd = dutyDateEnd;
     }
 }

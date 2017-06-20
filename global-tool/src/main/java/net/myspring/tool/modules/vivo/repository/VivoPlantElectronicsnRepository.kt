@@ -1,9 +1,7 @@
 package net.myspring.tool.modules.vivo.repository;
 
 import net.myspring.tool.common.repository.BaseRepository
-import net.myspring.tool.modules.vivo.domain.CommonEntity;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
-import org.springframework.cache.annotation.CacheConfig
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
@@ -44,5 +42,5 @@ interface VivoPlantElectronicsnRepository: BaseRepository<VivoPlantElectronicsn,
         and t.retailDate <=:dateEnd
         group by t.product_id
         """)
-    fun findNameQtyList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<CommonEntity>
+    fun findNameQtyList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): List<VivoPlantElectronicsn>
 }

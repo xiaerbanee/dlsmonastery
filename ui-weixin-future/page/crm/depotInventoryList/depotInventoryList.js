@@ -4,22 +4,17 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10
-    },
+    formData: {},
     searchHidden: true,
     activeItem: null
   },
-  onLoad: function () {
+  onLoad: function () {},
+  onShow: function () {
     var that = this;
     that.setData({
       "formData.dateStart": $util.formatLocalDate($util.addMonth(new Date, -3)),
       "formData.dateEnd": $util.formatLocalDate(new Date),
     })
-  },
-  onShow: function () {
-    var that = this;
     app.autoLogin(function () {
       that.initPage()
     });
@@ -43,7 +38,6 @@ Page({
           },
           data: that.data.formData,
           success: function (res) {
-            console.log(res.data);
             that.setData({ page: res.data });
             wx.hideToast();
           }

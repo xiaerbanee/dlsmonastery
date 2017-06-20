@@ -1,6 +1,5 @@
 package net.myspring.tool.modules.vivo.web;
 
-import com.ctc.wstx.util.StringUtil;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -10,6 +9,7 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.service.VivoService;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -51,4 +50,11 @@ public class VivoController {
         RequestUtils.getRequestEntity().setAccountId("1");
         return "vivo同步成功";
     }
+
+    @RequestMapping(value="synIme")
+    public  String synIme (String date){
+        List<VivoPlantSendimei> vivoPlantSendimeiList=vivoService.synIme(date);
+        return ObjectMapperUtils.writeValueAsString(vivoPlantSendimeiList);
+    }
+
 }

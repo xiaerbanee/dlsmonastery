@@ -110,4 +110,24 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
                     )
         """,Collections.singletonMap("custId",custId), BeanPropertyRowMapper(BdDepartment::class.java))
     }
+
+    //SalDeptId是BdCustomer对象关联BdDepartment的字段
+    fun findBySalDeptIdList(salDeptIdList:List<String>): MutableList<BdDepartment> {
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FDEPTID,
+                t1.FNUMBER,
+                t2.FFULLNAME,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            from
+                T_BD_DEPARTMENT t1,
+                T_BD_DEPARTMENT_L t2
+            where
+                t1.FDEPTID = t2.FDEPTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FDEPTID in (:salDeptIdList)
+        """,Collections.singletonMap("salDeptIdList",salDeptIdList), BeanPropertyRowMapper(BdDepartment::class.java))
+    }
 }

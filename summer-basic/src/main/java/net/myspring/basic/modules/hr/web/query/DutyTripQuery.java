@@ -51,6 +51,10 @@ public class DutyTripQuery extends BaseQuery {
         return null;
     }
 
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
+    }
+
     public LocalDate getDutyDateEnd() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
@@ -58,10 +62,6 @@ public class DutyTripQuery extends BaseQuery {
             return dutyDateEnd.plusDays(1);
         }
         return null;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
     }
 
     public void setDutyDateEnd(LocalDate dutyDateEnd) {

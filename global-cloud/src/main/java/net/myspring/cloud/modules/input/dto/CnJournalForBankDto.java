@@ -31,7 +31,7 @@ public class CnJournalForBankDto {
     //账套类型
     private String kingdeeTypeK3;
 
-    private List<CnJournalFEntityForBankDto> fEntityDtoList = Lists.newArrayList();
+    private List<CnJournalEntityForBankDto> entityForBankDtoList = Lists.newArrayList();
 
     public String getCreatorK3() {
         return creatorK3;
@@ -73,12 +73,12 @@ public class CnJournalForBankDto {
         this.kingdeeTypeK3 = kingdeeTypeK3;
     }
 
-    public List<CnJournalFEntityForBankDto> getfEntityDtoList() {
-        return fEntityDtoList;
+    public List<CnJournalEntityForBankDto> getEntityForBankDtoList() {
+        return entityForBankDtoList;
     }
 
-    public void setfEntityDtoList(List<CnJournalFEntityForBankDto> fEntityDtoList) {
-        this.fEntityDtoList = fEntityDtoList;
+    public void setEntityForBankDtoList(List<CnJournalEntityForBankDto> entityForBankDtoList) {
+        this.entityForBankDtoList = entityForBankDtoList;
     }
 
     @JsonIgnore
@@ -101,30 +101,30 @@ public class CnJournalForBankDto {
         BigDecimal debitAmounts = BigDecimal.ZERO;
         BigDecimal creditAmounts = BigDecimal.ZERO;
         List<Object> entity = Lists.newArrayList();
-        for (CnJournalFEntityForBankDto fEntityDto : fEntityDtoList){
+        for (CnJournalEntityForBankDto entityForBankDto : getEntityForBankDtoList()){
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", fEntityDto.getDepartmentNumber()));
-            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", fEntityDto.getEmpInfoNumberK3()));
-            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", fEntityDto.getOtherTypeNumberK3()));
-            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", fEntityDto.getExpenseTypeNumberK3()));
-            if (StringUtils.isNotBlank(fEntityDto.getCustomerNumberK3())){
+            detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", entityForBankDto.getDepartmentNumber()));
+            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", entityForBankDto.getEmpInfoNumberK3()));
+            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", entityForBankDto.getOtherTypeNumberK3()));
+            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", entityForBankDto.getExpenseTypeNumberK3()));
+            if (StringUtils.isNotBlank(entityForBankDto.getCustomerNumberK3())){
                 if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeNameK3())) {
-                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberK3()));
+                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumberK3()));
                 }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeTypeK3())){
-                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", fEntityDto.getCustomerNumberK3()));
+                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumberK3()));
                 }
             }
-            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", fEntityDto.getSettleTypeNumberK3()));
-            detail.put("FCREDITAMOUNT", fEntityDto.getCreditAmount());
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityForBankDto.getSettleTypeNumberK3()));
+            detail.put("FCREDITAMOUNT", entityForBankDto.getCreditAmount());
             // 借方
-            detail.put("FDEBITAMOUNT", fEntityDto.getDebitAmount());
+            detail.put("FDEBITAMOUNT", entityForBankDto.getDebitAmount());
             detail.put("FVOUCHERGROUPID", CollectionUtil.getMap("FNumber", "PRE001"));
-            detail.put("FBANKACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getBankAccountNumber()));
-            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", fEntityDto.getAccountNumberK3()));
-            detail.put("FCOMMENT", fEntityDto.getComment());
+            detail.put("FBANKACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getBankAccountNumber()));
+            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getAccountNumberK3()));
+            detail.put("FCOMMENT", entityForBankDto.getComment());
             entity.add(detail);
-            debitAmounts = debitAmounts.add(fEntityDto.getDebitAmount());
-            creditAmounts = creditAmounts.add(fEntityDto.getCreditAmount());
+            debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
+            creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
         }
         model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
         model.put("FCREDITSUMAMOUNT", creditAmounts);

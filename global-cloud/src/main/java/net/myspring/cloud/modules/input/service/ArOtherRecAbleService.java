@@ -49,19 +49,13 @@ public class ArOtherRecAbleService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    public KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = new KingdeeSynDto(
+    private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
+        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                     KingdeeFormIdEnum.AR_OtherRecAble.name(),
                     arOtherRecAbleDto.getJson(),
                     kingdeeBook) {
             };
             kingdeeManager.save(kingdeeSynDto);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
-        }
         return kingdeeSynDto;
     }
 
@@ -139,12 +133,33 @@ public class ArOtherRecAbleService {
             arOtherRecAbleDtoMap.get(billKey).getArOtherRecAbleFEntityDtoList().add(entityDto);
         }
         List<ArOtherRecAbleDto> billList = Lists.newArrayList(arOtherRecAbleDtoMap.values());
+        List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
+        return kingdeeSynDtoList;
+    }
+
+    public KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
+        }else{
+            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+        }
+        return kingdeeSynDto;
+    }
+
+    public List<KingdeeSynDto> save(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
-        if (CollectionUtil.isNotEmpty(billList)) {
-            for (ArOtherRecAbleDto arOtherRecAbleDto : billList) {
-                KingdeeSynDto kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
-                kingdeeSynDtoList.add(kingdeeSynDto);
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            if (CollectionUtil.isNotEmpty(arOtherRecAbleDtoList)) {
+                for (ArOtherRecAbleDto arOtherRecAbleDto : arOtherRecAbleDtoList) {
+                    KingdeeSynDto kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
+                    kingdeeSynDtoList.add(kingdeeSynDto);
+                }
             }
+        }else{
+            kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
         }
         return kingdeeSynDtoList;
     }

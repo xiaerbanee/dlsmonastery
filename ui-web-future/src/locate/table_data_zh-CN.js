@@ -96,6 +96,8 @@ export default {
       purMrb:'采购退料',
       stkInStock:'采购入库',
       arOtherRecAble:'其他应收单',
+      arRefundBill:'收款退款单',
+      apPayBill:'付款单',
       cloudReportCategory:"财务报表",
       payableReport:"应付对账报表",
       customerReceive:"应收对账报表",

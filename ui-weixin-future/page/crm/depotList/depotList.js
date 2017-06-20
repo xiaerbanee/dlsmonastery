@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
     data: {
         page: {},
-        formData: {
-            page: 0,
-            size: 10
-        },
+        formData: {},
         searchHidden: true,
         activeItem: null
     },
@@ -36,7 +33,7 @@ Page({
                         'authorization': "Bearer" + wx.getStorageSync('token').access_token
                     },
                     method: 'GET',
-                    data: that.data.formData,
+                    data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
                         that.setData({ page: res.data });
                         wx.hideToast();
@@ -116,5 +113,5 @@ Page({
                 }
             }
         });
-    },
+    }
 });
