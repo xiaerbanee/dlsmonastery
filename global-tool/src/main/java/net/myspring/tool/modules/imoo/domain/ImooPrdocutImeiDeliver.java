@@ -5,6 +5,7 @@ import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +22,7 @@ public class ImooPrdocutImeiDeliver extends IdEntity<ImooPrdocutImeiDeliver> {
     private String box;
     private String imei;
     private String companyId;
+    private String productId;
 
     public String getMainagentid() {
         return mainagentid;
@@ -108,5 +110,14 @@ public class ImooPrdocutImeiDeliver extends IdEntity<ImooPrdocutImeiDeliver> {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    @Transient
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }
