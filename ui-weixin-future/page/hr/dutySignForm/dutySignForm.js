@@ -53,7 +53,6 @@ Page({
     wx.getLocation({
       type: 'wgs84',
       success: function (res) {
-        console.log(res)
         that.setData({ "formData.longitude": res.longitude, "formData.latitude": res.latitude, "formData.accuracy": res.accuracy })
         wx.getNetworkType({
           success: function (res) {
@@ -76,7 +75,6 @@ Page({
             wx.hideToast();
           },
           fail: function () {
-            console.log(res);
           }
         });
       }
@@ -95,7 +93,6 @@ Page({
       sizeType: ['compressed'],
       sourceType: ['camera'],
       success: function (res) {
-        console.log(res);
         var tempFilePaths = res.tempFilePaths
         wx.uploadFile({
           url: $util.getUrl('general/sys/folderFile/upload'),
@@ -109,7 +106,6 @@ Page({
             uploadPath: 'dutySign'
           },
           success: function (res) {
-            console.log(res);
             var folderFile = JSON.parse(res.data)[0];
             images.push({
               preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId),
@@ -156,7 +152,6 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          console.log()
           that.setData({ "response.data": res.data, submitDisabled: false });
         }
       }

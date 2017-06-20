@@ -71,7 +71,7 @@ public class ClientController {
     @RequestMapping(value = "syn")
     public RestResponse syn(){
         clientService.syn();
-//        depotStoreService.syn();
+        depotStoreService.syn();
         return new RestResponse("同步成功",null);
     }
 

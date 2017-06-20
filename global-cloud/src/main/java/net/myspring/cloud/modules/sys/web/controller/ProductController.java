@@ -58,7 +58,7 @@ public class ProductController {
     @RequestMapping(value = "syn")
     public RestResponse syn(ProductForm productForm){
         LocalDateTime maxDate = productService.findMaxOutDate();
-        List<BdMaterial> bdMaterialList = bdMaterialService.findByModifyDate(maxDate);
+        List<BdMaterial> bdMaterialList = bdMaterialService.findByMaxModifyDate(maxDate);
         if (CollectionUtil.isNotEmpty(bdMaterialList)){
             KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             productService.syn(bdMaterialList,kingdeeBook);

@@ -41,7 +41,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
-    fun findByModifyDate(modifyDate:LocalDateTime): MutableList<BdMaterial> {
+    fun findByMaxModifyDate(modifyDate:LocalDateTime): MutableList<BdMaterial> {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
