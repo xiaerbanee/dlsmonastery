@@ -122,6 +122,8 @@ public class ProductImeSaleService {
             productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
             productImeSale.setBuyerSex(productImeSaleForm.getBuyerSex());
             productImeSale.setBuyerPhone(productImeSaleForm.getBuyerPhone());
+            productImeSale.setBuyerSchool(productImeSaleForm.getBuyerSchool());
+            productImeSale.setBuyerGrade(productImeSaleForm.getBuyerGrade());
 
             Product product = productRepository.findOne(productIme.getProductId());
             //设置积分

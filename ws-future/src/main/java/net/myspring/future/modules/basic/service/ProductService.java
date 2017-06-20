@@ -128,11 +128,12 @@ public class ProductService {
     }
 
     public List<ProductDto> findByOutGroupIds(List<String> outGroupIds){
-        List<ProductDto> productDtoList= BeanUtil.map(productRepository.findByOutGroupIdIn(outGroupIds),ProductDto.class);
+        List<Product> productList = productRepository.findByOutGroupIds(outGroupIds);
+        List<ProductDto> productDtoList= BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
-    public  List<ProductDto> findAdProductAndAllowOrder(String billType){
+    public  List<Product> findAdProduct(String billType,AdApplyForm adApplyForm){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
@@ -141,8 +142,12 @@ public class ProductService {
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
-        List<ProductDto> adProductDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductDto.class);
-        return adProductDtos;
+        List<Product> adProducts  = productRepository.findByOutGroupIds(outGroupIds);
+        if(adApplyForm.getShopId() != null){
+            Depot depot = depotRepository.findOne(adApplyForm.getShopId());
+            //adApplyForm.setShop(depot);
+        }
+        return adProducts;
     }
 
     public void save(ProductForm productForm) {

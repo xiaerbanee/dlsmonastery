@@ -1,12 +1,10 @@
 package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
+import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.time.LocalDateUtils;
@@ -15,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by guolm on 2017/5/9.
@@ -149,4 +149,4 @@ public class OppoService {
         List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
         return oppoPlantSendImeiPpsels;
     }
-}
+ }

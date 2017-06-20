@@ -28,7 +28,7 @@ Page({
       });
     } else {
       wx.request({
-        url: $util.getUrl("basic/hr/dutySign/getForm"),
+        url: $util.getUrl("basic/hr/dutySign/detail"),
         data: { id: that.data.options.id },
         header: {
           'x-auth-token': app.globalData.sessionId,

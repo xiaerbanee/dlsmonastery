@@ -2,8 +2,6 @@ package net.myspring.basic.modules.hr.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.DutySign;
-import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,9 +37,6 @@ public class DutySignDto extends DataDto<DutySign> {
     }
 
     public String getWeek() {
-        if(StringUtils.isBlank(week)&&dutyDate!=null){
-            this.week= LocalDateUtils.getDayOfWeek(dutyDate);
-        }
         return week;
     }
 

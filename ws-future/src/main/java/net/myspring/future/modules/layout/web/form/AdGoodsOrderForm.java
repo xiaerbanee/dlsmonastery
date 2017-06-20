@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 
 import java.util.List;
 
@@ -11,20 +12,11 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
     private String outShopId;
     private String shopId;
     private String employeeId;
-    private String investInCause;
-    private String expressOrderExpressCompanyId;
+    private String expressCompanyId;
     private String expressOrderAddress;
     private String expressOrderContator;
     private String expressOrderMobilePhone;
-    private List<AdGoodsOrderDetailForm> adGoodsOrderDetailList;
-
-    public String getInvestInCause() {
-        return investInCause;
-    }
-
-    public void setInvestInCause(String investInCause) {
-        this.investInCause = investInCause;
-    }
+    private List<AdGoodsOrderDetailDto> adGoodsOrderDetailList;
 
     public String getOutShopId() {
         return outShopId;
@@ -50,12 +42,12 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
         this.employeeId = employeeId;
     }
 
-    public String getExpressOrderExpressCompanyId() {
-        return expressOrderExpressCompanyId;
+    public String getExpressCompanyId() {
+        return expressCompanyId;
     }
 
-    public void setExpressOrderExpressCompanyId(String expressOrderExpressCompanyId) {
-        this.expressOrderExpressCompanyId = expressOrderExpressCompanyId;
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
     }
 
     public String getExpressOrderAddress() {
@@ -82,11 +74,11 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
         this.expressOrderMobilePhone = expressOrderMobilePhone;
     }
 
-    public List<AdGoodsOrderDetailForm> getAdGoodsOrderDetailList() {
+    public List<AdGoodsOrderDetailDto> getAdGoodsOrderDetailList() {
         return adGoodsOrderDetailList;
     }
 
-    public void setAdGoodsOrderDetailList(List<AdGoodsOrderDetailForm> adGoodsOrderDetailList) {
+    public void setAdGoodsOrderDetailList(List<AdGoodsOrderDetailDto> adGoodsOrderDetailList) {
         this.adGoodsOrderDetailList = adGoodsOrderDetailList;
     }
 }

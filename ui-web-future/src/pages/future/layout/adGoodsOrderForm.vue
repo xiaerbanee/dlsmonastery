@@ -11,17 +11,11 @@
             <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isAdShop">
               <depot-select v-model="inputForm.shopId" category="delegateShop"></depot-select>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.recentSaleQty')" >
-              {{recentSaleQty}}
-            </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.investInCause')" prop="investInCause">
-              <el-input v-model="inputForm.investInCause" ></el-input>
-            </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.employeeName')" prop="employeeId">
               <employee-select v-model="inputForm.employeeId" ></employee-select>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.expressCompany')" prop="expressOrderExpressCompanyId">
-              <express-company-select v-model="inputForm.expressOrderExpressCompanyId"></express-company-select>
+            <el-form-item :label="$t('adGoodsOrderForm.expressCompany')" prop="expressCompanyId">
+              <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.address')" prop="expressOrderAddress">
               <el-input v-model="inputForm.expressOrderAddress" type="textarea"></el-input>
@@ -82,7 +76,6 @@
         return {
 
           isCreate: this.$route.query.id == null,
-          recentSaleQty:'',
           submitDisabled: false,
           productName: "",
           filterAdGoodsOrderDetailList: [],
@@ -164,6 +157,19 @@
         }
         this.totalQty = totalQty;
         this.totalPrice = totalPrice;
+      }, initPage(){
+
+        axios.get('/api/ws/future/layout/adGoodsOrder/getForm').then((response) => {
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {id: this.$route.query.id, includeNotAllowOrderProduct: util.isPermit("crm:adGoodsOrder:bill")}}).then((response) => {
+            this.setAdGoodsOrderDetailList(response.data);
+          });
+          if(!this.isCreate){
+            axios.get('/api/ws/future/layout/adGoodsOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+            });
+          }
+        });
       },setAdGoodsOrderDetailList(list){
         this.inputForm.adGoodsOrderDetailList = list;
         this.searchDetail();
@@ -176,29 +182,6 @@
           }
         }
         return tempList;
-      }, initPage(){
-
-        axios.get('/api/ws/future/layout/adGoodsOrder/getForm').then((response) => {
-          this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {adGoodsOrderId: this.$route.query.id, includeNotAllowOrderProduct: util.isPermit("crm:adGoodsOrder:bill")}}).then((response) => {
-            this.setAdGoodsOrderDetailList(response.data);
-          });
-          if(!this.isCreate){
-            axios.get('/api/ws/future/layout/adGoodsOrder/findDto', {params: {id: this.$route.query.id}}).then((response) => {
-              this.inputForm.id = response.data.id;
-              this.inputForm.outShopId = response.data.outShopId;
-              this.inputForm.shopId = response.data.shopId;
-              this.inputForm.investInCause = response.data.investInCause;
-              this.inputForm.employeeId = response.data.employeeId;
-              this.inputForm.expressOrderExpressCompanyId = response.data.expressOrderExpressCompanyId;
-              this.inputForm.expressOrderAddress = response.data.expressOrderAddress;
-              this.inputForm.expressOrderContator = response.data.expressOrderContator;
-              this.inputForm.expressOrderMobilePhone = response.data.expressOrderMobilePhone;
-              this.inputForm.remarks = response.data.remarks;
-
-            });
-          }
-        });
       }
     }, created(){
       this.initPage();

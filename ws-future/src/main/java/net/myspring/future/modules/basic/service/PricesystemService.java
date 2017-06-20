@@ -135,7 +135,7 @@ public class PricesystemService {
         if(pricesystemForm.isCreate()){
             String value =CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
             List<String> outGroupIds = IdUtils.getIdList(value);
-            List<Product> productList = productRepository.findByOutGroupIdIn(outGroupIds);
+            List<Product> productList = productRepository.findByOutGroupIds(outGroupIds);
             for(Product product:productList){
                 PricesystemDetailForm pricesystemDetailForm=new PricesystemDetailForm();
                 pricesystemDetailForm.setProductId(product.getId());

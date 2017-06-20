@@ -6,7 +6,6 @@ import net.myspring.general.modules.sys.service.TownService;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,17 +26,10 @@ public class TownController {
         return townDtoList;
     }
 
-    @RequestMapping(value = "findByIds")
-    public List<TownDto> findByIds(@RequestParam("idStr") List<String> ids){
-        List<TownDto> townDtoList=townService.findByIds(ids);
+    @RequestMapping(value = "findOne")
+    public TownDto findOne(String id){
+        TownDto townDtoList=townService.findDto(id);
         return townDtoList;
     }
-
-    @RequestMapping(value = "findOne")
-    public TownDto findByIds(String id){
-        TownDto townDto=townService.findOne(id);
-        return townDto;
-    }
-
 
 }

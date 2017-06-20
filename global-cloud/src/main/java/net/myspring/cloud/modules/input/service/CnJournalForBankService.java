@@ -169,8 +169,7 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public CnJournalForBankForm getForm(KingdeeBook kingdeeBook){
-        CnJournalForBankForm cnJournalForBankForm = new CnJournalForBankForm();
+    public CnJournalForBankForm getForm(CnJournalForBankForm cnJournalForBankForm,KingdeeBook kingdeeBook){
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));

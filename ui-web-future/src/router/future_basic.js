@@ -37,8 +37,6 @@ const employeePhoneList = r => require.ensure([],() => r(require('pages/future/b
 const employeePhoneForm = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneForm.vue')));
 const employeePhoneDepositList = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneDepositList.vue')));
 const employeePhoneDepositForm = r => require.ensure([],() => r(require('pages/future/basic/employeePhoneDepositForm.vue')));
-const employeePhoneDepositBatchForm  = r => require.ensure([], () => r(require('pages/future/basic/employeePhoneDepositBatchForm.vue')));
-
 
 let routes = [
   {path:'/future/basic/adPricesystemList',component:adPricesystemList,name:'adPricesystemList'},
@@ -69,8 +67,6 @@ let routes = [
   {path:'/future/basic/employeePhoneForm',component:employeePhoneForm,name:'employeePhoneForm',meta: {menu:"employeePhoneList",keepAlive:true}},
   {path:'/future/basic/employeePhoneDepositList',component:employeePhoneDepositList,name:'employeePhoneDepositList'},
   {path:'/future/basic/employeePhoneDepositForm',component:employeePhoneDepositForm,name:'employeePhoneDepositForm',meta: {menu:"employeePhoneDepositList",keepAlive:true}},
-  {path:'/future/basic/employeePhoneDepositBatchForm',component:employeePhoneDepositBatchForm,name:'employeePhoneDepositBatchForm',meta: {menu:"employeePhoneList",keepAlive:true}},
-
   {path:'/future/basic/depotShopList',component:depotShopList,name:'depotShopList'},
   {path:'/future/basic/depotShopForm',component:depotShopForm,name:'depotShopForm',meta: {menu:"depotShopList",keepAlive:true}},
   {path:'/future/basic/shopForm',component:shopForm,name:'shopForm',meta: {menu:"depotShopList",keepAlive:true}},

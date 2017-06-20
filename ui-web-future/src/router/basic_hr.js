@@ -1,6 +1,7 @@
 const employeeList  = r => require.ensure([], () => r(require('pages/basic/hr/employeeList.vue')));
 const employeeForm  = r => require.ensure([], () => r(require('pages/basic/hr/employeeForm.vue')));
 const employeeEditForm  = r => require.ensure([], () => r(require('pages/basic/hr/employeeEditForm.vue')));
+const employeePhoneDepositBatchForm  = r => require.ensure([], () => r(require('pages/basic/hr/employeePhoneDepositBatchForm.vue')));
 const accountList  = r => require.ensure([], () => r(require('pages/basic/hr/accountList.vue')));
 const accountForm  = r => require.ensure([], () => r(require('pages/basic/hr/accountForm.vue')));
 const accountChangeList  = r => require.ensure([], () => r(require('pages/basic/hr/accountChangeList.vue')));
@@ -46,6 +47,7 @@ let routes = [
   {path:'/basic/hr/employeeList',component:employeeList,name:'employeeList'},
   {path:'/basic/hr/employeeForm',component:employeeForm,name:'employeeForm',meta: {menu:"employeeList",keepAlive:true}},
   {path:'/basic/hr/employeeEditForm',component:employeeEditForm,name:'employeeEditForm',meta: {menu:"employeeList",keepAlive:true}},
+  {path:'/basic/hr/employeePhoneDepositBatchForm',component:employeePhoneDepositBatchForm,name:'employeePhoneDepositBatchForm',meta: {menu:"employeePhoneList",keepAlive:true}},
   {path:'/basic/hr/positionList',component:positionList,name:'positionList'},
   {path:'/basic/hr/positionForm',component:positionForm,name:'positionForm',meta: {menu:"positionList",keepAlive:true}},
   {path:'/basic/hr/dutySignList',component:dutySignList,name:'dutySignList'},

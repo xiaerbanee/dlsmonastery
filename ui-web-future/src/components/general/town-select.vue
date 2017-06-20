@@ -16,7 +16,7 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(util.isBlank(query)) {
+        if(query=="" || query == this.innerId) {
           return;
         }
         this.remoteLoading = true;
@@ -40,9 +40,11 @@
             return;
           }
           this.remoteLoading = true;
-          axios.get('/api/general/sys/town/findByIds?idStr=' + idStr).then((response)=>{
+          console.log("response.data")
+          axios.get('/api/general/sys/town/findOne?id=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
+            console.log(response.data)
             this.$nextTick(()=>{
               this.$emit('afterInit');
             });
@@ -53,6 +55,7 @@
             this.$emit('afterInit');
           });
         }
+
       }
     },created () {
       this.setValue(this.value);

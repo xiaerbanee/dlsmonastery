@@ -11,6 +11,7 @@ import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
+import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
@@ -78,6 +79,7 @@ public class SalReturnStockService {
         kingdeeManager.save(kingdeeSynExtendDto);
         return kingdeeSynExtendDto;
     }
+
 
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String storeNumber = salStockForm.getStoreNumber();
@@ -149,14 +151,13 @@ public class SalReturnStockService {
         return kingdeeSynExtendDtoList;
     }
 
-    public SalStockForm getForm(){
-        SalStockForm salStockForm = new SalStockForm();
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
-        map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
-        map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
-        salStockForm.setExtra(map);
-        return salStockForm;
+    public BatchBillQuery getForm(BatchBillQuery batchBillQuery){
+        batchBillQuery.setReturnStockBillTypeEnums(SalReturnStockBillTypeEnum.values());
+        List<String> customerNameList = bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList());
+        List<String> materialNameList = bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList());
+        batchBillQuery.setBdCustomerNameList(customerNameList);
+        batchBillQuery.setBdMaterialNameList(materialNameList);
+        return batchBillQuery;
     }
 
 }

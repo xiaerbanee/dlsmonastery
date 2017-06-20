@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
+import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -151,5 +153,16 @@ public class VivoService {
             }
         }
         return "电子保卡同步成功,共同步"+list.size()+"条数据";
+    }
+
+    @Transactional
+    public  List<VivoPlantSendimei>  synIme(String date) {
+        LocalDate nowDate= LocalDateUtils.parse(date);
+        LocalDate dateStart = nowDate.minusDays(1);
+        LocalDate dateEnd = nowDate.plusDays(1);
+        List<String>  mainCodes=Lists.newArrayList();
+        mainCodes.add("M13E00");
+        List<VivoPlantSendimei> vivoPlantSendimeis = vivoPlantSendimeiRepository.findSynList(dateStart, dateEnd, mainCodes);
+        return vivoPlantSendimeis;
     }
 }

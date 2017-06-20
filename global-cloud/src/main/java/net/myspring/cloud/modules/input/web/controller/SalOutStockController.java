@@ -4,6 +4,7 @@ import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
+import net.myspring.cloud.modules.input.web.query.BatchBillQuery;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
@@ -30,8 +31,9 @@ public class SalOutStockController {
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public SalStockForm form () {
-        return salOutStockService.getForm();
+    public BatchBillQuery form (BatchBillQuery batchBillQuery) {
+        batchBillQuery = salOutStockService.getForm(batchBillQuery);
+        return batchBillQuery;
     }
 
     @RequestMapping(value = "save")

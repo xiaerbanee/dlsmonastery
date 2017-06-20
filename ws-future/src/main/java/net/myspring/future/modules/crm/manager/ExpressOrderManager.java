@@ -9,6 +9,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class ExpressOrderManager {
         expressOrder.setExpressCodes(expressCodes);
 
         List<String> expressCodeList = StringUtils.getSplitList(expressCodes, CharConstant.ENTER);
-        List<Express> expresses = expressRepository.findByEnabledIsTrueAndExpressOrderId(expressOrder.getId());
+        List<Express> expresses = expressRepository.findByExpressOrderId(expressOrder.getId());
         if(CollectionUtil.isNotEmpty(expresses)) {
             for(int i = expresses.size()-1;i>=0;i--) {
                 Express express = expresses.get(i);
