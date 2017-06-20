@@ -4,15 +4,21 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      pageNumber: 0,
-      pageSize: 10
-    },
+    formData: {},
     formProperty: {},
     searchHidden: true,
     activeItem: null
   },
   onLoad: function (option) {
+
+  },
+  onShow: function () {
+    var that = this;
+    app.autoLogin(function () {
+      that.initPage()
+    });
+  },
+  initPage: function () {
     var that = this;
     wx.request({
       url: $util.getUrl("ws/future/layout/shopAd/getQuery"),
@@ -23,7 +29,8 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes });
+        that.pageRequest();
       }
     });
     wx.request({
@@ -39,16 +46,6 @@ Page({
       }
     })
   },
-  onShow: function () {
-    var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
-  },
-  initPage: function () {
-    var that = this;
-    that.pageRequest();
-  },
   pageRequest: function () {
     var that = this;
     wx.showToast({
@@ -62,7 +59,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
@@ -82,14 +79,14 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   bindAdType: function (e) {
     var that = this;
     that.setData({
-      'formData.shopAdType.id': that.data.formProperty.shopAdTypeList[e.detail.value].id,
-      'formData.shopAdType.name': that.data.formProperty.shopAdTypeList[e.detail.value].name
+      'formData.shopAdTypeId': that.data.formProperty.shopAdTypeList[e.detail.value].id,
+      'formData.shopAdTypeName': that.data.formProperty.shopAdTypeList[e.detail.value].name
     })
   },
   bindStatus: function (e) {
@@ -188,5 +185,5 @@ Page({
         }
       }
     });
-  },
+  }
 })

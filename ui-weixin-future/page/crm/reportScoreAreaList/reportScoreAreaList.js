@@ -6,8 +6,6 @@ Page({
   data: {
     page: {},
     formData: {
-      page: 0,
-      size: 10,
       order: "month_rank: DESC"
     },
     fromProperty: {},
@@ -31,6 +29,9 @@ Page({
   },
   initPage: function () {
     var that = this;
+    if ($util.trim(that.data.formData.scoreDate) == "") {
+      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+    }
     wx.getSystemInfo({
       success: function (res) {
         that.setData({
@@ -47,13 +48,10 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.extra.areaList })
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
+        that.pageRequest();
       }
     })
-    if ($util.trim(that.data.formData.scoreDate) == "") {
-      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
-    }
-    that.pageRequest();
   },
   pageRequest: function () {
     var that = this;
@@ -68,7 +66,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
@@ -115,7 +113,7 @@ Page({
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
     wx.navigateTo({
-      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId +'areaName=' + officeName +  '&scoreDate=' + that.data.formData.scoreDate
+      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + 'areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
     })
   },
 

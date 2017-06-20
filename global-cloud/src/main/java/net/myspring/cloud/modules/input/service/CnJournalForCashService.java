@@ -7,7 +7,7 @@ import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForCashDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForCashDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForCashDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -65,14 +65,13 @@ public class CnJournalForCashService {
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> empInfoNameList = Lists.newArrayList();
         List<String> departmentNameList = Lists.newArrayList();
-        List<String> otherTypeNameList = Lists.newArrayList();
-        List<String> expenseTypeNameList = Lists.newArrayList();
+        List<String> assistantNameList = Lists.newArrayList();
         List<String> customerNameForList = Lists.newArrayList();
         for (List<Object> row : data){
             empInfoNameList.add(HandsontableUtils.getValue(row, 5));
             departmentNameList.add(HandsontableUtils.getValue(row, 6));
-            otherTypeNameList.add(HandsontableUtils.getValue(row, 7));
-            expenseTypeNameList.add(HandsontableUtils.getValue(row, 8));
+            assistantNameList.add(HandsontableUtils.getValue(row, 7));
+            assistantNameList.add(HandsontableUtils.getValue(row, 8));
             if (row.size() > 9) {
                 customerNameForList.add(HandsontableUtils.getValue(row, 9));
             }
@@ -80,8 +79,16 @@ public class CnJournalForCashService {
         Map<String, String> customerNameMap = Maps.newHashMap();
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
-        Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
-        Map<String, String> expenseNameMap = basAssistantRepository.findByNameList(expenseTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
+        List<BasAssistant> basAssistantList = basAssistantRepository.findByNameList(assistantNameList);
+        Map<String, String> otherTypeNameMap = Maps.newHashMap();
+        Map<String, String> expenseTypeNameMap = Maps.newHashMap();
+        for (BasAssistant basAssistant :basAssistantList){
+            if ("其他类".equals(basAssistant.getFType())){
+                otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }else if("费用类".equals(basAssistant.getFType())){
+                expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }
+        }
         if (customerNameForList.size() > 0){
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
@@ -104,17 +111,17 @@ public class CnJournalForCashService {
             if (row.size() > 9) {
                 customerNameFor =  HandsontableUtils.getValue(row, 9);
             }
-            CnJournalFEntityForCashDto cnJournalFEntityForCashDto = new CnJournalFEntityForCashDto();
-            cnJournalFEntityForCashDto.setAccountNumber(accountNumber);
-            cnJournalFEntityForCashDto.setDebitAmount(debitAmount);
-            cnJournalFEntityForCashDto.setCreditAmount(creditAmount);
-            cnJournalFEntityForCashDto.setRemarks(remarks);
-            cnJournalFEntityForCashDto.setStaffNumber(empInfoNameMap.get(empInfoName));
-            cnJournalFEntityForCashDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForCashDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForCashDto.setExpenseTypeNumber(expenseNameMap.get(expenseTypeName));
-            cnJournalFEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
-            cnJournalForCashDto.getfEntityDtoList().add(cnJournalFEntityForCashDto);
+            CnJournalEntityForCashDto cnJournalEntityForCashDto = new CnJournalEntityForCashDto();
+            cnJournalEntityForCashDto.setAccountNumber(accountNumber);
+            cnJournalEntityForCashDto.setDebitAmount(debitAmount);
+            cnJournalEntityForCashDto.setCreditAmount(creditAmount);
+            cnJournalEntityForCashDto.setRemarks(remarks);
+            cnJournalEntityForCashDto.setStaffNumber(empInfoNameMap.get(empInfoName));
+            cnJournalEntityForCashDto.setDepartmentNumber(departmentNameMap.get(departmentName));
+            cnJournalEntityForCashDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
+            cnJournalEntityForCashDto.setExpenseTypeNumber(expenseTypeNameMap.get(expenseTypeName));
+            cnJournalEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
+            cnJournalForCashDto.getEntityForCashDtoList().add(cnJournalEntityForCashDto);
         }
         return save(cnJournalForCashDto,kingdeeBook,accountKingdeeBook);
     }

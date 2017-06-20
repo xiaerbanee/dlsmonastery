@@ -7,6 +7,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,5 +29,9 @@ public class BdStockService {
 
     public List<BdStock> findAll(){
         return bdStockRepository.findAll();
+    }
+
+    public List<BdStock> findByMaxModifyDate(LocalDateTime modifyDate){
+        return bdStockRepository.findByMaxModifyDate(modifyDate);
     }
 }

@@ -46,9 +46,9 @@
           <view class="weui-label">乡镇名称：</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="townId" value="{{formData.town.id}}" />
+          <input class="hidden" name="townId" value="{{formData.towId}}" />
             <view class="weui-input"  bindtap="bindTown">
-              {{formData.town.name}}
+              {{formData.townName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>
         </view>
@@ -150,6 +150,7 @@
         </view>
       </view>
     </view>
+   <view wx:if="{{shopAttributeShow}}">
     <view class="weui-cells__title" >终端统计</view>
     <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
     <text>{{response.error}}</text></view>
@@ -166,6 +167,7 @@
         </view>
       </block>
     </view>
+   </view>
     <view class="weui-btn-area">
       <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
     </view>

@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopPromotionList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>

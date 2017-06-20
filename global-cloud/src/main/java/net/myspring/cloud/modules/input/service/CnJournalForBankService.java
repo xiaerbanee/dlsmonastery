@@ -7,7 +7,7 @@ import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -18,7 +18,6 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -80,16 +79,15 @@ public class CnJournalForBankService {
         List<String> bankAcntNameList = Lists.newArrayList();
         List<String> empInfoNameList = Lists.newArrayList();
         List<String> departmentNameList = Lists.newArrayList();
-        List<String> otherTypeNameList = Lists.newArrayList();
-        List<String> expenseTypeNameList = Lists.newArrayList();
+        List<String> assistantNameList = Lists.newArrayList();
         List<String> customerNameForList = Lists.newArrayList();
         for (List<Object> row : data){
             settleTypeNameList.add(HandsontableUtils.getValue(row,1));
             bankAcntNameList.add(HandsontableUtils.getValue(row,4));
             empInfoNameList.add(HandsontableUtils.getValue(row, 7));
             departmentNameList.add(HandsontableUtils.getValue(row, 8));
-            otherTypeNameList.add(HandsontableUtils.getValue(row, 9));
-            expenseTypeNameList.add(HandsontableUtils.getValue(row, 10));
+            assistantNameList.add(HandsontableUtils.getValue(row, 9));
+            assistantNameList.add(HandsontableUtils.getValue(row, 10));
             if (row.size() > 11) {
                 customerNameForList.add(HandsontableUtils.getValue(row, 11));
             }
@@ -98,8 +96,16 @@ public class CnJournalForBankService {
         Map<String, String> bankAcntNameMap = cnBankAcntRepository.findByNameList(bankAcntNameList).stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber));
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
-        Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
-        Map<String, String> expenseNameMap = basAssistantRepository.findByNameList(expenseTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
+        List<BasAssistant> basAssistantList = basAssistantRepository.findByNameList(assistantNameList);
+        Map<String, String> otherTypeNameMap = Maps.newHashMap();
+        Map<String, String> expenseTypeNameMap = Maps.newHashMap();
+        for (BasAssistant basAssistant :basAssistantList){
+            if ("其他类".equals(basAssistant.getFType())){
+                otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }else if("费用类".equals(basAssistant.getFType())){
+                expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }
+        }
         if (customerNameForList.size() > 0){
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
@@ -126,38 +132,38 @@ public class CnJournalForBankService {
             if (row.size() > 11) {
                 customerNameFor =  HandsontableUtils.getValue(row, 11);
             }
-            CnJournalFEntityForBankDto cnJournalFEntityForBankDto = new CnJournalFEntityForBankDto();
-            cnJournalFEntityForBankDto.setAccountNumberK3(accountNumber);
-            cnJournalFEntityForBankDto.setSettleTypeNumberK3(settleTypeNameMap.get(settleTypeName));
-            cnJournalFEntityForBankDto.setDebitAmount(debitAmount);
-            cnJournalFEntityForBankDto.setCreditAmount(creditAmount);
-            cnJournalFEntityForBankDto.setBankAccountNumber(bankAcntNameMap.get(bankAcountName));
-            cnJournalFEntityForBankDto.setComment(remarks);
-            cnJournalFEntityForBankDto.setEmpInfoNumberK3(empInfoNameMap.get(empInfoName));
-            cnJournalFEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForBankDto.setOtherTypeNumberK3(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(expenseNameMap.get(expenseTypeName));
-            cnJournalFEntityForBankDto.setCustomerNumberK3(customerNameMap.get(customerNameFor));
-            cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
+            CnJournalEntityForBankDto cnJournalEntityForBankDto = new CnJournalEntityForBankDto();
+            cnJournalEntityForBankDto.setAccountNumberK3(accountNumber);
+            cnJournalEntityForBankDto.setSettleTypeNumberK3(settleTypeNameMap.get(settleTypeName));
+            cnJournalEntityForBankDto.setDebitAmount(debitAmount);
+            cnJournalEntityForBankDto.setCreditAmount(creditAmount);
+            cnJournalEntityForBankDto.setBankAccountNumber(bankAcntNameMap.get(bankAcountName));
+            cnJournalEntityForBankDto.setComment(remarks);
+            cnJournalEntityForBankDto.setEmpInfoNumberK3(empInfoNameMap.get(empInfoName));
+            cnJournalEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
+            cnJournalEntityForBankDto.setOtherTypeNumberK3(otherTypeNameMap.get(otherTypeName));
+            cnJournalEntityForBankDto.setExpenseTypeNumberK3(expenseTypeNameMap.get(expenseTypeName));
+            cnJournalEntityForBankDto.setCustomerNumberK3(customerNameMap.get(customerNameFor));
+            cnJournalForBankDto.getEntityForBankDtoList().add(cnJournalEntityForBankDto);
         }
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public KingdeeSynDto save(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public KingdeeSynDto save(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
         cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
         cnJournalForBankDto.setDateK3(LocalDate.now());
         cnJournalForBankDto.setAccountNumberForBankK3("1002");//银行存款
         cnJournalForBankDto.setKingdeeNameK3(kingdeeBook.getName());
         cnJournalForBankDto.setKingdeeTypeK3(kingdeeBook.getType());
-        for (CnJournalFEntityForBankDto cnJournalFEntityForBankDto : cnJournalFEntityForBankDtoList) {
-            cnJournalFEntityForBankDto.setAccountNumberK3("2241");//其他应付款
-            cnJournalFEntityForBankDto.setSettleTypeNumberK3("JSFS04_SYS");//电汇
-            cnJournalFEntityForBankDto.setEmpInfoNumberK3("0001");//员工
-            cnJournalFEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
-            cnJournalFEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
-            cnJournalFEntityForBankDto.setCustomerNumberK3(null);
-            cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
+        for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalEntityForBankDtoList) {
+            cnJournalEntityForBankDto.setAccountNumberK3("2241");//其他应付款
+            cnJournalEntityForBankDto.setSettleTypeNumberK3("JSFS04_SYS");//电汇
+            cnJournalEntityForBankDto.setEmpInfoNumberK3("0001");//员工
+            cnJournalEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
+            cnJournalEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
+            cnJournalEntityForBankDto.setCustomerNumberK3(null);
+            cnJournalForBankDto.getEntityForBankDtoList().add(cnJournalEntityForBankDto);
         }
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }

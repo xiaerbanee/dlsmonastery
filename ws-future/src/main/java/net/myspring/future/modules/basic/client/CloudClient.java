@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -22,14 +22,26 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
     List<BdStock> getAllStock();
 
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findByMaxModifyDate")
+    List<BdStock> findStockByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
     List<BdCustomer> getAllCustomer();
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findByMaxModifyDate")
+    List<BdCustomer> findCustomerByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
     List<BdMaterial> getAllProduct();
 
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findByMaxModifyDate")
+    List<BdMaterial> findMaterialByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
     List<CnBankAcnt> getAllBank();
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findByMaxModifyDate")
+    List<CnBankAcnt> findBankAcntByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
     ArReceivable findReceivableByBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
@@ -63,6 +75,6 @@ public interface CloudClient {
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
 
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEntityList")
-    RestResponse synForJournalForBank(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList);
+    RestResponse synForJournalForBank(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList);
 
 }

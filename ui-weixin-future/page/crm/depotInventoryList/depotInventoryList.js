@@ -4,22 +4,17 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      pageNumber: 0,
-      pageSize: 10
-    },
+    formData: {},
     searchHidden: true,
     activeItem: null
   },
-  onLoad: function () {
+  onLoad: function () {},
+  onShow: function () {
     var that = this;
     that.setData({
       "formData.dateStart": $util.formatLocalDate($util.addMonth(new Date, -3)),
       "formData.dateEnd": $util.formatLocalDate(new Date),
     })
-  },
-  onShow: function () {
-    var that = this;
     app.autoLogin(function () {
       that.initPage()
     });
@@ -36,8 +31,11 @@ Page({
       duration: 10000,
       success: function () {
         wx.request({
-          url: $util.getUrl("crm/depot/inventory"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("ws/future/basic/depotShop/depotReportDate"),
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
           data: that.data.formData,
           success: function (res) {
             that.setData({ page: res.data });
@@ -67,8 +65,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -79,13 +75,11 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
-    var itemList = that.data.activeItem.actionList;
-    if (!itemList) { return; }
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: ["详细"],
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "详细") {
+          if (res.tapIndex == 0) {
             wx.navigateTo({
               url: '/page/crm/depotInventoryDetail/depotInventoryDetail?id=' + id + '&dateStart=' + that.data.formData.dateStart + '&dateEnd=' + that.data.formData.dateEnd
             })
@@ -96,37 +90,37 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

@@ -32,9 +32,7 @@
         <el-table-column prop="status" :label="$t('priceChangeList.status')"></el-table-column>
         <el-table-column  :label="$t('priceChangeList.operation')" width="140">
           <template scope="scope">
-            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeList.audit')}}</el-button></div>
-            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button></div>
-            <div class="action" v-if="scope.row.status === '上报中'" v-permit="'crm:priceChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -68,7 +66,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("priceChangeList",submitData);
         axios.get('/api/ws/future/crm/priceChange',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -79,7 +77,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -89,16 +87,16 @@
         this.$router.push({ name: 'priceChangeForm'})
       },itemAction:function(id,action){
         if(action=="edit") {
-          this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
+          this.$router.push({ name: 'priceChangeForm', query: { id: id}})
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
-        }).catch(()=>{});
-        }else if(action =='audit'){
-          this.$router.push({ name: 'priceChangeForm', query: { id: id,action:action}})
+            axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            })
+          }).catch(()=>{
+
+          });
         }
       }
     },created () {

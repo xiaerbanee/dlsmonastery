@@ -81,7 +81,8 @@
                     let number = response.data;
                     if (accountNumber !== number){
                       table.setDataAtCell(i, 9, '');
-                      alert("其他类的编码前4位必须和对应科目的编码一致");
+                      let j = i=1;
+                      alert('第'+j+"其他类的编码前4位必须和对应科目的编码一致");;
                     }
                   });
                 }

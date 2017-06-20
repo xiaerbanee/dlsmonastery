@@ -17,6 +17,7 @@ Page({
     },
     initPage: function () {
         var that = this;
+        that.setData({ shopAttributeShow: false });
         var options = that.data.options;
         if (options.action == 'edit') {
             wx.request({
@@ -27,16 +28,15 @@ Page({
                     'authorization': "Bearer" + wx.getStorageSync('token').access_token
                 },
                 success: function (res) {
-                    console.log(res.data)
                     that.setData({ formData: res.data });
                     wx.request({
                         url: $util.getUrl("ws/future/basic/depotShop/getForm"),
-                        header: { 'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
-                         },
+                        header: {
+                            'x-auth-token': app.globalData.sessionId,
+                            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                        },
                         success: function (res) {
                             that.setData({ formProperty: res.data });
-                            console.log(that.data.formProperty)
                         }
                     })
                 }
@@ -99,9 +99,12 @@ Page({
         var that = this;
         that.setData({ submitDisabled: true });
         wx.request({
-            url: $util.getUrl("crm/depot/save"),
+            url: $util.getUrl("ws/future/basic/depotShop/save"),
             data: e.detail.value,
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
             success: function (res) {
                 if (res.data.success) {
                     wx.navigateBack();

@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -106,10 +107,21 @@ public class ClientService {
     public void syn(){
         List<BdCustomer> bdCustomers=cloudClient.getAllCustomer();
         List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
-        List<Client> clients=clientRepository.findByNameIn(CollectionUtil.extractToList(bdCustomers,"FName"));
         Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");
-        Map<String,Client> nameClientMap=CollectionUtil.extractToMap(clients,"name");
         for(BdCustomer bdCustomer:bdCustomers){
+            Client outClient=outIdClientMap.get(bdCustomer.getFCustId());
+            if(outClient==null){
+                outClient=new Client();
+            }
+            outClient.setCompanyId(RequestUtils.getCompanyId());
+            outClient.setName(bdCustomer.getFName().trim());
+            outClient.setOutId(bdCustomer.getFCustId());
+            outClient.setOutGroupId(bdCustomer.getFPrimaryGroup());
+            outClient.setOutGroupName(bdCustomer.getFPrimaryGroupName());
+            outClient.setOutCode(bdCustomer.getFNumber());
+            outClient.setOutDate(bdCustomer.getFModifyDate());
+            outClient.setEnabled(true);
+            clientRepository.save(outClient);
         }
     }
 }

@@ -24,16 +24,6 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
 
     private String image;
 
-    private List<PriceChangeDto> priceChangeDtos;
-
-    public List<PriceChangeDto> getPriceChangeDtos() {
-        return priceChangeDtos;
-    }
-
-    public void setPriceChangeDtos(List<PriceChangeDto> priceChangeDtos) {
-        this.priceChangeDtos = priceChangeDtos;
-    }
-
     public String getPriceChangeId() {
         return priceChangeId;
     }
