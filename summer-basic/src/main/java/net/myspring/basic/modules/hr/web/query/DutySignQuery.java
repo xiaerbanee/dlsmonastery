@@ -1,13 +1,10 @@
 package net.myspring.basic.modules.hr.web.query;
 
-import com.google.common.collect.Lists;
 import net.myspring.basic.common.query.BaseQuery;
-import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.modules.hr.dto.PositionDto;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.joda.time.LocalDateTime;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +20,7 @@ public class DutySignQuery extends BaseQuery {
     private String officeName;
     private String positionName;
     private List<String> officeIds;
+    private String requestClient;
 
     public void setDutyDate(String dutyDate) {
         this.dutyDate = dutyDate;
@@ -32,7 +30,18 @@ public class DutySignQuery extends BaseQuery {
         return dutyDate;
     }
 
+    public String getRequestClient() {
+        return requestClient;
+    }
+
+    public void setRequestClient(String requestClient) {
+        this.requestClient = requestClient;
+    }
+
     public String getCreatedBy() {
+        if(StringUtils.isNotEmpty(requestClient)&&"weixin".equals(requestClient)){
+            this.createdBy= RequestUtils.getAccountId();
+        }
         return createdBy;
     }
 

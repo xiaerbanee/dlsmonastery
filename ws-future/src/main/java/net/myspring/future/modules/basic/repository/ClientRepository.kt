@@ -35,6 +35,10 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     @CachePut(key = "#p0.id")
     fun save(client: Client): Client
 
+    fun findByOutIdIn(outIdList:MutableList<String>):MutableList<Client>
+
+    fun findByNameIn(nameList:MutableList<String>):MutableList<Client>
+
     @Query("""
         SELECT t1.*
         FROM crm_client t1

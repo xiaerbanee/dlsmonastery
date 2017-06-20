@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
@@ -28,6 +29,52 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String townId;
     private LocalDate enableDate;
     private String townName;
+    private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    private String contator;
+    private String mobilePhone;
+    private String address;
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
 
     public Integer getFrameNum() {
         return frameNum;

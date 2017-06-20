@@ -7,7 +7,7 @@
           <view class="weui-label">门店：</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="name" class="weui-input" value="{{formData.name}}" disabled/>
+          <input name="name" class="weui-input" value="{{formData.depotName}}" disabled/>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
