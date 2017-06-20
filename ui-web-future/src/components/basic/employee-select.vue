@@ -48,7 +48,7 @@
           this.innerId=[];
           this.$nextTick(()=>{
             this.$emit('afterInit');
-          })
+          });
         }
 
       }
