@@ -96,18 +96,18 @@
       },showQty(){
           let sum = this.inputForm.limitQty;
           let realSum = 0;
-          for(let key in this.demoPhoneTypeOfficeDtos){
-              this.demoPhoneTypeOfficeDtos[key].qty = parseInt(sum*this.demoPhoneTypeOfficeDtos[key].officeTaskPoint/100);
+          for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+              this.inputForm.demoPhoneTypeOfficeDtos[key].qty = parseInt(sum*this.inputForm.demoPhoneTypeOfficeDtos[key].officeTaskPoint/100);
           }
 
-          for(let key in this.demoPhoneTypeOfficeDtos){
-            realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+          for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+            realSum += parseInt(this.inputForm.demoPhoneTypeOfficeDtos[key].qty);
           }
         this.inputForm.limitQty  = realSum;
       },qtySum(){
         let realSum = 0;
-        for(let key in this.demoPhoneTypeOfficeDtos){
-          realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+        for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+          realSum += parseInt(this.inputForm.sdemoPhoneTypeOfficeDtos[key].qty);
         }
         this.inputForm.limitQty  = realSum;
       },

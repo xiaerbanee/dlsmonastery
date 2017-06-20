@@ -132,7 +132,7 @@ public class StkInStockService {
                 purMrbDto.setSupplierNumber(supplierNumber);
                 purMrbDto.setDepartmentNumber(departmentNumber);
                 purMrbDto.getEntityDtoList().addAll(purMrbFEntryDtoList);
-                kingdeeSynDtoList.add(purMrbService.save(purMrbDto,kingdeeBook));
+                kingdeeSynDtoList.add(purMrbService.save(purMrbDto,kingdeeBook,accountKingdeeBook));
             }
         }else{
             kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));

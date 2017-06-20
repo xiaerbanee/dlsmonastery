@@ -10,6 +10,8 @@ public class BasAssistant {
     private String FNumber;
     //名称
     private String FDataValue;
+    //类型
+    private String FType;
     //审核状态
     private String FDocumentStatus;
     //禁用状态
@@ -37,6 +39,14 @@ public class BasAssistant {
 
     public void setFDataValue(String FDataValue) {
         this.FDataValue = FDataValue;
+    }
+
+    public String getFType() {
+        return FType;
+    }
+
+    public void setFType(String FType) {
+        this.FType = FType;
     }
 
     public String getFDocumentStatus() {
