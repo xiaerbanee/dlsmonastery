@@ -162,6 +162,12 @@ function getFormatOfficeName(name) {
   }
 }
 
+function deleteExtra(json) {
+  var newJson = JSON.parse(JSON.stringify(json));
+  delete newJson.extra;
+  return newJson;
+}
+
 module.exports = {
   getCheckboxItems: getCheckboxItems,
   trim: trim,
@@ -179,5 +185,6 @@ module.exports = {
   getImages:getImages,
   getImageStr:getImageStr,
   getUrl:getUrl,
-  getFormatOfficeName:getFormatOfficeName
+  getFormatOfficeName:getFormatOfficeName,
+  deleteExtra:deleteExtra
 }
