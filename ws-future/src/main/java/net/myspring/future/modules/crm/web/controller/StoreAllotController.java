@@ -15,6 +15,7 @@ import net.myspring.future.modules.crm.service.StoreAllotDetailService;
 import net.myspring.future.modules.crm.service.StoreAllotService;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,11 @@ public class StoreAllotController {
 //            return new Message("message_store_allot_no_bind_finance",Message.Type.danger);
 //        }
         if(!storeAllotForm.isCreate()){
-            throw new ServiceException("大库调拨不可编辑");
+            throw new ServiceException("大库调拨不可修改");
+        }
+
+        if(CollectionUtil.isEmpty(storeAllotForm.getStoreAllotDetailList())){
+            throw new ServiceException("请录入大库店调拨明细");
         }
 
         storeAllotService.saveForm(storeAllotForm);
@@ -72,7 +77,7 @@ public class StoreAllotController {
 
         storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
         storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        storeAllotForm.setShowAllotType(storeAllotService.getShowAllotType());
+        storeAllotForm.getExtra().put("showAllotType", storeAllotService.getShowAllotType());
 
         return storeAllotForm;
     }

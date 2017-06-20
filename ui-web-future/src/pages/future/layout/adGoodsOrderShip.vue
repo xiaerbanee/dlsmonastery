@@ -6,173 +6,129 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('adGoodsOrderShip.shipCode')" prop="id">
-              {{shipForm.id}}
+              {{adGoodsOrder.id}}
           </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.remarks')" prop="remarks">
-              {{shipForm.remarks}}
+              {{adGoodsOrder.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.smallQty')" prop="smallQty" >
-              <el-input v-model="shipForm.smallQty" @blur="materialChange()"></el-input>
+              <el-input v-model="inputForm.smallQty" @input="materialChange()"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.mediumQty')" prop="mediumQty" >
-              <el-input v-model="shipForm.mediumQty" @blur="materialChange()"></el-input>
+              <el-input v-model="inputForm.mediumQty" @input="materialChange()"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.largeQty')" prop="largeQty">
-              <el-input v-model="shipForm.largeQty" @blur="materialChange()"></el-input>
+              <el-input v-model="inputForm.largeQty" @input="materialChange()"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.expressCodes')" prop="expressCodes">
-              <el-input type="textarea" v-model="inputForm.expressCodes"></el-input>
+            <el-form-item :label="$t('adGoodsOrderShip.expressCodes')" prop="expressOrderExpressCodes">
+              <el-input type="textarea" v-model="inputForm.expressOrderExpressCodes" :placeholder="$t('adGoodsOrderShip.enter')"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.expressCompany')" prop="expressCompanyId">
-              <el-select v-model="inputForm.expressOrder.expressCompanyId" clearable  >
-                <el-option v-for="item in shipFormProperty.expressCompanys" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+            <el-form-item :label="$t('adGoodsOrderShip.expressCompany')" prop="expressOrderExpressCompanyId">
+              <express-company-select v-model="inputForm.expressOrderExpressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adGoodsOrderShip.ship')}}</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('adGoodsOrderShip.shipShopName')" prop="outShopId">
-              {{shipForm.shop.name}}
+            <el-form-item :label="$t('adGoodsOrderShip.outShopName')" prop="outShopId">
+              {{adGoodsOrder.outShopName}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.remarks')" prop="shopId">
-              {{shipForm.shop.name}}
+            <el-form-item :label="$t('adGoodsOrderShip.shopName')" prop="shopId">
+              {{adGoodsOrder.shopName}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.saleContact')" prop="contator">
-              {{shipForm.shop.name}}
+            <el-form-item :label="$t('adGoodsOrderShip.saleContact')" >
+              {{employee.officeName}}_{{employee.positionName}}_{{employee.name}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.saleMobile')" prop="mobilePhone">
-              {{shipForm.shop.name}}
+              {{employee.mobilePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.billRemarks')" prop="billRemarks">
-              {{shipForm.billRemarks}}
+              {{adGoodsOrder.billRemarks}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.contact')" prop="contator">
-              {{shipForm.expressOrder.contator}}
+            <el-form-item :label="$t('adGoodsOrderShip.contact')" prop="expressOrderContator">
+              {{expressOrder.contator}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.address')" prop="address">
-              {{shipForm.expressOrder.address}}
+              {{expressOrder.address}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.mobilePhone')" prop="mobilePhone">
-              {{shipForm.expressOrder.mobilePhone}}
+              {{expressOrder.mobilePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.shouldPay')" prop="shouldPay">
-              {{inputForm.expressOrder.shouldPay}}
+              {{inputForm.expressOrderShouldPay}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.shouldGet')" prop="shouldGet">
-              <el-input v-model="inputForm.expressOrder.shouldGet"></el-input>
+            <el-form-item :label="$t('adGoodsOrderShip.shouldGet')" prop="expressOrderShouldGet">
+              <el-input v-model="inputForm.expressOrderShouldGet"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.realPay')" prop="realPay">
-              <el-input v-model="inputForm.expressOrder.realPay"></el-input>
+            <el-form-item :label="$t('adGoodsOrderShip.realPay')" prop="expressOrderRealPay">
+              <el-input v-model="inputForm.expressOrderRealPay"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <el-table :data="inputForm.adGoodsOrderDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderShip.loading')" stripe border >
-        <el-table-column  prop="product.code" :label="$t('adGoodsOrderShip.code')" sortable width="200"></el-table-column>
-        <el-table-column prop="product.name" :label="$t('adGoodsOrderShip.productName')"></el-table-column>
+      <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adGoodsOrderBill.inputTwoKey')" style="width:200px;"></el-input>
+      <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderShip.loading')" stripe border >
+        <el-table-column prop="productCode" :label="$t('adGoodsOrderShip.code')" sortable width="200"></el-table-column>
+        <el-table-column prop="productName" :label="$t('adGoodsOrderShip.productName')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderShip.billQty')"></el-table-column>
         <el-table-column prop="shippedQty" :label="$t('adGoodsOrderShip.shippedQty')"></el-table-column>
-        <el-table-column prop="extendMap.waitShipQty" :label="$t('adGoodsOrderShip.waitShipQty')" ></el-table-column>
+        <el-table-column prop="waitShipQty" :label="$t('adGoodsOrderShip.waitShipQty')" ></el-table-column>
         <el-table-column prop="shipQty" :label="$t('adGoodsOrderShip.shipQty')" >
           <template scope="scope">
-            <el-input v-model="scope.row.shipQty"  @blur="materialChange()"> </el-input>
+            <el-input v-model="scope.row.shipQty"  @input="materialChange()"> </el-input>
           </template>
         </el-table-column>
       </el-table>
-      <el-table :data="activitiEntity.historicTaskInstances" v-if="activitiEntity">
-        <el-table-column prop="name" :label="$t('adGoodsOrderShip.nodeName')"></el-table-column>
-        <el-table-column :label="$t('adGoodsOrderShip.auditMan')" >
-          <template scope="scope">{{activitiEntity.accountMap?activitiEntity.accountMap[scope.row.id]:''}}</template>
-        </el-table-column>
-        <el-table-column :label="$t('adGoodsOrderShip.auditDate')">
-          <template scope="scope">
-            {{scope.row.endTime | formatLocalDateTime}}
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('adGoodsOrderShip.auditRemarks')">
-          <template scope="scope">
-            {{activitiEntity.commentMap?activitiEntity.commentMap[scope.row.id]:''}}
-          </template>
-        </el-table-column>
-      </el-table>
+      <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
+
     </div>
   </div>
 </template>
 <script>
+  import expressCompanySelect from 'components/future/express-company-select'
+  import boolSelect from 'components/common/bool-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
+  import processDetails from 'components/general/process-details';
+
   export default{
+    components:{expressCompanySelect,boolSelect,boolRadioGroup,processDetails},
     data(){
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        shipFormProperty:{},
-        activitiEntity:{},
-        shipForm:{
-          id:"",
-          remarks:"",
-          shop:{name:''},
-          outShop:{name:''},
-          billRemarks:'',
-          employee:{
-            name:'',
-            mobilePhone:''
-          },
-          expressOrder:{
-            concator:'',
-            address:'',
-            mobilePhone:'',
-            shouldPay:''
-          },
-          largeQty:'',
-          mediumQty:'',
-          smallQty:'',
-          shouldGet:'',
-          shouldPay:'',
-        },
+        adGoodsOrder:{},
+        employee:{},
+        expressOrder:{},
+        productName:'',
+        filterAdGoodsOrderDetailList:[],
         inputForm:{
-          id:this.$route.query.id,
-          expressCompanyId:'',
-          expressCodes:'',
-          expressOrder:{
-            expressCompanyId:'',
-            contator:'',
-            address:'',
-            realPay:'',
-            shouldGet:'',
-            shouldPay:'',
-            mobilePhone:''
-          },
-          adGoodsOrderDetailList:[],
+            extra:{},
         },
-        rules: {
-
-        },
-        pageLoading:'',
+        rules: {},
+        pageLoading:false,
       }
     },
     methods:{
       formSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/crm/adGoodsOrder/ship',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/layout/adGoodsOrder/ship',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.isCreate){
-                form.resetFields();
-                this.submitDisabled = false;
-              } else {
+              this.submitDisabled = false;
+              if(response.data.success){
                 this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
               }
-            }).catch(function () {
+            }).catch( () => {
               this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
-      },materialChange(val){
+      },materialChange(){
       var shouldGet= this.shipForm.shouldGet
       var shouldPay= this.shipForm.shouldPay
       var ysyfAmount=this.shipFormProperty.ysyfAmount;
@@ -190,33 +146,60 @@
             pay=parseInt(pay)+(parseInt(list[item].shipQty==null?0:list[item].shipQty)+parseInt(list[item].shippedQty==null?0:list[item].shippedQty))*parseInt(list[item].product.price==null?0:list[item].price);
           }
         }
-			this.inputForm.expressOrder.realPay=parseInt(pay)+parseInt(shipPrice);
-			this.inputForm.expressOrder.shouldGet=parseInt(shouldGet)+parseInt(shipPrice);
-			this.inputForm.expressOrder.shouldPay=parseInt(shouldPay)+parseInt(shipPrice);
-      } ,findOne(){
-        axios.get('/api/crm/adGoodsOrder/ship',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.shipForm=response.data;
-          util.copyValue(response.data,this.inputForm);
+			this.inputForm.expressOrderRealPay=parseInt(pay)+parseInt(shipPrice);
+			this.inputForm.expressOrderShouldGet=parseInt(shouldGet)+parseInt(shipPrice);
+			this.inputForm.expressOrderShouldPay=parseInt(shouldPay)+parseInt(shipPrice);
+      }, searchDetail(){
+        let val = this.productName;
+        if(!val){
+          this.filterAdGoodsOrderDetailList = this.inputForm.adGoodsOrderDetailList;
+          return;
+        }
+        let tempList = [];
+        for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
+          if (util.contains(adGoodsOrderDetail.productName, val)) {
+            tempList.push(adGoodsOrderDetail)
+          }
+        }
+        this.filterAdGoodsOrderDetailList = tempList;
 
-          this.inputForm.expressOrder.shouldGet=response.data.expressOrder.shouldGet==null?0:expressOrder.shouldGet;
-          this.inputForm.expressOrder.shouldPay=response.data.expressOrder.shouldPay==null?0:expressOrder.shouldPay;
-          this.inputForm.adGoodsOrderDetailList=response.data.adGoodsOrderDetailList;
-         for(var index in this.inputForm.adGoodsOrderDetailList){
-           this.inputForm.adGoodsOrderDetailList[index].shipQty=this.inputForm.adGoodsOrderDetailList[index].extendMap.waitShipQty
-         }
-          this.shipForm.shouldGet=this.inputForm.expressOrder.shouldGet
-          this.shipForm.shouldPay=this.inputForm.expressOrder.shouldPay
+      },initPage(){
+        axios.get('/api/ws/future/layout/adGoodsOrder/getShipForm').then((response)=>{
+          this.inputForm=response.data;
 
-        })
-      },getForm(){
-        axios.get('/api/crm/adGoodsOrder/getShipFormProperty',{params:{id:this.$route.query.id,}}).then((response)=>{
-          this.shipFormProperty=response.data;
-          this.activitiEntity = response.data.activitiEntity;
+          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListByAdGoodsOrderId', {params: {adGoodsOrderId: this.$route.query.id}}).then((response) => {
+            this.inputForm.adGoodsOrderDetailList = response.data;
+            if( this.inputForm.adGoodsOrderDetailList){
+                for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+                    adGoodsOrderDetail.shipQty = adGoodsOrderDetail.waitShipQty;
+                }
+            }
+            this.searchDetail();
+          });
+
+          axios.get('/api/ws/future/layout/adGoodsOrder/findDto',{params:{id:this.$route.query.id}}).then((response)=> {
+            this.adGoodsOrder =response.data;
+            this.inputForm.id = this.adGoodsOrder.id;
+            this.inputForm.smallQty = this.adGoodsOrder.smallQty;
+            this.inputForm.mediumQty = this.adGoodsOrder.mediumQty;
+            this.inputForm.largeQty = this.adGoodsOrder.largeQty;
+            this.inputForm.expressOrderExpressCompanyId = this.adGoodsOrder.expressOrderExpressCompanyId;
+            this.inputForm.expressOrderExpressCodes = this.adGoodsOrder.expressOrderExpressCodes;
+
+            axios.get('/api/ws/future/crm/expressOrder/findDto',{params: {id:this.adGoodsOrder.expressOrderId}}).then((response)=>{
+              this.expressOrder = response.data;
+              this.inputForm.expressOrderShouldGet = this.expressOrder.shouldGet;
+              this.inputForm.expressOrderRealPay = this.expressOrder.realPay;
+              this.inputForm.expressOrderShouldPay = this.expressOrder.shouldPay;
+            });
+            axios.get('/api/basic/hr/employee/findOne',{params: {id:this.adGoodsOrder.employeeId}}).then((response)=>{
+              this.employee = response.data;
+            });
+          });
         });
       }
     },created(){
-      this.findOne();
-      this.getForm();
+        this.initPage();
     }
   }
 </script>

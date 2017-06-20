@@ -4,15 +4,15 @@
     <div>
       <el-form :model="inputForm" ref="inputForm"  label-width="120px"  class="form input-form">
         <el-form-item :label="$t('storeAllotForm.allotType')" prop="allotType" >
-          <el-select v-if="inputForm.showAllotType" v-model="allotType"  clearable @change="allotTypeChanged" >
+          <el-select v-if="inputForm.extra.showAllotType" v-model="inputForm.allotType"  clearable @change="allotTypeChanged" >
             <el-option v-for="item in inputForm.extra.allotTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.fromStore')" prop="fromStoreId">
-          <depot-select :disabled="allotType=='快速调拨'" category="store" v-model="inputForm.fromStoreId" @input="fromStoreChanged"></depot-select>
+          <depot-select :disabled="inputForm.allotType=='快速调拨'" category="store" v-model="inputForm.fromStoreId" @input="fromStoreChanged"></depot-select>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.toStore')" prop="toStoreId">
-          <depot-select :disabled="allotType=='快速调拨'" category="store" v-model="inputForm.toStoreId"  ></depot-select>
+          <depot-select :disabled="inputForm.allotType=='快速调拨'" category="store" v-model="inputForm.toStoreId"  ></depot-select>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.shipType')" prop="shipType">
           <el-select v-model="inputForm.shipType"  clearable>
@@ -23,7 +23,7 @@
           <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.syn')" prop="syn">
-          <bool-radio-group v-model="syn"></bool-radio-group>
+          <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.remarks')" prop="remarks">
           <el-input type="textarea" v-model="inputForm.remarks"></el-input>
@@ -72,9 +72,6 @@
           inputForm:{
             extra:{}
           },
-          storeAllot:{},
-          allotType:null,
-          syn:true,
           rules: {
             allotType: [{ required: true, message: this.$t('storeAllotForm.prerequisiteMessage')}],
             fromStoreId: [{ required: true, message: this.$t('storeAllotForm.prerequisiteMessage')}],
@@ -88,53 +85,47 @@
         }
       },
       formSubmit(){
-        var that = this;
+        this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.submitDisabled = true;
-            this.initSubmitDataBeforeSubmit();
-            axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            let submitData =util.deleteExtra(this.inputForm);
+            submitData.storeAllotDetailList = this.getDetailListForSubmit();
+            axios.post('/api/ws/future/crm/storeAllot/save', qs.stringify(submitData, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-            if(response.data.success) {
-              if (!that.isCreate) {
+              this.submitDisabled = false;
+              if(response.data.success) {
+                  if (!this.isCreate) {
+                    this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
+                  }else{
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
+                  }
+                }
+            }).catch( () => {
                 this.submitDisabled = false;
-                this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
-              }else{
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }
-              }
-          }).catch( () => {
-              that.submitDisabled = false;
-          });
+            });
+          }else{
+            this.submitDisabled = false;
           }
-        })
-      }, initSubmitDataBeforeSubmit(){
+        });
+      }, getDetailListForSubmit(){
 
-        this.inputForm.allotType = this.allotType;
-        this.inputForm.fromStoreId = this.inputForm.fromStoreId;
-        this.inputForm.toStoreId = this.inputForm.toStoreId;
-        this.inputForm.shipType = this.inputForm.shipType;
-        this.inputForm.expressCompanyId = this.inputForm.expressCompanyId;
-        this.inputForm.syn = this.syn;
-        this.inputForm.remarks = this.inputForm.remarks;
-
-        if(this.storeAllotDetailList){
+        if(this.inputForm.storeAllotDetailList){
           let tempList=[];
-          for(let storeAllotDetail of this.storeAllotDetailList){
+          for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
             if(util.isNotBlank(storeAllotDetail.billQty)){
               tempList.push(storeAllotDetail);
             }
           }
-          this.submitData.storeAllotDetailList = tempList;
+          return tempList;
         }else{
-          this.submitData.storeAllotDetailList = [];
+          return [];
         }
 
       },allotTypeChanged(newVal){
         if('快速调拨' === newVal){
-          this.syn = false;
+          this.inputForm.syn = false;
           axios.get('/api/ws/future/crm/storeAllot/findDetailListForFastAllot').then((response) => {
             this.setStoreAllotDetailList(response.data);
           });
@@ -150,7 +141,7 @@
           this.inputForm.toStoreId  = null;
           this.inputForm.expressCompanyId  = null;
           this.inputForm.shipType  = null;
-          this.syn = true;
+          this.inputForm.syn = true;
           axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response) => {
             this.setStoreAllotDetailList(response.data);
           });
@@ -158,41 +149,37 @@
 
       }, fromStoreChanged() {
         //快速调拨时，fromStore应该不可变更
-        if('快速调拨' === this.allotType){
+        if('快速调拨' === this.inputForm.allotType){
           return;
         }
 
-        axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot', {
-          params: {
-            fromStoreId: this.inputForm.fromStoreId
-          }
-        }).then((response) => {
+        axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot', {params: {fromStoreId: this.inputForm.fromStoreId}}).then((response) => {
           this.setStoreAllotDetailList(response.data);
         });
       },setStoreAllotDetailList(list){
-        this.storeAllotDetailList = list;
+        this.inputForm.storeAllotDetailList = list;
         this.filterProducts();
 
       },filterProducts(){
 
-        if(!this.storeAllotDetailList){
+        if(!this.inputForm.storeAllotDetailList){
           this.filterStoreAllotDetailList = [];
           return;
         }
         if(!this.productName){
-          this.filterStoreAllotDetailList = this.storeAllotDetailList;
+          this.filterStoreAllotDetailList = this.inputForm.storeAllotDetailList;
           return;
         }
         let val=this.productName;
         let tempList=[];
 
-        for(let storeAllotDetail of this.storeAllotDetailList){
+        for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
 
           if(util.isNotBlank(storeAllotDetail.billQty)){
             tempList.push(storeAllotDetail);
           }
         }
-        for(let storeAllotDetail of this.storeAllotDetailList){
+        for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
           if(util.contains(storeAllotDetail.productName, val) && util.isBlank(storeAllotDetail.billQty)){
             tempList.push(storeAllotDetail);
           }
@@ -201,14 +188,10 @@
       },initPage(){
         axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm= response.data;
-        //大库调拨只能新增和删除，不能修改，所以不用传id
-        axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response)=>{
-          this.setStoreAllotDetailList(response.data);
-      });
-        //大库调拨只能新增和删除，不能修改，所以不用传id
-        axios.get('/api/ws/future/crm/storeAllot/findDto').then((response)=>{
-        util.copyValue(response.data,this.inputForm);
-      });
+          //大库调拨只能新增和删除，不能修改，所以不用传id
+          axios.get('/api/ws/future/crm/storeAllot/findDetailListForCommonAllot').then((response)=>{
+            this.setStoreAllotDetailList(response.data);
+          });
       });
       }
     },created () {

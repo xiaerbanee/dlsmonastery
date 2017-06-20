@@ -25,7 +25,7 @@
           <el-table-column prop="productName" :label="$t('shopAllotForm.productName')"></el-table-column>
           <el-table-column prop="qty" :label="$t('shopAllotForm.qty')">
             <template scope="scope">
-              <input type="text" v-model="scope.row.qty" class="el-input__inner"/>
+              <input type="text" v-model.number="scope.row.qty" class="el-input__inner"/>
             </template>
           </el-table-column>
 
@@ -65,22 +65,20 @@
           }
         },
         formSubmit(){
-
+          this.submitDisabled = true;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.submitDisabled = true;
+
               let submitData =util.deleteExtra(this.inputForm);
               submitData.shopAllotDetailList = this.getSubmitDetailList();
 
               axios.post('/api/ws/future/crm/shopAllot/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-
+                this.submitDisabled = false;
                 if(response.data.success) {
                   if (!this.isCreate) {
-                    this.submitDisabled = false;
                     this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
-
                   }else{
                     Object.assign(this.$data, this.getData());
                     this.initPage();
@@ -89,6 +87,8 @@
               }).catch(() => {
                   this.submitDisabled = false;
               });
+            }else{
+              this.submitDisabled = false;
             }
           })
         }, getSubmitDetailList(){
@@ -139,12 +139,13 @@
                 this.setShopAllotDetailList(response.data);
               });
               axios.get('/api/ws/future/crm/shopAllot/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-                util.copyValue(response.data, this.inputForm);
+                  this.inputForm.id = response.data.id;
+                  this.inputForm.fromShopId = response.data.fromShopId;
+                  this.inputForm.toShopId = response.data.toShopId;
+                  this.inputForm.remarks = response.data.remarks;
               });
             }
-
           });
-
         }
     },created () {
       this.initPage();

@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 
 import java.util.List;
 
@@ -12,11 +11,29 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
     private String outShopId;
     private String shopId;
     private String employeeId;
-    private String expressCompanyId;
+    private String investInCause;
+    private String expressOrderExpressCompanyId;
+    private String expressOrderExpressCodes;
     private String expressOrderAddress;
     private String expressOrderContator;
     private String expressOrderMobilePhone;
-    private List<AdGoodsOrderDetailDto> adGoodsOrderDetailList;
+    private List<AdGoodsOrderDetailForm> adGoodsOrderDetailList;
+
+    public String getExpressOrderExpressCodes() {
+        return expressOrderExpressCodes;
+    }
+
+    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
+        this.expressOrderExpressCodes = expressOrderExpressCodes;
+    }
+
+    public String getInvestInCause() {
+        return investInCause;
+    }
+
+    public void setInvestInCause(String investInCause) {
+        this.investInCause = investInCause;
+    }
 
     public String getOutShopId() {
         return outShopId;
@@ -42,12 +59,12 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
         this.employeeId = employeeId;
     }
 
-    public String getExpressCompanyId() {
-        return expressCompanyId;
+    public String getExpressOrderExpressCompanyId() {
+        return expressOrderExpressCompanyId;
     }
 
-    public void setExpressCompanyId(String expressCompanyId) {
-        this.expressCompanyId = expressCompanyId;
+    public void setExpressOrderExpressCompanyId(String expressOrderExpressCompanyId) {
+        this.expressOrderExpressCompanyId = expressOrderExpressCompanyId;
     }
 
     public String getExpressOrderAddress() {
@@ -74,11 +91,11 @@ public class AdGoodsOrderForm extends BaseForm<AdGoodsOrder> {
         this.expressOrderMobilePhone = expressOrderMobilePhone;
     }
 
-    public List<AdGoodsOrderDetailDto> getAdGoodsOrderDetailList() {
+    public List<AdGoodsOrderDetailForm> getAdGoodsOrderDetailList() {
         return adGoodsOrderDetailList;
     }
 
-    public void setAdGoodsOrderDetailList(List<AdGoodsOrderDetailDto> adGoodsOrderDetailList) {
+    public void setAdGoodsOrderDetailList(List<AdGoodsOrderDetailForm> adGoodsOrderDetailList) {
         this.adGoodsOrderDetailList = adGoodsOrderDetailList;
     }
 }
