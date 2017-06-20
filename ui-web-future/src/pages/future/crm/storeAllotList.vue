@@ -48,7 +48,7 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
         <el-table-column prop="fromStoreName" column-key="fromStoreId"  :label="$t('storeAllotList.fromStore')" sortable ></el-table-column>
         <el-table-column prop="toStoreName" column-key="toStoreId" :label="$t('storeAllotList.toStore')" sortable ></el-table-column>
@@ -84,6 +84,7 @@
     data() {
       return {
         page:{},
+        pageHeight:600,
         initPromise:{},
         searchText:"",
         formData:{
@@ -137,9 +138,9 @@
         }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
         }else if(action==="print"){
-          this.$router.push({ name: 'storeAllotPrint', query: { id: id }});
+           window.open('/#/future/crm/storeAllotPrint?id=' + id, '', '');
         }else if(action==="shipPrint"){
-          this.$router.push({ name: 'storeAllotShipPrint', query: { id: id }});
+           window.open('/#/future/crm/storeAllotShipPrint?id=' + id, '', '');
         }else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/storeAllot/delete',{params:{id:id}}).then((response) =>{
@@ -168,6 +169,7 @@
         }
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/storeAllot/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

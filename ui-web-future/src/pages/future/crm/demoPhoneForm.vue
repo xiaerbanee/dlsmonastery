@@ -45,19 +45,14 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        inputForm:{},
-        submitData:{
-          id:'',
-          type:'',
-          demoPhoneTypeId:'',
-          shopId:'',
-          employeeId:'',
-          productImeId:'',
-          remarks:'',
+        inputForm:{
+            extra:{}
         },
         rules: {
+          demoPhoneTypeId:[{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           shopId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
           employeeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}],
+          productImeId: [{ required: true, message: this.$t('demoPhoneForm.prerequisiteMessage')}]
         },
         remoteLoading:false,
         productImes:[],
@@ -69,10 +64,9 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(this.submitData)).then((response)=> {
+            axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-            if (!this.inputForm.create) {
+            if (!this.isCreate) {
               this.submitDisabled = false;
               this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
             } else {
@@ -99,9 +93,11 @@
       },initPage(){
         axios.get('/api/ws/future/crm/demoPhone/getForm').then((response)=>{
           this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=> {
-          util.copyValue(response.data, this.inputForm);
-           })
+          if(!this.isCreate){
+            axios.get('/api/ws/future/crm/demoPhone/findOne',{params: {id:this.$route.query.id}}).then((response)=> {
+              util.copyValue(response.data, this.inputForm);
+            })
+          }
         })
       }
     },created () {

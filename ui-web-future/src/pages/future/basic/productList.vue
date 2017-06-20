@@ -6,40 +6,40 @@
         <el-button type="primary" @click="productEdit" icon="edit" v-permit="'crm:product:edit'">{{$t('productList.productEdit')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:product:view'">{{$t('productList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('productList.syn')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('productList.filter')" v-model="formVisible"  size="small" class="search-form">
+      <search-dialog :title="$t('productList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="8">
             <el-col :span="12">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.hasIme.label" :label-width="formLabelWidth">
-                <bool-select v-model="formData.hasIme"></bool-select>
+              <el-form-item :label="$t('productList.hasIme')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.hasIme" ></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.code.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productList.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.allowBill.label" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowBill"></bool-select>
+              <el-form-item :label="$t('productList.allowBill')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.allowBill" ></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.productTypeId.label" :label-width="formLabelWidth">
-                <product-type-select v-model="formData.productTypeId"></product-type-select>
+              <el-form-item :label="$t('productList.productType')" :label-width="formLabelWidth">
+                <product-type-select v-model="formData.productTypeId" @afterInit="setSearchText"></product-type-select>
               </el-form-item>
-              <el-form-item :label="formLabel.allowOrder.label" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowOrder"></bool-select>
+              <el-form-item :label="$t('productList.allowOrder')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.allowOrder" ></bool-select>
               </el-form-item>
-              <el-form-item :label="formLabel.outGroupName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productList.outGroupName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.outGroupName" filterable clearable :placeholder="$t('productList.inputWord')">
-                  <el-option v-for="outGroupNames  in formData.outGroupNameList" :key="outGroupNames" :label="outGroupNames" :value="outGroupNames"></el-option>
+                  <el-option v-for="outGroupNames  in formData.extra.outGroupNameList" :key="outGroupNames" :label="outGroupNames" :value="outGroupNames"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="formLabel.netType.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('productList.netType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.netType" filterable clearable :placeholder="$t('productList.inputKey')">
-                  <el-option v-for="netType in formData.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
+                  <el-option v-for="netType in formData.extra.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -48,7 +48,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('productList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
         <el-table-column prop="code" :label="$t('productList.code')" sortable></el-table-column>
@@ -99,47 +99,30 @@
     },
     data() {
       return {
+        searchText:"",
         page:{},
-        formData:{},
-        submitData:{
-          page:0,
-          size:25,
-          sort:"id,DESC",
-          name:'',
-          type:'',
-          hasIme:'',
-          allowBill:'',
-          productTypeId:'',
-          code:'',
-          allowOrder:'',
-          outGroupName:'',
-          netType:'',
-        },formLabel:{
-          name:{label:this.$t('productList.name')},
-          hasIme:{label:this.$t('productList.hasIme'),value:""},
-          code:{label:this.$t('productList.code')},
-          allowBill:{label:this.$t('productList.allowBill'),value:""},
-          productTypeId:{label:this.$t('productList.productType'),value:""},
-          allowOrder:{label:this.$t('productList.allowOrder'),value:""},
-          outGroupName:{label:this.$t('productList.outGroupName')},
-          netType:{label:this.$t('productList.netType')}
+        formData:{
+            extra:{}
         },
+        initPromise:{},
         formLabelWidth: '120px',
-        pageHeight:'',
+        pageHeight:600,
         formVisible: false,
         pageLoading: false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formLabel.hasIme.value = util.bool2str(this.formData.hasIme);
-        this.formLabel.allowBill.value = util.bool2str(this.formData.allowBill);
-        this.formLabel.allowOrder.value =  util.bool2str(this.formData.allowOrder);
-        this.formLabel.productTypeId.value = util.getLabel(this.formData.productTypeId);
-        util.copyValue(this.formData,this.submitData);
-        util.setQuery("productList",this.submitData);
-        axios.get('/api/ws/future/basic/product',{params:this.submitData}).then((response) => {
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("productList",submitData);
+        axios.get('/api/ws/future/basic/product',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -165,12 +148,16 @@
           this.$router.push({ name: 'productForm', query: { id: id }})
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
-        this.formData = response.data;
-        util.copyValue(this.$route.query,this.formData);
+        let that = this;
+        that.pageHeight = window.outerHeight -320;
+        this.initPromise = axios.get('/api/ws/future/basic/product/getQuery').then((response) =>{
+          this.formData = response.data;
+          util.copyValue(this.$route.query,this.formData);
+        });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
-      });
+      })
     }
   };
 </script>

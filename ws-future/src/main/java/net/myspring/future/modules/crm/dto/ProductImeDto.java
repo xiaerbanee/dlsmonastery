@@ -1,15 +1,14 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.cahe.annotation.CacheInput;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Created by haos on 2017/5/12.
- */
+
 public class ProductImeDto extends DataDto<ProductIme> {
 
     private String boxIme;

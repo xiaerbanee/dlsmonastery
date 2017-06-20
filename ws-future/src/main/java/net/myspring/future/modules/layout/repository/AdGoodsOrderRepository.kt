@@ -1,8 +1,10 @@
 package net.myspring.future.modules.layout.repository
 
+import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.crm.dto.StoreAllotImeDto
 import net.myspring.future.modules.layout.domain.AdGoodsOrder
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
@@ -17,6 +19,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
 
 interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOrderRepositoryCustom{
     @Query("""
@@ -25,17 +29,46 @@ interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOr
     FROM
         #{#entityName} t1
     WHERE
-        t1.createdDate >= ?1
+        t1.billDate = ?1
     """)
-    fun findMaxBusinessId(localDate: LocalDate): String
+    fun findMaxBusinessId(billDate: LocalDate): String
 }
 
 interface AdGoodsOrderRepositoryCustom{
     fun findPage(pageable: Pageable,adGoodsOrderQuery: AdGoodsOrderQuery): Page<AdGoodsOrderDto>
 
+    fun findDto(id: String): AdGoodsOrderDto
+
 }
 
 class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):AdGoodsOrderRepositoryCustom{
+
+    override fun findDto(id: String): AdGoodsOrderDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+            SELECT
+                shop.office_id shopOfficeId,
+                shop.area_id shopAreaId,
+                expressOrder.express_codes expressOrderExpressCodes,
+                expressOrder.mobile_phone expressOrderMobilePhone,
+                expressOrder.contator expressOrderContator,
+                expressOrder.address expressOrderAddress,
+                expressOrder.express_company_id expressOrderExpressCompanyId,
+                expressOrder.out_print_date expressOrderOutPrintDate,
+                expressOrder.should_get expressOrderShouldGet,
+                expressOrder.should_pay expressOrderShouldPay,
+                expressOrder.real_pay expressOrderRealPay,
+                depotShop.area_type depotShopAreaType,
+                t1.*
+            FROM
+                crm_ad_goods_order t1
+                LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+                LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
+                LEFT JOIN crm_express_order expressOrder ON t1.express_order_id = expressOrder.id
+            WHERE
+                t1.id = :id
+
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(AdGoodsOrderDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable,adGoodsOrderQuery: AdGoodsOrderQuery): Page<AdGoodsOrderDto>{
 
@@ -45,10 +78,20 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                 shop.office_id shopOfficeId,
                 shop.area_id shopAreaId,
                 expressOrder.express_codes expressOrderExpressCodes,
+                expressOrder.mobile_phone expressOrderMobilePhone,
+                expressOrder.contator expressOrderContator,
+                expressOrder.address expressOrderAddress,
+                expressOrder.express_company_id expressOrderExpressCompanyId,
+                expressOrder.out_print_date expressOrderOutPrintDate,
+                expressOrder.should_get expressOrderShouldGet,
+                expressOrder.should_pay expressOrderShouldPay,
+                expressOrder.real_pay expressOrderRealPay,
+                depotShop.area_type depotShopAreaType,
                 t1.*
             FROM
                 crm_ad_goods_order t1
                 LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+                LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
                 LEFT JOIN crm_express_order expressOrder ON t1.express_order_id = expressOrder.id
             WHERE
                 t1.enabled = 1

@@ -7,7 +7,7 @@
           <view class="weui-label">门店：</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="name" class="weui-input" value="{{formData.name}}" disabled/>
+          <input name="name" class="weui-input" value="{{formData.depotName}}" disabled/>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -34,7 +34,7 @@
           <view class="weui-label">区域类型：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="areaType" value="{{formData.areaType}}" range="{{formProperty.areaTypes}}" range-key="name" bindchange="bindAreaTypeChange">
+          <picker name="areaType" value="{{formData.areaType}}" range="{{formProperty.extra.areaList}}" range-key="name" bindchange="bindAreaTypeChange">
             <view class="weui-input">
               {{formData.areaType}}
             </view>
@@ -46,9 +46,9 @@
           <view class="weui-label">乡镇名称：</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="townId" value="{{formData.town.id}}" />
+          <input class="hidden" name="townId" value="{{formData.towId}}" />
             <view class="weui-input"  bindtap="bindTown">
-              {{formData.town.name}}
+              {{formData.townName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>
         </view>
@@ -66,7 +66,7 @@
           <view class="weui-label">核心商圈名称</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="bussinessCenterName" bindchange="bussinessCenterNameChange" value="{{formData.bussinessCenterName}}" range="{{formProperty.businessCenterTypes}}" range-key="name">
+          <picker name="bussinessCenterName" bindchange="bussinessCenterNameChange" value="{{formData.bussinessCenterName}}" range="{{formProperty.extra.businessCenterList}}" range-key="name">
             <view class="weui-input">
               {{formData.bussinessCenterName}}
             </view>
@@ -78,7 +78,7 @@
           <view class="weui-label">运营商社会渠道：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="channelType" bindchange="bindChannelTypeChange" value="{{formData.channelType}}" range="{{formProperty.channelTypes}}" range-key="name">
+          <picker name="channelType" bindchange="bindChannelTypeChange" value="{{formData.channelType}}" range="{{formProperty.extra.channelList}}" range-key="name">
             <view class="weui-input">
               {{formData.channelType}}
             </view>
@@ -90,7 +90,7 @@
           <view class="weui-label">门店属性：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="salePointType" bindchange="bindSalePointTypeChange" value="{{formData.salePointType}}" range="{{formProperty.salePointTypes}}" range-key="name">
+          <picker name="salePointType" bindchange="bindSalePointTypeChange" value="{{formData.salePointType}}" range="{{formProperty.extra.salePointList}}" range-key="name">
             <view class="weui-input">
               {{formData.salePointType}}
             </view>
@@ -102,7 +102,7 @@
           <view class="weui-label">连锁类型：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindChainTypeChange" value="{{formData.chainType}}" range="{{formProperty.chainTypes}}" range-key="name" name="chainType">
+          <picker bindchange="bindChainTypeChange" value="{{formData.chainType}}" range="{{formProperty.extra.chainList}}" range-key="name" name="chainType">
             <view class="weui-input">
               {{formData.chainType}}
             </view>
@@ -114,7 +114,7 @@
           <view class="weui-label">运营商属性：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindCarrierTypeChange" value="{{formData.carrierType}}" range="{{formProperty.carrierTypes}}" range-key="name" name="carrierType">
+          <picker bindchange="bindCarrierTypeChange" value="{{formData.carrierType}}" range="{{formProperty.extra.carrierList}}" range-key="name" name="carrierType">
             <view class="weui-input">
               {{formData.carrierType}}
             </view>
@@ -134,7 +134,7 @@
           <view class="weui-label">店面尺寸：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindAreaSizeChange" value="{{formData.shopArea}}" range="{{formProperty.shopAreaTypes}}" range-key="name" name="shopArea">
+          <picker bindchange="bindAreaSizeChange" value="{{formData.shopArea}}" range="{{formProperty.extra.shopAreaList}}" range-key="name" name="shopArea">
             <view class="weui-input">
               {{formData.shopArea}}
             </view>
@@ -150,6 +150,7 @@
         </view>
       </view>
     </view>
+   <view wx:if="{{shopAttributeShow}}">
     <view class="weui-cells__title" >终端统计</view>
     <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
     <text>{{response.error}}</text></view>
@@ -166,6 +167,7 @@
         </view>
       </block>
     </view>
+   </view>
     <view class="weui-btn-area">
       <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
     </view>

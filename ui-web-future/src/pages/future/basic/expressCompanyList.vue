@@ -82,7 +82,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("expressCompanyList",submitData);
         axios.get('/api/ws/future/basic/expressCompany',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -114,9 +114,9 @@
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      that.initPromise = axios.get('/api/ws/future/basic/expressCompany/getQuery').then((response) =>{
-        that.formData = response.data;
-        util.copyValue(that.$route.query,that.formData);
+      this.initPromise = axios.get('/api/ws/future/basic/expressCompany/getQuery').then((response) =>{
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

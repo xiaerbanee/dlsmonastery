@@ -1,6 +1,8 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.CnJournalForBankService;
 import net.myspring.cloud.modules.input.service.CnJournalForCashService;
@@ -11,8 +13,12 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 /**
@@ -42,6 +48,21 @@ public class CnJournalForBankController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm,kingdeeBook,accountKingdeeBook);
+        if (kingdeeSynDto.getSuccess()){
+            restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
+        }else {
+            System.err.println(kingdeeSynDto.getResult());
+            restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(),null,true);
+        }
+        return restResponse;
+    }
+
+    @RequestMapping(value = "saveForEntityList", method= RequestMethod.POST)
+    public RestResponse saveForEntityList(@RequestBody List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList) {
+        RestResponse restResponse;
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalFEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
         if (kingdeeSynDto.getSuccess()){
             restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
         }else {

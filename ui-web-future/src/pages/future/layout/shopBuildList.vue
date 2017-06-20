@@ -14,7 +14,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopBuildList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -22,7 +22,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="门店建设申请"></process-status-select>
@@ -31,7 +31,7 @@
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.createdBy')" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy"></account-select>
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
@@ -112,7 +112,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopBuildList",submitData);
         axios.get('/api/ws/future/layout/shopBuild',{params:submitData}).then((response) => {
           this.page = response.data;
@@ -160,19 +160,23 @@
           this.$message(this.$t('shopBuildList.noSelectionFound'));
           return ;
         }
-        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:true}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }).catch(()=>{});
     },batchBack(){
         if(!this.multipleSelection || this.multipleSelection.length < 1){
           this.$message(this.$t('shopBuildList.noSelectionFound'));
           return ;
         }
-        axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
-        })
+        util.confirmBeforeBatchNotPass(this).then(() => {
+          axios.get('/api/ws/future/layout/shopBuild/batchAudit',{params:{ids:this.multipleSelection,pass:false}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          })
+        }).catch(()=>{});
     },
       checkSelectable(row) {
         return row.processStatus.indexOf('通过')<0;
@@ -182,8 +186,8 @@
       var that = this;
       that.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
-         that.formData = response.data;
-         util.copyValue(that.$route.query,that.formData);
+        this.formData = response.data;
+         util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

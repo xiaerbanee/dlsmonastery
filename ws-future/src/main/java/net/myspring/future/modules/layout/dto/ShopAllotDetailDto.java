@@ -3,6 +3,7 @@ package net.myspring.future.modules.layout.dto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 public class ShopAllotDetailDto extends DataDto<ShopAllotDetail> {
@@ -13,6 +14,21 @@ public class ShopAllotDetailDto extends DataDto<ShopAllotDetail> {
     private Integer qty;
     private BigDecimal returnPrice;
     private BigDecimal salePrice;
+
+    public BigDecimal getSaleAmount(){
+        if(qty == null || salePrice == null){
+            return null;
+        }
+        return salePrice.multiply(new BigDecimal(qty));
+    }
+
+    public BigDecimal getReturnAmount(){
+        if(qty == null || returnPrice == null){
+            return null;
+        }
+        return returnPrice.multiply(new BigDecimal(qty));
+    }
+
 
     public BigDecimal getReturnPrice() {
         return returnPrice;

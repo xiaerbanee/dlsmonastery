@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeName">
+            <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeId">
               <office-select v-model="inputForm.officeId" :disabled="officeDisabled"></office-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.printType')" prop="printType">
@@ -77,30 +77,32 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
             axios.post('/api/ws/future/layout/shopPrint/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
+
               if(response.data.success) {
                 if (this.inputForm.isCreate) {
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false ;
+                  this.submitDisabled = false;
                   this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList")})
                 }
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(() => {
+              this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         })
       },typeChange(){
-        axios.get('/api/basic/sys/dictMap/findByName?name=' + this.inputForm.printType).then((response)=>{
+        axios.get('/api/basic/sys/dictMap/findByName',{params: {name: this.inputForm.printType}}).then((response)=>{
           this.printTypeContent=response.data;
         })
       },
@@ -113,21 +115,22 @@
       },initPage(){
         axios.get('/api/ws/future/layout/shopPrint/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopPrint/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(this.inputForm.printType!=null){
-              this.typeChange();
-            }
-            if(this.inputForm.attachment !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-                this.fileList= response.data;
-              });
-            }
-          });
-          if(!this.isCreate){
+          if(!this.isCreate) {
             this.officeDisabled = true;
+            axios.get('/api/ws/future/layout/shopPrint/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (this.inputForm.printType != null) {
+                this.typeChange();
+              }
+              if (this.inputForm.attachment != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.attachment}}).then((response) => {
+                  this.fileList = response.data;
+                });
+              }
+            });
           }
         });
+
       }
     },created () {
       this.initPage();

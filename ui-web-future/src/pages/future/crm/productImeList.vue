@@ -63,7 +63,7 @@
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('productImeList.createTimeBtw')" :label-width="formLabelWidth">
-                <date-range-picker v-model="formData.createTimeRange" ></date-range-picker>
+                <date-range-picker v-model="formData.createdTimeRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('productImeList.retailDateBtw')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.retailDateRange" ></date-range-picker>

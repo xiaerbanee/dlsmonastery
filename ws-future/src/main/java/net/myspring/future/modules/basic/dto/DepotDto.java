@@ -11,27 +11,35 @@ import java.math.BigDecimal;
  * Created by lihx on 2017/4/17.
  */
 public class DepotDto extends DataDto<Depot> {
+    private String delegateDepotId;
+    private String depotStoreId;
+    private String depotShopId;
+    private String districtId;
+    private String chainId;
+    private String adPricesystemId;
+    private String expressCompanyId;
+    private Boolean printPrice;
+    private String printType;
+    private String taxName;
+    private Boolean adShop=false;
+    private Boolean isHidden=false;
+    private Boolean popShop = false;
+    private String companyGroup;
     private String code;
-    // 名称
     private String name;
-    // 拼音
     private String namePinyin;
     private String depotType;
-
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
-    // 部门
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "jointType")
     private String jointType;
-
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
     private String clientName;
     private String pricesystemId;
     @CacheInput(inputKey = "pricesystems",inputInstance = "pricesystemId",outputInstance = "name")
     private String pricesystemName;
-
     private String contator;
     private String address;
     private String mobilePhone;
@@ -39,6 +47,118 @@ public class DepotDto extends DataDto<Depot> {
     private BigDecimal credit;
     private String areaType;
     private Boolean rebate;
+
+    public String getDelegateDepotId() {
+        return delegateDepotId;
+    }
+
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
+    }
+
+    public String getDepotStoreId() {
+        return depotStoreId;
+    }
+
+    public void setDepotStoreId(String depotStoreId) {
+        this.depotStoreId = depotStoreId;
+    }
+
+    public String getDepotShopId() {
+        return depotShopId;
+    }
+
+    public void setDepotShopId(String depotShopId) {
+        this.depotShopId = depotShopId;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getChainId() {
+        return chainId;
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    public String getAdPricesystemId() {
+        return adPricesystemId;
+    }
+
+    public void setAdPricesystemId(String adPricesystemId) {
+        this.adPricesystemId = adPricesystemId;
+    }
+
+    public String getExpressCompanyId() {
+        return expressCompanyId;
+    }
+
+    public void setExpressCompanyId(String expressCompanyId) {
+        this.expressCompanyId = expressCompanyId;
+    }
+
+    public Boolean getPrintPrice() {
+        return printPrice;
+    }
+
+    public void setPrintPrice(Boolean printPrice) {
+        this.printPrice = printPrice;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
+    }
+
+    public String getTaxName() {
+        return taxName;
+    }
+
+    public void setTaxName(String taxName) {
+        this.taxName = taxName;
+    }
+
+    public Boolean getAdShop() {
+        return adShop;
+    }
+
+    public void setAdShop(Boolean adShop) {
+        this.adShop = adShop;
+    }
+
+    public Boolean getHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
+    }
+
+    public Boolean getPopShop() {
+        return popShop;
+    }
+
+    public void setPopShop(Boolean popShop) {
+        this.popShop = popShop;
+    }
+
+    public String getCompanyGroup() {
+        return companyGroup;
+    }
+
+    public void setCompanyGroup(String companyGroup) {
+        this.companyGroup = companyGroup;
+    }
 
     public Boolean getRebate() {
         return rebate;

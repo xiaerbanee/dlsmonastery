@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
@@ -11,32 +12,128 @@ import java.time.LocalDate;
 public class DepotShopDto extends DataDto<DepotShop>{
 
     private String depotId;
-    // 地区属性
     private String areaType;
-
     private Boolean hasGuide;
-
-    //门店各种属性
-    //运营商营业厅类型
     private String carrierType;
-    //营业额分类
     private String turnoverType;
-    //经营方式
     private String businessType;
-    //运营商类型移动社会渠道
     private String channelType;
-    //门店类型
     private String salePointType;
-    //乡镇类型
     private String townType;
-    //面积大小
     private String shopArea;
-
+    private Integer frameNum=0;
+    private Integer deskDoubleNum=0;
+    private Integer deskSingleNum=0;
+    private Integer cabinetNum=0;
+    private Boolean bussinessCenter=false;
+    private String bussinessCenterName;
     private String depotName;
-
     private String townId;
     private LocalDate enableDate;
     private String townName;
+    private String officeId;
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
+    private String officeName;
+    private String contator;
+    private String mobilePhone;
+    private String address;
+    private String chainType;
+
+    public String getChainType() {
+        return chainType;
+    }
+
+    public void setChainType(String chainType) {
+        this.chainType = chainType;
+    }
+
+    public Boolean getBussinessCenter() {
+        return bussinessCenter;
+    }
+
+    public void setBussinessCenter(Boolean bussinessCenter) {
+        this.bussinessCenter = bussinessCenter;
+    }
+
+    public String getBussinessCenterName() {
+        return bussinessCenterName;
+    }
+
+    public void setBussinessCenterName(String bussinessCenterName) {
+        this.bussinessCenterName = bussinessCenterName;
+    }
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+    public String getOfficeName() {
+        return officeName;
+    }
+
+    public void setOfficeName(String officeName) {
+        this.officeName = officeName;
+    }
+
+    public Integer getFrameNum() {
+        return frameNum;
+    }
+
+    public void setFrameNum(Integer frameNum) {
+        this.frameNum = frameNum;
+    }
+
+    public Integer getDeskDoubleNum() {
+        return deskDoubleNum;
+    }
+
+    public void setDeskDoubleNum(Integer deskDoubleNum) {
+        this.deskDoubleNum = deskDoubleNum;
+    }
+
+    public Integer getDeskSingleNum() {
+        return deskSingleNum;
+    }
+
+    public void setDeskSingleNum(Integer deskSingleNum) {
+        this.deskSingleNum = deskSingleNum;
+    }
+
+    public Integer getCabinetNum() {
+        return cabinetNum;
+    }
+
+    public void setCabinetNum(Integer cabinetNum) {
+        this.cabinetNum = cabinetNum;
+    }
 
     public String getTownName() {
         return townName;

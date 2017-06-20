@@ -5,7 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
-import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
@@ -18,12 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping(value = "crm/shopDeposit")
 public class ShopDepositController {
 
     @Autowired
     private ShopDepositService shopDepositService;
+    @Autowired
+    private CloudClient cloudClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopDepositDto> list(Pageable pageable, ShopDepositQuery shopDepositQuery){
@@ -36,15 +40,10 @@ public class ShopDepositController {
         return shopDepositQuery;
     }
 
-    @RequestMapping(value = "getDefaultDepartMent")
-    public String getDefaultDepartMent(String shopId) {
-//TODO 需要查金蝶获取结果
-        return "ceshi";
-    }
-
     @RequestMapping(value = "getForm")
     public ShopDepositForm getForm(ShopDepositForm shopDepositForm) {
         shopDepositForm.getExtra().put("outBillTypeList",OutBillTypeEnum.getList());
+        shopDepositForm.getExtra().put("departMentList", cloudClient.findAllDepartment());
         return shopDepositForm;
 
     }
@@ -63,6 +62,16 @@ public class ShopDepositController {
     public RestResponse save(ShopDepositForm shopDepositForm) {
         shopDepositService.save(shopDepositForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "findLeftAmount")
+    public BigDecimal findLeftAmount(String type, String depotId) {
+        return shopDepositService.findLeftAmount(type, depotId);
+    }
+
+    @RequestMapping(value="exportLatest")
+    public String exportLatest() {
+        return shopDepositService.exportLatest();
     }
 
 }

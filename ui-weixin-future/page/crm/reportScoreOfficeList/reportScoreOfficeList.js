@@ -6,8 +6,8 @@ Page({
   data: {
     page: {},
     formData: {
-      pageNumber: 0,
-      pageSize: 10,
+      page: 0,
+      size: 10,
       order: "month_rank: DESC"
     },
     radioChecked: {
@@ -42,18 +42,21 @@ Page({
     });
     if (that.data.options.areaId) {
       that.setData({ "formData.areaId": that.data.options.areaId });
-      that.setData({ "formData.area.name": that.data.options.areaName });
+      that.setData({ "formData.areaName": that.data.options.areaName });
     }
     if (that.data.options.scoreDate) {
       that.setData({ "formData.scoreDate": that.data.options.scoreDate });
     }
     wx.request({
-      url: $util.getUrl("crm/reportScoreOffice/getQuery"),
+      url: $util.getUrl("ws/future/crm/reportScoreOffice/getQuery"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.areas })
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList })
       }
     })
     if ($util.trim(that.data.formData.scoreDate) == "") {
@@ -69,10 +72,14 @@ Page({
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("crm/reportScoreOffice"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("ws/future/crm/reportScoreOffice"),
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
           data: that.data.formData,
           success: function (res) {
+            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -108,48 +115,43 @@ Page({
   bindArea: function (e) {
     var that = this;
     that.setData({
-      'formData.area.id': that.data.fromProperty.areaList[e.detail.value].id,
-      'formData.area.name': that.data.fromProperty.areaList[e.detail.value].name
-    })
-  },
-  bindOffice: function (e) {
-    wx.navigateTo({
-      url: '/page/crm/officeSearch/officeSearch?type=200'
+      'formData.areaId': that.data.fromProperty.areaList[e.detail.value].id,
+      'formData.areaName': that.data.fromProperty.areaList[e.detail.value].name
     })
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

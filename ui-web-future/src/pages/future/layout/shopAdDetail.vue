@@ -36,15 +36,14 @@
           </el-col>
           <el-col :span="10" :offset="2">
             <el-form-item :label="$t('shopAdDetail.pass')"  v-if="isAudit">
-              <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
+              <bool-radio-group v-model="formData.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopAdDetail.passRemarks')"  v-if="isAudit">
-              <el-input v-model="inputForm.passRemarks" :placeholder="$t('shopAdDetail.inputRemarks')" type="textarea"></el-input>
+              <el-input v-model="formData.passRemarks" :placeholder="$t('shopAdDetail.inputRemarks')" type="textarea"></el-input>
             </el-form-item>
             <el-form-item v-if="isAudit">
               <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopAdDetail.save')}}</el-button>
             </el-form-item>
-            <span v-html="inputForm.content"></span>
             <process-details v-model="inputForm.processInstanceId"></process-details>
           </el-col>
         </el-row>
@@ -59,54 +58,60 @@
   export default{
     components:{processDetails,boolRadioGroup},
     data(){
-      return{
-        isCreate:this.$route.query.id==null,
-        isAudit:this.$route.query.action=='audit',
-        inputForm:{},
-        submitData:{
-            id:'',
-          pass:'',
-          passRemarks:'',
-        },
-        activitiEntity:{historicTaskInstances:[]},
-        fileList:[],
-        submitDisabled:false,
-      }
+      return this.getData();
     },
     methods:{
+        getData(){
+          return{
+            isCreate:this.$route.query.id==null,
+            isAudit:this.$route.query.action=='audit',
+            inputForm:{},
+            formData:{
+              extra:{}
+            },
+            fileList:[],
+            submitDisabled:false,
+          }
+        },
       passSubmit(){
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/ws/future/layout/shopAd/audit', qs.stringify(this.submitData)).then((response)=> {
-              this.$message(response.data.message);
-              this.submitDisabled = false;
+            axios.post('/api/ws/future/layout/shopAd/audit', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
+                this.$message(response.data.message);
+                this.submitDisabled = false;
               if(response.data.success){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+                this.submitDisabled = true;
                 this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
               }
             }).catch(function () {
               this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         })
       },
       handlePreview(file) {
         window.open(file.url);
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm = response.data;
+          if(this.inputForm.attachment !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
+              this.fileList= response.data;
+            });
+          }
+        })
+        axios.get('/api/ws/future/layout/shopAd/getAuditForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.formData = response.data;
+        })
       }
     },created(){
-      axios.get('/api/ws/future/layout/shopAd/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-        if(this.inputForm.attachment !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.attachment}}).then((response)=>{
-            this.fileList= response.data;
-          });
-        }
-        if(response.data.activitiEntity.historicTaskInstances){
-          this.activitiEntity.historicTaskInstances = response.data.activitiEntity.historicTaskInstances;
-        }
-      })
+      this.initPage();
     }
   }
 </script>

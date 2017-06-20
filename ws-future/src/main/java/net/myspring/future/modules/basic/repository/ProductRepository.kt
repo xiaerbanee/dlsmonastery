@@ -110,6 +110,8 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product
 
+    fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Product>
+
     fun findByOutId(outId: String): Product
 
     @Query("""
@@ -249,8 +251,9 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(productQuery.netType)) {
             sb.append("""  and t1.net_type =:netType """)
         }
-
-
+        if (StringUtils.isNotEmpty(productQuery.netType)) {
+            sb.append("""  and t1.net_type =:netType """)
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
     }
 

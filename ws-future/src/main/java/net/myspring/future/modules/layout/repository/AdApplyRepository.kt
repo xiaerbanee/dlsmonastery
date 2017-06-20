@@ -41,6 +41,8 @@ interface AdApplyRepositoryCustom{
 
     fun findByOutGroupIdAndDate(@Param("dateStart") dateStart: LocalDate, @Param("outGroupIds") outGroupIds: MutableList<String>): MutableList<AdApplyDto>
 
+    fun findByFilter(adApplyQuery: AdApplyQuery):MutableList<AdApplyDto>
+
     fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>
 }
 
@@ -65,6 +67,50 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         """,params,MyBeanPropertyRowMapper(AdApplyDto::class.java))
     }
 
+    override fun findByFilter(adApplyQuery: AdApplyQuery):MutableList<AdApplyDto>{
+        val sb = StringBuilder("""
+            SELECT
+                t1.*
+            FROM
+                crm_ad_apply t1,
+                crm_product product
+            WHERE
+                t1.enabled = 1
+            AND t1.product_id = product.id
+        """)
+        if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
+            sb.append("""  and t1.shop_id = :shopId """)
+        }
+        if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
+            sb.append("""  and t1.created_by = :createdBy """)
+        }
+        if (adApplyQuery.createdDateStart != null) {
+            sb.append("""  and t1.created_date  >= :createdDateStart """)
+        }
+        if (adApplyQuery.createdDateEnd != null) {
+            sb.append("""  and t1.created_date  < :createdDateEnd """)
+        }
+        if (StringUtils.isNotEmpty(adApplyQuery.productCode)) {
+            sb.append(""" and product.code like CONCAT('%', :productCode,'%') """)
+        }
+        if (StringUtils.isNotEmpty(adApplyQuery.productName)) {
+            sb.append(""" and product.name like CONCAT('%', :productName,'%') """)
+        }
+        if (adApplyQuery.isBilled != null) {
+            if(adApplyQuery.isBilled){
+                sb.append("""
+                    and t1.billed_qty > 0
+                """)
+            }else{
+                sb.append("""
+                    and t1.billed_qty = 0
+                """)
+            }
+        }
+
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(adApplyQuery), BeanPropertyRowMapper(AdApplyDto::class.java))
+    }
+
     override fun findPage(pageable: Pageable,adApplyQuery: AdApplyQuery): Page<AdApplyDto>{
         val sb = StringBuilder("""
             SELECT
@@ -80,7 +126,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append("""  and t1.shop_id = :shopId """)
         }
         if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
-            sb.append("""  and t1.create_by = :createdBy """)
+            sb.append("""  and t1.created_by = :createdBy """)
         }
         if (adApplyQuery.createdDateStart != null) {
             sb.append("""  and t1.created_date  >= :createdDateStart """)

@@ -1,13 +1,11 @@
 package net.myspring.future.modules.layout.dto;
 
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
-import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -25,14 +23,28 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private String outSaleCode;
     private String status;
     private Boolean enabled;
-
-
     private BigDecimal saleTotalPrice;
     private BigDecimal returnTotalPrice;
-
     private BigDecimal fromShopShouldGet;
     private BigDecimal toShopShouldGet;
+    private String fromJointLevel;
+    private String toJoinLevel;
 
+    public String isFromJointLevel() {
+        return fromJointLevel;
+    }
+
+    public void setFromJointLevel(String fromJointLevel) {
+        this.fromJointLevel = fromJointLevel;
+    }
+
+    public String isToJoinLevel() {
+        return toJoinLevel;
+    }
+
+    public void setToJoinLevel(String toJoinLevel) {
+        this.toJoinLevel = toJoinLevel;
+    }
 
     public BigDecimal getFromShopShouldGet() {
         return fromShopShouldGet;

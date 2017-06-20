@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.basic.domain.Client
 import net.myspring.future.modules.basic.dto.ClientDto
 import net.myspring.future.modules.basic.web.query.ClientQuery
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -33,6 +35,10 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     @CachePut(key = "#p0.id")
     fun save(client: Client): Client
 
+    fun findByOutIdIn(outIdList:MutableList<String>):MutableList<Client>
+
+    fun findByNameIn(nameList:MutableList<String>):MutableList<Client>
+
     @Query("""
         SELECT t1.*
         FROM crm_client t1
@@ -40,24 +46,25 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     """, nativeQuery = true)
     fun findAllEnabled(): MutableList<Client>
 
-    @Query("""
-        select t1.*
-        from crm_client t1, crm_depot t2
-        where
-        t1.enabled=1
-        and t1.id = t2.client_id
-        and t2.id = ?1
-    """, nativeQuery = true)
-    fun findByDepotId(depotId: String): Client
-
     fun findByNameContaining(name: String): MutableList<Client>
 }
 
 interface ClientRepositoryCustom{
     fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto>
+
+    fun findByDepotId(depotId: String): ClientDto?
 }
 
 class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ClientRepositoryCustom{
+    override fun findByDepotId(depotId: String): ClientDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+        select t1.*
+        from crm_client t1, crm_depot t2
+        where
+        t1.id = t2.client_id
+        and t2.id = :depotId
+        """, Collections.singletonMap("depotId",depotId),BeanPropertyRowMapper(ClientDto::class.java))
+    }
 
     override fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto> {
         val sb = StringBuffer()

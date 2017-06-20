@@ -1,5 +1,11 @@
 package net.myspring.future.modules.basic.client;
 
+import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.kingdee.domain.*;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.common.response.RestResponse;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,52 +16,65 @@ import java.util.List;
 /**
  * Created by liuj on 2017-03-08.
  */
-@FeignClient("cloud")
+@FeignClient(value = "global-cloud")
 public interface CloudClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/getSynStockData")
-    String getSynStockData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findAll")
+    List<BdStock> getAllStock();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/getSynCustomerData")
-    String getSynCustomerData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findByMaxModifyDate")
+    List<BdStock> findStockByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/getSynProductData")
-    String getSynProductData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
+    List<BdCustomer> getAllCustomer();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/getSynBankData")
-    String getSynBankData(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "maxOutDate") String maxOutDate);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findByMaxModifyDate")
+    List<BdCustomer> findCustomerByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findReceivableBillNo")
-    String findReceivableBillNo(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outStockBillNo") String outStockBillNo);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
+    List<BdMaterial> getAllProduct();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findHrEmpinfo")
-    String findHrEmpinfo(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "name") String name);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findByMaxModifyDate")
+    List<BdMaterial> findMaterialByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findAccountFNumber")
-    String findAccountFNumber(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "bankName") String bankName);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
+    List<CnBankAcnt> getAllBank();
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findAssistantCode")
-    String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findByMaxModifyDate")
+    List<CnBankAcnt> findBankAcntByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findDepartByCustomer")
-    String findDepartByCustomer(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "outId") String outId);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
+    ArReceivable findReceivableByBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findAllDepartments")
-    String findAllDepartments(@RequestParam(value = "companyName") String companyName);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/hrEmpInfo/findByName")
+    HrEmpInfo findEmpInfoByName(@RequestParam(value = "name") String name);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findBdInventorys")
-    String findBdInventorys(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "stockIds") List<String> stockIds);
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdAccount/findByName")
+    BdAccount findAccountByName(@RequestParam(value = "name") String name);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/findBdInventoryByDepotAndProduct")
-    String findBdInventoryByDepotAndProduct(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "depotId") String depotId, @RequestParam(value = "productId") String productId);
+//    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAssistantCode")
+//    String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findCustId")
+    BdDepartment findDepartmentByOutId( @RequestParam(value = "custId") String outId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
+    List<BdDepartment> findAllDepartment();
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
+    List<StkInventory> findInventorys(@RequestParam(value = "stockIds") List<String> stockIds);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
+    List<StkInventory> findInventoryByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
 
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/receivableReportForSummaryList")
-    String receivableReportForSummaryList(@RequestParam(value = "dateRange") String dateRange, @RequestParam(value = "companyName") String companyName);
+    @RequestMapping(method = RequestMethod.GET, value = "/report/customerReceive/detail")
+    List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(@RequestParam(value = "dateRange")String dateRange,@RequestParam(value = "customerId")String customerId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/k3cloud/basicData/receivableReportForDetailList")
-    String receivableReportForDetailList(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "customerId") String customerId, @RequestParam(value = "dateRange") String dateRange);
+    @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
+    List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
 
-    @RequestMapping(method = RequestMethod.POST, value = "/k3cloud/basicData/shouldGet")
-    String findShouldGet(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "customerIds") List<String> customerIds, @RequestParam(value = "dateEndStr") String dateEndStr);
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEntityList")
+    RestResponse synForJournalForBank(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList);
+
 }

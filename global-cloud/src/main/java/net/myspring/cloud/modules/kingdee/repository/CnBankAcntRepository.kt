@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -51,5 +52,25 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
                 and t1.FFORBIDSTATUS = 'A'
                 and t1.FDOCUMENTSTATUS = 'C'
         """, BeanPropertyRowMapper(CnBankAcnt::class.java))
+    }
+
+    fun findByMaxModifyDate(modifyDate: LocalDateTime) :MutableList<CnBankAcnt>{
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FBANKACNTID,
+                t1.FNUMBER,
+                t1.FMODIFYDATE,
+                t2.FNAME,
+                t1.FForbidStatus,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_CN_BANKACNT t1,
+                T_CN_BANKACNT_L t2
+            WHERE
+                t1.FBANKACNTID = t2.FBANKACNTID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FMODIFYDATE > :modifyDate
+        """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
 }

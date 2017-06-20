@@ -58,8 +58,8 @@ public class DictEnumService {
     }
 
 
-    public String findByValue(String value){
-        DictEnum dictEnum = dictEnumRepository.findByValue(value);
+    public String findByValue(String value,String category){
+        DictEnum dictEnum = dictEnumRepository.findByValue(value,category);
         if(dictEnum!=null){
             return dictEnum.getRemarks();
         }else{

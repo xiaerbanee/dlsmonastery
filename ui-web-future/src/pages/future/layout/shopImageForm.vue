@@ -55,7 +55,7 @@
             extra:{}
           },
           rules: {
-            shopName: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
+            shopId: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
             imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
             imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
           },
@@ -63,7 +63,6 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -71,15 +70,20 @@
           if (valid) {
             axios.post('/api/ws/future/layout/shopImage/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
               if(response.data.success) {
-                if (!this.isCreate) {
+                if (this.isCreate) {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }else{
+                  this.submitDisabled = false;
                   this.$router.push({name: 'shopImageList', query: util.getQuery("shopImageList")});
                 }
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(() => {
+              this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         })
       },handlePreview(file) {
@@ -88,30 +92,30 @@
         this.fileList = fileList;
       },handleRemove(file, fileList) {
         this.fileList = fileList;
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-        axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
-          this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopImage/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(this.inputForm.id != null){
-              this.shopDisabled = true;
-            }else{
-              this.shopDisabled = false;
-            }
-            if(this.inputForm.image != null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-                this.fileList= response.data;
+      },initPage(){
+          axios.get('/api/ws/future/layout/shopImage/getForm').then((response)=>{
+            this.inputForm = response.data;
+            if(!this.isCreate) {
+              axios.get('/api/ws/future/layout/shopImage/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+                util.copyValue(response.data, this.inputForm);
+                if (this.isCreate) {
+                  this.shopDisabled = false;
+                } else {
+                  this.shopDisabled = true;
+                }
+                if (this.inputForm.image != null) {
+                  axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.image}}).then((response) => {
+                    this.fileList = response.data;
+                  });
+                } else {
+                  this.fileList = [];
+                }
               });
-            }else{
-              this.fileList = [];
             }
           });
-        });
       }
-      this.isInit = true;
+    },created(){
+      this.initPage();
     }
   }
 </script>

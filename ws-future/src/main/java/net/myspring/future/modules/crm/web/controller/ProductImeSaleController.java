@@ -74,6 +74,7 @@ public class ProductImeSaleController {
     @RequestMapping(value = "sale")
     public RestResponse sale(ProductImeSaleForm productImeSaleForm) {
 
+        //TODO 核銷門店權限檢查，這個在核銷退回，上報及上報退回應該都要
         List<String> imeList = productImeSaleForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
            throw new ServiceException("没有输入任何有效的串码");
@@ -115,8 +116,13 @@ public class ProductImeSaleController {
         return productImeSaleService.export(productImeSaleQuery);
     }
 
-    @RequestMapping(value="getForm")
-    public  ProductImeSaleForm getForm(ProductImeSaleForm productImeSaleForm) {
+    @RequestMapping(value="getSaleForm")
+    public  ProductImeSaleForm getSaleForm(ProductImeSaleForm productImeSaleForm) {
         return productImeSaleForm;
+    }
+
+    @RequestMapping(value="getSaleBackForm")
+    public  ProductImeSaleBackForm getSaleBackForm(ProductImeSaleBackForm productImeSaleBackForm) {
+        return productImeSaleBackForm;
     }
 }

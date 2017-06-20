@@ -33,6 +33,25 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, Collections.singletonMap("name",name), BeanPropertyRowMapper(BdSupplier::class.java))
     }
 
+    fun findByNameList(nameList: List<String>): MutableList<BdSupplier> {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FSUPPLIERID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            FROM
+                T_BD_SUPPLIER t1,
+                T_BD_SUPPLIER_L t2
+            WHERE
+                t1.FSUPPLIERID = t2.FSUPPLIERID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                and t2.FNAME in (:nameList)
+        """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(BdSupplier::class.java))
+    }
+
     fun findAll(): MutableList<BdSupplier> {
         return namedParameterJdbcTemplate.query("""
             SELECT

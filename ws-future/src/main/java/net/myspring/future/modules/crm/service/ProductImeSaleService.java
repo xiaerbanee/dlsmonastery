@@ -2,22 +2,18 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
-import net.myspring.future.modules.crm.dto.StoreAllotDto;
-import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
-import net.myspring.future.modules.crm.repository.StoreAllotRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
@@ -29,24 +25,16 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +42,14 @@ import java.util.Map;
 @Transactional
 public class ProductImeSaleService {
 
-
-
     @Autowired
     private ProductImeSaleRepository productImeSaleRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotManager depotManager;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
@@ -84,34 +72,32 @@ public class ProductImeSaleService {
     }
 
     public String checkForSale(List<String> imeList) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
             if(productIme == null) {
-                sb.append("串码："+ime+"在系统中不存在；");
+                sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
                 Depot depot = depotRepository.findOne(productIme.getDepotId());
                 if(depot.getIsHidden() != null && depot.getIsHidden()){
-                    sb.append("串码："+ime+"的所属地点："+depot.getName()+" 被隐藏，请联系文员开通门店；");
+                    sb.append("串码：").append(ime).append("的所属地点：").append(depot.getName()).append(" 被隐藏，请联系文员开通门店；");
                 }
                 if(productIme.getProductImeSaleId()!=null) {
-                    sb.append("串码："+ime+"已核销；");
+                    sb.append("串码：").append(ime).append("已核销；");
                 } else if(StringUtils.isNotBlank(depot.getDepotStoreId())) {
-                    sb.append("串码：" + ime + "的所属地点为："+depot.getName()+"，不是门店，无法核销；");
-                    //TODO 需要增加判断，判断门店是否可以核销
-//                } else if(!DepotUtils.isAccess(productIme.getDepot(),true)) {
-//                    message.addText("message_product_ime_sale_not_have_ime",ime,"message_product_ime_sale_in_store",productIme.getDepotName(),"message_product_ime_sale_no_sale_permission");
+                    sb.append("串码：").append(ime).append("的所属地点为：").append(depot.getName()).append("，不是门店，无法核销；");
+                } else if(!depotManager.isAccess(depot, true)) {
+                    sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }else if(productIme.getProductImeUploadId() != null) {
-                    sb.append("串码："+ime+"已上报,不能核销；");
+                    sb.append("串码：").append(ime).append("已上报,不能核销；");
                 }
             }
         }
 
         return sb.toString();
     }
-
 
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
@@ -123,9 +109,9 @@ public class ProductImeSaleService {
             leftCredit=latestProductImeSale.getLeftCredit();
         }
 
-        for (int i = 0; i < imeList.size(); i++) {
-            ProductIme productIme = productImeRepository.findByIme(imeList.get(i));
-            Depot depot = depotRepository.findOne(productImeSaleForm.getShopId());//TODO 需要修正 depotDao.findOne(depotIds[i]);
+        Depot depot = depotRepository.findOne(productImeSaleForm.getShopId());
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        for (ProductIme productIme : productImeList) {
 
             ProductImeSale productImeSale = new ProductImeSale();
             productImeSale.setEmployeeId(employeeId);
@@ -168,11 +154,12 @@ public class ProductImeSaleService {
             if(productIme == null) {
                 sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
+                Depot depot = depotRepository.findOne(productIme.getDepotId());
+
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                    //TODO 需要增加判断，判断门店是否可以核销
-//                } else if(!DepotUtils.isAccess(productIme.getDepot(),true)) {
-//                    message.addText("message_product_ime_sale_not_have_ime",ime,"message_product_ime_sale_in_store",productIme.getDepotName(),"message_product_ime_sale_no_sale_permission");
+                } else if(!depotManager.isAccess(depot,true)) {
+                    sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
                     sb.append("串码：").append(ime).append("已上报,不能退回；");
@@ -195,7 +182,7 @@ public class ProductImeSaleService {
             leftCredit=latestProductImeSale.getLeftCredit();
         }
 
-        for(ProductIme productIme:productImes) {
+        for(ProductIme productIme : productImes) {
             ProductImeSale productImeSale = productImeSaleRepository.findOne(productIme.getProductImeSaleId());
 
             productImeSale.setEnabled(false);

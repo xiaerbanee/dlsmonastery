@@ -45,17 +45,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -339,20 +336,10 @@ public class StoreAllotService {
 
     }
 
-
     private Integer getExpressPrintQty(Integer totalBillQty) {
-        //TODO 需要完善该方法，
-        //String companyName= RequestUtils.getCompanyName();
-        Integer expressPrintQty = 1;
-//        if(CompanyNameEnum.JXOPPO.name().equals(companyName)){
-//            expressPrintQty=Const.OPPO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else if(CompanyNameEnum.JXVIVO.name().equals(companyName)) {
-//            expressPrintQty = Const.VIVO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else if(CompanyNameEnum.JXIMOO.name().equals(companyName)){
-//            expressPrintQty = Const.IMOO_ORDER_EXPRESS_PRODUCT_QTY;
-//        }else{
-//            expressPrintQty=Const.LX_ORDER_EXPRESS_PRODUCT_QTY;
-//        }
+
+        Integer expressPrintQty = 20; //TODO JXOPPO默認爲20  不同的公司不同，這個需要在上其它公司的時候判斷
+
         if(0 == totalBillQty % expressPrintQty){
             expressPrintQty = totalBillQty / expressPrintQty;
         } else{
@@ -376,10 +363,7 @@ public class StoreAllotService {
     public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
 
         List<SimpleStoreAllotDetailDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
-
-
         cacheUtils.initCacheInput(result);
-
 
         if(StringUtils.isNotBlank(fromStoreId)){
 //        TODO 初始化财务存量
@@ -409,16 +393,16 @@ public class StoreAllotService {
         String toStoreId =mergeIdList.get(1);
 
         List<SimpleStoreAllotDetailDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
-        if(result!=null){
-            cacheUtils.initCacheInput(result);
-            //TODO 初始化财务存量
 
-            result.stream().forEach((each)->{
-                if(each.getBillQty() != null && each.getBillQty()<=0 ) {
-                    each.setBillQty(null);
-                }
-            });
-        }
+        cacheUtils.initCacheInput(result);
+        //TODO 初始化财务存量
+
+        result.forEach((each)->{
+            if(each.getBillQty() != null && each.getBillQty()<=0 ) {
+                each.setBillQty(null);
+            }
+        });
+
 
         return result;
 

@@ -41,7 +41,7 @@
           <el-button type="primary" @click="search()">{{$t('shopAllotList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="id" :label="$t('shopAllotList.billCode')" width="180" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('shopAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopAllotList.createdDate')" width="120" sortable></el-table-column>
@@ -49,20 +49,12 @@
         <el-table-column prop="toShopName" column-key="toShopId" :label="$t('shopAllotList.toShop')" sortable></el-table-column>
         <el-table-column prop="outReturnCode" :label="$t('shopAllotList.outReturnCode')" sortable>
           <template scope="scope">
-            <el-button
-              @click.native.prevent="print(scope.row.id, 'returnPrint')"
-              type="text">
-              {{ scope.row.outReturnCode}}
-            </el-button>
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="print(scope.row.id, 'returnPrint')">{{ scope.row.outReturnCode}}</a>
           </template>
         </el-table-column>
         <el-table-column prop="outSaleCode" :label="$t('shopAllotList.outSaleCode')" sortable>
           <template scope="scope">
-            <el-button
-              @click.native.prevent="print(scope.row.id, 'salePrint')"
-              type="text">
-              {{ scope.row.outSaleCode}}
-            </el-button>
+            <a href="javascript:void(0);" style="color:blue;text-decoration:underline;" @click="print(scope.row.id, 'salePrint')">{{ scope.row.outSaleCode}}</a>
           </template>
         </el-table-column>
 
@@ -107,6 +99,7 @@
         initPromise:{},
         formVisible: false,
         pageLoading: false,
+        pageHeight:600,
       };
     },
     methods: {
@@ -139,9 +132,9 @@
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
         if(action==="returnPrint") {
-          window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=returnPrint", '', '').print();
+          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
         } else if(action==="salePrint") {
-          window.open('/api/ws/future/crm/shopAllot/print?id='+id+"&printType=salePrint", '', '').print();
+          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
         }
       },itemAction:function(id, action){
         if(action==="edit") {
@@ -159,6 +152,7 @@
           this.$router.push({ name: 'shopAllotDetail', query: { id: id, action:'audit'}})}
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopAllot/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

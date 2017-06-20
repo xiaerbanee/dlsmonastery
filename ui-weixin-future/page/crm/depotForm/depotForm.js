@@ -17,23 +17,26 @@ Page({
     },
     initPage: function () {
         var that = this;
+        that.setData({ shopAttributeShow: false });
         var options = that.data.options;
         if (options.action == 'edit') {
             wx.request({
-                url: $util.getUrl("crm/depot/detail"),
+                url: $util.getUrl("ws/future/basic/depotShop/findOne"),
                 data: { id: options.id },
-                header: { 'x-auth-token': app.globalData.sessionId },
+                header: {
+                    'x-auth-token': app.globalData.sessionId,
+                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                },
                 success: function (res) {
                     that.setData({ formData: res.data });
-                    if (res.data.townId != null) {
-                        that.setData({ "formData.town.name": res.data.town.provinceName + res.data.town.cityName + res.data.town.countyName+ res.data.town.townName })
-                    }
                     wx.request({
-                        url: $util.getUrl("crm/depot/getForm"),
-                        header: { 'x-auth-token': app.globalData.sessionId },
+                        url: $util.getUrl("ws/future/basic/depotShop/getForm"),
+                        header: {
+                            'x-auth-token': app.globalData.sessionId,
+                            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                        },
                         success: function (res) {
                             that.setData({ formProperty: res.data });
-                            console.log(that.data.formProperty)
                         }
                     })
                 }
@@ -47,7 +50,7 @@ Page({
     },
     bindAreaTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.areaType": that.data.formProperty.areaTypes[e.detail.value].name });
+        that.setData({ "formData.areaType": that.data.formProperty.extra.areaList[e.detail.value].name });
     },
     bindBussinessCenterChange: function (e) {
         var that = this;
@@ -58,54 +61,57 @@ Page({
     },
     bussinessCenterNameChange: function (e) {
         var that = this;
-        that.setData({ "formData.bussinessCenterName": that.data.formProperty.businessCenterTypes[e.detail.value].name });
+        that.setData({ "formData.bussinessCenterName": that.data.formProperty.extra.businessCenterList[e.detail.value].name });
     },
     bindChannelTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.channelType":that.data.formProperty.channelTypes[e.detail.value].name});
+        that.setData({ "formData.channelType": that.data.formProperty.extra.channelList[e.detail.value].name });
     },
     bindSalePointTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.salePointType": that.data.formProperty.salePointTypes[e.detail.value].name });
+        that.setData({ "formData.salePointType": that.data.formProperty.extra.salePointList[e.detail.value].name });
     },
     bindSpecialityStoreTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.specialityStoreType": that.data.formProperty.specialityStoreTypes[e.detail.value] });
+        that.setData({ "formData.specialityStoreType": that.data.formProperty.extra.specialityStoreList[e.detail.value] });
     },
     bindChainTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.chainType": that.data.formProperty.chainTypes[e.detail.value].name });
+        that.setData({ "formData.chainType": that.data.formProperty.extra.chainList[e.detail.value].name });
     },
     bindCarrierTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.carrierType": that.data.formProperty.carrierTypes[e.detail.value].name });
+        that.setData({ "formData.carrierType": that.data.formProperty.extra.carrierList[e.detail.value].name });
     },
     bindBusinessTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.businessType": that.data.formProperty.businessTypes[e.detail.value].name });
+        that.setData({ "formData.businessType": that.data.formProperty.extra.businessList[e.detail.value].name });
     },
     bindAreaSizeChange: function (e) {
         var that = this;
-        that.setData({ "formData.shopArea": that.data.formProperty.shopAreaTypes[e.detail.value].name });
+        that.setData({ "formData.shopArea": that.data.formProperty.extra.shopAreaList[e.detail.value].name });
     },
     bindShopMonthTotalChange: function (e) {
         var that = this;
-        that.setData({ "shopAttribute.shopMonthTotal": that.data.shopAttribute.shopMonthTotalList[e.detail.value] });
+        that.setData({ "shopAttribute.shopMonthTotal": that.data.formProperty.extra.shopMonthTotalList[e.detail.value] });
     },
     formSubmit: function (e) {
         var that = this;
         that.setData({ submitDisabled: true });
         wx.request({
-            url: $util.getUrl("crm/depot/save"),
+            url: $util.getUrl("ws/future/basic/depotShop/save"),
             data: e.detail.value,
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
             success: function (res) {
                 if (res.data.success) {
                     wx.navigateBack();
                 } else {
                     that.setData({ 'response.data': res.data, submitDisabled: false });
-                    if(res.data.errors.shopAttributeList!=null ||res.data.errors.shopAttributeList!=''){
-                        that.setData({ 'response.error': res.data.errors.shopAttributeList.message});
+                    if (res.data.errors.shopAttributeList != null || res.data.errors.shopAttributeList != '') {
+                        that.setData({ 'response.error': res.data.errors.shopAttributeList.message });
                     }
                 }
             }

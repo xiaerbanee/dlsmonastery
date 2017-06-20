@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Depot
-import net.myspring.future.modules.basic.dto.CustomerDto
 import net.myspring.future.modules.basic.dto.DepotAccountDto
 import net.myspring.future.modules.basic.dto.DepotDto
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery
@@ -19,7 +18,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
@@ -38,6 +36,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
     fun findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(companyId :String): MutableList<Depot>
+
+    fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>
 
     fun findByChainId(chainId: String): MutableList<Depot>
 
@@ -70,11 +70,32 @@ interface DepotRepositoryCustom{
 
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
 
-    fun getCustomer():MutableList<CustomerDto>
+    fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto>
 }
 
 @Suppress("UNCHECKED_CAST")
-class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
+        val params = HashMap<String, Any>()
+        params.put("companyId", companyId)
+        params.put("outGroupId", outGroupId)
+
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.*
+            FROM
+                crm_depot t1,
+                crm_depot_store t2
+            WHERE
+                t1.depot_store_id = t2.id
+            AND t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.company_id = :companyId
+            AND t2.out_group_id = :outGroupId
+            AND t1.is_hidden = 0
+          """, params, BeanPropertyRowMapper(DepotDto::class.java))
+    }
+
     override fun findByFilter(depotQuery: DepotQuery): MutableList<Depot> {
         val sb = StringBuffer("""
             SELECT
@@ -207,13 +228,23 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
         val sb = StringBuffer()
         sb.append("""
         select
-        t1.id, t1.name, t1.office_id, t1.client_id
+        t1.id,
+        t1.name,
+        t1.office_id,
+        t1.area_id,
+        t1.client_id,
+        scbzjDeposit.left_amount scbzj,
+        xxbzjDeposit.left_amount xxbzj,
+        ysjyjDeposit.left_amount ysjyj
         from
-        crm_depot t1 , crm_depot_shop t2
+        crm_depot t1
+        LEFT JOIN crm_depot_shop t2 ON t1.depot_shop_id = t2.id
+        LEFT JOIN crm_shop_deposit scbzjDeposit ON scbzjDeposit.shop_id = t1.id AND scbzjDeposit.type='市场保证金' AND scbzjDeposit.locked = 0 AND scbzjDeposit.enabled = 1
+        LEFT JOIN crm_shop_deposit xxbzjDeposit ON xxbzjDeposit.shop_id = t1.id AND xxbzjDeposit.type='形象保证金' AND xxbzjDeposit.locked = 0 AND xxbzjDeposit.enabled = 1
+        LEFT JOIN crm_shop_deposit ysjyjDeposit ON ysjyjDeposit.shop_id = t1.id AND ysjyjDeposit.type='演示机押金' AND ysjyjDeposit.locked = 0 AND ysjyjDeposit.enabled = 1
         where
         t1.enabled =1
         and t1.is_hidden=0
-        and t1.id = t2.depot_id
         and t1.client_id IS NOT NULL
         """)
         if(depotAccountQuery.specialityStore != null && depotAccountQuery.specialityStore ){
@@ -232,48 +263,11 @@ class DepotRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate,
             sb.append("""  and t1.office_id = :officeId  """)
         }
 
-
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(depotAccountQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(DepotAccountDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(depotAccountQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(DepotAccountDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
-    }
-
-    override fun getCustomer(): MutableList<CustomerDto> {
-        val sb = StringBuffer()
-        sb.append("""
-       select
-            de.area_id as areaId,
-            de.office_id as officeId,
-            de.id as depotId,
-            de.name as depotName,
-            de.depot_store_id as storeId,
-            de.depot_shop_id as shopId,
-            st.joint_leavel as jointLeavel,
-            sh.sale_point_type as salePointType,
-            de.mobile_phone as mobilePhone,
-            sh.area_type as areaType,
-            sh.bussiness_center_name as bussinessCenterName,
-            sh.chain_type as chainType,
-            sh.carrier_type as carrierType,
-            sh.door_head as doorHead,
-            sh.enable_date as enableDate,
-            de.enabled as enabled,
-            de.is_hidden as isHidden,
-            de.district_id as districtId,
-            sh.town_id as townId,
-            sh.shop_area as shopArea,
-            sh.frame_num as frameNum,
-            sh.desk_double_num as deskDoubleNum,
-            sh.desk_single_num as deskSingleNum,
-            sh.cabinet_num as cabinetNum
-        from crm_depot de
-            left join crm_depot_store st on de.depot_store_id = st.id
-            left join crm_depot_shop sh on de.depot_shop_id = sh.id
-            order by de.id asc
-        """)
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertyRowMapper(CustomerDto::class.java))
     }
 }

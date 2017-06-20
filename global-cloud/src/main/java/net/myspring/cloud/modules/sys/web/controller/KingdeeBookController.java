@@ -28,9 +28,9 @@ public class KingdeeBookController {
         return page;
     }
 
-    @RequestMapping(value = "queryProperty")
-    public KingdeeBookQuery getQueryProperty(){
-        KingdeeBookQuery kingdeeBookQuery = kingdeeBookService.getQueryProperty();
+    @RequestMapping(value = "getQuery")
+    public KingdeeBookQuery getQuery(){
+        KingdeeBookQuery kingdeeBookQuery = kingdeeBookService.getQuery();
         return kingdeeBookQuery;
     }
 

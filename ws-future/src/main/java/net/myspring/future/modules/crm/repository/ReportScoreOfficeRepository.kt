@@ -35,6 +35,8 @@ class ReportScoreOfficeRepositoryImpl @Autowired constructor(val namedParameterJ
         """)
         if(reportScoreOfficeQuery.officeId !=null)
             sb.append("""  and t1.office_id =:officeId""")
+        if(reportScoreOfficeQuery.areaId !=null)
+            sb.append("""  and t1.area_id =:areaId""")
         if(reportScoreOfficeQuery.scoreDate!=null)
             sb.append("""  and t1.score_date  =:scoreDate """)
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

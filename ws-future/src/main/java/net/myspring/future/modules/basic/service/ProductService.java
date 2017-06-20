@@ -3,6 +3,8 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -171,10 +173,12 @@ public class ProductService {
                 String value = StringUtils.toString(rows.get(i)).trim();
                 switch (i) {
                     case 3:
-                        product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                        /* product.setVisible(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setVisible("是".equals(value));
                         break;
                     case 4:
-                        product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));
+                       /* product.setAllowOrder(Boolean.TRUE.toString().equalsIgnoreCase(value));*/
+                        product.setAllowOrder("是".equals(value));
                         break;
                     case 5:
                         if (StringUtils.isBlank(value)) {
@@ -205,8 +209,8 @@ public class ProductService {
     }
 
     public ProductQuery getQuery(ProductQuery productQuery){
-        productQuery.setNetTypeList(NetTypeEnum.getList());
-        productQuery.setOutGroupNameList(productRepository.findByOutName());
+        productQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
+        productQuery.getExtra().put("outGroupNameList",productRepository.findByOutName());
         return productQuery;
     }
 
@@ -216,38 +220,54 @@ public class ProductService {
     }
 
     public void syn() {
-        LocalDateTime dateTime=productRepository.getMaxOutDate();
-        String cloudName = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.CLOUD_DB_NAME.name()).getValue();
-        String result = cloudClient.getSynProductData(cloudName, LocalDateTimeUtils.format(dateTime));
-        String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
-        List<String> outGroupIds = IdUtils.getIdList(value);
-        List<Map<String, Object>> dataList = ObjectMapperUtils.readValue(result,List.class);
-        if(CollectionUtil.isNotEmpty(dataList)) {
-            for (Map<String, Object> map : dataList) {
-                Product product = productRepository.findByOutId(map.get("outId").toString());
-                if(product==null) {
-                    product = productRepository.findByName(map.get("name").toString());
-                    if(product ==null) {
+        List<BdMaterial> bdMaterials = cloudClient.getAllProduct();
+        List<Product> products = productRepository.findAllEnabled();
+        Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
+        Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
+        List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
+        List<Product> synProduct = Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(bdMaterials)){
+            for(BdMaterial bdMaterial:bdMaterials){
+                Product product = productMapByOutId.get(bdMaterial.getFMasterId());
+                if(product == null){
+                    product = productMapByName.get(bdMaterial.getFName());
+                    if(product == null){
                         product = new Product();
-                        product.setAllowBill(false);
-                        product.setAllowOrder(false);
-                        if(CollectionUtil.isNotEmpty(outGroupIds) && outGroupIds.contains(map.get("fgroup").toString())) {
-                            product.setHasIme(true);
-                        }else {
-                            product.setHasIme(false);
-                        }
-                        productRepository.save(product);
+                        product.setCreatedBy(RequestUtils.getAccountId());
+                    }else{
+                        product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
                 }
-                product.setOutDate(LocalDateTimeUtils.parse(map.get("modifyDate").toString()));
-                product.setName(map.get("name").toString());
-                product.setOutId(map.get("outId").toString());
-                product.setOutGroupId(map.get("fgroup").toString());
-                product.setOutGroupName(map.get("groupName").toString());
-                product.setCode(map.get("code").toString());
-                productRepository.save(product);
-
+                if(product.isCreate()){
+                    product.setAllowOrder(false);
+                    product.setAllowBill(false);
+                    if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
+                        product.setHasIme(true);
+                    }else{
+                        product.setHasIme(false);
+                    }
+                }else{
+                    product.setOldName(product.getName());
+                    product.setOldOutId(product.getOutId());
+                }
+                if(bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")){
+                    if(bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())){
+                        product.setNetType(NetTypeEnum.移动.name());
+                    }else{
+                        product.setNetType(NetTypeEnum.联信.name());
+                    }
+                }else{
+                    product.setNetType(NetTypeEnum.全网通.name());
+                }
+                product.setOutDate(bdMaterial.getFModifyDate());
+                product.setName(bdMaterial.getFName());
+                product.setOutId(bdMaterial.getFMasterId());
+                product.setOutGroupId(bdMaterial.getFMaterialGroup().toString());
+                product.setOutGroupName(bdMaterial.getFMaterialGroupName());
+                product.setCode(bdMaterial.getFNumber());
+                synProduct.add(product);
             }
+            productRepository.save(synProduct);
         }
     }
 

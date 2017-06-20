@@ -19,13 +19,16 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
                 t1.FENTRYID,
                 t1.FNUMBER,
                 t2.FDATAVALUE,
+                t3.FNAME as FType,
                 t1.FDOCUMENTSTATUS,
                 t1.FFORBIDSTATUS
             FROM
                 T_BAS_ASSISTANTDATAENTRY t1,
-                T_BAS_ASSISTANTDATAENTRY_L t2
+                T_BAS_ASSISTANTDATAENTRY_L t2,
+                T_BAS_ASSISTANTDATA_L t3
             WHERE
                 t1.FENTRYID = t2.FENTRYID
+                and t1.FID = t3.FID
                 AND t1.FDOCUMENTSTATUS = 'C'
                 AND t1.FFORBIDSTATUS = 'A'
                 AND t2.FDATAVALUE in (:nameList)
@@ -38,13 +41,16 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
                 t1.FENTRYID,
                 t1.FNUMBER,
                 t2.FDATAVALUE,
+                t3.FNAME as FType,
                 t1.FDOCUMENTSTATUS,
                 t1.FFORBIDSTATUS
             FROM
                 T_BAS_ASSISTANTDATAENTRY t1,
-                T_BAS_ASSISTANTDATAENTRY_L t2
+                T_BAS_ASSISTANTDATAENTRY_L t2,
+                T_BAS_ASSISTANTDATA_L t3
             WHERE
                 t1.FENTRYID = t2.FENTRYID
+                and t1.FID = t3.FID
                 AND t1.FDOCUMENTSTATUS = 'C'
                 AND t1.FFORBIDSTATUS = 'A'
                 AND t2.FDATAVALUE = :name
@@ -57,6 +63,7 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
                 t1.FENTRYID,
                 t1.FNUMBER,
                 t2.FDATAVALUE,
+                t3.FNAME as FType,
                 t1.FDOCUMENTSTATUS,
                 t1.FFORBIDSTATUS
             FROM

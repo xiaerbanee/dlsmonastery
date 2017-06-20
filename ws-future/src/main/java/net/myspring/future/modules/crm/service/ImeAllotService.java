@@ -7,15 +7,11 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.domain.ImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.dto.ImeAllotDto;
-import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
-import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.ImeAllotRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
@@ -41,7 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -52,20 +50,13 @@ public class ImeAllotService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private DepotManager depotManager;
+    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private ProductImeRepository productImeRepository;
-
-    public void logicDelete(String id) {
-        imeAllotRepository.logicDelete(id);
-    }
-
-    private boolean getCrossArea(String toDepotId,String productImeDepotId){
-        //TODO 需要实现是否跨地区
-        return true;
-    }
 
     public Page<ImeAllotDto> findPage(Pageable pageable, ImeAllotQuery imeAllotQuery) {
         Page<ImeAllotDto> page = imeAllotRepository.findPage(pageable,imeAllotQuery);
@@ -115,16 +106,16 @@ public class ImeAllotService {
             if(productIme == null) {
                 sb.append("串码：").append(ime).append("在系统中不存在；");
             } else {
+                Depot depot = depotRepository.findOne(productIme.getDepotId());
                 if(productIme.getProductImeSaleId() !=null) {
                     sb.append("串码：").append(ime).append("已核销；");
                 }else if(productIme.getProductImeUploadId() != null) {
                     sb.append("串码：").append(ime).append("已上报；");
                 }else{
                     if(checkAccess) {
-                        //TODO 需要增加判断，判断门店是否可以核销
-//                        if(!DepotUtils.isAccess(productIme.getDepot(), true)) {
-//                            message.addText("message_ime_allot_no_depot",productIme.getDepot().getName(),"message_ime_allot_no_allot_permission");
-//                        }
+                        if(!depotManager.isAccess(depot, true)) {
+                            sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的调拨权限，将自动生成调拨申请单；");
+                        }
                     }
                 }
             }
@@ -138,24 +129,21 @@ public class ImeAllotService {
 
         List<String> imeList = imeAllotForm.getImeList();
 
-        String errMsg = checkForImeAllot(imeList, true);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
-        }
-
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        Depot toDepot = depotRepository.findOne(imeAllotForm.getToDepotId());
 
         for(ProductIme productIme:productImes) {
             if(productIme.getProductImeSaleId()==null && productIme.getDepotId()!=null&&!productIme.getDepotId().equals(imeAllotForm.getToDepotId())) {
                 Depot fromDepot = depotRepository.findOne(productIme.getDepotId());
-                if(true) { //TODO 修改判断逻辑DepotUtils.isAccess(fromDepot,true)
+
+                if(depotManager.isAccess(fromDepot, true)) {
                     ImeAllot imeAllot = new ImeAllot();
                     imeAllot.setProductImeId(productIme.getId());
                     imeAllot.setFromDepotId(fromDepot.getId());
                     imeAllot.setToDepotId(imeAllotForm.getToDepotId());
                     imeAllot.setStatus(AuditStatusEnum.已通过.name());
                     imeAllot.setRemarks(imeAllotForm.getRemarks());
-                    imeAllot.setCrossArea(getCrossArea(imeAllotForm.getToDepotId(),productIme.getDepotId()));
+                    imeAllot.setCrossArea(!fromDepot.getAreaId().equals(toDepot.getAreaId()));
                     imeAllot.setAuditRemarks(imeAllotForm.getRemarks());
                     imeAllot.setAuditBy(RequestUtils.getAccountId());
                     imeAllot.setAuditDate(LocalDateTime.now());
@@ -172,7 +160,7 @@ public class ImeAllotService {
                     imeAllot.setToDepotId(imeAllotForm.getToDepotId());
                     imeAllot.setStatus(AuditStatusEnum.申请中.name());
                     imeAllot.setRemarks(imeAllotForm.getRemarks());
-                    imeAllot.setCrossArea(getCrossArea(imeAllotForm.getToDepotId(),productIme.getDepotId()));
+                    imeAllot.setCrossArea(!fromDepot.getAreaId().equals(toDepot.getAreaId()));
                     imeAllotRepository.save(imeAllot);
                 }
             }
@@ -216,6 +204,12 @@ public class ImeAllotService {
     }
 
     public void batchAllot(ImeAllotBatchForm imeAllotBatchForm) {
+
+        List<String> imeList =  CollectionUtil.extractToList(imeAllotBatchForm.getImeAllotSimpleFormList(),"ime");
+        String errMsg = checkForImeAllot(imeList, true);
+        if(StringUtils.isNotBlank(errMsg)){
+            throw new ServiceException(errMsg);
+        }
 
         for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
 

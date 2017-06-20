@@ -19,14 +19,8 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId",outputInstance = "name")
     private String officeName;
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
+    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "taskPoint")
+    private BigDecimal officeTaskPoint;
 
     public Integer getRealQty() {
         return realQty;
@@ -34,14 +28,6 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
 
     public void setRealQty(Integer realQty) {
         this.realQty = realQty;
-    }
-
-    public String getDemoPhoneTypeId() {
-        return demoPhoneTypeId;
-    }
-
-    public void setDemoPhoneTypeId(String demoPhoneTypeId) {
-        this.demoPhoneTypeId = demoPhoneTypeId;
     }
 
     public String getDemoPhoneTypeName() {
@@ -52,12 +38,16 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
         this.demoPhoneTypeName = demoPhoneTypeName;
     }
 
-    public String getOfficeId() {
-        return officeId;
+    public String getOfficeTaskPointString() {
+        return officeTaskPoint +"000%";
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public BigDecimal getOfficeTaskPoint() {
+        return officeTaskPoint;
+    }
+
+    public void setOfficeTaskPoint(BigDecimal officeTaskPoint) {
+        this.officeTaskPoint = officeTaskPoint;
     }
 
     public String getOfficeName() {
@@ -67,4 +57,31 @@ public class DemoPhoneTypeOfficeDto extends DataDto<DemoPhoneTypeOffice> {
     public void setOfficeName(String officeName) {
         this.officeName = officeName;
     }
+
+    public Integer getQty() {
+        return qty;
+    }
+
+    public void setQty(Integer qty) {
+        this.qty = qty;
+    }
+
+    public String getDemoPhoneTypeId() {
+        return demoPhoneTypeId;
+    }
+
+    public void setDemoPhoneTypeId(String demoPhoneTypeId) {
+        this.demoPhoneTypeId = demoPhoneTypeId;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
+    }
+
+
+
 }

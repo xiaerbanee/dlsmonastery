@@ -22,33 +22,33 @@
 <script>
     export default{
       data(){
+        return this.getData()
+      },
+      methods:{
+        getData(){
           return{
+            isCreate:this.$route.query.id===null,
             submitDisabled:false,
             inputForm:{},
-            submitData:{
-              username:'',
-              password:'',
-              remarks:'',
-            },
+            submitData:{},
             rules: {
               username: [{ required: true, message: "必填信息"}],
               password: [{ required: true, message: "必填信息"}],
             }
           }
-      },
-      methods:{
+        },
         formSubmit(){
           this.submitDisabled = true;
-          var form = this.$refs["inputForm"];
+          let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              util.copyValue(this.inputForm,this.submitData);
-              axios.post('/api/global/cloud/sys/accountKingdeeBook/save', qs.stringify(this.submitData)).then((response)=> {
+              axios.post('/api/global/cloud/sys/accountKingdeeBook/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                if(!this.inputForm.id){
-                  form.resetFields();
-                  this.submitDisabled = false;
+                if(this.isCreate){
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
                 } else {
+                  this.submitDisabled = false;
                   this.$router.push({name:'accountKingdeeBookList',query:util.getQuery("accountKingdeeBookList")})
                 }
               }).catch(function () {
@@ -58,11 +58,13 @@
               this.submitDisabled = false;
             }
           })
+        },initPage(){
+          axios.get('/api/global/cloud/sys/accountKingdeeBook/form',{params: {id:this.$route.query.id}}).then((response)=>{
+            this.inputForm = response.data;
+          });
         }
       },created(){
-        axios.get('/api/global/cloud/sys/accountKingdeeBook/form',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.inputForm = response.data;
-        })
+        this.initPage();
       }
     }
 </script>

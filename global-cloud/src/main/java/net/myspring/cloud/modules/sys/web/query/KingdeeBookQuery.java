@@ -12,9 +12,6 @@ public class KingdeeBookQuery extends BaseQuery {
     private String name;
     private String type;
 
-    private List<String> nameList;
-    private List<String> typeList;
-
     public String getCompanyId() {
         return companyId;
     }
@@ -37,21 +34,5 @@ public class KingdeeBookQuery extends BaseQuery {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public List<String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<String> typeList) {
-        this.typeList = typeList;
-    }
-
-    public List<String> getNameList() {
-        return nameList;
-    }
-
-    public void setNameList(List<String> nameList) {
-        this.nameList = nameList;
     }
 }

@@ -14,9 +14,9 @@
               <el-form-item :label="$t('menuCategoryList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('menuCategoryList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('menuCategoryList.sort')" :label-width="formLabelWidth">
-                <el-input v-model="formData.sort" auto-complete="off" :placeholder="$t('menuCategoryList.likeSearch')"></el-input>
-              </el-form-item>
+              <!--<el-form-item :label="$t('menuCategoryList.sort')" :label-width="formLabelWidth">-->
+                <!--<el-input v-model="formData.sort" auto-complete="off" :placeholder="$t('menuCategoryList.likeSearch')"></el-input>-->
+              <!--</el-form-item>-->
             </el-col>
           </el-row>
         </el-form>

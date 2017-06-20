@@ -67,10 +67,10 @@
               </el-dialog>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.pass')"  v-if="action=='audit'">
-              <bool-radio-group v-model="formProperty.pass"></bool-radio-group>
+              <bool-radio-group v-model="formData.pass"></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.passRemarks')"  v-if="action=='audit'">
-              <el-input v-model="formProperty.passRemarks" :placeholder="$t('shopBuildDetail.inputRemarks')" type="textarea"></el-input>
+              <el-input v-model="formData.passRemarks" :placeholder="$t('shopBuildDetail.inputRemarks')" type="textarea"></el-input>
             </el-form-item>
             <el-form-item v-if="action=='audit'">
               <el-button type="primary" :disabled="submitDisabled"  @click="passSubmit()">{{$t('shopBuildDetail.save')}}</el-button>
@@ -89,35 +89,38 @@
   export default{
     components:{processDetails,boolRadioGroup},
     data(){
-      return{
-        submitDisabled:false,
-        isCreate:this.$route.query.id==null,
-        action:this.$route.query.action,
-        inputForm:{},
-        formProperty:{},
-        submitData:{
-            id:this.$route.query.id,
-          pass:'',
-          passRemarks:"",
-        },
-        fileList1:[],
-        fileList2:[],
-        dialogImageUrl:'',
-        dialogVisible:false
-      }
+      return this.getData();
     },
     methods:{
+        getData(){
+          return{
+            submitDisabled:false,
+            isCreate:this.$route.query.id==null,
+            action:this.$route.query.action,
+            inputForm:{},
+            formData:{
+              extra:{}
+            },
+            fileList1:[],
+            fileList2:[],
+            dialogImageUrl:'',
+            dialogVisible:false
+          }
+        },
       passSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.formProperty,this.submitData);
-            axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(this.submitData)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
+            axios.post('/api/ws/future/layout/shopBuild/audit', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
+              this.$message(response.data.message);
+              if(response.data.success){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+                this.submitDisabled = true;
+                this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList")})
               }
-            }).catch(function () {
+            }).catch( ()=> {
               this.submitDisabled = false;
             });
           }else{
@@ -131,24 +134,26 @@
       },handlePreview2(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
-      },
+      },initPage(){
+        axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.inputForm=response.data;
+          if(this.inputForm.scenePhoto !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
+              this.fileList1= response.data;
+            });
+          }
+          if(this.inputForm.confirmPhoto !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
+              this.fileList2= response.data;
+            });
+          }
+        })
+        axios.get('/api/ws/future/layout/shopBuild/getAuditForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.formData = response.data;
+        })
+      }
     },created(){
-      axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm=response.data;
-        if(this.inputForm.scenePhoto !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-            this.fileList1= response.data;
-          });
-        }
-        if(this.inputForm.confirmPhoto !=null) {
-          axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
-            this.fileList2= response.data;
-          });
-        }
-      })
-      axios.get('/api/ws/future/layout/shopBuild/getAuditForm').then((response)=>{
-        this.formProperty = response.data;
-      })
+      this.initPage();
     }
   }
 </script>

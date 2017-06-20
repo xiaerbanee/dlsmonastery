@@ -1,10 +1,10 @@
 package net.myspring.future.modules.basic.service;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
@@ -13,9 +13,7 @@ import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
-import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -47,6 +45,8 @@ public class DepotStoreService {
     private DepotRepository depotRepository;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
         Page<DepotStoreDto> page=depotStoreRepository.findPage(pageable,depotStoreQuery);
@@ -54,23 +54,20 @@ public class DepotStoreService {
         return page;
     }
 
-    public DepotStoreForm getForm(DepotStoreForm depotStoreForm) {
-        if(!depotStoreForm.isCreate()) {
-            DepotStore depotStore =depotStoreRepository.findOne(depotStoreForm.getId());
-            depotStoreForm= BeanUtil.map(depotStore,DepotStoreForm.class);
-            Depot depot=depotRepository.findOne(depotStoreForm.getDepotId());
-            depotStoreForm.setDepotForm(BeanUtil.map(depot,DepotForm.class));
-            cacheUtils.initCacheInput(depotStoreForm);
+    public DepotStoreDto findOne(DepotStoreDto depotStoreDto) {
+        if(!depotStoreDto.isCreate()) {
+            DepotStore depotStore =depotStoreRepository.findOne(depotStoreDto.getId());
+            depotStoreDto= BeanUtil.map(depotStore,DepotStoreDto.class);
+            cacheUtils.initCacheInput(depotStoreDto);
         }
-        return depotStoreForm;
+        return depotStoreDto;
     }
 
     public DepotStore save(DepotStoreForm depotStoreForm) {
         DepotStore depotStore;
-        DepotForm depotForm = depotStoreForm.getDepotForm();
         //保存depot
-        Depot depot = BeanUtil.map(depotForm, Depot.class);
-        depot.setNamePinyin(StringUtils.getFirstSpell(depotStoreForm.getDepotForm().getName()));
+        Depot depot = BeanUtil.map(depotStoreForm.getDepotForm(), Depot.class);
+        depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
         depotRepository.save(depot);
         //保存depotStore
         if(depotStoreForm.isCreate()) {
@@ -129,5 +126,37 @@ public class DepotStoreService {
         depotStoreRepository.logicDelete(id);
     }
 
-
+    public void syn() {
+        List<BdStock> bdstocks = cloudClient.getAllStock();
+        List<DepotStore> outIdDepotStoreList=depotStoreRepository.findByOutIdIn(CollectionUtil.extractToList(bdstocks,"FStockId"));
+        Map<String,DepotStore> depotStoreMap=CollectionUtil.extractToMap(outIdDepotStoreList,"outId");
+        List<Depot> depotList=depotRepository.findByNameList(CollectionUtil.extractToList(bdstocks,"FName"));
+        Map<String,Depot> depotMap=CollectionUtil.extractToMap(depotList,"name");
+        for(BdStock bdStock:bdstocks){
+            DepotStore store=depotStoreMap.get(bdStock.getFStockId());
+            if(store==null){
+                store=new DepotStore();
+            }
+            Depot depot=depotMap.get(bdStock.getFName());
+            if(depot==null){
+                depot=new Depot();
+            }
+            store.setCompanyId(RequestUtils.getCompanyId());
+            store.setOutId(bdStock.getFStockId());
+            store.setOutGroupId(bdStock.getFGroup());
+            store.setOutGroupName(bdStock.getFGroupName());
+            store.setOutDate(bdStock.getFModifyDate());
+            store.setOutCode(bdStock.getFNumber());
+            store.setEnabled(true);
+            depotStoreRepository.save(store);
+            depot.setName(bdStock.getFName());
+            store.setEnabled(true);
+            depot.setIsHidden(false);
+            depot.setNamePinyin(StringUtils.getFirstSpell(depot.getName()));
+            depot.setDepotStoreId(store.getId());
+            depotRepository.save(depot);
+            store.setDepotId(depot.getId());
+            depotStoreRepository.save(store);
+        }
+    }
 }

@@ -3,19 +3,26 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.dto.CustomerDto;
-import net.myspring.future.modules.basic.dto.DepotAccountDetailDto;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -31,6 +38,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,12 +55,19 @@ public class DepotService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
     private OfficeClient officeClient;
-
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private ShopDepositRepository shopDepositRepository;
+    @Autowired
+    private CloudClient cloudClient;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
 
@@ -79,16 +94,6 @@ public class DepotService {
         return depotRepository.findStoreList(depotQuery);
     }
 
-
-
-    public List<DepotDto> findStoreList(String shipType) {
-        //TODO  需要完成根據shipType選擇倉庫
-        return findStoreList(new DepotQuery());
-
-    }
-
-
-
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndIdIn(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
@@ -114,13 +119,22 @@ public class DepotService {
             throw new ServiceException("查询条件请选择为70天以内");
         }
 
-        depotAccountQuery.setAccountTaxPermitted(true);
-        //TODO  判断是否有tax权限
-        Page<DepotAccountDto> depotAccountDtoList = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
-        //TODO 设置应收项
-        cacheUtils.initCacheInput(depotAccountDtoList.getContent());
+        Page<DepotAccountDto> page = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
+        cacheUtils.initCacheInput(page.getContent());
 
-        return depotAccountDtoList;
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+//        customerReceiveQuery.setDateRange(depotAccountQuery.getDutyDateRange());
+        customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
+
+        for(DepotAccountDto depotAccountDto : page.getContent()){
+            CustomerReceiveDto customerReceiveDto = customerReceiveDtoMap.get(depotAccountDto.getClientOutId());
+            depotAccountDto.setQcys(customerReceiveDto.getBeginShouldGet());
+            depotAccountDto.setQmys(customerReceiveDto.getEndShouldGet());
+        }
+
+        return page;
     }
 
     public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
@@ -200,10 +214,6 @@ public class DepotService {
 
     }
 
-    public List<DepotAccountDetailDto> depotAccountDetailList(DepotAccountQuery depotAccountQuery) {
-        return null;
-    }
-
     public void scheduleSynArea(){
         List<Depot> depotList=depotRepository.findAll();
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
@@ -228,9 +238,24 @@ public class DepotService {
         }
     }
 
-    public List<CustomerDto>  getCustomerList(){
-        List<CustomerDto> customerDtoList=depotRepository.getCustomer();
-        cacheUtils.initCacheInput(customerDtoList);
-        return customerDtoList;
+    public List<DepotDto> findAdStoreDtoList() {
+        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
+        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(RequestUtils.getCompanyId(), outGroupId);
+        cacheUtils.initCacheInput(adStoreDtoList);
+        return adStoreDtoList;
+
+    }
+
+    public String getDefaultDepartMent(String depotId) {
+        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
+            return null;
+        }
+        BdDepartment bdDepartment = cloudClient.findDepartmentByOutId(clientDto.getOutId());
+        if(bdDepartment == null){
+            return null;
+        }
+        return bdDepartment.getFNumber();
+
     }
 }

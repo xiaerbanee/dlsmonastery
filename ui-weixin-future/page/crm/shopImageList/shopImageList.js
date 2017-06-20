@@ -15,22 +15,25 @@ Page({
   onLoad: function (option) {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/shopImage/getQuery"),
+      url: $util.getUrl("ws/future/layout/shopImage/getQuery"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        that.setData({ 'formProperty.areaList': res.data.areaList })
+        that.setData({ 'formProperty.areaList': res.data.extra.areaList })
       }
     })
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function(){
+    app.autoLogin(function () {
       that.initPage()
     });
   },
-  initPage:function() {
+  initPage: function () {
     var that = this;
     that.pageRequest();
   },
@@ -42,8 +45,11 @@ Page({
       duration: 10000,
       success: function (res) {
         wx.request({
-          url: $util.getUrl("crm/shopImage"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          url: $util.getUrl("ws/future/layout/shopImage"),
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
           data: that.data.formData,
           success: function (res) {
             console.log(res.data)
@@ -75,8 +81,13 @@ Page({
   bindOffice: function (e) {
     var that = this;
     that.setData({
-      'formData.office.id': that.data.formProperty.areaList[e.detail.value].id,
-      'formData.office.name': that.data.formProperty.areaList[e.detail.value].name
+      'formData.officeId': that.data.formProperty.areaList[e.detail.value].id,
+      'formData.officeName': that.data.formProperty.areaList[e.detail.value].name
+    })
+  },
+  bindShop: function (e) {
+    wx.navigateTo({
+      url: '/page/crm/depotSearch/depotSearch'
     })
   },
   itemActive: function (e) {
@@ -86,8 +97,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -98,26 +107,27 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
-    var itemList = that.data.activeItem.actionList;
-    if (!itemList) { return; }
     wx.showActionSheet({
-      itemList: itemList,
+      itemList: ["修改", "详细", "删除"],
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "修改") {
+          if (res.tapIndex == 0) {
             wx.navigateTo({
               url: '/page/crm/shopImageForm/shopImageForm?action=update&id=' + id
             })
-          } else if (itemList[res.tapIndex] == "详细") {
+          } else if (res.tapIndex == 1) {
             wx.navigateTo({
               url: '/page/crm/shopImageForm/shopImageForm?action=detail&id=' + id
             })
           }
-          else if (itemList[res.tapIndex] == "删除") {
+          else if (res.tapIndex == 2) {
             wx.request({
-              url: $util.getUrl("crm/shopImage/delete"),
+              url: $util.getUrl("ws/future/layout/shopImage/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId },
+              header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              },
               success: function (res) {
                 that.pageRequest();
               }

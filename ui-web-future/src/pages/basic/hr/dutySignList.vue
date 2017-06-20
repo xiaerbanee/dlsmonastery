@@ -21,11 +21,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('dutySignList.officeName')" :label-width="formLabelWidth">
-                <el-select v-model="formData.officeName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
-                  <el-option v-for="office in formData.extra.officeList" :key="office.name" :label="office.name" :value="office.name"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$t('dutySignList.positionName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
                   <el-option v-for="position in formData.extra.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
@@ -97,7 +92,6 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

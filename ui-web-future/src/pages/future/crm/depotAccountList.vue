@@ -10,19 +10,19 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('depotAccountList.name')" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('depotAccountList.likeSearch')"></el-input>
+              <el-form-item :label="$t('depotAccountList.name')">
+                <el-input v-model="formData.name" :placeholder="$t('depotAccountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('depotAccountList.dateRange')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.dateRange')">
                 <date-range-picker v-model="formData.dutyDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('depotAccountList.officeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.officeName')">
                 <office-select v-model="formData.officeId" @afterInit="setSearchText" ></office-select>
               </el-form-item>
-              <el-form-item :label="$t('depotAccountList.isSpecialityStore')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotAccountList.isSpecialityStore')">
                 <bool-select v-model="formData.specialityStore" ></bool-select>
               </el-form-item>
             </el-col>
@@ -43,7 +43,7 @@
         <el-table-column prop="ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
         <el-table-column fixed="right" :label="$t('depotAccountList.operation')" >
           <template scope="scope">
-            <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('depotAccountList.detail')}}</el-button></div>
+            <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemDetail(scope.row.clientOutId)">{{$t('depotAccountList.detail')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -62,14 +62,15 @@
     data() {
       return {
         page: {},
+        pageHeight: 600,
         searchText:"",
         formData:{
             extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
+        accountTaxPermitted:false,
       };
     },
     methods: {
@@ -81,7 +82,9 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
+        //判断是否有tax权限
+        submitData.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
         util.setQuery("depotAccountList", submitData);
         axios.get('/api/ws/future/basic/depot/findDepotAccountList?' + qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -100,38 +103,37 @@
       }, search() {
         this.formVisible = false;
         this.pageRequest();
-      }, itemAction: function (id, action) {
-        if(action==="detail") {
-          this.$router.push({name: 'depotAccountDetail', query: {id: id, dateRange: this.formData.dateRange}});
-        }
+      }, itemDetail(clientOutId) {
+          this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dutyDateRange: this.formData.dutyDateRange}});
       }, exportAllDepots() {
 
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.submitData.dutyDateRange}}).then((response)=> {
+
+        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.formData.dutyDateRange, accountTaxPermitted:this.accountTaxPermitted}}).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportConfirmation(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted}}).then((response) => {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
       }).catch(()=>{});
 
     }, exportDetail(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.submitData.dutyDateRange,specialityStore: this.submitData.specialityStore}}).then((response) => {
+        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted}}).then((response) => {
           window.location.href = "/api/general/sys/folderFile/download?id=" + response.data;
         });
       }).catch(()=>{});
     }
   }, created (){
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
+      this.accountTaxPermitted = util.isPermit("crm:depot:depotAccountTax");
+      this.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/basic/depot/getDepotAccountQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

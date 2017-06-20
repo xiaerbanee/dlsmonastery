@@ -10,12 +10,12 @@
         开单日期：{{goodsOrder.billDate}}
       </div>
       <div class="span3">
-        出货仓：{{goodsOrder.store.name}}，出货单号：{{goodsOrder.businessId}}
+        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.businessId}}
       </div>
     </div>
     <div class="row">
       <div class="span10">
-        收货单位：{{goodsOrder.shop.name}}&nbsp;总店：{{goodsOrder.shop.parent==null?" ":goodsOrder.shop.parent.name}} 	&nbsp;&nbsp;备注摘要：{{goodsOrder.shop.contator }}，{{goodsOrder.shop.mobilePhone}}，{{goodsOrder.shop.address}}，{{goodsOrder.remarks}}
+        收货单位：{{goodsOrder.shopName}}&nbsp;总店：	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}
       </div>
     </div>
     <table class="table table-bordered">
@@ -27,19 +27,12 @@
         <td>单价</td>
         <td>合计</td>
       </tr>
-      <tr v-for="item in goodsOrder.goodsOrderDetailList">
-        <td>{{item.product.name}}</td>
-        <td>套</td>
+      <tr v-for="item in goodsOrder.productList">
+        <td>{{item.productName}}</td>
+        <td>{{item.unit}}</td>
         <td>{{item.qty}}</td>
         <td>{{item.price}}</td>
-        <td>{{item.qty*item.price}}</td>
-      </tr>
-      <tr>
-        <td>合计</td>
-        <td></td>
-        <td>{{total.totalQty}}</td>
-        <td></td>
-        <td>{{total.totalPrice}}</td>
+        <td>{{item.total}}</td>
       </tr>
       </tbody>
     </table>
@@ -48,7 +41,7 @@
       <div class="span1">记账：</div>
       <div class="span2">收款：</div>
       <div class="span2">仓管员：</div>
-      <div class="span2">制单：{{goodsOrder.created.loginName}}</div>
+      <div class="span2">制单：</div>
       <div class="span2">提货人：</div>
     </div>
   </div>
@@ -60,13 +53,6 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         goodsOrder:{
-          store:{name:""},
-          shop:{name:"",parent:{name:""}},
-          created:{loginName:""}
-        },
-        total:{
-          totalQty:"",
-          totalPrice:""
         },
         rules: {
           pass: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
@@ -75,21 +61,12 @@
       }
     },
     mounted() {
-      setTimeout("window.print()",5000);
+      setTimeout("window.print()",1000);
     },
     methods:{
       findOne(){
-        axios.get('/api/crm/goodsOrder/print',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
           this.goodsOrder=response.data;
-          let list=response.data.goodsOrderDetailList;
-          let totalQty=0;
-          let totalPrice=0
-          for(let i=0 ; i<list.length ; i++){
-            totalQty=parseInt(list[i].qty)+totalQty;
-            totalPrice=parseInt(list[i].qty*list[i].price)+totalPrice;
-          }
-         this.total.totalPrice=totalPrice;
-          this.total.totalQty=totalQty;
         })
       }
     },created(){

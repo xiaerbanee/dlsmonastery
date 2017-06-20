@@ -2,22 +2,20 @@ package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.common.enums.BoolEnum;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.*;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.*;
+import net.myspring.future.common.enums.DepotStoreTypeEnum;
+import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
+import net.myspring.future.common.enums.ReportTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.DictEnumClient;
+import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.DepotStore;
-import net.myspring.future.modules.basic.dto.DepotReportDto;
-import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.DepotStoreService;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
-import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.mapper.BeanUtil;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +44,10 @@ public class DepotStoreController {
     private OfficeClient officeClient;
     @Autowired
     private DepotService depotService;
+    @Autowired
+    private DictMapClient dictMapClient;
+    @Autowired
+    private DictEnumClient dictEnumClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotStoreDto> list(Pageable pageable, DepotStoreQuery depotStoreQuery){
@@ -54,10 +55,26 @@ public class DepotStoreController {
         return page;
     }
 
+    @RequestMapping(value = "findOne")
+    public DepotStoreDto findOne(DepotStoreDto depotStoreDto){
+        depotStoreDto=depotStoreService.findOne(depotStoreDto);
+        return depotStoreDto;
+    }
+
     @RequestMapping(value = "getForm")
     public DepotStoreForm getForm(DepotStoreForm depotStoreForm){
-        depotStoreForm=depotStoreService.getForm(depotStoreForm);
         depotStoreForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
+        depotStoreForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
+        depotStoreForm.getExtra().put("areaList", dictMapClient.findByCategory(DictMapCategoryEnum.门店_地区属性.name()));
+        depotStoreForm.getExtra().put("channelList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_渠道类型.name())));
+        depotStoreForm.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));
+        depotStoreForm.getExtra().put("salePointList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_售点类型.name())));
+        depotStoreForm.getExtra().put("turnoverList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_营业额分类.name())));
+        depotStoreForm.getExtra().put("shopAreaList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_店面尺寸.name())));
+        depotStoreForm.getExtra().put("carrierList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_运营商属性.name())));
+        depotStoreForm.getExtra().put("businessCenterList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_核心商圈.name())));
+        depotStoreForm.getExtra().put("specialityStoreList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_体验店类型.name())));
+        depotStoreForm.getExtra().put("shopMonthTotalList",dictEnumClient.findByCategory((DictEnumCategoryEnum.SHOP_MONTH_TOTAL.name())));
         return depotStoreForm;
     }
 

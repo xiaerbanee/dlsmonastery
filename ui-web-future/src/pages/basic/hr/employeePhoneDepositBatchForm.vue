@@ -17,111 +17,126 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-  export default{
-    data(){
-      return{
-        formData:{},
-        inputForm:{
-          data:null
-        },
-        rules:{},
-        table:null,
-        settings: {
-          colHeaders: ["员工","门店","收款金额","部门","手机型号","备注"],
-          rowHeaders:true,
-          maxRows:1000,
-          columns: [{
-            data:"accountName",
-            type:'text',
-            strict:true,
-            width:150
-          },{
-            data:"depot",
-            type: "autocomplete",
-            allowEmpty: true,
-            strict: true,
-            tempDepotNames:[],
-            source:function (query, process) {
-              var that = this;
-              if(that.tempDepotNames.indexOf(query)>=0) {
-                process(that.tempDepotNames);
-              } else {
-                var depotNames = new Array();
-                if(query.length>=2) {
-                  axios.get('/api/ws/future/basic/depot/directShop?name='+query).then((response)=>{
-                    if(response.data.length>0) {
-                      for(var index in response.data) {
-                        var depotName = response.data[index].name;
-                        depotNames.push(depotName);
-                        if(that.tempDepotNames.indexOf(depotName)<0) {
-                          that.tempDepotNames.push(depotName);
-                        }
-                      }
-                    }
-                    process(depotNames);
-                  });
-                } else {
-                  process(depotNames);
-                }
-              }
-            },
-            width:200
-          },{
-            data:"amount",
-            type:'text',
-            allowEmpty:false,
-            width:150
-          },{
-            data:"department",
-            type: 'autocomplete',
-            source:departments,
-            strict: true,
-            allowEmpty:false,
-            width:200
-
-          },{
-            data:"productName",
-            type: "autocomplete",
-            allowEmpty: true,
-            strict: true,
-            tempProductNames:[],
-            source:function (query, process) {
-              var that = this;
-              if(that.tempProductNames.indexOf(query)>=0) {
-                process(that.tempProductNames);
-              } else {
-                var productNames = new Array();
-                if(query.length>=2) {
-                  axios.get('/api/ws/future/basic/product/searchFullText?key='+query).then((response)=>{
-                    if(response.data.length>0) {
-                      for(var index in response.data) {
-                        var productName = response.data[index].name;
-                        productNames.push(productName);
-                        if(that.tempProductNames.indexOf(productName)<0) {
-                          that.tempProductNames.push(productName);
-                        }
-                      }
-                    }
-                    process(productNames);
-                  });
-                } else {
-                  process(productNames);
-                }
-              }
-            },
-            width:150
-          },{
-            data:"remarks",
-            width:150
-          }]
-        },
-      }
-    },
+  var table=null
+    export default{
+      data(){
+        return this.getData()
+      },
     mounted () {
       this.table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
     methods:{
+      getData(){
+        return {
+          formData:{},
+          inputForm:{
+            data:null
+          },
+          rules:{},
+          settings: {
+            colHeaders: ["员工","门店","收款金额","部门","手机型号","备注"],
+            rowHeaders:true,
+            maxRows:1000,
+            columns: [{
+              data:"accountName",
+              type:'text',
+              strict:true,
+              width:150
+            },{
+              data:"depot",
+              type: "autocomplete",
+              allowEmpty: true,
+              strict: true,
+              tempDepotNames:[],
+              source:function (query, process) {
+                var that = this;
+                if(that.tempDepotNames.indexOf(query)>=0) {
+                  process(that.tempDepotNames);
+                } else {
+                  var depotNames = new Array();
+                  if(query.length>=2) {
+                    axios.get('/api/ws/future/basic/depot/directShop?name='+query).then((response)=>{
+                      if(response.data.length>0) {
+                        for(var index in response.data) {
+                          var depotName = response.data[index].name;
+                          depotNames.push(depotName);
+                          if(that.tempDepotNames.indexOf(depotName)<0) {
+                            that.tempDepotNames.push(depotName);
+                          }
+                        }
+                      }
+                      process(depotNames);
+                    });
+                  } else {
+                    process(depotNames);
+                  }
+                }
+              },
+              width:200
+            },{
+              data:"amount",
+              type:'text',
+              allowEmpty:false,
+              width:150
+            },{
+              data:"department",
+              type: 'autocomplete',
+              strict: true,
+              allowEmpty:false,
+              width:200
+
+            },{
+              data:"productName",
+              type: "autocomplete",
+              allowEmpty: true,
+              strict: true,
+              tempProductNames:[],
+              source:function (query, process) {
+                var that = this;
+                if(that.tempProductNames.indexOf(query)>=0) {
+                  process(that.tempProductNames);
+                } else {
+                  var productNames = new Array();
+                  if(query.length>=2) {
+                    axios.get('/api/ws/future/basic/product/searchFullText?key='+query).then((response)=>{
+                      if(response.data.length>0) {
+                        for(var index in response.data) {
+                          var productName = response.data[index].name;
+                          productNames.push(productName);
+                          if(that.tempProductNames.indexOf(productName)<0) {
+                            that.tempProductNames.push(productName);
+                          }
+                        }
+                      }
+                      process(productNames);
+                    });
+                  } else {
+                    process(productNames);
+                  }
+                }
+              },
+              width:150
+            },{
+              data:"remarks",
+              width:150
+            }],
+            afterChange:function(changes, source) {
+              if (source != "loadData" && changes && changes.length==1) {
+                var row = changes[0][0]; //行数
+                var style=changes[0][1];//列名
+                if(style=='depot'){
+                  var name=changes[0][3];//表格值
+                  axios.post('/api/ws/future/employeePhoneDeposit/searchDepartment?depotName='+name.trim()).then((response)=> {
+                    this.table('setDataAtCell', row, 3, response.data);
+                  })
+                }
+              }
+            }
+          },
+        }
+      },
       formSubmit(){
+        var that=this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -134,20 +149,31 @@
               }
             }
             this.inputForm.data = JSON.stringify(this.inputForm.data);
-            axios.post('/api/basic/hr/employeePhoneDeposit/batchSave',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/basic/employeePhoneDeposit/batchSave',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
+              if(this.isCreate){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+              }else {
+                this.submitDisabled = false;
+                this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
+              }
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
           }
         })
       }
+    },created(){
+        axios.get('/api/ws/future/basic/employeePhoneDeposit/getBatchForm').then((response)=> {
+          this.settings.columns[3].source=response.data.extra.departments;
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+        })
     }
   }
 </script>
 <style>
-  @import "~handsontable/dist/handsontable.full.css";
+  @import "../../../../node_modules/handsontable/dist/handsontable.full.css";
 </style>

@@ -75,16 +75,16 @@
           rules: {
             shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            fixtureType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-            accountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
           headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -102,13 +102,15 @@
                     this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
                   }
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch(() => {
+                this.submitDisabled = false;
               });
+          }else{
+            this.submitDisabled = false;
           }
         })
       },shopChange(){
-        axios.get('/api/basic/sys/dictEnum/findByValue?value=' + this.inputForm.fixtureType).then((response)=>{
+        axios.get('/api/basic/sys/dictEnum/findByValue',{params: {value:this.inputForm.fixtureType,category:'装修类别'}}).then((response)=>{
           this.fixtureContent=response.data;
         })
       },
@@ -121,20 +123,22 @@
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(this.inputForm.id != null){
-              this.shopDisabled = true;
-            }
-            if(this.inputForm.fixtureType!=null){
-              this.shopChange();
-            }
-            if(this.inputForm.scenePhoto !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
-                this.fileList= response.data;
-              });
-            }
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (this.inputForm.id != null) {
+                this.shopDisabled = true;
+              }
+              if (this.inputForm.fixtureType != null) {
+                this.shopChange();
+              }
+              if (this.inputForm.scenePhoto != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.scenePhoto}}).then((response) => {
+                  this.fileList = response.data;
+                });
+              }
+            });
+          }
         });
       }
     },created () {

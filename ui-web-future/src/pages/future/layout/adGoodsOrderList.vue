@@ -5,15 +5,15 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adGoodsOrder:edit'">{{$t('adGoodsOrderList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
+        <el-button type="primary" @click="itemDetailList"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.itemDetailList')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
-          <el-row :gutter="4">
+          <el-row :gutter="12">
             <el-col :span="12">
-              <el-form-item :label="$t('adGoodsOrderList.orderCode')">
-                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
-              </el-form-item>
+
               <el-form-item :label="$t('adGoodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
@@ -50,6 +50,9 @@
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
                 <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
+                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -57,7 +60,7 @@
           <el-button type="primary" @click="search()">{{$t('adGoodsOrderList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" sortable></el-table-column>
@@ -82,6 +85,7 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -112,6 +116,7 @@
         },
         initPromise:{},
         formVisible: false,
+        pageHeight:600,
       };
     },
     methods: {
@@ -142,6 +147,8 @@
         this.pageRequest();
       }, itemAdd(){
         this.$router.push({name: 'adGoodsOrderForm'});
+      }, itemDetailList(){
+        this.$router.push({name: 'adGoodsOrderDetailList'});
       }, itemAction: function (id, action) {
         if (action === "edit") {
           this.$router.push({name: 'adGoodsOrderForm', query: {id: id}})
@@ -151,20 +158,36 @@
           this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "audit"}})
         } else if (action === "bill") {
           this.$router.push({name: 'adGoodsOrderBill', query: {id: id}})
-        } else if (action === "发货") {
+        } else if (action === "ship") {
           this.$router.push({name: 'adGoodsOrderShip', query: {id: id}})
-        } else if (action === "签收") {
+        } else if (action === "sign") {
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
+        } else if (action === "print") {
+          window.open('/#/future/layout/adGoodsOrderPrint?id='+id, '', '');
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
               this.$message(response.data.message);
               this.pageRequest();
-            })
+            });
           }).catch(()=>{});
         }
+      },stypeOfPrintBtn(isPrint){
+        if(!isPrint){
+          return "color:#ff0000;";
+        }else {
+          return "";
+        }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          axios.get('/api/ws/future/layout/adGoodsOrder/export',{params: util.deleteExtra(this.formData)}).then((response)=> {
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
+
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/layout/adGoodsOrder/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

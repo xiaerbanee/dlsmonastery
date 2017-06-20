@@ -17,6 +17,8 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
+import net.myspring.future.modules.crm.dto.GoodsOrderPrintDto;
+import net.myspring.future.modules.crm.dto.ProductPrintDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
@@ -161,7 +163,7 @@ public class GoodsOrderShipService {
         return result;
     }
 
-    public void print(String goodsOrderId) {
+    public GoodsOrderPrintDto print(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         if (expressOrder != null) {
@@ -170,9 +172,49 @@ public class GoodsOrderShipService {
             }
             expressOrderRepository.save(expressOrder);
         }
+        List<String> depotIdList=Lists.newArrayList(goodsOrder.getShopId(),goodsOrder.getStoreId());
+        Map<String,Depot> depotMap=depotRepository.findMap(depotIdList);
+        GoodsOrderPrintDto goodsOrderPrintDto=BeanUtil.map(goodsOrder,GoodsOrderPrintDto.class);
+        Depot shop=depotMap.get(goodsOrder.getShopId());
+        goodsOrderPrintDto.setStoreName(depotMap.get(goodsOrder.getStoreId()).getName());
+        goodsOrderPrintDto.setShopName(shop.getName());
+        goodsOrderPrintDto.setExpressOrderCode(expressOrder.getOutCode());
+        goodsOrderPrintDto.setRemarks(shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress());
+        List<GoodsOrderDetail> goodsOrderDetailList=goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
+        List<String> productIdList=CollectionUtil.extractToList(goodsOrderDetailList,"productId");
+        Map<String,Product> productMap=productRepository.findMap(productIdList);
+        List<ProductPrintDto> productPrintDtoList=Lists.newArrayList();
+        Integer totalQty=0;
+        BigDecimal totalPrice=BigDecimal.ZERO;
+        BigDecimal total=BigDecimal.ZERO;
+        for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList){
+            if(goodsOrderDetail.getRealBillQty()>0){
+                ProductPrintDto productPrintDto=new ProductPrintDto();
+                productPrintDto.setQty(goodsOrderDetail.getRealBillQty());
+                productPrintDto.setUnit("套");
+                totalQty+=productPrintDto.getQty();
+                Product product=productMap.get(goodsOrderDetail.getProductId());
+                productPrintDto.setProductName(product.getName());
+                if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
+                    productPrintDto.setPrice(product.getRetailPrice());
+                    productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
+                    totalPrice=totalPrice.add(productPrintDto.getPrice());
+                    total=total.add(productPrintDto.getTotal());
+                }
+                productPrintDtoList.add(productPrintDto);
+            }
+        }
+        ProductPrintDto productPrintDto=new ProductPrintDto();
+        productPrintDto.setProductName("合计");
+        productPrintDto.setQty(totalQty);
+        productPrintDto.setPrice(totalPrice.compareTo(BigDecimal.ZERO)<=0?null:totalPrice);
+        productPrintDto.setTotal(total.compareTo(BigDecimal.ZERO)<=0?null:total);
+        productPrintDtoList.add(productPrintDto);
+        goodsOrderPrintDto.setProductList(productPrintDtoList);
+        return goodsOrderPrintDto;
     }
 
-    public void shipPrint(String goodsOrderId) {
+    public GoodsOrderPrintDto shipPrint(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         if (expressOrder != null) {
@@ -181,6 +223,13 @@ public class GoodsOrderShipService {
             }
             expressOrderRepository.save(expressOrder);
         }
+        GoodsOrderPrintDto goodsOrderPrintDto=new GoodsOrderPrintDto();
+        Depot depot=depotRepository.findOne(goodsOrder.getShopId());
+        goodsOrderPrintDto.setContator(depot.getContator());
+        goodsOrderPrintDto.setAddress(depot.getAddress());
+        goodsOrderPrintDto.setShopName(depot.getName());
+        goodsOrderPrintDto.setMobilePhone(depot.getMobilePhone());
+        return goodsOrderPrintDto;
     }
 
 

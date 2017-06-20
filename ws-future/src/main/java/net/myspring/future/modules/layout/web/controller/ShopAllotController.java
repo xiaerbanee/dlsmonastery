@@ -82,6 +82,11 @@ public class ShopAllotController {
 
     }
 
+    @RequestMapping(value="findTotalPrice")
+    public Map<String, Object> findTotalPrice(String id) {
+        return  shopAllotService.findTotalPrice(id);
+    }
+
     @RequestMapping(value="findDetailListForViewOrAudit")
     public List<ShopAllotDetailDto> findDetailListForViewOrAudit(String id) {
         return  shopAllotService.findDetailListForViewOrAudit(id);

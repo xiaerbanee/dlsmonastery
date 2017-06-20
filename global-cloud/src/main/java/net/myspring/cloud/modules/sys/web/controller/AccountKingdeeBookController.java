@@ -29,9 +29,9 @@ public class AccountKingdeeBookController {
         return page;
     }
 
-    @RequestMapping(value = "queryProperty")
-    public AccountKingdeeBookQuery getQueryProperty(){
-        return accountKingdeeBookService.getQueryProperty();
+    @RequestMapping(value = "getQuery")
+    public AccountKingdeeBookQuery getQuery(){
+        return accountKingdeeBookService.getQuery();
     }
 
     @RequestMapping(value = "form")

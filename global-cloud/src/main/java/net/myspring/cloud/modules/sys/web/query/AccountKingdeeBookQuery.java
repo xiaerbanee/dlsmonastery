@@ -1,18 +1,16 @@
 package net.myspring.cloud.modules.sys.web.query;
 
-import java.util.List;
+
+import net.myspring.cloud.common.query.BaseQuery;
 
 /**
  * Created by lihx on 2017/5/10.
  */
-public class AccountKingdeeBookQuery {
+public class AccountKingdeeBookQuery extends BaseQuery {
     private String accountId;
     private String username;
     private String kingdeeBookName;
     private String kingdeeBookType;
-    private String companyId;
-    private List<String> kingdeeBookTypeList;
-    private List<String> kingdeeBookNameList;
 
     public String getAccountId() {
         return accountId;
@@ -44,29 +42,5 @@ public class AccountKingdeeBookQuery {
 
     public void setKingdeeBookType(String kingdeeBookType) {
         this.kingdeeBookType = kingdeeBookType;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public List<String> getKingdeeBookTypeList() {
-        return kingdeeBookTypeList;
-    }
-
-    public void setKingdeeBookTypeList(List<String> kingdeeBookTypeList) {
-        this.kingdeeBookTypeList = kingdeeBookTypeList;
-    }
-
-    public List<String> getKingdeeBookNameList() {
-        return kingdeeBookNameList;
-    }
-
-    public void setKingdeeBookNameList(List<String> kingdeeBookNameList) {
-        this.kingdeeBookNameList = kingdeeBookNameList;
     }
 }

@@ -54,6 +54,15 @@ public class DepotShopForm extends BaseForm<DepotShop> {
     private String townId;
     private String townName;
     private String depotName;
+    private String chainType;
+
+    public String getChainType() {
+        return chainType;
+    }
+
+    public void setChainType(String chainType) {
+        this.chainType = chainType;
+    }
 
     private List<String> townTypeList=Lists.newArrayList();
 

@@ -23,7 +23,7 @@
               <el-input v-model.number="inputForm.amount" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.salerComment')"prop="salerComment">
-              <el-input v-model="inputForm.salerComment" ></el-input>
+              <el-input v-model="inputForm.salerComment" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.materialComment')" prop="materialComment">
               <el-input v-model="inputForm.materialComment" type="textarea"></el-input>
@@ -55,7 +55,7 @@
                   </el-upload>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">{{$t('shopPromotionForm.save')}}</el-button>
@@ -100,26 +100,30 @@
         }
       },
       formSubmit(){
-        var that = this;
+        let form = this.$refs["inputForm"];
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
         this.inputForm.activityDate = util.formatLocalDate(this.inputForm.activityDate)
         form.validate((valid) => {
           this.inputForm.activityImage1 = util.getFolderFileIdStr(this.fileList1);
           this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
           this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
           if (valid) {
-            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
+            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(util.deleteExtra(that.inputForm))).then((response) => {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
               if(response.data.success) {
                 if (!this.isCreate) {
+                  this.submitDisabled = false;
                   this.$router.push({name: 'shopPromotionList', query: util.getQuery("shopPromotionList")})
+                }else{
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
                 }
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(() => {
+              this.submitDisabled = false;
             });
+          }else{
+            this.submitDisabled = false;
           }
         })
       }, handlePreview1(file) {
@@ -140,47 +144,45 @@
         this.fileList3 = fileList;
       }, handleRemove3(file, fileList) {
         this.fileList3 = fileList;
-      }, findOne(){
-
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
+      }, initPage(){
         axios.get('/api/ws/future/layout/shopPromotion/getForm').then((response)=>{
-          Object.assign(this.$data, this.getData());
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/shopPromotion/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-            util.copyValue(response.data,this.inputForm);
-            if(response.data.shopId!=null){
-              this.shopDisabled = true;
-            }else {
-              this.shopDisabled=false;
-            }
-            if(this.inputForm.activityImage1 !=null) {
-              console.log(this.fileList1);
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage1}}).then((response)=>{
-                this.fileList1= response.data;
-              });
-            }else {
-              this.fileList1=[];
-            }
-            if(this.inputForm.activityImage2 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage2}}).then((response)=>{
-                this.fileList2= response.data;
-              });
-            }else {
-              this.fileList2=[];
-            }
-            if(this.inputForm.activityImage3 !=null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.activityImage3}}).then((response)=>{
-                this.fileList3= response.data;
-              });
-            }else {
-              this.fileList3=[];
-            }
-          });
+          if(!this.isCreate) {
+            axios.get('/api/ws/future/layout/shopPromotion/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+              util.copyValue(response.data, this.inputForm);
+              if (response.data.shopId != null) {
+                this.shopDisabled = true;
+              } else {
+                this.shopDisabled = false;
+              }
+              if (this.inputForm.activityImage1 != null) {
+                console.log(this.fileList1);
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage1}}).then((response) => {
+                  this.fileList1 = response.data;
+                });
+              } else {
+                this.fileList1 = [];
+              }
+              if (this.inputForm.activityImage2 != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage2}}).then((response) => {
+                  this.fileList2 = response.data;
+                });
+              } else {
+                this.fileList2 = [];
+              }
+              if (this.inputForm.activityImage3 != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage3}}).then((response) => {
+                  this.fileList3 = response.data;
+                });
+              } else {
+                this.fileList3 = [];
+              }
+            });
+          }
         });
       }
-      this.isInit = true;
+    },created () {
+        this.initPage();
     }
   }
 </script>

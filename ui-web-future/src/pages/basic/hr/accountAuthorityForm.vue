@@ -69,6 +69,7 @@
             axios.post('/api/basic/hr/account/saveAuthorityList', qs.stringify(this.inputForm, {allowDots:true})).then((response) => {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
+              this.initPage();
             }).catch(function () {
               that.submitDisabled = false;
             });
@@ -77,7 +78,7 @@
           }
         })
       }, remoteAccount(query){
-        if (query !== '') {
+        if (query !== ''&&query.length>=2) {
           this.remoteLoading = true;
           axios.get('/api/basic/hr/account/searchFilter', {params: {loginName: query}}).then((response) => {
             this.accountList = response.data;
@@ -100,15 +101,13 @@
           this.$refs.tree.setCheckedKeys(response.data);
           this.checked=response.data
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },initPage(){
         axios.get('/api/basic/hr/account/getTreeNode').then((response) => {
           this.treeData = new Array(response.data);
         })
       }
-      this.isInit = true;
+    },created () {
+      this.initPage()
     }
   }
 </script>

@@ -10,6 +10,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
 import org.springside.modules.utils.text.EncodeUtil;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -118,5 +119,29 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		BigDecimal percent = new BigDecimal(qty).multiply(new BigDecimal(100)).divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
 		return percent.toString();
+	}
+
+	public static String getChineseMoney(BigDecimal money) {
+		if (money != null) {
+			String s = new DecimalFormat("#.00").format(money.abs());
+			s = s.replaceAll("\\.", "");// 将字符串中的"."去掉
+			char d[] = { '零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖' };
+			String unit = "仟佰拾兆仟佰拾亿仟佰拾万仟佰拾元角分";
+			int c = unit.length();
+			StringBuffer sb = new StringBuffer(unit);
+			for (int i = s.length() - 1; i >= 0; i--) {
+				sb.insert(c - s.length() + i, d[s.charAt(i) - 0x30]);
+			}
+			s = sb.substring(c - s.length(), c + s.length());
+			s = s.replaceAll("零[仟佰拾]", "零").replaceAll("零{2,}", "零").replaceAll("零([兆万元Ԫ])", "$1").replaceAll("零[角分]", "");
+			if (BigDecimal.ZERO.compareTo(money) == 1) {
+				return "负" + s + "整";
+			}
+			if (BigDecimal.ZERO.compareTo(money) == 0) {
+				return "零元整";
+			}
+			return s + "整";
+		}
+		return "";
 	}
 }

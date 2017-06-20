@@ -34,10 +34,10 @@
                 <el-option v-for="item in inputForm.extra.jointLevelList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.point')" prop="point">
+            <el-form-item :label="$t('officeForm.point')" prop="point" v-show="isBusiness">
               <el-input v-model="inputForm.point"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.taskPoint')" prop="taskPoint">
+            <el-form-item :label="$t('officeForm.taskPoint')" prop="taskPoint" v-show="isBusiness">
               <el-input v-model="inputForm.taskPoint"></el-input>
             </el-form-item>
             <el-form-item :label="$t('officeForm.sort')" prop="sort">
@@ -87,8 +87,6 @@
           multiple:true,
           submitDisabled: false,
           isBusiness:false,
-          offices: [],
-          accountList: [],
           inputForm: {
               extra:{}
           },
@@ -116,10 +114,11 @@
               if(response.data.success){
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if (!this.inputForm.create) {
+                if (!that.isCreate) {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
                 }
               }else {
+                that.submitDisabled = false;
                 this.$message({
                   showClose: true,
                   message: response.data.message,
@@ -155,25 +154,23 @@
             this.inputForm.officeIdList=new Array();
             this.isBusiness=true;
           }
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data,this.getData());
+      },initPage(){
         axios.get('/api/basic/sys/office/getForm').then((response) => {
           this.inputForm = response.data;
-        axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
-          util.copyValue(response.data,this.inputForm);
-          if(response.data.type =="职能部门" ){
-            this.isBusiness=false;
-            this.checked=response.data.businessIdList
-            this.inputForm.officeIdList = response.data.businessIdList;
-          }else {
-            this.isBusiness=true;
-          }
+          axios.get('/api/basic/sys/office/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+            util.copyValue(response.data,this.inputForm);
+            if(response.data.type =="职能部门" ){
+              this.isBusiness=false;
+              this.checked=response.data.businessIdList
+              this.inputForm.officeIdList = response.data.businessIdList;
+            }else {
+              this.isBusiness=true;
+            }
+          })
         })
-      })
       }
-      this.isInit = true;
+    },created () {
+      this.initPage();
     }
   }
 </script>

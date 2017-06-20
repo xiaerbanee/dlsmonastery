@@ -24,7 +24,7 @@
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('demoPhoneTypeForm.save')}}</el-button>
         </el-form-item>
-        <el-table :data="demoPhoneTypeOfficeDtos"  style="margin-top:5px;"   stripe border>
+        <el-table :data="inputForm.demoPhoneTypeOfficeDtos"  style="margin-top:5px;"   stripe border>
           <el-table-column prop="officeName" :label="$t('demoPhoneTypeForm.officeName')"></el-table-column>
           <el-table-column prop="officeTaskPointString" :label="$t('demoPhoneTypeForm.taskPoint')"></el-table-column>
           <el-table-column prop="qty" :label="$t('demoPhoneTypeForm.qty')">
@@ -48,84 +48,75 @@
     },
     methods:{
       getData() {
-      return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
-        inputForm:{
-            extra:{}
-        },
-        demoPhoneTypeOfficeDtos:[],
-        remoteLoading:false,
-        productTypes:[],
-        rules: {
-          name: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
-          productType: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
-          applyEndDate: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}]
-        },
-        pickerDateOption:util.pickerDateOption
-      }
-    },
+        return{
+          isCreate:this.$route.query.id==null,
+          submitDisabled:false,
+          inputForm:{
+              extra:{},
+              demoPhoneTypeOfficeDtos:[],
+          },
+
+          remoteLoading:false,
+          productTypes:[],
+          rules: {
+            name: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
+            productTypeIdList: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}],
+            applyEndDate: [{ required: true, message: this.$t('demoPhoneTypeForm.prerequisiteMessage')}]
+          }
+        }
+      },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let demoPhoneTypeOfficeList = new Array();
-            for(let key in this.demoPhoneTypeOfficeDtos){
-                if(this.demoPhoneTypeOfficeDtos[key].qty!=0&&this.demoPhoneTypeOfficeDtos[key].qty!=null){
-                    demoPhoneTypeOfficeList.push(this.demoPhoneTypeOfficeDtos[key]);
+            for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+                if(this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=0&&this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=null){
+                    demoPhoneTypeOfficeList.push(this.inputForm.demoPhoneTypeOfficeDtos[key]);
                 }
             }
+            this.inputForm.demoPhoneTypeOfficeDtos = demoPhoneTypeOfficeList;
             axios.post('/api/ws/future/crm/demoPhoneType/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                 this.$message(response.data.message);
-                if(!this.inputForm.create){
+                if(!this.isCreate){
                   this.submitDisabled = false;
-                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")})
+                  this.$router.push({name:'demoPhoneTypeList',query:util.getQuery("demoPhoneTypeList")});
                 }else{
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }
-              }).catch(function () {
-                that.submitDisabled = false;
+              }).catch( ()=> {
+                this.submitDisabled = false;
               });
             }else{
               this.submitDisabled = false;
           }
         })
-      },remoteProduct(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/ws/future/crm/demoPhoneType/search',{params:{name:query}}).then((response)=>{
-            this.productTypes = response.data;
-            this.remoteLoading = false;
-          });
-        }
       },showQty(){
           let sum = this.inputForm.limitQty;
           let realSum = 0;
-          for(let key in this.demoPhoneTypeOfficeDtos){
-              this.demoPhoneTypeOfficeDtos[key].qty = parseInt(sum*this.demoPhoneTypeOfficeDtos[key].officeTaskPoint/100);
+          for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+              this.inputForm.demoPhoneTypeOfficeDtos[key].qty = parseInt(sum*this.inputForm.demoPhoneTypeOfficeDtos[key].officeTaskPoint/100);
           }
 
-          for(let key in this.demoPhoneTypeOfficeDtos){
-            realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+          for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+            realSum += parseInt(this.inputForm.demoPhoneTypeOfficeDtos[key].qty);
           }
         this.inputForm.limitQty  = realSum;
       },qtySum(){
         let realSum = 0;
-        for(let key in this.demoPhoneTypeOfficeDtos){
-          realSum += parseInt(this.demoPhoneTypeOfficeDtos[key].qty);
+        for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
+          realSum += parseInt(this.inputForm.sdemoPhoneTypeOfficeDtos[key].qty);
         }
         this.inputForm.limitQty  = realSum;
       },
-    initPage(){
+      initPage(){
         axios.get('/api/ws/future/crm/demoPhoneType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.demoPhoneTypeOfficeDtos = response.data.demoPhoneTypeOfficeDtos;
-        this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-            });
+          this.inputForm = response.data;
+          axios.get('/api/ws/future/crm/demoPhoneType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+          });
         });
       }
     },created () {

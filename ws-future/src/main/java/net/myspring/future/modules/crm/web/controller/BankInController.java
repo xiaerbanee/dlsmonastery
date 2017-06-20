@@ -90,6 +90,7 @@ public class BankInController {
 
     @RequestMapping(value = "getAuditForm")
     public BankInAuditForm getAuditForm(BankInAuditForm bankInAuditForm ){
+        bankInAuditForm.getExtra().put("defaultBillDate", LocalDate.now());
         return bankInAuditForm;
     }
 

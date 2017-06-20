@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.dto.DutyDto;
 import net.myspring.basic.modules.hr.service.*;
 import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.query.AccountQuery;
+import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.basic.modules.sys.dto.BackendMenuDto;
 import net.myspring.basic.modules.sys.manager.RoleManager;
 import net.myspring.basic.modules.sys.service.MenuService;
@@ -20,6 +21,8 @@ import net.myspring.common.enums.BoolEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -107,22 +110,22 @@ public class AccountController {
 
     @RequestMapping(value = "search")
     public List<AccountDto> search(String type, String key) {
-        List<AccountDto> accountDtoList = accountService.findByLoginNameLikeAndType(type,key);
+        List<AccountDto> accountDtoList = accountService.findByLoginNameLikeAndType(type, key);
         return accountDtoList;
     }
 
     @RequestMapping(value = "findByIds")
     public List<AccountDto> findByIds(String idStr) {
-        List<String> ids=StringUtils.getSplitList(idStr,CharConstant.COMMA);
-        List<AccountDto> accountDtoList =accountService.findByIds(ids);
+        List<String> ids = StringUtils.getSplitList(idStr, CharConstant.COMMA);
+        List<AccountDto> accountDtoList = accountService.findByIds(ids);
         return accountDtoList;
     }
 
-    @RequestMapping(value="checkLoginName")
-        public RestResponse checkLoginName(AccountQuery accountQuery){
-        RestResponse restResponse=new RestResponse("登录名可用", null);
-        if(!accountService.checkLoginName(accountQuery)) {
-            restResponse = new RestResponse("登录名不能重复", null,false);
+    @RequestMapping(value = "checkLoginName")
+    public RestResponse checkLoginName(AccountQuery accountQuery) {
+        RestResponse restResponse = new RestResponse("登录名可用", null);
+        if (!accountService.checkLoginName(accountQuery)) {
+            restResponse = new RestResponse("登录名不能重复", null, false);
         }
         return restResponse;
     }
@@ -138,7 +141,7 @@ public class AccountController {
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public String export(AccountQuery accountQuery) throws IOException {
         Workbook workbook = new SXSSFWorkbook(10000);
-        return accountService.findSimpleExcelSheet(workbook,accountQuery);
+        return accountService.findSimpleExcelSheet(workbook, accountQuery);
     }
 
     @RequestMapping(value = "getAccountInfo")
@@ -182,15 +185,25 @@ public class AccountController {
 
     @RequestMapping(value = "getTreeNode")
     public TreeNode getTreeNode() {
-        String roleId=roleManager.findIdByAccountId(RequestUtils.getAccountId());
-        TreeNode treeNode=permissionService.findRolePermissionTree(roleId);
+        String roleId = roleManager.findIdByAccountId(RequestUtils.getAccountId());
+        TreeNode treeNode = permissionService.findRolePermissionTree(roleId);
         return treeNode;
     }
 
     @RequestMapping(value = "getTreeCheckData")
     public List<String> getTreeCheckData(String id) {
-        List<String> permissionIdList=permissionService.getAccountPermissionCheckData(id);
+        List<String> permissionIdList = permissionService.getAccountPermissionCheckData(id);
         return permissionIdList;
+    }
+
+    @RequestMapping(value = "findByLoginNameList")
+    public List<AccountCommonDto> findByLoginNameList(@RequestParam(value = "loginNameList") List<String> loginNameList) {
+        List<AccountCommonDto> accountCommonDtoList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(loginNameList)) {
+            List<AccountDto> accountDtoList=accountService.findByLoginNameList(loginNameList);
+            accountCommonDtoList= BeanUtil.map(accountDtoList,AccountCommonDto.class);
+        }
+        return accountCommonDtoList;
     }
 
 }
