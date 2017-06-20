@@ -29,8 +29,8 @@
           <view class="weui-label">办事处</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="officeId" range="{{formProperty.areaList}}" range-key="name" value="{{formData.office.id}}" bindchange="bindOffice">
-            <view class="weui-input">{{formData.office.name}}</view>
+          <picker name="officeId" range="{{formProperty.areaList}}" range-key="name" value="{{formData.officeId}}" bindchange="bindOffice">
+            <view class="weui-input">{{formData.officeName}}</view>
           </picker>
         </view>
       </view>

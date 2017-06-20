@@ -29,8 +29,8 @@
           <view class="weui-label">广告品种</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdType.id}}" bindchange="bindAdType">
-            <view class="weui-input">{{formData.shopAdType.name}}</view>
+          <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdTypeId}}" bindchange="bindAdType">
+            <view class="weui-input">{{formData.shopAdTypeName}}</view>
           </picker>
         </view>
       </view>

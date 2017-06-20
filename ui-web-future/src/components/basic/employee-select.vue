@@ -27,6 +27,9 @@
       }, handleChange(newVal) {
         this.$emit('input', newVal);
       },setValue(val) {
+        if(this.innerId===val){
+          return;
+        }
         if(val){
           this.innerId=val;
           this.remoteLoading = true;
@@ -43,6 +46,9 @@
           })
         }else{
           this.innerId=[];
+          this.$nextTick(()=>{
+            this.$emit('afterInit');
+          })
         }
 
       }

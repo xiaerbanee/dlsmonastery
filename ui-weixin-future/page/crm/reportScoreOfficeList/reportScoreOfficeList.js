@@ -119,11 +119,6 @@ Page({
       'formData.areaName': that.data.fromProperty.areaList[e.detail.value].name
     })
   },
-  bindOffice: function (e) {
-    wx.navigateTo({
-      url: '/page/crm/officeSearch/officeSearch?type=200'
-    })
-  },
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });

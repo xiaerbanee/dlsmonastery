@@ -46,9 +46,9 @@
           <view class="weui-label">乡镇名称：</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="townId" value="{{formData.town.id}}" />
+          <input class="hidden" name="townId" value="{{formData.towId}}" />
             <view class="weui-input"  bindtap="bindTown">
-              {{formData.town.name}}
+              {{formData.townName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>
         </view>
