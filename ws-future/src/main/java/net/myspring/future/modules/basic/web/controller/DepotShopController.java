@@ -1,12 +1,13 @@
 package net.myspring.future.modules.basic.web.controller;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.common.enums.BoolEnum;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.*;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.DictEnumClient;
+import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
@@ -49,6 +50,10 @@ public class DepotShopController {
     private OfficeClient officeClient;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private DictEnumClient dictEnumClient;
+    @Autowired
+    private DictMapClient dictMapClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotShopDto> list(Pageable pageable, DepotQuery depotShopQuery){
@@ -70,7 +75,18 @@ public class DepotShopController {
 
     @RequestMapping(value = "getForm")
     public DepotShopForm getForm(DepotShopForm depotShopForm){
-        depotShopForm.getExtra().put("townTypeList",TownTypeEnum.getList());
+        depotShopForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
+        depotShopForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
+        depotShopForm.getExtra().put("areaList", dictMapClient.findByCategory(DictMapCategoryEnum.门店_地区属性.name()));
+        depotShopForm.getExtra().put("channelList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_渠道类型.name())));
+        depotShopForm.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));
+        depotShopForm.getExtra().put("salePointList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_售点类型.name())));
+        depotShopForm.getExtra().put("turnoverList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_营业额分类.name())));
+        depotShopForm.getExtra().put("shopAreaList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_店面尺寸.name())));
+        depotShopForm.getExtra().put("carrierList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_运营商属性.name())));
+        depotShopForm.getExtra().put("businessCenterList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_核心商圈.name())));
+        depotShopForm.getExtra().put("specialityStoreList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_体验店类型.name())));
+        depotShopForm.getExtra().put("shopMonthTotalList",dictEnumClient.findByCategory((DictEnumCategoryEnum.SHOP_MONTH_TOTAL.name())));
         return depotShopForm;
     }
 
