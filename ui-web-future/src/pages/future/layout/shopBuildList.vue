@@ -14,7 +14,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopBuildList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -22,7 +22,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="门店建设申请"></process-status-select>
@@ -31,7 +31,7 @@
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.createdBy')" :label-width="formLabelWidth">
-                <account-select v-model="formData.createdBy"></account-select>
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>

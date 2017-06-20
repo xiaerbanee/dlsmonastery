@@ -20,7 +20,7 @@
                 <el-input v-model="formData.toDepotName" :placeholder="$t('imeAllotList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.crossArea')" >
-                <bool-select v-model="formData.crossArea"   ></bool-select>
+                <bool-select v-model="formData.crossArea"  @afterInit="setSearchText" ></bool-select>
               </el-form-item>
               <el-form-item :label="$t('imeAllotList.ime')">
                 <el-input v-model="formData.ime" :placeholder="$t('imeAllotList.likeSearch')"></el-input>

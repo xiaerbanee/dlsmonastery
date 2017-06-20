@@ -6,6 +6,7 @@ const cnJournalForBank  = r => require.ensure([], () => r(require('pages/cloud/i
 const purMrb  = r => require.ensure([], () => r(require('pages/cloud/input/purMrb.vue')));
 const stkInStock  = r => require.ensure([], () => r(require('pages/cloud/input/stkInStock.vue')));
 const arOtherRecAble  = r => require.ensure([], () => r(require('pages/cloud/input/arOtherRecAble.vue')));
+const apPayBill  = r => require.ensure([], () => r(require('pages/cloud/input/apPayBill.vue')));
 
 let routes = [
   {path: '/cloud/input/salOutStock',component: salOutStock,name: 'salOutStock'},
@@ -16,6 +17,7 @@ let routes = [
   {path: '/cloud/input/purMrb',component: purMrb,name: 'purMrb'},
   {path: '/cloud/input/stkInStock',component: stkInStock,name: 'stkInStock'},
   {path: '/cloud/input/arOtherRecAble',component: arOtherRecAble,name: 'arOtherRecAble'},
+  {path: '/cloud/input/apPayBill',component: apPayBill,name: 'apPayBill'},
 ];
 
 export default routes;

@@ -87,7 +87,7 @@ public class PriceChangeService {
 
         if(priceChangeForm.isCreate()){
             priceChange = BeanUtil.map(priceChangeForm,PriceChange.class);
-            priceChange.setStatus(PriceChangeStatusEnum.上报中.name());
+            priceChange.setStatus(PriceChangeStatusEnum.抽检中.name());
             priceChangeRepository.save(priceChange);
 
             List<Product> productList = productRepository.findByProductTypeIds(priceChangeForm.getProductTypeIdList());
