@@ -12,10 +12,10 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopImageList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
               </el-form-item>
               <el-form-item :label="$t('shopImageList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
             </el-col>
           </el-row>
