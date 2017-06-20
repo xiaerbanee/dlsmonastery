@@ -41,7 +41,6 @@ public class DutySignController {
 
     @RequestMapping(value = "getQuery")
     public DutySignQuery getQuery(DutySignQuery dutySignQuery) {
-        dutySignQuery.getExtra().put("officeList", officeService.findAll());
         dutySignQuery.getExtra().put("positionList", positionService.findAll());
         return dutySignQuery;
     }
