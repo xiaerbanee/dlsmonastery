@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -37,5 +38,9 @@ public class BdCustomerService {
 
     public List<BdCustomer> findAll(){
         return bdCustomerRepository.findAll();
+    }
+
+    public List<BdCustomer> findByMaxModifyDate(LocalDateTime modifyDate){
+        return bdCustomerRepository.findByMaxModifyDate(modifyDate);
     }
 }

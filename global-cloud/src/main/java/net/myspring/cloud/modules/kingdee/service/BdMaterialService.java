@@ -34,12 +34,12 @@ public class BdMaterialService {
         return null;
     }
 
-    public List<BdMaterial> findByModifyDate(LocalDateTime dateTime){
-        return bdMaterialRepository.findByModifyDate(dateTime);
-    }
-
     public List<BdMaterial> findAll(){
         return bdMaterialRepository.findAll();
+    }
+
+    public List<BdMaterial> findByMaxModifyDate(LocalDateTime modifyDate){
+        return bdMaterialRepository.findByMaxModifyDate(modifyDate);
     }
 
 }

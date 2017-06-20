@@ -65,14 +65,13 @@ public class CnJournalForCashService {
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<String> empInfoNameList = Lists.newArrayList();
         List<String> departmentNameList = Lists.newArrayList();
-        List<String> otherTypeNameList = Lists.newArrayList();
-        List<String> expenseTypeNameList = Lists.newArrayList();
+        List<String> assistantNameList = Lists.newArrayList();
         List<String> customerNameForList = Lists.newArrayList();
         for (List<Object> row : data){
             empInfoNameList.add(HandsontableUtils.getValue(row, 5));
             departmentNameList.add(HandsontableUtils.getValue(row, 6));
-            otherTypeNameList.add(HandsontableUtils.getValue(row, 7));
-            expenseTypeNameList.add(HandsontableUtils.getValue(row, 8));
+            assistantNameList.add(HandsontableUtils.getValue(row, 7));
+            assistantNameList.add(HandsontableUtils.getValue(row, 8));
             if (row.size() > 9) {
                 customerNameForList.add(HandsontableUtils.getValue(row, 9));
             }
@@ -80,8 +79,7 @@ public class CnJournalForCashService {
         Map<String, String> customerNameMap = Maps.newHashMap();
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
-        Map<String, String> otherTypeNameMap = basAssistantRepository.findByNameList(otherTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
-        Map<String, String> expenseNameMap = basAssistantRepository.findByNameList(expenseTypeNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
+        Map<String, String> assistantNameMap = basAssistantRepository.findByNameList(assistantNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
         if (customerNameForList.size() > 0){
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
@@ -111,8 +109,8 @@ public class CnJournalForCashService {
             cnJournalFEntityForCashDto.setRemarks(remarks);
             cnJournalFEntityForCashDto.setStaffNumber(empInfoNameMap.get(empInfoName));
             cnJournalFEntityForCashDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForCashDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForCashDto.setExpenseTypeNumber(expenseNameMap.get(expenseTypeName));
+            cnJournalFEntityForCashDto.setOtherTypeNumber(assistantNameMap.get(otherTypeName));
+            cnJournalFEntityForCashDto.setExpenseTypeNumber(assistantNameMap.get(expenseTypeName));
             cnJournalFEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
             cnJournalForCashDto.getfEntityDtoList().add(cnJournalFEntityForCashDto);
         }

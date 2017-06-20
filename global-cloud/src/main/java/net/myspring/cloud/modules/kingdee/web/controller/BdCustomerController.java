@@ -4,6 +4,7 @@ import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.common.dto.NameValueDto;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -40,4 +42,9 @@ public class BdCustomerController {
         return bdCustomerService.findAll();
     }
 
+    @RequestMapping(value = "findByMaxModifyDate")
+    public List<BdCustomer> findByMaxModifyDate(String modifyDate){
+        LocalDateTime maxModifyDate = LocalDateTimeUtils.parse(modifyDate,"yyyy-MM-dd HH:mm:ss");
+        return bdCustomerService.findByMaxModifyDate(maxModifyDate);
+    }
 }
