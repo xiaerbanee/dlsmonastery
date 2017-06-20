@@ -53,6 +53,8 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
     """, nativeQuery = true)
     fun findByIds(ids: MutableList<String>): MutableList<DepotStore>
 
+    fun findByOutIdIn(outList:MutableList<String>):MutableList<DepotStore>
+
 }
 
 interface DepotStoreRepositoryCustom{

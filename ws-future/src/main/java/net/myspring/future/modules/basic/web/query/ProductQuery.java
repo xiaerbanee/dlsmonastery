@@ -2,12 +2,8 @@ package net.myspring.future.modules.basic.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.query.BaseQuery;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.domain.ProductType;
-import net.myspring.future.modules.basic.dto.ProductDto;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/19.
@@ -23,6 +19,7 @@ public class ProductQuery extends BaseQuery {
     private Boolean allowOrder;  //允许开单
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
+    private List<String> ids= Lists.newArrayList();
 
     public String getId() {
         return id;
@@ -104,5 +101,13 @@ public class ProductQuery extends BaseQuery {
 
     public void setNetType(String netType) {
         this.netType = netType;
+    }
+
+    public List<String> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<String> ids) {
+        this.ids = ids;
     }
 }

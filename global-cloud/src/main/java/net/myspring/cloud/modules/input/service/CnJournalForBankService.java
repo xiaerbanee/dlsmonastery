@@ -97,7 +97,16 @@ public class CnJournalForBankService {
         Map<String, String> bankAcntNameMap = cnBankAcntRepository.findByNameList(bankAcntNameList).stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber));
         Map<String, String> empInfoNameMap = hrEmpInfoRepository.findByNameList(empInfoNameList).stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber));
         Map<String, String> departmentNameMap  = bdDepartmentRepository.findByNameList(departmentNameList).stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber));
-        Map<String, String> assistantNameMap = basAssistantRepository.findByNameList(assistantNameList).stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber));
+        List<BasAssistant> basAssistantList = basAssistantRepository.findByNameList(assistantNameList);
+        Map<String, String> otherTypeNameMap = Maps.newHashMap();
+        Map<String, String> expenseTypeNameMap = Maps.newHashMap();
+        for (BasAssistant basAssistant :basAssistantList){
+            if ("其他类".equals(basAssistant.getFType())){
+                otherTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }else if("费用类".equals(basAssistant.getFType())){
+                expenseTypeNameMap.put(basAssistant.getFDataValue(),basAssistant.getFNumber());
+            }
+        }
         if (customerNameForList.size() > 0){
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
@@ -133,8 +142,8 @@ public class CnJournalForBankService {
             cnJournalFEntityForBankDto.setComment(remarks);
             cnJournalFEntityForBankDto.setEmpInfoNumberK3(empInfoNameMap.get(empInfoName));
             cnJournalFEntityForBankDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForBankDto.setOtherTypeNumberK3(assistantNameMap.get(otherTypeName));
-            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(assistantNameMap.get(expenseTypeName));
+            cnJournalFEntityForBankDto.setOtherTypeNumberK3(otherTypeNameMap.get(otherTypeName));
+            cnJournalFEntityForBankDto.setExpenseTypeNumberK3(expenseTypeNameMap.get(expenseTypeName));
             cnJournalFEntityForBankDto.setCustomerNumberK3(customerNameMap.get(customerNameFor));
             cnJournalForBankDto.getfEntityDtoList().add(cnJournalFEntityForBankDto);
         }

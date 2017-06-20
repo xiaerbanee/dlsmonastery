@@ -26,8 +26,16 @@ public class DepotStore extends CompanyEntity<DepotStore> {
     private String outGroupName;
     //财务同步日期
     private LocalDate outDate;
-
+    private String outCode;
     private String jointLevel;
+
+    public String getOutCode() {
+        return outCode;
+    }
+
+    public void setOutCode(String outCode) {
+        this.outCode = outCode;
+    }
 
     public String getJointLevel() {
         return jointLevel;

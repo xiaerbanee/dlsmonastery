@@ -5,8 +5,7 @@ import net.myspring.future.common.domain.CompanyEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_client")
@@ -17,11 +16,21 @@ public class Client extends CompanyEntity<Client> {
     // 财务编号
     private String outId;
     //财务分组
-    private Long outGroupId;
+    private String outGroupId;
     //财务分组名称
     private String outGroupName;
     //财务同步日期
-    private LocalDate outDate;
+    private LocalDateTime outDate;
+
+    private String outCode;
+
+    public String getOutCode() {
+        return outCode;
+    }
+
+    public void setOutCode(String outCode) {
+        this.outCode = outCode;
+    }
 
     public String getName() {
         return name;
@@ -55,11 +64,11 @@ public class Client extends CompanyEntity<Client> {
         this.outId = outId;
     }
 
-    public Long getOutGroupId() {
+    public String getOutGroupId() {
         return outGroupId;
     }
 
-    public void setOutGroupId(Long outGroupId) {
+    public void setOutGroupId(String outGroupId) {
         this.outGroupId = outGroupId;
     }
 
@@ -71,11 +80,11 @@ public class Client extends CompanyEntity<Client> {
         this.outGroupName = outGroupName;
     }
 
-    public LocalDate getOutDate() {
+    public LocalDateTime getOutDate() {
         return outDate;
     }
 
-    public void setOutDate(LocalDate outDate) {
+    public void setOutDate(LocalDateTime outDate) {
         this.outDate = outDate;
     }
 }
