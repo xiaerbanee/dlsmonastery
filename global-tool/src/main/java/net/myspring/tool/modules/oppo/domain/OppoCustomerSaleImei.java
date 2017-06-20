@@ -2,7 +2,7 @@ package net.myspring.tool.modules.oppo.domain;
 
 import java.time.LocalDateTime;
 
-public class OppoCustomerSaleIme {
+public class OppoCustomerSaleImei {
     private String imei;
     private LocalDateTime saletime;
     private String custname;

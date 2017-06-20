@@ -1,10 +1,10 @@
-package net.myspring.tool.modules.oppo.domain;
+package net.myspring.future.modules.third.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class OppoCustomerSale {
     private String customerid;
-    private LocalDate date;
+    private LocalDateTime date;
     private Long totalSaleQty;
 
     public String getCustomerid() {
@@ -15,11 +15,11 @@ public class OppoCustomerSale {
         this.customerid = customerid;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

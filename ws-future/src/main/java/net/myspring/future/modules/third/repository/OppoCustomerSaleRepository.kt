@@ -1,48 +1,35 @@
 package net.myspring.tool.modules.oppo.repository;
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.third.domain.OppoCustomerAllot
+import net.myspring.future.modules.third.domain.OppoCustomerSale
 import net.myspring.future.modules.third.domain.OppoCustomerStock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 
 /**
  * Created by admin on 2016/10/11.
  */
-interface OppoCustomerStockRepository : BaseRepository<OppoCustomerStockRepository, String> {
+interface OppoCustomerSaleRepository : BaseRepository<OppoCustomerSale, String> {
 
     @Query("""
-          select
-              de.id as customerid,
-              pro.name as productcode ,
-                count(*) AS qty
+            select
+                sa.shop_id as customerId,
+                date_format(sa.created_date,'%Y-%m-%d') as date,
+                count(*) as totalSaleQty
             from
-                crm_product_ime im
-            left join crm_product_ime_upload up on im.product_ime_upload_id = up.id,
-             crm_depot de,
-             crm_product pro
+                crm_product_ime_sale sa
             where
-                im.depot_id = de.id
-            and (
-                im.retail_date is null
-                or im.retail_date >:dateEnd
-            )
-            and (
-                up.id is null
-                OR up.created_date > :dateEnd
-            )
-            and im.company_id = :companyId
-            and im.created_date>=:dateStart
-            and im.created_date < :dateEnd
-            and im.enabled = 1
-            and de.enabled = 1
-            and pro.enabled=1
-            and im.product_id = pro.id
-            group by de.id,pro.id asc
+                sa.created_date >=:dateStart
+                and sa.created_date <=:dateEnd
+                and sa.is_back = 0
+                and sa.enabled = 1
+                and sa.company_id =:companyId
+            group by
+                sa.shop_id,date_format(sa.created_date,'%Y-%m-%d')
+            order by sa.shop_id,date_format(sa.created_date,'%Y-%m-%d')  asc
         """)
-    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerStock>
+    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerSale>
 
 }

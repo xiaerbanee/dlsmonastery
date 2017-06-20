@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.domain;
+package net.myspring.future.modules.third.domain;
 
 import java.time.LocalDate;
 

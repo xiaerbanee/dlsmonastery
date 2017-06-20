@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 public class OppoCustomerImeiStock {
 
     private String customerid;
-    private LocalDateTime date;
+    private LocalDate date;
     private String imei;
     private String productcode;
     private String transType;
@@ -21,11 +22,11 @@ public class OppoCustomerImeiStock {
         this.customerid = customerid;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

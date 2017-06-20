@@ -4,7 +4,7 @@ import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDateTime;
 
-public class OppoCustomerSaleIme {
+public class OppoCustomerSaleImei {
     private String imei;
     private LocalDateTime saletime;
     private String custname;

@@ -9,8 +9,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 
 @FeignClient("ws-future")
-public interface OppoCustomerAllotClient {
+public interface OppoClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/getOppoCustomerAllots")
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerAllots")
     String  findOppoCustomerAllots(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerStocks")
+    String  findOppoCustomerStocks(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerImeiStocks")
+    String  findOppoCustomerImeiStocks(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSales")
+    String  findOppoCustomerSales(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSaleImes")
+    String  findOppoCustomerSaleImes(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSaleCounts")
+    String  findOppoCustomerSaleCounts(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerAfterSaleImeis")
+    String  findOppoCustomerAfterSaleImes(String dateStart,String dateEnd,String companyId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerDemoPhones")
+    String  findOppoCustomerDemoPhones(String dateStart,String dateEnd,String companyId);
+
 }

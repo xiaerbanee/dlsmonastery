@@ -11,9 +11,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -125,6 +122,148 @@ public class OppoController {
             LocalDate dateEndTime=LocalDateUtils.parse(dateEnd).plusDays(1);
             List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getOppoCustomerAllot(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAllots));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //库存数据上抛
+    @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerStock(String key,String createdDate,HttpServletResponse response, Model model)  {
+        String factoryAgentName="M13AMB";
+        String localKey=MD5Utils.encode(factoryAgentName+createdDate);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            logger.info("库存上抛开始："+new Date());
+            LocalDate dateStart= LocalDateUtils.parse(createdDate);
+            LocalDate dateEnd=LocalDateUtils.parse(createdDate).plusDays(1);
+            List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStock(dateStart,dateEnd);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));
+            responseMessage.setResult("success");
+        }
+        logger.info("库存上抛结束："+new Date());
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //门店条码调拨明细上抛
+    @RequestMapping(value ="pullCustomerImeStock", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerImeStock(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+        String factoryAgentName="M13AMB";
+        String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            LocalDate dateStartTime= LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime=LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getOppoCustomerImeiStock(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerImeiStocks));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //店总数据上抛
+    @RequestMapping(value ="pullCustomerSale", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerSale(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model) {
+        String factoryAgentName = "M13AMB";
+        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
+        OppoResponseMessage responseMessage = new OppoResponseMessage();
+        if (!localKey.equals(key)) {
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        } else {
+            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerSale> oppoCustomerSales = oppoPushSerivce.getOppoCustomerSales(dateStartTime, dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSales));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //门店销售明细
+    @RequestMapping(value ="pullCustomerSaleIme", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerSaleIme(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+        String factoryAgentName = "M13AMB";
+        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoPushSerivce.getOppoCustomerSaleImes(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //门店销售数据汇总
+    @RequestMapping(value ="pullCustomerSaleCount", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerSaleCount(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+        String factoryAgentName = "M13AMB";
+        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCounts(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //门店售后零售退货条码数据
+    @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+        String factoryAgentName = "M13AMB";
+        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeis(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis));
+            responseMessage.setResult("success");
+        }
+        return ObjectMapperUtils.writeValueAsString(responseMessage);
+    }
+
+    //演示机条码数据
+    @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
+    @ResponseBody
+    public String pullCustomerDemoPhone(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+        String factoryAgentName = "M13AMB";
+        String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
+        OppoResponseMessage responseMessage=new OppoResponseMessage();
+        if(!localKey.equals(key)){
+            responseMessage.setMessage("密钥不正确");
+            responseMessage.setResult("false");
+        }else{
+            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
+            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
+            List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhone(dateStartTime,dateEndTime);
+            responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
             responseMessage.setResult("success");
         }
         return ObjectMapperUtils.writeValueAsString(responseMessage);

@@ -1,7 +1,7 @@
 package net.myspring.tool.modules.oppo.repository;
 
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.third.domain.OppoCustomerSaleIme
+import net.myspring.future.modules.third.domain.OppoCustomerSaleImei
 import net.myspring.future.modules.third.domain.OppoCustomerStock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 /**
  * Created by admin on 2016/10/11.
  */
-interface OppoCustomerSaleImeRepository : BaseRepository<OppoCustomerSaleIme, String> {
+interface OppoCustomerSaleImeiRepository : BaseRepository<OppoCustomerSaleImei, String> {
 
     @Query("""
       select
@@ -38,6 +38,6 @@ interface OppoCustomerSaleImeRepository : BaseRepository<OppoCustomerSaleIme, St
             and sa.enabled = 1
             and sa.company_id = :companyId
         """)
-    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerSaleIme>
+    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerSaleImei>
 
 }

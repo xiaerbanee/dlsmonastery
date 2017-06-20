@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
@@ -9,13 +10,10 @@ import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.oppo.client.CustomerClient;
 import net.myspring.tool.modules.oppo.client.DistrictClient;
-import net.myspring.tool.modules.oppo.client.OppoCustomerAllotClient;
-import net.myspring.tool.modules.oppo.domain.OppoCustomerAllot;
-import net.myspring.tool.modules.oppo.domain.OppoCustomerOperatortype;
-import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
+import net.myspring.tool.modules.oppo.client.OppoClient;
+import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.dto.DistrictDto;
-import net.myspring.tool.modules.oppo.domain.OppoCustomer;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -42,7 +40,7 @@ public class OppoPushSerivce {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private OppoCustomerAllotClient oppoCustomerAllotClient;
+    private OppoClient oppoClient;
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
 
@@ -65,7 +63,7 @@ public class OppoPushSerivce {
             districtDtoMap.put(districtDto.getId(),districtDto);
         }
         for(CustomerDto customerDto:customerDtosList){
-            String depotId=getAreaDepotId(customerDto);
+            String depotId=getDepotId(customerDto);
             if (!oppoCustomersMap.containsKey(depotId)) {
                 OppoCustomer oppoCustomer = new OppoCustomer();
                 oppoCustomer.setCustomerid(depotId);
@@ -124,8 +122,7 @@ public class OppoPushSerivce {
     //上抛运营商属性
     public List<OppoCustomerOperatortype> getOppoCustomerOperatortype() {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
-        String companyId=RequestUtils.getRequestEntity().getCompanyId();
-        initAreaDepotMap(companyId);
+        initAreaDepotMap(RequestUtils.getRequestEntity().getCompanyId());
         String customerStr=customerClient.findCustomerDtoList();
         List<CustomerDto> customerDtosList= ObjectMapperUtils.readValue(customerStr, ArrayList.class);
         for(CustomerDto customerDto:customerDtosList){
@@ -133,7 +130,7 @@ public class OppoPushSerivce {
                 if("运营商营业厅".equals(customerDto.getSalePointType())){
                     if(StringUtils.isNotBlank((customerDto.getCarrierType()))){
                         OppoCustomerOperatortype oppoCustomerOperatortype=new OppoCustomerOperatortype();
-                        oppoCustomerOperatortype.setCustomerid(getAreaDepotId(customerDto));
+                        oppoCustomerOperatortype.setCustomerid(getDepotId(customerDto));
                         oppoCustomerOperatortype.setCustomername(getAreaDepotName(customerDto));
                         oppoCustomerOperatortype.setOperatortype(customerDto.getCarrierType());
                         oppoCustomerOperatortypeList.add(oppoCustomerOperatortype);
@@ -144,7 +141,7 @@ public class OppoPushSerivce {
                         if(CollectionUtil.isNotEmpty(channelNames)){
                             for(String channelName:channelNames){
                                 OppoCustomerOperatortype oppoCustomerOperatortype=new OppoCustomerOperatortype();
-                                oppoCustomerOperatortype.setCustomerid(getAreaDepotId(customerDto));
+                                oppoCustomerOperatortype.setCustomerid(getDepotId(customerDto));
                                 oppoCustomerOperatortype.setCustomername(getAreaDepotName(customerDto));
                                 oppoCustomerOperatortype.setOperatortype(channelName);
                                 oppoCustomerOperatortypeList.add(oppoCustomerOperatortype);
@@ -157,27 +154,17 @@ public class OppoPushSerivce {
         return oppoCustomerOperatortypeList;
     }
 
+    //发货退货调拨数据上抛
     public List<OppoCustomerAllot>  getOppoCustomerAllot(LocalDate dateStart, LocalDate dateEnd){
         String companyId=RequestUtils.getRequestEntity().getCompanyId();
-        String oppoCustomerAllotStr=oppoCustomerAllotClient.findOppoCustomerAllots(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateStart),companyId);
+        initAreaDepotMap(companyId);
+        String oppoCustomerAllotStr=oppoClient.findOppoCustomerAllots(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerAllot> oppoCustomerAllots=ObjectMapperUtils.readValue(oppoCustomerAllotStr, ArrayList.class);
-        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoPlantAgentProductSelRepository.findAllByProductId();
-        Map<String, String> productColorMap = Maps.newHashMap();
+        Map<String, String> productColorMap = getProductColorMap();
         Map<String, OppoCustomerAllot> oppoCustomerAllotMap = Maps.newHashMap();
-        for (OppoPlantAgentProductSel oppoPlantAgentProductSel : oppoPlantAgentProductSels) {
-            String colorId = oppoPlantAgentProductSel.getColorId();
-            String productId=oppoPlantAgentProductSel.getProductId();
-            String lxProductId=oppoPlantAgentProductSel.getLxProductId();
-            if (StringUtils.isNotBlank(colorId) && StringUtils.isNotBlank(productId)) {
-                productColorMap.put(productId, colorId);
-            }
-            if (StringUtils.isNotBlank(colorId)&& StringUtils.isNotBlank(lxProductId)) {
-                productColorMap.put(lxProductId, colorId);
-            }
-        }
         for(OppoCustomerAllot oppoCustomerAllot:oppoCustomerAllots){
-            String fromDepotId=getAreaDepotId(customerDtoMap.get(oppoCustomerAllot.getFromCustomerid()));
-            String toDepotId=getAreaDepotId(customerDtoMap.get(oppoCustomerAllot.getToCustomerid()));
+            String fromDepotId=getDepotId(customerDtoMap.get(oppoCustomerAllot.getFromCustomerid()));
+            String toDepotId=getDepotId(customerDtoMap.get(oppoCustomerAllot.getToCustomerid()));
             if(!fromDepotId.equals(toDepotId)){
                 String key = fromDepotId +CharConstant.UNDER_LINE+ toDepotId + CharConstant.UNDER_LINE+ productColorMap.get(oppoCustomerAllot.getProductcode());
                 if (!oppoCustomerAllotMap.containsKey(key)) {
@@ -185,7 +172,7 @@ public class OppoPushSerivce {
                     allot.setFromCustomerid(fromDepotId);
                     allot.setToCustomerid(toDepotId);
                     allot.setProductcode(productColorMap.get(oppoCustomerAllot.getProductcode()));
-                    allot.setDate(oppoCustomerAllot.getDate());
+                    allot.setDate(dateStart);
                     allot.setQty(0);
                     oppoCustomerAllotMap.put(key, allot);
                 }
@@ -196,6 +183,119 @@ public class OppoPushSerivce {
         return  oppoCustomerAllotList;
     }
 
+    //上抛一代二代库存数据,不包括门店数据
+    public List<OppoCustomerStock> getOppoCustomerStock(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
+        Map<String, String> productColorMap = getProductColorMap();
+       String oppoCustomerStockStr=oppoClient.findOppoCustomerStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerStock> oppoCustomerStocks= ObjectMapperUtils.readValue(oppoCustomerStockStr, ArrayList.class);
+        for(OppoCustomerStock oppoCustomerStock:oppoCustomerStocks){
+            String customerId=getDepotId(customerDtoMap.get(oppoCustomerStock.getCustomerid()));
+            String key=customerId+ CharConstant.UNDER_LINE+productColorMap.get(oppoCustomerStock.getProductcode());
+            if(!oppoCustomerStockHashMap.containsKey(key)){
+                OppoCustomerStock customerStock = new OppoCustomerStock();
+                customerStock.setCustomerid(customerId);
+                customerStock.setDate(dateStart);
+                customerStock.setProductcode(productColorMap.get(oppoCustomerStock.getProductcode()));
+                customerStock.setQty(0);
+                oppoCustomerStockHashMap.put(key, customerStock);
+            }
+            oppoCustomerStockHashMap.get(key).setQty(oppoCustomerStockHashMap.get(key).getQty() + oppoCustomerStock.getQty());
+        }
+        List<OppoCustomerStock>  oppoCustomerStockList=new ArrayList<OppoCustomerStock>(oppoCustomerStockHashMap.values());
+        return oppoCustomerStockList;
+    }
+
+    //获取渠道串码收货数据
+    public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks = Lists.newArrayList();
+        Map<String, String> productColorMap = getProductColorMap();
+        String oppoCustomerImeiStockStr=oppoClient.findOppoCustomerImeiStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerImeiStock> oppoCustomerImeiStockList= ObjectMapperUtils.readValue(oppoCustomerImeiStockStr, ArrayList.class);
+        for(OppoCustomerImeiStock oppoCustomerImeiStock:oppoCustomerImeiStockList){
+            oppoCustomerImeiStock.setCustomerid(oppoCustomerImeiStock.getCustomerid());
+            oppoCustomerImeiStock.setProductcode(productColorMap.get(oppoCustomerImeiStock.getProductcode()));
+            oppoCustomerImeiStock.setImei(oppoCustomerImeiStock.getImei());
+            oppoCustomerImeiStock.setDate(dateStart);
+            oppoCustomerImeiStock.setTransType(oppoCustomerImeiStock.getTransType());
+        }
+        return oppoCustomerImeiStocks;
+    }
+
+    //获取店核销总数据
+    public List<OppoCustomerSale> getOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        String oppoCustomerSaleStr=oppoClient.findOppoCustomerSales(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSale> oppoCustomerSales=ObjectMapperUtils.readValue(oppoCustomerSaleStr,ArrayList.class);
+        return oppoCustomerSales;
+    }
+
+    //	门店销售明细数据抛转
+    public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        String districtStr=districtClient.findDistrictList();
+        List<DistrictDto>  districtDtoList=ObjectMapperUtils.readValue(districtStr,ArrayList.class);
+        Map<String,DistrictDto>  districtDtoMap=Maps.newHashMap();
+        for(DistrictDto districtDto:districtDtoList){
+            districtDtoMap.put(districtDto.getId(),districtDto);
+        }
+        String oppoCustomerSaleImeStr=oppoClient.findOppoCustomerSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleImei>    oppoCustomerSaleImes= ObjectMapperUtils.readValue(oppoCustomerSaleImeStr,ArrayList.class);
+        for(OppoCustomerSaleImei oppoCustomerSaleIme:oppoCustomerSaleImes){
+            oppoCustomerSaleIme.setAgentcode("M13AMB");
+            oppoCustomerSaleIme.setAgentname("JXOPPO");
+        }
+        return oppoCustomerSaleImes;
+    }
+
+    //门店销售数据汇总
+    public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        Map<String, String> productColorMap = getProductColorMap();
+        String oppoCustomerSaleCountStr=oppoClient.findOppoCustomerSaleCounts(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts= ObjectMapperUtils.readValue(oppoCustomerSaleCountStr,ArrayList.class);
+        for(OppoCustomerSaleCount oppoCustomerSaleCount:oppoCustomerSaleCounts) {
+            String colorId=productColorMap.get(oppoCustomerSaleCount.getProductCode());
+            oppoCustomerSaleCount.setProductCode(colorId);
+            oppoCustomerSaleCount.setAgentCode("M13AMB");
+        }
+        return oppoCustomerSaleCounts;
+    }
+
+
+    //门店售后退货汇总
+    public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        Map<String, String> productColorMap = getProductColorMap();
+        String oppoCustomerAfterSaleImeiStr=oppoClient.findOppoCustomerAfterSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis= ObjectMapperUtils.readValue(oppoCustomerAfterSaleImeiStr,ArrayList.class);
+        for(OppoCustomerAfterSaleImei oppoCustomerAfterSaleImei:oppoCustomerAfterSaleImeis){
+            oppoCustomerAfterSaleImei.setProductCode(productColorMap.get(oppoCustomerAfterSaleImei.getProductCode()));
+            oppoCustomerAfterSaleImei.setDate(oppoCustomerAfterSaleImei.getDate());
+        }
+        return oppoCustomerAfterSaleImeis;
+    }
+
+    //门店演示机汇总数据
+    public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(LocalDate dateStart, LocalDate dateEnd) {
+        String companyId=RequestUtils.getRequestEntity().getCompanyId();
+        initAreaDepotMap(companyId);
+        Map<String, String> productColorMap = getProductColorMap();
+        String oppoCustomerDeomoPhones=oppoClient.findOppoCustomerDemoPhones(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones= ObjectMapperUtils.readValue(oppoCustomerDeomoPhones,ArrayList.class);
+        for(OppoCustomerDemoPhone oppoCustomerDemoPhone:oppoCustomerDemoPhones){
+            oppoCustomerDemoPhone.setProductCode(productColorMap.get(oppoCustomerDemoPhone.getProductCode()));
+        }
+        return oppoCustomerDemoPhones;
+    }
 
 
     private void initAreaDepotMap(String companyId){
@@ -215,7 +315,7 @@ public class OppoPushSerivce {
         }
     }
 
-    private  String  getAreaDepotId(CustomerDto customerDto){
+    private  String  getDepotId(CustomerDto customerDto){
         String jointLeavel=customerDto.getJointLeavel();
         String storeId=customerDto.getStoreId();
         String  areaId=customerDto.getAreaId();
@@ -269,6 +369,21 @@ public class OppoPushSerivce {
         }
     }
 
-
+    private Map<String,String> getProductColorMap(){
+        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoPlantAgentProductSelRepository.findAllByProductId();
+        Map<String, String> productColorMap = Maps.newHashMap();
+        for (OppoPlantAgentProductSel oppoPlantAgentProductSel : oppoPlantAgentProductSels) {
+            String colorId = oppoPlantAgentProductSel.getColorId();
+            String productId=oppoPlantAgentProductSel.getProductId();
+            String lxProductId=oppoPlantAgentProductSel.getLxProductId();
+            if (StringUtils.isNotBlank(colorId) && StringUtils.isNotBlank(productId)) {
+                productColorMap.put(productId, colorId);
+            }
+            if (StringUtils.isNotBlank(colorId)&& StringUtils.isNotBlank(lxProductId)) {
+                productColorMap.put(lxProductId, colorId);
+            }
+        }
+        return productColorMap;
+    }
 
 }

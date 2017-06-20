@@ -2,6 +2,7 @@ package net.myspring.tool.modules.oppo.repository;
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.third.domain.OppoCustomerAllot
+import net.myspring.future.modules.third.domain.OppoCustomerImeiStock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.time.LocalDate
@@ -11,52 +12,84 @@ import java.time.LocalDateTime
 /**
  * Created by admin on 2016/10/11.
  */
-interface OppoCustomerAllotRepository : BaseRepository<OppoCustomerAllot, String> {
+interface OppoCustomerImeiStockRepository : BaseRepository<OppoCustomerImeiStock, String> {
 
     @Query("""
-             select
-                    go.store_id as fromCustomerid,go.shop_id as toCustomerid,de.product_id as productcode,sum(de.shipped_qty) as qty
-                    from
-                        crm_goods_order go,
-                        crm_goods_order_detail de
-                    where
-                        go.id = de.goods_order_id
-                    and
-                    go.ship_date>=:dateStart
-                    and go.ship_date<=:dateEnd
-                    and de.shipped_qty >0
-                    and go.enabled=1
-                    and go.company_id=:companyId
-                    group by go.store_id,go.shop_id,de.product_id
-                    union
-            select
-                st.from_store_id as fromCustomerid,st.to_store_id as toCustomerid,de.product_id as productcode,sum(de.shipped_qty) as qty
-                    from
-                        crm_store_allot st,
-                        crm_store_allot_detail de
-                    where
-                        de.store_allot_id=st.id
-                    and
-                      st.ship_date>=:dateStart
-                      and st.ship_date<=:dateEnd
-                    and de.shipped_qty>0
-                    and st.enabled=1
-                    and st.company_id=:companyId
-                    group by st.from_store_id,st.to_store_id,de.product_id
-                    union
-            select
-                t.from_depot_id as fromCustomerid,t.to_depot_id as toCustomerid,im.product_id as productcode,count(*) as qty
-                    grom
-                        crm_ime_allot t,crm_product_ime im
-                    where
-                        t.audit_date >= :dateStart
-                    and t.audit_date <= :dateEnd
-                    and t.company_id = :companyId
-                    and t.enabled = 1
-                    and t.`status` = '已通过'
-                    And t.product_ime_id=im.id
-                    group by t.from_depot_id,t.to_depot_id,im.product_id
+        select
+	        go.shop_id as customerid,im.ime as imei,goi.product_id as productcode,0 as transType
+        from
+            crm_goods_order_ime goi,
+            crm_goods_order go,
+            crm_product_ime im
+        where
+            goi.goods_order_id = go.id
+            and goi.product_ime_id=im.id
+            and go.ship_date>=:dateStart
+            and go.ship_date<=:dateEnd
+            and go.company_id=:companyId
+            and go.enabled=1
+            and go.shop_id in (select id from crm_depot_shop)
+        union
+        select
+            al.from_depot_id as customerid,im.ime as imei,pro.id as productcode,1 as transType
+        from
+            crm_ime_allot al,
+            crm_product pro,
+            crm_product_ime im
+        where
+            al.product_ime_id = im.id
+            and im.product_id = pro.id
+            and al.created_date>=:dateStart
+            and al.created_date<=:dateEnd
+            and al.company_id=:companyId
+            and al.enabled=1
+            and al.from_depot_id in (select id from crm_depot_shop)
+        union
+        select
+            al.to_depot_id as customerid,im.ime as imei,pro.id as productcode,0 as transType
+        from
+            crm_ime_allot al,
+            crm_product pro,
+            crm_product_ime im
+        where
+            al.product_ime_id = im.id
+            and im.product_id = pro.id
+            and al.created_date>=:dateStart
+            and al.created_date<=:dateEnd
+            and al.company_id=:companyId
+            and al.enabled=1
+            and al.to_depot_id in (select id from crm_depot_shop)
+        union
+        select
+            af.from_depot_id as customerid,im.ime as imei, pro.id as productcode,1 as transType
+        from
+            crm_after_sale_ime_allot af,
+            crm_product_ime im,
+            crm_product pro
+        where
+            af.product_ime_id=im.id
+            and im.product_id=pro.id
+            and af.created_date>=:dateStart
+            and af.created_date<=:dateEnd
+            and af.company_id=:companyId
+            and af.enabled=1
+            and af.from_depot_id in (select id from crm_depot_shop)
+        union
+        select
+            af.to_depot_id as customerid,im.ime as imei, pro.id as productcode,0 as transType
+        from
+            crm_after_sale_ime_allot af,
+            crm_product_ime im,
+            crm_product pro
+        where
+            af.product_ime_id=im.id
+            and im.product_id=pro.id
+            and af.created_date>=:dateStart
+            and af.created_date<=:dateEnd
+            and af.company_id=:companyId
+            and af.enabled=1
+            and af.to_depot_id in (select id from crm_depot_shop)
         """)
-    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerAllot>
+    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerImeiStock>
 
 }
