@@ -39,7 +39,7 @@ public class PurMrbService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
+    private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 KingdeeFormIdEnum.PUR_MRB.name(),
                 purMrbDto.getJson(),
