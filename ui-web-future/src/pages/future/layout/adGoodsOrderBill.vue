@@ -73,7 +73,7 @@
         <el-table-column prop="confirmQty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model.number="scope.row.billQty" class="el-input__inner"  @input="refreshSummary()"/>
+            <input type="text" v-model="scope.row.billQty" class="el-input__inner"  @input="refreshSummary()"/>
           </template>
         </el-table-column>
         <el-table-column prop="productPrice2" :label="$t('adGoodsOrderBill.price')"></el-table-column>
@@ -189,21 +189,12 @@
         axios.get('/api/ws/future/layout/adGoodsOrder/findDto',{params:{id:this.$route.query.id}}).then((response)=> {
           this.adGoodsOrder =response.data;
           this.inputForm.id = this.adGoodsOrder.id;
-          this.inputForm.billDate = this.adGoodsOrder.billDate;
-          if(!this.inputForm.billDate){
-            this.inputForm.billDate = this.inputForm.extra.defaultBillDate;
-          }
-          this.inputForm.storeId = this.adGoodsOrder.storeId;
-          if(util.isBlank(this.inputForm.storeId)){
-            this.inputForm.storeId = this.inputForm.extra.defaultStoreId;
-          }
-          this.inputForm.expressOrderExpressCompanyId = this.adGoodsOrder.expressOrderExpressCompanyId;
-          if(util.isBlank(this.inputForm.expressOrderExpressCompanyId)){
-            this.inputForm.expressOrderExpressCompanyId = this.inputForm.extra.defaultExpressCompanyId;
-          }
+          this.inputForm.billDate = this.inputForm.extra.defaultBillDate;
+          this.inputForm.storeId = this.inputForm.extra.defaultStoreId;
           this.inputForm.expressOrderContator = this.adGoodsOrder.expressOrderContator;
           this.inputForm.expressOrderAddress = this.adGoodsOrder.expressOrderAddress;
           this.inputForm.billAddress = this.adGoodsOrder.billAddress;
+          this.inputForm.expressOrderExpressCompanyId = this.adGoodsOrder.expressOrderExpressCompanyId;
           this.inputForm.expressOrderMobilePhone = this.adGoodsOrder.expressOrderMobilePhone;
           this.inputForm.splitBill = this.adGoodsOrder.splitBill;
           this.inputForm.syn = true;

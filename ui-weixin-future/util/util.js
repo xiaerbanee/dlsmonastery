@@ -1,5 +1,5 @@
 function getUrl(url) {
-    var baseUrl =  "http://168.192.1.20:1200/api/";
+    var baseUrl =  "http://localhost:1200/api/";
     var result = baseUrl + url;
     if(url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";
@@ -162,18 +162,6 @@ function getFormatOfficeName(name) {
   }
 }
 
-function deleteExtra(json) {
-  var newJson = JSON.parse(JSON.stringify(json));
-  delete newJson.extra;
-  for(var index in newJson){
-    if(!newJson[index]){
-      delete newJson[index];
-    }
-  }
-  return newJson;
-}
-
-
 module.exports = {
   getCheckboxItems: getCheckboxItems,
   trim: trim,
@@ -191,6 +179,5 @@ module.exports = {
   getImages:getImages,
   getImageStr:getImageStr,
   getUrl:getUrl,
-  getFormatOfficeName:getFormatOfficeName,
-  deleteExtra:deleteExtra
+  getFormatOfficeName:getFormatOfficeName
 }

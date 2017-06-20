@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.InputTypeEnum;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.SumTypeEnum;
@@ -50,7 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -314,64 +312,42 @@ public class ProductImeService {
     }
 
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {
-
-        List<ProductIme> toBeSaved = Lists.newArrayList();
+        if(CollectionUtil.isEmpty(productImeBatchCreateForm.getProductImeCreateFormList())){
+            return;
+        }
+        List<ProductIme> productImes = Lists.newArrayList();
         for (ProductImeCreateForm productImeCreateForm : productImeBatchCreateForm.getProductImeCreateFormList()) {
-
-            if(productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeCreateForm.getIme()) != null){
-                throw new ServiceException("串码："+productImeCreateForm.getIme()+" 在本公司中已经存在");
-            }
-
             ProductIme productIme = new ProductIme();
-            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName());
-            if(product == null){
-                throw new ServiceException("货品："+productImeCreateForm.getProductName()+" 在本公司中无效或不存在");
-            }
-            productIme.setProductId(product.getId());
 
-            Depot depot = depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getStoreName());
-            if(depot == null){
-                throw new ServiceException("仓库："+productImeCreateForm.getStoreName()+" 在本公司中无效或不存在");
-            }
+            productIme.setProductId(productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName()).getId());
+            Depot depot = depotRepository.findByCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getStoreName());
             productIme.setDepotId(depot.getId());
-
             productIme.setRetailShopId(depot.getId());
-            productIme.setIme(toUpperCase(productImeCreateForm.getIme()));
-            productIme.setIme2(toUpperCase(productImeCreateForm.getIme2()));
-            productIme.setBoxIme(toUpperCase(productImeCreateForm.getBoxIme()));
+            productIme.setIme(productImeCreateForm.getIme().toUpperCase());
+            productIme.setIme2(productImeCreateForm.getIme2().toUpperCase());
+            productIme.setBoxIme(productImeCreateForm.getBoxIme().toUpperCase());
             productIme.setMeid(productImeCreateForm.getMeid());
             productIme.setBillId(productImeCreateForm.getBillId());
-            productIme.setCreatedTime(LocalDate.parse(productImeCreateForm.getCreatedTimeStr()).atStartOfDay());
+            productIme.setCreatedTime(productImeCreateForm.getCreatedTime());
             productIme.setRemarks(productImeCreateForm.getRemarks());
             productIme.setItemNumber(productImeCreateForm.getItemNumber());
             productIme.setImeReverse(StringUtils.reverse(productIme.getIme()));
             productIme.setInputType(InputTypeEnum.手工入库.name());
-            toBeSaved.add(productIme);
+            productImes.add(productIme);
         }
-        productImeRepository.save(toBeSaved);
-    }
-
-    private String toUpperCase(String str){
-        if(str == null){
-            return null;
-        }
-        return str.toUpperCase();
+        productImeRepository.save(productImes);
     }
 
     public void batchChange(ProductImeBatchChangeForm productImeBatchChangeForm) {
+        if(CollectionUtil.isEmpty(productImeBatchChangeForm.getProductImeChangeFormList())){
 
+            return;
+        }
         for(ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()){
 
-            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeChangeForm.getIme());
-            if(productIme == null){
-                throw new ServiceException("串码"+productImeChangeForm.getIme()+" 在本公司中无效或不存在");
-            }
+            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(productImeChangeForm.getIme());
 
             Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeChangeForm.getProductName());
-            if(product == null){
-                throw new ServiceException("调整后型号："+productImeChangeForm.getProductName()+" 在本公司中无效或不存在");
-            }
-
             productIme.setProductId(product.getId());
             productImeRepository.save(productIme);
         }

@@ -3,6 +3,8 @@ package net.myspring.future.modules.crm.web.form;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductIme;
 
+import java.time.LocalDateTime;
+
 
 public class ProductImeCreateForm extends BaseForm<ProductIme> {
 
@@ -14,16 +16,10 @@ public class ProductImeCreateForm extends BaseForm<ProductIme> {
     private String boxIme;
     private String meid;
     private String billId;
-    private String createdTimeStr;
+    private LocalDateTime createdTime;
+    private String remarks;
     private String itemNumber;
 
-    public String getCreatedTimeStr() {
-        return createdTimeStr;
-    }
-
-    public void setCreatedTimeStr(String createdTimeStr) {
-        this.createdTimeStr = createdTimeStr;
-    }
 
     public String getProductName() {
         return productName;
@@ -79,6 +75,24 @@ public class ProductImeCreateForm extends BaseForm<ProductIme> {
 
     public void setBillId(String billId) {
         this.billId = billId;
+    }
+
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(LocalDateTime createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    @Override
+    public String getRemarks() {
+        return remarks;
+    }
+
+    @Override
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public String getItemNumber() {

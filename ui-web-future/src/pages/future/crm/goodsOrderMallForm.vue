@@ -38,7 +38,7 @@
               <el-input  v-model="inputForm.carrierCodes"></el-input>
             </el-form-item>
             <el-form-item label="商城订单信息" prop="carrierDetails">
-              <el-input type="textarea" v-model="inputForm.carrierDetails"></el-input>
+              <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="inputForm.carrierDetails"></el-input>
             </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
                 {{shop.depotType}}

@@ -45,7 +45,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): Depot?
+    fun findByCompanyIdAndName(companyId: String, name: String): Depot
 
     @Query("""
         select t
@@ -60,7 +60,7 @@ interface DepotRepositoryCustom{
 
     fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
-    fun findStoreList(depotStoreQuery: DepotQuery): MutableList<DepotDto>
+    fun findStoreList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
@@ -219,7 +219,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             WHERE
                 t1.enabled=1
         """)
-        val query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
+        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
         return query.resultList as Page<DepotDto>
     }

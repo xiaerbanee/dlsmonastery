@@ -15,7 +15,4 @@ interface OppoPlantAgentProductSelRepository:BaseRepository<OppoPlantAgentProduc
     @Query("select t.item_number from #{#entityName} t where t.item_number in ?1")
     fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<String>
 
-    @Query("select * from #{#entityName} t  where t.productId is not null or t.lxProductId is not null ")
-    fun findAllByProductId():MutableList<OppoPlantAgentProductSel>
-
 }

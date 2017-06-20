@@ -36,10 +36,9 @@ public class CnJournalForBankController {
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public CnJournalForBankForm form (CnJournalForBankForm cnJournalForBankForm) {
+    public CnJournalForBankForm form () {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        cnJournalForBankForm = cnJournalForBankService.getForm(cnJournalForBankForm,kingdeeBook);
-        return cnJournalForBankForm;
+        return cnJournalForBankService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")

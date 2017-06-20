@@ -5,11 +5,11 @@
       <el-col :span="4"><div class="grid-content bg-purple">{{$t('dutyTaskForm.dutyTaskType')}}<span>&nbsp;&nbsp;</span><span style="color:red">{{dutyType}}</span></div></el-col>
     </el-row>
     <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="submitData" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20" />
         <el-row :gutter="20" v-if="dutyType === '请假'">
-          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="fullName">
-            <el-input v-model="showForm.created.fullName" disabled ></el-input>
+          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="createdByName">
+            <el-input v-model="showForm.createdByName" disabled ></el-input>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.leaveType')" prop="leaveType">
             <el-input v-model="showForm.leaveType"disabled ></el-input>
@@ -25,8 +25,8 @@
           </el-form-item>
         </el-row>
         <el-row :gutter="20" v-if="dutyType === '签到'">
-          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="fullName">
-            <el-input v-model="showForm.created.fullName"disabled ></el-input>
+          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="createdByName">
+            <el-input v-model="showForm.createdByName"disabled ></el-input>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.dutySignDate')" prop="dutyDate">
             <el-input v-model="showForm.dutyDate"disabled ></el-input>
@@ -45,8 +45,8 @@
           </el-form-item>
         </el-row>
         <el-row :gutter="20" v-if="dutyType === '补卡'">
-          <el-form-item  :label="$t('dutyTaskForm.applyAccount')" prop="fullName">
-            <el-input v-model="showForm.created.fullName"disabled ></el-input>
+          <el-form-item  :label="$t('dutyTaskForm.applyAccount')" prop="createdByName">
+            <el-input v-model="showForm.createdByName"disabled ></el-input>
           </el-form-item>
           <el-form-item  :label="$t('dutyTaskForm.dutyRepairDate')" prop="dutyDate">
             <el-input v-model="showForm.dutyDate"disabled ></el-input>
@@ -56,8 +56,8 @@
           </el-form-item>
         </el-row>
         <el-row :gutter="20" v-if="dutyType === '加班'">
-          <el-form-item :label="$t('dutyTaskForm.applyAccount')"  prop="fullName">
-            <el-input v-model="showForm.created.fullName"disabled ></el-input>
+          <el-form-item :label="$t('dutyTaskForm.applyAccount')"  prop="createdByName">
+            <el-input v-model="showForm.createdByName"disabled ></el-input>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.dutyOverTimeDate')"  prop="dutyDate">
             <el-input v-model="showForm.dutyDate"disabled ></el-input>
@@ -76,8 +76,8 @@
           </el-form-item>
         </el-row>
         <el-row :gutter="20" v-if="dutyType === '调休'">
-          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="fullName">
-            <el-input v-model="showForm.created.fullName"disabled ></el-input>
+          <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="createdByName">
+            <el-input v-model="showForm.createdByName"disabled ></el-input>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.restType')" prop="type">
             <el-input v-model="showForm.type"disabled ></el-input>
@@ -106,8 +106,8 @@
           </el-form-item>
         </el-row>
         <el-row :gutter="20" v-if="dutyType === '出差'">
-        <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="fullName">
-          <el-input v-model="showForm.created.fullName"disabled ></el-input>
+        <el-form-item :label="$t('dutyTaskForm.applyAccount')" prop="createdByName">
+          <el-input v-model="showForm.createdByName"disabled ></el-input>
         </el-form-item>
         <el-form-item :label="$t('dutyTaskForm.restTimeStart')" prop="dateStart">
           <el-input v-model="showForm.dateStart"disabled ></el-input>
@@ -120,8 +120,8 @@
         </el-form-item>
       </el-row>
         <el-row :gutter="20" v-if="dutyType === '免打卡'">
-          <el-form-item :label="$t('dutyTaskForm.applyAccount')"  prop="fullName">
-            <el-input v-model="showForm.created.fullName"disabled ></el-input>
+          <el-form-item :label="$t('dutyTaskForm.applyAccount')"  prop="createdByName">
+            <el-input v-model="showForm.createdByName"disabled ></el-input>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.freeDate')"  prop="freeDate">
             <el-input v-model="showForm.freeDate"disabled ></el-input>
@@ -135,12 +135,12 @@
         </el-row>
         <el-row :gutter="20" v-if="showForm.status === '申请中'">
           <el-form-item :label="$t('dutyTaskForm.isPass')" prop="pass">
-            <el-radio-group v-model="inputForm.pass">
+            <el-radio-group v-model="submitData.pass">
               <el-radio v-for="(value,key) in inputForm.bools" :key="key" :label="value">{{key | bool2str}}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item :label="$t('dutyTaskForm.auditRemarks')" prop="auditRemarks">
-            <el-input  type="textarea" v-model="inputForm.auditRemarks" ></el-input>
+            <el-input  type="textarea" v-model="submitData.auditRemarks" ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('dutyTaskForm.sure')}}</el-button>
@@ -161,8 +161,7 @@
           isInit:false,
           submitDisabled:false,
           dutyType:'',
-          inputForm:{
-          },
+          inputForm:{},
           submitData:{
             id: this.$route.query.id,
             dutyType: this.$route.query.dutyType,
@@ -181,8 +180,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            util.copyValue(this.inputForm,this.submitData);
-            axios.post('/api/basic/hr/duty/audit',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/basic/hr/duty/audit',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if(!this.isCreate){

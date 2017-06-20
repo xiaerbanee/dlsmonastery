@@ -8,8 +8,6 @@ import net.myspring.basic.modules.hr.web.query.DutySignQuery;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelSheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by liuj on 2016/11/30.
@@ -44,6 +41,7 @@ public class DutySignController {
 
     @RequestMapping(value = "getQuery")
     public DutySignQuery getQuery(DutySignQuery dutySignQuery) {
+        dutySignQuery.getExtra().put("officeList", officeService.findAll());
         dutySignQuery.getExtra().put("positionList", positionService.findAll());
         return dutySignQuery;
     }
@@ -69,10 +67,8 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "export")
-    public ModelAndView export(DutySignQuery dutySignQuery) {
+    public String export(DutySignQuery dutySignQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
-        SimpleExcelSheet simpleExcelSheet = dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "签到列表.xlsx", simpleExcelSheet);
-        return null;
+        return dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
     }
 }

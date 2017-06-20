@@ -5,7 +5,6 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.service.ImooService;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +36,5 @@ public class ImooController {
         List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers = imooService.plantPrdocutImeiDeliverByDate(LocalDateUtils.parse(date));
         imooService.pullPlantSendimeis(imooPrdocutImeiDelivers);
         return "imoo同步成功";
-    }
-
-    @RequestMapping(value="synIme")
-    public  String synIme (String date){
-        List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers=imooService.synIme(date);
-        return ObjectMapperUtils.writeValueAsString(imooPrdocutImeiDelivers);
     }
 }

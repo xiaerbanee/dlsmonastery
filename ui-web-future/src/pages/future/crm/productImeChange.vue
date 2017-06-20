@@ -1,8 +1,8 @@
 <template>
   <div>
     <head-tab active="productImeChange"></head-tab>
-    <search-dialog :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
-      <el-form  label-width="120px">
+    <search-dialog :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" zIndex="1500">
+      <el-form >
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('productImeChange.ime')" prop="imeStr">
@@ -17,7 +17,7 @@
       </div>
     </search-dialog>
     <div>
-      <el-form  :model="inputForm"  ref="inputForm"  :rules="rules"  label-width="120px">
+      <el-form  :model="batchChangeForm"  ref="inputForm"  :rules="rules">
         <el-row :gutter="24">
           <el-col :span="12">
             <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -39,10 +39,10 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  import SearchDialog from "../../../components/common/search-dialog";
 
-  var table = null;
   export default {
-
+    components: {SearchDialog},
     data(){
       return this.getData()
     },
@@ -50,11 +50,11 @@
     methods: {
       getData() {
         return {
+          isInit: false,
+          table: null,
           searchFormVisible:false,
           imeStr:'',
-          inputForm: {
-              extra:{},
-          },
+          batchChangeForm: {},
           settings: {
             rowHeaders: true,
             minSpareRows: 100,
@@ -82,24 +82,30 @@
               width: 300
             }],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
+
           }, rules: {},
           submitDisabled: false,
+          formLabelWidth: '120px',
+          remoteLoading: false,
+
         };
       },
       search() {
         axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
-          table.loadData(response.data);
+          this.table.loadData(response.data);
         })
       },
       formSubmit(){
-        this.submitDisabled = true;
+
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.submitDisabled = true;
             let tableData = [];
-            let list = table.getData();
+
+            let list = this.table.getData();
             for (let item in list) {
-              if (!table.isEmptyRow(item)) {
+              if (!this.table.isEmptyRow(item)) {
                 let row = list[item];
                 let changeForm = {};
                 changeForm.ime = row[0];
@@ -107,32 +113,35 @@
                 tableData.push(changeForm);
               }
             }
-            this.inputForm.productImeChangeFormList = tableData;
+            this.batchChangeForm.productImeChangeFormList = tableData;
 
-            axios.post('/api/ws/future/crm/productIme/batchChange', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            axios.post('/api/ws/future/crm/productIme/batchChange', qs.stringify(this.batchChangeForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(response.data.success){
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }
+              Object.assign(this.$data, this.getData());
+
             }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
+
           }
         })
-      },initPage(){
-        axios.get('/api/ws/future/crm/productIme/getBatchChangeForm').then((response)=>{
-          this.inputForm = response.data;
-          this.settings.columns[3].source = response.data.extra.productNameList;
-          table = new Handsontable(this.$refs["handsontable"], this.settings);
-        });
       }
     },
-    created() {
-        this.initPage();
+    activated() {
+
+
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+
+        axios.get('/api/ws/future/crm/productIme/getBatchChangeForm').then((response)=>{
+          this.batchChangeForm = response.data;
+          this.settings.columns[3].source = response.data.extra.productNameList;
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+      }
+      this.isInit = true;
+
+
     },
   }
 </script>

@@ -12,10 +12,8 @@ import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.repository.ImooRepository;
 import net.myspring.tool.modules.imoo.repository.ImooPlantBasicProductRepository;
 import net.myspring.tool.modules.imoo.repository.ImooPrdocutImeiDeliverRepository;
-import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -99,14 +97,4 @@ public class ImooService {
         return "发货串码同步成功，共同步" + list.size() + "条数据";
     }
 
-    @Transactional
-    public  List<ImooPrdocutImeiDeliver>  synIme(String date) {
-        LocalDate nowDate= LocalDateUtils.parse(date);
-        LocalDate dateStart = nowDate.minusDays(1);
-        LocalDate dateEnd = nowDate.plusDays(1);
-        List<String>  mainCodes=Lists.newArrayList();
-        mainCodes.add("M13A03");
-        List<ImooPrdocutImeiDeliver> prdocutImeiDelivers = imooPrdocutImeiDeliverRepository.findSynList(dateStart, dateEnd, mainCodes);
-        return prdocutImeiDelivers;
-    }
 }

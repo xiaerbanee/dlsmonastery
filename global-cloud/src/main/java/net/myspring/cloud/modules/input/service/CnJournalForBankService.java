@@ -18,7 +18,6 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -169,7 +168,8 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public CnJournalForBankForm getForm(CnJournalForBankForm cnJournalForBankForm,KingdeeBook kingdeeBook){
+    public CnJournalForBankForm getForm(KingdeeBook kingdeeBook){
+        CnJournalForBankForm cnJournalForBankForm = new CnJournalForBankForm();
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         map.put("settleTypeNameList",bdSettleTypeRepository.findAllForDefault().stream().map(BdSettleType::getFName).collect(Collectors.toList()));

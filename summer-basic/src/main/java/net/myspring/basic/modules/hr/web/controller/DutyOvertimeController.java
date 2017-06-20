@@ -24,6 +24,8 @@ public class DutyOvertimeController {
     public DutyOvertimeQuery getQuery(DutyOvertimeQuery dutyOvertimeQuery) {
         return dutyOvertimeQuery;
     }
+
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyOvertimeDto> list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
         dutyOvertimeQuery.setCreatedBy(RequestUtils.getAccountId());

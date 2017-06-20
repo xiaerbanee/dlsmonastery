@@ -18,9 +18,11 @@ import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderService;
-import net.myspring.future.modules.layout.web.form.*;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderAuditForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderBillForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderShipForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
-import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,10 +98,6 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public RestResponse save(AdGoodsOrderForm adGoodsOrderForm) {
-        if(CollectionUtil.isEmpty(adGoodsOrderForm.getAdGoodsOrderDetailList())){
-            throw new ServiceException("请录入柜台订货明细");
-        }
-
         adGoodsOrderService.save(adGoodsOrderForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
@@ -120,7 +118,6 @@ public class  AdGoodsOrderController {
         adGoodsOrderBillForm.getExtra().put("defaultStoreId",defaultStoreId);
 
         adGoodsOrderBillForm.getExtra().put("defaultBillDate", LocalDate.now());
-        adGoodsOrderBillForm.getExtra().put("defaultExpressCompanyId", expressCompanyService.getDefaultExpressCompanyId());
 
         return adGoodsOrderBillForm;
     }

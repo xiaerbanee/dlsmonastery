@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeCreate"></head-tab>
     <div>
-      <el-form  :model="inputForm" class="form input-form" ref="inputForm"  :rules="rules"  label-width="120px">
+      <el-form  :model="batchCreateForm" class="form input-form" ref="inputForm"  :rules="rules">
         <el-row :gutter="24">
           <el-col :span="12">
             <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -20,11 +20,10 @@
 </template>
 <style>
   @import "~handsontable/dist/handsontable.full.css";
-
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-  var table = null;
+
   export default {
     data(){
       return this.getData()
@@ -33,10 +32,9 @@
     methods: {
       getData() {
         return {
-
-          inputForm: {
-              extra:{},
-          },
+          isInit: false,
+          table: null,
+          batchCreateForm: {},
           settings: {
             rowHeaders: true,
             autoColumnSize: true,
@@ -46,7 +44,7 @@
             startRows: 500,
             maxRows: 5000,
             startCols: 5,
-            colHeaders: ['货品', '仓库', '串码', '串码2', '箱号', 'meid码', '订单号', '工厂录入时间', '备注', '物料编码'],
+            colHeaders: ['货品', '仓库', '串码串码', '串码2', '箱号', 'meid码', '订单号', '工厂录入时间', '备注', '物料编码'],
             columns: [{
               type: "autocomplete",
               allowEmpty: false,
@@ -87,19 +85,24 @@
               width: 100
             }],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
+
           }, rules: {},
           submitDisabled: false,
+          formLabelWidth: '120px',
+          remoteLoading: false
         };
       },
       formSubmit(){
-        this.submitDisabled = true;
+
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.submitDisabled = true;
             let tableData = [];
-            let list = table.getData();
+
+            let list = this.table.getData();
             for (let item in list) {
-              if (!table.isEmptyRow(item)) {
+              if (!this.table.isEmptyRow(item)) {
                 let row = list[item];
                 let createForm = {};
                 createForm.productName = row[0];
@@ -109,39 +112,42 @@
                 createForm.boxIme = row[4];
                 createForm.meid = row[5];
                 createForm.billId = row[6];
-                createForm.createdTimeStr = row[7];
+                createForm.createdTime = row[7];
                 createForm.remarks = row[8];
                 createForm.itemNumber = row[9];
                 tableData.push(createForm);
               }
             }
-            this.inputForm.productImeCreateFormList = tableData;
+            this.batchCreateForm.productImeCreateFormList = tableData;
 
-            axios.post('/api/ws/future/crm/productIme/batchCreate', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            axios.post('/api/ws/future/crm/productIme/batchCreate', qs.stringify(this.batchCreateForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(response.data.success){
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }
+              Object.assign(this.$data, this.getData());
+
             }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
+
           }
         })
-      },initPage(){
-        axios.get('/api/ws/future/crm/productIme/getBatchCreateForm').then((response)=>{
-          this.inputForm = response.data;
-          this.settings.columns[0].source = response.data.extra.productNameList;
-          this.settings.columns[1].source = response.data.extra.storeNameList;
-          table = new Handsontable(this.$refs["handsontable"], this.settings);
-        });
       }
     },
-    created() {
-      this.initPage();
+    activated() {
+
+
+      if(!this.$route.query.headClick || !this.isInit) {
+        Object.assign(this.$data, this.getData());
+
+        axios.get('/api/ws/future/crm/productIme/getBatchCreateForm').then((response)=>{
+          this.batchCreateForm = response.data;
+          this.settings.columns[0].source = response.data.extra.productNameList;
+          this.settings.columns[1].source = response.data.extra.storeNameList;
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
+        });
+      }
+      this.isInit = true;
+
+
     },
   }
 </script>

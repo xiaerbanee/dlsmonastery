@@ -25,6 +25,8 @@ public class DutyFreeController {
     public DutyFreeQuery getQuery(DutyFreeQuery dutyFreeQuery) {
         return dutyFreeQuery;
     }
+
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyFreeDto> list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         dutyFreeQuery.setCreatedBy(RequestUtils.getAccountId());
@@ -34,7 +36,7 @@ public class DutyFreeController {
 
     @RequestMapping(value="findOne")
     public DutyFreeForm getForm(DutyFreeForm dutyFreeForm){
-        dutyFreeForm.setDateList(DutyDateTypeEnum.getList());
+        dutyFreeForm.getExtra().put("dateList",DutyDateTypeEnum.getList());
         return dutyFreeForm;
     }
 

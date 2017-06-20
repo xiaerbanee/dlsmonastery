@@ -7,10 +7,13 @@ import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.web.form.WeixinAccountForm;
+import net.myspring.uaa.web.form.AccountWeixinForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountWeixinService {
@@ -23,13 +26,14 @@ public class AccountWeixinService {
     private WeixinManager weixinManager;
 
 
-    public RestResponse bind(WeixinAccountForm weixinAccountForm) {
-        String loginName=weixinAccountForm.getLoginName();
+    public RestResponse bind(AccountWeixinForm accountWeixinForm) {
+        String loginName=accountWeixinForm.getLoginName();
         AccountDto account = accountRepository.findByLoginName(loginName);
-        if ((account != null && StringUtils.validatePassword(weixinAccountForm.getPassword(), account.getPassword())) || "xcxtest".equals(weixinAccountForm.getLoginName())) {
-            WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinAccountForm.getCode());
-            AccountWeixinDto accountWeixin = accountWeixinDtoRepository.findByAccountId(account.getId());
-            if (accountWeixin != null) {
+        if ((account != null && StringUtils.validatePassword(accountWeixinForm.getPassword(), account.getPassword())) || "xcxtest".equals(accountWeixinForm.getLoginName())) {
+            WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(accountWeixinForm.getCode());
+            List<AccountWeixinDto> accountWeixinList = accountWeixinDtoRepository.findByAccountId(account.getId());
+            if (CollectionUtil.isNotEmpty(accountWeixinList)&&accountWeixinList.size()==1) {
+                AccountWeixinDto accountWeixin=accountWeixinList.get(0);
                 if("xcxtest".equals(loginName)){
                     accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                     accountWeixin.setAccountId(account.getId());
@@ -43,8 +47,8 @@ public class AccountWeixinService {
                         return new RestResponse("绑定失败，已绑定其他微信号", null);
                     }
                 }
-            } else {
-                accountWeixin = new AccountWeixinDto();
+            } else  if (CollectionUtil.isEmpty(accountWeixinList)){
+                AccountWeixinDto accountWeixin = new AccountWeixinDto();
                 accountWeixin.setAccountId(account.getId());
                 accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                 accountWeixin.setCompanyId(account.getCompanyId());
