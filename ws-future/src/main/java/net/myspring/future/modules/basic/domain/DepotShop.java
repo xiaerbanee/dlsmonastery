@@ -37,6 +37,8 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private String salePointType;
     //乡镇类型
     private String townType;
+
+    private String chainType;
     //是否核心商圈
     private Boolean bussinessCenter=false;
     //核心商圈名称
@@ -62,6 +64,14 @@ public class DepotShop extends CompanyEntity<DepotShop> {
     private String townId;
 
     private String townName;
+
+    public String getChainType() {
+        return chainType;
+    }
+
+    public void setChainType(String chainType) {
+        this.chainType = chainType;
+    }
 
     public String getTownName() {
         return townName;
