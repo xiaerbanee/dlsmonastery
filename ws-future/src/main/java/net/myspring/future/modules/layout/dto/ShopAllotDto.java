@@ -27,6 +27,24 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private BigDecimal returnTotalPrice;
     private BigDecimal fromShopShouldGet;
     private BigDecimal toShopShouldGet;
+    private String fromJointLevel;
+    private String toJoinLevel;
+
+    public String isFromJointLevel() {
+        return fromJointLevel;
+    }
+
+    public void setFromJointLevel(String fromJointLevel) {
+        this.fromJointLevel = fromJointLevel;
+    }
+
+    public String isToJoinLevel() {
+        return toJoinLevel;
+    }
+
+    public void setToJoinLevel(String toJoinLevel) {
+        this.toJoinLevel = toJoinLevel;
+    }
 
     public BigDecimal getFromShopShouldGet() {
         return fromShopShouldGet;
