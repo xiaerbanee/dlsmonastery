@@ -54,7 +54,6 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         inputForm:{
