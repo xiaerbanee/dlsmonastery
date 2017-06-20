@@ -115,13 +115,13 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.initPromise = axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
+        this.pageHeight = window.outerHeight -320;
+        util.copyValue(this.$route.query,this.formData);
+        this.initPromise = axios.get('/api/ws/future/crm/depotChange/getQuery').then((response) =>{
         this.formData=response.data;
       });
     },activated(){
-      this.initPromise.then(()=>{
+        this.initPromise.then(()=>{
         this.pageRequest();
       })
     }

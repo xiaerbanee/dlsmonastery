@@ -64,7 +64,7 @@
       },
       formSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/ws/future/crm/depotChange/audit',qs.stringify(this.inputForm)).then((response)=> {
