@@ -3,11 +3,8 @@
     <head-tab active="arRefundBill"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item label="日期"  prop="billDate">
-          <date-picker v-model="formData.billDate"></date-picker>
-        </el-form-item>
         <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 25px"></div>
       </el-form>
     </div>
   </div>
@@ -40,11 +37,8 @@
           contextMenu: ['row_above', 'row_below', 'remove_row'],
         },
         formData:{
-          billDate:new Date().toLocaleDateString(),
           json:[],
-        },rules: {
-          billDate: [{ required: true, message: '必填项'}],
-        },
+        },rules: {},
         submitDisabled:false,
         remoteLoading:false
       };
@@ -72,7 +66,6 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            this.formData.billDate = util.formatLocalDate(this.formData.billDate);
             axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             }).catch(function () {
