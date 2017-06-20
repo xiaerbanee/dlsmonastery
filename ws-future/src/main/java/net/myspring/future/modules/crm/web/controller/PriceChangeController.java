@@ -76,8 +76,4 @@ public class PriceChangeController {
         return priceChangeQuery;
     }
 
-    private List<String> getActionList(PriceChange priceChange) {
-        return null;
-    }
-
 }

@@ -10,16 +10,13 @@
           <product-type-select  v-model="inputForm.productTypeIdList" :multiple=true :disabled="!isCreate"></product-type-select>
         </el-form-item>
         <el-form-item  :label="$t('priceChangeForm.priceChangeDate')" prop="priceChangeDate">
-          <date-picker  v-model="inputForm.priceChangeDate" :disabled="action=='audit'"></date-picker>
+          <date-picker  v-model="inputForm.priceChangeDate"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.uploadEndDate')" prop="uploadEndDate">
-          <date-picker  v-model="inputForm.uploadEndDate" :disabled="action=='audit'"></date-picker>
+          <date-picker  v-model="inputForm.uploadEndDate"></date-picker>
         </el-form-item>
         <el-form-item :label="$t('priceChangeForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks" :disabled="action=='audit'"></el-input>
-        </el-form-item>
-        <el-form-item v-if="action=='audit'"  :label="$t('priceChangeDetail.checkPercent')" prop="checkPercent">
-          <el-input v-model.number="inputForm.checkPercent" ></el-input>
+          <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('priceChangeForm.save')}}</el-button>
@@ -39,7 +36,6 @@
       getData() {
       return{
         isCreate:this.$route.query.id==null,
-        action:this.$route.query.action,
         submitDisabled:false,
         inputForm:{},
         url:'',
@@ -57,12 +53,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            if(this.action==='audit'){
-              this.url = '/api/ws/future/crm/priceChange/check';
-            }else{
-              this.url = '/api/ws/future/crm/priceChange/save';
-            }
-            axios.post(this.url,qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/priceChange/save',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               if(!that.isCreate){
                 this.submitDisabled = false;
