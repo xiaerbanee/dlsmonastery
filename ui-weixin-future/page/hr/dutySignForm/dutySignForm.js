@@ -52,14 +52,7 @@ Page({
                 preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + res.data[0].mongoPreviewId),
                 view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + "&id=" + res.data[0].mongoPreviewId)
               })
-              console.log(res.data)
               that.setData({ "formProperty.images": images })
-            },
-            fail: function () {
-              // fail
-            },
-            complete: function () {
-              // complete
             }
           })
 

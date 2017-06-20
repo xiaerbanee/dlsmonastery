@@ -6,8 +6,6 @@ Page({
   data: {
     page: {},
     formData: {
-      page: 0,
-      size: 10,
       order: "month_rank: DESC"
     },
     radioChecked: {
@@ -33,13 +31,6 @@ Page({
   },
   initPage: function () {
     var that = this;
-    wx.getSystemInfo({
-      success: function (res) {
-        that.setData({
-          sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2
-        });
-      }
-    });
     if (that.data.options.areaId) {
       that.setData({ "formData.areaId": that.data.options.areaId });
       that.setData({ "formData.areaName": that.data.options.areaName });
@@ -47,6 +38,16 @@ Page({
     if (that.data.options.scoreDate) {
       that.setData({ "formData.scoreDate": that.data.options.scoreDate });
     }
+    if ($util.trim(that.data.formData.scoreDate) == "") {
+      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+    }
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2
+        });
+      }
+    });
     wx.request({
       url: $util.getUrl("ws/future/crm/reportScoreOffice/getQuery"),
       data: {},
@@ -56,13 +57,11 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.extra.areaList })
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
+        that.pageRequest();
       }
     })
-    if ($util.trim(that.data.formData.scoreDate) == "") {
-      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
-    }
-    that.pageRequest();
+
   },
   pageRequest: function () {
     var that = this;
@@ -77,9 +76,8 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -156,5 +154,5 @@ Page({
         }
       }
     });
-  },
+  }
 })

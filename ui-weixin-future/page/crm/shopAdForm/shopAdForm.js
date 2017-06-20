@@ -3,9 +3,7 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    formData: {
-      specialArea: false,
-    },
+    formData: {},
     formProperty: {},
     response: {},
     submitDisabled: false,
@@ -100,7 +98,6 @@ Page({
         }
       })
     }
-
   },
   showError: function (e) {
     var that = this;
@@ -125,7 +122,6 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        console.log(res)
         that.setData({
           formData: res.data
         })

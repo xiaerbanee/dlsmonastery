@@ -4,11 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10,
-      sort:'id:desc'
-    },
+    formData: {},
     searchHidden: true,
     activeItem: null
   },
@@ -29,7 +25,7 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ formData: res.data});
+        that.setData({ formData: res.data });
         that.pageRequest();
       }
     })
@@ -47,7 +43,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
@@ -155,5 +151,5 @@ Page({
         }
       }
     });
-  },
+  }
 })
