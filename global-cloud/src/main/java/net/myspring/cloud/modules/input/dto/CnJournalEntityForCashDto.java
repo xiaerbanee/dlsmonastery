@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by lihx on 2017/6/8.
  */
-public class CnJournalFEntityForCashDto {
+public class CnJournalEntityForCashDto {
     //对方科目编码
     private String accountNumber;
     //部门编码
