@@ -8,7 +8,7 @@
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
               <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="adShop" @input="outShopChanged"></depot-select>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isAdShop">
+            <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isDelegateShop">
               <depot-select :disabled="afterBill" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.recentSaleQty')" >
@@ -100,7 +100,7 @@
           submitDisabled: false,
           productName: "",
           filterAdGoodsOrderDetailList: [],
-          isAdShop: false,
+          isDelegateShop: false,
           pageLoading: false,
           processStatus: '',
           inputForm: {
@@ -148,7 +148,7 @@
         })
       }, outShopChanged(){
           if(util.isBlank(this.inputForm.outShopId)){
-            this.isAdShop = false;
+            this.isDelegateShop = false;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
             return;
@@ -156,11 +156,11 @@
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
           if (response.data.jointType === '代理') {
-            this.isAdShop = true;
+            this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
           }else{
-            this.isAdShop = false;
+            this.isDelegateShop = false;
             this.inputForm.shopId = this.inputForm.outShopId;
             this.refreshRecentMonthSaleAmount();
           }
@@ -248,7 +248,11 @@
               this.inputForm.expressOrderMobilePhone = response.data.expressOrderMobilePhone;
               this.inputForm.remarks = response.data.remarks;
               this.processStatus = response.data.processStatus;
+
               this.refreshRecentMonthSaleAmount();
+              axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
+                this.isDelegateShop = (response.data.jointType === '代理');
+              });
 
             });
           }

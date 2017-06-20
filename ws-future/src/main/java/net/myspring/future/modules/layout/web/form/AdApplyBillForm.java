@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.web.form;
 
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.common.enums.BillTypeEnum;
+import net.myspring.future.modules.basic.web.form.ProductAdForm;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 
@@ -17,7 +18,17 @@ public class AdApplyBillForm extends BaseForm<AdApply> {
     private LocalDate billDate = LocalDate.now();
     private String expressCompanyId;
     private String storeId;
-    private List<String> billTypes;
+
+    private List<AdApplyDetailForm> adApplyDetailForms;
+
+
+    public List<AdApplyDetailForm> getAdApplyDetailForms() {
+        return adApplyDetailForms;
+    }
+
+    public void setAdApplyDetailForms(List<AdApplyDetailForm> adApplyDetailForms) {
+        this.adApplyDetailForms = adApplyDetailForms;
+    }
 
     public String getBillType() {
         return billType;
@@ -51,11 +62,4 @@ public class AdApplyBillForm extends BaseForm<AdApply> {
         this.storeId = storeId;
     }
 
-    public List<String> getBillTypes() {
-        return billTypes;
-    }
-
-    public void setBillTypes(List<String> billTypes) {
-        this.billTypes = billTypes;
-    }
 }
