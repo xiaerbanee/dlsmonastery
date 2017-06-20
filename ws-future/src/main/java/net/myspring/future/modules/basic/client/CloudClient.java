@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -75,6 +75,6 @@ public interface CloudClient {
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
 
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEntityList")
-    RestResponse synForJournalForBank(List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList);
+    RestResponse synForJournalForBank(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList);
 
 }

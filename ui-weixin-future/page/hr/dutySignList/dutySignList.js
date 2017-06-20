@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10
-    },
+    formData: {},
     searchHidden: true,
     activeItem: null
   },
@@ -21,7 +18,17 @@ Page({
   },
   initPage: function () {
     var that = this;
-    that.pageRequest();
+    wx.request({
+      url: $util.getUrl("basic/hr/dutySign/getQuery"),
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.pageRequest();
+      }
+    })
   },
   pageRequest: function () {
     var that = this
@@ -32,10 +39,11 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("basic/hr/dutySign"),
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
-            },
-          data: that.data.formData,
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
@@ -82,16 +90,16 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     wx.showActionSheet({
-      itemList: ["详细","删除"],
+      itemList: ["详细", "删除"],
       success: function (res) {
         if (!res.cancel) {
           if (res.tapIndex == 0) {
             wx.navigateTo({
               url: '/page/hr/dutySignForm/dutySignForm?action=detail&id=' + id
             })
-          } else if(res.tapIndex==1){
+          } else if (res.tapIndex == 1) {
             wx.request({
-              url: $util.getUrl( "basic/hr/dutySign/delete"),
+              url: $util.getUrl("basic/hr/dutySign/delete"),
               data: { id: id },
               header: {
                 'x-auth-token': app.globalData.sessionId,
@@ -143,5 +151,5 @@ Page({
         }
       }
     });
-  },
+  }
 })

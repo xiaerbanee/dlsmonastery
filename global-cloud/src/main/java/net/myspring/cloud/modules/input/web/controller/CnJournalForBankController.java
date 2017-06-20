@@ -1,11 +1,9 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.CnJournalForBankService;
-import net.myspring.cloud.modules.input.service.CnJournalForCashService;
 import net.myspring.cloud.modules.input.web.form.CnJournalForBankForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
@@ -57,11 +55,11 @@ public class CnJournalForBankController {
     }
 
     @RequestMapping(value = "saveForEntityList", method= RequestMethod.POST)
-    public RestResponse saveForEntityList(@RequestBody List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList) {
+    public RestResponse saveForEntityList(@RequestBody List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList) {
         RestResponse restResponse;
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalFEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
+        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
         if (kingdeeSynDto.getSuccess()){
             restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
         }else {

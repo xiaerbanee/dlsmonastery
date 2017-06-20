@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
@@ -31,7 +31,6 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,7 +42,6 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +136,7 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
-            List<CnJournalFEntityForBankDto> cnJournalFEntityForBankDtoList = Lists.newArrayList();
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
@@ -146,7 +144,7 @@ public class EmployeePhoneDepositService {
                         employeePhoneDeposit.setStatus(EmployeePhoneDepositStatusEnum.已通过.name());
                         employeePhoneDeposit.setLocked(true);
                         employeePhoneDeposit.setBillDate(LocalDateTime.now());
-                        CnJournalFEntityForBankDto entityForBankDto = new CnJournalFEntityForBankDto();
+                        CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
                         entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
                         entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
                         entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
@@ -154,7 +152,7 @@ public class EmployeePhoneDepositService {
                         entityForBankDto.setBankAccountNumber(bank.getCode());
                         Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
                         entityForBankDto.setComment(depot.getName());
-                        cnJournalFEntityForBankDtoList.add(entityForBankDto);
+                        cnJournalEntityForBankDtoList.add(entityForBankDto);
                         employeePhoneDepositRepository.save(employeePhoneDeposit);
                         if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) > 0) {
                             EmployeePhone employeePhone = new EmployeePhone();
@@ -172,7 +170,7 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
-            RestResponse restResponse = cloudClient.synForJournalForBank(cnJournalFEntityForBankDtoList);
+            RestResponse restResponse = cloudClient.synForJournalForBank(cnJournalEntityForBankDtoList);
         }
     }
 

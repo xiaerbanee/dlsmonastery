@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.dto;
 /**
  * Created by lihx on 2017/6/20.
  */
-public class ApPayBillFEntryDto {
+public class ApPayBillEntryDto {
     //科目编码
     private String accountNumber;
     //银行账户编码
