@@ -163,9 +163,14 @@ function getFormatOfficeName(name) {
 }
 
 function deleteExtra(json) {
-  var newJson = JSON.parse(JSON.stringify(json));
-  delete newJson.extra;
-  return newJson;
+    var newJson = JSON.parse(JSON.stringify(json));
+    delete newJson.extra;
+    for(var index in newJson){
+        if(!newJson[index]){
+            delete newJson[index];
+        }
+    }
+    return newJson;
 }
 
 module.exports = {
