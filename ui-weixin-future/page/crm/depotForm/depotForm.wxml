@@ -150,6 +150,7 @@
         </view>
       </view>
     </view>
+   <view wx:if="{{shopAttributeShow}}">
     <view class="weui-cells__title" >终端统计</view>
     <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
     <text>{{response.error}}</text></view>
@@ -166,6 +167,7 @@
         </view>
       </block>
     </view>
+   </view>
     <view class="weui-btn-area">
       <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
     </view>

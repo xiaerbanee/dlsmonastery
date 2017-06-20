@@ -4,7 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     productImeSearchResult: {},
-    formData: {imeStr:''},
+    formData: { imeStr: '' },
     formProperty: {},
     response: {},
     submitDisabled: false
@@ -18,14 +18,14 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl( "crm/productImeSale/getForm"),
+      url: $util.getUrl("ws/future/crm/productImeSale/getSaleForm"),
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
         that.setData({ formProperty: res.data })
-        if(res.data.shops.length==0){
-          that.setData({ "response.error": "该账户未绑定门店,请先绑定门店",submitDisabled:false});
-        }
       }
     })
   },
@@ -50,11 +50,19 @@ Page({
       that.setData({ productImeSearchResult: {} })
     } else {
       wx.request({
-        url: $util.getUrl( "crm/productIme/search"),
+        url: $util.getUrl("ws/future/crm/productImeSale/checkForSale"),
         data: that.data.formData,
-        header: { 'x-auth-token': app.globalData.sessionId },
+        header: {
+          'x-auth-token': app.globalData.sessionId,
+          'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        },
         success: function (res) {
+          console.log(res)
+          if(!res.errMsg){
           that.setData({ productImeSearchResult: res.data });
+          }else {
+            that.setData({ "response.error": res.data});
+          }
         }
       })
     }
@@ -68,15 +76,18 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("crm/productImeSale/save"),
+      url: $util.getUrl("ws/future/crm/productImeSale/sale"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        if (res.data.success) {
+        if (!res.errMsg) {
           that.setData({ "response.data": res.data });
           wx.navigateBack();
         } else {
-          that.setData({ "response.data": res.data, submitDisabled: false });
+          that.setData({ "response.error": res.data, submitDisabled: false });
         }
       }
     })
