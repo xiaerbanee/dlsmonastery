@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
     data: {
         page: {},
-        formData: {
-            page: 0,
-            size: 10
-        },
+        formData: {},
         searchHidden: true,
         activeItem: null
     },

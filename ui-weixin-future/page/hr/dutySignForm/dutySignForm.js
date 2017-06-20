@@ -37,13 +37,32 @@ Page({
         success: function (res) {
           that.setData({ formData: res.data });
           that.setData({ "submitHidden": true });
-          var images = new Array();
-          images.push({
-            id: res.data.mongoPreviewId,
-            preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + id),
-            view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId +'authorization=Bearer' + wx.getStorageSync('token').access_token +"&id=" + id)
+          wx.request({
+            url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
+            data: {},
+            header: {
+              'x-auth-token': app.globalData.sessionId,
+              'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
+            method: 'GET',
+            success: function (res) {
+              var images = new Array();
+              images.push({
+                id: res.data[0].id,
+                preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + res.data[0].mongoPreviewId),
+                view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + "&id=" + res.data[0].mongoPreviewId)
+              })
+              console.log(res.data)
+              that.setData({ "formProperty.images": images })
+            },
+            fail: function () {
+              // fail
+            },
+            complete: function () {
+              // complete
+            }
           })
-          that.setData({ "formProperty.images": images })
+
         }
       })
     }
@@ -67,14 +86,13 @@ Page({
         wx.request({
           url: $util.getUrl("basic/sys/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
           method: 'GET',
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization':'Bearer'+wx.getStorageSync('token').access_token 
-           },
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': 'Bearer' + wx.getStorageSync('token').access_token
+          },
           success: function (res) {
             that.setData({ "formProperty.addressList": res.data });
             wx.hideToast();
-          },
-          fail: function () {
           }
         });
       }
@@ -98,7 +116,7 @@ Page({
           url: $util.getUrl('general/sys/folderFile/upload'),
           header: {
             'x-auth-token': app.globalData.sessionId,
-            'authorization':'Bearer' + wx.getStorageSync('token').access_token 
+            'authorization': 'Bearer' + wx.getStorageSync('token').access_token
           },
           filePath: tempFilePaths[0],
           name: 'file',
@@ -108,6 +126,7 @@ Page({
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
             images.push({
+              id:folderFile.id,
               preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId),
               view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId)
             })
@@ -146,7 +165,7 @@ Page({
       data: e.detail.value,
       header: {
         'x-auth-token': app.globalData.sessionId,
-        'authorization':'Bearer' + wx.getStorageSync('token').access_token 
+        'authorization': 'Bearer' + wx.getStorageSync('token').access_token
       },
       success: function (res) {
         if (res.data.success) {
