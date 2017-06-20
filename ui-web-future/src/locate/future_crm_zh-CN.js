@@ -1249,6 +1249,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    noSelectionFound:"未选中任何项",
   },
   productImeList: {
     productImeList: "串码列表",
