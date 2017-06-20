@@ -110,7 +110,7 @@
         this.pageLoading = true;
 
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("priceChangeImeList",submitData);
         axios.get('/api/ws/future/crm/priceChangeIme',{params:submitData}).then((response) => {
           this.page = response.data;
