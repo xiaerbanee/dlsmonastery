@@ -131,7 +131,7 @@
             this.formData.customerIdList = customerIdList;
             if (this.formData.customerIdList.length !== 0) {
               let submitData = util.deleteExtra(this.formData);
-              axios.post('/api/global/cloud/report/customerReceive/list', qs.stringify(submitData)).then((response) => {
+              axios.post('/api/global/cloud/report/customerReceive/list', qs.stringify(submitData, {allowDots:true})).then((response) => {
                 this.summary = response.data;
                 this.summary = response.data;
               });

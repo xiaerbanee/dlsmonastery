@@ -6,6 +6,7 @@ import net.myspring.cloud.modules.kingdee.repository.CnBankAcntRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,5 +21,9 @@ public class CnBankAcntService {
 
     public List<CnBankAcnt> findAll(){
         return cnBankAcntRepository.findAll();
+    }
+
+    public List<CnBankAcnt> findByMaxModifyDate(LocalDateTime modifyDate){
+        return cnBankAcntRepository.findByMaxModifyDate(modifyDate);
     }
 }
