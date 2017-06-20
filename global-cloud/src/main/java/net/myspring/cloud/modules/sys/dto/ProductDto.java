@@ -1,8 +1,6 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.cloud.modules.sys.domain.Product;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,7 +8,7 @@ import java.time.LocalDateTime;
 /**
  * Created by liuj on 2017/4/5.
  */
-public class ProductDto extends DataDto<Product>{
+public class ProductDto {
     private String name;
     private String code;
     private BigDecimal price1;

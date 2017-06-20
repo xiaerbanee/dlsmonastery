@@ -29,6 +29,7 @@ App({
     },
     //检查用户是否登陆，如果未登陆，自动登陆
     autoLogin: function (cb) {
+
         var that = this;
         if (!that.globalData.weixinCode) {
             that.getCode(function () {
@@ -43,11 +44,13 @@ App({
         var distance = that.getDistance();
         var reflushTokenDustance = wx.getStorageSync('token').expires_in;
         //如果没有登陆
-        if (token == "" || $util.isNotBlank(token.access_token) || distance < 60 * 1000) {
-            that.getToken(cb);
+        if (token==""||$util.isNotBlank(token.access_token) || distance < 60 * 1000) {
+            console.log("getToken")
+            that.getToken();
         } else if (distance < (reflushTokenDustance / 2) * 1000) {
             that.getRefreshToken();
         }
+        typeof cb == "function" && cb();
     },
     getRefreshToken: function () {
         var that = this;
@@ -75,7 +78,7 @@ App({
         var distance;
         var expDate = new Date(token.exp + token.expires_in * 1000);
         return distance = expDate.getTime() - new Date().getTime();
-    }, getToken: function (cb) {
+    }, getToken: function () {
         var that = this;
         wx.request({
             url: $util.getUrl('uaa/oauth/token?username=' + that.globalData.weixinCode + '&password=' + that.globalData.weixinCode + '&weixinCode=' + that.globalData.weixinCode + '&grant_type=password'),
@@ -89,7 +92,6 @@ App({
                 } else if ($util.isNotBlank(res.data.access_token)) {
                     res.data.exp = new Date().getTime();
                     wx.setStorageSync('token', res.data);
-                    typeof cb == "function" && cb();
                 }
             }
         })
@@ -98,6 +100,7 @@ App({
         if (!that.globalData.weixinCode) {
             wx.login({
                 success: function (loginRes) {
+                    console.log(loginRes.code)
                     if (loginRes.code) {
                         that.globalData.weixinCode = loginRes.code;
                         typeof cb == "function" && cb();

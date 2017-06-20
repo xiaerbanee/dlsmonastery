@@ -15,8 +15,6 @@ public class DutyFreeQuery extends BaseQuery {
     private String createdBy;
     private String dutyDate;
     private List<String> officeIds;
-    private LocalDate dutyDateStart;
-    private LocalDate dutyDateEnd;
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
@@ -45,27 +43,16 @@ public class DutyFreeQuery extends BaseQuery {
     public LocalDate getDutyDateStart() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else if(dutyDateStart!=null){
-            return dutyDateStart;
-        }
+        } else {
             return null;
+        }
     }
 
     public LocalDate getDutyDateEnd() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else if(dutyDateEnd!=null){
-            return dutyDateEnd.plusDays(1);
-        }
+        } else {
             return null;
         }
-
-
-    public void setDutyDateEnd(LocalDate dutyDateEnd) {
-        this.dutyDateEnd = dutyDateEnd;
-    }
-
-    public void setDutyDateStart(LocalDate dutyDateStart) {
-        this.dutyDateStart = dutyDateStart;
     }
 }

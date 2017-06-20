@@ -23,8 +23,6 @@ public class DutyTripController {
     public DutyTripQuery getQuery(DutyTripQuery dutyTripQuery) {
         return dutyTripQuery;
     }
-
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyTripDto>  list(Pageable pageable, DutyTripQuery dutyTripQuery){
         dutyTripQuery.setCreatedBy(RequestUtils.getAccountId());

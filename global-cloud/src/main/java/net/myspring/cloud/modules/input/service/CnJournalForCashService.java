@@ -137,8 +137,7 @@ public class CnJournalForCashService {
         return kingdeeSynDto;
     }
 
-    public CnJournalForCashForm getForm(KingdeeBook kingdeeBook){
-        CnJournalForCashForm cnJournalForCashForm = new CnJournalForCashForm();
+    public CnJournalForCashForm getForm(CnJournalForCashForm cnJournalForCashForm,KingdeeBook kingdeeBook){
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         map.put("staffNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));

@@ -58,13 +58,13 @@ Page({
   bindDateChange: function (e) {
     var that = this;
     var name = e.currentTarget.dataset.name;
-    if (name == 'dutyDateStart') {
+    if (name == 'freeDateStart') {
       that.setData({
-        "formData.dutyDateStart": e.detail.value
+        "formData.freeDateStart": e.detail.value
       });
     } else {
       that.setData({
-        "formData.dutyDateEnd": e.detail.value
+        "formData.freeDateEnd": e.detail.value
       });
     }
   },
@@ -75,6 +75,8 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
+      }
+      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -85,11 +87,13 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
+    var itemList = that.data.activeItem.actionList;
+    if (!itemList) { return; }
     wx.showActionSheet({
-      itemList:["删除"],
+      itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (res.tapIndex==0) {
+          if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("basic/hr/dutyFree/delete"),
               data: { id: id },

@@ -2,7 +2,7 @@ package net.myspring.uaa.web.controller;
 
 import net.myspring.common.response.RestResponse;
 import net.myspring.uaa.service.AccountWeixinService;
-import net.myspring.uaa.web.form.AccountWeixinForm;
+import net.myspring.uaa.web.form.WeixinAccountForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ public class AccountWeixinController {
     private AccountWeixinService accountWeixinService;
 
     @RequestMapping(value = "bind")
-    public RestResponse accountBind(AccountWeixinForm accountWeixinForm) {
-        return accountWeixinService.bind(accountWeixinForm);
+    public RestResponse accountBind(WeixinAccountForm weixinAccountForm) {
+        return accountWeixinService.bind(weixinAccountForm);
     }
 }

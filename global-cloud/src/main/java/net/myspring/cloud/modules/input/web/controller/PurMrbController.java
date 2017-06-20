@@ -28,8 +28,9 @@ public class PurMrbController {
     private AccountKingdeeBookService accountKingdeeBookService;
     
     @RequestMapping(value = "form")
-    public PurMrbForm form () {
-        return purMrbService.getForm();
+    public PurMrbForm form (PurMrbForm purMrbForm) {
+        purMrbForm = purMrbService.getForm(purMrbForm);
+        return purMrbForm;
     }
 
     @RequestMapping(value = "save")

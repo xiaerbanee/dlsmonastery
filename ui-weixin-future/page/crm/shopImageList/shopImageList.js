@@ -81,8 +81,8 @@ Page({
   bindOffice: function (e) {
     var that = this;
     that.setData({
-      'formData.office.id': that.data.formProperty.areaList[e.detail.value].id,
-      'formData.office.name': that.data.formProperty.areaList[e.detail.value].name
+      'formData.officeId': that.data.formProperty.areaList[e.detail.value].id,
+      'formData.officeName': that.data.formProperty.areaList[e.detail.value].name
     })
   },
   bindShop: function (e) {

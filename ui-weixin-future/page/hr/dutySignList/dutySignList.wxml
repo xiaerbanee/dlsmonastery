@@ -47,7 +47,7 @@
           <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
           <view class="weui-media-box__info">
               <view class="weui-media-box__info__meta">创建人</view>
-            <view class="weui-media-box__info__meta">{{item.createdByName}}</view>
+            <view class="weui-media-box__info__meta">{{item.created.fullName}}</view>
             <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
           </view>
         </view>

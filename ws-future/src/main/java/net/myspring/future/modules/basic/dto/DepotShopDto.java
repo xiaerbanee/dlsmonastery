@@ -25,6 +25,8 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private Integer deskDoubleNum=0;
     private Integer deskSingleNum=0;
     private Integer cabinetNum=0;
+    private Boolean bussinessCenter=false;
+    private String bussinessCenterName;
     private String depotName;
     private String townId;
     private LocalDate enableDate;
@@ -35,6 +37,31 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String contator;
     private String mobilePhone;
     private String address;
+    private String chainType;
+
+    public String getChainType() {
+        return chainType;
+    }
+
+    public void setChainType(String chainType) {
+        this.chainType = chainType;
+    }
+
+    public Boolean getBussinessCenter() {
+        return bussinessCenter;
+    }
+
+    public void setBussinessCenter(Boolean bussinessCenter) {
+        this.bussinessCenter = bussinessCenter;
+    }
+
+    public String getBussinessCenterName() {
+        return bussinessCenterName;
+    }
+
+    public void setBussinessCenterName(String bussinessCenterName) {
+        this.bussinessCenterName = bussinessCenterName;
+    }
 
     public String getContator() {
         return contator;

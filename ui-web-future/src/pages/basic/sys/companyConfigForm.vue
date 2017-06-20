@@ -30,7 +30,6 @@
       methods:{
         getData(){
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             isCreate:true,
             inputForm:{
@@ -49,7 +48,7 @@
             if (valid) {
               axios.post('/api/basic/sys/companyConfig/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-                if(this.isCreate){
+                if(this.inputForm.create){
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{

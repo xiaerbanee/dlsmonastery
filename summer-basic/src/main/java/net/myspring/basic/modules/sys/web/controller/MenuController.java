@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.web.controller;
 
-import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.common.enums.BoolEnum;
 import net.myspring.basic.modules.sys.dto.MenuDto;
 import net.myspring.basic.modules.sys.dto.PermissionDto;
 import net.myspring.basic.modules.sys.service.MenuCategoryService;
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by liuj on 2016/11/23.
@@ -63,12 +62,6 @@ public class MenuController {
     public MenuDto findOne(MenuDto menuDto){
         menuDto = menuService.findOne(menuDto);
         return menuDto;
-    }
-
-    @RequestMapping(value = "getMobileMenus")
-    public List<Map<String,Object>> getMenus(){
-        String accountId= RequestUtils.getAccountId();
-        return menuService.findMobileMenus(accountId);
     }
 
     @RequestMapping(value = "getForm")

@@ -39,6 +39,12 @@
               <el-form-item  :label="$t('productImeSaleForm.buyerPhone')" prop="buyerPhone" >
                 <el-input  v-model="inputForm.buyerPhone"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('productImeSaleForm.buyerSchool')" prop="buyerSchool" v-if=" companyName=='JXIMOO'">
+                <el-input  v-model="inputForm.buyerSchool"></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('productImeSaleForm.buyerGrade')" prop="buyerGrade" v-if=" companyName=='JXIMOO'">
+                <el-input  v-model="inputForm.buyerGrade"></el-input>
+              </el-form-item>
               <el-form-item :label="$t('productImeSaleForm.remarks')" prop="remarks" >
                 <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
               </el-form-item>
@@ -96,6 +102,7 @@
           submitDisabled:false,
           searched:false,
           inputForm:{},
+          companyName:'',
           errMsg:'',
           productImeList:[],
           productQtyList:[],

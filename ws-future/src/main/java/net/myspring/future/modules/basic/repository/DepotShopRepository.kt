@@ -357,7 +357,6 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 crm_depot_shop t2
             WHERE
                 t1.enabled = 1
-            AND t2.enabled = 1
             AND t1.depot_shop_id = t2.id
         """)
         if (StringUtils.isNotEmpty(depotQuery.name)) {
