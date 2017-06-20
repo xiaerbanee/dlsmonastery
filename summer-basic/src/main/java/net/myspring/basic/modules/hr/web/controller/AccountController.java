@@ -150,7 +150,7 @@ public class AccountController {
         Map<String, Object> map = Maps.newHashMap();
         AccountDto accountDto = accountService.getAccountDto(accountId);
         List<String> authorityList = accountService.getAuthorityList();
-        List<BackendMenuDto> menus = menuService.getMenuMap();
+        List<BackendMenuDto> menus = menuService.getMenusMap(RequestUtils.getAccountId());
         map.put("account", accountDto);
         map.put("authorityList", authorityList);
         map.put("menus", menus);
