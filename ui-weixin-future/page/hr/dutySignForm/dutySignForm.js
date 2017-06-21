@@ -119,7 +119,7 @@ Page({
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
             images.push({
-              id:folderFile.id,
+              id: folderFile.id,
               preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId),
               view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId)
             })
@@ -165,7 +165,7 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ "response.data": res.data.extra, submitDisabled: false });
+          that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
     })
@@ -175,9 +175,11 @@ Page({
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
     if (responseData && responseData[key] != null) {
-      that.setData({ "response.error": responseData[key] });
-      delete responseData[key];
-      that.setData({ "response.data": responseData })
+      console.log(responseData[key])
+      that.setData({ "response.error": responseData[key].message });
+      delete that.data.response.data[key];
+      console.log(responseData)
+      that.setData({ "response.data": that.data.response.data })
     } else {
       that.setData({ "response.error": '' })
     }

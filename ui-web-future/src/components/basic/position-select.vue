@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:this.value,
+        innerId:null,
         itemList : [],
         remoteLoading:false,
       };
@@ -53,6 +53,7 @@
         }
       },
     },created () {
+      console.log(this.innerId)
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
