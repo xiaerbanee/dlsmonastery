@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-select v-model="innerId" clearable @change="handleChange" :disabled="disabled" >
-      <el-option v-for="item in itemList"  :key="item" :label="item | bool2str" :value="item | bool2str"></el-option>
+      <el-option v-for="item in itemList"  :key="item" :label="item | bool2str" :value="item "></el-option>
     </el-select>
   </div>
 </template>
