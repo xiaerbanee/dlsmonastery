@@ -90,12 +90,10 @@
           }
       },methods:{
           formSubmit(){
-
+            this.submitDisabled = true;
             let form = this.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
-                this.submitDisabled = true;
-
                 axios.post('/api/ws/future/crm/bankIn/audit', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
                   this.$message(response.data.message);
                   this.submitDisabled = false;
@@ -106,38 +104,30 @@
                 }).catch( () => {
                   this.submitDisabled = false;
                 });
+              }else{
+                this.submitDisabled = false;
               }
             })
-          }, initSubmitDataBeforeSubmit(){
+          },initPage(){
 
-        this.submitData.id = this.$route.query.id;
-        this.submitData.syn = this.syn;
-        this.submitData.billDate = this.bankIn.billDate;
-        this.submitData.pass = this.audit.pass;
-        this.submitData.auditRemarks = this.audit.auditRemarks;
-
-      },initPage(){
-              if(this.action !== 'audit'){
-                  return;
-              }
-          axios.get('/api/ws/future/crm/bankIn/getAuditForm').then((response)=>{
-            this.inputForm = response.data;
-
-
-            axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
-              this.bankIn = response.data;
-
+        axios.get('/api/ws/future/crm/bankIn/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.bankIn = response.data;
+          if(this.action === 'audit'){
+            axios.get('/api/ws/future/crm/bankIn/getAuditForm').then((response)=>{
+              this.inputForm = response.data;
               this.inputForm.id = this.bankIn.id;
-
+              this.inputForm.syn = true;
+              this.inputForm.pass = false;
               this.inputForm.billDate = this.bankIn.billDate;
               if(!this.inputForm.billDate){
                 this.inputForm.billDate = this.inputForm.extra.defaultBillDate;
               }
             });
-          });
+          }
+        });
       }
     },created(){
-          this.initPage();
-      }
+      this.initPage();
     }
+  }
 </script>
