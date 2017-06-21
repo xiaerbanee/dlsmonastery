@@ -2,9 +2,12 @@ package net.myspring.basic.modules.hr.web.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
+import net.myspring.common.utils.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * Created by liuj on 2016/12/10.
+ */
 @Component
 public class DutySignValidator implements Validator {
     @Override

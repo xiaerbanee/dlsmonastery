@@ -1,4 +1,4 @@
-package net.myspring.basic.modules.hr.validator;
+package net.myspring.basic.modules.hr.web.validator;
 
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;

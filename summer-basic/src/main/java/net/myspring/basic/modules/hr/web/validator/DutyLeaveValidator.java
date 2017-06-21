@@ -1,4 +1,4 @@
-package net.myspring.basic.modules.hr.validator;
+package net.myspring.basic.modules.hr.web.validator;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
