@@ -54,10 +54,10 @@ public class DutySignController {
     public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
         dutySignValidator.validate(dutySignForm,bindingResult);
         if(bindingResult.hasErrors()){
-            return new RestResponse(bindingResult,"签到失败", null);
+            return new RestResponse(bindingResult,"保存失败", null);
         }
         dutySignService.save(dutySignForm);
-        return new RestResponse("签到成功", null);
+        return new RestResponse("保存成功", null);
     }
 
     @RequestMapping(value = "delete")

@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.service.DutyOvertimeService;
 import net.myspring.basic.modules.hr.service.DutyRestService;
 import net.myspring.basic.modules.hr.web.form.DutyRestForm;
 import net.myspring.basic.modules.hr.web.query.DutyRestQuery;
+import net.myspring.basic.modules.hr.web.validator.DutyRestValidator;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class DutyRestController {
     private DutyAnnualService dutyAnnualService;
     @Autowired
     private DutyOvertimeService dutyOvertimeService;
+    @Autowired
+    private DutyRestValidator dutyRestValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
@@ -59,9 +62,12 @@ public class DutyRestController {
 
     @RequestMapping(value = "save")
     public RestResponse save(DutyRestForm dutyRestForm, BindingResult bindingResult) {
-        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        dutyRestValidator.validate(dutyRestForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         dutyRestService.save(dutyRestForm);
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
