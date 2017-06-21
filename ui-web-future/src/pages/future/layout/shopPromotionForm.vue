@@ -108,7 +108,7 @@
           this.inputForm.activityImage2 = util.getFolderFileIdStr(this.fileList2);
           this.inputForm.activityImage3 = util.getFolderFileIdStr(this.fileList3);
           if (valid) {
-            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(util.deleteExtra(that.inputForm))).then((response) => {
+            axios.post('/api/ws/future/layout/shopPromotion/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
               if(response.data.success) {
                 if (!this.isCreate) {
