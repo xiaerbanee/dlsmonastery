@@ -30,7 +30,7 @@ public class SalOutStockDto {
     // 备注
     private String note;
     //部门编码
-    private String departmentNumber;
+    private String departmentNumberK3;
     //单据类型
     private String billTypeK3;
 
@@ -87,12 +87,12 @@ public class SalOutStockDto {
         this.note = note;
     }
 
-    public String getDepartmentNumber() {
-        return departmentNumber;
+    public String getDepartmentNumberK3() {
+        return departmentNumberK3;
     }
 
-    public void setDepartmentNumber(String departmentNumber) {
-        this.departmentNumber = departmentNumber;
+    public void setDepartmentNumberK3(String departmentNumberK3) {
+        this.departmentNumberK3 = departmentNumberK3;
     }
 
     public String getBillTypeK3() {
@@ -124,7 +124,7 @@ public class SalOutStockDto {
         }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillTypeK3())){
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
         }
-        model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
+        model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumberK3()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
