@@ -20,6 +20,10 @@ import java.util.Map;
  * Created by lihx on 2017/6/9.
  */
 public class CnJournalForBankDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
     private String creatorK3;
     //日期
@@ -32,6 +36,22 @@ public class CnJournalForBankDto {
     private String kingdeeTypeK3;
 
     private List<CnJournalEntityForBankDto> entityForBankDtoList = Lists.newArrayList();
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
 
     public String getCreatorK3() {
         return creatorK3;

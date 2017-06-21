@@ -42,10 +42,10 @@ public class ShopAdController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ShopAdForm shopAdForm, BindingResult bindingResult) {
+        RestResponse restResponse = new RestResponse("保存成功", null);
         shopAdValidator.validate(shopAdForm,bindingResult);
-        RestResponse restResponse = new RestResponse("签到成功", null);
         if(bindingResult.hasErrors()){
-            return  new RestResponse(bindingResult,"签到失败", null);
+            return  new RestResponse(bindingResult,"保存失败", null);
         }
         shopAdService.save(shopAdForm);
         return restResponse;

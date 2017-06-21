@@ -10,15 +10,10 @@ import java.math.BigDecimal;
  * Created by zhangyf on 2017/5/10.
  */
 public class ShopAdForm extends BaseForm<ShopAd> {
-    @NotNull(message = "必填信息")
     private String shopId;
-    @NotNull(message = "必填信息")
     private String shopAdTypeId;
-    @NotNull(message = "必填信息")
     private BigDecimal length;
-    @NotNull(message = "必填信息")
     private BigDecimal width;
-    @NotNull(message = "必填信息")
     private Integer qty;
     private String content;
     private Boolean specialArea;

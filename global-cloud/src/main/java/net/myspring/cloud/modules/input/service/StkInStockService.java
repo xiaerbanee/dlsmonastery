@@ -43,6 +43,8 @@ public class StkInStockService {
 
     private KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                stkInStockDto.getExtendId(),
+                stkInStockDto.getExtendType(),
                 KingdeeFormIdEnum.STK_InStock.name(),
                 stkInStockDto.getJson(),
                 kingdeeBook) {

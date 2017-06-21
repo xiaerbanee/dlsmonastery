@@ -432,4 +432,8 @@ public class GoodsOrderService {
         goodsOrderDto.setGoodsOrderImeDtoList(goodsOrderImeDtoList);
         return goodsOrderDto;
     }
+
+    public void delete(String id) {
+        goodsOrderRepository.logicDelete(id);
+    }
 }

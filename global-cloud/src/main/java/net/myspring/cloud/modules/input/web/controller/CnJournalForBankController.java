@@ -54,12 +54,12 @@ public class CnJournalForBankController {
         return restResponse;
     }
 
-    @RequestMapping(value = "saveForEntityList", method= RequestMethod.POST)
-    public RestResponse saveForEntityList(@RequestBody List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList) {
+    @RequestMapping(value = "saveForEmployeePhoneDeposit", method= RequestMethod.POST)
+    public RestResponse saveForEmployeePhoneDeposit(@RequestBody List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList) {
         RestResponse restResponse;
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
+        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
         if (kingdeeSynDto.getSuccess()){
             restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
         }else {

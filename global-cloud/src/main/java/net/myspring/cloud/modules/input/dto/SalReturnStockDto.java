@@ -13,9 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 销售退货单
  * Created by liuj on 2017/5/11.
  */
 public class SalReturnStockDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
     private String creator;
     // 客户编码
@@ -32,6 +37,22 @@ public class SalReturnStockDto {
     private String billType;
 
     private List<SalReturnStockFEntityDto> salReturnStockFEntityDtoList = Lists.newArrayList();
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
 
     public String getCreator() {
         return creator;

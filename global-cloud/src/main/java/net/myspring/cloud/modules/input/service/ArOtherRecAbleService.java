@@ -51,9 +51,11 @@ public class ArOtherRecAbleService {
 
     private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
-                    KingdeeFormIdEnum.AR_OtherRecAble.name(),
-                    arOtherRecAbleDto.getJson(),
-                    kingdeeBook) {
+                arOtherRecAbleDto.getExtendId(),
+                arOtherRecAbleDto.getExtendType(),
+                KingdeeFormIdEnum.AR_OtherRecAble.name(),
+                arOtherRecAbleDto.getJson(),
+                kingdeeBook) {
             };
             kingdeeManager.save(kingdeeSynDto);
         return kingdeeSynDto;

@@ -51,11 +51,13 @@ public class ApPayBillService {
 
     private KingdeeSynDto save(ApPayBillDto apPayBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
-                    KingdeeFormIdEnum.AP_PAYBILL.name(),
-                    apPayBillDto.getJson(),
-                    kingdeeBook) {
+                apPayBillDto.getExtendId(),
+                apPayBillDto.getExtendType(),
+                KingdeeFormIdEnum.AP_PAYBILL.name(),
+                apPayBillDto.getJson(),
+                kingdeeBook) {
             };
-            kingdeeManager.save(kingdeeSynDto);
+        kingdeeManager.save(kingdeeSynDto);
         return kingdeeSynDto;
     }
 

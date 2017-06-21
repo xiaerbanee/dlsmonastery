@@ -51,6 +51,8 @@ public class CnJournalForCashService {
 
     private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                cnJournalForCashDto.getExtendId(),
+                cnJournalForCashDto.getExtendType(),
                 KingdeeFormIdEnum.CN_JOURNAL.name(),
                 cnJournalForCashDto.getJson(),
                 kingdeeBook) {

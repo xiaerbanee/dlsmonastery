@@ -58,6 +58,8 @@ public class ArRefundBillService {
 
     private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                arRefundBillDto.getExtendId(),
+                arRefundBillDto.getExtendType(),
                 KingdeeFormIdEnum.AR_REFUNDBILL.name(),
                 arRefundBillDto.getJson(),
                 kingdeeBook) {
