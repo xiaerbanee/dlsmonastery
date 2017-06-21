@@ -98,7 +98,6 @@
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
             <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
           </template>
@@ -174,9 +173,11 @@
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
       }else if(action == "delete"){
-          axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
+        util.confirmBeforeDelRecord(this).then(() => {
+          axios.get('/api/ws/future/crm/goodsOrder/delete', {params: {id: id}}).then((response) => {
           this.$message(response.data.message);
           this.pageRequest();
+      })
       })
       }else if(action=="ship"){
         window.open('/#/future/crm/goodsOrderPrint?id=' + id, '', '');
