@@ -47,7 +47,10 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-        this.$emit('input', newVal);
+        if(newVal !== this.value){
+          this.$emit('input', newVal);
+        }
+
       },setValue(val) {
         if(this.innerId===val){
           return;

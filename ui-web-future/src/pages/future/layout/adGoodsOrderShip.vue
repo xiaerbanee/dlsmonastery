@@ -20,8 +20,8 @@
             <el-form-item :label="$t('adGoodsOrderShip.largeQty')" prop="largeQty">
               <el-input v-model="inputForm.largeQty" @input="materialChange()"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.expressCodes')" prop="expressCompanyExpressCodes">
-              <el-input type="textarea" v-model="inputForm.expressCompanyExpressCodes"></el-input>
+            <el-form-item :label="$t('adGoodsOrderShip.expressCodes')" prop="expressOrderExpressCodes">
+              <el-input type="textarea" v-model="inputForm.expressOrderExpressCodes" :placeholder="$t('adGoodsOrderShip.enter')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.expressCompany')" prop="expressOrderExpressCompanyId">
               <express-company-select v-model="inputForm.expressOrderExpressCompanyId"></express-company-select>

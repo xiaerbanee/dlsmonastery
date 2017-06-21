@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
@@ -10,6 +11,7 @@ import net.myspring.future.modules.layout.service.ShopAllotService;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,9 @@ public class ShopAllotController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ShopAllotForm shopAllotForm) {
+        if(CollectionUtil.isEmpty(shopAllotForm.getShopAllotDetailList())){
+            throw new ServiceException("请录入门店调拨明细");
+        }
         shopAllotService.save(shopAllotForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
