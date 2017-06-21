@@ -5,6 +5,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllot
 import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -98,7 +99,7 @@ class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(StringUtils.isNotBlank(storeAllotQuery.toStoreId)){
             sb.append("""  and t1.to_store_id= :toStoreId  """)
         }
-        if(storeAllotQuery.businessIdList != null){
+        if(CollectionUtil.isNotEmpty(storeAllotQuery.businessIdList) ){
             sb.append("""  and t1.business_id  in  (:businessIdList)  """)
         }
         if(StringUtils.isNotBlank(storeAllotQuery.outCode)){

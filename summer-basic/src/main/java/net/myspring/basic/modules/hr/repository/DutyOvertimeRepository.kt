@@ -128,7 +128,7 @@ class DutyOvertimeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTe
             sb.append(" AND t1.created_by=:createdBy ")
         }
         if (dutyOvertimeQuery.dutyDateStart != null) {
-            sb.append(" AND t1.duty_date> :dutyDateStart ")
+            sb.append(" AND t1.duty_date>= :dutyDateStart ")
         }
         if (dutyOvertimeQuery.dutyDateEnd != null) {
             sb.append(" AND t1.duty_date < :dutyDateEnd ")

@@ -21,7 +21,19 @@ Page({
     },
     initPage: function () {
         var that = this;
-        that.pageRequest();
+        wx.request({
+            url: $util.getUrl("basic/hr/dutyTrip/getQuery"),
+            data: {},
+            method: 'GET',
+            header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
+            success: function (res) {
+                that.setData({ formData: res.data })
+                that.pageRequest();
+            }
+        })
     },
     pageRequest: function () {
         var that = this;
@@ -32,10 +44,11 @@ Page({
             success: function (res) {
                 wx.request({
                     url: $util.getUrl("basic/hr/dutyTrip"),
-                    header: { 'x-auth-token': app.globalData.sessionId,
-                              'authorization': "Bearer" + wx.getStorageSync('token').access_token
-                      },
-                    data: that.data.formData,
+                    header: {
+                        'x-auth-token': app.globalData.sessionId,
+                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                    },
+                    data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
                         that.setData({ page: res.data });
                         wx.hideToast();
@@ -51,16 +64,17 @@ Page({
     },
     search: function () {
         var that = this;
-        that.setData({  searchHidden: !that.data.searchHidden
+        that.setData({
+            searchHidden: !that.data.searchHidden
         })
     },
     bindDateChange: function (e) {
         var that = this;
         var name = e.currentTarget.dataset.name;
         if (name == 'dutyDateStart') {
-            that.setData({"formData.dutyDateStart": e.detail.value});
+            that.setData({ "formData.dutyDateStart": e.detail.value });
         } else {
-            that.setData({"formData.dutyDateEnd": e.detail.value});
+            that.setData({ "formData.dutyDateEnd": e.detail.value });
         }
     },
     itemActive: function (e) {
@@ -88,9 +102,10 @@ Page({
                         wx.request({
                             url: $util.getUrl("basic/hr/dutyTrip/delete"),
                             data: { id: id },
-                            header: { 'x-auth-token': app.globalData.sessionId,
-                                      'authorization': "Bearer" + wx.getStorageSync('token').access_token
-                              },
+                            header: {
+                                'x-auth-token': app.globalData.sessionId,
+                                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                            },
                             success: function (res) {
                                 that.pageRequest();
                             }
