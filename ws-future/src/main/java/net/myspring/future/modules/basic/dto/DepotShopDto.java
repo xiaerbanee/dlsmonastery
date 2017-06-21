@@ -38,6 +38,15 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String mobilePhone;
     private String address;
     private String chainType;
+    private boolean doorHead;
+
+    public boolean isDoorHead() {
+        return doorHead;
+    }
+
+    public void setDoorHead(boolean doorHead) {
+        this.doorHead = doorHead;
+    }
 
     public String getChainType() {
         return chainType;

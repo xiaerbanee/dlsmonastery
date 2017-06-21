@@ -3,6 +3,8 @@ package net.myspring.common.response;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.util.collection.CollectionUtil;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.List;
 import java.util.Map;
@@ -73,5 +75,13 @@ public class RestResponse {
 
     public void setExtra(Map<String, Object> extra) {
         this.extra = extra;
+    }
+
+    public void setErrorMap(BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            for(FieldError error:bindingResult.getFieldErrors()){
+                getExtra().put(error.getField(),error.getDefaultMessage());
+            }
+        }
     }
 }

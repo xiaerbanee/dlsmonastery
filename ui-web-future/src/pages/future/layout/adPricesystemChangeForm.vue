@@ -77,11 +77,10 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
         this.inputForm.data = new Array();
         let list = table.getData();
-        for (var item in list) {
+        for (let item in list) {
           if (!table.isEmptyRow(item)) {
             this.inputForm.data.push(list[item]);
           }
@@ -92,8 +91,8 @@
           if(response.data.success){
             Object.assign(this.$data, this.getData());
           }
-        }).catch(function () {
-          that.submitDisabled = false;
+        }).catch( ()=> {
+          this.submitDisabled = false;
         });
       }, search() {
         this.setSearchText();

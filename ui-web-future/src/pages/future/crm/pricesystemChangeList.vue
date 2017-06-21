@@ -125,9 +125,16 @@
           this.$message(this.$t('pricesystemChangeList.noSelectionFound'));
           return ;
         }
-        axios.get('/api/ws/future/crm/pricesystemChange/batchAudit',{params:{ids:this.selects,pass:true}}).then((response) =>{
-          this.$message(response.data.message);
-          this.pageRequest();
+        util.confirmBeforeBatchPass(this).then(() => {
+          axios.get('/api/ws/future/crm/pricesystemChange/batchAudit', {
+            params: {
+              ids: this.selects,
+              pass: true
+            }
+          }).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
         });
       },checkSelectable(row) {
         return row.status =='申请中';
@@ -136,8 +143,8 @@
       var that = this;
       that.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/crm/pricesystemChange/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

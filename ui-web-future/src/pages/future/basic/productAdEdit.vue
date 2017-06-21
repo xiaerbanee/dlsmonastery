@@ -116,25 +116,21 @@
         util.setQuery("productList",submitData);
         axios.get('/api/ws/future/basic/product/filter',{params:submitData}).then((response) => {
           this.settings.data  = response.data;
-          for (var i= 0; i<this.settings.data.length;i++) {
-             let vis = this.settings.data[i].visible;
-             let ao = this.settings.data[i].allowOrder;
-            this.settings.data[i].visible = vis ? '是' : '否';
-            this.settings.data[i].allowOrder = ao ? '是' : '否';
+          for (let index in this.settings.data) {
+            this.settings.data[index].visible = this.settings.data[index].visible ? '是' : '否';
+            this.settings.data[index].allowOrder = this.settings.data[index].allowOrder ? '是' : '否';
           }
           table.loadData(this.settings.data);
         });
       },formSubmit(){
-            var that = this;
-            that.submitDisabled = true;
+            this.submitDisabled = true;
             table.validateCells(function(valid) {
-            console.log(valid);
             if(valid) {
-              that.inputForm.productList = JSON.stringify(table.getData());
-              axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(that.inputForm, {allowDots: true})).then((response) => {
-                that.$message(response.data.message);
+              this.inputForm.productList = JSON.stringify(table.getData());
+              axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
+                this.$message(response.data.message);
               }).catch(function () {
-                that.submitDisabled = false;
+                this.submitDisabled = false;
               });
             }
         })

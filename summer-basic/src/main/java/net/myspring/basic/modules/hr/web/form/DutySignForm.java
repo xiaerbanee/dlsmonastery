@@ -3,8 +3,8 @@ package net.myspring.basic.modules.hr.web.form;
 
 import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.common.form.BaseForm;
-import net.myspring.util.text.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,7 +19,9 @@ public class DutySignForm extends BaseForm<DutySign> {
     private String status;
     private String EmployeeId;
     private LocalDateTime dutyDateTime;
+    @NotNull(message = "必填信息")
     private String address;
+    @NotNull(message = "必填信息")
     private String attachment;
     private String longitude;
     private String latitude;

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * Created by liuj on 2016/11/30.
  */
@@ -47,8 +49,13 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
+    public RestResponse save(@Valid DutySignForm dutySignForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("签到成功", null);
+        if(bindingResult.hasErrors()){
+            restResponse= new RestResponse("签到失败", null,false);
+            restResponse.setErrorMap(bindingResult);
+            return restResponse;
+        }
         dutySignService.save(dutySignForm);
         return restResponse;
     }
