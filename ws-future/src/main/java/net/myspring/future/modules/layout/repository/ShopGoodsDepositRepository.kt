@@ -106,7 +106,7 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             AND t1.company_id = :companyId
         """)
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.remarks)){
-            sb.append("""  and t1.out_code like concat('%',:remarks,'%')  """)
+            sb.append("""  and t1.remarks like concat('%',:remarks,'%')  """)
         }
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.status)){
             sb.append("""  and t1.status=:status  """)

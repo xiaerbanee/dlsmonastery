@@ -12,7 +12,7 @@
             <view class="weui-input">{{formData.dutyDateStart}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDateStart}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dutyDateStart}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -25,7 +25,7 @@
             <view class="weui-input">{{formData.dutyDateEnd}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDateEnd}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dutyDateEnd}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -38,7 +38,7 @@
             <view class="weui-input">{{formData.dateType}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateType}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dateType}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -51,7 +51,7 @@
             <view class="weui-input">{{formData.leaveType}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.leaveType}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.leaveType}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>

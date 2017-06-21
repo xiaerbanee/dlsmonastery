@@ -65,11 +65,9 @@
               readOnly: true,
               width: 300
             }, {
-              readOnly: true,
               type: "numeric",
               width: 150
             }, {
-              readOnly: true,
               type: "numeric",
               width: 150
             }]

@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.crm.domain.PriceChange;
 
 import java.time.LocalDate;

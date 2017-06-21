@@ -147,14 +147,14 @@ public class ProductService {
 
     public void save(ProductForm productForm) {
         Product product;
-            if(productForm.isCreate()){
-                product = BeanUtil.map(productForm,Product.class);
-                productRepository.save(product);
-            }else{
-                product = productRepository.findOne(productForm.getId());
-                ReflectionUtil.copyProperties(productForm,product);
-                productRepository.save(product);
-            }
+        if(productForm.isCreate()){
+            product = BeanUtil.map(productForm,Product.class);
+            productRepository.save(product);
+        }else{
+            product = productRepository.findOne(productForm.getId());
+            ReflectionUtil.copyProperties(productForm,product);
+            productRepository.save(product);
+        }
     }
 
     public void batchSave(ProductBatchForm productBatchForm){
@@ -229,21 +229,20 @@ public class ProductService {
                     if(product == null){
                         product = new Product();
                         product.setCreatedBy(RequestUtils.getAccountId());
+                        product.setShouldGet(BigDecimal.ZERO);
+                        product.setVolume(BigDecimal.ZERO);
+                        product.setAllowOrder(false);
+                        product.setAllowBill(false);
+                        if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
+                            product.setHasIme(true);
+                        }else{
+                            product.setHasIme(false);
+                        }
                     }else{
+                        product.setOldName(product.getName());
+                        product.setOldOutId(product.getOutId());
                         product.setLastModifiedBy(RequestUtils.getAccountId());
                     }
-                }
-                if(product.isCreate()){
-                    product.setAllowOrder(false);
-                    product.setAllowBill(false);
-                    if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
-                        product.setHasIme(true);
-                    }else{
-                        product.setHasIme(false);
-                    }
-                }else{
-                    product.setOldName(product.getName());
-                    product.setOldOutId(product.getOutId());
                 }
                 if(bdMaterial.getFMaterialGroupName().equalsIgnoreCase("商品类")){
                     if(bdMaterial.getFName().trim().contains(NetTypeEnum.移动.name())){

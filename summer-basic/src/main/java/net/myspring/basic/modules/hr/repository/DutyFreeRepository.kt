@@ -116,7 +116,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sb.append(" AND t1.created_by=:createdBy ")
         }
         if (dutyFreeQuery.dutyDateStart != null) {
-            sb.append(" AND t1.free_date > :dutyDateStart ")
+            sb.append(" AND t1.free_date >= :dutyDateStart ")
         }
         if (dutyFreeQuery.dutyDateEnd != null) {
             sb.append(" AND t1.free_date  < :dutyDateEnd ")

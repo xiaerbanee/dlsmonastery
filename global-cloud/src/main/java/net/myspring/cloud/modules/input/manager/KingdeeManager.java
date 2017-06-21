@@ -132,7 +132,7 @@ public class KingdeeManager {
             root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);
             root.put("Numbers", nextBillNo);
-            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
+            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo());
             content = ObjectMapperUtils.writeValueAsString(root);
             result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
             resultMap.put("NEXT_SUBMIT",result);
