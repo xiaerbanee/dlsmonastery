@@ -70,7 +70,7 @@ public class PriceChangeImeService {
     }
 
     public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
-        List<PriceChange> priceChange = priceChangeRepository.findAll();
+        List<PriceChange> priceChange = priceChangeRepository.findByPriceChangeIme(PriceChangeStatusEnum.抽检中.name());
         priceChangeImeForm.getExtra().put("priceChangeDtos",BeanUtil.map(priceChange, PriceChangeDto.class));
         return priceChangeImeForm;
     }

@@ -8,15 +8,14 @@
       </el-row>
       <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-row :gutter="8">
-            <el-form-item label="日期范围" :label-width="formLabelWidth">
-              <el-col :span="7">
-                <date-picker placeholder="选择开始日期" v-model="formData.dateStart" style="width: 50px"></date-picker>
-              </el-col>
-              <el-col class="line" :span="1">-</el-col>
-              <el-col :span="7">
-                <date-picker placeholder="选择截止日期" v-model="formData.dateEnd" style="width: 50px"></date-picker>
-              </el-col>
+          <el-row :gutter="4">
+            <el-form-item label="开始日期" :label-width="formLabelWidth">
+                <date-picker placeholder="选择开始日期" v-model="formData.dateStart"></date-picker>
+            </el-form-item>
+          </el-row>
+          <el-row :gutter="4">
+            <el-form-item label="截止日期" :label-width="formLabelWidth">
+                <date-picker placeholder="选择截止日期" v-model="formData.dateEnd"></date-picker>
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
@@ -131,7 +130,7 @@
             this.formData.customerIdList = customerIdList;
             if (this.formData.customerIdList.length !== 0) {
               let submitData = util.deleteExtra(this.formData);
-              axios.post('/api/global/cloud/report/customerReceive/list', qs.stringify(submitData, {allowDots:true})).then((response) => {
+              axios.get('/api/global/cloud/report/customerReceive/page?' + qs.stringify(submitData)).then((response) => {
                 this.summary = response.data;
                 this.summary = response.data;
               });

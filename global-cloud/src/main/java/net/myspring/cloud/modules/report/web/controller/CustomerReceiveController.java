@@ -20,6 +20,12 @@ public class CustomerReceiveController {
     @Autowired
     private CustomerReceiveService customerReceiveService;
 
+    @RequestMapping(value = "page")
+    public List<CustomerReceiveDto> page(CustomerReceiveQuery customerReceiveQuery) {
+        List<CustomerReceiveDto> customerReceiveDtoList =  customerReceiveService.findCustomerReceiveDtoList(customerReceiveQuery);
+        return customerReceiveDtoList;
+    }
+
     @RequestMapping(value = "list",method = RequestMethod.POST)
     public List<CustomerReceiveDto> list(@RequestBody CustomerReceiveQuery customerReceiveQuery) {
         List<CustomerReceiveDto> customerReceiveDtoList =  customerReceiveService.findCustomerReceiveDtoList(customerReceiveQuery);

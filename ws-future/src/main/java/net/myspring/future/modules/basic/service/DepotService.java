@@ -86,7 +86,7 @@ public class DepotService {
     }
 
     public List<String> filterDepotIds(){
-        return depotManager.filterDepotIds();
+        return depotManager.filterDepotIds(RequestUtils.getAccountId());
     }
 
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
@@ -231,7 +231,7 @@ public class DepotService {
 
     public void synArea(DepotQuery depotQuery){
       depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-      depotQuery.setDepotIdList(depotManager.filterDepotIds());
+      depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
       List<Depot> depotList=depotRepository.findByFilter(depotQuery);
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
         cacheUtils.initCacheInput(depotDtoList);

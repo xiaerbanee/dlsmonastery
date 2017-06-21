@@ -52,7 +52,6 @@
         formData:{
             extra:{}
         },
-        formProperty:{},
         formVisible: false,
         initPromise:{},
       };

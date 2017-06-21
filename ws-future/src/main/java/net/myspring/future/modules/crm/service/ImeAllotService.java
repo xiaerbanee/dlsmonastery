@@ -113,7 +113,7 @@ public class ImeAllotService {
                     sb.append("串码：").append(ime).append("已上报；");
                 }else{
                     if(checkAccess) {
-                        if(!depotManager.isAccess(depot, true)) {
+                        if(!depotManager.isAccess(depot, true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                             sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的调拨权限，将自动生成调拨申请单；");
                         }
                     }
@@ -136,7 +136,7 @@ public class ImeAllotService {
             if(productIme.getProductImeSaleId()==null && productIme.getDepotId()!=null&&!productIme.getDepotId().equals(imeAllotForm.getToDepotId())) {
                 Depot fromDepot = depotRepository.findOne(productIme.getDepotId());
 
-                if(depotManager.isAccess(fromDepot, true)) {
+                if(depotManager.isAccess(fromDepot, true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                     ImeAllot imeAllot = new ImeAllot();
                     imeAllot.setProductImeId(productIme.getId());
                     imeAllot.setFromDepotId(fromDepot.getId());
