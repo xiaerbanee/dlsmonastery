@@ -118,6 +118,7 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
             ime.meid productImeMeid,
             ime.product_id productImeProductId,
             ime.product_ime_upload_id productImeProductImeUploadId,
+            ime.retail_date retailDate,
             depot.office_id shopOfficeId,
             depot.area_id shopAreaId,
             depotShop.area_type depotShopAreaType,

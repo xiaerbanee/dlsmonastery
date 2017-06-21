@@ -27,7 +27,19 @@ Page({
   },
   initPage: function () {
     var that = this;
-    that.pageRequest();
+    wx.request({
+      url: $util.getUrl("ws/future/crm/productImeSale/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.pageRequest();
+      }
+    });
   },
   pageRequest: function () {
     var that = this;
@@ -42,7 +54,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             console.log(res.data)
             that.setData({ page: res.data });
