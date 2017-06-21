@@ -7,7 +7,7 @@ Page({
     response: {},
     submitDisabled: false,
     leaveDisabled: false,
-    options:null
+    options: null
   },
 
   onLoad: function (options) {
@@ -21,18 +21,15 @@ Page({
   initPage: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("basic/hr/dutyLeave/findOne"),
+      url: $util.getUrl("basic/hr/dutyLeave/getQuery"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        console.log(res)
-        that.setData({
-          'formProperty.dateList': res.data.dateList,
-          'formProperty.leaveList': res.data.leaveList
-        })
+        that.setData({ formProperty: res.data.extra})
       }
     })
   },
@@ -68,15 +65,15 @@ Page({
     wx.request({
       url: $util.getUrl("basic/hr/dutyLeave/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({"response.data": res.data.extra.errors, submitDisabled: false });
+          that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
     })

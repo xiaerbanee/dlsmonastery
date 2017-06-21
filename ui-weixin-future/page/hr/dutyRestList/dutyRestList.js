@@ -30,7 +30,7 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({formProperty:res.data.extra,formData:res.data })
+        that.setData({ formProperty: res.data.extra, formData: res.data })
         console.log(that.data.formProperty)
         that.pageRequest();
 
