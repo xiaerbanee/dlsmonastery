@@ -120,6 +120,7 @@ export default {
     price: "harga",
     save:"simpan",
     investInCause:'投入理由',
+    prerequisiteMessage: "必填信息",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "perincian bahan",

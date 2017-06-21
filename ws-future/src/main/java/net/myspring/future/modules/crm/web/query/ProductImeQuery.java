@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProductImeQuery extends BaseQuery{
 
-    private String imeReverse;
+    private String ime;
     private String boxIme;
     private String ime2;
     private String meid;
@@ -66,12 +66,16 @@ public class ProductImeQuery extends BaseQuery{
         this.createdTimeRange = createdTimeRange;
     }
 
-    public String getImeReverse() {
-        return imeReverse;
+    public String getIme() {
+        return ime;
     }
 
-    public void setImeReverse(String imeReverse) {
-        this.imeReverse = imeReverse;
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
+
+    public String getImeReverse(){
+        return StringUtils.reverse(ime);
     }
 
     public String getBoxIme() {
