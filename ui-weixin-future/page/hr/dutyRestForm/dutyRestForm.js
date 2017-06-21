@@ -20,12 +20,13 @@ Page({
       url: $util.getUrl("basic/hr/dutyRest/getForm"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
         console.log(res);
-        that.setData({ 'formProperty.restList': res.data.extra.restList, 'formProperty.dateList': res.data.extra.dateList, 'fromProperty': res.data})
+        that.setData({ formProperty: res.data.extra})
       }
     })
   },
@@ -66,9 +67,10 @@ Page({
     wx.request({
       url: $util.getUrl("basic/hr/dutyRest/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
         console.log(res.data)
         if (res.data.success) {
@@ -110,7 +112,7 @@ Page({
           var tempTotalrestHour = Math.floor(hour) + 0.5;
           if (hour > tempTotalrestHour) {
             hour = Math.floor(hour) + 1.0;
-            that.setData({ 'formData.hour': hour})
+            that.setData({ 'formData.hour': hour })
           } else {
             hour = tempTotalrestHour;
             that.setData({ 'formData.hour': hour })

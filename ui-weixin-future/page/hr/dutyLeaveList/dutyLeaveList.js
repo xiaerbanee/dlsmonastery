@@ -44,7 +44,6 @@ Page({
       icon: 'loading',
       duration: 10000,
       success: function (res) {
-        console.log(that.data.formData)
         wx.request({
           url: $util.getUrl("basic/hr/dutyLeave"),
           header: {
@@ -53,7 +52,6 @@ Page({
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res)
             that.setData({ page: res.data });
             wx.hideToast();
           }
