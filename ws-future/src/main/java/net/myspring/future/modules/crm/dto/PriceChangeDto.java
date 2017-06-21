@@ -1,9 +1,12 @@
 package net.myspring.future.modules.crm.dto;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.PriceChange;
+import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,16 +15,48 @@ import java.util.List;
 public class PriceChangeDto extends DataDto<PriceChange> {
 
     private String name;
-    private String productTypeName;
+    private String productTypeIds;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;
     private Integer checkPercent;
     private String status;
 
     private List<String> productTypeIdList;
+    @CacheInput(inputKey = "productTypes",inputInstance = "productTypeIdList",outputInstance = "name")
+    private List<String> productTypeNameList;
+
+    public String getProductTypeName(){
+        String productTypeNames = "";
+        if(this.productTypeNameList != null){
+            for (String productTypeName:this.productTypeNameList){
+                productTypeNames += productTypeName;
+            }
+        }
+        return productTypeNames;
+    }
+
+    public List<String> getProductTypeNameList() {
+        return productTypeNameList;
+    }
+
+    public void setProductTypeNameList(List<String> productTypeNameList) {
+        this.productTypeNameList = productTypeNameList;
+    }
+
+    public String getProductTypeIds() {
+        return productTypeIds;
+    }
+
+    public void setProductTypeIds(String productTypeIds) {
+        this.productTypeIds = productTypeIds;
+    }
 
     public List<String> getProductTypeIdList() {
-        return productTypeIdList;
+        if(this.productTypeIds!=null){
+            return Arrays.asList(this.productTypeIds.split(CharConstant.COMMA));
+        }else{
+            return null;
+        }
     }
 
     public void setProductTypeIdList(List<String> productTypeIdList) {
@@ -66,13 +101,5 @@ public class PriceChangeDto extends DataDto<PriceChange> {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getProductTypeName() {
-        return productTypeName;
-    }
-
-    public void setProductTypeName(String productTypeName) {
-        this.productTypeName = productTypeName;
     }
 }
