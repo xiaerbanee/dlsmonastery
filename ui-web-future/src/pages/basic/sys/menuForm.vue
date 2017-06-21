@@ -27,9 +27,6 @@
             <el-form-item :label="$t('menuForm.visible')" prop="visible">
               <bool-radio-group v-model="inputForm.visible"></bool-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('menuForm.permissionStr')" prop="permissionStr">
-              <el-input v-model="inputForm.permissionStr" type="textarea":rows="5"></el-input>
-            </el-form-item>
             <el-form-item :label="$t('menuForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
