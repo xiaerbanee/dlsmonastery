@@ -53,7 +53,7 @@
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.productImeIme}}</view>
           <view class="weui-media-box__desc item_style">门店：{{item.shopName}}</view>
           <view class="weui-media-box__desc item_style">产品名称：{{item.productImeProductName}} </view>
-          <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate}}</view>
+          <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate?item.retailDate:""}}</view>
           <view class="weui-media-box__desc item_style">核销人：{{item.employeeName}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">核销时间：</view>
