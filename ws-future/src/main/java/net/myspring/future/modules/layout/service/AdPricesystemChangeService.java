@@ -74,6 +74,7 @@ public class AdPricesystemChangeService {
 
     public void save(String adpricesystemChanges){
         String json = HtmlUtils.htmlUnescape(adpricesystemChanges);
+        Map<String,Product> productMap= CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         List<AdPricesystem> adPricesystems = adpricesystemRepository.findByEnabledIsTrue();
         List<Map<String, AdPricesystemDetail>> adPricesystemList = Lists.newArrayList();
@@ -89,34 +90,56 @@ public class AdPricesystemChangeService {
         }
         List<AdPricesystemDetail> adPricesystemDetails = Lists.newArrayList();
         List<AdPricesystemChange> adPricesystemChanges = Lists.newArrayList();
+        List<Product> products = Lists.newArrayList();
         for (List<Object> row : data) {
             String productId = StringUtils.toString(row.get(0)).trim();
-            for (int i = 5; i < row.size(); i++) {
+            for (int i = 0; i < row.size(); i++) {
                 String value = StringUtils.toString(row.get(i)).trim();
-                AdPricesystem adPricesystem = adPricesystems.get(i - 5);
-                Map<String, AdPricesystemDetail> map = adPricesystemList.get(i - 5);
-                BigDecimal price = null;
-                if (StringUtils.isNotBlank(value)) {
-                    price = new BigDecimal(value);
+                Product product = productMap.get(StringUtils.toString(row.get(0)).trim());
+                switch (i) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        break;
+                    case 3:
+                        if (StringUtils.isNotBlank(value)&&product.getVolume().compareTo(new BigDecimal(value))!=0) {
+                            product.setVolume(new BigDecimal(value));
+                        }
+                        break;
+                    case 4:
+                        if (StringUtils.isNotBlank(value)&&product.getShouldGet().compareTo(new BigDecimal(value))!=0) {
+                            product.setShouldGet(new BigDecimal(value));
+                        }
+                        break;
+                    default:
+                        AdPricesystem adPricesystem = adPricesystems.get(i - 5);
+                        Map<String, AdPricesystemDetail> map = adPricesystemList.get(i - 5);
+                        BigDecimal price = null;
+                        if (StringUtils.isNotBlank(value)) {
+                            price = new BigDecimal(value);
+                        }
+                        AdPricesystemDetail adPricesystemDetail = map.get(productId);
+                        if (adPricesystemDetail == null) {
+                            adPricesystemDetail = new AdPricesystemDetail();
+                            adPricesystemDetail.setAdPricesystemId(adPricesystem.getId());
+                            adPricesystemDetail.setProductId(productId);
+                        }
+                        if ((adPricesystemDetail.getPrice() == null && price != null) || (adPricesystemDetail.getPrice() != null && price == null) || (adPricesystemDetail.getPrice() != null && price != null && adPricesystemDetail.getPrice().compareTo(price) != 0)) {
+                            AdPricesystemChange adPricesystemChange = new AdPricesystemChange();
+                            adPricesystemChange.setOldPrice(adPricesystemDetail.getPrice());
+                            adPricesystemChange.setNewPrice(price);
+                            adPricesystemChange.setAdPricesystemId(adPricesystem.getId());
+                            adPricesystemChange.setProductId(productId);
+                            adPricesystemChanges.add(adPricesystemChange);
+                        }
+                        adPricesystemDetail.setPrice(price);
+                        adPricesystemDetails.add(adPricesystemDetail);
+                        break;
                 }
-                AdPricesystemDetail adPricesystemDetail = map.get(productId);
-                if (adPricesystemDetail == null) {
-                    adPricesystemDetail = new AdPricesystemDetail();
-                    adPricesystemDetail.setAdPricesystemId(adPricesystem.getId());
-                    adPricesystemDetail.setProductId(productId);
-                }
-                if ((adPricesystemDetail.getPrice() == null && price != null) || (adPricesystemDetail.getPrice() != null && price == null) || (adPricesystemDetail.getPrice() != null && price != null && adPricesystemDetail.getPrice().compareTo(price) != 0)) {
-                    AdPricesystemChange adPricesystemChange = new AdPricesystemChange();
-                    adPricesystemChange.setOldPrice(adPricesystemDetail.getPrice());
-                    adPricesystemChange.setNewPrice(price);
-                    adPricesystemChange.setAdPricesystemId(adPricesystem.getId());
-                    adPricesystemChange.setProductId(productId);
-                    adPricesystemChanges.add(adPricesystemChange);
-                }
-                adPricesystemDetail.setPrice(price);
-                adPricesystemDetails.add(adPricesystemDetail);
+                products.add(product);
             }
         }
+        productRepository.save(products);
         adPricesystemChangeRepository.save(adPricesystemChanges);
         adPricesystemDetailRepository.save(adPricesystemDetails);
     }
