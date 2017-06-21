@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.report.web.controller;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.service.CustomerReceiveService;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,8 +35,8 @@ public class CustomerReceiveController {
     }
 
     @RequestMapping(value = "detail")
-    public List<CustomerReceiveDetailDto> detail(LocalDate dateStart,LocalDate dateEnd,String customerId) {
-        return customerReceiveService.findCustomerReceiveDetailDtoList(dateStart,dateEnd,customerId);
+    public List<CustomerReceiveDetailDto> detail(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+        return customerReceiveService.findCustomerReceiveDetailDtoList(customerReceiveDetailQuery);
     }
 
     @RequestMapping(value = "getQuery")

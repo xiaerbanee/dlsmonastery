@@ -91,6 +91,16 @@ public class CustomerReceiveService {
         return map.get(customerId);
     }
 
+    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+        List<CustomerReceiveDetailDto> detailDtoList = Lists.newArrayList();
+        List<String> customerIdList = customerReceiveDetailQuery.getCustomerIdList();
+        Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+        for (String customerId : customerIdList){
+            detailDtoList.addAll(map.get(customerId));
+        }
+        return detailDtoList;
+    }
+
     //一个customerId对应List<CustomerReceiveDetailDto>
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
