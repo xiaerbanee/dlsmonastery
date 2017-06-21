@@ -120,7 +120,7 @@ public class SalOutStockService {
                 SalOutStockDto salOutStockDto = new SalOutStockDto();
                 salOutStockDto.setCreatorK3(accountKingdeeBook.getUsername());
                 salOutStockDto.setDate(date);
-                salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
+                salOutStockDto.setDepartmentNumberK3(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
                 salOutStockDto.setBillTypeK3(billType);
                 salOutStockDto.setCustomerNumber(customerNumMap.get(customerName));
                 salOutStockDto.setNote(remarks);
@@ -158,9 +158,22 @@ public class SalOutStockService {
         if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
+                List<String> customerNumberList = Lists.newArrayList();
+                for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
+                    customerNumberList.add(salOutStockDto.getCustomerNumber());
+                }
+                Map<String, String> customerDepartmentMap = Maps.newHashMap();
+                List<String> departmentIdList = Lists.newArrayList();
+                for (BdCustomer bdCustomer : bdCustomerRepository.findByNumberList(customerNumberList)) {
+                    customerDepartmentMap.put(bdCustomer.getFNumber(), bdCustomer.getFSalDeptId());
+                    departmentIdList.add(bdCustomer.getFSalDeptId());
+                }
+                List<BdDepartment> bdDepartmentList = bdDepartmentRepository.findByIdList(departmentIdList);
+                Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
                 for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
                     salOutStockDto.setCreatorK3(accountKingdeeBook.getUsername());
                     salOutStockDto.setBillTypeK3(SalOutStockBillTypeEnum.标准销售出库单.name());
+                    salOutStockDto.setDepartmentNumberK3(bdDepartmentMap.get(customerDepartmentMap.get(salOutStockDto.getCustomerNumber())).getFNumber());
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
