@@ -17,6 +17,10 @@ import java.util.Map;
  * Created by lihx on 2017/6/13.
  */
 public class StkInStockDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
     private String creator;
     //供应商编码
@@ -27,6 +31,22 @@ public class StkInStockDto {
     private String departmentNumber;
 
     private List<StkInStockFEntryDto> stkInStockFEntryDtoList = Lists.newArrayList();
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
 
     public String getCreator() {
         return creator;

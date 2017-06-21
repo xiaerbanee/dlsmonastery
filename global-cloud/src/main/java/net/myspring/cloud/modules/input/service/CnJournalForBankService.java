@@ -58,6 +58,8 @@ public class CnJournalForBankService {
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {
             kingdeeSynDto = new KingdeeSynDto(
+                    cnJournalForBankDto.getExtendId(),
+                    cnJournalForBankDto.getExtendType(),
                     KingdeeFormIdEnum.CN_JOURNAL.name(),
                     cnJournalForBankDto.getJson(),
                     kingdeeBook) {
@@ -149,7 +151,7 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public KingdeeSynDto save(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public KingdeeSynDto saveForEmployeePhoneDeposit(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
         cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
         cnJournalForBankDto.setDateK3(LocalDate.now());

@@ -45,6 +45,8 @@ public class StkMisDeliveryService {
 
     private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                stkMisDeliveryDto.getExtendId(),
+                stkMisDeliveryDto.getExtendType(),
                 KingdeeFormIdEnum.STK_MisDelivery.name(),
                 stkMisDeliveryDto.getJson(),
                 kingdeeBook);
