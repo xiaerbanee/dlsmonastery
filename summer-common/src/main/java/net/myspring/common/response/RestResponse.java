@@ -77,11 +77,10 @@ public class RestResponse {
         this.extra = extra;
     }
 
-    public void setRestErrorField(BindingResult bindingResult){
+    public void setErrorMap(BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             for(FieldError error:bindingResult.getFieldErrors()){
-                RestErrorField restErrorField=new RestErrorField(error.getDefaultMessage(),null,error.getField());
-                getErrors().add(restErrorField);
+                getExtra().put(error.getField(),error.getDefaultMessage());
             }
         }
     }
