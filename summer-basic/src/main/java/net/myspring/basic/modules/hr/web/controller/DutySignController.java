@@ -53,7 +53,7 @@ public class DutySignController {
         RestResponse restResponse = new RestResponse("签到成功", null);
         if(bindingResult.hasErrors()){
             restResponse= new RestResponse("签到失败", null,false);
-            restResponse.setRestErrorFieldList(bindingResult);
+            restResponse.setErrorMap(bindingResult);
             return restResponse;
         }
         dutySignService.save(dutySignForm);
