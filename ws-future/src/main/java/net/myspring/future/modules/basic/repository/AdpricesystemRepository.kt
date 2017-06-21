@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.AdPricesystem
+import net.myspring.future.modules.basic.domain.AdPricesystemDetail
 import net.myspring.future.modules.basic.dto.AdPricesystemDto
 import net.myspring.future.modules.basic.web.query.AdPricesystemQuery
 import net.myspring.util.repository.MySQLDialect
@@ -49,7 +50,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     """)
     fun findList(adPricesystemQuery: AdPricesystemQuery): MutableList<AdPricesystem>
 
-    fun findByName(name: String): AdPricesystem
+    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): AdPricesystem?
 
 
 }
