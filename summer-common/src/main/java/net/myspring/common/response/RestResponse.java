@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.Map;
@@ -77,10 +77,11 @@ public class RestResponse {
         this.extra = extra;
     }
 
-    public void setErrorMap(BindingResult bindingResult){
+    public void setRestErrorFieldList(BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            for(FieldError error:bindingResult.getFieldErrors()){
-                getExtra().put(error.getField(),error.getDefaultMessage());
+            for(ObjectError error:bindingResult.getAllErrors()){
+                RestErrorField restErrorField=new RestErrorField(error.getDefaultMessage(),null,error.getObjectName());
+                getErrors().add(restErrorField);
             }
         }
     }

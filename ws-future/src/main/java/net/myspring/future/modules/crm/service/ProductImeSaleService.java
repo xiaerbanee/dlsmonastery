@@ -88,7 +88,7 @@ public class ProductImeSaleService {
                     sb.append("串码：").append(ime).append("已核销；");
                 } else if(StringUtils.isNotBlank(depot.getDepotStoreId())) {
                     sb.append("串码：").append(ime).append("的所属地点为：").append(depot.getName()).append("，不是门店，无法核销；");
-                } else if(!depotManager.isAccess(depot, true)) {
+                } else if(!depotManager.isAccess(depot, true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }else if(productIme.getProductImeUploadId() != null) {
                     sb.append("串码：").append(ime).append("已上报,不能核销；");
@@ -156,7 +156,7 @@ public class ProductImeSaleService {
 
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                } else if(!depotManager.isAccess(depot,true)) {
+                } else if(!depotManager.isAccess(depot,true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
