@@ -105,7 +105,11 @@
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/sys/office/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
+            if(response.data.success){
+              this.$message(response.data.message);
+            }else {
+              tthis.$message.error(response.data.message);
+            }
             this.pageRequest();
           });
         }).catch(()=>{});

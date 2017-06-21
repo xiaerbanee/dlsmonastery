@@ -107,7 +107,7 @@
       },qtySum(){
         let realSum = 0;
         for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
-          realSum += parseInt(this.inputForm.sdemoPhoneTypeOfficeDtos[key].qty);
+          realSum += parseInt(this.inputForm.demoPhoneTypeOfficeDtos[key].qty);
         }
         this.inputForm.limitQty  = realSum;
       },

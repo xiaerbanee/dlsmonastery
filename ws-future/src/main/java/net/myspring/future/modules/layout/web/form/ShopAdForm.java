@@ -1,12 +1,10 @@
 package net.myspring.future.modules.layout.web.form;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.form.BaseForm;
-import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.layout.domain.ShopAd;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/10.

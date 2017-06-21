@@ -79,7 +79,7 @@ public class OfficeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(OfficeForm officeForm) {
-        RestResponse restResponse=officeService.check(officeForm);
+        RestResponse restResponse=officeService.checkSave(officeForm);
         if(!restResponse.getSuccess()){
             return restResponse;
         }
@@ -119,8 +119,12 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(Office office, BindingResult bindingResult) {
-        officeService.logicDelete(office);
+    public RestResponse delete(OfficeForm officeForm) {
+        RestResponse restResponse = officeService.checkDelete(officeForm);
+        if(restResponse.getSuccess()){
+            return restResponse;
+        }
+        officeService.logicDelete(officeForm);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

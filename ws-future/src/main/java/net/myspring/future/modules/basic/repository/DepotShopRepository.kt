@@ -58,7 +58,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.enabled = 1
             AND t2.enabled = 1
             AND t1.depot_shop_id = t2.id
-            AND t1.id=:id
+            AND t2.id=:id
           """, Collections.singletonMap("id", id), BeanPropertyRowMapper(DepotShopDto::class.java))
     }
 

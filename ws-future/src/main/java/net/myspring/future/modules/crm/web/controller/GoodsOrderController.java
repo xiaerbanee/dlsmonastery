@@ -56,7 +56,7 @@ public class GoodsOrderController {
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        goodsOrderQuery.getExtra().put("StatusList",GoodsOrderStatusEnum.getList());
+        goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
         return goodsOrderQuery;
     }
 
@@ -105,5 +105,12 @@ public class GoodsOrderController {
     @RequestMapping(value = "findOne")
     public GoodsOrderDto findOne(String id) {
         return goodsOrderService.findOne(id);
+    }
+
+    @RequestMapping(value="delete")
+    public RestResponse delete(String id) {
+        goodsOrderService.delete(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 }

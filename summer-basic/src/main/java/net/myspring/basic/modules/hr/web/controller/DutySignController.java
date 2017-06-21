@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.service.DutySignService;
 import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
+import net.myspring.basic.modules.hr.web.validator.DutySignValidator;
 import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -29,11 +30,12 @@ public class DutySignController {
 
     @Autowired
     private DutySignService dutySignService;
-
     @Autowired
     private OfficeService officeService;
     @Autowired
     private PositionService positionService;
+    @Autowired
+    private DutySignValidator dutySignValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutySignDto> list(Pageable pageable, DutySignQuery dutySignQuery) {
@@ -49,15 +51,13 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(@Valid DutySignForm dutySignForm, BindingResult bindingResult) {
-        RestResponse restResponse = new RestResponse("签到成功", null);
+    public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
+        dutySignValidator.validate(dutySignForm,bindingResult);
         if(bindingResult.hasErrors()){
-            restResponse= new RestResponse("签到失败", null,false);
-            restResponse.setErrorMap(bindingResult);
-            return restResponse;
+            return new RestResponse(bindingResult,"保存失败", null);
         }
         dutySignService.save(dutySignForm);
-        return restResponse;
+        return new RestResponse("保存成功", null);
     }
 
     @RequestMapping(value = "delete")

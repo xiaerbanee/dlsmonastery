@@ -8,13 +8,26 @@ Page({
     searchHidden: true,
     activeItem: null
   },
-  onLoad: function () {},
+  onLoad: function () { },
   onShow: function () {
     var that = this;
     that.setData({
       "formData.dateStart": $util.formatLocalDate($util.addMonth(new Date, -3)),
       "formData.dateEnd": $util.formatLocalDate(new Date),
-    })
+    });
+    wx.request({
+      url: $util.getUrl("ws/future/basic/depotShop/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.pageRequest();
+      }
+    });
     app.autoLogin(function () {
       that.initPage()
     });

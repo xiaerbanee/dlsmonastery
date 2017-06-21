@@ -75,8 +75,8 @@ public class GoodsOrderShipService {
      */
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
-        if (goodsOrderQuery.getExpressCodes() != null) {
-            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+        if (goodsOrderQuery.getExpressOrderIds() != null) {
+            goodsOrderQuery.setExpressOrderIdList(Arrays.asList(goodsOrderQuery.getExpressOrderId().split("\n|,")));
         }
         if (goodsOrderQuery.getBusinessIds() != null) {
             goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));

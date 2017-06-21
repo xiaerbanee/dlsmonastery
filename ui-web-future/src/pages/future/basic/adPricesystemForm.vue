@@ -9,7 +9,7 @@
             <el-form-item :label="$t('adPricesystemForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adPricesystemForm.officeName')" prop="officeName">
+            <el-form-item :label="$t('adPricesystemForm.officeName')" prop="officeIdList">
               <office-select v-model="inputForm.officeIdList" multiple="multiple"></office-select>
             </el-form-item>
             <el-form-item>
@@ -39,6 +39,7 @@
         },
         rules: {
           name: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}],
+          officeIdList: [{required: true, message: this.$t('officeForm.prerequisiteMessage')}]
         },
         remoteLoading: false,
         defaultProps: {
