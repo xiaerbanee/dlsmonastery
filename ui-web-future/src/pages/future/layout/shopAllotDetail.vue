@@ -63,7 +63,8 @@
           <el-table-column prop="qty" :label="$t('shopAllotDetail.qty')"></el-table-column>
           <el-table-column prop="returnPrice" :label="$t('shopAllotDetail.returnPrice')">
             <template   scope="scope">
-              <el-input  :readonly="isView" v-model="scope.row.returnPrice"></el-input>
+              <div v-if="isView">{{scope.row.returnPrice}}</div>
+              <div v-else><el-input v-model.number="scope.row.returnPrice"></el-input></div>
             </template>
           </el-table-column>
           <el-table-column prop="salePrice" :label="$t('shopAllotDetail.salePrice')">
@@ -134,6 +135,7 @@
       }
     },created(){
 
+        //TODO 门店的应收还没有获取
       axios.get('/api/ws/future/crm/shopAllot/findDtoForViewOrAudit', {params: {id: this.$route.query.id}}).then((response) => {
         this.shopAllot = response.data;
       });

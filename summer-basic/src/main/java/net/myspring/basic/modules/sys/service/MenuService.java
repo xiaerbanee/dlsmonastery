@@ -68,15 +68,7 @@ public class MenuService {
     public MenuDto findOne(MenuDto menuDto) {
         if (!menuDto.isCreate()) {
             Menu menu = findOne(menuDto.getId());
-            if (menu != null) {
-                menuDto = BeanUtil.map(menu, MenuDto.class);
-                List<Permission> permissionList = permissionRepository.findByMenuId(menuDto.getId());
-                String permissionStr = "";
-                for (Permission permission : permissionList) {
-                    permissionStr = permissionStr + permission.getName() + CharConstant.SPACE + permission.getPermission() + CharConstant.ENTER;
-                }
-                menuDto.setPermissionStr(permissionStr);
-            }
+            menuDto = BeanUtil.map(menu, MenuDto.class);
         }
         return menuDto;
     }
@@ -92,8 +84,6 @@ public class MenuService {
     }
 
     public Menu save(MenuForm menuForm) {
-        Set<Permission> permissions = Sets.newHashSet();
-        Set<Permission> oldPermissions = Sets.newHashSet();
         Menu menu;
         if (menuForm.isCreate()) {
             menu = BeanUtil.map(menuForm, Menu.class);
@@ -102,36 +92,6 @@ public class MenuService {
             menu = menuRepository.findOne(menuForm.getId());
             ReflectionUtil.copyProperties(menuForm, menu);
             menuRepository.save(menu);
-            oldPermissions = Sets.newHashSet(permissionRepository.findByMenuId(menuForm.getId()));
-        }
-        if (StringUtils.isNotBlank(menuForm.getPermissionStr())) {
-            String[] permissionRows = menuForm.getPermissionStr().split(CharConstant.ENTER);
-            for (String permissionRow : permissionRows) {
-                if (StringUtils.isNotBlank(permissionRow)) {
-                    String[] detail = permissionRow.split(CharConstant.SPACE);
-                    if (detail.length >= 2) {
-                        String name = detail[0];
-                        String permissionStr = detail[detail.length - 1];
-                        Permission permission = permissionRepository.findByPermission(permissionStr);
-                        if (permission != null) {
-                            permission.setName(name);
-                            permission.setMenuId(menuForm.getId());
-                            permissionRepository.save(permission);
-                        } else {
-                            permission = new Permission();
-                            permission.setName(name);
-                            permission.setPermission(permissionStr);
-                            permission.setMenuId(menuForm.getId());
-                            permissionRepository.save(permission);
-                        }
-                        permissions.add(permission);
-                    }
-                }
-            }
-        }
-        List<String> removePermissionIds = CollectionUtil.subtract(CollectionUtil.extractToList(oldPermissions, "id"), CollectionUtil.extractToList(permissions, "id"));
-        if (CollectionUtil.isNotEmpty(removePermissionIds)) {
-            permissionRepository.logicDeleteByIds(removePermissionIds);
         }
         return menu;
     }
