@@ -178,6 +178,8 @@ export default {
     selectKeyShow20time: "请输入关键词,显示前20条",
     recentSaleQty:'门店近三个月销量',
     investInCause:'投入理由',
+    enter:'以回车分割',
+    expressCodes: "快递单号",
   },
   adGoodsOrderList: {
     adGoodsOrderList: "pemesanan etalase",
@@ -308,6 +310,7 @@ export default {
     auditRemarks: "keterangan pemeriksaan",
     outShopName: "开单门店",
     shopName: "门店",
+    enter:'以回车分割',
   },
   adGoodsOrderSign: {
     adGoodsOrderSign: "货品订货签收",

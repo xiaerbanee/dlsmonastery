@@ -45,7 +45,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findByCompanyIdAndName(companyId: String, name: String): Depot
+    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): Depot?
 
     @Query("""
         select t
@@ -60,7 +60,7 @@ interface DepotRepositoryCustom{
 
     fun findShopList(depotShopQuery: DepotQuery): MutableList<DepotDto>
 
-    fun findStoreList(depotShopQuery: DepotQuery): MutableList<DepotDto>
+    fun findStoreList(depotStoreQuery: DepotQuery): MutableList<DepotDto>
 
     fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
 
@@ -71,10 +71,30 @@ interface DepotRepositoryCustom{
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
 
     fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto>
+
+    fun findChainIds(depotQuery: DepotQuery):MutableList<String>
 }
 
 @Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findChainIds(depotQuery: DepotQuery): MutableList<String> {
+        val sb = StringBuffer("""
+            select
+                distinct depot.chain_id
+            from
+                crm_depot depot
+            where
+                depot.enabled=1
+        """)
+        if(CollectionUtil.isNotEmpty(depotQuery.depotIdList)){
+            sb.append("""  and depot.id in (:depotIdList) """)
+        }
+        if(CollectionUtil.isNotEmpty(depotQuery.officeIdList)){
+            sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(String::class.java))
+    }
+
     override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
         val params = HashMap<String, Any>()
         params.put("companyId", companyId)
@@ -219,7 +239,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             WHERE
                 t1.enabled=1
         """)
-        var query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
+        val query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
         return query.resultList as Page<DepotDto>
     }

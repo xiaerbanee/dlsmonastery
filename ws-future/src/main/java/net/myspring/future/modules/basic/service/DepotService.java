@@ -1,8 +1,10 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
+import com.sun.xml.internal.bind.v2.TODO;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -22,6 +24,7 @@ import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -30,6 +33,7 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -44,10 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @Transactional
@@ -67,6 +69,8 @@ public class DepotService {
     @Autowired
     private ShopDepositRepository shopDepositRepository;
     @Autowired
+    private ProductImeRepository productImeRepository;
+    @Autowired
     private CloudClient cloudClient;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
@@ -82,7 +86,7 @@ public class DepotService {
     }
 
     public List<String> filterDepotIds(){
-        return depotManager.filterDepotIds();
+        return depotManager.filterDepotIds(RequestUtils.getAccountId());
     }
 
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
@@ -227,7 +231,7 @@ public class DepotService {
 
     public void synArea(DepotQuery depotQuery){
       depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-      depotQuery.setDepotIdList(depotManager.filterDepotIds());
+      depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
       List<Depot> depotList=depotRepository.findByFilter(depotQuery);
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
         cacheUtils.initCacheInput(depotDtoList);
@@ -257,5 +261,20 @@ public class DepotService {
         }
         return bdDepartment.getFNumber();
 
+    }
+
+    public Map<String,Long> getRecentMonthSaleAmount(String depotId, int monthQty) {
+        LocalDate now = LocalDate.now();
+        Map<String,Long>  recentMonthSaleAmountMap= Maps.newLinkedHashMap();
+        for(int i=monthQty;i>0;i--){
+
+            LocalDateTime dateStart=now.minusMonths(i).atStartOfDay();
+            LocalDateTime dateEnd=now.minusMonths(i-1).atStartOfDay();
+
+            Long saleQty=productImeRepository.countByEnabledIsTrueAndDepotIdAndCompanyIdAndRetailDateBetween(depotId, RequestUtils.getCompanyId(), dateStart, dateEnd);
+            String month = LocalDateTimeUtils.format(dateStart, "yyyy-MM");
+            recentMonthSaleAmountMap.put(month, saleQty);
+        }
+        return recentMonthSaleAmountMap;
     }
 }
