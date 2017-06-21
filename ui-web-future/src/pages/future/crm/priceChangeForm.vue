@@ -69,13 +69,14 @@
             this.submitDisabled = false;
           }
         })
-      }, initPage(){
-        axios.get('/api/ws/future/crm/priceChange/getForm').then((response)=>{
-          this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-      });
-        });
+      },
+      initPage(){
+          axios.get('/api/ws/future/crm/priceChange/getForm').then((response)=>{
+            this.inputForm = response.data;
+            axios.get('/api/ws/future/crm/priceChange/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+            });
+          });
       }
     },created () {
       this.initPage();

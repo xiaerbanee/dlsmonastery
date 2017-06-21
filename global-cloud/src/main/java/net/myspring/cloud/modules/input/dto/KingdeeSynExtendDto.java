@@ -10,9 +10,13 @@ public abstract class KingdeeSynExtendDto extends KingdeeSynDto {
 
     private String nextFormId;
 
-    public KingdeeSynExtendDto(String formId, String content, KingdeeBook kingdeeBook, String nextFormId) {
-        super(formId, content,kingdeeBook);
+    public KingdeeSynExtendDto(String extendId,String extendType,String formId, String content, KingdeeBook kingdeeBook, String nextFormId) {
+        super(extendId,extendType,formId, content,kingdeeBook);
         this.nextFormId = nextFormId;
+    }
+
+    public KingdeeSynExtendDto(Boolean success, String result) {
+        super(success,result);
     }
 
     public abstract String getNextBillNo();
@@ -24,4 +28,5 @@ public abstract class KingdeeSynExtendDto extends KingdeeSynDto {
     public void setNextFormId(String nextFormId) {
         this.nextFormId = nextFormId;
     }
+
 }

@@ -106,7 +106,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             """);
         if(dutyTripQuery.dutyDateStart!=null){
             sql.append("""
-                   AND t1.date_start > :dutyDateStart
+                   AND t1.date_start >= :dutyDateStart
                 """);
         }
         if(dutyTripQuery.dutyDateEnd!=null){

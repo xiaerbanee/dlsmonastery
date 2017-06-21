@@ -5,11 +5,8 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="10">
-            <el-form-item label="选择仓库" prop="depotId" v-if="!isCreate">
+            <el-form-item label="选择门店" prop="depotId" >
               <depot-select v-model="inputForm.depotId" category="shop"></depot-select>
-            </el-form-item>
-            <el-form-item label="门店名称" prop="depotName" v-if="isCreate">
-              <el-input v-model="inputForm.depotName" />
             </el-form-item>
             <el-form-item label="开业时间" prop="enableDate">
               <date-picker v-model="inputForm.enableDate"></date-picker>
@@ -104,7 +101,7 @@
           extra:{}
         },
         rules: {
-          depotId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          depotId: [{ required: true, message: "必填信息,门店不存在,请联系省公司文员添加"}],
           areaType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           carrierType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           turnoverType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],

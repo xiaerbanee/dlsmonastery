@@ -10,7 +10,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="dutyDateStart" mode="date" value="{{formData.dutyDateStart}}" data-name="dutyDateStart" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dutyDateStart}}</view>
+            <view class="weui-input">{{formData.dutyDateStart?formData.dutyDateStart:""}}</view>
           </picker>
         </view>
       </view>
@@ -20,7 +20,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd}}" data-name="dutyDateEnd" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.dutyDateEnd}}</view>
+            <view class="weui-input">{{formData.dutyDateEnd?formData.dutyDateEnd:""}}</view>
           </picker>
         </view>
       </view>
@@ -30,7 +30,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="type" range="{{formProperty.restList}}" value="{{formData.type}}" data-name="type" bindchange="bindType">
-            <view class="weui-input">{{formData.type}}</view>
+            <view class="weui-input">{{formData.type?formData.type:""}}</view>
           </picker>
         </view>
       </view>
@@ -40,7 +40,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType}}" data-name="dateType" bindchange="bindType">
-            <view class="weui-input">{{formData.dateType}}</view>
+            <view class="weui-input">{{formData.dateType?formData.dateType:""}}</view>
           </picker>
         </view>
       </view>

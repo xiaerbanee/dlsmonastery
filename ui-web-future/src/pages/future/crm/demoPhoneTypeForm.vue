@@ -72,7 +72,7 @@
           if (valid) {
             let demoPhoneTypeOfficeList = new Array();
             for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
-                if(this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=0&&this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=null){
+                if(this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=0&&this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=''){
                     demoPhoneTypeOfficeList.push(this.inputForm.demoPhoneTypeOfficeDtos[key]);
                 }
             }
@@ -107,7 +107,9 @@
       },qtySum(){
         let realSum = 0;
         for(let key in this.inputForm.demoPhoneTypeOfficeDtos){
-          realSum += parseInt(this.inputForm.demoPhoneTypeOfficeDtos[key].qty);
+            if(this.inputForm.demoPhoneTypeOfficeDtos[key].qty!=''){
+              realSum += parseInt(this.inputForm.demoPhoneTypeOfficeDtos[key].qty);
+            }
         }
         this.inputForm.limitQty  = realSum;
       },

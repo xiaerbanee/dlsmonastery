@@ -82,8 +82,7 @@ public class DepotShopController {
 
     @RequestMapping(value = "getForm")
     public DepotShopForm getForm(DepotShopForm depotShopForm){
-        depotShopForm.getExtra().put("depotStoreTypeList",DepotStoreTypeEnum.getList());
-        depotShopForm.getExtra().put("jointLevelList", JointLevelEnum.getList());
+        depotShopForm.getExtra().put("townTypeList",TownTypeEnum.getList());
         depotShopForm.getExtra().put("areaList", dictMapClient.findByCategory(DictMapCategoryEnum.门店_地区属性.name()));
         depotShopForm.getExtra().put("channelList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_渠道类型.name())));
         depotShopForm.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));

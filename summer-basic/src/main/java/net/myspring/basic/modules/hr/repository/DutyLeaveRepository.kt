@@ -123,7 +123,7 @@ class DutyLeaveRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(" AND t1.created_by=:createdBy ")
         }
         if (dutyLeaveQuery.dutyDateStart != null) {
-            sb.append(" AND t1.duty_date > :dutyDateStart ")
+            sb.append(" AND t1.duty_date >= :dutyDateStart ")
         }
         if (dutyLeaveQuery.dutyDateEnd != null) {
             sb.append(" AND t1.duty_date  < :dutyDateEnd ")

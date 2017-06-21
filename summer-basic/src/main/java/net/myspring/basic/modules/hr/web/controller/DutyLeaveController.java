@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 
+import net.myspring.basic.modules.hr.web.validator.DutyLeaveValidator;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -25,6 +26,8 @@ public class DutyLeaveController {
     private DutyLeaveService dutyLeaveService;
     @Autowired
     private DictEnumService dictEnumService;
+    @Autowired
+    private DutyLeaveValidator dutyLeaveValidator;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -50,9 +53,12 @@ public class DutyLeaveController {
 
     @RequestMapping(value="save")
     public RestResponse save(DutyLeaveForm dutyLeaveForm, BindingResult  bindingResult){
-        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        dutyLeaveValidator.validate(dutyLeaveForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         dutyLeaveService.save(dutyLeaveForm);
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")

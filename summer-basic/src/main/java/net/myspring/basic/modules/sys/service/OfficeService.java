@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -160,7 +161,7 @@ public class OfficeService {
         return map;
     }
 
-    public RestResponse check(OfficeForm officeForm) {
+    public RestResponse checkSave(OfficeForm officeForm) {
         Office parent = officeRepository.findOne(officeForm.getParentId());
         if (OfficeTypeEnum.业务部门.name().equals(officeForm.getType())) {
             OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
@@ -176,6 +177,27 @@ public class OfficeService {
             }
         }
         officeForm.setParent(parent);
+        return new RestResponse("验证成功", null);
+    }
+
+    public RestResponse checkDelete(OfficeForm officeForm) {
+       Office office=officeRepository.findOne(officeForm.getId());
+        StringBuilder stringBuilder=new StringBuilder();
+        if (office.getLocked()) {
+            stringBuilder.append("该机构已锁定，不能删除!\n");
+        }
+        if(office.getPoint()!=null ){
+            if(BigDecimal.ZERO.compareTo(office.getPoint())!=0){
+                stringBuilder.append("该机构点位不为0，不能删除！\n");
+            }
+        }
+        List<Office> offices=officeRepository.findByParentIdsLike(office.getId());
+        if(CollectionUtil.isNotEmpty(offices)){
+            stringBuilder.append("该机构有下属机构，不能删除！\n");
+        }
+        if (StringUtils.isNotBlank(stringBuilder)) {
+            return new RestResponse(stringBuilder.toString(), null,false);
+        }
         return new RestResponse("验证成功", null);
     }
 
@@ -249,9 +271,10 @@ public class OfficeService {
         return office;
     }
 
-    @Transactional
-    public void logicDelete(Office office) {
-        officeRepository.logicDelete(office.getId());
+    public void logicDelete(OfficeForm officeForm) {
+        Office office=officeRepository.findOne(officeForm.getId());
+        office.setName(office.getName()+"废弃"+ LocalDate.now());
+        officeRepository.save(office);
     }
 
     public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {

@@ -17,12 +17,14 @@ import java.util.Map;
  * Created by liuj on 2017/5/11.
  */
 public class SalOutStockDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
-    private String creator;
+    private String creatorK3;
     // 客户编码
     private String customerNumber;
-    //仓库
-    private String storeNumber;
     // 日期
     private LocalDate date;
     // 备注
@@ -30,16 +32,35 @@ public class SalOutStockDto {
     //部门编码
     private String departmentNumber;
     //单据类型
-    private String billType;
+    private String billTypeK3;
 
     private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
 
-    public String getCreator() {
-        return creator;
+    public String getExtendId() {
+        return extendId;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        if (extendType == null){
+            return getBillTypeK3()+"-K3";
+        }
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
+
+    public String getCreatorK3() {
+        return creatorK3;
+    }
+
+    public void setCreatorK3(String creatorK3) {
+        this.creatorK3 = creatorK3;
     }
 
     public String getCustomerNumber() {
@@ -48,14 +69,6 @@ public class SalOutStockDto {
 
     public void setCustomerNumber(String customerNumber) {
         this.customerNumber = customerNumber;
-    }
-
-    public String getStoreNumber() {
-        return storeNumber;
-    }
-
-    public void setStoreNumber(String storeNumber) {
-        this.storeNumber = storeNumber;
     }
 
     public LocalDate getDate() {
@@ -82,12 +95,12 @@ public class SalOutStockDto {
         this.departmentNumber = departmentNumber;
     }
 
-    public String getBillType() {
-        return billType;
+    public String getBillTypeK3() {
+        return billTypeK3;
     }
 
-    public void setBillType(String billType) {
-        this.billType = billType;
+    public void setBillTypeK3(String billTypeK3) {
+        this.billTypeK3 = billTypeK3;
     }
 
     public List<SalOutStockFEntityDto> getSalOutStockFEntityDtoList() {
@@ -101,14 +114,14 @@ public class SalOutStockDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreator());
+        root.put("Creator", getCreatorK3());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
-        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillType())) {
+        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillTypeK3())) {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
-        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillType())){
+        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillTypeK3())){
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
         }
         model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
@@ -122,7 +135,7 @@ public class SalOutStockDto {
         for (SalOutStockFEntityDto salOutStockFEntityDto: getSalOutStockFEntityDtoList()) {
             if (salOutStockFEntityDto.getQty() != null && salOutStockFEntityDto.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
-                detail.put("FStockID", CollectionUtil.getMap("FNumber", getStoreNumber()));
+                detail.put("FStockID", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getStoreNumber()));
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getMaterialNumber()));
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));

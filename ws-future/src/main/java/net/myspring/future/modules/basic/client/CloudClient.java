@@ -1,6 +1,8 @@
 package net.myspring.future.modules.basic.client;
 
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
+import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -67,15 +69,16 @@ public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
     List<StkInventory> findInventoryByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
-
-
+    //应收
     @RequestMapping(method = RequestMethod.GET, value = "/report/customerReceive/detail")
     List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
-
+    //应收
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
-
-    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEntityList")
-    RestResponse synForJournalForBank(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList);
-
+    //银行存款日记账
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEmployeePhoneDeposit")
+    RestResponse synForJournalForBank(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    //标准销售出库单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
+    RestResponse synForSalOutStock(List<SalOutStockDto> salOutStockDtoList);
 }

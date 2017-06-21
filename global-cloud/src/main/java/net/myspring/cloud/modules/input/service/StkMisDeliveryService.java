@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.StkMisDeliveryTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
@@ -45,6 +46,8 @@ public class StkMisDeliveryService {
 
     private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                stkMisDeliveryDto.getExtendId(),
+                stkMisDeliveryDto.getExtendType(),
                 KingdeeFormIdEnum.STK_MisDelivery.name(),
                 stkMisDeliveryDto.getJson(),
                 kingdeeBook);
@@ -76,6 +79,7 @@ public class StkMisDeliveryService {
             String billKey = materialNumber + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
                 StkMisDeliveryDto misDelivery = new StkMisDeliveryDto();
+                misDelivery.setExtendType(BillTypeEnum.其他出库单_K3.name());
                 misDelivery.setCreator(accountKingdeeBook.getUsername());
                 misDelivery.setBillDate(billDate);
                 misDelivery.setDepartmentNumber(departmentNumber);
