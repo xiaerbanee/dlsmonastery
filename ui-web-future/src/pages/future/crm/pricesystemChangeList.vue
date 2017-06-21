@@ -37,7 +37,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('pricesystemChangeList.loading')"  @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column column-key="productId" prop="productName":label="$t('pricesystemChangeList.productName')" width="150" sortable></el-table-column>
+        <el-table-column column-key="productId" prop="productName" :label="$t('pricesystemChangeList.productName')" width="150" sortable></el-table-column>
         <el-table-column column-key="pricesystemId" prop="pricesystemName" :label="$t('pricesystemChangeList.pricesystemName')" sortable></el-table-column>
         <el-table-column prop="oldPrice" :label="$t('pricesystemChangeList.oldPrice')"></el-table-column>
         <el-table-column prop="newPrice" :label="$t('pricesystemChangeList.newPrice')"></el-table-column>
@@ -45,7 +45,7 @@
         <el-table-column prop="createdDate" :label="$t('pricesystemChangeList.createdDate')" sortable></el-table-column>
         <el-table-column prop="status" :label="$t('pricesystemChangeList.status')" width="120" sortable>
           <template scope="scope">
-            <el-tag :type="scope.row.status=='未通过' ? 'danger' : 'primary'">{{scope.row.status}}</el-tag>
+            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column  :label="$t('pricesystemChangeList.operation')" width="160">
