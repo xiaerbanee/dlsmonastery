@@ -23,7 +23,10 @@
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('depotChangeForm.newValue')" prop="newValue">
-              <bool-select  v-model="inputForm.newValue"></bool-select>
+              <el-select  v-model="inputForm.newValue">
+                <el-option value="是">是</el-option>
+                <el-option value="否">否</el-option>
+              </el-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='价格体系'" :label="$t('depotChangeForm.newValue')" prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
@@ -46,8 +49,11 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import boolSelect from 'components/common/bool-select'
+  import ElOption from "../../../../node_modules/element-ui/packages/select/src/option.vue";
   export default{
-    components:{depotSelect,boolSelect},
+    components:{
+      ElOption,
+      depotSelect,boolSelect},
     data(){
       return this.getData()
     },
@@ -77,7 +83,7 @@
             this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data, this.getData());
-                this.initPage;
+                this.initPage();
               }else{
                 this.submitDisabled = false;
                 this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
@@ -111,8 +117,7 @@
               this.inputForm.oldValue = that.shop.credit;
             }
           });
-      },
-      initPage(){
+      }, initPage(){
         axios.get('/api/ws/future/crm/depotChange/getForm').then((response)=>{
           this.inputForm = response.data;
           if(!this.isCreate){
