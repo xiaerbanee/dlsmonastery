@@ -52,8 +52,7 @@ public class DutySignController {
     public RestResponse save(@Valid DutySignForm dutySignForm, BindingResult bindingResult) {
         RestResponse restResponse = new RestResponse("签到成功", null);
         if(bindingResult.hasErrors()){
-            restResponse= new RestResponse("签到失败", null,false);
-            restResponse.setErrorMap(bindingResult);
+            restResponse= new RestResponse(bindingResult,"签到失败", null);
             return restResponse;
         }
         dutySignService.save(dutySignForm);

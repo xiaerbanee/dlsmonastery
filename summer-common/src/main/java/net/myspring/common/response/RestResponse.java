@@ -18,9 +18,9 @@ public class RestResponse {
     private Boolean success;
     private String message;
     private String code;
-    private String type;
     @JsonIgnore
     private BindingResult bindingResult;
+
     private List<RestErrorField> errors = Lists.newArrayList();
 
     private Map<String,Object> extra = Maps.newHashMap();
@@ -32,6 +32,13 @@ public class RestResponse {
         this.code = code;
     }
 
+    public RestResponse(BindingResult bindingResult,String message,String code) {
+        this.success = false;
+        this.message = message;
+        this.code = code;
+        this.bindingResult=bindingResult;
+    }
+
     public RestResponse(String message,String code,Boolean success) {
         this.message = message;
         this.code = code;
@@ -40,7 +47,7 @@ public class RestResponse {
 
 
     public Boolean getSuccess() {
-        if(CollectionUtil.isNotEmpty(errors)) {
+        if((bindingResult!=null&&bindingResult.hasFieldErrors()||CollectionUtil.isNotEmpty(errors))) {
             success = false;
         }
         return success;
@@ -66,15 +73,14 @@ public class RestResponse {
         this.code = code;
     }
 
-    public List<RestErrorField> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<RestErrorField> errors) {
-        this.errors = errors;
-    }
-
     public Map<String, Object> getExtra() {
+        if(bindingResult.hasErrors()){
+            Map<String,RestErrorField> errors=Maps.newHashMap();
+            for(FieldError error:bindingResult.getFieldErrors()){
+                errors.put(error.getField(),new RestErrorField(error,null));
+            }
+            extra.put("errors",errors);
+        }
         return extra;
     }
 
@@ -82,11 +88,19 @@ public class RestResponse {
         this.extra = extra;
     }
 
-    public void setErrorMap(BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            for(FieldError error:bindingResult.getFieldErrors()){
-                getExtra().put(error.getField(),error.getDefaultMessage());
-            }
-        }
+    public BindingResult getBindingResult() {
+        return bindingResult;
+    }
+
+    public void setBindingResult(BindingResult bindingResult) {
+        this.bindingResult = bindingResult;
+    }
+
+    public List<RestErrorField> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<RestErrorField> errors) {
+        this.errors = errors;
     }
 }

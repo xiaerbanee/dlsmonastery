@@ -3,8 +3,8 @@
     <head-tab active="depotShopList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >添加门店属性</el-button>
-        <el-button type="primary" @click="itemAddDepot" icon="plus" >添加门店</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" >添加基础属性</el-button>
+        <el-button type="primary" @click="itemAddDepot" icon="plus" >添加业务属性</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <search-tag  :submitData="formData" :formLabel="formLabel"></search-tag>
