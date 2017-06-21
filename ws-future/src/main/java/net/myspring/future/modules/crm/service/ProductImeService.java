@@ -23,6 +23,7 @@ import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.dto.ProductImeReportDto;
+import net.myspring.future.modules.crm.dto.ProductImeSearchResultDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
@@ -77,32 +78,60 @@ public class ProductImeService {
     private ProductTypeRepository productTypeRepository;
 
     //分页，但不查询总数
-    public Page<ProductImeDto> findPage(Pageable pageable,ProductImeQuery productImeQuery) {
+    public Page<ProductImeDto> findPage(Pageable pageable, ProductImeQuery productImeQuery) {
         Page<ProductImeDto> page = productImeRepository.findPage(pageable, productImeQuery);
 
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
 
-    public List<ProductImeDto> findByImeList(List<String> imeList){
-        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
-        List<ProductImeDto> productImeDtoList= BeanUtil.map(productImeList,ProductImeDto.class);
+    public List<ProductImeDto> findByImeList(List<String> imeList) {
+        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        List<ProductImeDto> productImeDtoList = BeanUtil.map(productImeList, ProductImeDto.class);
         cacheUtils.initCacheInput(productImeDtoList);
         return productImeDtoList;
     }
 
-    public Map<String,Integer> findQtyMap(List<String> imeList){
-        Map<String,Integer> map= Maps.newHashMap();
-        List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
-        if(CollectionUtil.isNotEmpty(productImeList)){
-            List<Product> productList=productRepository.findAll(CollectionUtil.extractToList(productImeList,"productId"));
-            Map<String,Product> productMap=CollectionUtil.extractToMap(productList,"id");
-            Map<String,List<ProductIme>> productImeMap=CollectionUtil.extractToMapList(productImeList,"productId");
-            for(Map.Entry<String,List<ProductIme>> entry:productImeMap.entrySet()){
-                map.put(productMap.get(entry.getKey()).getName(),entry.getValue().size());
+    public Map<String, Integer> findQtyMap(List<String> imeList) {
+        Map<String, Integer> map = Maps.newHashMap();
+        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        if (CollectionUtil.isNotEmpty(productImeList)) {
+            List<Product> productList = productRepository.findAll(CollectionUtil.extractToList(productImeList, "productId"));
+            Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "id");
+            Map<String, List<ProductIme>> productImeMap = CollectionUtil.extractToMapList(productImeList, "productId");
+            for (Map.Entry<String, List<ProductIme>> entry : productImeMap.entrySet()) {
+                map.put(productMap.get(entry.getKey()).getName(), entry.getValue().size());
             }
         }
         return map;
+    }
+
+    public ProductImeSearchResultDto findProductImeSearchResult(List<String> imeList) {
+        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
+        ProductImeSearchResultDto productImeSearchResult = new ProductImeSearchResultDto();
+        if (CollectionUtil.isNotEmpty(productImeList)) {
+            Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
+            for (String ime : imeList) {
+                if (productImeMap.containsKey(ime)) {
+                    productImeSearchResult.getProductImeList().add(productImeMap.get(ime));
+                } else {
+                    productImeSearchResult.getNotExists().add(ime);
+                }
+            }
+            //填充productQty
+            Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "id"));
+            Map<String, Integer> productQtyMap = Maps.newHashMap();
+            for (ProductIme productIme : productImeList) {
+                Product product = productMap.get(productIme.getProductId());
+                if (!productQtyMap.containsKey(product.getName())) {
+                    productQtyMap.put(product.getName(), 0);
+                }
+                productQtyMap.put(product.getName(), productQtyMap.get(product.getName()) + 1);
+            }
+            productImeSearchResult.setProductQtyMap(productQtyMap);
+        }
+
+        return productImeSearchResult;
     }
 
     public ProductImeDto getProductImeDetail(String id) {
@@ -120,16 +149,16 @@ public class ProductImeService {
     }
 
     public List<ProductImeDto> findDtoListByImes(String imeStr) {
-        if(StringUtils.isBlank(imeStr)){
+        if (StringUtils.isBlank(imeStr)) {
             return new ArrayList<>();
         }
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        List<ProductImeDto> productImeDtoList  = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
         cacheUtils.initCacheInput(productImeDtoList);
         return productImeDtoList;
     }
 
-    public String export( List<ProductImeDto> productImeDtoList) {
+    public String export(List<ProductImeDto> productImeDtoList) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
@@ -158,66 +187,66 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
     }
 
     public String export(ProductImeQuery productImeQuery) {
-        List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000) , productImeQuery).getContent();
+        List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000), productImeQuery).getContent();
         cacheUtils.initCacheInput(productImeDtoList);
         return export(productImeDtoList);
     }
 
 
-    public List<ProductIme> findByImeLike(String imeReverse,String shopId){
-        List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(shopId,imeReverse);
+    public List<ProductIme> findByImeLike(String imeReverse, String shopId) {
+        List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(shopId, imeReverse);
         return productImeList;
     }
 
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
         reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        Map<String,List<String>>  lastRuleMap=Maps.newHashMap();
-        if(StringUtils.isNotBlank(reportQuery.getOfficeId())){
+        Map<String, List<String>> lastRuleMap = Maps.newHashMap();
+        if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
             reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
-            lastRuleMap=officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
+            lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
-        List<ProductImeReportDto> productImeSaleReportList=getProductImeReportList(reportQuery);
-        if(StringUtils.isNotBlank(reportQuery.getOfficeId())&&SumTypeEnum.区域.name().equals(reportQuery.getSumType())){
-            Map<String,ProductImeReportDto> map=Maps.newHashMap();
-            for(ProductImeReportDto productImeSaleReportDto:productImeSaleReportList){
-                String key=getOfficeKey(lastRuleMap,productImeSaleReportDto.getOfficeId());
-                if(StringUtils.isNotBlank(key)){
-                    if(map.containsKey(key)){
+        List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
+        if (StringUtils.isNotBlank(reportQuery.getOfficeId()) && SumTypeEnum.区域.name().equals(reportQuery.getSumType())) {
+            Map<String, ProductImeReportDto> map = Maps.newHashMap();
+            for (ProductImeReportDto productImeSaleReportDto : productImeSaleReportList) {
+                String key = getOfficeKey(lastRuleMap, productImeSaleReportDto.getOfficeId());
+                if (StringUtils.isNotBlank(key)) {
+                    if (map.containsKey(key)) {
                         map.get(key).addQty(1);
-                    }else {
-                        ProductImeReportDto productImeSaleReport=new ProductImeReportDto(key,1);
-                        map.put(key,productImeSaleReport);
+                    } else {
+                        ProductImeReportDto productImeSaleReport = new ProductImeReportDto(key, 1);
+                        map.put(key, productImeSaleReport);
                     }
                 }
             }
-            for(String officeId:lastRuleMap.keySet()){
-                if(!map.containsKey(officeId)){
-                    map.put(officeId,new ProductImeReportDto(officeId,0));
+            for (String officeId : lastRuleMap.keySet()) {
+                if (!map.containsKey(officeId)) {
+                    map.put(officeId, new ProductImeReportDto(officeId, 0));
                 }
             }
-            List<ProductImeReportDto> list=Lists.newArrayList(map.values());
+            List<ProductImeReportDto> list = Lists.newArrayList(map.values());
             setPercentage(list);
             cacheUtils.initCacheInput(list);
             return list;
-        }else {
+        } else {
             setPercentage(productImeSaleReportList);
             cacheUtils.initCacheInput(productImeSaleReportList);
             return productImeSaleReportList;
         }
     }
 
-    private String getOfficeKey(Map<String,List<String>> officeMap,String officeId){
-        for(Map.Entry<String,List<String>> entry:officeMap.entrySet()){
-            for (String childId:entry.getValue()){
-                if(childId.equals(officeId)){
+    private String getOfficeKey(Map<String, List<String>> officeMap, String officeId) {
+        for (Map.Entry<String, List<String>> entry : officeMap.entrySet()) {
+            for (String childId : entry.getValue()) {
+                if (childId.equals(officeId)) {
                     return entry.getKey();
                 }
             }
@@ -225,19 +254,19 @@ public class ProductImeService {
         return null;
     }
 
-    private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery){
-        List<ProductImeReportDto> productImeReportList=Lists.newArrayList();
-        if(OutTypeEnum.电子保卡.name().equals(reportQuery.getOutType())){
-            if("销售报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaSaleReport(reportQuery);
-            }else if("库存报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findBaokaStoreReport(reportQuery);
+    private List<ProductImeReportDto> getProductImeReportList(ReportQuery reportQuery) {
+        List<ProductImeReportDto> productImeReportList = Lists.newArrayList();
+        if (OutTypeEnum.电子保卡.name().equals(reportQuery.getOutType())) {
+            if ("销售报表".equals(reportQuery.getType())) {
+                productImeReportList = productImeRepository.findBaokaSaleReport(reportQuery);
+            } else if ("库存报表".equals(reportQuery.getType())) {
+                productImeReportList = productImeRepository.findBaokaStoreReport(reportQuery);
             }
-        }else {
-            if("销售报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findSaleReport(reportQuery);
-            }else if("库存报表".equals(reportQuery.getType())){
-                productImeReportList=productImeRepository.findStoreReport(reportQuery);
+        } else {
+            if ("销售报表".equals(reportQuery.getType())) {
+                productImeReportList = productImeRepository.findSaleReport(reportQuery);
+            } else if ("库存报表".equals(reportQuery.getType())) {
+                productImeReportList = productImeRepository.findStoreReport(reportQuery);
             }
         }
         return productImeReportList;
@@ -246,70 +275,70 @@ public class ProductImeService {
     private void setPercentage(List<ProductImeReportDto> productImeReportList) {
         Integer sum = 0;
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
-            sum= sum + productImeReportDto.getQty();
+            sum = sum + productImeReportDto.getQty();
         }
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
-            productImeReportDto.setPercent(StringUtils.division(sum,productImeReportDto.getQty()));
+            productImeReportDto.setPercent(StringUtils.division(sum, productImeReportDto.getQty()));
         }
     }
 
-    public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList,ReportQuery reportQuery){
-        List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","考核区域"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店名称"));
-        if("按数量".equals(reportQuery.getExportType())){
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"qty","数量"));
-        }else if("按串码".equals(reportQuery.getExportType())){
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"ime","串码"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"productTypeName","产品型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
-        }else if("按合计".equals(reportQuery.getExportType())){
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"chainName","连锁体系"));
-            List<ProductType> productTypeList=productTypeRepository.findByScoreType(reportQuery.getScoreType());
-            for(ProductType productType:productTypeList){
-                simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extra",productType.getName(),productType.getName()));
+    public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店名称"));
+        if ("按数量".equals(reportQuery.getExportType())) {
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
+        } else if ("按串码".equals(reportQuery.getExportType())) {
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
+        } else if ("按合计".equals(reportQuery.getExportType())) {
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
+            List<ProductType> productTypeList = productTypeRepository.findByScoreType(reportQuery.getScoreType());
+            for (ProductType productType : productTypeList) {
+                simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extra", productType.getName(), productType.getName()));
             }
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"extra","合计","sum"));
-            Map<String,DepotReportDto> map=Maps.newHashMap();
-            for(DepotReportDto depotReport:depotReportList){
-                if(!map.containsKey(depotReport.getDepotId())){
-                    map.put(depotReport.getDepotId(),depotReport);
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extra", "合计", "sum"));
+            Map<String, DepotReportDto> map = Maps.newHashMap();
+            for (DepotReportDto depotReport : depotReportList) {
+                if (!map.containsKey(depotReport.getDepotId())) {
+                    map.put(depotReport.getDepotId(), depotReport);
                 }
-                map.get(depotReport.getDepotId()).getExtra().put(depotReport.getProductTypeName(),depotReport.getQty());
+                map.get(depotReport.getDepotId()).getExtra().put(depotReport.getProductTypeName(), depotReport.getQty());
             }
-            depotReportList=Lists.newArrayList(map.values());
-            Map<String,Object> sumMap=Maps.newHashMap();
-            Integer totalSum=0;
-            for(DepotReportDto depotReport:depotReportList){
-                Integer sum=0;
-                for(ProductType productType:productTypeList){
-                    String key=productType.getName();
-                    if(!depotReport.getExtra().containsKey(key)){
-                        depotReport.getExtra().put(key,0);
+            depotReportList = Lists.newArrayList(map.values());
+            Map<String, Object> sumMap = Maps.newHashMap();
+            Integer totalSum = 0;
+            for (DepotReportDto depotReport : depotReportList) {
+                Integer sum = 0;
+                for (ProductType productType : productTypeList) {
+                    String key = productType.getName();
+                    if (!depotReport.getExtra().containsKey(key)) {
+                        depotReport.getExtra().put(key, 0);
                     }
-                    if(!sumMap.containsKey(key)){
-                        sumMap.put(key,0);
+                    if (!sumMap.containsKey(key)) {
+                        sumMap.put(key, 0);
                     }
-                    sumMap.put(key,(Integer)sumMap.get(key)+(Integer)depotReport.getExtra().get(key));
-                    sum+=(Integer)depotReport.getExtra().get(key);
-                    totalSum+=(Integer)depotReport.getExtra().get(key);
+                    sumMap.put(key, (Integer) sumMap.get(key) + (Integer) depotReport.getExtra().get(key));
+                    sum += (Integer) depotReport.getExtra().get(key);
+                    totalSum += (Integer) depotReport.getExtra().get(key);
                 }
-                depotReport.getExtra().put("sum",sum);
+                depotReport.getExtra().put("sum", sum);
             }
-            DepotReportDto depotReportDto=new DepotReportDto();
+            DepotReportDto depotReportDto = new DepotReportDto();
             depotReportDto.setChainName("合计");
             depotReportDto.setExtra(sumMap);
-            depotReportDto.getExtra().put("sum",totalSum);
+            depotReportDto.getExtra().put("sum", totalSum);
             depotReportList.add(depotReportDto);
         }
         cacheUtils.initCacheInput(depotReportList);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表"+reportQuery.getExportType(),depotReportList,simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"销售报表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
+        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
+        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
     }
 
@@ -318,20 +347,20 @@ public class ProductImeService {
         List<ProductIme> toBeSaved = Lists.newArrayList();
         for (ProductImeCreateForm productImeCreateForm : productImeBatchCreateForm.getProductImeCreateFormList()) {
 
-            if(productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeCreateForm.getIme()) != null){
-                throw new ServiceException("串码："+productImeCreateForm.getIme()+" 在本公司中已经存在");
+            if (productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeCreateForm.getIme()) != null) {
+                throw new ServiceException("串码：" + productImeCreateForm.getIme() + " 在本公司中已经存在");
             }
 
             ProductIme productIme = new ProductIme();
             Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName());
-            if(product == null){
-                throw new ServiceException("货品："+productImeCreateForm.getProductName()+" 在本公司中无效或不存在");
+            if (product == null) {
+                throw new ServiceException("货品：" + productImeCreateForm.getProductName() + " 在本公司中无效或不存在");
             }
             productIme.setProductId(product.getId());
 
             Depot depot = depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getStoreName());
-            if(depot == null){
-                throw new ServiceException("仓库："+productImeCreateForm.getStoreName()+" 在本公司中无效或不存在");
+            if (depot == null) {
+                throw new ServiceException("仓库：" + productImeCreateForm.getStoreName() + " 在本公司中无效或不存在");
             }
             productIme.setDepotId(depot.getId());
 
@@ -351,8 +380,8 @@ public class ProductImeService {
         productImeRepository.save(toBeSaved);
     }
 
-    private String toUpperCase(String str){
-        if(str == null){
+    private String toUpperCase(String str) {
+        if (str == null) {
             return null;
         }
         return str.toUpperCase();
@@ -360,16 +389,16 @@ public class ProductImeService {
 
     public void batchChange(ProductImeBatchChangeForm productImeBatchChangeForm) {
 
-        for(ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()){
+        for (ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()) {
 
             ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeChangeForm.getIme());
-            if(productIme == null){
-                throw new ServiceException("串码"+productImeChangeForm.getIme()+" 在本公司中无效或不存在");
+            if (productIme == null) {
+                throw new ServiceException("串码" + productImeChangeForm.getIme() + " 在本公司中无效或不存在");
             }
 
             Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeChangeForm.getProductName());
-            if(product == null){
-                throw new ServiceException("调整后型号："+productImeChangeForm.getProductName()+" 在本公司中无效或不存在");
+            if (product == null) {
+                throw new ServiceException("调整后型号：" + productImeChangeForm.getProductName() + " 在本公司中无效或不存在");
             }
 
             productIme.setProductId(product.getId());

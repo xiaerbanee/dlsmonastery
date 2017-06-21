@@ -106,4 +106,11 @@ public class GoodsOrderController {
     public GoodsOrderDto findOne(String id) {
         return goodsOrderService.findOne(id);
     }
+
+    @RequestMapping(value="delete")
+    public RestResponse delete(String id) {
+        goodsOrderService.delete(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
+    }
 }
