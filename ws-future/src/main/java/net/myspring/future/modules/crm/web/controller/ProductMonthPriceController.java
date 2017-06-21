@@ -40,8 +40,8 @@ public class ProductMonthPriceController {
     }
 
     @RequestMapping(value = "getForm")
-    public String getForm() {
-        return null;
+    public ProductMonthPriceForm getForm(ProductMonthPriceForm productMonthPriceForm) {
+        return productMonthPriceForm;
     }
     @RequestMapping(value = "findDto")
     public ProductMonthPriceDto findDto(String id){

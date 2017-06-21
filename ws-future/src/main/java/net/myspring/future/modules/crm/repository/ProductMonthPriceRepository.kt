@@ -20,7 +20,7 @@ import java.util.*
 
 interface ProductMonthPriceRepository : BaseRepository<ProductMonthPrice, String> ,ProductMonthPriceRepositoryCustom{
 
-    fun findByCompanyIdAndMonth(companyId: String, month: String): ProductMonthPrice?
+    fun findByCompanyIdAndMonthAndEnabledIsTrue(companyId: String, month: String): ProductMonthPrice?
 
 
 }

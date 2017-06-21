@@ -63,7 +63,7 @@ public class ProductMonthPriceService {
 
     public String checkMonth(String id, String month) {
 
-        ProductMonthPrice productMonthPrice = productMonthPriceRepository.findByCompanyIdAndMonth(RequestUtils.getCompanyId(), month);
+        ProductMonthPrice productMonthPrice = productMonthPriceRepository.findByCompanyIdAndMonthAndEnabledIsTrue(RequestUtils.getCompanyId(), month);
         if(productMonthPrice == null ){
             return null;
         }else if(StringUtils.isBlank(id)){
