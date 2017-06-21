@@ -140,7 +140,7 @@ public class DemoPhoneTypeService {
         }
         for (DemoPhoneTypeOfficeDto demoPhoneTypeOfficeDto : demoPhoneTypeForm.getDemoPhoneTypeOfficeDtos()) {
             DemoPhoneTypeOffice demoPhoneTypeOffice = new DemoPhoneTypeOffice();
-            demoPhoneTypeOffice.setDemoPhoneTypeId(demoPhoneTypeOfficeDto.getDemoPhoneTypeId());
+            demoPhoneTypeOffice.setDemoPhoneTypeId(demoPhoneType.getId());
             demoPhoneTypeOffice.setOfficeId(demoPhoneTypeOfficeDto.getOfficeId());
             demoPhoneTypeOffice.setQty(demoPhoneTypeOfficeDto.getQty());
             demoPhoneTypeOfficeList.add(demoPhoneTypeOffice);

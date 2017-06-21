@@ -14,13 +14,21 @@ public class AdGoodsOrderShipForm extends BaseForm<AdGoodsOrder> {
     private Integer mediumQty;
     private Integer largeQty;
     private String expressOrderExpressCodes;
-    private String expressOrderExpressComapnyId;
+    private String expressOrderExpressCompanyId;
 
-     private BigDecimal expressOrderShouldGet;
-     private BigDecimal expressOrderRealPay;
-     private BigDecimal expressOrderShouldPay;
+    private BigDecimal expressOrderShouldGet;
+    private BigDecimal expressOrderRealPay;
+    private BigDecimal expressOrderShouldPay;
 
     private List<AdGoodsOrderShipDetailForm> adGoodsOrderDetailList;
+
+    public String getExpressOrderExpressCompanyId() {
+        return expressOrderExpressCompanyId;
+    }
+
+    public void setExpressOrderExpressCompanyId(String expressOrderExpressCompanyId) {
+        this.expressOrderExpressCompanyId = expressOrderExpressCompanyId;
+    }
 
     public BigDecimal getExpressOrderShouldPay() {
         return expressOrderShouldPay;
@@ -60,14 +68,6 @@ public class AdGoodsOrderShipForm extends BaseForm<AdGoodsOrder> {
 
     public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
         this.expressOrderExpressCodes = expressOrderExpressCodes;
-    }
-
-    public String getExpressOrderExpressComapnyId() {
-        return expressOrderExpressComapnyId;
-    }
-
-    public void setExpressOrderExpressComapnyId(String expressOrderExpressComapnyId) {
-        this.expressOrderExpressComapnyId = expressOrderExpressComapnyId;
     }
 
     public BigDecimal getExpressOrderShouldGet() {

@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
           <el-col :span="10">
-            <el-form-item :label="$t('adGoodsOrderBill.code')" prop="id">
+            <el-form-item :label="$t('adGoodsOrderBill.code')">
               {{inputForm.id}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.billDate')" prop="billDate">
@@ -35,16 +35,16 @@
             </el-form-item>
             <el-col :span="12">
             </el-col>
-            <el-form-item :label="$t('adGoodsOrderBill.contact')" prop="contator">
+            <el-form-item :label="$t('adGoodsOrderBill.contact')" prop="expressOrderContator">
               <el-input v-model="inputForm.expressOrderContator"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderBill.address')" prop="address">
+            <el-form-item :label="$t('adGoodsOrderBill.address')" prop="expressOrderAddress">
               <el-input v-model="inputForm.expressOrderAddress"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderBill.mobilePhone')" prop="mobilePhone">
+            <el-form-item :label="$t('adGoodsOrderBill.mobilePhone')" prop="expressOrderMobilePhone">
               <el-input v-model="inputForm.expressOrderMobilePhone"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderBill.expressCompany')" prop="expressCompanyId">
+            <el-form-item :label="$t('adGoodsOrderBill.expressCompany')" prop="expressOrderExpressCompanyId">
               <express-company-select v-model="inputForm.expressOrderExpressCompanyId"></express-company-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.splitBill')" prop="splitBill">
@@ -73,7 +73,7 @@
         <el-table-column prop="confirmQty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model.number="scope.row.billQty" class="el-input__inner"  @input="refreshSummary()"/>
+            <el-input v-model.number="scope.row.billQty" @input="refreshSummary()"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="productPrice2" :label="$t('adGoodsOrderBill.price')"></el-table-column>
@@ -100,6 +100,14 @@
             extra:{},
         },
         rules: {
+          billDate: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          storeId: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          expressOrderContator: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          expressOrderMobilePhone: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          splitBill: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          syn: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
         },
         pageLoading:false,
         imageDeposit:0,
@@ -112,7 +120,7 @@
     methods:{
       formSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let submitData = util.deleteExtra(this.inputForm);
@@ -159,10 +167,10 @@
         let list=this.inputForm.adGoodsOrderDetailList;
         let totalBillQty=0;
         let totalBillPrice=0;
-        for(let item in list){
-          if(list[item].billQty){
-            totalBillQty=totalBillQty+parseInt(list[item].billQty);
-            totalBillPrice=totalBillPrice+parseInt(list[item].billQty)*parseInt(list[item].productPrice2);
+        for(let adGoodsOrderDetail of list){
+          if(adGoodsOrderDetail.billQty){
+            totalBillQty=totalBillQty+parseInt(adGoodsOrderDetail.billQty);
+            totalBillPrice=totalBillPrice+parseInt(adGoodsOrderDetail.billQty)*parseInt(adGoodsOrderDetail.productPrice2);
           }
         }
         this.totalBillQty=totalBillQty;

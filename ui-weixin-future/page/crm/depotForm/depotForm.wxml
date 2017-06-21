@@ -36,7 +36,7 @@
         <view class="weui-cell__bd">
           <picker name="areaType" value="{{formData.areaType}}" range="{{formProperty.extra.areaList}}" range-key="name" bindchange="bindAreaTypeChange">
             <view class="weui-input">
-              {{formData.areaType}}
+              {{formData.areaType?formData.areaType:""}}
             </view>
           </picker>
         </view>
@@ -46,11 +46,11 @@
           <view class="weui-label">乡镇名称：</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="townId" value="{{formData.towId}}" />
-            <view class="weui-input"  bindtap="bindTown">
-              {{formData.townName}}
-              <image class="right_icon" src="/image/icons/right.png" />
-            </view>
+          <input class="hidden" name="townId" value="{{formData.townId}}" />
+          <view class="weui-input" bindtap="bindTown">
+            {{formData.townName?formData.townName:""}}
+            <image class="right_icon" src="/image/icons/right.png" />
+          </view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input" wx:if="{{formData.areaType == '市区'}}">
@@ -68,7 +68,7 @@
         <view class="weui-cell__bd">
           <picker name="bussinessCenterName" bindchange="bussinessCenterNameChange" value="{{formData.bussinessCenterName}}" range="{{formProperty.extra.businessCenterList}}" range-key="name">
             <view class="weui-input">
-              {{formData.bussinessCenterName}}
+              {{formData.bussinessCenterName?formData.bussinessCenterName:""}}
             </view>
           </picker>
         </view>
@@ -80,7 +80,7 @@
         <view class="weui-cell__bd">
           <picker name="channelType" bindchange="bindChannelTypeChange" value="{{formData.channelType}}" range="{{formProperty.extra.channelList}}" range-key="name">
             <view class="weui-input">
-              {{formData.channelType}}
+              {{formData.channelType?formData.channelType:""}}
             </view>
           </picker>
         </view>
@@ -92,7 +92,7 @@
         <view class="weui-cell__bd">
           <picker name="salePointType" bindchange="bindSalePointTypeChange" value="{{formData.salePointType}}" range="{{formProperty.extra.salePointList}}" range-key="name">
             <view class="weui-input">
-              {{formData.salePointType}}
+              {{formData.salePointType?formData.salePointType:""}}
             </view>
           </picker>
         </view>
@@ -104,7 +104,7 @@
         <view class="weui-cell__bd">
           <picker bindchange="bindChainTypeChange" value="{{formData.chainType}}" range="{{formProperty.extra.chainList}}" range-key="name" name="chainType">
             <view class="weui-input">
-              {{formData.chainType}}
+              {{formData.chainType?formData.chainType:""}}
             </view>
           </picker>
         </view>
@@ -116,7 +116,7 @@
         <view class="weui-cell__bd">
           <picker bindchange="bindCarrierTypeChange" value="{{formData.carrierType}}" range="{{formProperty.extra.carrierList}}" range-key="name" name="carrierType">
             <view class="weui-input">
-              {{formData.carrierType}}
+              {{formData.carrierType?formData.carrierType:""}}
             </view>
           </picker>
         </view>
@@ -126,7 +126,9 @@
           <view class="weui-label">有门头：</view>
         </view>
         <view class="weui-cell__bd">
-          <switch checked="{{formData.doorHead}}" name="doorHead" />
+          <view class="weui-input">
+            <switch checked="{{formData.doorHead}}" name="doorHead" />
+          </view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -136,7 +138,7 @@
         <view class="weui-cell__bd">
           <picker bindchange="bindAreaSizeChange" value="{{formData.shopArea}}" range="{{formProperty.extra.shopAreaList}}" range-key="name" name="shopArea">
             <view class="weui-input">
-              {{formData.shopArea}}
+              {{formData.shopArea?formData.shopArea:""}}
             </view>
           </picker>
         </view>
@@ -150,24 +152,25 @@
         </view>
       </view>
     </view>
-   <view wx:if="{{shopAttributeShow}}">
-    <view class="weui-cells__title" >终端统计</view>
-    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
-    <text>{{response.error}}</text></view>
-    <view class="weui-cells weui-cells_after-title">
-      <block wx:for-items="{{formData.shopAttributeList}}" wx:key="{{item.typeName}}">
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">{{item.typeName}}：</view>
+    <view wx:if="{{shopAttributeShow}}">
+      <view class="weui-cells__title">终端统计</view>
+      <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">
+        <text>{{response.error}}</text>
+      </view>
+      <view class="weui-cells weui-cells_after-title">
+        <block wx:for-items="{{formData.shopAttributeList}}" wx:key="{{item.typeName}}">
+          <view class="weui-cell weui-cell_input">
+            <view class="weui-cell__hd">
+              <view class="weui-label">{{item.typeName}}：</view>
+            </view>
+            <view class="weui-cell__bd">
+              <input class="hidden" name="shopAttributeList[{{index}}].typeName" value="{{item.typeName}}" />
+              <input class="weui-input" name="shopAttributeList[{{index}}].typeValue" value="{{item.typeValue}}" />
+            </view>
           </view>
-          <view class="weui-cell__bd" >
-            <input class="hidden" name="shopAttributeList[{{index}}].typeName" value="{{item.typeName}}" />
-            <input class="weui-input" name="shopAttributeList[{{index}}].typeValue" value="{{item.typeValue}}" />
-          </view>
-        </view>
-      </block>
+        </block>
+      </view>
     </view>
-   </view>
     <view class="weui-btn-area">
       <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
     </view>

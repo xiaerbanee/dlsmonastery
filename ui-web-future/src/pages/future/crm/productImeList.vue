@@ -32,7 +32,7 @@
                 <el-input v-model="formData.boxIme" auto-complete="off" :placeholder="$t('productImeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('productImeList.ime')" :label-width="formLabelWidth">
-                <el-input v-model="formData.imeReverse" ></el-input>
+                <el-input v-model="formData.ime" auto-complete="off" :placeholder="$t('productImeList.imeFilter')"></el-input>
               </el-form-item>
 
               <el-form-item :label="$t('productImeList.ime2')" :label-width="formLabelWidth">

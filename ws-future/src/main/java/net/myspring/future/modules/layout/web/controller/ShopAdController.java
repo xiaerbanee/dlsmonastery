@@ -13,8 +13,10 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -36,9 +38,15 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(ShopAdForm shopAdForm) {
+    public RestResponse save(@Valid ShopAdForm shopAdForm, BindingResult bindingResult) {
+        RestResponse restResponse = new RestResponse("签到成功", null);
+        if(bindingResult.hasErrors()){
+            restResponse= new RestResponse("签到失败", null,false);
+            restResponse.setErrorMap(bindingResult);
+            return restResponse;
+        }
         shopAdService.save(shopAdForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")

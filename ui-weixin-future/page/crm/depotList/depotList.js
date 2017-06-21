@@ -17,7 +17,19 @@ Page({
     },
     initPage: function () {
         var that = this;
-        that.pageRequest();
+        wx.request({
+            url: $util.getUrl("ws/future/basic/depotShop/getQuery"),
+            data: {},
+            method: 'GET',
+            header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            },
+            success: function (res) {
+                that.setData({ formData: res.data });
+                that.pageRequest();
+            }
+        });
     },
     pageRequest: function () {
         var that = this;
