@@ -12,44 +12,24 @@ import java.util.List;
  */
 public class DepotShopForm extends BaseForm<DepotShop> {
     private String depotId;
-    // 地区属性
     private String areaType;
-    // 有无导购
     private Boolean hasGuide;
-
-    //门店各种属性
-    //运营商营业厅类型
     private String carrierType;
-    //营业额分类
     private String turnoverType;
-    //经营方式
     private String businessType;
-    //运营商类型移动社会渠道
     private String channelType;
-    //门店类型
     private String salePointType;
-    //乡镇类型
     private String townType;
-    //是否核心商圈
     private Boolean bussinessCenter=false;
-    //核心商圈名称
     private String bussinessCenterName;
-    //有无门头
     private Boolean doorHead=false;
-    //开业时间
     private LocalDate enableDate;
-    //是否体验店
     private Boolean specialityStore=false;
     private String specialityStoreType;
-    //面积大小
     private String shopArea;
-    //2.0悬吊画框数量
     private Integer frameNum=0;
-    //2.0 双面体验台数量
     private Integer deskDoubleNum=0;
-    //2.0 单面体验台数量
     private Integer deskSingleNum=0;
-    //展柜数量
     private Integer cabinetNum=0;
     private String townId;
     private String townName;

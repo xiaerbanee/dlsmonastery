@@ -6,7 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ApPayBillDto;
-import net.myspring.cloud.modules.input.dto.ApPayBillFEntryDto;
+import net.myspring.cloud.modules.input.dto.ApPayBillEntryDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.ApPayBillForm;
@@ -99,14 +99,14 @@ public class ApPayBillService {
                 payBill.setDepartmentNumber(departmentNameMap.get(departmentName));
                 payBill.setSupplierNumber(supplierNameMap.get(supplierName));
                 payBill.setAmount(amount);
-                ApPayBillFEntryDto entryDto = new ApPayBillFEntryDto();
+                ApPayBillEntryDto entryDto = new ApPayBillEntryDto();
                 if (StringUtils.isNotBlank(bankAcntName)) {
                     entryDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
                 }
                 entryDto.setSettleTypeNumber(settleTypeNameMap.get(settleTypeName));
                 entryDto.setAccountNumber(accountNameMap.get(accountName));
                 entryDto.setComment(note);
-                payBill.setApPayBillFEntryDto(entryDto);
+                payBill.setApPayBillEntryDtoList(Lists.newArrayList(entryDto));
                 payBillMap.put(billKey, payBill);
             } else {
                 payBillMap.get(billKey).setAmount(amount.add(amount));

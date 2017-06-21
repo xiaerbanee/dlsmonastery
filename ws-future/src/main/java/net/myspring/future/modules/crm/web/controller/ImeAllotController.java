@@ -10,8 +10,6 @@ import net.myspring.future.modules.crm.dto.ImeAllotDto;
 import net.myspring.future.modules.crm.service.ImeAllotService;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
-import net.myspring.future.modules.crm.web.form.ImeAllotSimpleForm;
-import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -81,20 +79,6 @@ public class ImeAllotController {
 
     @RequestMapping(value = "batchAllot")
     public RestResponse batchAllot(ImeAllotBatchForm  imeAllotBatchForm){
-
-
-        if(CollectionUtil.isEmpty(imeAllotBatchForm.getImeAllotSimpleFormList())){
-            throw new ServiceException("请录入需要调拨的串码信息");
-        }
-
-        for(ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()){
-            if(StringUtils.isBlank(imeAllotSimpleForm.getIme())){
-                throw new ServiceException("串码不可以为空");
-            }
-            if(StringUtils.isBlank(imeAllotSimpleForm.getToDepotName())){
-                throw new ServiceException("调拨后门店不可以为空");
-            }
-        }
 
         imeAllotService.batchAllot(imeAllotBatchForm);
         return new RestResponse("串码批量调拨成功", ResponseCodeEnum.saved.name());

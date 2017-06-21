@@ -2,59 +2,72 @@
   <div>
     <head-tab active="adGoodsOrderDetail"></head-tab>
     <div>
-      <el-form :model="detailForm" ref="detailForm" :rules="rules" label-width="150px"  class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('adGoodsOrderDetail.orderCode')">
-              {{detailForm.businessId}}
+              {{adGoodsOrder.id}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.billDate')" >
-              {{detailForm.billDate}}
+              {{adGoodsOrder.billDate}}
+            </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderDetail.storeName')" >
+              {{adGoodsOrder.storeName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.outShopName')">
-              {{detailForm.outShopName}}
+              {{adGoodsOrder.outShopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.shopName')" >
-              {{detailForm.shopName}}
+              {{adGoodsOrder.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.threeMonthQty')">
-              {{detailForm.threeMonthQty}}
+              {{adGoodsOrder.recentSaleQty}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderDetail.employeeId')" >
-              {{detailForm.employeeName}}
+            <el-form-item :label="$t('adGoodsOrderDetail.investInCause')">
+              {{adGoodsOrder.investInCause}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderDetail.mobilePhone')">
-              {{detailForm.employeePhone}}
+            <el-form-item :label="$t('adGoodsOrderDetail.imageDeposit')">
+              {{imageDeposit}}
+            </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderDetail.employeeFullName')" >
+              {{employee.officeName}}_{{employee.positionName}}_{{employee.name}}
+            </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderDetail.employeeMobilePhone')">
+              {{employee.mobilePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.processStatus')">
-              {{detailForm.processStatus}}
+              {{adGoodsOrder.processStatus}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderDetail.expressCodes')">
-              {{expressOrderForm.expressCodes}}
-            </el-form-item>
+
           </el-col>
           <el-col :span="12">
+            <el-form-item :label="$t('adGoodsOrderDetail.expressCodes')">
+              {{adGoodsOrder.expressOrderExpressCodes}}
+            </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.createdBy')">
-              {{detailForm.createdByName}}
+              {{adGoodsOrder.createdByName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.remarks')">
-              {{detailForm.remarks}}
+              {{adGoodsOrder.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.contact')" >
-              {{expressOrderForm.contator}}
+              {{adGoodsOrder.expressOrderContator}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.address')" >
-              {{expressOrderForm.address}}
+              {{adGoodsOrder.expressOrderAddress}}
+            </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderDetail.billAddress')" >
+              {{adGoodsOrder.billAddress}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderDetail.mobilePhone')">
-              {{expressOrderForm.mobilePhone}}
+              {{adGoodsOrder.expressOrderMobilePhone}}
             </el-form-item>
             <div  v-if="audit">
-            <el-form-item :label="$t('adGoodsOrderDetail.pass')" >
+            <el-form-item :label="$t('adGoodsOrderDetail.pass')" prop="pass">
               <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="passRemarks">
-              <el-input v-model="inputForm.passRemarks"></el-input>
+            <el-form-item :label="$t('adGoodsOrderDetail.comment')" prop="remarks">
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adGoodsOrderDetail.audit')}}</el-button>
@@ -62,7 +75,17 @@
               </div>
           </el-col>
         </el-row>
-        <process-details v-model="detailForm.processInstanceId"></process-details>
+        <el-table :data="adGoodsOrderDetailList" style="margin-top:5px;"  stripe border >
+          <el-table-column prop="productCode" :label="$t('adGoodsOrderDetail.code')" ></el-table-column>
+          <el-table-column prop="productName" :label="$t('adGoodsOrderDetail.productName')" ></el-table-column>
+          <el-table-column prop="qty" :label="$t('adGoodsOrderDetail.qty')"></el-table-column>
+          <el-table-column prop="confirmQty" :label="$t('adGoodsOrderDetail.confirmQty')"></el-table-column>
+          <el-table-column prop="billQty" :label="$t('adGoodsOrderDetail.billQty')"></el-table-column>
+          <el-table-column prop="shippedQty" :label="$t('adGoodsOrderDetail.shippedQty')"></el-table-column>
+          <el-table-column prop="productPrice2" :label="$t('adGoodsOrderDetail.price')"></el-table-column>
+        </el-table>
+
+        <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
       </el-form>
     </div>
   </div>
@@ -77,34 +100,32 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         audit:this.$route.query.action=='audit',
-        detailForm:{},
-        expressOrderForm:{},
+        adGoodsOrder:{},
+        imageDeposit:0,
+        employee:{},
+        adGoodsOrderDetailList:[],
         inputForm:{
          id:this.$route.query.id,
-         pass:"",
-         passRemarks:"",
+         pass:false,
+         remarks:"",
         },
         rules: {
-          comment:{ required: true, message: this.$t('adGoodsOrderDetail.prerequisiteMessage')},
+          pass:{ required: true, message: this.$t('adGoodsOrderDetail.prerequisiteMessage')},
         },
       }
     },
     methods:{
       formSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["detailForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/layout/adGoodsOrder/audit',qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/layout/adGoodsOrder/audit', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              if(this.isCreate){
-                form.resetFields();
-                this.fileList = [];
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
-              }
-            }).catch(function () {
+
+              this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
+
+            }).catch(() => {
               this.submitDisabled = false;
             });
           }else{
@@ -113,13 +134,19 @@
         })
       }
     },created(){
-      axios.get('/api/ws/future/layout/adGoodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.detailForm = response.data;
-        if(response.data.expressOrderDto!=null){
-          this.expressOrderForm = response.data.expressOrderDto;
-        }
+      axios.get('/api/ws/future/layout/adGoodsOrder/findDto',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.adGoodsOrder = response.data;
 
-      })
+        axios.get('/api/basic/hr/employee/findOne',{params: {id:this.adGoodsOrder.employeeId}}).then((response)=>{
+          this.employee = response.data;
+        });
+        axios.get('/api/ws/future/crm/shopDeposit/findLeftAmount',{params: {type:'形象保证金', depotId:this.adGoodsOrder.shopId}}).then((response)=>{
+          this.imageDeposit = response.data;
+        });
+      });
+      axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListByAdGoodsOrderId',{params: {adGoodsOrderId:this.$route.query.id}}).then((response)=>{
+        this.adGoodsOrderDetailList = response.data;
+      });
     }
   }
 </script>

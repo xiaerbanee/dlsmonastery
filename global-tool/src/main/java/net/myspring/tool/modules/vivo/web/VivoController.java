@@ -1,6 +1,5 @@
 package net.myspring.tool.modules.vivo.web;
 
-import com.ctc.wstx.util.StringUtil;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController

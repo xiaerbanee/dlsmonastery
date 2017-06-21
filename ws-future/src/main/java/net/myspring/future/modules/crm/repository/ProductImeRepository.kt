@@ -22,17 +22,14 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.lang.StringBuilder
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
-    fun findByEnabledIsTrueAndCompanyIdAndIme(companyId: String, ime: String): ProductIme?
+    fun findByEnabledIsTrueAndIme(ime: String): ProductIme
 
     fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
-
-    fun countByEnabledIsTrueAndDepotIdAndCompanyIdAndRetailDateBetween(depotId: String, companyId: String, retailDateStart: LocalDateTime, retailDateEnd: LocalDateTime): Long
 
     @Query("""
     SELECT

@@ -57,14 +57,13 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	public static String getEncryptPassword(String plainPassword) {
 		byte[] salt = Digests.generateSalt(8);
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
-		return EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
+		return Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword);
 	}
 
 	public static boolean validatePassword(String plainPassword, String password) {
-		byte[] salt = EncodeUtil.decodeHex(password.substring(0, 16));
+		byte[] salt = Encodes.decodeHex(password.substring(0, 16));
 		byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt, 1024);
-        String pwd = EncodeUtil.encodeHex(salt) + EncodeUtil.encodeHex(hashPassword);
-        return password.equalsIgnoreCase(pwd);
+		return password.equals(Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword));
 	}
 
 	public static  String toString(Object object) {

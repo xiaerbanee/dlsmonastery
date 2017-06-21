@@ -34,6 +34,7 @@
       methods:{
         getData() {
           return{
+            isCreate:this.$route.query.id == null,
             submitDisabled:false,
             formData:{
               extra:{}
@@ -53,7 +54,7 @@
             if (valid) {
               axios.post('/api/ws/future/basic/shopAdType/save', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
                 this.$message(response.data.message);
-                if(this.formData.isCreate){
+                if(this.isCreate){
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }
@@ -68,8 +69,7 @@
               this.submitDisabled = false;
             }
           })
-        },
-        initPage () {
+        }, initPage () {
           axios.get('/api/ws/future/basic/shopAdType/getForm').then((response)=>{
             this.formData = response.data;
             if(!this.isCreate) {

@@ -72,7 +72,7 @@
           if (valid) {
             axios.post('/api/basic/sys/role/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               this.$message(response.data.message);
-              if (this.inputForm.create) {
+              if (this.isCreate) {
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               } else {

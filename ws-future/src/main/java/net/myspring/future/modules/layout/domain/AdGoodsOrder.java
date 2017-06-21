@@ -57,7 +57,6 @@ public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
         this.investInCause = investInCause;
     }
 
-
     public String getProcessPositionId() {
         return processPositionId;
     }

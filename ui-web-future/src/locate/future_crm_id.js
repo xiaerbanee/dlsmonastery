@@ -1343,7 +1343,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    noSelectionFound:"未选中任何项",
   },
   productImeList: {
     productImeList: "daftar string kdoe",

@@ -68,8 +68,7 @@
           </el-table-column>
           <el-table-column prop="salePrice" :label="$t('shopAllotDetail.salePrice')">
             <template  scope="scope">
-              <div v-if="isView">{{scope.row.salePrice}}</div>
-              <div v-else><el-input v-model.number="scope.row.salePrice"></el-input></div>
+              <el-input :readonly="isView"  v-model="scope.row.salePrice"></el-input>
             </template>
           </el-table-column>
         </el-table>

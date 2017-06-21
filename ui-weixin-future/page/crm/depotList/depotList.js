@@ -33,7 +33,7 @@ Page({
                         'authorization': "Bearer" + wx.getStorageSync('token').access_token
                     },
                     method: 'GET',
-                    data: that.data.formData,
+                    data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
                         that.setData({ page: res.data });
                         wx.hideToast();
@@ -113,5 +113,5 @@ Page({
                 }
             }
         });
-    },
+    }
 });

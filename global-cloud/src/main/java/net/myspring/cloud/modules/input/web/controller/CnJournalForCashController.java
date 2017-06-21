@@ -29,10 +29,9 @@ public class CnJournalForCashController {
     private AccountKingdeeBookService accountKingdeeBookService;
 
     @RequestMapping(value = "form")
-    public CnJournalForCashForm form (CnJournalForCashForm cnJournalForCashForm) {
+    public CnJournalForCashForm form () {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        cnJournalForCashForm = cnJournalForCashService.getForm(cnJournalForCashForm,kingdeeBook);
-        return cnJournalForCashForm;
+        return cnJournalForCashService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")

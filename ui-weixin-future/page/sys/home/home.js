@@ -19,7 +19,7 @@ Page({
         that.setData({ weixinAccountsHidden: true })
         if (that.data.menuList == null) {
             wx.request({
-                url: $util.getUrl('basic/sys/menu/getMenus'),
+                url: $util.getUrl('basic/sys/menu/getMobileMenus'),
                 header: {
                     'x-auth-token': app.globalData.sessionId,
                     'authorization': "Bearer" + wx.getStorageSync('token').access_token

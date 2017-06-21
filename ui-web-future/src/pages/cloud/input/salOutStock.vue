@@ -2,20 +2,18 @@
   <div>
     <head-tab active="salOutStock"></head-tab>
     <div>
-      <el-form :model="formData"  ref="inputForm" :rules="rules" class="form input-form" :inline="true">
+      <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-form-item label="仓库"   prop="storeNumber">
           <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
             <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期" prop="billDate">
+        <el-form-item label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="formSubmit" icon="check" style="margin-left:30px;">保存</el-button>
-        </el-form-item>
+        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
-      <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
     </div>
   </div>
 </template>
@@ -30,16 +28,15 @@
       return {
         table:null,
         stockList:{},
-        productMap:[],
         settings: {
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
           height: 650,
-          minSpareRows: 5,
+          minSpareRows: 1,
           colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
           columns: [
-            {type:"text", allowEmpty: false, strict: true},
+            {type:"text", allowEmpty: false, readOnly: true, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
             {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
@@ -47,12 +44,13 @@
             {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
             {type: "text", allowEmpty: true, strict: true }
           ],
-          afterChange: function (changes) {
-            if(changes) {
+          contextMenu: ['row_above', 'row_below', 'remove_row'],
+          afterChange: function (changes, source) {
+            if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
-                let column = changes[i][1]==2;
-                if(column){
+                let column = changes[i][1];
+                if(column === 2){
                   let name = changes[i][3];
                   if(util.isNotBlank(name)) {
                     axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name='+ name).then((response) =>{
@@ -69,11 +67,10 @@
         },
         formData:{
           billDate:new Date().toLocaleDateString(),
-          storeNumber:'',
-          json:{},
+          json:[],
         },rules: {
-          storeNumber: [{ required: true, message: '请选择仓库'}],
-          billDate: [{ required: true, message: '请选择时间'}],
+          storeNumber: [{ required: true, message: '必填项'}],
+          billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
         remoteLoading:false
@@ -81,9 +78,10 @@
     },
     mounted() {
       axios.get('/api/global/cloud/input/salOutStock/form').then((response)=>{
-        this.settings.columns[1].source = response.data.bdCustomerNameList;
-        this.settings.columns[2].source = response.data.bdMaterialNameList;
-        this.settings.columns[5].source = response.data.outStockBillTypeEnums;
+        let extra = response.data.extra;
+        this.settings.columns[1].source = extra.bdCustomerNameList;
+        this.settings.columns[2].source = extra.bdMaterialNameList;
+        this.settings.columns[5].source = extra.outStockBillTypeEnums;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
@@ -122,7 +120,7 @@
         } else {
           this.stockList = {};
         }
-      }
+      },
     }
   }
 </script>

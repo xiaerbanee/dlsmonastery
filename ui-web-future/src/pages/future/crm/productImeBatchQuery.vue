@@ -68,7 +68,6 @@
     methods:{
       getData() {
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           searched:false,
@@ -119,11 +118,6 @@
         this.productImeList=[];
         this.productQtyList = [];
       }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-      }
-      this.isInit = true;
     }
   }
 </script>

@@ -26,57 +26,64 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  var table = null;
     export default{
       data(){
-        return this.getData()
+        return this.getData();
       },
+      mounted () {
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+        },
       methods: {
         getData() {
           return {
             submitDisabled: false,
-            table: null,
             settings: {
               colHeaders: [this.$t('priceChangeImeForm.shopName'), this.$t('priceChangeImeForm.ime'), this.$t('priceChangeImeForm.remarks')],
               rowHeaders: true,
               minSpareRows: 500,
               startRows: 500,
               maxRows: 1000,
-              columns: [{
-                type: "autocomplete",
-                allowEmpty: false,
-                strict: true,
-                tempShopNames: [],
-                source: function (query, process) {
-                  var that = this;
-                  if (that.tempShopNames.indexOf(query) >= 0) {
-                    process(that.tempShopNames);
-                  } else {
-                    var shopNames = new Array();
-                    if (query.length >= 2) {
-                      axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
-                        if (response.data.length > 0) {
-                          for (var index in response.data) {
-                            var shopName = response.data[index].name;
-                            shopNames.push(shopName);
-                            if (that.tempShopNames.indexOf(shopName) < 0) {
-                              that.tempShopNames.push(shopName);
+              columns: [
+                {
+                  type: "autocomplete",
+                  allowEmpty: false,
+                  strict: true,
+                  tempShopNames: [],
+                  source: function (query, process) {
+                    var that = this;
+                    if (that.tempShopNames.indexOf(query) >= 0) {
+                      process(that.tempShopNames);
+                    } else {
+                      var shopNames = new Array();
+                      if (query.length >= 2) {
+                        axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                          if (response.data.length > 0) {
+                            for (var index in response.data) {
+                              var shopName = response.data[index].name;
+                              shopNames.push(shopName);
+                              if (that.tempShopNames.indexOf(shopName) < 0) {
+                                that.tempShopNames.push(shopName);
+                              }
                             }
                           }
-                        }
+                          process(shopNames);
+                        });
+                      } else {
                         process(shopNames);
-                      });
-                    } else {
-                      process(shopNames);
+                      }
                     }
-                  }
+                  },
+                  width: 300
+              },
+                {
+                  strict: true,
+                  width: 200
                 },
-                width: 300
-              }, {
-                strict: true,
-                width: 200
-              }, {
-                width: 200
-              }]
+                {
+                  width: 200
+                }
+              ]
             },
             inputForm: {
               extra:{}
@@ -87,9 +94,6 @@
             }
           }
         },
-        mounted () {
-          this.table = new Handsontable(this.$refs["handsontable"], this.settings)
-        },
         formSubmit(){
           var that = this;
           this.submitDisabled = true;
@@ -97,9 +101,9 @@
           form.validate((valid) => {
             if (valid) {
               this.inputForm.imeUploadList = new Array();
-              let list = this.table.getData()
+              let list = table.getData()
               for (var item in list) {
-                if (!this.table.isEmptyRow(item)) {
+                if (!table.isEmptyRow(item)) {
                   this.inputForm.imeUploadList.push(list[item]);
                 }
               }
@@ -119,7 +123,6 @@
         }, initPage(){
           axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response) => {
             this.inputForm = response.data;
-            this.table = new Handsontable(this.$refs["handsontable"], this.settings)
           });
         }
       }, created () {

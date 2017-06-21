@@ -10,7 +10,6 @@ import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkMisDeliveryDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
-import net.myspring.cloud.modules.input.web.query.StkMisDeliveryQuery;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.domain.BdStock;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
@@ -110,13 +109,15 @@ public class StkMisDeliveryService {
         return kingdeeSynDtoList;
     }
 
-    public StkMisDeliveryQuery getForm(StkMisDeliveryQuery stkMisDeliveryQuery){
-        List<String> stockName = bdStockRepository.findAll().stream().map(BdStock::getFName).collect(Collectors.toList());
+    public StkMisDeliveryForm getForm(){
+        StkMisDeliveryForm stkMisDeliveryForm = new StkMisDeliveryForm();
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("stockNameList",bdStockRepository.findAll().stream().map(BdStock::getFName).collect(Collectors.toList()));
         List<BdMaterial> materialList = bdMaterialRepository.findAll();
-        stkMisDeliveryQuery.setMaterialNameList(materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
-        stkMisDeliveryQuery.setMaterialNumberList(materialList.stream().map(BdMaterial::getFNumber).collect(Collectors.toList()));
-        stkMisDeliveryQuery.setStockNameList(stockName);
-        stkMisDeliveryQuery.setStkMisDeliveryTypeEnums(StkMisDeliveryTypeEnum.values());
-        return stkMisDeliveryQuery;
+        map.put("materialNameList",materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
+        map.put("materialNumberList",materialList.stream().map(BdMaterial::getFNumber).collect(Collectors.toList()));
+        map.put("stkMisDeliveryTypeEnums",StkMisDeliveryTypeEnum.values());
+        stkMisDeliveryForm.setExtra(map);
+        return stkMisDeliveryForm;
     }
 }

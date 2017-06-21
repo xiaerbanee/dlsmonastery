@@ -79,7 +79,7 @@
             axios.post('/api/ws/future/basic/expressCompany/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              if(this.inputForm.isCreate){
+              if(this.isCreate){
                 Object.assign(this.$data,this.getData());
                 this.initPage;
               }else{

@@ -28,7 +28,7 @@ public class ApPayBillDto {
     // 金额
     private BigDecimal amount;
 
-    private ApPayBillFEntryDto apPayBillFEntryDto;
+    private List<ApPayBillEntryDto> apPayBillEntryDtoList;
 
     public String getCreatorK3() {
         return creatorK3;
@@ -70,12 +70,12 @@ public class ApPayBillDto {
         this.amount = amount;
     }
 
-    public ApPayBillFEntryDto getApPayBillFEntryDto() {
-        return apPayBillFEntryDto;
+    public List<ApPayBillEntryDto> getApPayBillEntryDtoList() {
+        return apPayBillEntryDtoList;
     }
 
-    public void setApPayBillFEntryDto(ApPayBillFEntryDto apPayBillFEntryDto) {
-        this.apPayBillFEntryDto = apPayBillFEntryDto;
+    public void setApPayBillEntryDtoList(List<ApPayBillEntryDto> apPayBillEntryDtoList) {
+        this.apPayBillEntryDtoList = apPayBillEntryDtoList;
     }
 
     @JsonIgnore
@@ -100,19 +100,20 @@ public class ApPayBillDto {
         model.put("FPAYTOTALAMOUNTFOR_H", getAmount());
         model.put("FREALPAYAMOUNTFOR_H", getAmount());
         model.put("FEXCHANGERATE", 1);
-
         List<Object> entity = Lists.newArrayList();
         Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", getApPayBillFEntryDto().getSettleTypeNumber()));
-        if (StringUtils.isNotBlank(getApPayBillFEntryDto().getBankAcntNumber())) {
-            detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getApPayBillFEntryDto().getBankAcntNumber()));
+        for (ApPayBillEntryDto entryDto : getApPayBillEntryDtoList()){
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entryDto.getSettleTypeNumber()));
+            if (StringUtils.isNotBlank(entryDto.getBankAcntNumber())) {
+                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entryDto.getBankAcntNumber()));
+            }
+            detail.put("FPAYTOTALAMOUNTFOR", getAmount());
+            detail.put("FREALPAYAMOUNTFOR_D", getAmount());
+            detail.put("FSETTLEPAYAMOUNTFOR", getAmount());
+            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entryDto.getAccountNumber()));
+            detail.put("FCOMMENT", entryDto.getComment());
+            entity.add(detail);
         }
-        detail.put("FPAYTOTALAMOUNTFOR", getAmount());
-        detail.put("FREALPAYAMOUNTFOR_D", getAmount());
-        detail.put("FSETTLEPAYAMOUNTFOR", getAmount());
-        detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", getApPayBillFEntryDto().getAccountNumber()));
-        detail.put("FCOMMENT", getApPayBillFEntryDto().getComment());
-        entity.add(detail);
         model.put("FPAYBILLENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);

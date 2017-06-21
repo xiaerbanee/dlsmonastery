@@ -213,16 +213,7 @@ public class ImeAllotService {
 
         for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
 
-            Depot toDepot=depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), imeAllotSimpleForm.getToDepotName());
-            if(toDepot == null){
-                throw new ServiceException("调拨后门店在本公司无效或者不存在");
-            }
-
-            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), imeAllotSimpleForm.getIme());
-            if(productIme == null){
-                throw new ServiceException("串码："+imeAllotSimpleForm.getIme()+" 在本公司中无效或者不存在");
-            }
-
+            Depot toDepot=depotRepository.findByName(imeAllotSimpleForm.getToDepotName());
             ImeAllotForm imeAllotForm = new ImeAllotForm();
             imeAllotForm.setImeStr(imeAllotSimpleForm.getIme());
             imeAllotForm.setToDepotId(toDepot.getId());

@@ -5,13 +5,21 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllotDetail
 import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto
+import net.myspring.future.modules.crm.dto.StoreAllotDto
+import net.myspring.future.modules.crm.web.query.StoreAllotQuery
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
 
 
 interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> ,StoreAllotDetailRepositoryCustom{
+
+    fun deleteByStoreAllotId(storeAllotId: String)
+
 }
 
 

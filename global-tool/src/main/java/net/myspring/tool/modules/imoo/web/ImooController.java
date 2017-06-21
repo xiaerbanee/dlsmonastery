@@ -1,7 +1,5 @@
 package net.myspring.tool.modules.imoo.web;
 
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.service.ImooService;

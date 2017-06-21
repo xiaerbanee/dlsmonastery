@@ -55,7 +55,7 @@
             axios.post('/api/ws/future/basic/adPricesystem/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-                if (this.inputForm.isCreate) {
+                if (this.isCreate) {
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {

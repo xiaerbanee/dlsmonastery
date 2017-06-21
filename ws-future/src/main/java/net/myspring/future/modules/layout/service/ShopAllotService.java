@@ -43,10 +43,18 @@ public class ShopAllotService {
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
+
+
     @Autowired
     private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
+
+
+    public ShopAllot findOne(String id){
+
+        return shopAllotRepository.findOne(id);
+    }
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
         Page<ShopAllotDto> page = shopAllotRepository.findPage(pageable, shopAllotQuery);
@@ -76,7 +84,7 @@ public class ShopAllotService {
     }
 
     public ShopAllot save(ShopAllotForm shopAllotForm) {
-        ShopAllot shopAllot;
+        ShopAllot shopAllot = null;
         if(shopAllotForm.isCreate()){
             shopAllot = new ShopAllot();
             shopAllot.setFromShopId(shopAllotForm.getFromShopId());
@@ -100,26 +108,26 @@ public class ShopAllotService {
         return shopAllot;
     }
 
+    /**
+     * 该方法会首先清空ShopAllot已经关联的ShopAllotDetail记录。之后将传入的门店调拨明细插入ShopAllotDetail表中，并关联至传入的ShopAllot记录
+     */
     private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetailFormList, ShopAllot shopAllot) {
-
+        shopAllotDetailRepository.deleteByShopAllotId(shopAllot.getId());
+        if(shopAllotDetailFormList == null || shopAllotDetailFormList.isEmpty()){
+            return ;
+        }
         Map<String, PricesystemDetail> fromPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailRepository.findByDepotId(shopAllot.getFromShopId()),"productId");
         Map<String, PricesystemDetail> toPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailRepository.findByDepotId(shopAllot.getToShopId()),"productId");
 
         List<ShopAllotDetail> shopAllotDetailsToBeSaved = new ArrayList<>();
         for(ShopAllotDetailForm shopAllotDetailForm : shopAllotDetailFormList){
-            ShopAllotDetail shopAllotDetail;
-            if(StringUtils.isBlank(shopAllotDetailForm.getId())){
-                shopAllotDetail = new ShopAllotDetail();
-                shopAllotDetail.setProductId(shopAllotDetailForm.getProductId());
-                shopAllotDetail.setQty(shopAllotDetailForm.getQty());
-                shopAllotDetail.setShopAllotId(shopAllot.getId());
-                shopAllotDetail.setReturnPrice(fromPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
-                shopAllotDetail.setSalePrice(toPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
-            }else{
-                shopAllotDetail = shopAllotDetailRepository.findOne(shopAllotDetailForm.getId());
-                shopAllotDetail.setQty(shopAllotDetailForm.getQty());
-            }
-
+            ShopAllotDetail shopAllotDetail = new ShopAllotDetail();
+            shopAllotDetail.setId(null);
+            shopAllotDetail.setProductId(shopAllotDetailForm.getProductId());
+            shopAllotDetail.setQty(shopAllotDetailForm.getQty());
+            shopAllotDetail.setShopAllotId(shopAllot.getId());
+            shopAllotDetail.setReturnPrice(fromPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
+            shopAllotDetail.setSalePrice(toPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
             shopAllotDetailsToBeSaved.add(shopAllotDetail);
         }
 
@@ -133,7 +141,7 @@ public class ShopAllotService {
 //            return new Message("message_shop_allot_no_finance_message_account",Message.Type.danger);
 //        }
 
-        ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotViewOrAuditForm.getId());
+        ShopAllot shopAllot = findOne(shopAllotViewOrAuditForm.getId());
         shopAllot.setStatus(shopAllotViewOrAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
         shopAllot.setAuditRemarks(shopAllotViewOrAuditForm.getAuditRemarks());
         shopAllot.setAuditBy(RequestUtils.getAccountId());

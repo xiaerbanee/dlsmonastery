@@ -7,7 +7,7 @@ import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.modules.input.dto.CnJournalFEntityForCashDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForCashDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForCashDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -111,17 +111,17 @@ public class CnJournalForCashService {
             if (row.size() > 9) {
                 customerNameFor =  HandsontableUtils.getValue(row, 9);
             }
-            CnJournalFEntityForCashDto cnJournalFEntityForCashDto = new CnJournalFEntityForCashDto();
-            cnJournalFEntityForCashDto.setAccountNumber(accountNumber);
-            cnJournalFEntityForCashDto.setDebitAmount(debitAmount);
-            cnJournalFEntityForCashDto.setCreditAmount(creditAmount);
-            cnJournalFEntityForCashDto.setRemarks(remarks);
-            cnJournalFEntityForCashDto.setStaffNumber(empInfoNameMap.get(empInfoName));
-            cnJournalFEntityForCashDto.setDepartmentNumber(departmentNameMap.get(departmentName));
-            cnJournalFEntityForCashDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
-            cnJournalFEntityForCashDto.setExpenseTypeNumber(expenseTypeNameMap.get(expenseTypeName));
-            cnJournalFEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
-            cnJournalForCashDto.getfEntityDtoList().add(cnJournalFEntityForCashDto);
+            CnJournalEntityForCashDto cnJournalEntityForCashDto = new CnJournalEntityForCashDto();
+            cnJournalEntityForCashDto.setAccountNumber(accountNumber);
+            cnJournalEntityForCashDto.setDebitAmount(debitAmount);
+            cnJournalEntityForCashDto.setCreditAmount(creditAmount);
+            cnJournalEntityForCashDto.setRemarks(remarks);
+            cnJournalEntityForCashDto.setStaffNumber(empInfoNameMap.get(empInfoName));
+            cnJournalEntityForCashDto.setDepartmentNumber(departmentNameMap.get(departmentName));
+            cnJournalEntityForCashDto.setOtherTypeNumber(otherTypeNameMap.get(otherTypeName));
+            cnJournalEntityForCashDto.setExpenseTypeNumber(expenseTypeNameMap.get(expenseTypeName));
+            cnJournalEntityForCashDto.setCustomerNumberFor(customerNameMap.get(customerNameFor));
+            cnJournalForCashDto.getEntityForCashDtoList().add(cnJournalEntityForCashDto);
         }
         return save(cnJournalForCashDto,kingdeeBook,accountKingdeeBook);
     }
@@ -137,7 +137,8 @@ public class CnJournalForCashService {
         return kingdeeSynDto;
     }
 
-    public CnJournalForCashForm getForm(CnJournalForCashForm cnJournalForCashForm,KingdeeBook kingdeeBook){
+    public CnJournalForCashForm getForm(KingdeeBook kingdeeBook){
+        CnJournalForCashForm cnJournalForCashForm = new CnJournalForCashForm();
         Map<String,Object> map = Maps.newHashMap();
         map.put("accountNumberList",bdAccountRepository.findAll().stream().map(BdAccount::getFNumber).collect(Collectors.toList()));
         map.put("staffNameList",hrEmpInfoRepository.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));

@@ -17,13 +17,11 @@ import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ClientDto;
-import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.ClientRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
+import net.myspring.future.modules.crm.repository.ExpressRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailExportDto;
@@ -31,6 +29,7 @@ import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -77,9 +76,15 @@ public class AdGoodsOrderService {
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
+    private ExpressRepository expressRepository;
+    @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private ShopDepositRepository shopDepositRepository;
+    @Autowired
     private AdPricesystemDetailRepository adPricesystemDetailRepository;
+    @Autowired
+    private AdpricesystemRepository adpricesystemRepository;
     @Autowired
     private ExpressOrderManager expressOrderManager;
     @Autowired
@@ -96,6 +101,7 @@ public class AdGoodsOrderService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
+
 
 //    public Map<String,Object> getAmountMap(AdGoodsOrder adGoodsOrder){
 //        Map<String,Object> map=Maps.newHashMap();
@@ -148,13 +154,6 @@ public class AdGoodsOrderService {
             AdGoodsOrder adGoodsOrder;
             if(adGoodsOrderForm.isCreate()){
                 adGoodsOrder = new AdGoodsOrder();
-                //设置部分字段的初始值
-                adGoodsOrder.setSplitBill(false);
-                adGoodsOrder.setAmount(BigDecimal.ZERO);
-                adGoodsOrder.setSmallQty(0);
-                adGoodsOrder.setMediumQty(0);
-                adGoodsOrder.setLargeQty(0);
-                adGoodsOrder.setBillType(BillTypeEnum.柜台.name());
             }else{
                 adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderForm.getId());
             }
@@ -166,16 +165,19 @@ public class AdGoodsOrderService {
             }
             adGoodsOrder.setOutShopId(outShop.getId());
             adGoodsOrder.setInvestInCause(adGoodsOrderForm.getInvestInCause());
+            adGoodsOrder.setBillType(BillTypeEnum.柜台.name());
             adGoodsOrder.setEmployeeId(adGoodsOrderForm.getEmployeeId());
         //TODO 确认下面的billAddress赋值语句是否正确
             adGoodsOrder.setBillAddress(adGoodsOrderForm.getExpressOrderAddress());
+            adGoodsOrder.setSplitBill(false);
+            adGoodsOrder.setAmount(BigDecimal.ZERO);
+            adGoodsOrder.setSmallQty(0);
+            adGoodsOrder.setMediumQty(0);
+            adGoodsOrder.setLargeQty(0);
             adGoodsOrder.setRemarks(adGoodsOrderForm.getRemarks());
             adGoodsOrderRepository.save(adGoodsOrder);
 
-            if(adGoodsOrderForm.isCreate() || adGoodsOrder.getProcessStatus().contains("审核") || AdGoodsOrderStatusEnum.待开单.name().equals(adGoodsOrder.getProcessStatus())){
-                //在开单之前，是可以修改订货明细的
-                saveAdGoodsOrderDetailInfo(adGoodsOrder, adGoodsOrderForm.getAdGoodsOrderDetailList());
-            }
+            saveAdGoodsOrderDetailInfo(adGoodsOrder, adGoodsOrderForm.getAdGoodsOrderDetailList());
 
             saveExpressOrderInfo(adGoodsOrder, adGoodsOrderForm);
 
@@ -198,18 +200,13 @@ public class AdGoodsOrderService {
 
     }
 
-    private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
+    private ExpressOrder saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
 
         String expressOrderId = adGoodsOrder.getExpressOrderId();
         if(StringUtils.isBlank(expressOrderId)){
             expressOrder = new ExpressOrder();
-            expressOrder.setShipType(ShipTypeEnum.总部发货.name());
-            expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
-            expressOrder.setExtendId(adGoodsOrder.getId());
-            expressOrder.setPrintDate(LocalDate.now());
-            expressOrder.setLocked(true);
         }else{
             expressOrder = expressOrderRepository.findOne(expressOrderId);
         }
@@ -217,18 +214,21 @@ public class AdGoodsOrderService {
         expressOrder.setContator(adGoodsOrderForm.getExpressOrderContator());
         expressOrder.setMobilePhone(adGoodsOrderForm.getExpressOrderMobilePhone());
         expressOrder.setAddress(adGoodsOrderForm.getExpressOrderAddress());
-        expressOrder.setExpressCodes(adGoodsOrderForm.getExpressOrderExpressCodes());
         expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
         expressOrder.setToDepotId(adGoodsOrder.getShopId());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
         expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressOrderExpressCompanyId());
+        expressOrder.setShipType(ShipTypeEnum.总部发货.name());
+        expressOrder.setPrintDate(LocalDate.now());
+        expressOrder.setLocked(true);
+        expressOrder.setExtendId(adGoodsOrder.getId());
 
         expressOrderRepository.save(expressOrder);
 
         adGoodsOrder.setExpressOrderId(expressOrder.getId());
         adGoodsOrderRepository.save(adGoodsOrder);
 
-        expressOrderManager.save(ExpressOrderTypeEnum.物料订单.name(), adGoodsOrder.getId(), adGoodsOrderForm.getExpressOrderExpressCodes(), adGoodsOrderForm.getExpressOrderExpressCompanyId());
-
+        return expressOrder;
     }
 
     private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> adGoodsOrderDetailList) {
@@ -238,39 +238,35 @@ public class AdGoodsOrderService {
             AdGoodsOrderDetail adGoodsOrderDetail;
 
             if(adGoodsOrderDetailForm.getQty() !=null && adGoodsOrderDetailForm.getQty() < 0){
-                throw new ServiceException("每个货品订货数量不可以小于0");
+                throw new ServiceException("订货数量不可以小于0");
             }
 
             if(StringUtils.isBlank(adGoodsOrderDetailForm.getId())){
                 adGoodsOrderDetail = new AdGoodsOrderDetail();
                 adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
                 adGoodsOrderDetail.setProductId(adGoodsOrderDetailForm.getProductId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailForm.getQty() == null ? 0 : adGoodsOrderDetailForm.getQty());
+                adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
                 adGoodsOrderDetail.setBillQty(0);
                 adGoodsOrderDetail.setShippedQty(0);
                 adGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
                 adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
             }else{
                 adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderDetailForm.getId());
+                adGoodsOrderDetail.setQty(adGoodsOrderDetailForm.getQty() == null ? 0 : adGoodsOrderDetailForm.getQty());
+                adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
             }
-            adGoodsOrderDetail.setQty(adGoodsOrderDetailForm.getQty() == null ? 0 : adGoodsOrderDetailForm.getQty());
-            adGoodsOrderDetail.setConfirmQty(adGoodsOrderDetail.getQty());
-
             toBeSaved.add(adGoodsOrderDetail);
         }
         adGoodsOrderDetailRepository.save(toBeSaved);
 
-        adGoodsOrder.setAmount(calcAmountByDetailConfirmQty(adGoodsOrder));
-        adGoodsOrderRepository.save(adGoodsOrder);
-    }
-
-    private BigDecimal calcAmountByDetailConfirmQty(AdGoodsOrder adGoodsOrder){
-        List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
-        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(detailList, "productId"));
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(toBeSaved, "productId"));
         BigDecimal amount = BigDecimal.ZERO;
-        for (AdGoodsOrderDetail adGoodsOrderDetail : detailList) {
+        for (AdGoodsOrderDetail adGoodsOrderDetail : toBeSaved) {
             amount = amount.add(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2().multiply(new BigDecimal(adGoodsOrderDetail.getConfirmQty())));
         }
-        return amount;
+        adGoodsOrder.setAmount(amount);
+        adGoodsOrderRepository.save(adGoodsOrder);
     }
 
     public AdGoodsOrderDto findDto(String id) {
@@ -383,27 +379,34 @@ public class AdGoodsOrderService {
 
             List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
             for(AdGoodsOrderBillDetailForm adGoodsOrderBillDetailForm : adGoodsOrderDetailList){
+                AdGoodsOrderDetail adGoodsOrderDetail;
+
                 if(adGoodsOrderBillDetailForm.getBillQty() !=null && adGoodsOrderBillDetailForm.getBillQty() < 0){
                     throw new ServiceException("开单数量不可以小于0");
                 }
 
-                AdGoodsOrderDetail adGoodsOrderDetail;
                 if(StringUtils.isBlank(adGoodsOrderBillDetailForm.getId())){
                     adGoodsOrderDetail = new AdGoodsOrderDetail();
                     adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
                     adGoodsOrderDetail.setProductId(adGoodsOrderBillDetailForm.getProductId());
                     adGoodsOrderDetail.setQty(0);
                     adGoodsOrderDetail.setConfirmQty(0);
+                    adGoodsOrderDetail.setBillQty(adGoodsOrderBillDetailForm.getBillQty() == null ? 0 : adGoodsOrderBillDetailForm.getBillQty());
                     adGoodsOrderDetail.setShippedQty(0);
+
                 }else{
                     adGoodsOrderDetail = adGoodsOrderDetailRepository.findOne(adGoodsOrderBillDetailForm.getId());
+                    adGoodsOrderDetail.setBillQty(adGoodsOrderBillDetailForm.getBillQty() == null ? 0 : adGoodsOrderBillDetailForm.getBillQty());
                 }
-                adGoodsOrderDetail.setBillQty(adGoodsOrderBillDetailForm.getBillQty() == null ? 0 : adGoodsOrderBillDetailForm.getBillQty());
+
                 if (priceMap.containsKey(adGoodsOrderDetail.getProductId())) {
                     adGoodsOrderDetail.setShouldPay(priceMap.get(adGoodsOrderDetail.getProductId()).getPrice());
                     adGoodsOrderDetail.setShouldGet(productMap.get(adGoodsOrderDetail.getProductId()).getShouldGet());
-                }else{
+                }
+                if (adGoodsOrderDetail.getShouldPay() == null) {
                     adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+                }
+                if (adGoodsOrderDetail.getShouldGet() == null) {
                     adGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
                 }
 
@@ -455,7 +458,14 @@ public class AdGoodsOrderService {
             }
         }
         adGoodsOrderDetailRepository.save(newAdGoodsOrderDetails);
-        newAdGoodsOrder.setAmount(calcAmountByDetailConfirmQty(newAdGoodsOrder));
+
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(newAdGoodsOrderDetails, "productId"));
+        BigDecimal childAmount = BigDecimal.ZERO;
+        for (AdGoodsOrderDetail adGoodsOrderDetail : newAdGoodsOrderDetails) {
+            BigDecimal price2 = productMap.get(adGoodsOrderDetail.getProductId()).getPrice2();
+            childAmount = childAmount.add(price2.multiply(new BigDecimal(adGoodsOrderDetail.getConfirmQty())));
+        }
+        newAdGoodsOrder.setAmount(childAmount);
         adGoodsOrderRepository.save(newAdGoodsOrder);
 
         //开始保存拆分后的expressOrder信息
@@ -553,15 +563,16 @@ public class AdGoodsOrderService {
         }
         adGoodsOrderRepository.save(adGoodsOrder);
 
-        ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
-        expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressComapnyId());
-        expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
-        expressOrder.setShouldGet(adGoodsOrderShipForm.getExpressOrderShouldGet());
-        expressOrder.setShouldPay(adGoodsOrderShipForm.getExpressOrderShouldPay());
-        expressOrder.setRealPay(adGoodsOrderShipForm.getExpressOrderRealPay());
-        expressOrderRepository.save(expressOrder);
 
-        expressOrderManager.save(expressOrder.getExtendType(), expressOrder.getExtendId(), expressOrder.getExpressCodes(), expressOrder.getExpressCompanyId());
+            ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
+            expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressComapnyId());
+            expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
+            expressOrder.setShouldGet(adGoodsOrderShipForm.getExpressOrderShouldGet());
+            expressOrder.setShouldPay(adGoodsOrderShipForm.getExpressOrderShouldPay());
+            expressOrder.setRealPay(adGoodsOrderShipForm.getExpressOrderRealPay());
+            expressOrderRepository.save(expressOrder);
+
+            expressOrderManager.save(expressOrder.getExtendType(), expressOrder.getExtendId(), expressOrder.getExpressCodes(), expressOrder.getExpressCompanyId());
 
     }
 
@@ -604,6 +615,7 @@ public class AdGoodsOrderService {
     }
 
     public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
+
 
         Workbook workbook = new SXSSFWorkbook(10000);
 

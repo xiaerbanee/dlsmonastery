@@ -21,6 +21,11 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <el-form-item :label="$t('dutySignList.officeName')" :label-width="formLabelWidth">
+                <el-select v-model="formData.officeName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
+                  <el-option v-for="office in formData.extra.officeList" :key="office.name" :label="office.name" :value="office.name"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="$t('dutySignList.positionName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.positionName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
                   <el-option v-for="position in formData.extra.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
@@ -35,9 +40,9 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('dutySignList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="employee.name" :label="$t('dutySignList.employeeName')" sortable></el-table-column>
+        <el-table-column prop="employeeName" :label="$t('dutySignList.employeeName')" sortable></el-table-column>
         <el-table-column prop="dutyDate" :label="$t('dutySignList.dutyDate')"></el-table-column>
-        <el-table-column prop="extendMap.week" :label="$t('dutySignList.week')" ></el-table-column>
+        <el-table-column prop="week" :label="$t('dutySignList.week')" ></el-table-column>
         <el-table-column prop="dutyTime" :label="$t('dutySignList.dutyTime')" ></el-table-column>
         <el-table-column prop="address" :label="$t('dutySignList.address')" ></el-table-column>
         <el-table-column prop="uuid" :label="$t('dutySignList.uuid')" ></el-table-column>
@@ -92,14 +97,18 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
+        this.formData.order=util.getOrder(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        this.formData.dutyDateBTW = util.formatDateRange(this.formData.dutyDate);
-        window.location.href= "/api/basic/hr/dutySign/export?"+qs.stringify(this.formData);
+        this.formVisible = false;
+        var submitData = util.deleteExtra(this.formData);
+        axios.get('/api/basic/hr/dutySign/export?'+qs.stringify(submitData)).then((response) => {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        })
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;

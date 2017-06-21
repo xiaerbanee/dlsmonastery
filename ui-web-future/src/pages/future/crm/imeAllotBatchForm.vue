@@ -47,7 +47,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   import suAlert from 'components/common/su-alert'
-  var table = null;
+
   export default{
     components:{
       suAlert,
@@ -60,6 +60,7 @@
     methods: {
       getData() {
         return {
+          table: null,
           errMsg:'',
           searchFormVisible:false,
           imeStr:'',
@@ -99,7 +100,7 @@
       },
       search() {
         axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
-          table.loadData(response.data);
+          this.table.loadData(response.data);
         });
         axios.get('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.imeStr}}).then((response)=>{
           this.errMsg=response.data;
@@ -118,9 +119,9 @@
             this.submitDisabled = true;
             let tableData = [];
 
-            let list = table.getData();
+            let list = this.table.getData();
             for (let item in list) {
-              if (!table.isEmptyRow(item)) {
+              if (!this.table.isEmptyRow(item)) {
                 let row = list[item];
                 let imeAllotSimpleForm = {};
                 imeAllotSimpleForm.ime = row[0];
@@ -146,7 +147,7 @@
         axios.get('/api/ws/future/crm/imeAllot/getImeAllotBatchForm').then((response)=>{
           this.inputForm = response.data;
           this.settings.columns[2].source = response.data.extra.toDepotNameList;
-          table = new Handsontable(this.$refs["handsontable"], this.settings);
+          this.table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }
     },

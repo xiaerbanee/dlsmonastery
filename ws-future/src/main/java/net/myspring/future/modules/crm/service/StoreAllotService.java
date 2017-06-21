@@ -63,6 +63,7 @@ import java.util.regex.Pattern;
 @Transactional
 public class StoreAllotService {
 
+
     @Autowired
     private StoreAllotRepository storeAllotRepository;
     @Autowired
@@ -81,6 +82,7 @@ public class StoreAllotService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private ProductImeRepository productImeRepository;
+
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -92,7 +94,7 @@ public class StoreAllotService {
 
     public Map<String, Object> shipBoxAndIme(String storeAllotId, String boxImeStr, String imeStr) {
 
-        StringBuilder sb = new StringBuilder();
+        StringBuffer stringBuffer = new StringBuffer();
         Integer totalShouldShipQty = 0;
         Integer totalShippedQty=0;
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(storeAllotId);
@@ -136,19 +138,19 @@ public class StoreAllotService {
             boxImeSet.add(productIme.getBoxIme());
             imeSet.add(productIme.getIme());
             if(!storeAllotDetailMap.containsKey(productIme.getProductId())) {
-                sb.append("箱号  ").append(productIme.getBoxIme()).append(",串码  ").append(productIme.getIme()).append(" 不属于此次要调拨的产品；");
+                stringBuffer.append("箱号  "+productIme.getBoxIme()+",串码  "+ productIme.getIme()+" 不属于此次要调拨的产品；");
             } else {
                 storeAllotDetailMap.get(productIme.getProductId()).setShipQty(storeAllotDetailMap.get(productIme.getProductId()).getShipQty()+1);
             }
         }
         for(String boxIme:boxImeList) {
             if(!boxImeSet.contains(boxIme)) {
-                sb.append("箱号  ").append(boxIme).append(" 不在选定的仓库  ").append(storeAllotDto.getFromStoreName()).append("；");
+                stringBuffer.append("箱号  " + boxIme + " 不在选定的仓库  "+storeAllotDto.getFromStoreName()+"；");
             }
         }
         for(String ime : imeList){
             if(!imeSet.contains(ime)) {
-                sb.append("串码  ").append(ime).append(" 不在选定的仓库  ").append(storeAllotDto.getFromStoreName()).append("；");
+                stringBuffer.append("串码  " + ime + " 不在选定的仓库  "+storeAllotDto.getFromStoreName()+"；");
             }
         }
         for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
@@ -156,7 +158,7 @@ public class StoreAllotService {
             totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
             Integer qty = storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
             if(qty > storeAllotDetailDto.getBillQty()){
-                sb.append("产品 ").append(storeAllotDetailDto.getProductName()).append(" 已经发货 ").append(qty.toString()).append(" 台，超过该产品的调拨量  ").append(storeAllotDetailDto.getBillQty().toString()).append(" 台；");
+                stringBuffer.append("产品 " + storeAllotDetailDto.getProductName()+" 已经发货 " + qty.toString() + " 台，超过该产品的调拨量  "+storeAllotDetailDto.getBillQty().toString()+" 台；");
             }
         }
         Map<String,Object> result = Maps.newHashMap();
@@ -167,7 +169,7 @@ public class StoreAllotService {
         for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
             shipQtyMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto.getShipQty());
         }
-        result.put("errMsg", sb.toString());
+        result.put("errMsg", stringBuffer.toString());
         result.put("shipQtyMap", shipQtyMap);
         result.put("totalQty", productImeList.size());
 
@@ -221,17 +223,20 @@ public class StoreAllotService {
         cacheUtils.initCacheInput(storeAllotImeDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
+
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
         return StringUtils.toString(gridFSFile.getId());
 
+
     }
+
 
     public StoreAllot saveForm(StoreAllotForm storeAllotForm) {
         //大库调拨单只允许新增和删除，不能修改
         if(!storeAllotForm.isCreate()){
-            throw new ServiceException("大库调拨不允许修改");
+            throw new ServiceException("error.storeAllot.cantEdit");
         }
 
         if(storeAllotForm.getSyn()){
@@ -266,12 +271,15 @@ public class StoreAllotService {
     }
 
     private void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailList) {
-        //大库调拨只有新增，没有修改
+        storeAllotDetailRepository.deleteByStoreAllotId(storeAllotId);
+        if(storeAllotDetailList == null){
+            return;
+        }
 
         List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
         for(StoreAllotDetailForm storeAllotDetailForm : storeAllotDetailList){
             if(storeAllotDetailForm == null || storeAllotDetailForm.getBillQty() == null || storeAllotDetailForm.getBillQty() <=0){
-                throw new ServiceException("大库的调拨明细里，调拨数量必须大于0");
+                continue;
             }
             StoreAllotDetail storeAllotDetail = new StoreAllotDetail();
             storeAllotDetail.setStoreAllotId(storeAllotId);
@@ -405,30 +413,30 @@ public class StoreAllotService {
     }
 
     public StoreAllotDto print(String id) {
-        StoreAllotDto storeAllotDto = findDto(id);
+        StoreAllot storeAllot = storeAllotRepository.findOne(id);
 
-        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
-            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
+        if(StringUtils.isNotBlank(storeAllot.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllot.getExpressOrderId());
             if(expressOrder != null && expressOrder.getOutPrintDate() == null){
                 expressOrder.setOutPrintDate(LocalDateTime.now());
-                expressOrderRepository.save(expressOrder);
+                expressOrderRepository.saveAndFlush(expressOrder);
             }
         }
 
-        return storeAllotDto;
+        return findDto(id);
     }
 
     public StoreAllotDto shipPrint(String id) {
-        StoreAllotDto storeAllotDto = findDto(id);
+        StoreAllot storeAllot = storeAllotRepository.findOne(id);
 
-        if(StringUtils.isNotBlank(storeAllotDto.getExpressOrderId())){
-            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllotDto.getExpressOrderId());
+        if(StringUtils.isNotBlank(storeAllot.getExpressOrderId())){
+            ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllot.getExpressOrderId());
             if(expressOrder != null && expressOrder.getExpressPrintDate() == null){
                 expressOrder.setExpressPrintDate(LocalDateTime.now());
-                expressOrderRepository.save(expressOrder);
+                expressOrderRepository.saveAndFlush(expressOrder);
             }
         }
 
-        return storeAllotDto;
+        return findDto(id);
     }
 }

@@ -58,6 +58,7 @@
     methods:{
       getData(){
         return{
+          isCreate:this.$route.query.id==null,
           submitDisabled:false,
           officeDisabled:false,
           printTypeContent:'',
@@ -86,7 +87,7 @@
               this.$message(response.data.message);
 
               if(response.data.success) {
-                if (this.inputForm.isCreate) {
+                if (this.isCreate) {
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{

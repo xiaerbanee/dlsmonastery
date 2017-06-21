@@ -70,7 +70,7 @@
         <el-table-column prop="storeName" column-key="storeId" :label="$t('adGoodsOrderList.storeName')" sortable></el-table-column>
         <el-table-column prop="shopOfficeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
         <el-table-column prop="shopAreaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
-        <el-table-column prop="depotShopAreaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
+        <el-table-column prop="shopAreaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
         <el-table-column prop="shopName" column-key="shopId" :label="$t('adGoodsOrderList.shopName')" sortable></el-table-column>
         <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  sortable></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
