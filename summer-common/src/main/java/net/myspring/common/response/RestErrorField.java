@@ -16,6 +16,12 @@ public class RestErrorField {
         this.field = field;
     }
 
+    public RestErrorField(FieldError fieldError,String code) {
+        this.message = fieldError.getDefaultMessage();
+        this.code = code;
+        this.field = fieldError.getField();
+    }
+
     public String getMessage() {
         return message;
     }
