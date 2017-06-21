@@ -12,7 +12,7 @@
             <view class="weui-input">{{formData.shopAdTypeName}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopAdTypeId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopAdTypeId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -25,7 +25,7 @@
             <view class="weui-input">{{formData.shopName}} <image class="right_icon" src="/image/icons/right.png"/></view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -36,7 +36,7 @@
         <view class="weui-cell__bd">
           <input name="length" value="{{formData.length}}" class="weui-input"  />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.length}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.length}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -47,7 +47,7 @@
         <view class="weui-cell__bd">
           <input name="width" value="{{formData.width}}" class="weui-input"  />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.width}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.width}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -58,7 +58,7 @@
         <view class="weui-cell__bd">
           <input name="qty" value="{{formData.qty}}" class="weui-input"  />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.qty}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.qty}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>

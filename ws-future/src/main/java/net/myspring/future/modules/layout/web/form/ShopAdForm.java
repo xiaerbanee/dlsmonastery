@@ -1,21 +1,24 @@
 package net.myspring.future.modules.layout.web.form;
 
-import com.google.common.collect.Lists;
 import net.myspring.common.form.BaseForm;
-import net.myspring.future.modules.basic.dto.ShopAdTypeDto;
 import net.myspring.future.modules.layout.domain.ShopAd;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/10.
  */
 public class ShopAdForm extends BaseForm<ShopAd> {
+    @NotNull(message = "必填信息")
     private String shopId;
+    @NotNull(message = "必填信息")
     private String shopAdTypeId;
+    @NotNull(message = "必填信息")
     private BigDecimal length;
+    @NotNull(message = "必填信息")
     private BigDecimal width;
+    @NotNull(message = "必填信息")
     private Integer qty;
     private String content;
     private Boolean specialArea;
