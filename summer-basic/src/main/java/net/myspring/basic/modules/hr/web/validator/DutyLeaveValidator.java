@@ -36,24 +36,24 @@ public class DutyLeaveValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        DutyLeaveForm dutyLeave = (DutyLeaveForm) target;
+        DutyLeaveForm dutyLeaveForm = (DutyLeaveForm) target;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "leaveType", "error.leaveType", "请选择请假类型");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateStart", "error.dutyDateStart", "开始日期不能为空");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateEnd", "error.dutyDateEnd", "结束日期不能为空");
 
-        if (StringUtils.isNotBlank(dutyLeave.getDutyDateStart() ) && StringUtils.isNotBlank(dutyLeave.getDutyDateEnd())) {
+        if (StringUtils.isNotBlank(dutyLeaveForm.getDutyDateStart() ) && StringUtils.isNotBlank(dutyLeaveForm.getDutyDateEnd())) {
             String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
-            if (dutyLeave.getDutyDateStart().equals(dutyLeave.getDutyDateEnd())) {
-                List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDate(employeeId, LocalDateUtils.parse(dutyLeave.getDutyDateStart()));
+            if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {
+                List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDate(employeeId, LocalDateUtils.parse(dutyLeaveForm.getDutyDateStart()));
                 List<String> dateTypes = CollectionUtil.extractToList(dutyLeaves, "dateType");
-                boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyLeave.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyLeave.getDateType()));
+                boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyLeaveForm.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyLeaveForm.getDateType()));
                 if (!isNotCross) {
                     errors.rejectValue("dutyDateStart", "error.dutyDateStart", "保存失败，请假时间已存在");
                 }
             } else {
-                LocalDate dateStart = LocalDate.parse(dutyLeave.getDutyDateStart());
-                LocalDate dateEnd = LocalDate.parse(dutyLeave.getDutyDateEnd());
+                LocalDate dateStart = LocalDate.parse(dutyLeaveForm.getDutyDateStart());
+                LocalDate dateEnd = LocalDate.parse(dutyLeaveForm.getDutyDateEnd());
                 List<LocalDate> dateList = LocalDateUtils.getDateList(dateStart, dateEnd);
                 List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDateList(employeeId, dateList);
                 Map<LocalDate, List<DutyLeave>> dutyLeaveMap = Maps.newHashMap();
@@ -66,7 +66,7 @@ public class DutyLeaveValidator implements Validator {
                 for (LocalDate date : dateList) {
                     List<DutyLeave> dutyLeaveList = dutyLeaveMap.get(date);
                     List<String> dateTypes = CollectionUtil.extractToList(dutyLeaveList, "dateType");
-                    boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyLeave.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyLeave.getDateType()));
+                    boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyLeaveForm.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyLeaveForm.getDateType()));
                     if (!isNotCross) {
                         errors.rejectValue("dutyDateStart", "error.dutyDateStart", "保存失败，请假时间已存在");
                         break;

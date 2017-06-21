@@ -17,6 +17,10 @@ import java.util.Map;
  * Created by lihx on 2017/6/20.
  */
 public class ApPayBillDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
     private String creatorK3;
     //供应商编码
@@ -29,6 +33,22 @@ public class ApPayBillDto {
     private BigDecimal amount;
 
     private List<ApPayBillEntryDto> apPayBillEntryDtoList;
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
 
     public String getCreatorK3() {
         return creatorK3;

@@ -41,6 +41,8 @@ public class PurMrbService {
 
     private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                purMrbDto.getExtendId(),
+                purMrbDto.getExtendType(),
                 KingdeeFormIdEnum.PUR_MRB.name(),
                 purMrbDto.getJson(),
                 kingdeeBook) {
