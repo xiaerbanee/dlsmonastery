@@ -537,6 +537,7 @@ public class AdGoodsOrderService {
             if (adGoodsOrderShipDetailForm !=null && adGoodsOrderShipDetailForm.getShipQty() != null && adGoodsOrderShipDetailForm.getShipQty() > 0) {
                 adGoodsOrderDetail.setShippedQty(adGoodsOrderDetail.getShippedQty() + adGoodsOrderShipDetailForm.getShipQty());
             }
+
             if(adGoodsOrderDetail.getBillQty() - adGoodsOrderDetail.getShippedQty() > 0){
                 isAllShipped = false;
             }
@@ -554,7 +555,7 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(adGoodsOrder);
 
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
-        expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressComapnyId());
+        expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressCompanyId());
         expressOrder.setExpressCodes(adGoodsOrderShipForm.getExpressOrderExpressCodes());
         expressOrder.setShouldGet(adGoodsOrderShipForm.getExpressOrderShouldGet());
         expressOrder.setShouldPay(adGoodsOrderShipForm.getExpressOrderShouldPay());

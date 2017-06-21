@@ -90,6 +90,7 @@
           this.$message(response.data.message);
           if(response.data.success){
             Object.assign(this.$data, this.getData());
+            this.initPage();
           }
         }).catch( ()=> {
           this.submitDisabled = false;
@@ -99,7 +100,7 @@
         this.formVisible = false;
         this.getTableData();
       }, getTableData(){
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("adPricesystemChangeForm", submitData);
         axios.get('/api/ws/future/layout/adPricesystemChange/findFilter', {params: submitData}).then((response) => {
           this.settings.data = response.data;

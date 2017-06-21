@@ -19,9 +19,7 @@ public class DutySignForm extends BaseForm<DutySign> {
     private String status;
     private String EmployeeId;
     private LocalDateTime dutyDateTime;
-    @NotNull(message = "必填信息")
     private String address;
-    @NotNull(message = "必填信息")
     private String attachment;
     private String longitude;
     private String latitude;

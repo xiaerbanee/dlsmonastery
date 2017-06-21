@@ -108,7 +108,6 @@
       this.initPromise = axios.get('/api/general/sys/processType/getQuery').then((response) => {
         that.formData = response.data;
         util.copyValue(that.$route.query, that.formData);
-        that.pageRequest();
       });
     },activated(){
       this.initPromise.then(()=>{

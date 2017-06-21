@@ -29,7 +29,9 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes });
+        console.log(res.data)
+        that.setData({ formData: res.data});
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
         that.pageRequest();
       }
     });
@@ -134,7 +136,7 @@ Page({
           }
           else if (res.tapIndex == 2) {
             wx.request({
-              url: $util.getUrl("crm/shopAd/delete"),
+              url: $util.getUrl("ws/future/layout/shopAd/delete"),
               data: { id: id },
               header: {
                 'x-auth-token': app.globalData.sessionId,
