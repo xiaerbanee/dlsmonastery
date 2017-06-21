@@ -1,9 +1,10 @@
-package net.myspring.basic.modules.hr.validator;
+package net.myspring.basic.modules.hr.web.validator;
 
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyFree;
 import net.myspring.basic.modules.hr.service.DutyFreeService;
+import net.myspring.basic.modules.hr.web.form.DutyFreeForm;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class DutyFreeValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        DutyFree dutyFree = (DutyFree) target;
+        DutyFreeForm dutyFree = (DutyFreeForm) target;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "freeDate", "error.freeDate", "请选择时间");
 

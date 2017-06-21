@@ -1,8 +1,9 @@
-package net.myspring.basic.modules.hr.validator;
+package net.myspring.basic.modules.hr.web.validator;
 
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyOvertime;
 import net.myspring.basic.modules.hr.service.DutyOvertimeService;
+import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -31,7 +32,7 @@ public class DutyOvertimeValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        DutyOvertime dutyOvertime = (DutyOvertime) target;
+        DutyOvertimeForm dutyOvertime = (DutyOvertimeForm) target;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "请选择日期");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeStart", "error.timeStart", "请选择开始时间");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeEnd", "error.timeEnd", "请选择结束日期");
