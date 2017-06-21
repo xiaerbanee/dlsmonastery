@@ -5,6 +5,7 @@ import org.springside.modules.utils.text.TextValidator;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -54,5 +55,26 @@ public class LocalTimeUtils {
             localTime =LocalTime.parse(localTimeStr,DateTimeFormatter.ofPattern(formatter));
         }
         return localTime;
+    }
+
+    public static boolean isCross(LocalTime from1, LocalTime to1, LocalTime from2, LocalTime to2) {
+        if (from1 == null || to1 == null || from2 == null || to2 == null) {
+            return false;
+        }
+        LocalTime minTime = from1;
+        LocalTime maxTime= to1;
+        if (from2.isBefore(from1)) {
+            minTime = from2;
+        }
+        if (to2.isAfter(to1)) {
+            maxTime = to2;
+        }
+        Long maxDiff = ChronoUnit.MILLIS.between(minTime,maxTime);
+        Long diff =ChronoUnit.MILLIS.between(from1,to1) + ChronoUnit.MILLIS.between(from2,to2);
+        if (maxDiff >= diff) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
