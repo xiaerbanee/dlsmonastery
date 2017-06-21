@@ -50,7 +50,7 @@ public class DepotManager {
                 return true;
             }
         } else {
-            if(officeIds.contains(depot.getOfficeId())) {
+            if(CollectionUtil.isEmpty(officeIds)||officeIds.contains(depot.getOfficeId())) {
                 return true;
             }
         }

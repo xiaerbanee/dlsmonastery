@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
@@ -15,12 +16,12 @@ import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/15.
@@ -157,5 +158,16 @@ public class DepotController {
             return null;
         }
         return depotService.getDefaultDepartMent(depotId);
+    }
+
+    @RequestMapping(value = "getRecentMonthSaleAmount")
+    public Map<String, Long>  getRecentMonthSaleAmount(String depotId, int monthQty) {
+        if(monthQty <= 0){
+            throw new ServiceException("monthQty 必须大于0");
+        }
+        if(StringUtils.isBlank(depotId)){
+            throw new ServiceException("depotId不能为空");
+        }
+        return depotService.getRecentMonthSaleAmount(depotId, monthQty);
     }
 }
