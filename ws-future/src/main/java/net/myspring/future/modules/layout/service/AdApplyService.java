@@ -241,7 +241,6 @@ public class AdApplyService {
             salOutStockDto.setExtendId(adGoodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
             salOutStockDto.setDate(adGoodsOrder.getBillDate());
-            salOutStockDto.setDepartmentNumber("");//与部门number K3cloudDao.findDepartByCustomer(company.getOutDbname(), getOutShop().getRealOutId()))
             salOutStockDto.setCustomerNumber("");//与客户number adGoodsOrder.getOutShop().getRealCode()
             salOutStockDto.setNote("");// getFormatId()+Const.CHAR_COMMA+getShopName()+Const.CHAR_COMMA+getContator()+Const.CHAR_COMMA+getMobilePhone()+Const.CHAR_COMMA+getAddress()
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
