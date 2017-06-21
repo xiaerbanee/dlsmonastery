@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,8 +34,8 @@ public class CustomerReceiveController {
     }
 
     @RequestMapping(value = "detail")
-    public List<CustomerReceiveDetailDto> detail(String dateRange,String customerId) {
-        return customerReceiveService.findCustomerReceiveDetailDtoList(dateRange,customerId);
+    public List<CustomerReceiveDetailDto> detail(LocalDate dateStart,LocalDate dateEnd,String customerId) {
+        return customerReceiveService.findCustomerReceiveDetailDtoList(dateStart,dateEnd,customerId);
     }
 
     @RequestMapping(value = "getQuery")
