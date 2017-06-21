@@ -13,12 +13,12 @@ public class KingdeeSynDto extends DataDto<KingdeeSyn> {
     //业务系统单据类型
     private String extendType;
     private Boolean success;
-    private KingdeeBook kingdeeBook;
     private String formId;
     private String content;
     private String billNo;
     private String result;
     private Boolean autoAudit = true;
+    private KingdeeBook kingdeeBook;
 
     public KingdeeSynDto(String extendId,String extendType,String formId, String content,KingdeeBook kingdeeBook) {
         this.extendId = extendId;
@@ -60,14 +60,6 @@ public class KingdeeSynDto extends DataDto<KingdeeSyn> {
         this.success = success;
     }
 
-    public KingdeeBook getKingdeeBook() {
-        return kingdeeBook;
-    }
-
-    public void setKingdeeBook(KingdeeBook kingdeeBook) {
-        this.kingdeeBook = kingdeeBook;
-    }
-
     public String getFormId() {
         return formId;
     }
@@ -106,5 +98,19 @@ public class KingdeeSynDto extends DataDto<KingdeeSyn> {
 
     public void setAutoAudit(Boolean autoAudit) {
         this.autoAudit = autoAudit;
+    }
+    public KingdeeBook getKingdeeBook() {
+        return kingdeeBook;
+    }
+
+    public void setKingdeeBook(KingdeeBook kingdeeBook) {
+        this.kingdeeBook = kingdeeBook;
+    }
+
+    public String getKingdeeBookId() {
+        if (kingdeeBook != null){
+            return kingdeeBook.getId();
+        }
+        return null;
     }
 }

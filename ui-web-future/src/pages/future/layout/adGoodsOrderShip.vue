@@ -5,20 +5,23 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form">
         <el-row >
           <el-col :span="12">
-            <el-form-item :label="$t('adGoodsOrderShip.shipCode')" prop="id">
+            <el-form-item :label="$t('adGoodsOrderShip.shipCode')">
               {{adGoodsOrder.id}}
           </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.remarks')" prop="remarks">
+            <el-form-item :label="$t('adGoodsOrderShip.remarks')">
               {{adGoodsOrder.remarks}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.smallQty')" prop="smallQty" >
-              <el-input v-model="inputForm.smallQty" @input="materialChange()"></el-input>
+              <el-input v-model.number="inputForm.smallQty" @input="refreshExpressOrderMoney()"></el-input>
+              <span> {{$t('adGoodsOrderShip.smallPrice')}} {{ysyfMap.smallPrice }}</span>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.mediumQty')" prop="mediumQty" >
-              <el-input v-model="inputForm.mediumQty" @input="materialChange()"></el-input>
+              <el-input v-model.number="inputForm.mediumQty" @input="refreshExpressOrderMoney()"></el-input>
+              <span> {{$t('adGoodsOrderShip.mediumPrice')}} {{ysyfMap.mediumPrice }}</span>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.largeQty')" prop="largeQty">
-              <el-input v-model="inputForm.largeQty" @input="materialChange()"></el-input>
+              <el-input v-model.number="inputForm.largeQty" @input="refreshExpressOrderMoney()"></el-input>
+              <span> {{$t('adGoodsOrderShip.largePrice')}} {{ysyfMap.largePrice }}</span>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.expressCodes')" prop="expressOrderExpressCodes">
               <el-input type="textarea" v-model="inputForm.expressOrderExpressCodes" :placeholder="$t('adGoodsOrderShip.enter')"></el-input>
@@ -31,38 +34,38 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('adGoodsOrderShip.outShopName')" prop="outShopId">
+            <el-form-item :label="$t('adGoodsOrderShip.outShopName')">
               {{adGoodsOrder.outShopName}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.shopName')" prop="shopId">
+            <el-form-item :label="$t('adGoodsOrderShip.shopName')">
               {{adGoodsOrder.shopName}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.saleContact')" >
               {{employee.officeName}}_{{employee.positionName}}_{{employee.name}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.saleMobile')" prop="mobilePhone">
+            <el-form-item :label="$t('adGoodsOrderShip.saleMobile')">
               {{employee.mobilePhone}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.billRemarks')" prop="billRemarks">
+            <el-form-item :label="$t('adGoodsOrderShip.billRemarks')">
               {{adGoodsOrder.billRemarks}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.contact')" prop="expressOrderContator">
+            <el-form-item :label="$t('adGoodsOrderShip.contact')">
               {{expressOrder.contator}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.address')" prop="address">
+            <el-form-item :label="$t('adGoodsOrderShip.address')">
               {{expressOrder.address}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.mobilePhone')" prop="mobilePhone">
+            <el-form-item :label="$t('adGoodsOrderShip.mobilePhone')">
               {{expressOrder.mobilePhone}}
             </el-form-item>
-            <el-form-item :label="$t('adGoodsOrderShip.shouldPay')" prop="shouldPay">
+            <el-form-item :label="$t('adGoodsOrderShip.shouldPay')">
               {{inputForm.expressOrderShouldPay}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.shouldGet')" prop="expressOrderShouldGet">
-              <el-input v-model="inputForm.expressOrderShouldGet"></el-input>
+              <el-input v-model.number="inputForm.expressOrderShouldGet"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderShip.realPay')" prop="expressOrderRealPay">
-              <el-input v-model="inputForm.expressOrderRealPay"></el-input>
+              <el-input v-model.number="inputForm.expressOrderRealPay"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -76,7 +79,7 @@
         <el-table-column prop="waitShipQty" :label="$t('adGoodsOrderShip.waitShipQty')" ></el-table-column>
         <el-table-column prop="shipQty" :label="$t('adGoodsOrderShip.shipQty')" >
           <template scope="scope">
-            <el-input v-model="scope.row.shipQty"  @input="materialChange()"> </el-input>
+            <el-input v-model.number="scope.row.shipQty"  @input="refreshExpressOrderMoney()"> </el-input>
           </template>
         </el-table-column>
       </el-table>
@@ -98,6 +101,9 @@
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
         adGoodsOrder:{},
+        ysyfMap:{
+            priceMap:{},
+        },
         employee:{},
         expressOrder:{},
         productName:'',
@@ -105,7 +111,15 @@
         inputForm:{
             extra:{},
         },
-        rules: {},
+        rules: {
+          smallQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          mediumQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          largeQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          expressOrderExpressCodes: [{required: true, message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
+          expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
+          expressOrderShouldGet: [{required: true, type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
+          expressOrderRealPay: [{required: true, type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
+        },
         pageLoading:false,
       }
     },
@@ -128,27 +142,28 @@
             this.submitDisabled = false;
           }
         })
-      },materialChange(){
-      var shouldGet= this.shipForm.shouldGet
-      var shouldPay= this.shipForm.shouldPay
-      var ysyfAmount=this.shipFormProperty.ysyfAmount;
-      var yfyfAmount=this.shipFormProperty.yfyfAmount;
-      var smallPrice=this.shipFormProperty.smallPrice;
-      var mediumPrice=this.shipFormProperty.mediumPrice;
-      var bigPrice=this.shipFormProperty.bigPrice;
-      var shipPrice=this.shipForm.smallQty*smallPrice+ this.shipForm.mediumQty*mediumPrice+ this.shipForm.largeQty*bigPrice;
-			var pay=0; //实付运费(实际面单金额)
-       let list=this.inputForm.adGoodsOrderDetailList;
-        for(let item in list){
-              console.log(parseInt(list[item].shipQty==null?0:list[item].shipQty)+parseInt(list[item].shippedQty==NaN?0:list[item].shippedQty))
-             console.log()
-          if(list[item].shipQty|| list[item].shippedQty){
-            pay=parseInt(pay)+(parseInt(list[item].shipQty==null?0:list[item].shipQty)+parseInt(list[item].shippedQty==null?0:list[item].shippedQty))*parseInt(list[item].product.price==null?0:list[item].price);
+      },refreshExpressOrderMoney(){
+          console.log("refreshExpressOrderMoney")
+        let smallQty = (this.inputForm.smallQty ? this.inputForm.smallQty : 0);
+        let mediumQty = (this.inputForm.mediumQty ? this.inputForm.mediumQty : 0);
+        let largeQty = (this.inputForm.largeQty ? this.inputForm.largeQty : 0);
+
+        let shipPrice= smallQty * this.ysyfMap.smallPrice + mediumQty * this.ysyfMap.mediumPrice + largeQty * this.ysyfMap.largePrice;
+
+        this.inputForm.expressOrderShouldGet = this.ysyfMap.ysAmount + shipPrice;
+        this.inputForm.expressOrderShouldPay = this.ysyfMap.yfAmount + shipPrice;
+
+			  let realPay = shipPrice; //实付运费(实际面单金额)
+        for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+          if(adGoodsOrderDetail.shipQty|| adGoodsOrderDetail.shippedQty){
+            let shipQty = (adGoodsOrderDetail.shipQty ? adGoodsOrderDetail.shipQty : 0);
+            let shippedQty = (adGoodsOrderDetail.shippedQty ? adGoodsOrderDetail.shippedQty : 0);
+            let price = (this.ysyfMap.priceMap[adGoodsOrderDetail.productId] ? this.ysyfMap.priceMap[adGoodsOrderDetail.productId] : 0);
+            realPay += (shipQty+shippedQty) * price;
           }
         }
-			this.inputForm.expressOrderRealPay=parseInt(pay)+parseInt(shipPrice);
-			this.inputForm.expressOrderShouldGet=parseInt(shouldGet)+parseInt(shipPrice);
-			this.inputForm.expressOrderShouldPay=parseInt(shouldPay)+parseInt(shipPrice);
+			  this.inputForm.expressOrderRealPay=realPay;
+
       }, searchDetail(){
         let val = this.productName;
         if(!val){
@@ -164,16 +179,27 @@
         this.filterAdGoodsOrderDetailList = tempList;
 
       },initPage(){
+
+        axios.get('/api/ws/future/layout/adGoodsOrder/getYsyfMap', {params: {adGoodsOrderId: this.$route.query.id}}).then((response) => {
+          this.ysyfMap = response.data;
+
+          this.inputForm.expressOrderShouldGet = this.ysyfMap.initShouldGet;
+          this.inputForm.expressOrderRealPay = this.ysyfMap.initRealPay;
+          this.inputForm.expressOrderShouldPay = this.ysyfMap.initShouldPay;
+        });
+
+
         axios.get('/api/ws/future/layout/adGoodsOrder/getShipForm').then((response)=>{
           this.inputForm=response.data;
 
           axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListByAdGoodsOrderId', {params: {adGoodsOrderId: this.$route.query.id}}).then((response) => {
-            this.inputForm.adGoodsOrderDetailList = response.data;
-            if( this.inputForm.adGoodsOrderDetailList){
-                for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
-                    adGoodsOrderDetail.shipQty = adGoodsOrderDetail.waitShipQty;
+              let tmpList = response.data;
+            if( tmpList){
+                for(let each of tmpList){
+                  each.shipQty = each.waitShipQty;
                 }
             }
+            this.inputForm.adGoodsOrderDetailList = tmpList;
             this.searchDetail();
           });
 
@@ -188,9 +214,7 @@
 
             axios.get('/api/ws/future/crm/expressOrder/findDto',{params: {id:this.adGoodsOrder.expressOrderId}}).then((response)=>{
               this.expressOrder = response.data;
-              this.inputForm.expressOrderShouldGet = this.expressOrder.shouldGet;
-              this.inputForm.expressOrderRealPay = this.expressOrder.realPay;
-              this.inputForm.expressOrderShouldPay = this.expressOrder.shouldPay;
+
             });
             axios.get('/api/basic/hr/employee/findOne',{params: {id:this.adGoodsOrder.employeeId}}).then((response)=>{
               this.employee = response.data;

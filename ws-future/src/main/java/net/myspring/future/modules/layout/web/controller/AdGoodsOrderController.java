@@ -2,12 +2,10 @@ package net.myspring.future.modules.layout.web.controller;
 
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.RequestUtils;
@@ -18,9 +16,13 @@ import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderService;
-import net.myspring.future.modules.layout.web.form.*;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderAuditForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderBillForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
+import net.myspring.future.modules.layout.web.form.AdGoodsOrderShipForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -144,13 +145,13 @@ public class  AdGoodsOrderController {
 
     }
 
-    @RequestMapping(value = "getShipFormProperty", method = RequestMethod.GET)
-    public String getShipFormProperty(AdGoodsOrder adGoodsOrder) {
-        Map<String, Object> map = Maps.newHashMap();
-        BigDecimal smallPrice = BigDecimal.ZERO;
-        BigDecimal mediumPrice = BigDecimal.ZERO;
-        BigDecimal bigPrice = BigDecimal.ZERO;
-        return null;
+    @RequestMapping(value = "getYsyfMap")
+    public Map<String, Object> getYsyfMap(String adGoodsOrderId) {
+        if(StringUtils.isBlank(adGoodsOrderId)){
+            return null;
+        }
+        return adGoodsOrderService.getYsyfMap(adGoodsOrderId);
+
     }
 
     @RequestMapping(value = "ship")

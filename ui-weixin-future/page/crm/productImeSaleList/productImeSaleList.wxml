@@ -18,7 +18,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker mode="date" name="createdDateStart" value="{{formData.createdDateStart}}" data-name="createdDateStart" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.createdDateStart}}</view>
+            <view class="weui-input">{{formData.createdDateStart?formData.createdDateStart:""}}</view>
           </picker>
         </view>
       </view>
@@ -28,7 +28,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker mode="date" name="createdDateEnd" value="{{formData.createdDateEnd}}" data-name="createdDateEnd" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.createdDateEnd}}</view>
+            <view class="weui-input">{{formData.createdDateEnd?formData.createdDateEnd:""}}</view>
           </picker>
         </view>
       </view>

@@ -23,17 +23,6 @@ public class AdGoodsOrderDetail extends IdEntity<AdGoodsOrderDetail> {
 
     private String adGoodsOrderId;
 
-    @Transient
-    private Integer shipQty;
-
-    public Integer getShipQty() {
-        return shipQty;
-    }
-
-    public void setShipQty(Integer shipQty) {
-        this.shipQty = shipQty;
-    }
-
     public BigDecimal getPrice() {
         return price;
     }

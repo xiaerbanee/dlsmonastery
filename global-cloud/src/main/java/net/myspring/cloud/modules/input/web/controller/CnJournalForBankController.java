@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.CnJournalForBankService;
 import net.myspring.cloud.modules.input.web.form.CnJournalForBankForm;
@@ -49,22 +50,24 @@ public class CnJournalForBankController {
             restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
         }else {
             System.err.println(kingdeeSynDto.getResult());
-            restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(),null,true);
+            restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(),null,false);
         }
         return restResponse;
     }
 
     @RequestMapping(value = "saveForEmployeePhoneDeposit", method= RequestMethod.POST)
-    public RestResponse saveForEmployeePhoneDeposit(@RequestBody List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList) {
-        RestResponse restResponse;
+    public RestResponse saveForEmployeePhoneDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
+        RestResponse restResponse = new RestResponse("銀行存取款日记账失败：" ,null, false);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalEntityForBankDtoList,kingdeeBook,accountKingdeeBook);
-        if (kingdeeSynDto.getSuccess()){
-            restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
-        }else {
-            System.err.println(kingdeeSynDto.getResult());
-            restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(),null,true);
+        List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+            if (kingdeeSynDto.getSuccess()) {
+                restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+            } else {
+                System.err.println(kingdeeSynDto.getResult());
+                restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(), null, false);
+            }
         }
         return restResponse;
     }

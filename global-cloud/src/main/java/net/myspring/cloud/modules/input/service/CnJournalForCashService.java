@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
@@ -95,6 +96,7 @@ public class CnJournalForCashService {
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
         CnJournalForCashDto cnJournalForCashDto = new CnJournalForCashDto();
+        cnJournalForCashDto.setExtendType(BillTypeEnum.现金日记账_K3.name());
         cnJournalForCashDto.setCreator(accountKingdeeBook.getUsername());
         cnJournalForCashDto.setDate(billDate);
         cnJournalForCashDto.setKingdeeBook(kingdeeBook);
