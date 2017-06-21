@@ -56,7 +56,7 @@ public class GoodsOrderController {
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        goodsOrderQuery.getExtra().put("StatusList",GoodsOrderStatusEnum.getList());
+        goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
         return goodsOrderQuery;
     }
 

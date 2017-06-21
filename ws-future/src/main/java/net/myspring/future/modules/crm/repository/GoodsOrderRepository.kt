@@ -56,10 +56,10 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and business_id like concat('%',:businessId,'%')")
         }
         if (goodsOrderQuery.billDateStart != null) {
-            sb.append(" and bill_data > :billDateStart")
+            sb.append(" and bill_date > :billDateStart")
         }
         if (goodsOrderQuery.billDateEnd != null) {
-            sb.append(" and bill_data < :billDateEnd ")
+            sb.append(" and bill_date < :billDateEnd ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.shipType)) {
             sb.append(" and ship_type = :shipType ")
@@ -74,7 +74,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and ship_date < :shipDateEnd")
         }
         if (StringUtils.isNoneBlank(goodsOrderQuery.shopName)) {
-            sb.append(" and shop_name like concat('%', :shopName,'%')");
+            sb.append(" and shop_id in(select id from crm_depot where name like concat('%',:shopName,'%') )");
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.storeId)) {
             sb.append(" and store_id = :storeId ")
@@ -86,13 +86,13 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and out_code like concat('%',:outCode,'%')")
         }
         if (goodsOrderQuery.createdDateStart != null) {
-            sb.append(" and create_date > :createdDateStart")
+            sb.append(" and created_date > :createdDateStart")
         }
         if (goodsOrderQuery.createdDateEnd != null) {
-            sb.append(" and create_date <:createDateEnd")
+            sb.append(" and created_date <:createdDateEnd")
         }
-        if (StringUtils.isNotBlank(goodsOrderQuery.expressCodes)) {
-            sb.append(" and express_code in (:expresscodeList)")
+        if (StringUtils.isNotBlank(goodsOrderQuery.expressOrderIds)) {
+            sb.append(" and express_order_id in (:expressOrderIdList)")
         }
         if (StringUtils.isNoneBlank(goodsOrderQuery.businessIds)) {
             sb.append(" and business_id in (:businessIdList)")
@@ -100,8 +100,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNoneBlank(goodsOrderQuery.remarks)) {
             sb.append(" and remarks like concat('%',:remarks,'%')")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
-            sb.append(" and express_code like concat('%',:expressCode,'%')")
+        if (StringUtils.isNoneBlank(goodsOrderQuery.expressOrderId)) {
+            sb.append(" and express_order_id like concat('%',:expressOrderId,'%')")
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
