@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
+import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
@@ -67,7 +68,8 @@ public class SalOutStockService {
                 if(salOutStockDto.getBillTypeK3().contains("现销")){
                     return null;
                 }else{
-                    return arReceivableRepository.findTopOneBySourceBillNo(getBillNo()).getFBillNo();
+                    ArReceivable receivable =arReceivableRepository.findTopOneBySourceBillNo(getBillNo());
+                    return  receivable.getFBillNo();
                 }
 
             }
