@@ -85,7 +85,7 @@ public class EmployeePhoneService {
 
     public String export(Workbook workbook,EmployeePhoneQuery employeePhoneQuery){
         employeePhoneQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        employeePhoneQuery.setDepotIdList(depotManager.filterDepotIds());
+        employeePhoneQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDto> employeePhoneDtoList = employeePhoneRepository.findFilter(employeePhoneQuery);
         cacheUtils.initCacheInput(employeePhoneDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();

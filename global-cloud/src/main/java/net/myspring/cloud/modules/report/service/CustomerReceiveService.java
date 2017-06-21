@@ -72,7 +72,8 @@ public class CustomerReceiveService {
         if(customerReceiveQuery.getQueryDetail()) {
             CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
             customerReceiveDetailQuery.setCustomerIdList(customerIdList);
-//            customerReceiveDetailQuery.setDateRange(customerReceiveQuery.getDateRange());
+            customerReceiveDetailQuery.setDateStart(customerReceiveQuery.getDateStart());
+            customerReceiveDetailQuery.setDateEnd(customerReceiveQuery.getDateEnd());
             Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
             for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
                 customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
@@ -81,14 +82,26 @@ public class CustomerReceiveService {
         return customerReceiveDtoList;
     }
 
-    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(String dateRange,String customerId) {
+    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(LocalDate dateStart,LocalDate dateEnd,String customerId) {
         CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
-        customerReceiveDetailQuery.setDateRange(dateRange);
+        customerReceiveDetailQuery.setDateStart(dateStart);
+        customerReceiveDetailQuery.setDateEnd(dateEnd);
         customerReceiveDetailQuery.getCustomerIdList().add(customerId);
         Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
         return map.get(customerId);
     }
 
+    public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+        List<CustomerReceiveDetailDto> detailDtoList = Lists.newArrayList();
+        List<String> customerIdList = customerReceiveDetailQuery.getCustomerIdList();
+        Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+        for (String customerId : customerIdList){
+            detailDtoList.addAll(map.get(customerId));
+        }
+        return detailDtoList;
+    }
+
+    //一个customerId对应List<CustomerReceiveDetailDto>
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart = customerReceiveDetailQuery.getDateStart();
         //期初应收

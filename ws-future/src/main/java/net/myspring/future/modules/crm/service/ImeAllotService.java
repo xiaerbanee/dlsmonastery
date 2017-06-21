@@ -113,7 +113,7 @@ public class ImeAllotService {
                     sb.append("串码：").append(ime).append("已上报；");
                 }else{
                     if(checkAccess) {
-                        if(!depotManager.isAccess(depot, true)) {
+                        if(!depotManager.isAccess(depot, true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                             sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的调拨权限，将自动生成调拨申请单；");
                         }
                     }
@@ -136,7 +136,7 @@ public class ImeAllotService {
             if(productIme.getProductImeSaleId()==null && productIme.getDepotId()!=null&&!productIme.getDepotId().equals(imeAllotForm.getToDepotId())) {
                 Depot fromDepot = depotRepository.findOne(productIme.getDepotId());
 
-                if(depotManager.isAccess(fromDepot, true)) {
+                if(depotManager.isAccess(fromDepot, true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
                     ImeAllot imeAllot = new ImeAllot();
                     imeAllot.setProductImeId(productIme.getId());
                     imeAllot.setFromDepotId(fromDepot.getId());
@@ -213,7 +213,16 @@ public class ImeAllotService {
 
         for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
 
-            Depot toDepot=depotRepository.findByName(imeAllotSimpleForm.getToDepotName());
+            Depot toDepot=depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), imeAllotSimpleForm.getToDepotName());
+            if(toDepot == null){
+                throw new ServiceException("调拨后门店在本公司无效或者不存在");
+            }
+
+            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), imeAllotSimpleForm.getIme());
+            if(productIme == null){
+                throw new ServiceException("串码："+imeAllotSimpleForm.getIme()+" 在本公司中无效或者不存在");
+            }
+
             ImeAllotForm imeAllotForm = new ImeAllotForm();
             imeAllotForm.setImeStr(imeAllotSimpleForm.getIme());
             imeAllotForm.setToDepotId(toDepot.getId());

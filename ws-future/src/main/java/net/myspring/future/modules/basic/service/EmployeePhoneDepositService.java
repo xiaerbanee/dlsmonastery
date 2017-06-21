@@ -245,7 +245,7 @@ public class EmployeePhoneDepositService {
 
     public String export(Workbook workbook, EmployeePhoneDepositQuery employeePhoneDepositQuery){
         employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
-        employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds());
+        employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDepositDto> employeePhoneDepositDtoList= employeePhoneDepositRepository.findFilter(employeePhoneDepositQuery);
         cacheUtils.initCacheInput(employeePhoneDepositDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList= Lists.newArrayList();

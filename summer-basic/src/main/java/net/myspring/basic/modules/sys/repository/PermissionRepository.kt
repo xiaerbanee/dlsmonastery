@@ -111,16 +111,10 @@ interface  PermissionRepository: BaseRepository<Permission, String>,PermissionRe
 
 interface PermissionRepositoryCustom{
 
-
-    fun logicDeleteByIds(removePermissionIds:MutableList<String>)
-
     fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>?
 }
 
 class PermissionRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):PermissionRepositoryCustom{
-    override fun logicDeleteByIds(removePermissionIds: MutableList<String>) {
-
-    }
 
     override fun findPage(pageable: Pageable, permissionQuery: PermissionQuery): Page<PermissionDto>? {
         var sb = StringBuilder("select t1.* from sys_permission t1 where t1.enabled=1 ");
