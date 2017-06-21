@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled',"hasIme"],
     data() {
       return {
-        innerId:this.value,
+        innerId:null,
         itemList : [],
         remoteLoading:false,
       };
