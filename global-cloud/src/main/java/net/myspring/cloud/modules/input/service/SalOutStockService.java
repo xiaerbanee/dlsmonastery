@@ -3,10 +3,10 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.KingdeeExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
@@ -143,21 +143,22 @@ public class SalOutStockService {
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
+            }else{
+                kingdeeSynExtendDtoList.add(new KingdeeSynExtendDto(false,"未登入金蝶系统") {
+                    @Override
+                    public String getNextBillNo() {return null;}}
+                    );
             }
         }
         return kingdeeSynExtendDtoList;
     }
 
-    //柜台订货
-    public List<KingdeeSynExtendDto> saveForAdApply (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynExtendDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
-                    if (StringUtils.isBlank(salOutStockDto.getExtendType())){
-                        salOutStockDto.setExtendType(KingdeeExtendTypeEnum.柜台订货.name());
-                    }
                     salOutStockDto.setCreatorK3(accountKingdeeBook.getUsername());
                     salOutStockDto.setBillTypeK3(SalOutStockBillTypeEnum.标准销售出库单.name());
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);

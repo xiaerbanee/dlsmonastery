@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.cloud.common.enums.KingdeeExtendTypeEnum;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.common.constant.CharConstant;
@@ -239,7 +239,7 @@ public class AdApplyService {
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(adGoodsOrder.getId());
-            salOutStockDto.setExtendType(KingdeeExtendTypeEnum.柜台订货.name());
+            salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
             salOutStockDto.setDate(adGoodsOrder.getBillDate());
             salOutStockDto.setDepartmentNumber("");//与部门number K3cloudDao.findDepartByCustomer(company.getOutDbname(), getOutShop().getRealOutId()))
             salOutStockDto.setCustomerNumber("");//与客户number adGoodsOrder.getOutShop().getRealCode()

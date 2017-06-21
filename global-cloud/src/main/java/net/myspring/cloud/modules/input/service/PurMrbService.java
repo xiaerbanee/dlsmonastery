@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
@@ -64,6 +65,7 @@ public class PurMrbService {
         }
         Map<String,String> materialNameMap = bdMaterialRepository.findByNameList(materialNameList).stream().collect(Collectors.toMap(BdMaterial::getFName,BdMaterial::getFNumber));
         PurMrbDto purMrbDto = new PurMrbDto();
+        purMrbDto.setExtendType(BillTypeEnum.采购退料_K3.name());
         purMrbDto.setCreator(accountKingdeeBook.getUsername());
         purMrbDto.setDate(billDate);
         purMrbDto.setDepartmentNumber(departmentNumber);

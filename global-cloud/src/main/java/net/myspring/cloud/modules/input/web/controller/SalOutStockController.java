@@ -50,11 +50,11 @@ public class SalOutStockController {
         return null;
     }
 
-    @RequestMapping(value = "saveForAdApply")
-    public RestResponse saveForAdApply(List<SalOutStockDto> salOutStockDtoList) {
+    @RequestMapping(value = "saveForXSCKD")
+    public RestResponse saveForXSCKD(List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForAdApply(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
         for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
             if (kingdeeSynExtendDto.getSuccess()){
                 return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
