@@ -1,5 +1,6 @@
 package net.myspring.common.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.util.collection.CollectionUtil;
@@ -17,6 +18,9 @@ public class RestResponse {
     private Boolean success;
     private String message;
     private String code;
+    private String type;
+    @JsonIgnore
+    private BindingResult bindingResult;
     private List<RestErrorField> errors = Lists.newArrayList();
 
     private Map<String,Object> extra = Maps.newHashMap();
