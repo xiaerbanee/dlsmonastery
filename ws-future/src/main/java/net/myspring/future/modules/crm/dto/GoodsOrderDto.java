@@ -47,7 +47,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String expressOrderId;
     private String expressCompanyId;
     private Boolean syn;
-
+    private String pullStatus;
     private String address;
     private String contator;
     private String mobilePhone;
@@ -303,5 +303,13 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+    }
+
+    public String getPullStatus() {
+        return pullStatus;
+    }
+
+    public void setPullStatus(String pullStatus) {
+        this.pullStatus = pullStatus;
     }
 }

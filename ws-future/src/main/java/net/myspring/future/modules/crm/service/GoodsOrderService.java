@@ -92,8 +92,8 @@ public class GoodsOrderService {
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        if (goodsOrderQuery.getExpressCodes() != null) {
-            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+        if (goodsOrderQuery.getExpressOrderIds() != null) {
+            goodsOrderQuery.setExpressOrderIdList(Arrays.asList(goodsOrderQuery.getExpressOrderIds().split("\n|,")));
         }
         if (goodsOrderQuery.getBusinessIds() != null) {
             goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
