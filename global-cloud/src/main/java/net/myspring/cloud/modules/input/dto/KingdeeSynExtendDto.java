@@ -15,6 +15,10 @@ public abstract class KingdeeSynExtendDto extends KingdeeSynDto {
         this.nextFormId = nextFormId;
     }
 
+    public KingdeeSynExtendDto(Boolean success, String result) {
+        super(success,result);
+    }
+
     public abstract String getNextBillNo();
 
     public String getNextFormId() {

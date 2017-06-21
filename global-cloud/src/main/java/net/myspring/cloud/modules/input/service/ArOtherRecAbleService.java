@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
@@ -121,6 +122,7 @@ public class ArOtherRecAbleService {
             String billKey = customerName + CharConstant.COMMA+ departmentName +CharConstant.COMMA+accountName+CharConstant.COMMA+amount+CharConstant.COMMA+remarks;
             if (!arOtherRecAbleDtoMap.containsKey(billKey)) {
                 ArOtherRecAbleDto arOtherRecAbleDto = new ArOtherRecAbleDto();
+                arOtherRecAbleDto.setExtendType(BillTypeEnum.其他应收单_K3.name());
                 arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
                 arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
                 arOtherRecAbleDto.setDate(billDate);

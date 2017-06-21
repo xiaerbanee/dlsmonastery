@@ -1,6 +1,7 @@
 package net.myspring.future.modules.basic.client;
 
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
@@ -76,8 +77,8 @@ public interface CloudClient {
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
     //银行存款日记账
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEmployeePhoneDeposit")
-    RestResponse synForJournalForBank(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList);
+    RestResponse synForJournalForBank(List<CnJournalForBankDto> cnJournalForBankDtoList);
     //标准销售出库单
-    @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForAdApply")
+    @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
     RestResponse synForSalOutStock(List<SalOutStockDto> salOutStockDtoList);
 }
