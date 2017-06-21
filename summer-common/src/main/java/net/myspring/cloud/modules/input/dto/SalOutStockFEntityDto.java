@@ -6,6 +6,8 @@ import java.math.BigDecimal;
  * Created by liuj on 2017/5/11.
  */
 public class SalOutStockFEntityDto {
+    //仓库
+    private String storeNumber;
     // 价格
     private BigDecimal price;
     // 物料名称
@@ -14,6 +16,14 @@ public class SalOutStockFEntityDto {
     private String entryNote;
     //数量
     private Integer qty;
+
+    public String getStoreNumber() {
+        return storeNumber;
+    }
+
+    public void setStoreNumber(String storeNumber) {
+        this.storeNumber = storeNumber;
+    }
 
     public BigDecimal getPrice() {
         return price;

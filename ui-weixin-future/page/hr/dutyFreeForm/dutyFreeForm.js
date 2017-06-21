@@ -17,18 +17,19 @@ Page({
       that.initPage()
     })
   },
-  
+
   initPage: function () {
     var that = this;
     wx.request({
       url: $util.getUrl("basic/hr/dutyFree/findOne"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
-        that.setData({ 'formProperty.dateList': res.data.extra.dateList })
+        that.setData({ formProperty: res.data.extra })
       }
     })
   },
@@ -51,14 +52,15 @@ Page({
     wx.request({
       url: $util.getUrl("basic/hr/dutyFree/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ 'response.data': res.data, submitDisabled: false });
+          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
         }
       }
     })
@@ -67,9 +69,9 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if (responseData && responseData.errors && responseData.errors[key] != null) {
-      that.setData({ "response.error": responseData.errors[key].message });
-      delete responseData.errors[key];
+    if (responseData && responseData[key] != null) {
+      that.setData({ "response.error": responseData[key].message });
+      delete responseData[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })

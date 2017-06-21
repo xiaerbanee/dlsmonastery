@@ -83,15 +83,6 @@ public class DepotShopService {
         return depotShopDto;
     }
 
-    public DepotForm findDepotForm(DepotForm depotForm) {
-        if (!depotForm.isCreate()) {
-            Depot depot = depotRepository.findOne(depotForm.getId());
-            depotForm = BeanUtil.map(depot, DepotForm.class);
-            cacheUtils.initCacheInput(depotForm);
-        }
-        return depotForm;
-    }
-
     public DepotDto findShop(String id){
         DepotDto depotDto;
         if (StringUtils.isBlank(id)){
@@ -111,20 +102,12 @@ public class DepotShopService {
             depotShopForm.setTownName(townClient.findOne(depotShopForm.getTownId()).getTownName());
         }
         if (depotShopForm.isCreate()) {
-            depotShop = BeanUtil.map(depotShopForm, DepotShop.class);
-            depotShopRepository.save(depotShop);
-            Depot depot = new Depot();
-            depot.setName(depotShopForm.getDepotName());
-            depot.setNamePinyin(StringUtils.getFirstSpell(depotShopForm.getDepotName()));
-            depot.setDepotShopId(depotShop.getId());
-            depotRepository.save(depot);
-            depotShop.setDepotId(depot.getId());
-            depotShopRepository.save(depotShop);
-        } else {
-            depotShop = depotShopRepository.findOne(depotShopForm.getId());
-            ReflectionUtil.copyProperties(depotShopForm, depotShop);
-            depotShopRepository.save(depotShop);
+            Depot depot = depotRepository.findOne(depotShopForm.getDepotId());
+            depotShopForm.setId(depot.getDepotShopId());
         }
+        depotShop = depotShopRepository.findOne(depotShopForm.getId());
+        ReflectionUtil.copyProperties(depotShopForm, depotShop);
+        depotShopRepository.save(depotShop);
         return depotShop;
     }
 
@@ -133,7 +116,7 @@ public class DepotShopService {
         depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
         if (depotForm.isCreate()) {
             depot = BeanUtil.map(depotForm, Depot.class);
-            depotRepository.save(depot);
+            depotManager.save(depot);
             DepotShop depotShop = new DepotShop();
             depotShop.setDepotId(depot.getId());
             depotShopRepository.save(depotShop);
@@ -142,7 +125,7 @@ public class DepotShopService {
         } else {
             depot = depotRepository.findOne(depotForm.getId());
             ReflectionUtil.copyProperties(depotForm, depot);
-            depotRepository.save(depot);
+            depotManager.save(depot);
         }
         return depot;
     }

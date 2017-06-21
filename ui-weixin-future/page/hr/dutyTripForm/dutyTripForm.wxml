@@ -12,7 +12,7 @@
             <view class="weui-input">{{formData.dateStart}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateStart}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dateStart}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -27,7 +27,7 @@
             </picker>
           </view>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dateEnd}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dateEnd}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>

@@ -18,7 +18,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')"  :label-width="formLabelWidth">
-                <el-input v-model.number="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
+                <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.billDate')" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
@@ -54,21 +54,21 @@
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.expressCodes')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.expressCodes" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
+                <el-input type="textarea" v-model="formData.expressOrderIds" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.status')" :label-width="formLabelWidth">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('goodsOrderList.selectStatus')">
-                  <el-option v-for="status in formData.extra.statusList" :key="status"  :label="status" :value="status"></el-option>
+                  <el-option v-for="status in formData.extra.statusList" :key="status" :label="status" :value="status"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.remarks')" :label-width="formLabelWidth">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.expressCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
+                <el-input v-model="formData.expressOrderId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,7 +90,7 @@
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderList.netType')" ></el-table-column>
-        <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
+        <el-table-column prop="expressOrderId" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
@@ -98,7 +98,6 @@
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
             <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
           </template>
@@ -174,9 +173,11 @@
       }else if(action =="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
       }else if(action == "delete"){
-          axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
+        util.confirmBeforeDelRecord(this).then(() => {
+          axios.get('/api/ws/future/crm/goodsOrder/delete', {params: {id: id}}).then((response) => {
           this.$message(response.data.message);
           this.pageRequest();
+      })
       })
       }else if(action=="ship"){
         window.open('/#/future/crm/goodsOrderPrint?id=' + id, '', '');

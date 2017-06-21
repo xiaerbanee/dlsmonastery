@@ -68,7 +68,11 @@ public class ExpressCompanyController {
 
     @RequestMapping(value = "search")
     public List<ExpressCompanyDto> search(String key){
-        return  expressCompanyService.findByNameLike(key);
+        List<ExpressCompanyDto> expressCompanyDtoList=Lists.newArrayList();
+        if(StringUtils.isNotBlank(key)){
+            expressCompanyDtoList=expressCompanyService.findByNameLike(key);
+        }
+        return  expressCompanyDtoList;
     }
 
     @RequestMapping(value = "searchById")

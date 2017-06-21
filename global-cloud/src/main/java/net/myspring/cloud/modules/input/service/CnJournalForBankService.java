@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.KingdeeTypeEnum;
@@ -16,6 +17,7 @@ import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 手工日记账之銀行存取款日记账
+ * 手工日记账之銀行存款日记账
  * Created by lihx on 2017/6/9.
  */
 @Service
@@ -53,19 +55,15 @@ public class CnJournalForBankService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = new KingdeeSynDto(
+    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook){
+        KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
+                    cnJournalForBankDto.getExtendId(),
+                    cnJournalForBankDto.getExtendType(),
                     KingdeeFormIdEnum.CN_JOURNAL.name(),
                     cnJournalForBankDto.getJson(),
                     kingdeeBook) {
-            };
-            kingdeeManager.save(kingdeeSynDto);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
-        }
+        };
+        kingdeeManager.save(kingdeeSynDto);
         return kingdeeSynDto;
     }
 
@@ -110,6 +108,7 @@ public class CnJournalForBankService {
             customerNameMap = bdCustomerRepository.findByNameList(customerNameForList).stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber));
         }
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+        cnJournalForBankDto.setExtendType(BillTypeEnum.銀行存款日记账_K3.name());
         cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
         cnJournalForBankDto.setDateK3(billDate);
         cnJournalForBankDto.setAccountNumberForBankK3(accountNumberForBank);
@@ -149,23 +148,59 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
-    public KingdeeSynDto save(List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-        cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
-        cnJournalForBankDto.setDateK3(LocalDate.now());
-        cnJournalForBankDto.setAccountNumberForBankK3("1002");//银行存款
-        cnJournalForBankDto.setKingdeeNameK3(kingdeeBook.getName());
-        cnJournalForBankDto.setKingdeeTypeK3(kingdeeBook.getType());
-        for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalEntityForBankDtoList) {
-            cnJournalEntityForBankDto.setAccountNumberK3("2241");//其他应付款
-            cnJournalEntityForBankDto.setSettleTypeNumberK3("JSFS04_SYS");//电汇
-            cnJournalEntityForBankDto.setEmpInfoNumberK3("0001");//员工
-            cnJournalEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
-            cnJournalEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
-            cnJournalEntityForBankDto.setCustomerNumberK3(null);
-            cnJournalForBankDto.getEntityForBankDtoList().add(cnJournalEntityForBankDto);
+    public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = new KingdeeSynDto(
+                    cnJournalForBankDto.getExtendId(),
+                    cnJournalForBankDto.getExtendType(),
+                    KingdeeFormIdEnum.CN_JOURNAL.name(),
+                    cnJournalForBankDto.getJson(),
+                    kingdeeBook) {
+            };
+            kingdeeManager.save(kingdeeSynDto);
+        }else{
+            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
         }
-        return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
+        return kingdeeSynDto;
+    }
+
+    public List<KingdeeSynDto> save(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynDto> kingdeeSynExtendDtoList = Lists.newArrayList();
+        //财务出库开单
+        if (CollectionUtil.isNotEmpty(cnJournalForBankDtoList)) {
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
+                    KingdeeSynDto kingdeeSynExtendDto = save(cnJournalForBankDto,kingdeeBook);
+                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
+                }
+            }
+        }else{
+            kingdeeSynExtendDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
+        }
+        return kingdeeSynExtendDtoList;
+    }
+
+    public List<KingdeeSynDto> saveForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
+            cnJournalForBankDto.setCreatorK3(accountKingdeeBook.getUsername());
+            cnJournalForBankDto.setDateK3(LocalDate.now());
+            cnJournalForBankDto.setAccountNumberForBankK3("1002");//银行存款
+            cnJournalForBankDto.setKingdeeNameK3(kingdeeBook.getName());
+            cnJournalForBankDto.setKingdeeTypeK3(kingdeeBook.getType());
+            for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalForBankDto.getEntityForBankDtoList()) {
+                cnJournalEntityForBankDto.setAccountNumberK3("2241");//其他应付款
+                cnJournalEntityForBankDto.setSettleTypeNumberK3("JSFS04_SYS");//电汇
+                cnJournalEntityForBankDto.setEmpInfoNumberK3("0001");//员工
+                cnJournalEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
+                cnJournalEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
+                cnJournalEntityForBankDto.setCustomerNumberK3(null);
+                cnJournalForBankDto.getEntityForBankDtoList().add(cnJournalEntityForBankDto);
+            }
+        }
+        return save(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
     }
 
     public CnJournalForBankForm getForm(KingdeeBook kingdeeBook){

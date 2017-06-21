@@ -42,7 +42,8 @@ public class DepotManager {
         return CollectionUtil.extractToList(depotList,"id");
     }
 
-    public boolean isAccess(Depot depot, boolean checkChain,String accountId,String officeId) {
+    public boolean isAccess(String depotId, boolean checkChain,String accountId,String officeId) {
+        Depot depot=depotRepository.findOne(depotId);
         List<String> depotIds = filterDepotIds(accountId);
         List<String> officeIds=officeClient.getChildOfficeIds(officeId);
         if(CollectionUtil.isNotEmpty(depotIds)) {

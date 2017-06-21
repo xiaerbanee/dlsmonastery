@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.dto.DutyOvertimeDto;
 import net.myspring.basic.modules.hr.service.DutyOvertimeService;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
+import net.myspring.basic.modules.hr.web.validator.DutyOvertimeValidator;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class DutyOvertimeController {
 
     @Autowired
     private DutyOvertimeService dutyOvertimeService;
+    @Autowired
+    private DutyOvertimeValidator dutyOvertimeValidator;
 
     @RequestMapping(value = "getQuery")
     public DutyOvertimeQuery getQuery(DutyOvertimeQuery dutyOvertimeQuery) {
@@ -35,9 +38,12 @@ public class DutyOvertimeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(DutyOvertimeForm dutyOvertimeForm, BindingResult bindingResult) {
-        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        dutyOvertimeValidator.validate(dutyOvertimeForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         dutyOvertimeService.save(dutyOvertimeForm);
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")

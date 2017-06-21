@@ -8,13 +8,16 @@ import net.myspring.future.modules.layout.service.ShopAdService;
 import net.myspring.future.modules.layout.web.form.ShopAdAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
+import net.myspring.future.modules.layout.web.validator.ShopAdValidator;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -23,6 +26,8 @@ public class ShopAdController {
 
     @Autowired
     private ShopAdService shopAdService;
+    @Autowired
+    private ShopAdValidator shopAdValidator;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -36,9 +41,14 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(ShopAdForm shopAdForm) {
+    public RestResponse save(ShopAdForm shopAdForm, BindingResult bindingResult) {
+        RestResponse restResponse = new RestResponse("保存成功", null);
+        shopAdValidator.validate(shopAdForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return  new RestResponse(bindingResult,"保存失败", null);
+        }
         shopAdService.save(shopAdForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        return restResponse;
     }
 
     @RequestMapping(value = "delete")

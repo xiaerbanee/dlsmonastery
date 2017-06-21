@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.dto.DutyFreeDto;
 import net.myspring.basic.modules.hr.service.DutyFreeService;
 import net.myspring.basic.modules.hr.web.form.DutyFreeForm;
 import net.myspring.basic.modules.hr.web.query.DutyFreeQuery;
+import net.myspring.basic.modules.hr.web.validator.DutyFreeValidator;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class DutyFreeController {
 
     @Autowired
     private DutyFreeService dutyFreeService;
+    @Autowired
+    private DutyFreeValidator dutyFreeValidator;
 
     @RequestMapping(value = "getQuery")
     public DutyFreeQuery getQuery(DutyFreeQuery dutyFreeQuery) {
@@ -50,8 +53,11 @@ public class DutyFreeController {
 
     @RequestMapping(value = "save")
     public RestResponse save(DutyFreeForm dutyFreeForm, BindingResult bindingResult) {
+        dutyFreeValidator.validate(dutyFreeForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         dutyFreeService.save(dutyFreeForm);
-        RestResponse restResponse = new RestResponse("申请成功",null);
-        return restResponse;
+        return new RestResponse("保存成功",null);
     }
 }
