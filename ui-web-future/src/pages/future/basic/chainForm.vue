@@ -9,7 +9,7 @@
         <el-form-item :label="$t('chainForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('chainForm.shop')" prop="depotList">
+        <el-form-item :label="$t('chainForm.shop')" prop="depotIdList">
           <depot-select v-model="inputForm.depotIdList" category="shop" multiple="multiple"></depot-select>
         </el-form-item>
         <el-form-item>
@@ -38,7 +38,8 @@
         },
         loading:false,
         rules: {
-          name: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}]
+          name: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}],
+          depotIdList: [{ required: true, message: this.$t('chainForm.prerequisiteMessage')}],
         }
       }
     },

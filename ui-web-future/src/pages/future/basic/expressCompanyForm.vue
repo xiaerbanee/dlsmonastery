@@ -65,9 +65,7 @@
             expressType: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
             districtId: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
             address: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
-            contator: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}],
-            phone: [{ type: 'number', message: this.$t('expressCompanyForm.inputLegalValue')}],
-            mobilePhone: [{ type: 'number', message: this.$t('expressCompanyForm.inputLegalValue')}]
+            contator: [{ required: true, message: this.$t('expressCompanyForm.prerequisiteMessage')}]
           }
         }
       },formSubmit(){

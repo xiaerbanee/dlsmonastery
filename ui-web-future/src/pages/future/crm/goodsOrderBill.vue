@@ -125,7 +125,8 @@
     },
     methods:{
       formSubmit(){
-        this.submitDisabled = true;
+          var that=this;
+        that.submitDisabled = true;
         var form = this.$refs["inputForm"];
 
         form.validate((valid) => {
@@ -144,10 +145,10 @@
               this.submitDisabled = false;
               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
             }).catch(function () {
-              this.submitDisabled = false;
+              that.submitDisabled = false;
             });
           }else{
-            this.submitDisabled = false;
+            that.submitDisabled = false;
           }
         })
 

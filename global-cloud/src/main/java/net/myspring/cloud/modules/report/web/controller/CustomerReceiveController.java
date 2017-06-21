@@ -3,12 +3,14 @@ package net.myspring.cloud.modules.report.web.controller;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.service.CustomerReceiveService;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,8 +35,8 @@ public class CustomerReceiveController {
     }
 
     @RequestMapping(value = "detail")
-    public List<CustomerReceiveDetailDto> detail(String dateRange,String customerId) {
-        return customerReceiveService.findCustomerReceiveDetailDtoList(dateRange,customerId);
+    public List<CustomerReceiveDetailDto> detail(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
+        return customerReceiveService.findCustomerReceiveDetailDtoList(customerReceiveDetailQuery);
     }
 
     @RequestMapping(value = "getQuery")
