@@ -29,64 +29,64 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             SUM (temp.endShouldGet) AS endShouldGet
             FROM
                 (
-            SELECT
-                t2.FCONTACTUNIT AS customerId,
-                t1.FAMOUNT AS endShouldGet
-            FROM
-                T_AR_OTHERRECABLEENTRY t1
-                JOIN T_AR_OTHERRECABLE t2 ON t1.FID = t2.FID
-            WHERE
-                t2.FDATE < :dateEnd
-                and t2.FCONTACTUNIT in  (:customerIdList)
-                UNION ALL
-            SELECT
-                t2.FRETCUSTID AS customerId,
-                - t3.FAMOUNT AS endShouldGet
+                SELECT
+                    t2.FCONTACTUNIT AS customerId,
+                    t1.FAMOUNT AS endShouldGet
                 FROM
-                T_SAL_RETURNSTOCKENTRY t1
-                JOIN T_SAL_RETURNSTOCK t2 ON t1.FID = t2.FID
-                JOIN T_SAL_RETURNSTOCKENTRY_F t3 ON t2.FID = t3.FID  AND t1.FENTRYID = t3.FENTRYID
-                LEFT JOIN T_BAS_BILLTYPE_L t4 ON t4.FBILLTYPEID = t2.FBILLTYPEID
-            WHERE
-                t4.FNAME = '标准销售退货单'
-                and t2.FDATE < :dateEnd
-                and t2.FRETCUSTID in  (:customerIdList)
+                    T_AR_OTHERRECABLEENTRY t1
+                    JOIN T_AR_OTHERRECABLE t2 ON t1.FID = t2.FID
+                WHERE
+                    t2.FDATE < :dateEnd
+                    and t2.FCONTACTUNIT in  (:customerIdList)
                 UNION ALL
                 SELECT
-                t2.FCUSTOMERID AS customerId,
-                t3.FALLAMOUNT AS endShouldGet
-            FROM
-                T_SAL_OUTSTOCKENTRY t1
-                JOIN T_SAL_OUTSTOCK t2 ON t1.FID = t2.FID
-                JOIN T_SAL_OUTSTOCKENTRY_F t3 ON t1.FID = t3.FID AND t1.FENTRYID = t3.FENTRYID
-                LEFT JOIN T_BAS_BILLTYPE_L t4 ON t2.FBILLTYPEID = t4.FBILLTYPEID
-             WHERE
-                t4.FNAME = '标准销售出库单'
-                and t2.FDATE < :dateEnd
-                and t2.FCUSTOMERID in (:customerIdList)
+                    t2.FRETCUSTID AS customerId,
+                    - t3.FAMOUNT AS endShouldGet
+                    FROM
+                    T_SAL_RETURNSTOCKENTRY t1
+                    JOIN T_SAL_RETURNSTOCK t2 ON t1.FID = t2.FID
+                    JOIN T_SAL_RETURNSTOCKENTRY_F t3 ON t2.FID = t3.FID  AND t1.FENTRYID = t3.FENTRYID
+                    LEFT JOIN T_BAS_BILLTYPE_L t4 ON t4.FBILLTYPEID = t2.FBILLTYPEID
+                WHERE
+                    t4.FNAME = '标准销售退货单'
+                    and t2.FDATE < :dateEnd
+                    and t2.FRETCUSTID in  (:customerIdList)
                 UNION ALL
-             SELECT
-                t2.FCONTACTUNIT AS customerId,
-                - t1.FRECAMOUNT_E AS endShouldGet
-             FROM
-                T_AR_RECEIVEBILLENTRY t1
-                JOIN T_AR_RECEIVEBILL t2 ON t1.FID = t2.FID
-             WHERE
-                t2.FDATE < :dateEnd
-                and t2.FCONTACTUNIT in (:customerIdList)
+                SELECT
+                    t2.FCUSTOMERID AS customerId,
+                    t3.FALLAMOUNT AS endShouldGet
+                FROM
+                    T_SAL_OUTSTOCKENTRY t1
+                    JOIN T_SAL_OUTSTOCK t2 ON t1.FID = t2.FID
+                    JOIN T_SAL_OUTSTOCKENTRY_F t3 ON t1.FID = t3.FID AND t1.FENTRYID = t3.FENTRYID
+                    LEFT JOIN T_BAS_BILLTYPE_L t4 ON t2.FBILLTYPEID = t4.FBILLTYPEID
+                WHERE
+                    t4.FNAME = '标准销售出库单'
+                    and t2.FDATE < :dateEnd
+                    and t2.FCUSTOMERID in (:customerIdList)
                 UNION ALL
-             SELECT
-                t2.FCONTACTUNIT AS customerId,
-                t1.FREALREFUNDAMOUNTFOR AS endShouldGet
-            FROM
-                T_AR_REFUNDBILLENTRY t1
-                JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
-             WHERE
-                t2.FDATE < :dateEnd
-                and t2.FCONTACTUNIT in (:customerIdList)
-                ) temp
-                GROUP BY
-                temp.customerId
+                 SELECT
+                    t2.FCONTACTUNIT AS customerId,
+                    - t1.FRECAMOUNT_E AS endShouldGet
+                 FROM
+                    T_AR_RECEIVEBILLENTRY t1
+                    JOIN T_AR_RECEIVEBILL t2 ON t1.FID = t2.FID
+                 WHERE
+                    t2.FDATE < :dateEnd
+                    and t2.FCONTACTUNIT in (:customerIdList)
+                UNION ALL
+                 SELECT
+                    t2.FCONTACTUNIT AS customerId,
+                    t1.FREALREFUNDAMOUNTFOR AS endShouldGet
+                FROM
+                    T_AR_REFUNDBILLENTRY t1
+                    JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
+                 WHERE
+                    t2.FDATE < :dateEnd
+                    and t2.FCONTACTUNIT in (:customerIdList)
+            ) temp
+            GROUP BY
+            temp.customerId
         """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDto::class.java))
     }
 
