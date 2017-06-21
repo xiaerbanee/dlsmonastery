@@ -9,7 +9,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdTypeId}}" bindchange="bindAdType">
-            <view class="weui-input">{{formData.shopAdTypeName}}</view>
+            <view class="weui-input" style="overflow:hidden">{{formData.shopAdTypeName}}</view>
           </picker>
         </view>
         <view class="weui-cell__ft" wx:if="{{response.data.shopAdTypeId}}">

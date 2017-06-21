@@ -8,6 +8,7 @@ import net.myspring.future.modules.layout.service.ShopAdService;
 import net.myspring.future.modules.layout.web.form.ShopAdAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
+import net.myspring.future.modules.layout.web.validator.ShopAdValidator;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class ShopAdController {
 
     @Autowired
     private ShopAdService shopAdService;
+    @Autowired
+    private ShopAdValidator shopAdValidator;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -38,7 +41,8 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(@Valid ShopAdForm shopAdForm, BindingResult bindingResult) {
+    public RestResponse save(ShopAdForm shopAdForm, BindingResult bindingResult) {
+        shopAdValidator.validate(shopAdForm,bindingResult);
         RestResponse restResponse = new RestResponse("签到成功", null);
         if(bindingResult.hasErrors()){
             return  new RestResponse(bindingResult,"签到失败", null);

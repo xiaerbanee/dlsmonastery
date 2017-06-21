@@ -4,15 +4,21 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10,
-    },
+    formData: {},
     formProperty: {},
     searchHidden: true,
     activeItem: null
   },
   onLoad: function (option) {
+    var that = this;
+  },
+  onShow: function () {
+    var that = this;
+    app.autoLogin(function () {
+      that.initPage()
+    });
+  },
+  initPage: function () {
     var that = this;
     wx.request({
       url: $util.getUrl("basic/hr/dutyLeave/getQuery"),
@@ -24,21 +30,12 @@ Page({
       },
       success: function (res) {
         that.setData({
-          'formProperty.dateList': res.data.extra.dateList,
-          'formProperty.leaveList': res.data.extra.leaveList
-        })
+          formProperty: res.data.extra,
+          formData: res.data
+        });
+        that.pageRequest();
       }
     })
-  },
-  onShow: function () {
-    var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
-  },
-  initPage: function () {
-    var that = this;
-    that.pageRequest();
   },
   pageRequest: function () {
     var that = this
@@ -54,7 +51,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             console.log(res)
             that.setData({ page: res.data });
@@ -101,7 +98,7 @@ Page({
       if (item.id == id) {
         that.data.activeItem = item;
         item.active = true;
-        }else {
+      } else {
         item.active = false;
       }
     }

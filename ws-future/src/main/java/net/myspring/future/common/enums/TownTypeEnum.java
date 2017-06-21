@@ -16,7 +16,7 @@ public enum  TownTypeEnum {
     public static List<String> getList(){
         if(CollectionUtil.isEmpty(list)){
             for(TownTypeEnum townTypeEnum:TownTypeEnum.values()){
-                list.add(townTypeEnum.name());
+                list.add(townTypeEnum.toString());
             }
         }
         return list;
