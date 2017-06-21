@@ -5,6 +5,7 @@ import net.myspring.future.modules.crm.domain.ProductImeSale;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public class ProductImeSaleDto extends DataDto<ProductImeSale> {
@@ -40,6 +41,7 @@ public class ProductImeSaleDto extends DataDto<ProductImeSale> {
 
     private String productImeProductImeUploadId;
     private String productImeId;
+    private LocalDateTime retailDate;
 
     public String getShopAreaId() {
         return shopAreaId;
@@ -231,5 +233,13 @@ public class ProductImeSaleDto extends DataDto<ProductImeSale> {
 
     public void setIsBack(Boolean isBack) {
         this.isBack = isBack;
+    }
+
+    public LocalDateTime getRetailDate() {
+        return retailDate;
+    }
+
+    public void setRetailDate(LocalDateTime retailDate) {
+        this.retailDate = retailDate;
     }
 }
