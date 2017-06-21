@@ -74,7 +74,7 @@ public class RestResponse {
     }
 
     public Map<String, Object> getExtra() {
-        if(bindingResult.hasErrors()){
+        if(bindingResult!=null&&bindingResult.hasFieldErrors()){
             Map<String,RestErrorField> errors=Maps.newHashMap();
             for(FieldError error:bindingResult.getFieldErrors()){
                 errors.put(error.getField(),new RestErrorField(error,null));
