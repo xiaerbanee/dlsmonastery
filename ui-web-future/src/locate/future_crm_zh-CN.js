@@ -1258,6 +1258,7 @@ export default {
     selectInputType: "请选择入库类型",
     ime: "串码",
     ime2: "串码2",
+    imeFilter: "请输入串码后六位",
     meid: "meid码",
     retailDate: "工厂保卡日期",
     saleDate: "核销时间",

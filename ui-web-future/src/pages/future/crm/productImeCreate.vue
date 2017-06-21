@@ -116,6 +116,11 @@
               }
             }
             this.inputForm.productImeCreateFormList = tableData;
+            if (tableData.length == 0) {
+              this.$message.error("请录入需要添加的串码信息");
+              this.submitDisabled = false;
+              return;
+            }
 
             axios.post('/api/ws/future/crm/productIme/batchCreate', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
@@ -140,7 +145,7 @@
         });
       }
     },
-    created() {
+    mounted() {
       this.initPage();
     },
   }
