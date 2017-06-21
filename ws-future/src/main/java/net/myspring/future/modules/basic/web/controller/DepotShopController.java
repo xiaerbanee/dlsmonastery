@@ -20,7 +20,9 @@ import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
+import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +62,11 @@ public class DepotShopController {
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
         return page;
     }
+    @RequestMapping(value = "getQuery")
+    public DepotQuery getQuery(DepotQuery depotShopQuery) {
+        return depotShopQuery;
+    }
+
 
     @RequestMapping(value = "save")
     public RestResponse list(DepotShopForm depotShopForm){

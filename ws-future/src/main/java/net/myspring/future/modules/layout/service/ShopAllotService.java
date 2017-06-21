@@ -1,8 +1,10 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -41,6 +43,8 @@ public class ShopAllotService {
     private ShopAllotRepository shopAllotRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private CloudClient cloudClient;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -208,12 +212,13 @@ public class ShopAllotService {
     public ShopAllotDto findDtoForViewOrAudit(String id) {
         ShopAllotDto shopAllotDto = findDto(id);
         //TODO 如果是申请状态，需要看到两个门店的应收
-//        if(AuditType.APPLY.toString().equals(shopAllot.getStatus())) {
-//        result.setFromShopShouldGet();
-//        result.setToShopShouldGet();
+        if(AuditTypeEnum.APPLY.toString().equals(shopAllotDto.getStatus())) {
+//            cloudClient.getCustomerReceiveList();
+//            shopAllotDto.setFromShopShouldGet();
+//            shopAllotDto.setToShopShouldGet();
 //            shopAllot.getFromShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getFromShop().getOutId()));
 //            shopAllot.getToShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getToShop().getOutId()));
-//        }
+        }
         return shopAllotDto;
     }
 

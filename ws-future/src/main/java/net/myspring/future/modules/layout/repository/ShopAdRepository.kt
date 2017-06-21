@@ -68,7 +68,7 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             sb.append("""  and t1.created_date  >= :createdDateStart """)
         }
         if (shopAdQuery.createdDateEnd != null) {
-            sb.append("""  and t1.created_date  < :createdDateStart """)
+            sb.append("""  and t1.created_date  < :createdDateEnd""")
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

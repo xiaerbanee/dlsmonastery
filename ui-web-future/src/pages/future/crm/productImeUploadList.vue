@@ -33,7 +33,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportData()" v-permit="'crm:productImeUpload:view'">{{$t('productImeUploadList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('productImeUploadList.sure')}}</el-button>
         </div>
       </search-dialog>

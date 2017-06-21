@@ -173,10 +173,7 @@ Page({
   showError: function (e) {
     var that = this;
     var key = e.currentTarget.dataset.key;
-    console.log(key)
     var responseData = that.data.response.data;
-    console.log(responseData)
-    console.log(responseData[key])
     if (responseData && responseData[key] != null) {
       that.setData({ "response.error": responseData[key] });
       delete responseData[key];

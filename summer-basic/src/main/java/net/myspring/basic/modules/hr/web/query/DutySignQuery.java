@@ -21,6 +21,8 @@ public class DutySignQuery extends BaseQuery {
     private String positionName;
     private List<String> officeIds;
     private String requestClient;
+    private LocalDate dutyDateStart;
+    private LocalDate dutyDateEnd;
 
     public void setDutyDate(String dutyDate) {
         this.dutyDate = dutyDate;
@@ -92,16 +94,27 @@ public class DutySignQuery extends BaseQuery {
     public LocalDate getDutyDateStart() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+        } else  if(dutyDateStart!=null){
+            return dutyDateStart;
         }
+            return null;
+
+    }
+
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.dutyDateStart = dutyDateStart;
     }
 
     public LocalDate getDutyDateEnd() {
         if(StringUtils.isNotBlank(dutyDate)) {
             return LocalDateUtils.parse(dutyDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
+        } else if(dutyDateEnd!=null){
+            return dutyDateEnd.plusDays(1);
+        }
             return null;
         }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.dutyDateEnd = dutyDateEnd;
     }
 }
