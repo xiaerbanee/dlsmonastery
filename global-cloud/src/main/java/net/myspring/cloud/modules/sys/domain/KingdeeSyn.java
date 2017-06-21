@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_kingdee_syn")
 public class KingdeeSyn extends CompanyEntity<KingdeeSyn> {
-    private Long extendId;
+    private String extendId;
     private String extendType;
     private String formId;
     private String nextFormId;
@@ -21,14 +21,14 @@ public class KingdeeSyn extends CompanyEntity<KingdeeSyn> {
     private String billNo;
     private String nextBillNo;
     private Boolean autoAudit = true;
-    private String kingdeeBookId;
+    private String kingdeeBookId;//
     private Integer version = 0;
 
-    public Long getExtendId() {
+    public String getExtendId() {
         return extendId;
     }
 
-    public void setExtendId(Long extendId) {
+    public void setExtendId(String extendId) {
         this.extendId = extendId;
     }
 

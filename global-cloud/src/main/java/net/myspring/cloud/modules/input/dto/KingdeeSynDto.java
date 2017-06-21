@@ -1,11 +1,17 @@
 package net.myspring.cloud.modules.input.dto;
 
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
+import net.myspring.common.dto.DataDto;
 
 /**
  * Created by liuj on 2016-06-20.
  */
-public class KingdeeSynDto {
+public class KingdeeSynDto extends DataDto<KingdeeSyn> {
+    //业务系统单据Id
+    private String extendId;
+    //业务系统单据类型
+    private String extendType;
     private Boolean success;
     private KingdeeBook kingdeeBook;
     private String formId;
@@ -14,7 +20,9 @@ public class KingdeeSynDto {
     private String result;
     private Boolean autoAudit = true;
 
-    public KingdeeSynDto(String formId, String content,KingdeeBook kingdeeBook) {
+    public KingdeeSynDto(String extendId,String extendType,String formId, String content,KingdeeBook kingdeeBook) {
+        this.extendId = extendId;
+        this.extendType = extendType;
         this.formId = formId;
         this.content = content;
         this.kingdeeBook = kingdeeBook;
@@ -23,6 +31,22 @@ public class KingdeeSynDto {
     public KingdeeSynDto(Boolean success, String result) {
         this.success = success;
         this.result = result;
+    }
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
     }
 
     public KingdeeSynDto() {

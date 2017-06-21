@@ -9,13 +9,12 @@ import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 public abstract class KingdeeSynExtendDto extends KingdeeSynDto {
 
     private String nextFormId;
+    private String nextBillNo;
 
-    public KingdeeSynExtendDto(String formId, String content, KingdeeBook kingdeeBook, String nextFormId) {
-        super(formId, content,kingdeeBook);
+    public KingdeeSynExtendDto(String extendId,String extendType,String formId, String content, KingdeeBook kingdeeBook, String nextFormId) {
+        super(extendId,extendType,formId, content,kingdeeBook);
         this.nextFormId = nextFormId;
     }
-
-    public abstract String getNextBillNo();
 
     public String getNextFormId() {
         return nextFormId;
@@ -23,5 +22,13 @@ public abstract class KingdeeSynExtendDto extends KingdeeSynDto {
 
     public void setNextFormId(String nextFormId) {
         this.nextFormId = nextFormId;
+    }
+
+    public void setNextBillNo(String nextBillNo) {
+        this.nextBillNo = nextBillNo;
+    }
+
+    public String getNextBillNo() {
+        return nextBillNo;
     }
 }

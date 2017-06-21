@@ -56,6 +56,8 @@ public class SalReturnStockService {
 
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
+                salReturnStockDto.getExtendId(),
+                salReturnStockDto.getExtendType(),
                 KingdeeFormIdEnum.SAL_RETURNSTOCK.name(),
                 salReturnStockDto.getJson(),
                 kingdeeBook,
