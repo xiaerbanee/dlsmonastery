@@ -79,6 +79,6 @@ public class LocalTimeUtils {
     }
 
     public static boolean isAm(LocalTime localTime){
-        return localTime.isBefore(LocalTime.MIDNIGHT);
+        return localTime.isBefore(LocalTime.of(12,0,0));
     }
 }

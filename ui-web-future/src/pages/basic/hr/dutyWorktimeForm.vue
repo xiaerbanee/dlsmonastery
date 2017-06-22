@@ -9,7 +9,7 @@
           <el-date-picker v-model="inputForm.yearMonth"  type="month" :placeholder="$t('dutyWorktimeForm.selectMonth')"></el-date-picker>
         </el-form-item>
         <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="importFile">
-          <el-upload action = "/api/basic/hr/dutyWorktime/import" multiple  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+          <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/dutyWorktime" multiple :headers="headers"   :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
             <el-button size="small" type="primary">{{$t('dutyWorktimeForm.clickUpload')}}</el-button>
             <div class="el-upload__tip" slot="tip">{{$t('dutyWorktimeForm.uploadImageSizeFor5000KB')}}</div>
           </el-upload>
@@ -34,13 +34,11 @@
       methods:{
         getData(){
           return{
-            isInit:false,
             submitDisabled:false,
             fileList:[],
+            headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
             inputForm:{
-              importFile:'',
-              yearMonth:'',
-              remarks:''
+              extra:{}
             },
             rules: {
               importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
@@ -54,9 +52,11 @@
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
+              this.inputForm.mongoId = util.getMongoId(this.fileList);
               axios.get('/api/basic/hr/dutyWorktime/import', {params: this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
+                this.initPage();
               }).catch(function () {
                 that.submitDisabled = false;
               });
@@ -70,14 +70,13 @@
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
+        },initPage(){
+          axios.get('/api/basic/hr/dutyWorktime/getForm').then((response)=>{
+            this.inputForm = response.data;
+          })
         }
-      },
-      activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
-          
-        }
-        this.isInit = true;
+      },created(){
+          this.initPage();
       }
   }
 </script>

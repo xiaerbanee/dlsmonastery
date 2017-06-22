@@ -2,9 +2,7 @@ package net.myspring.cloud.modules.report.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.CustomerReceiveEnum;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
@@ -12,13 +10,10 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.repository.CustomerReceiveRepository;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -39,8 +34,8 @@ public class CustomerReceiveService {
     private BdCustomerRepository bdCustomerRepository;
 
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
-        LocalDate dateStart = customerReceiveQuery.getDateStart();
-        LocalDate dateEnd = customerReceiveQuery.getDateEnd();
+        LocalDate dateStart = LocalDateUtils.parse(customerReceiveQuery.getDateStart(),"yyyy-MM-dd");
+        LocalDate dateEnd = LocalDateUtils.parse(customerReceiveQuery.getDateEnd(),"yyyy-MM-dd");
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
         List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerIdList);
         List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd,customerIdList);
@@ -72,8 +67,8 @@ public class CustomerReceiveService {
         if(customerReceiveQuery.getQueryDetail()) {
             CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
             customerReceiveDetailQuery.setCustomerIdList(customerIdList);
-            customerReceiveDetailQuery.setDateStart(customerReceiveQuery.getDateStart());
-            customerReceiveDetailQuery.setDateEnd(customerReceiveQuery.getDateEnd());
+            customerReceiveDetailQuery.setDateStart(LocalDateUtils.parse(customerReceiveQuery.getDateStart(),"yyyy-MM-dd"));
+            customerReceiveDetailQuery.setDateEnd(LocalDateUtils.parse(customerReceiveQuery.getDateEnd(),"yyyy-MM-dd"));
             Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
             for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
                 customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
