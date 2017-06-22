@@ -194,7 +194,6 @@ public class CnJournalForBankService {
                 cnJournalEntityForBankDto.setOtherTypeNumberK3("2241.00029");//其他应付款-导购业务机押金
                 cnJournalEntityForBankDto.setExpenseTypeNumberK3("6602.000");//无
                 cnJournalEntityForBankDto.setCustomerNumberK3(null);
-                cnJournalForBankDto.getEntityForBankDtoList().add(cnJournalEntityForBankDto);
             }
         }
         return save(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
