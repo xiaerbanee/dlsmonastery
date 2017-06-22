@@ -22,7 +22,7 @@
                 <el-input type="textarea" v-model="formData.replaceProductImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.remarks')" :label-width="formLabelWidth">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+                <el-input v-model="formData.detailRemarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
