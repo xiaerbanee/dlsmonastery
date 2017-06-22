@@ -1,8 +1,17 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud: DEBUG
+    org.springframework.web: WARN
 spring:
   application:
     name: summer-gateway
 server:
   port: 1200
+management:
+  security:
+    enabled: false
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -11,10 +20,12 @@ eureka:
       defaultZone: http://localhost:1000/eureka/
 zuul:
   routes:
+    webapp:
+      path: /**
+      url: http://localhost:8888
     summer-uaa:
-      sensitiveHeaders:
-      path: /api/uaa/**
-      stripPrefix: true
+      path: /user/**
+      url: http://localhost:1100/uaa/user
     summer-basic: /api/basic/**
     summer-general: /api/general/**
     ws-future: /api/ws/future/**
@@ -39,17 +50,15 @@ ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
 
+
 security:
   oauth2:
+    client:
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      clientId: ui
+      clientSecret: password
     resource:
-      jwt:
-        keyValue: |
-          -----BEGIN PUBLIC KEY-----
-          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwR84LFHwnK5GXErnwkmD
-          mPOJl4CSTtYXCqmCtlbF+5qVOosu0YsM2DsrC9O2gun6wVFKkWYiMoBSjsNMSI3Z
-          w5JYgh+ldHvA+MIex2QXfOZx920M1fPUiuUPgmnTFS+Z3lmK3/T6jJnmciUPY1pe
-          h4MXL6YzeI0q4W9xNBBeKT6FDGpduc0FC3OlXHfLbVOThKmAUpAWFDwf9/uUA//l
-          3PLchmV6VwTcUaaHp5W8Af/GU4lPGZbTAqOxzB9ukisPFuO1DikacPhrOQgdxtqk
-          LciRTa884uQnkFwSguOEUYf3ni8GNRJauIuW0rVXhMOs78pKvCKmo53M0tqeC6ul
-          +QIDAQAB
-          -----END PUBLIC KEY-----
+      preferTokenInfo: false
+      user-info-uri: http://localhost:1100/uaa/user
+  sessions: ALWAYS
