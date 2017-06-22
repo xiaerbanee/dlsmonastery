@@ -46,6 +46,10 @@ public class ImeAllotController {
         return imeAllotService.checkForImeAllot(imeList, true);
     }
 
+    @RequestMapping(value = "getForm")
+    public ImeAllotForm getForm(ImeAllotForm imeAllotForm) {
+        return imeAllotForm;
+    }
     @RequestMapping(value="getQuery")
     public  ImeAllotQuery getQuery(ImeAllotQuery imeAllotQuery){
         imeAllotQuery.getExtra().put("statusList",AuditStatusEnum.getList());
