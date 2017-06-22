@@ -25,7 +25,7 @@
           <el-table-column prop="productName" :label="$t('shopAllotForm.productName')"></el-table-column>
           <el-table-column prop="qty" :label="$t('shopAllotForm.qty')">
             <template scope="scope">
-              <input type="text" v-model.number="scope.row.qty" class="el-input__inner"/>
+              <el-input v-model.number="scope.row.qty" ></el-input>
             </template>
           </el-table-column>
 
@@ -65,6 +65,12 @@
           }
         },
         formSubmit(){
+          let validateMsg = this.customValidate();
+          if(util.isNotBlank(validateMsg)){
+            this.$alert(validateMsg);
+            return;
+          }
+
           this.submitDisabled = true;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -92,15 +98,33 @@
             }
           })
         }, getSubmitDetailList(){
+
           let tempList=[];
           for(let shopAllotDetail of this.inputForm.shopAllotDetailList){
 
-            if(util.isNotBlank(shopAllotDetail.id) || util.isNotBlank(shopAllotDetail.qty)){
+            if(util.isNotBlank(shopAllotDetail.id) || (Number.isInteger(shopAllotDetail.qty) &&shopAllotDetail.qty>0 )){
               tempList.push(shopAllotDetail);
             }
           }
           return tempList;
-      }
+      },customValidate(){
+          let totalQty = 0;
+          for(let shopAllotDetail of this.inputForm.shopAllotDetailList){
+            if(util.isBlank(shopAllotDetail.qty)){
+              continue;
+            }
+
+            if(!Number.isInteger(shopAllotDetail.qty) || shopAllotDetail.qty < 0){
+              return '产品：'+shopAllotDetail.productName+'的调拨数不是一个大于等于0的整数';
+            }
+
+            totalQty += shopAllotDetail.qty;
+          }
+          if(totalQty<=0){
+            return "总调拨数要大于0";
+          }
+          return null;
+        }
       ,refreshProductListIfNeeded(){
           //只有新增的时候才会刷新产品列表，修改的时候不能修改fromShop和toShop，所以也就不需要再次加载产品列表
         if(this.inputForm.fromShopId && this.inputForm.toShopId && !this.$route.query.id){

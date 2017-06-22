@@ -119,6 +119,12 @@
     },
     methods:{
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -164,13 +170,12 @@
         this.searchDetail();
         this.refreshSummary();
        }, refreshSummary(){
-        let list=this.inputForm.adGoodsOrderDetailList;
         let totalBillQty=0;
         let totalBillPrice=0;
-        for(let adGoodsOrderDetail of list){
-          if(adGoodsOrderDetail.billQty){
-            totalBillQty=totalBillQty+parseInt(adGoodsOrderDetail.billQty);
-            totalBillPrice=totalBillPrice+parseInt(adGoodsOrderDetail.billQty)*parseInt(adGoodsOrderDetail.productPrice2);
+        for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+          if(Number.isInteger(adGoodsOrderDetail.billQty)){
+            totalBillQty=totalBillQty+adGoodsOrderDetail.billQty;
+            totalBillPrice=totalBillPrice+adGoodsOrderDetail.billQty * (adGoodsOrderDetail.productPrice2*1);
           }
         }
         this.totalBillQty=totalBillQty;
@@ -178,15 +183,31 @@
       },getDetailListForSubmit(){
         let tempList = [];
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if (util.isNotBlank(adGoodsOrderDetail.id) || util.isNotBlank(adGoodsOrderDetail.billQty)) {
+          if (util.isNotBlank(adGoodsOrderDetail.id) || (Number.isInteger(adGoodsOrderDetail.billQty) && adGoodsOrderDetail.billQty > 0)) {
             tempList.push(adGoodsOrderDetail)
           }
         }
 
         return tempList;
+      },customValidate(){
+        let totalBillQty = 0;
+        for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+          if(util.isBlank(adGoodsOrderDetail.billQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(adGoodsOrderDetail.billQty) || adGoodsOrderDetail.billQty < 0){
+            return '产品：'+adGoodsOrderDetail.productName+'的开单数不是一个大于等于0的整数';
+          }
+
+          totalBillQty += adGoodsOrderDetail.billQty;
+        }
+        if(totalBillQty<=0){
+          return "总开单数要大于0";
+        }
+        return null;
       }
     },created(){
-
       axios.get('/api/ws/future/layout/adGoodsOrder/getBillForm').then((response)=>{
         this.inputForm = response.data;
 
