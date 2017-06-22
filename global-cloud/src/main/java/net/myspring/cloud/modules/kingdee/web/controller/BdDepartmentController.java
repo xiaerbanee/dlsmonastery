@@ -27,7 +27,6 @@ public class BdDepartmentController {
     public List<BdDepartment> findAll(){
         return bdDepartmentService.findAll();
     }
-
     @RequestMapping(value = "findCustId")
     public BdDepartment findCustId(String custId){
         return bdDepartmentService.findByCustId(custId);

@@ -26,7 +26,7 @@ Page({
       },
       success: function (res) {
         console.log(res);
-        that.setData({ formProperty: res.data.extra})
+        that.setData({ formProperty: res.data})
       }
     })
   },
@@ -35,7 +35,7 @@ Page({
     var name = e.currentTarget.dataset.name;
     if (name == 'restType') {
       that.setData({
-        'formData.restType': that.data.formProperty.restList[e.detail.value],
+        'formData.restType': that.data.formProperty.extra.restList[e.detail.value],
         'formData.hour': '',
         'formData.dateType': '',
         'formData.timeStart': '',
@@ -43,7 +43,7 @@ Page({
       });
     } else {
       that.setData({
-        'formData.dateType': that.data.formProperty.dateList[e.detail.value],
+        'formData.dateType': that.data.formProperty.extra.dateList[e.detail.value],
       })
       that.getHour();
     }

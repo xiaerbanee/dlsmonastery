@@ -10,12 +10,37 @@ import java.util.List;
 public class SimpleExcelSheet {
     private String sheetName;
     private List<Object> dataList;
+    private boolean isExcelColumn;
     private List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+
+    private List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
 
     public SimpleExcelSheet(String sheetName,List dataList,List<SimpleExcelColumn> simpleExcelColumnList) {
         this.sheetName = sheetName;
         this.dataList = dataList;
         this.simpleExcelColumnList = simpleExcelColumnList;
+    }
+
+    public SimpleExcelSheet(String sheetName,List<List<SimpleExcelColumn>> excelColumnList) {
+        this.sheetName = sheetName;
+        this.excelColumnList = excelColumnList;
+        isExcelColumn=true;
+    }
+
+    public boolean getIsExcelColumn() {
+        return isExcelColumn;
+    }
+
+    public void setExcelColumn(boolean excelColumn) {
+        isExcelColumn = excelColumn;
+    }
+
+    public List<List<SimpleExcelColumn>> getExcelColumnList() {
+        return excelColumnList;
+    }
+
+    public void setExcelColumnList(List<List<SimpleExcelColumn>> excelColumnList) {
+        this.excelColumnList = excelColumnList;
     }
 
     public String getSheetName() {

@@ -13,8 +13,8 @@ import java.util.List;
  */
 
 public class DutyLeaveForm extends BaseForm<DutyLeave> {
-    private String dutyDateStart;
-    private String dutyDateEnd;
+    private LocalDate dutyDateStart;
+    private LocalDate dutyDateEnd;
     private String employeeId;
     private String dateType;
     private LocalDate dutyDate;
@@ -41,19 +41,19 @@ public class DutyLeaveForm extends BaseForm<DutyLeave> {
         this.leaveList = leaveList;
     }
 
-    public String getDutyDateStart() {
+    public LocalDate getDutyDateStart() {
         return dutyDateStart;
     }
 
-    public void setDutyDateStart(String dutyDateStart) {
+    public void setDutyDateStart(LocalDate dutyDateStart) {
         this.dutyDateStart = dutyDateStart;
     }
 
-    public String getDutyDateEnd() {
+    public LocalDate getDutyDateEnd() {
         return dutyDateEnd;
     }
 
-    public void setDutyDateEnd(String dutyDateEnd) {
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
         this.dutyDateEnd = dutyDateEnd;
     }
 

@@ -67,15 +67,15 @@ public class OppoService {
             for (OppoPlantProductSel oppoPlantProductSel : oppoPlantProductSels) {
                 colorIds.add(oppoPlantProductSel.getColorId().trim());
             }
-            List<String> localColorIds = oppoPlantProductSelRepository.findColorIds(colorIds);
+            List<String> localColorIds =CollectionUtil.extractToList(oppoPlantProductSelRepository.findColorIds(colorIds),"colorId");
             for (OppoPlantProductSel oppoPlantProductSel : oppoPlantProductSels) {
                 if (!localColorIds.contains(oppoPlantProductSel.getColorId().trim())) {
                     list.add(oppoPlantProductSel);
                 }
             }
-            if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantProductSelRepository.save(list);
-            }
+//            if (CollectionUtil.isNotEmpty(list)) {
+//                oppoPlantProductSelRepository.save(list);
+//            }
         }
         return "颜色编码同步成功，共" + list.size() + "条";
     }
@@ -93,9 +93,9 @@ public class OppoService {
                     list.add(oppoPlantAgentProductSel);
                 }
             }
-            if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantAgentProductSelRepository.save(list);
-            }
+//            if (CollectionUtil.isNotEmpty(list)) {
+//                oppoPlantAgentProductSelRepository.save(list);
+//            }
         }
         return "物料编码同步成功，共"+list.size()+"条";
     }
@@ -113,9 +113,9 @@ public class OppoService {
                 list.add(oppoPlantSendImeiPpsel);
             }
         }
-        if (CollectionUtil.isNotEmpty(list)) {
-            oppoPlantSendImeiPpselRepository.save(list);
-        }
+//        if (CollectionUtil.isNotEmpty(list)) {
+//            oppoPlantSendImeiPpselRepository.save(list);
+//        }
         return "发货串码同步成功，共"+list.size()+"条";
     }
 
@@ -130,9 +130,9 @@ public class OppoService {
                     list.add(oppoPlantProductItemelectronSel);
                 }
             }
-            if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantProductItemelectronSelRepository.save(list);
-            }
+//            if (CollectionUtil.isNotEmpty(list)) {
+//                oppoPlantProductItemelectronSelRepository.save(list);
+//            }
         }
         return "电子保卡同步成功，共"+list.size()+"条";
     }

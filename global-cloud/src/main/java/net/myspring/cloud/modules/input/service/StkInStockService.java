@@ -1,9 +1,8 @@
 package net.myspring.cloud.modules.input.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.BillTypeEnum;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
@@ -71,7 +70,7 @@ public class StkInStockService {
         Map<String,String> materialNameForSHMap = bdMaterialRepository.findByNameList(materialNameForSHList).stream().collect(Collectors.toMap(BdMaterial::getFName, BdMaterial::getFNumber));
         List<PurMrbFEntityDto> purMrbFEntryDtoList = Lists.newArrayList();
         StkInStockDto stkInStockDto = new StkInStockDto();
-        stkInStockDto.setExtendType(BillTypeEnum.采购入库_K3.name());
+        stkInStockDto.setExtendType(ExtendTypeEnum.采购入库_K3.name());
         stkInStockDto.setCreator(accountKingdeeBook.getUsername());
         stkInStockDto.setDate(billDate);
         stkInStockDto.setDepartmentNumber(departmentNumber);

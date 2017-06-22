@@ -95,11 +95,9 @@ public class ProductImeController {
     }
 
     @RequestMapping(value = "search")
-    public List<ProductImeDto> search(String productIme,String shopId){
+    public List<ProductImeDto> search(String productIme){
         String imeReverse = StringUtils.reverse(productIme);
-        List<ProductIme> productImeList =productImeService.findByImeLike(imeReverse,shopId);
-        List<ProductImeDto> productImeDtoList = BeanUtil.map(productImeList,ProductImeDto.class);
-        return productImeDtoList;
+        return productImeService.findByImeLike(imeReverse);
     }
 
     @RequestMapping(value = "productImeReport")

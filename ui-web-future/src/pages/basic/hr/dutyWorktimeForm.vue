@@ -8,8 +8,8 @@
         <el-form-item :label="$t('dutyWorktimeForm.yearMonth')" prop="yearMonth">
           <el-date-picker v-model="inputForm.yearMonth"  type="month" :placeholder="$t('dutyWorktimeForm.selectMonth')"></el-date-picker>
         </el-form-item>
-        <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="importFile">
-          <el-upload action = "/api/basic/hr/dutyWorktime/import" multiple  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+        <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="mongoId">
+          <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/dutyWorktime" multiple :headers="headers"   :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
             <el-button size="small" type="primary">{{$t('dutyWorktimeForm.clickUpload')}}</el-button>
             <div class="el-upload__tip" slot="tip">{{$t('dutyWorktimeForm.uploadImageSizeFor5000KB')}}</div>
           </el-upload>
@@ -27,6 +27,8 @@
   </div>
 </template>
 <script>
+    import util from "../../../utils/util";
+
     export default{
       data(){
         return this.getData();
@@ -34,16 +36,14 @@
       methods:{
         getData(){
           return{
-            isInit:false,
             submitDisabled:false,
             fileList:[],
+            headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
             inputForm:{
-              importFile:'',
-              yearMonth:'',
-              remarks:''
+              extra:{}
             },
             rules: {
-              importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
+              mongoId: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
               yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
             },
           }
@@ -52,11 +52,16 @@
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
+          this.inputForm.mongoId = util.getMongoId(this.fileList);
           form.validate((valid) => {
             if (valid) {
-              axios.get('/api/basic/hr/dutyWorktime/import', {params: this.inputForm}).then((response)=> {
+              console.log(this.inputForm);
+              var submitData=util.deleteExtra(this.inputForm);
+              submitData.yearMonth=util.formatLocalMonth(this.inputForm.yearMonth)
+              axios.post('/api/basic/hr/dutyWorktime/import', qs.stringify(submitData)).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
+                this.initPage();
               }).catch(function () {
                 that.submitDisabled = false;
               });
@@ -70,14 +75,13 @@
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
+        },initPage(){
+          axios.get('/api/basic/hr/dutyWorktime/getForm').then((response)=>{
+            this.inputForm = response.data;
+          })
         }
-      },
-      activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
-          
-        }
-        this.isInit = true;
+      },created(){
+          this.initPage();
       }
   }
 </script>

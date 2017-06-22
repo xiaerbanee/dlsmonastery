@@ -45,31 +45,31 @@ public class OppoController {
         List<String> mainPasswords = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).getValue(), CharConstant.COMMA);
         LocalDate localDate = LocalDateUtils.parse(date);
         List<OppoPlantProductSel> plantProductSel = oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
-        //同步颜色编码
-        logger.info("开始同步颜色编码");
-        oppoService.pullPlantProductSels(plantProductSel);
-        logger.info("开始同步物料编码");
-        //同步物料编码
+//        //同步颜色编码
+//        logger.info("开始同步颜色编码");
+//        oppoService.pullPlantProductSels(plantProductSel);
+//        logger.info("开始同步物料编码");
+//        //同步物料编码
         List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(mainCodes.get(0), mainPasswords.get(0), "");
-        String message = oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
+//        String message = oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
         //同步发货串吗
-        for (int i = 0; i < mainCodes.size(); i++) {
-            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(mainCodes.get(i), mainPasswords.get(i), localDate);
-            if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
-                oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, mainCodes.get(i));
-            }
-        }
+//        for (int i = 0; i < mainCodes.size(); i++) {
+//            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(mainCodes.get(i), mainPasswords.get(i), localDate);
+//            if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
+//                oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, mainCodes.get(i));
+//            }
+//        }
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(mainCodes.get(0), mainPasswords.get(0), localDate);
-        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
-        RequestUtils.getRequestEntity().setAccountId("1");
+//        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(mainCodes.get(0), mainPasswords.get(0), localDate);
+//        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         return "OPPO同步成功";
     }
 
     @RequestMapping(value = "synIme")
     public String synIme(String date) {
-        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselDtos = oppoService.synIme(date);
-        return ObjectMapperUtils.writeValueAsString(oppoPlantSendImeiPpselDtos);
+//        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselDtos = oppoService.synIme(date);
+//        return ObjectMapperUtils.writeValueAsString(oppoPlantSendImeiPpselDtos);
+        return "";
     }
 
     //代理商经销商基础数据上抛
