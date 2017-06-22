@@ -21,7 +21,7 @@ import java.time.LocalDate;
 class OppoRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     fun plantProductSel(companyId: String,password: String, branchId: String): MutableList<OppoPlantProductSel>{
-        var paramMap = Maps.newHashMap<String, Any>();
+        val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("companyId",companyId);
         paramMap.put("password",password);
         paramMap.put("branchId",branchId);
@@ -34,7 +34,7 @@ class OppoRepository @Autowired constructor(val namedParameterJdbcTemplate: Name
     }
 
     fun plantAgentProductSel(companyId: String, password: String, branchId: String): MutableList<OppoPlantAgentProductSel>{
-        var paramMap = Maps.newHashMap<String, Any>();
+        val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("companyId",companyId);
         paramMap.put("password",password);
         paramMap.put("branchId",branchId);
@@ -47,7 +47,7 @@ class OppoRepository @Autowired constructor(val namedParameterJdbcTemplate: Name
     }
 
     fun plantSendImeiPPSel(companyId: String,  password: String, createdTime: LocalDate): MutableList<OppoPlantSendImeiPpsel>{
-        var paramMap = Maps.newHashMap<String, Any>();
+        val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("companyId",companyId);
         paramMap.put("password",password);
         paramMap.put("createdTime",createdTime);
@@ -60,15 +60,8 @@ class OppoRepository @Autowired constructor(val namedParameterJdbcTemplate: Name
         """,paramMap,BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java));
     }
 
-    @Query("""
-        call PlantProductItemelectronSel (
-         :companyId,
-         :password,
-         :systemDate
-        )
-    """, nativeQuery = true)
     fun plantProductItemelectronSel(companyId: String, password: String, systemDate: LocalDate): MutableList<OppoPlantProductItemelectronSel>{
-        var paramMap = Maps.newHashMap<String, Any>();
+        val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("companyId",companyId);
         paramMap.put("password",password);
         paramMap.put("systemDate",systemDate);

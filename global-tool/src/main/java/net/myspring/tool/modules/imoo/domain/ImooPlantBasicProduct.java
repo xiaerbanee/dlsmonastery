@@ -18,8 +18,6 @@ public class ImooPlantBasicProduct extends IdEntity<ImooPlantBasicProduct> {
     private String plname;
     private String createdTime;
     private String productId;
-    private List<ImooProductMap> imooProductMapList = Lists.newArrayList();
-    private List<String> imooProductMapIdList = Lists.newArrayList();
 
     public String getSegment1() {
         return segment1;
@@ -67,22 +65,6 @@ public class ImooPlantBasicProduct extends IdEntity<ImooPlantBasicProduct> {
 
     public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
-    }
-
-    public List<ImooProductMap> getImooProductMapList() {
-        return imooProductMapList;
-    }
-
-    public void setImooProductMapList(List<ImooProductMap> imooProductMapList) {
-        this.imooProductMapList = imooProductMapList;
-    }
-
-    public List<String> getImooProductMapIdList() {
-        return imooProductMapIdList;
-    }
-
-    public void setImooProductMapIdList(List<String> imooProductMapIdList) {
-        this.imooProductMapIdList = imooProductMapIdList;
     }
 
     public String getProductId() {
