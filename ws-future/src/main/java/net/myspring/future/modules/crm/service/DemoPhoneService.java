@@ -10,6 +10,7 @@ import net.myspring.future.modules.crm.dto.DemoPhoneDto;
 import net.myspring.future.modules.crm.repository.DemoPhoneRepository;
 import net.myspring.future.modules.crm.web.form.DemoPhoneForm;
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -60,10 +62,15 @@ public class DemoPhoneService {
         demoPhoneRepository.logicDelete(id);
     }
 
-    public void save(DemoPhoneForm demoPhoneForm) {
+    public String save(DemoPhoneForm demoPhoneForm) {
+        Map<String,DemoPhone> demoPhoneMap = CollectionUtil.extractToMap(demoPhoneRepository.findAll(),"productImeId");
+        if(demoPhoneMap.get(demoPhoneForm.getProductImeId())!=null){
+            return "此串码已在演示用机中存在";
+        }
         DemoPhone demoPhone = BeanUtil.map(demoPhoneForm,DemoPhone.class);
         demoPhone.setStatus(AuditStatusEnum.已通过.name());
         demoPhoneRepository.save(demoPhone);
+        return null;
     }
 
     public String findSimpleExcelSheets(Workbook workbook, DemoPhoneQuery demoPhoneQuery) {

@@ -100,7 +100,9 @@
       },exportData(){
         this.exportVisible = false;
         this.formData.formatMonth = util.formatLocalMonth(this.month);
-        window.location.href="/api/basic/hr/dutyWorktime/export?formatMonth="+this.formData.formatMonth;
+        axios.get('/api/basic/hr/dutyWorktime/export?month='+this.formData.formatMonth).then((response)=> {
+          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+        });
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;

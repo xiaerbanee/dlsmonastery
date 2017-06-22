@@ -36,8 +36,8 @@ public class DepotDetailController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public ModelAndView export(HttpServletRequest request) {
-        return null;
+    public String export(DepotDetailQuery depotDetailQuery) {
+        return depotDetailService.export(depotDetailQuery);
     }
 
 }
