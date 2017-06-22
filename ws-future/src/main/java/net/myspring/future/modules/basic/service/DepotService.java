@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -127,15 +128,22 @@ public class DepotService {
         cacheUtils.initCacheInput(page.getContent());
 
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-//        customerReceiveQuery.setDateRange(depotAccountQuery.getDutyDateRange());
+        customerReceiveQuery.setDateStart(LocalDateUtils.format(depotAccountQuery.getDutyDateStart(),"yyyy-MM-dd"));
+        customerReceiveQuery.setDateEnd(LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(),"yyyy-MM-dd"));
         customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
         List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
         Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
 
         for(DepotAccountDto depotAccountDto : page.getContent()){
             CustomerReceiveDto customerReceiveDto = customerReceiveDtoMap.get(depotAccountDto.getClientOutId());
-            depotAccountDto.setQcys(customerReceiveDto.getBeginShouldGet());
-            depotAccountDto.setQmys(customerReceiveDto.getEndShouldGet());
+            if (customerReceiveDto != null){
+                depotAccountDto.setQcys(customerReceiveDto.getBeginShouldGet());
+                depotAccountDto.setQmys(customerReceiveDto.getEndShouldGet());
+            }else {
+                depotAccountDto.setQcys(BigDecimal.ZERO);
+                depotAccountDto.setQmys(BigDecimal.ZERO);
+            }
+
         }
 
         return page;
