@@ -28,8 +28,4 @@ public class BdDepartmentController {
         return bdDepartmentService.findAll();
     }
 
-    @RequestMapping(value = "findCustId")
-    public BdDepartment findCustId(String custId){
-        return bdDepartmentService.findByCustId(custId);
-    }
 }
