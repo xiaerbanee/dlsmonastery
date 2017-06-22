@@ -15,12 +15,12 @@ import java.util.List;
 public class PriceChangeDto extends DataDto<PriceChange> {
 
     private String name;
-    private String productTypeIds;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;
     private Integer checkPercent;
     private String status;
 
+    private String productTypeIds;
     private List<String> productTypeIdList;
     @CacheInput(inputKey = "productTypes",inputInstance = "productTypeIdList",outputInstance = "name")
     private List<String> productTypeNameList;
@@ -52,11 +52,7 @@ public class PriceChangeDto extends DataDto<PriceChange> {
     }
 
     public List<String> getProductTypeIdList() {
-        if(this.productTypeIds!=null){
-            return Arrays.asList(this.productTypeIds.split(CharConstant.COMMA));
-        }else{
-            return null;
-        }
+        return productTypeIdList;
     }
 
     public void setProductTypeIdList(List<String> productTypeIdList) {
