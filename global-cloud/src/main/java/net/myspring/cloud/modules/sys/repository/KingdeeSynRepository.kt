@@ -29,7 +29,27 @@ interface KingdeeSynRepositoryCustom{
 class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): KingdeeSynRepositoryCustom{
     override fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSyn>? {
         var sb = StringBuilder("select * from sys_kingdee_syn where enabled=1 ");
-
+        if(kingdeeSynQuery.createdDate != null){
+            sb.append(" and date(created_date) = :createdDate ");
+        }
+        if(StringUtils.isNotBlank(kingdeeSynQuery.billNo)){
+            sb.append(" and bill_no like CONCAT('%',:billNo,'%')");
+        }
+        if(StringUtils.isNotBlank(kingdeeSynQuery.extendId)){
+            sb.append(" and extend_id like CONCAT('%',:extendId,'%') ");
+        }
+        if(StringUtils.isNotBlank(kingdeeSynQuery.extendType)){
+            sb.append(" and extend_type = :extendType ");
+        }
+        if(kingdeeSynQuery.success){
+            sb.append(" and success = :success ");
+        }
+        if(kingdeeSynQuery.locked){
+            sb.append(" and locked = :locked ");
+        }
+        if(StringUtils.isNotBlank(kingdeeSynQuery.kingdeeBookId)){
+            sb.append(" and kingdee_book_id = :kingdeeBookId ");
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(kingdeeSynQuery), BeanPropertyRowMapper(KingdeeSyn::class.java));

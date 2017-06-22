@@ -112,6 +112,7 @@ export default {
       voucherList:"凭证管理",
       voucherForm:"凭证管理编辑",
       kingdeeSynList:'金蝶核对',
+      kingdeeSynDetail:'金蝶核对详细',
       404: "404",
       companyConfigForm: "参数设置编辑",
       companyConfigList: "参数设置",

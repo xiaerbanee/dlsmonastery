@@ -126,7 +126,7 @@
             axios.post('/api/ws/future/layout/adGoodsOrder/audit', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
 
-              this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
+              this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList"), params:{_closeFrom:true}});
 
             }).catch(() => {
               this.submitDisabled = false;
