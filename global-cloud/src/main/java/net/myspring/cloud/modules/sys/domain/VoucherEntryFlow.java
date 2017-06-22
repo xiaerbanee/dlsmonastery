@@ -5,6 +5,7 @@ import net.myspring.cloud.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 @Entity
@@ -18,6 +19,10 @@ public class VoucherEntryFlow extends IdEntity<VoucherEntryFlow> {
     private String code;
 
     private String glVoucherEntryId;
+
+    //核算维度名称
+    @Transient
+    private String flexName;
 
     public String getName() {
         return name;
@@ -49,5 +54,17 @@ public class VoucherEntryFlow extends IdEntity<VoucherEntryFlow> {
 
     public void setGlVoucherEntryId(String glVoucherEntryId) {
         this.glVoucherEntryId = glVoucherEntryId;
+    }
+
+    public String getFlexName() {
+        return flexName;
+    }
+
+    public void setFlexName(String flexName) {
+        this.flexName = flexName;
+    }
+
+    public String getFlexNumber() {
+        return name.replaceFirst("FDetailID__","");
     }
 }

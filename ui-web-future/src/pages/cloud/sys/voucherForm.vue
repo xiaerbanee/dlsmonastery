@@ -33,6 +33,8 @@
   import ElInputNumber from "../../../../node_modules/element-ui/packages/input-number/src/input-number";
   import ElFormItem from "../../../../node_modules/element-ui/packages/form/src/form-item";
   var table = null;
+  var accountNameToFlexGroupNamesMap = {};
+  var headers = [];
   export default {
     data() {
       return {
@@ -43,16 +45,42 @@
           rowHeaders:true,
           autoColumnSize:true,
           stretchH: 'all',
-          minSpareRows: 1,
+          minSpareRows: 10,
           height: 650,
           colHeaders: [],
           columns: [],
+          data:{},
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
             if (source !== 'loadData') {
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
+                if (column === headers.length - 1) {//贷方金额
+                  if (changes[i][3] !== '') {
+                      table.setDataAtCell(row, headers.length - 2, '');
+                  }
+                }
+                if (column === headers.length - 2) {//借方金额
+                  if (changes[i][3] !== '') {
+                    table.setDataAtCell(row, headers.length - 1, '');
+                  }
+                }
+                if (column === 1) {//科目名称
+                  for(let j=2;j<headers.length-2;j++) {
+                    let flexGroupNames = accountNameToFlexGroupNamesMap[changes[i][3]];
+                    if(flexGroupNames) {
+                      //不包含
+                      if(flexGroupNames.indexOf(headers[j]) === -1) {
+                        table.setCellMeta(row, j, 'readOnly', true);
+                      } else {
+                        table.setCellMeta(row, j, 'readOnly', false);
+                      }
+                    } else {
+                      table.setCellMeta(row, j, 'readOnly', true);
+                    }
+                  }
+                }
               }
             }
           }
@@ -71,10 +99,12 @@
       axios.get('/api/global/cloud/sys/voucher/form').then((response)=>{
         let extra = response.data.extra;
         this.settings.colHeaders = extra.headerList;
+        accountNameToFlexGroupNamesMap = extra.accountNameToFlexGroupNamesMap;
         this.settings.columns.push({type: 'text', allowEmpty: false, strict: true});
         this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName});
         this.settings.columns[1].source = extra.accountNameList;
         let colHeaders = extra.headerList;
+        headers = extra.headerList;
         for (let i=0;i<colHeaders.length;i++){
             if(colHeaders[i] === "供应商") {
               this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, supplierName:[],source: this.supplierName});
@@ -101,6 +131,7 @@
         }
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true});
         this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: false, strict: true});
+        this.settings.data = extra.data;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
