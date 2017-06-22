@@ -23,7 +23,7 @@
         return this.getData()
       },
     mounted () {
-      this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      table = new Handsontable(this.$refs["handsontable"], this.settings)
     },
     methods:{
       getData(){
@@ -126,8 +126,9 @@
                 var style=changes[0][1];//列名
                 if(style=='depot'){
                   var name=changes[0][3];//表格值
-                  axios.post('/api/ws/future/employeePhoneDeposit/searchDepartment?depotName='+name.trim()).then((response)=> {
-                    this.table('setDataAtCell', row, 3, response.data);
+                  axios.post('/api/ws/future/basic/depot/searchDepartment?depotName='+name.trim()).then((response)=> {
+                    console.log(response.data)
+                    table.setDataAtCell(row, 3, response.data);
                   })
                 }
               }
@@ -142,9 +143,9 @@
         form.validate((valid) => {
           if (valid) {
             this.inputForm.data =new Array();
-            let list=this.table.getData();
+            let list=table.getData();
             for(var item in list){
-              if(!this.table.isEmptyRow(item)){
+              if(!table.isEmptyRow(item)){
                 this.inputForm.data.push(list[item]);
               }
             }
@@ -169,7 +170,7 @@
     },created(){
         axios.get('/api/ws/future/basic/employeePhoneDeposit/getBatchForm').then((response)=> {
           this.settings.columns[3].source=response.data.extra.departments;
-          this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+          table = new Handsontable(this.$refs["handsontable"], this.settings)
         })
     }
   }
