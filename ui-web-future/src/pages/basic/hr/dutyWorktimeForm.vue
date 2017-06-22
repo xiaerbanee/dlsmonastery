@@ -34,11 +34,12 @@
       methods:{
         getData(){
           return{
-            isInit:false,
             submitDisabled:false,
             fileList:[],
             headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
-            inputForm:{},
+            inputForm:{
+              extra:{}
+            },
             rules: {
               importFile: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
               yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
@@ -55,6 +56,7 @@
               axios.get('/api/basic/hr/dutyWorktime/import', {params: this.inputForm}).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
+                this.initPage();
               }).catch(function () {
                 that.submitDisabled = false;
               });
@@ -68,14 +70,13 @@
           this.fileList = fileList;
         },handleRemove(file, fileList) {
           this.fileList = fileList;
+        },initPage(){
+          axios.get('/api/basic/hr/dutyWorktime/getForm').then((response)=>{
+            this.inputForm = response.data;
+          })
         }
-      },
-      activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data, this.getData());
-
-        }
-        this.isInit = true;
+      },created(){
+          this.initPage();
       }
   }
 </script>
