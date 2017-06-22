@@ -23,7 +23,10 @@
               <el-input v-model="inputForm.newValue" ></el-input>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='有无导购' || inputForm.type=='是否让利'" :label="$t('depotChangeForm.newValue')" prop="newValue">
-              <bool-select  v-model="inputForm.newValue"></bool-select>
+              <el-select  v-model="inputForm.newValue">
+                <el-option value="是">是</el-option>
+                <el-option value="否">否</el-option>
+              </el-select>
             </el-form-item>
             <el-form-item v-show="inputForm.type=='价格体系'" :label="$t('depotChangeForm.newValue')" prop="newValue" >
               <el-select v-model="inputForm.newValue" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
