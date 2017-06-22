@@ -14,7 +14,7 @@
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.productIme')" prop="productImeId">
           <el-select v-model="inputForm.productImeId" clearable filterable remote :placeholder="$t('demoPhoneForm.inputImeLast6')" :remote-method="remoteProductIme" :loading="remoteLoading">
-            <el-option v-for="productIme in productImes" :key="productIme.id" :label="productIme.ime" :value="productIme.id"></el-option>
+            <el-option v-for="productIme in productImes" :key="productIme.id" :label="productIme.ime+' '+productIme.productName" :value="productIme.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneForm.remarks')" prop="remarks">
@@ -81,9 +81,9 @@
           }
         })
       },remoteProductIme(query) {
-        if (query !== '' && query.length>=6 && this.inputForm.shopId) {
+        if (query !== '' && query.length>=6) {
           this.remoteLoading = true;
-          axios.get('/api/ws/future/crm/productIme/search',{params: {productIme:query,shopId:this.inputForm.shopId}}).then((response)  =>{
+          axios.get('/api/ws/future/crm/productIme/search',{params: {productIme:query}}).then((response)  =>{
             this.productImes=response.data;
             this.remoteLoading = false;
           })
