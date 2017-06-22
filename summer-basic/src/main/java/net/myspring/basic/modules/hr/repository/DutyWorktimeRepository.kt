@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.repository
 
 import net.myspring.basic.common.repository.BaseRepository
+import net.myspring.basic.modules.hr.domain.Account
 import net.myspring.basic.modules.hr.domain.DutyWorktime
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -49,7 +51,9 @@ interface DutyWorktimeRepository : BaseRepository<DutyWorktime,String>,DutyWorkt
     """)
     fun findByEmployeeAndDate(@Param("employeeId") employeeId: String, @Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<DutyWorktime>
 
-
+    @Modifying
+    @Query("delete from #{#entityName} t where t.employeeId = ?1 and t.dutyDate=?2 and type=?3 and t.enabled=1")
+     fun deleteByEmployeeAndDutyDateAndType(employeeId: String, dutyDate: LocalDate, type: String): Int
 }
 interface DutyWorktimeRepositoryCustom{
     fun findByAccountIdAndDutyDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("accountIds") accountIds: MutableList<Long>): MutableList<DutyWorktime>

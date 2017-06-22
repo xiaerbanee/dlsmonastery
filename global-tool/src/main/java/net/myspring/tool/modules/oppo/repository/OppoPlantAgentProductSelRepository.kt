@@ -1,21 +1,33 @@
 package net.myspring.tool.modules.oppo.repository;
+import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
+import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 
 ;
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 
 /**
  * Created by admin on 2016/10/11.
  */
-@Repository
-interface OppoPlantAgentProductSelRepository:BaseRepository<OppoPlantAgentProductSel,String> {
+@Component
+class OppoPlantAgentProductSelRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    @Query("select t.item_number from #{#entityName} t where t.item_number in ?1")
-    fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<String>
+    fun findItemNumbers(itemNumbers:MutableList<String>): MutableList<String> {
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("itemNumbers",itemNumbers);
+        val  sql=" select t.itemNumber from #{#entityName} t where t.itemNumber in :itemNumbers";
+        return namedParameterJdbcTemplate.query(sql,paramMap,BeanPropertyRowMapper(String::class.java));
+    }
 
-    @Query("select * from #{#entityName} t  where t.productId is not null or t.lxProductId is not null ")
-    fun findAllByProductId():MutableList<OppoPlantAgentProductSel>
-
+    fun findAllByProductId(): MutableList<OppoPlantAgentProductSel> {
+        val  sql="select * from #{#entityName} t  where t.productId is not null or t.lxProductId is not null";
+        return namedParameterJdbcTemplate.query(sql,BeanPropertyRowMapper(OppoPlantAgentProductSel::class.java));
+    }
 }

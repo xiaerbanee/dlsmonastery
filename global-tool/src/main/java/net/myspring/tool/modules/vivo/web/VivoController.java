@@ -30,8 +30,8 @@ public class VivoController {
 
     @RequestMapping(value="syn")
     public String synFactoryVivo(String date){
-        RequestUtils.getRequestEntity().setAccountId("1");
-        RequestUtils.getRequestEntity().setCompanyId("1");
+//        RequestUtils.getRequestEntity().setAccountId("1");
+//        RequestUtils.getRequestEntity().setCompanyId("1");
         List<String> agentCodes = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue(),CharConstant.COMMA);
         //同步颜色编码
         LocalDate localDate= LocalDateUtils.parse(date);
@@ -47,7 +47,6 @@ public class VivoController {
 //        //同步电子保卡
         List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.plantElectronicsn(localDate);
         vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
-        RequestUtils.getRequestEntity().setAccountId("1");
         return "vivo同步成功";
     }
 

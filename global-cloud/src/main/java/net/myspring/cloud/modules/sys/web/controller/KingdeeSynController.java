@@ -4,6 +4,8 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 金蝶同步
  * Created by lihx on 2017/6/21.
  */
 @RestController
@@ -31,5 +34,18 @@ public class KingdeeSynController {
         KingdeeSynQuery kingdeeSynQuery = new KingdeeSynQuery();
         kingdeeSynQuery.getExtra().put("extendTypeList", ExtendTypeEnum.values());
         return kingdeeSynQuery;
+    }
+
+    @RequestMapping(value = "findOne")
+    public KingdeeSyn findOne(String id){
+        KingdeeSyn kingdeeSyn = kingdeeSynService.findOne(id);
+        return kingdeeSyn;
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id){
+        kingdeeSynService.logicDelete(id);
+        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+        return restResponse;
     }
 }

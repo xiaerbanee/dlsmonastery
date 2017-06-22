@@ -250,7 +250,7 @@ public class DepotService {
 
     }
 
-    public String getDefaultDepartMent(String depotId) {
+    public String getDefaultDepartment(String depotId) {
         ClientDto clientDto = clientRepository.findByDepotId(depotId);
         if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
             return null;

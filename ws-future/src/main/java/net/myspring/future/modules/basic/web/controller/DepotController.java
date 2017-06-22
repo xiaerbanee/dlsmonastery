@@ -157,7 +157,7 @@ public class DepotController {
         if(StringUtils.isBlank(depotId)){
             return null;
         }
-        return depotService.getDefaultDepartMent(depotId);
+        return depotService.getDefaultDepartment(depotId);
     }
 
     @RequestMapping(value = "getRecentMonthSaleAmount")

@@ -77,4 +77,8 @@ public class LocalTimeUtils {
             return true;
         }
     }
+
+    public static boolean isAm(LocalTime localTime){
+        return localTime.isBefore(LocalTime.MIDNIGHT);
+    }
 }

@@ -106,19 +106,15 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             if(StringUtils.isNotBlank(afterSaleQuery.type)){
                 sb.append(""" and t5.type=:type""")
             }
-            if(StringUtils.isNotBlank(afterSaleQuery.productTypeId)){
-                sb.append(""" and t3.product_type_id=:productTypeId""")
-            }
             if(StringUtils.isNotBlank(afterSaleQuery.badDepotName)){
-                sb.append(""" and t4.name=:badDepotName""")
+                sb.append(""" and t4.name LIKE CONCAT('%',:badDepotName,'%')""")
             }
             if(StringUtils.isNotBlank(afterSaleQuery.detailRemarks)){
-                sb.append(""" and t5.remarks=:detailRemarks""")
+                sb.append(""" and t5.remarks LIKE CONCAT('%',:detailRemarks,'%')""")
             }
             if(CollectionUtil.isNotEmpty(afterSaleQuery.replaceProductImeList)){
                 sb.append(""" and t9.ime in(:replaceProductImeList)""")
             }
-           print(sb.toString())
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
             var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));

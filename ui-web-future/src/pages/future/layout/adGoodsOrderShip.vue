@@ -125,6 +125,11 @@
     },
     methods:{
       formSubmit(){
+
+          if(!this.validateTableInfo()){
+            this.$message( '明细的开单数必须是不小于0的数字，且总发货数要大于0');
+              return;
+          }
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -164,7 +169,22 @@
         }
 			  this.inputForm.expressOrderRealPay=realPay;
 
-      }, searchDetail(){
+      },validateTableInfo(){
+          let totalQty = 0;
+        for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+            if(util.isNotBlank(adGoodsOrderDetail.shipQty) && isNaN(adGoodsOrderDetail.shipQty)){
+                return false;
+            }
+            if(util.isNotBlank(adGoodsOrderDetail.shipQty)){
+                if(adGoodsOrderDetail.shipQty<0){
+                    return false;
+                }
+              totalQty += adGoodsOrderDetail.shipQty;
+            }
+        }
+        return totalQty > 0;
+      }
+      , searchDetail(){
         let val = this.productName;
         if(!val){
           this.filterAdGoodsOrderDetailList = this.inputForm.adGoodsOrderDetailList;
