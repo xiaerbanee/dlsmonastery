@@ -3,7 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.BillTypeEnum;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ApPayBillDto;
@@ -97,7 +97,7 @@ public class ApPayBillService {
             String billKey = supplierName + CharConstant.COMMA + departmentName + CharConstant.COMMA + bankAcntName + CharConstant.COMMA + settleTypeName + CharConstant.COMMA + amount + CharConstant.COMMA + note + CharConstant.COMMA + accountName;
             if (!payBillMap.containsKey(billKey)) {
                 ApPayBillDto payBill = new ApPayBillDto();
-                payBill.setExtendType(BillTypeEnum.付款单_K3.name());
+                payBill.setExtendType(ExtendTypeEnum.付款单_K3.name());
                 payBill.setCreatorK3(accountKingdeeBook.getUsername());
                 payBill.setDate(billDate);
                 payBill.setDepartmentNumber(departmentNameMap.get(departmentName));
