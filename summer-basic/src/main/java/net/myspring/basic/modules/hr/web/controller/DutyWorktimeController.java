@@ -4,6 +4,7 @@ import net.myspring.basic.modules.hr.domain.DutyWorktime;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.service.DutyWorktimeService;
+import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -41,6 +42,11 @@ public class DutyWorktimeController {
     @RequestMapping(value = "getQuery")
     public DutyWorktimeQuery getQuery(DutyWorktimeQuery dutyWorktimeQuery) {
         return dutyWorktimeQuery;
+    }
+
+    @RequestMapping(value = "getForm")
+    public DutyWorktimeForm getForm(DutyWorktimeForm dutyWorktimeForm){
+        return dutyWorktimeForm;
     }
 
     @RequestMapping(method = RequestMethod.GET)
