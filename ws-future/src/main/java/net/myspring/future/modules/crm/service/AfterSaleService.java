@@ -517,7 +517,7 @@ public class AfterSaleService {
             afterSale.setEnabled(false);
             afterSaleRepository.save(afterSale);
             AfterSaleFlee afterSaleFlee=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
-            if(afterSale!=null){
+            if(afterSaleFlee!=null){
                 afterSaleFlee.setEnabled(false);
                 afterSaleFleeRepository.save(afterSaleFlee);
             }
