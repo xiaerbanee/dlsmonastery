@@ -10,9 +10,6 @@ import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.imoo.domain.ImooPlantBasicProduct;
 import net.myspring.tool.modules.imoo.domain.ImooPrdocutImeiDeliver;
 import net.myspring.tool.modules.imoo.repository.ImooRepository;
-import net.myspring.tool.modules.imoo.repository.ImooPlantBasicProductRepository;
-import net.myspring.tool.modules.imoo.repository.ImooPrdocutImeiDeliverRepository;
-import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -33,10 +30,10 @@ import java.util.List;
 public class ImooService {
     @Autowired
     private ImooRepository imooRepository;
-    @Autowired
-    private ImooPlantBasicProductRepository imooPlantBasicProductRepository;
-    @Autowired
-    private ImooPrdocutImeiDeliverRepository imooPrdocutImeiDeliverRepository;
+//    @Autowired
+//    private ImooPlantBasicProductRepository imooPlantBasicProductRepository;
+//    @Autowired
+//    private ImooPrdocutImeiDeliverRepository imooPrdocutImeiDeliverRepository;
     @Autowired
     private RedisTemplate redisTemplate;
 
@@ -60,15 +57,15 @@ public class ImooService {
         if (CollectionUtil.isNotEmpty(imooPlantBasicProducts)) {
             List<ImooPlantBasicProduct> list = Lists.newArrayList();
             List<String> segment1s = CollectionUtil.extractToList(imooPlantBasicProducts, "segment1");
-            List<String> localSegment1s = imooPlantBasicProductRepository.findSegment1s(segment1s);
-            for (ImooPlantBasicProduct item : imooPlantBasicProducts) {
-                if (!localSegment1s.contains(item.getSegment1())) {
-                    list.add(item);
-                }
-            }
-            if (CollectionUtil.isNotEmpty(list)) {
-                imooPlantBasicProductRepository.save(list);
-            }
+//            List<String> localSegment1s = imooPlantBasicProductRepository.findSegment1s(segment1s);
+//            for (ImooPlantBasicProduct item : imooPlantBasicProducts) {
+//                if (!localSegment1s.contains(item.getSegment1())) {
+//                    list.add(item);
+//                }
+//            }
+//            if (CollectionUtil.isNotEmpty(list)) {
+//                imooPlantBasicProductRepository.save(list);
+//            }
         }
     }
 
@@ -83,19 +80,19 @@ public class ImooService {
             if (CollectionUtil.isNotEmpty(imooPrdocutImeiDelivers)) {
                 List<String> imeis = CollectionUtil.extractToList(imooPrdocutImeiDelivers, "imei");
                 if (CollectionUtil.isNotEmpty(imeis)) {
-                    List<String> localImeis = imooPrdocutImeiDeliverRepository.findImeis(imeis);
-                    for (ImooPrdocutImeiDeliver item : imooPrdocutImeiDelivers) {
-                        if (!localImeis.contains(item.getImei())) {
-                            item.setCompanyId(agentCode);
-                            list.add(item);
-                        }
-                    }
+//                    List<String> localImeis = imooPrdocutImeiDeliverRepository.findImeis(imeis);
+//                    for (ImooPrdocutImeiDeliver item : imooPrdocutImeiDelivers) {
+//                        if (!localImeis.contains(item.getImei())) {
+//                            item.setCompanyId(agentCode);
+//                            list.add(item);
+//                        }
+//                    }
                 }
             }
         }
-        if (CollectionUtil.isNotEmpty(list)) {
-            imooPrdocutImeiDeliverRepository.save(list);
-        }
+//        if (CollectionUtil.isNotEmpty(list)) {
+//            imooPrdocutImeiDeliverRepository.save(list);
+//        }
         return "发货串码同步成功，共同步" + list.size() + "条数据";
     }
 
@@ -106,7 +103,8 @@ public class ImooService {
         LocalDate dateEnd = nowDate.plusDays(1);
         List<String>  mainCodes=Lists.newArrayList();
         mainCodes.add("M13A03");
-        List<ImooPrdocutImeiDeliver> prdocutImeiDelivers = imooPrdocutImeiDeliverRepository.findSynList(dateStart, dateEnd, mainCodes);
-        return prdocutImeiDelivers;
+//        List<ImooPrdocutImeiDeliver> prdocutImeiDelivers = imooPrdocutImeiDeliverRepository.findSynList(dateStart, dateEnd, mainCodes);
+//        return prdocutImeiDelivers;
+        return null;
     }
 }

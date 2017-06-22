@@ -268,7 +268,7 @@ export default {
     alertDealErrorData: "请处理异常数据后保存",
   },
   bankInForm: {
-    bankInForm: "销售收款添加",
+    bankInForm: "销售收款编辑",
     shopName: "门店",
     type: "类型",
     saleMoney: "销售收款",

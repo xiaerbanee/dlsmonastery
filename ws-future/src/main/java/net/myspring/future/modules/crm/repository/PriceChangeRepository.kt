@@ -69,18 +69,17 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {
         val sb = StringBuilder("""
          SELECT
-            group_concat(DISTINCT productType.name) productTypeName, t1.*
+            group_concat(DISTINCT product.product_type_id) productTypeIds, t1.*
         FROM
-            crm_price_change t1,crm_price_change_product product,crm_product_type productType
+            crm_price_change t1
+            LEFT JOIN crm_price_change_product product ON  t1.id = product.price_change_id
         WHERE
             t1.enabled=1
-            AND product.product_type_id = productType.id
-            AND product.price_change_id = t1.id
         """)
         if (StringUtils.isNotEmpty(priceChangeQuery.name)) {
             sb.append("""  AND t1.name LIKE CONCAT('%', :name, '%')  """)
         }
-        sb.append("""  GROUP BY product.price_change_id  """)
+        sb.append("""  GROUP BY t1.id  """)
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
