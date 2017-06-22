@@ -41,10 +41,10 @@ class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(StringUtils.isNotBlank(kingdeeSynQuery.extendType)){
             sb.append(" and extend_type = :extendType ");
         }
-        if(kingdeeSynQuery.success){
+        if(kingdeeSynQuery.success != null){
             sb.append(" and success = :success ");
         }
-        if(kingdeeSynQuery.locked){
+        if(kingdeeSynQuery.locked != null){
             sb.append(" and locked = :locked ");
         }
         if(StringUtils.isNotBlank(kingdeeSynQuery.kingdeeBookId)){

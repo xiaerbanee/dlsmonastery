@@ -42,6 +42,14 @@ public class KingdeeSynController {
         return kingdeeSyn;
     }
 
+    @RequestMapping(value = "syn")
+    public RestResponse syn(String id){
+        KingdeeSyn kingdeeSyn = kingdeeSynService.findOne(id);
+        //待写
+        RestResponse restResponse = new RestResponse("未同步", null,false);
+        return restResponse;
+    }
+
     @RequestMapping(value = "delete")
     public RestResponse delete(String id){
         kingdeeSynService.logicDelete(id);
