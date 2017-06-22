@@ -98,7 +98,7 @@
                 } else {
                   var productNames = new Array();
                   if(query.length>=2) {
-                    axios.get('/api/ws/future/basic/product/searchFullText?key='+query).then((response)=>{
+                    axios.get('/api/ws/future/basic/product/filter?name='+query+"&hasIme="+true).then((response)=>{
                       if(response.data.length>0) {
                         for(var index in response.data) {
                           var productName = response.data[index].name;
