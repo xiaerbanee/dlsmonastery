@@ -19,10 +19,12 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.DepotAdApplyForm;
 import net.myspring.future.modules.basic.web.form.ProductAdForm;
@@ -79,6 +81,8 @@ public class AdApplyService {
     private ProductRepository productRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
@@ -200,13 +204,8 @@ public class AdApplyService {
     }
 
     public void billSave(AdApplyBillForm adApplyBillForm){
-
-
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
         Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");
-        Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
-        Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
-        Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<AdApply> adApplyList = adApplyRepository.findAll(adApplyId);
         Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
         List<AdGoodsOrderDetail> adGoodsOrderDetails = Lists.newArrayList();
@@ -214,7 +213,6 @@ public class AdApplyService {
         if(adApplyList == null){
             return;
         }
-
         //生成AdGoodsOrder
         for(AdApply adApply:adApplyList){
             if(!adGoodsOrderMap.containsKey(adApply.getShopId())){
@@ -246,43 +244,14 @@ public class AdApplyService {
 
         //自动开单
         String maxBusinessId = adGoodsOrderRepository.findMaxBusinessId(adApplyBillForm.getBillDate());
-        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
-            Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
-            Client client = clientMap.get(outShop.getClientId());
-            if(client == null || StringUtils.isBlank(client.getOutId())){
-                throw new ServiceException(client.getName() + " 没有关联财务账号，不能申请");
-            }
-            SalOutStockDto salOutStockDto = new SalOutStockDto();
-            salOutStockDto.setExtendId(adGoodsOrder.getId());
-            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
-            salOutStockDto.setDate(adGoodsOrder.getBillDate());
-            salOutStockDto.setCustomerNumber(client.getOutCode());//与客户number adGoodsOrder.getOutShop().getRealCode()
-            salOutStockDto.setNote(adGoodsOrder.getId()+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
-                    +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress());// getFormatId()+Const.CHAR_COMMA+getShopName()+Const.CHAR_COMMA+getContator()+Const.CHAR_COMMA+getMobilePhone()+Const.CHAR_COMMA+getAddress()
-            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+
             adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
             BigDecimal amount = BigDecimal.ZERO;
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 amount = amount.add(adGoodsOrderDetail.getPrice().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
-                Product product = productMap.get(adGoodsOrderDetail.getProductId());
-                SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                entityDto.setStoreNumber(client.getOutCode());//与仓库number getStore().getRealCode()
-                entityDto.setMaterialNumber(product.getCode());//与产品number adgoodsOrderDetail.getProduct().getCode()
-                entityDto.setQty(adGoodsOrderDetail.getBillQty());
-                // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
-                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
-                    entityDto.setPrice(product.getPrice2());//adgoodsOrderDetail.getProduct().getPrice2()
-                }else{
-                    entityDto.setPrice(BigDecimal.ZERO);
-                }
-                entityDto.setEntryNote(adGoodsOrder.getId()+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
-                        +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress());//adGoodsOrder.getId()+ Const.CHAR_COMMA + adGoodsOrder.getShopName() + Const.CHAR_COMMA+ adGoodsOrder.getContator()+ Const.CHAR_COMMA+ adGoodsOrder.getMobilePhone()+ Const.CHAR_COMMA+ adGoodsOrder.getAddress()+ Const.CHAR_COMMA+ adGoodsOrder.getRemarks());
-                entityDtoList.add(entityDto);
             }
-            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-            salOutStockDtoList.add(salOutStockDto);
             adGoodsOrder.setAmount(amount);
             adGoodsOrder.setProcessStatus(GoodsOrderStatusEnum.待发货.name());
             Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
@@ -308,7 +277,8 @@ public class AdApplyService {
             adGoodsOrderRepository.save(adGoodsOrder);
         }
         //TODO 调用金蝶接口
-        RestResponse restResponse = cloudClient.synForSalOutStock(salOutStockDtoList);
+        RestResponse restResponse = batchSynToCloud(adGoodsOrders);
+
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
         for(AdApply adApply:adApplyList){
@@ -324,7 +294,52 @@ public class AdApplyService {
             newAdApplys.add(adApply);
         }
         adApplyRepository.save(newAdApplys);
+    }
 
+    public RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
+        Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
+        Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
+        for (AdGoodsOrder adGoodsOrder : adGoodsOrderList){
+            Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
+            Client client = clientMap.get(outShop.getClientId());
+            if(client == null || StringUtils.isBlank(client.getOutId())){
+                throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
+            }
+            if(outShop.getDepotStoreId() == null || StringUtils.isBlank(outShop.getDepotStoreId())){
+                throw new ServiceException(client.getName() + " 没有关联财务仓库，不能申请");
+            }
+            DepotStore depotstore = depotStoreRepository.findOne(outShop.getDepotStoreId());
+            SalOutStockDto salOutStockDto = new SalOutStockDto();
+            salOutStockDto.setExtendId(adGoodsOrder.getId());
+            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
+            salOutStockDto.setDate(adGoodsOrder.getBillDate());
+            salOutStockDto.setCustomerNumber(client.getOutCode());
+            salOutStockDto.setNote(adGoodsOrder.getId()+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
+                    +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+            List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+            for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
+                Product product = productMap.get(adGoodsOrderDetail.getProductId());
+                SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+                entityDto.setStockNumber(depotstore.getOutCode());
+                entityDto.setMaterialNumber(product.getCode());
+                entityDto.setQty(adGoodsOrderDetail.getBillQty());
+                // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
+                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+                    entityDto.setPrice(product.getPrice2());
+                }else{
+                    entityDto.setPrice(BigDecimal.ZERO);
+                }
+                entityDto.setEntryNote(adGoodsOrder.getId()+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
+                        +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress());
+                entityDtoList.add(entityDto);
+            }
+            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+            salOutStockDtoList.add(salOutStockDto);
+        }
+        return cloudClient.synForSalOutStock(salOutStockDtoList);
 
     }
 

@@ -78,7 +78,7 @@ public class SalReturnStockService {
     }
 
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
-        String storeNumber = salStockForm.getStoreNumber();
+        String storeNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
