@@ -29,4 +29,7 @@ public class BdDepartmentService {
         return bdDepartmentRepository.findAll();
     }
 
+    public BdDepartment findByCustId(String custId){
+        return bdDepartmentRepository.findByCustId(custId);
+    }
 }

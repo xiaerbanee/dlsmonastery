@@ -58,6 +58,9 @@ public interface CloudClient {
 //    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/basicData/findAssistantCode")
 //    String findAssistantCode(@RequestParam(value = "companyName") String companyName, @RequestParam(value = "lbName") String lbName, @RequestParam(value = "name") String name);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findCustId")
+    BdDepartment findDepartmentByOutId( @RequestParam(value = "custId") String outId);
+
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
     List<BdDepartment> findAllDepartment();
 
