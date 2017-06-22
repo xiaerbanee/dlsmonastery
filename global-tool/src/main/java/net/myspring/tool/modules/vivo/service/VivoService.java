@@ -147,9 +147,9 @@ public class VivoService {
                     list.add(item);
                 }
             }
-            if(CollectionUtil.isNotEmpty(list)) {
-                vivoPlantElectronicsnRepository.save(list);
-            }
+//            if(CollectionUtil.isNotEmpty(list)) {
+//                vivoPlantElectronicsnRepository.save(list);
+//            }
         }
         return "电子保卡同步成功,共同步"+list.size()+"条数据";
     }

@@ -13,10 +13,16 @@ public class SimpleExcelColumn {
     private CellStyle headerStyle;
     private CellStyle cellStyle;
     private String fieldKey;
+    private Object value;
 
     public SimpleExcelColumn(String fieldName,String label) {
         this.fieldName = fieldName;
         this.label = label;
+    }
+
+    public SimpleExcelColumn(CellStyle cellStyle,Object value) {
+        this.cellStyle = cellStyle;
+        this.value = value;
     }
 
     public SimpleExcelColumn(Workbook workbook,String fieldName, String label) {
@@ -48,6 +54,14 @@ public class SimpleExcelColumn {
         this.label = label;
         this.headerStyle = headerStyle;
         this.cellStyle = cellStyle;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
     }
 
     public String getFieldKey() {

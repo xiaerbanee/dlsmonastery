@@ -4,6 +4,7 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Account
 import net.myspring.basic.modules.hr.dto.AccountDto
 import net.myspring.basic.modules.hr.web.query.AccountQuery
+import net.myspring.cloud.modules.kingdee.domain.StkInventory
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,6 +18,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDate
 import java.util.*
 
 
@@ -70,7 +72,6 @@ interface AccountRepository : BaseRepository<Account, String>,AccountRepositoryC
         and t.loginName in ?1
     """)
     fun findByLoginNameList(loginNames: MutableList<String>): MutableList<Account>
-
 }
 
 interface AccountRepositoryCustom{
@@ -79,9 +80,30 @@ interface AccountRepositoryCustom{
     fun findPage(pageable: Pageable, accountQuery: AccountQuery): Page<AccountDto>
 
     fun findByFilter(accountQuery: AccountQuery): MutableList<Account>
+
+    fun findByAccessLoginNameList(loginNameList:MutableList<String>,date:LocalDate): MutableList<Account>
 }
 
 class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AccountRepositoryCustom{
+    override fun findByAccessLoginNameList(loginNameList: MutableList<String>, date: LocalDate): MutableList<Account> {
+        var sb = StringBuilder()
+        sb.append("""
+            SELECT
+            t1.*
+            FROM
+            hr_account t1,hr_employee t2
+            WHERE
+            t1.enabled=1
+            and t1.employee_id=t2.id
+            and t1.login_name in(:loginNameList)
+            and (t2.leave_date is null or t2.leaveDate > :date)
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("loginNameList", loginNameList)
+        paramMap.put("date", date)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
+    }
+
     override fun findByFilter(accountQuery: AccountQuery): MutableList<Account> {
         var sb = StringBuilder()
         sb.append("""
