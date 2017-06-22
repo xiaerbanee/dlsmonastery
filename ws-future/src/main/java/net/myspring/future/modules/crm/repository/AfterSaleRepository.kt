@@ -110,7 +110,7 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 sb.append(""" and t4.name LIKE CONCAT('%',:badDepotName,'%')""")
             }
             if(StringUtils.isNotBlank(afterSaleQuery.detailRemarks)){
-                sb.append(""" and t5.remarks LIKE CONCAT('',:detailRemarks,'')""")
+                sb.append(""" and t5.remarks LIKE CONCAT('%',:detailRemarks,'%')""")
             }
             if(CollectionUtil.isNotEmpty(afterSaleQuery.replaceProductImeList)){
                 sb.append(""" and t9.ime in(:replaceProductImeList)""")
