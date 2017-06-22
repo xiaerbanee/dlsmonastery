@@ -2,6 +2,7 @@ package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
+import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
@@ -39,6 +40,21 @@ public class SalOutStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm,kingdeeBook,accountKingdeeBook);
+        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            if (kingdeeSynExtendDto.getSuccess()){
+                return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
+            }else {
+                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,false);
+            }
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "saveForXSCKD")
+    public RestResponse saveForXSCKD(List<SalOutStockDto> salOutStockDtoList) {
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
         for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
             if (kingdeeSynExtendDto.getSuccess()){
                 return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);

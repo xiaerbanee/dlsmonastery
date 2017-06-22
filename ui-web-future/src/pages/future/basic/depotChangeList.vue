@@ -37,7 +37,11 @@
         <el-table-column prop="expiryDate" :label="$t('depotChangeList.expiryDate')"sortable width="120"></el-table-column>
         <el-table-column prop="oldValue" :label="$t('depotChangeList.oldValue')" sortable></el-table-column>
         <el-table-column prop="newValue" :label="$t('depotChangeList.newValue')" sortable></el-table-column>
-        <el-table-column prop="status" :label="$t('depotChangeList.processStatus')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('depotChangeList.processStatus')" scope="scope" sortable>
+          <template scope="scope">
+            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" :label="$t('depotChangeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:depotChange:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('depotChangeList.detail')}}</el-button></div>

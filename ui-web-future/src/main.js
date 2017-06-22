@@ -79,6 +79,11 @@ Vue.config.errorHandler = function (err, vm) {
 
 router.beforeEach((to, from, next) => {
   router.app.$Progress.start()
+
+  if(to.params._closeFrom){
+    store.dispatch('closeTab', from.name);
+  }
+
   //检查是否已经登陆
   if (to.matched.some(record => record.meta.requiresAuth==false)) {
     next();

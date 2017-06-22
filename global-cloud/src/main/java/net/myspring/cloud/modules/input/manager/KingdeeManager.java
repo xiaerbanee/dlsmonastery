@@ -7,13 +7,17 @@ import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
+import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -25,6 +29,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class KingdeeManager {
+    @Autowired
+    private KingdeeSynRepository kingdeeSynRepository;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, OkHttpClient> okHttpClientMap = Maps.newHashMap();
@@ -97,6 +104,8 @@ public class KingdeeManager {
             kingdeeSynDto.setSuccess(false);
         }
         kingdeeSynDto.setResult(ObjectMapperUtils.writeValueAsString(resultMap));
+        KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynDto,KingdeeSyn.class);
+        kingdeeSynRepository.save(kingdeeSyn);
         return kingdeeSynDto;
     }
 
@@ -123,7 +132,7 @@ public class KingdeeManager {
             root = Maps.newLinkedHashMap();
             root.put("CreateOrgId", 0);
             root.put("Numbers", nextBillNo);
-            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo() + CharConstant.COMMA + nextBillNo);
+            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo());
             content = ObjectMapperUtils.writeValueAsString(root);
             result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
             resultMap.put("NEXT_SUBMIT",result);
@@ -134,6 +143,8 @@ public class KingdeeManager {
             kingdeeSynExtendDto.setSuccess(false);
         }
         kingdeeSynExtendDto.setResult(ObjectMapperUtils.writeValueAsString(result));
+        KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynExtendDto,KingdeeSyn.class);
+        kingdeeSynRepository.save(kingdeeSyn);
         return kingdeeSynExtendDto;
     }
 

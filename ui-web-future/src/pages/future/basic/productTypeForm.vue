@@ -69,7 +69,9 @@
               price1: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
               price2: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
               price3: [{type: 'number', required: true, message: this.$t('productTypeForm.inputLegalValue'),trigger:"blur"}],
-            }
+            },
+            remoteLoading:false,
+            products:[]
           }
       },
         formSubmit(){
@@ -78,10 +80,8 @@
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-
               axios.post('/api/ws/future/basic/productType/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
-
                 if(response.data.success) {
                     if (this.isCreate) {
                       Object.assign(this.$data, this.getData());
@@ -101,7 +101,6 @@
         },initPage(){
         axios.get('/api/ws/future/basic/productType/getForm').then((response)=>{
           this.inputForm=response.data;
-
           if(!this.isCreate){
             axios.get('/api/ws/future/basic/productType/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
               util.copyValue(response.data, this.inputForm);

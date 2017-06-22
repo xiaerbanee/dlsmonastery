@@ -136,7 +136,7 @@
                     this.initPage();
                   }else{
                     this.submitDisabled = false;
-                    this.$router.push({name: 'adGoodsOrderList', query: util.getQuery("adGoodsOrderList")})
+                    this.$router.push({name: 'adGoodsOrderList', query: util.getQuery("adGoodsOrderList"), params:{_closeFrom:true}})
                   }
                 }
             }).catch(() => {

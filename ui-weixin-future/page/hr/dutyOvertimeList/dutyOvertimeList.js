@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10
-    },
+    formData: {},
     activeItem: null,
     searchHidden: true
   },
@@ -21,7 +18,19 @@ Page({
   },
   initPage: function () {
     var that = this;
-    that.pageRequest();
+    wx.request({
+      url: $util.getUrl("basic/hr/dutyOvertime/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.pageRequest();
+      }
+    })
   },
   pageRequest: function () {
     var that = this
@@ -36,7 +45,7 @@ Page({
             'x-auth-token': app.globalData.sessionId,
             'authorization': "Bearer" + wx.getStorageSync('token').access_token
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();

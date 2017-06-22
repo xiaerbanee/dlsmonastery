@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
@@ -51,9 +52,11 @@ public class ArOtherRecAbleService {
 
     private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
-                    KingdeeFormIdEnum.AR_OtherRecAble.name(),
-                    arOtherRecAbleDto.getJson(),
-                    kingdeeBook) {
+                arOtherRecAbleDto.getExtendId(),
+                arOtherRecAbleDto.getExtendType(),
+                KingdeeFormIdEnum.AR_OtherRecAble.name(),
+                arOtherRecAbleDto.getJson(),
+                kingdeeBook) {
             };
             kingdeeManager.save(kingdeeSynDto);
         return kingdeeSynDto;
@@ -119,6 +122,7 @@ public class ArOtherRecAbleService {
             String billKey = customerName + CharConstant.COMMA+ departmentName +CharConstant.COMMA+accountName+CharConstant.COMMA+amount+CharConstant.COMMA+remarks;
             if (!arOtherRecAbleDtoMap.containsKey(billKey)) {
                 ArOtherRecAbleDto arOtherRecAbleDto = new ArOtherRecAbleDto();
+                arOtherRecAbleDto.setExtendType(BillTypeEnum.其他应收单_K3.name());
                 arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
                 arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
                 arOtherRecAbleDto.setDate(billDate);

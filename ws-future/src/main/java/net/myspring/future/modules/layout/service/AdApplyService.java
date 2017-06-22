@@ -4,13 +4,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.SalOutStockDto;
+import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -23,6 +28,7 @@ import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
+import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
@@ -77,6 +83,8 @@ public class AdApplyService {
     private RedisTemplate redisTemplate;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
         Page<AdApplyDto> page = adApplyRepository.findPage(pageable, adApplyQuery);
@@ -189,6 +197,8 @@ public class AdApplyService {
 
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
         Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");
+        Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
+        Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<AdApply> adApplyList = adApplyRepository.findAll(adApplyId);
         Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
         List<AdGoodsOrderDetail> adGoodsOrderDetails = Lists.newArrayList();
@@ -228,16 +238,41 @@ public class AdApplyService {
 
         //自动开单
         String maxBusinessId = adGoodsOrderRepository.findMaxBusinessId(adApplyBillForm.getBillDate());
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
+            Depot shop = depotMap.get(adGoodsOrder.getShopId());
+            Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
+            Depot store = depotMap.get(adGoodsOrder.getStoreId());
+            SalOutStockDto salOutStockDto = new SalOutStockDto();
+            salOutStockDto.setExtendId(adGoodsOrder.getId());
+            salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
+            salOutStockDto.setDate(adGoodsOrder.getBillDate());
+            salOutStockDto.setCustomerNumber(outShop.getCode());//与客户number adGoodsOrder.getOutShop().getRealCode()
+            salOutStockDto.setNote(adGoodsOrder.getId()+CharConstant.COMMA+store.getName()+CharConstant.COMMA+store.getContator()+CharConstant.COMMA+store.getMobilePhone()+CharConstant.COMMA+store.getAddress());// getFormatId()+Const.CHAR_COMMA+getShopName()+Const.CHAR_COMMA+getContator()+Const.CHAR_COMMA+getMobilePhone()+Const.CHAR_COMMA+getAddress()
+            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
             BigDecimal amount = BigDecimal.ZERO;
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 amount = amount.add(adGoodsOrderDetail.getPrice().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+                Product product = productMap.get(adGoodsOrderDetail.getProductId());
+                SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+                entityDto.setStoreNumber(store.getCode());//与仓库number getStore().getRealCode()
+                entityDto.setMaterialNumber(product.getCode());//与产品number adgoodsOrderDetail.getProduct().getCode()
+                entityDto.setQty(adGoodsOrderDetail.getBillQty());
+                // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
+                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+                    entityDto.setPrice(product.getPrice2());//adgoodsOrderDetail.getProduct().getPrice2()
+                }else{
+                    entityDto.setPrice(BigDecimal.ZERO);
+                }
+                entityDto.setEntryNote(adGoodsOrder.getId()+CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress());//adGoodsOrder.getId()+ Const.CHAR_COMMA + adGoodsOrder.getShopName() + Const.CHAR_COMMA+ adGoodsOrder.getContator()+ Const.CHAR_COMMA+ adGoodsOrder.getMobilePhone()+ Const.CHAR_COMMA+ adGoodsOrder.getAddress()+ Const.CHAR_COMMA+ adGoodsOrder.getRemarks());
+                entityDtoList.add(entityDto);
             }
+            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+            salOutStockDtoList.add(salOutStockDto);
             adGoodsOrder.setAmount(amount);
             adGoodsOrder.setProcessStatus(GoodsOrderStatusEnum.待发货.name());
-
             Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
             ExpressOrder expressOrder = new ExpressOrder();
             expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
@@ -260,7 +295,8 @@ public class AdApplyService {
             adGoodsOrder.setExpressOrderId(expressOrder.getId());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
-
+        //TODO 调用金蝶接口
+        RestResponse restResponse = cloudClient.synForSalOutStock(salOutStockDtoList);
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
         for(AdApply adApply:adApplyList){
@@ -277,7 +313,7 @@ public class AdApplyService {
         }
         adApplyRepository.save(newAdApplys);
 
-        //TODO 调用金蝶接口
+
     }
 
     public String findSimpleExcelSheets(Workbook workbook,AdApplyQuery adApplyQuery){

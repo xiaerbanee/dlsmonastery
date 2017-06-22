@@ -57,7 +57,7 @@
                 this.initPage();
               }else{
                 this.submitDisabled = false;
-                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList")})
+                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList"), params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;
