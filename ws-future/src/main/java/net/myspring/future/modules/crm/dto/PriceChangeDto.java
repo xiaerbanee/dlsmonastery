@@ -52,7 +52,11 @@ public class PriceChangeDto extends DataDto<PriceChange> {
     }
 
     public List<String> getProductTypeIdList() {
-        return productTypeIdList;
+        if(this.productTypeIds!=null){
+            return Arrays.asList(this.productTypeIds.split(CharConstant.COMMA));
+        }else{
+            return null;
+        }
     }
 
     public void setProductTypeIdList(List<String> productTypeIdList) {
