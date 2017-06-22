@@ -32,4 +32,8 @@ public class KingdeeSynService {
     public void logicDelete(String id) {
         kingdeeSynRepository.logicDelete(id);
     }
+
+    public KingdeeSyn findOne(String id){
+        return kingdeeSynRepository.findOne(id);
+    }
 }

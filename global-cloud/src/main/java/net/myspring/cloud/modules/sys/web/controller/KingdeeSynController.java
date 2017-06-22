@@ -40,6 +40,12 @@ public class KingdeeSynController {
         return kingdeeSynQuery;
     }
 
+    @RequestMapping(value = "findOne")
+    public KingdeeSyn findOne(String id){
+        KingdeeSyn kingdeeSyn = kingdeeSynService.findOne(id);
+        return kingdeeSyn;
+    }
+
     @RequestMapping(value = "delete")
     public RestResponse delete(String id){
         kingdeeSynService.logicDelete(id);
