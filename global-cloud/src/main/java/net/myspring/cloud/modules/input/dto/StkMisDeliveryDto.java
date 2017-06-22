@@ -16,6 +16,10 @@ import java.util.Map;
  * Created by lihx on 2017/5/17.
  */
 public class StkMisDeliveryDto {
+    //附加-业务系统单据Id
+    private String extendId;
+    //附加-单据类型
+    private String extendType;
     //创建人
     private String creator;
     //单据类型
@@ -32,6 +36,22 @@ public class StkMisDeliveryDto {
     private Integer qty;
    //备注
     private String FEntryNote;
+
+    public String getExtendId() {
+        return extendId;
+    }
+
+    public void setExtendId(String extendId) {
+        this.extendId = extendId;
+    }
+
+    public String getExtendType() {
+        return extendType;
+    }
+
+    public void setExtendType(String extendType) {
+        this.extendType = extendType;
+    }
 
     public String getCreator() {
         return creator;

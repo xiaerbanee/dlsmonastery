@@ -1,6 +1,6 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
-import net.myspring.cloud.common.enums.KingdeeExtendTypeEnum;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
@@ -29,7 +29,7 @@ public class KingdeeSynController {
     @RequestMapping(value = "getQuery")
     public KingdeeSynQuery getQuery(){
         KingdeeSynQuery kingdeeSynQuery = new KingdeeSynQuery();
-        kingdeeSynQuery.getExtra().put("extendTypeList", KingdeeExtendTypeEnum.values());
+        kingdeeSynQuery.getExtra().put("extendTypeList", ExtendTypeEnum.values());
         return kingdeeSynQuery;
     }
 }

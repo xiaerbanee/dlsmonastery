@@ -27,12 +27,6 @@ public class PriceChangeController {
     @Autowired
     private PriceChangeService priceChangeService;
 
-
-    @ModelAttribute
-    public PriceChange get(@RequestParam(required = false) String id) {
-        return null;
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     public Page<PriceChangeDto> list(Pageable pageable,PriceChangeQuery priceChangeQuery){
         return priceChangeService.findPage(pageable,priceChangeQuery);
@@ -41,34 +35,30 @@ public class PriceChangeController {
     @RequestMapping(value = "delete")
     public RestResponse delete(PriceChangeForm priceChangeForm) {
         priceChangeService.delete(priceChangeForm);
-        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(PriceChangeForm priceChangeForm) {
         priceChangeService.save(priceChangeForm);
-        RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
 
     @RequestMapping(value = "check")
     public RestResponse check(PriceChangeForm priceChangeForm) {
         priceChangeService.check(priceChangeForm);
-        RestResponse restResponse = new RestResponse("审核成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("审核成功", ResponseCodeEnum.audited.name());
     }
 
     @RequestMapping(value = "findOne")
-    public PriceChangeDto detail(String id){
+    public PriceChangeDto findOne(String id){
         return priceChangeService.findOne(id);
     }
 
     @RequestMapping(value = "getForm")
     public PriceChangeForm getForm(PriceChangeForm priceChangeForm){
-        priceChangeForm = priceChangeService.getForm(priceChangeForm);
-        return priceChangeForm;
+        return priceChangeService.getForm(priceChangeForm);
     }
 
     @RequestMapping(value="getQuery")

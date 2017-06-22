@@ -91,7 +91,7 @@ class DutyRestRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcTempl
             sb.append(" AND t1.created_by=:createdBy ")
         }
         if (dutyRestQuery.dutyDateStart != null) {
-            sb.append(" AND t1.duty_date> :dutyDateStart ")
+            sb.append(" AND t1.duty_date>= :dutyDateStart ")
         }
         if (dutyRestQuery.dutyDateEnd != null) {
             sb.append(" AND t1.duty_date < :dutyDateEnd ")

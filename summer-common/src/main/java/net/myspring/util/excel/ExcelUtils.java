@@ -7,6 +7,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
 import net.myspring.util.text.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,18 +31,28 @@ import java.util.Map;
  */
 public class ExcelUtils {
     public static ByteArrayInputStream doWrite(Workbook workbook, Collection<SimpleExcelSheet> simpleExcelSheets) {
-        if(CollectionUtil.isNotEmpty(simpleExcelSheets)) {
-            for(SimpleExcelSheet simpleExcelSheet:simpleExcelSheets) {
+        if (CollectionUtil.isNotEmpty(simpleExcelSheets)) {
+            for (SimpleExcelSheet simpleExcelSheet : simpleExcelSheets) {
                 Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
-                doWriteSheet(sheet,simpleExcelSheet);
+                if (simpleExcelSheet.getIsExcelColumn()) {
+                    Map<String, CellStyle> cellStyleMap = getCellStyleMap(workbook);
+                    doWriteSheet(sheet, simpleExcelSheet, cellStyleMap);
+                } else {
+                    doWriteSheet(sheet, simpleExcelSheet);
+                }
             }
         }
         return getInputStream(workbook);
     }
 
-    public static ByteArrayInputStream doWrite(Workbook workbook,SimpleExcelSheet simpleExcelSheet) {
+    public static ByteArrayInputStream doWrite(Workbook workbook, SimpleExcelSheet simpleExcelSheet) {
         Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
-        doWriteSheet(sheet,simpleExcelSheet);
+        if (simpleExcelSheet.getIsExcelColumn()) {
+            Map<String, CellStyle> cellStyleMap = getCellStyleMap(workbook);
+            doWriteSheet(sheet, simpleExcelSheet, cellStyleMap);
+        } else {
+            doWriteSheet(sheet, simpleExcelSheet);
+        }
         return getInputStream(workbook);
     }
 
@@ -85,24 +97,24 @@ public class ExcelUtils {
         return workbook;
     }
 
-    public static <T> List<T> doRead(Sheet sheet,List<SimpleExcelColumn> columnList,Class<T> clazz) {
-        return doRead(sheet,columnList,clazz,0,1);
+    public static <T> List<T> doRead(Sheet sheet, List<SimpleExcelColumn> columnList, Class<T> clazz) {
+        return doRead(sheet, columnList, clazz, 0, 1);
     }
 
-    public  static <T> List<T> doRead(Sheet sheet,List<SimpleExcelColumn> columnList,Class<T> clazz,Integer headerRowNumber,Integer startRowNumber) {
-        Map<String,Integer> headerLabelMap = Maps.newHashMap();
+    public static <T> List<T> doRead(Sheet sheet, List<SimpleExcelColumn> columnList, Class<T> clazz, Integer headerRowNumber, Integer startRowNumber) {
+        Map<String, Integer> headerLabelMap = Maps.newHashMap();
         Row headerRow = sheet.getRow(headerRowNumber);
         for (int i = 0; i < headerRow.getLastCellNum(); i++) {
             Cell cell = headerRow.getCell(i);
             String label = String.valueOf(getCellValue(cell));
-            if(StringUtils.isNotBlank(label)) {
-                headerLabelMap.put(label,i);
+            if (StringUtils.isNotBlank(label)) {
+                headerLabelMap.put(label, i);
             }
         }
         List<T> list = Lists.newArrayList();
         for (int i = startRowNumber; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            if(row != null) {
+            if (row != null) {
                 T instance = null;
                 try {
                     instance = clazz.newInstance();
@@ -112,13 +124,13 @@ public class ExcelUtils {
                     e.printStackTrace();
                 }
                 for (int j = 0; j < columnList.size(); j++) {
-                    String label=columnList.get(j).getLabel();
+                    String label = columnList.get(j).getLabel();
                     String fieldName = columnList.get(j).getFieldName();
                     Integer columnIndex = headerLabelMap.get(label);
-                    if(columnIndex != null) {
+                    if (columnIndex != null) {
                         Cell cell = row.getCell(columnIndex);
-                        Object value=getCellValue(cell);
-                        ReflectionUtil.setFieldValue(instance,fieldName,value);
+                        Object value = getCellValue(cell);
+                        ReflectionUtil.setFieldValue(instance, fieldName, value);
                     }
                 }
                 list.add(instance);
@@ -182,55 +194,73 @@ public class ExcelUtils {
         cellStyleRed.setFillPattern(CellStyle.SOLID_FOREGROUND);
         map.put(ExcelCellStyle.RED.name(), cellStyleRed);
 
-        CellStyle cellStyleLightBlue=workbook.createCellStyle();
+        CellStyle cellStyleLightBlue = workbook.createCellStyle();
         cellStyleLightBlue.cloneStyleFrom(cellStyleData);
         cellStyleLightBlue.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
         cellStyleLightBlue.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        map.put(ExcelCellStyle.LIGHT_BLUE.name(),cellStyleLightBlue);
+        map.put(ExcelCellStyle.LIGHT_BLUE.name(), cellStyleLightBlue);
         return map;
     }
 
+    private static void doWriteSheet(Sheet sheet, SimpleExcelSheet simpleExcelSheet, Map<String, CellStyle> cellStyleMap) {
+        if (CollectionUtil.isNotEmpty(simpleExcelSheet.getExcelColumnList())) {
+            for (int i = 0; i < simpleExcelSheet.getExcelColumnList().size(); i++) {
+                List<SimpleExcelColumn> excelCellList = simpleExcelSheet.getExcelColumnList().get(i);
+                Row row = sheet.createRow(i);
+                for (int j = 0; j < excelCellList.size(); j++) {
+                    SimpleExcelColumn excelCell = excelCellList.get(j);
+                    Cell cell = row.createCell(j);
+                    cell.setCellStyle(cellStyleMap.get(excelCell.getCellStyle()));
+                    Object obj = excelCell.getValue();
+                    setCellValue(cell, obj);
+                }
+            }
+            for (int i = 0; i < simpleExcelSheet.getExcelColumnList().get(0).size(); i++) {
+                sheet.autoSizeColumn(i);
+            }
+        }
+    }
 
-    private static void doWriteSheet(Sheet sheet,SimpleExcelSheet simpleExcelSheet) {
-        if(CollectionUtil.isNotEmpty(simpleExcelSheet.getDataList())) {
+    private static void doWriteSheet(Sheet sheet, SimpleExcelSheet simpleExcelSheet) {
+        if (CollectionUtil.isNotEmpty(simpleExcelSheet.getDataList())) {
             int rowIndex = 0;
             Row row = sheet.createRow(rowIndex);
-            for(int i=0;i<simpleExcelSheet.getSimpleExcelColumnList().size();i++) {
+            for (int i = 0; i < simpleExcelSheet.getSimpleExcelColumnList().size(); i++) {
                 SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
-                if(simpleExcelColumn.getWidth() != null) {
-                    if(simpleExcelColumn.getWidth()>0) {
-                        sheet.setColumnWidth(i,simpleExcelColumn.getWidth());
+                if (simpleExcelColumn.getWidth() != null) {
+                    if (simpleExcelColumn.getWidth() > 0) {
+                        sheet.setColumnWidth(i, simpleExcelColumn.getWidth());
                     } else {
                         sheet.autoSizeColumn(i);
                     }
                 }
                 Cell cell = row.createCell(i);
                 cell.setCellStyle(simpleExcelColumn.getHeaderStyle());
-                setCellValue(cell,simpleExcelColumn.getLabel());
+                setCellValue(cell, simpleExcelColumn.getLabel());
             }
-            for(Object rowValue:simpleExcelSheet.getDataList()) {
+            for (Object rowValue : simpleExcelSheet.getDataList()) {
                 rowIndex = rowIndex + 1;
                 row = sheet.createRow(rowIndex);
-                for(int i=0;i<simpleExcelSheet.getSimpleExcelColumnList().size();i++) {
+                for (int i = 0; i < simpleExcelSheet.getSimpleExcelColumnList().size(); i++) {
                     SimpleExcelColumn simpleExcelColumn = simpleExcelSheet.getSimpleExcelColumnList().get(i);
-                    Object value=null;
-                    if(StringUtils.isNotBlank(simpleExcelColumn.getFieldName())){
-                        if(StringUtils.isNotBlank(simpleExcelColumn.getFieldKey())){
-                            Map<String,Object> map=ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
+                    Object value = null;
+                    if (StringUtils.isNotBlank(simpleExcelColumn.getFieldName())) {
+                        if (StringUtils.isNotBlank(simpleExcelColumn.getFieldKey())) {
+                            Map<String, Object> map = ReflectionUtil.getProperty(rowValue, simpleExcelColumn.getFieldName());
                             value = map.get(simpleExcelColumn.getFieldKey());
-                        }else {
-                            value = ReflectionUtil.getProperty(rowValue,simpleExcelColumn.getFieldName());
+                        } else {
+                            value = ReflectionUtil.getProperty(rowValue, simpleExcelColumn.getFieldName());
                         }
                     }
                     Cell cell = row.createCell(i);
                     cell.setCellStyle(simpleExcelColumn.getCellStyle());
-                    setCellValue(cell,value);
+                    setCellValue(cell, value);
                 }
             }
         }
     }
 
-    private static Object getCellValue(Cell cell) {
+    public static Object getCellValue(Cell cell) {
         Object cellValue = "";
         if (cell != null) {
             if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
@@ -253,7 +283,7 @@ public class ExcelUtils {
         return cellValue;
     }
 
-    private static void setCellValue(Cell cell,Object value) {
+    private static void setCellValue(Cell cell, Object value) {
         if (value == null) {
             cell.setCellValue("");
         } else if (value instanceof Integer) {
@@ -266,14 +296,14 @@ public class ExcelUtils {
             cell.setCellValue(((BigDecimal) value).doubleValue());
         } else if (value instanceof Float) {
             cell.setCellValue((Float) value);
-        }else if (value instanceof LocalDate){
+        } else if (value instanceof LocalDate) {
             cell.setCellValue(LocalDateUtils.format((LocalDate) value));
-        } else if (value instanceof LocalDateTime){
+        } else if (value instanceof LocalDateTime) {
             cell.setCellValue(LocalDateTimeUtils.format((LocalDateTime) value));
-        } else if (value instanceof LocalTime){
+        } else if (value instanceof LocalTime) {
             cell.setCellValue(LocalTimeUtils.format((LocalTime) value));
-        }else if (value instanceof String) {
-            String itemValue = (String)value;
+        } else if (value instanceof String) {
+            String itemValue = (String) value;
             if (itemValue.startsWith("=")) {
                 cell.setCellType(Cell.CELL_TYPE_FORMULA);
                 cell.setCellFormula(itemValue);
@@ -284,7 +314,6 @@ public class ExcelUtils {
             cell.setCellValue(String.valueOf(value));
         }
     }
-
 
 
     private static ByteArrayInputStream getInputStream(Workbook workbook) {

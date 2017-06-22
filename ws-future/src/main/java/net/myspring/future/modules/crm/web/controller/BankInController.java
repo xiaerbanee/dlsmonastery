@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BankInTypeEnum;
@@ -67,9 +68,12 @@ public class BankInController {
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
-
     @RequestMapping(value = "audit")
     public RestResponse audit(BankInAuditForm bankInAuditForm) {
+
+        if(bankInAuditForm.getPass()== null || bankInAuditForm.getSyn() == null || bankInAuditForm.getBillDate() == null){
+            throw new ServiceException("审批结果、是否同步财务、开单日期均不能为空");
+        }
 
         bankInService.audit(bankInAuditForm);
         return new RestResponse("审核成功",ResponseCodeEnum.audited.name());

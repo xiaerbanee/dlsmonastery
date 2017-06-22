@@ -89,26 +89,26 @@
         if(action=="edit") {
           this.$router.push({ name: 'priceChangeForm', query: { id: id}})
         } else if(action=="delete") {
-          util.confirmBeforeDelRecord(this).then(() => {
-            axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
-              this.$message(response.data.message);
-              this.pageRequest();
-            })
-          }).catch(()=>{
+            util.confirmBeforeDelRecord(this).then(() => {
+              axios.get('/api/ws/future/crm/priceChange/delete',{params:{id:id}}).then((response) =>{
+                this.$message(response.data.message);
+                this.pageRequest();
+              })
+            }).catch(()=>{
 
-          });
+            });
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      this.initPromise=axios.get('/api/ws/future/crm/priceChange/getQuery').then((response) =>{
-        this.formData=response.data;
-        util.copyValue(this.$route.query,this.formData);
-      });
+        this.pageHeight = window.outerHeight -320;
+        this.initPromise=axios.get('/api/ws/future/crm/priceChange/getQuery').then((response) =>{
+          this.formData=response.data;
+          util.copyValue(this.$route.query,this.formData);
+        });
     },activated(){
-      this.initPromise.then(()=>{
-        this.pageRequest();
-      });
+        this.initPromise.then(()=>{
+          this.pageRequest();
+        });
     }
   };
 </script>

@@ -15,13 +15,25 @@ Page({
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function(){
+    app.autoLogin(function () {
       that.initPage()
     });
   },
-  initPage:function() {
+  initPage: function () {
     var that = this;
-    that.pageRequest();
+    wx.request({
+      url: $util.getUrl("basic/hr/dutyFree/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        'x-auth-token': app.globalData.sessionId,
+        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+      },
+      success: function (res) {
+        that.setData({ formData: res.data })
+        that.pageRequest();
+      }
+    })
   },
   pageRequest: function () {
     var that = this;
@@ -32,10 +44,11 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("basic/hr/dutyFree"),
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
-            },
-          data: that.data.formData,
+          header: {
+            'x-auth-token': app.globalData.sessionId,
+            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          },
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
@@ -86,16 +99,17 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     wx.showActionSheet({
-      itemList:["删除"],
+      itemList: ["删除"],
       success: function (res) {
         if (!res.cancel) {
-          if (res.tapIndex==0) {
+          if (res.tapIndex == 0) {
             wx.request({
               url: $util.getUrl("basic/hr/dutyFree/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
-                },
+              header: {
+                'x-auth-token': app.globalData.sessionId,
+                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              },
               success: function (res) {
                 that.pageRequest();
               }
@@ -142,5 +156,5 @@ Page({
         }
       }
     });
-  },
+  }
 })

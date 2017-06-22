@@ -37,17 +37,21 @@
         <el-table-column column-key="shopId" prop="shopName" :label="$t('demoPhoneList.shopName')" sortable></el-table-column>
         <el-table-column column-key="demoPhoneTypeId" prop="demoPhoneType" :label="$t('demoPhoneList.demoPhoneType')" sortable></el-table-column>
         <el-table-column column-key="employeeId" prop="employeeName" :label="$t('demoPhoneList.employeeName')" sortable></el-table-column>
-        <el-table-column prop="status" :label="$t('demoPhoneList.status')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('demoPhoneList.status')" sortable>
+          <template scope="scope">
+            <el-tag :type="scope.row.status=='已通过' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="createdDate" :label="$t('demoPhoneList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('demoPhoneList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('demoPhoneList.locked')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
+            <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="enabled" :label="$t('demoPhoneList.enabled')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'danger' : 'primary'">{{scope.row.enabled | bool2str}}</el-tag>
+            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneList.operation')" width="140">
@@ -63,8 +67,11 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import demoPhoneType from 'components/future/demo-phone-type-select'
+  import ElTag from "../../../../node_modules/element-ui/packages/tag/src/tag.vue";
   export default {
-    components:{depotSelect,demoPhoneType},
+    components:{
+      ElTag,
+      depotSelect,demoPhoneType},
     data() {
       return {
         pageLoading: false,

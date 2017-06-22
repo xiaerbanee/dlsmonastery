@@ -60,9 +60,10 @@ public class BankInService {
     }
 
     public void audit(BankInAuditForm bankInAuditForm){
+
         //TODO 需要同步金蝶
         BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
-        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), "1".equals(bankInAuditForm.getPass())));
+        ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), bankInAuditForm.getPass()));
         if("已通过".equals(activitiCompleteDto.getProcessStatus())){
             bankIn.setLocked(true);
         }
@@ -114,9 +115,7 @@ public class BankInService {
             bankInAuditForm.setBillDate(LocalDate.now());
 
             audit(bankInAuditForm);
-
         }
-
     }
 
     public String export(BankInQuery bankInQuery) {

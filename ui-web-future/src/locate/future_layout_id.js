@@ -312,6 +312,12 @@ export default {
     outShopName: "开单门店",
     shopName: "门店",
     enter:'以回车分割',
+    smallPrice:'单件价格为',
+    mediumPrice:'单件价格为',
+    largePrice:'单件价格为',
+    prerequisiteAndNumberMessage:'请输入一个合法的数值',
+    prerequisiteMessage:'必填信息',
+    loading: "拼命加载中",
   },
   adGoodsOrderSign: {
     adGoodsOrderSign: "货品订货签收",

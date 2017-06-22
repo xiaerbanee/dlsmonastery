@@ -8,7 +8,7 @@
         <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
         <view class="weui-cells weui-cells_after-title form_bd">
           <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
-          <view class="weui-cell weui-cell_input" bindtap="showError" data-key="restType">
+          <view class="weui-cell weui-cell_input" bindtap="showError" data-key="type">
             <view class="weui-cell__hd">
               <view class="weui-label">调休类型</view>
             </view>
@@ -17,7 +17,7 @@
                 <view class="weui-input">{{formData.restType}}</view>
               </picker>
             </view>
-            <view class="weui-cell__ft" wx:if="{{response.data.errors.type}}">
+            <view class="weui-cell__ft" wx:if="{{response.data.type}}">
               <icon type="warn" class="warn"></icon>
             </view>
           </view>
@@ -30,7 +30,7 @@
                 <view class="weui-input">{{formData.dutyDate}}</view>
               </picker>
             </view>
-            <view class="weui-cell__ft" wx:if="{{response.data.errors.dutyDate}}">
+            <view class="weui-cell__ft" wx:if="{{response.data.dutyDate}}">
               <icon type="warn" class="warn"></icon>
             </view>
           </view>
@@ -45,7 +45,7 @@
                   <view class="weui-input">{{formData.timeStart}}</view>
                 </picker>
               </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.timeStart}}">
+              <view class="weui-cell__ft" wx:if="{{response.data.timeStart}}">
                 <icon type="warn" class="warn"></icon>
               </view>
             </view>
@@ -58,7 +58,7 @@
                   <view class="weui-input">{{formData.timeEnd}}</view>
                 </picker>
               </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.timeEnd}}">
+              <view class="weui-cell__ft" wx:if="{{response.data.timeEnd}}">
                 <icon type="warn" class="warn"></icon>
               </view>
             </view>
@@ -74,7 +74,7 @@
                   <view class="weui-input">{{formData.dateType}}</view>
                 </picker>
               </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.dateType}}">
+              <view class="weui-cell__ft" wx:if="{{response.data.dateType}}">
                 <icon type="warn" class="warn"></icon>
               </view>
             </view>
@@ -86,7 +86,7 @@
             <view class="weui-cell__bd">
               <input name="hour" type="number" class="weui-input" value="{{formData.hour}}" disabled />
             </view>
-            <view class="weui-cell__ft" wx:if="{{response.data.errors.hour}}">
+            <view class="weui-cell__ft" wx:if="{{response.data.hour}}">
               <icon type="warn" class="warn"></icon>
             </view>
           </view>

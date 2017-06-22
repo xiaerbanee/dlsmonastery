@@ -56,6 +56,8 @@ public class SalReturnStockService {
 
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
+                salReturnStockDto.getExtendId(),
+                salReturnStockDto.getExtendType(),
                 KingdeeFormIdEnum.SAL_RETURNSTOCK.name(),
                 salReturnStockDto.getJson(),
                 kingdeeBook,
@@ -65,12 +67,8 @@ public class SalReturnStockService {
                 if(salReturnStockDto.getBillType().contains("现销")){
                     return null;
                 }else{
-                    List<ArReceivable> arReceivableList = arReceivableRepository.findBySourceBillNo(getBillNo());
-                    if (arReceivableList.size()>0){
-                        return arReceivableList.get(0).getFBillNo();
-                    }else {
-                        return "";
-                    }
+                    ArReceivable receivable = arReceivableRepository.findTopOneBySourceBillNo(getBillNo());
+                    return receivable.getFBillNo();
 
                 }
             }
