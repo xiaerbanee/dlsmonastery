@@ -200,9 +200,11 @@ public class ProductImeService {
     }
 
 
-    public List<ProductIme> findByImeLike(String imeReverse, String shopId) {
-        List<ProductIme> productImeList = productImeRepository.findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(shopId, imeReverse);
-        return productImeList;
+    public List<ProductImeDto> findByImeLike(String imeReverse) {
+        List<ProductIme> productImeList = productImeRepository.findTop20ByImeReverseStartingWithAndEnabledIsTrue(imeReverse);
+        List<ProductImeDto> productImeDtos = BeanUtil.map(productImeList,ProductImeDto.class);
+        cacheUtils.initCacheInput(productImeDtos);
+        return productImeDtos;
     }
 
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {

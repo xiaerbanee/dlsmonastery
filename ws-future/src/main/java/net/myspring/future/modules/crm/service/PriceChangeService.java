@@ -6,6 +6,7 @@ import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RandomUtils;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
 import net.myspring.future.modules.crm.repository.PriceChangeRepository;
@@ -60,10 +61,13 @@ public class PriceChangeService {
             PriceChange priceChange = priceChangeRepository.findOne(id);
             priceChangeDto = BeanUtil.map(priceChange,PriceChangeDto.class);
             List<String> productTypeList = CollectionUtil.extractToList(priceChangeProductRepository.findByPriceChangeId(id),"productTypeId");
-            HashSet hashSet = new HashSet(productTypeList);
-            productTypeList.clear();
-            productTypeList.addAll(hashSet);
-            priceChangeDto.setProductTypeIdList(productTypeList);
+            if(productTypeList!=null){
+                String productTypeIds = "";
+                for (String productTypeId:productTypeList){
+                    productTypeIds += productTypeId;
+                }
+                priceChangeDto.setProductTypeIds(productTypeIds);
+            }
         }
         return priceChangeDto;
     }
@@ -90,13 +94,11 @@ public class PriceChangeService {
             priceChange.setStatus(PriceChangeStatusEnum.抽检中.name());
             priceChangeRepository.save(priceChange);
 
-            List<Product> productList = productRepository.findByProductTypeIds(priceChangeForm.getProductTypeIdList());
             List<PriceChangeProduct> priceChangeProducts = Lists.newArrayList();
-            for(Product product:productList){
+            for(String productTypeId:priceChangeForm.getProductTypeIdList()){
                 PriceChangeProduct priceChangeProduct = new PriceChangeProduct();
                 priceChangeProduct.setPriceChangeId(priceChange.getId());
-                priceChangeProduct.setProductId(product.getId());
-                priceChangeProduct.setProductTypeId(product.getProductTypeId());
+                priceChangeProduct.setProductTypeId(productTypeId);
                 priceChangeProducts.add(priceChangeProduct);
             }
             priceChangeProductRepository.save(priceChangeProducts);

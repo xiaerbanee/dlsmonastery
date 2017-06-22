@@ -50,7 +50,7 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
     fun findByImeList(imeList: MutableList<String>): MutableList<ProductIme>
 
 
-    fun findTop20ByDepotIdAndImeReverseStartingWithAndEnabledIsTrue(depotId: String,  ime: String): MutableList<ProductIme>
+    fun findTop20ByImeReverseStartingWithAndEnabledIsTrue(ime: String): MutableList<ProductIme>
 
 }
 
