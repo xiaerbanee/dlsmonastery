@@ -34,7 +34,7 @@ public class CustomerReceiveController {
         return customerReceiveDtoList;
     }
 
-    @RequestMapping(value = "detail")
+    @RequestMapping(value = "detail",method = RequestMethod.POST)
     public List<CustomerReceiveDetailDto> detail(@RequestBody CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         return customerReceiveService.findCustomerReceiveDetailDtoList(customerReceiveDetailQuery);
     }
