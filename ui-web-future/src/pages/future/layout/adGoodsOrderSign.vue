@@ -66,7 +66,7 @@
           this.$message(response.data.message);
           this.submitDisabled = false;
           if(response.data.success){
-            this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")});
+            this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList"), params:{_closeFrom:true}});
           }
         }).catch( () => {
           this.submitDisabled = false;

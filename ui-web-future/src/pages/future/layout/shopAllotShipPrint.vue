@@ -4,79 +4,64 @@
     <br/>
 
     <div v-if="printType ==='salePrint'">
-      <div v-if="shopAllot.toJoinLevel !='一级'">
-        <h2 style="text-align: center;">销售出货单</h2>
-      </div>
-      <div v-if="shopAllot.toJoinLevel == '一级'">
-        <h2 style="text-align: center;">委托代销单</h2>
-      </div>
+      <h2 style="text-align: center;">销售出货单</h2>
     </div>
 
     <div v-if="printType === 'returnPrint'">
-      <div v-if="shopAllot.fromJointLevel === '一级' ">
-        <h2 style="text-align: center;">退货单号</h2>
-      </div>
-      <div v-if="shopAllot.fromJointLevel == '一级' ">
-        <h2 style="text-align: center;">委托代销单</h2>
-        <!-- 委托代销与委托退货使用正负号区分-->
-      </div>
+      <h2 style="text-align: center;">销售退货单</h2>
     </div>
     <div style="width: 794px; height: 562px; margin: auto;">
       <br />
-    <div class="row">
-      <div v-if="printType === 'returnPrint'">
-        <div class="span4">退货类型：</div>
+      <div class="row">
+        <div v-if="printType === 'returnPrint'">
+          <div class="span4">退货类型：</div>
+          <div class="span4">
+            发票类型{{shopAllot.createdDate}}
+          </div>
+        </div>
         <div class="span4">
-          发票类型{{shopAllot.createdDate}}
+          开单日期：{{shopAllot.createdDate}}
         </div>
-      </div>
-      <div class="span4">
-        开单日期：{{shopAllot.createdDate}}
-      </div>
-      <div class="span4">
-        <div v-if="printType === 'salePrint'">
-          销售开单单号：{{shopAllot.outSaleCode}}
-        </div>
-        <div v-if="printType === 'returnPrint'">
-          销售退货单号：{{shopAllot.outReturnCode}}
-        </div>
-      </div>
-      <div class="span4">
-        <div v-if="printType === 'salePrint'">
-          客户名称：{{shopAllot.toShopName }}
-        </div>
-        <div v-if="printType === 'returnPrint'">
-          客户名称：{{shopAllot.fromShopName }}
-        </div>
-      </div>
-      <div v-if="printType === 'salePrint'">
-        <div class="span4">客户：</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="span4">
-        <div v-if="printType === 'salePrint'">送货地址：</div>
-        <div v-if="printType === 'returnPrint'">付款方式</div>
-      </div>
-      <div class="span4">
-        <div v-if="printType === 'salePrint'">付款账户</div>
-      </div>
-      <div class="span4">
-        收款期限：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（天）（天）</div>
-    </div>
-
-    <table class="table table-bordered">
-      <tbody class="list">
-      <div v-if="shopAllot.fromJointLevel != '一级'">
-        <tr>
+        <div class="span4">
           <div v-if="printType === 'salePrint'">
-            <th rowspan="2">购货单位</th>
+            销售开单单号：{{shopAllot.outSaleCode}}
           </div>
           <div v-if="printType === 'returnPrint'">
-            <th rowspan="2">退货单位</th>
+            销售退货单号：{{shopAllot.outReturnCode}}
           </div>
+        </div>
+        <div class="span4">
+          <div v-if="printType === 'salePrint'">
+            客户名称：{{shopAllot.toShopName }}
+          </div>
+          <div v-if="printType === 'returnPrint'">
+            客户名称：{{shopAllot.fromShopName }}
+          </div>
+        </div>
+        <div v-if="printType === 'salePrint'">
+          <div class="span4">客户：</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div v-if="printType === 'salePrint'">送货地址：</div>
+          <div v-if="printType === 'returnPrint'">付款方式</div>
+        </div>
+        <div class="span4">
+          <div v-if="printType === 'salePrint'">付款账户</div>
+        </div>
+        <div class="span4">
+          收款期限：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;（天）（天）</div>
+      </div>
+
+      <table class="table table-bordered">
+        <tbody class="list">
+        <tr>
+            <td rowspan="2" v-if="printType === 'salePrint'">购货单位</td>
+            <td rowspan="2" v-if="printType === 'returnPrint'">退货单位</td>
+
           <td>名称</td>
-          <td colspan="2"></td>
+          <td  colspan="2" ></td>
           <td>税务登记号</td>
           <td colspan="3"></td>
         </tr>
@@ -86,22 +71,19 @@
           <td>开户银行及账号</td>
           <td colspan="3"></td>
         </tr>
-      </div>
-      <tr>
-        <td>货品名称</td>
-        <td>规格</td>
-        <td>单位</td>
-        <td>数量</td>
-        <td>单价<td>
-        <td>贷款</td>
-      </tr>
+        <tr>
+          <td>货品名称</td>
+          <td>规格</td>
+          <td>单位</td>
+          <td>数量</td>
+          <td>单价<td>
+          <td>贷款</td>
+        </tr>
         <tr v-for="shopAllotDetail in shopAllotDetailList">
           <td>{{shopAllotDetail.productName}}</td>
           <td></td>
           <td>台</td>
           <td>
-            <!-- 销售类型==委托代销且为委托退货时使用负号区分 -->
-            <div v-if="shopAllot.fromJointLevel == '一级' && printType === 'returnPrint' ">-</div>
             {{shopAllotDetail.qty}}
           </td>
           <td>
@@ -109,63 +91,36 @@
             <div v-if="printType === 'returnPrint'">{{shopAllotDetail.returnPrice}}</div>
           </td>
           <td>
-            <div v-if="shopAllot.fromJointLevel == '一级' && printType === 'returnPrint' ">-</div>
             <div v-if="printType === 'salePrint'">{{shopAllotDetail.saleAmount}}</div>
             <div v-if="printType === 'returnPrint'">{{shopAllotDetail.returnAmount}}</div>
           </td>
         </tr>
 
-      <tr>
-        <td>合计</td>
-        <td colspan="2"></td>
-        <td>
-          <div v-if="shopAllot.fromJointLevel == '一级' && printType === 'returnPrint' ">-</div>
-          {{shopAllot }}
-        </td>
-        <td></td>
-        <td>
-          <div v-if="shopAllot.fromJointLevel != '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.returnTotalPrice}}</div>
-            <div v-if="printType === 'returnPrint'">{{totalPrice.returnTotalPrice}}</div>
-          </div>
-          <div v-if="shopAllot.fromJointLevel == '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.returnTotalPrice}}</div>
-            <div v-if="printType === 'returnPrint'">{{totalPrice.returnTotalPrice}}</div>
-          </div>
-        </td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>价税合计</td>
-        <td colspan="4">
-          <div v-if="shopAllot.fromJointLevel != '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-            <div v-if="printType === 'returnPrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-          </div>
-          <div v-if="shopAllot.fromJointLevel == '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-            <div v-if="printType === 'returnPrint'">负${totalPrice.chineseReturnTotalPrice }}</div>
-          </div>
-        </td>
-        <td colspan="3">
-          <div v-if="shopAllot.fromJointLevel != '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-            <div v-if="printType === 'returnPrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-          </div>
-          <div v-if="shopAllot.fromJointLevel == '一级'">
-            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
-            <div v-if="printType === 'returnPrint'">-{{totalPrice.chineseReturnTotalPrice }}</div>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>摘要</td>
-        <td colspan="7">调拨单：{{shopAllot.formatId}}</td>
-      </tr>
-      <div v-if="shopAllot.fromJointLevel != '一级'">
         <tr>
-          <th rowspan="2">销货单位</th>
+          <td>合计</td>
+          <td colspan="2"></td>
+          <td>{{totalQty}}</td>
+          <td></td>
+          <td  v-if="printType === 'salePrint'">{{totalPrice.saleTotalPrice}}</td>
+          <td v-if="printType === 'returnPrint'">{{totalPrice.returnTotalPrice}}</td>
+        </tr>
+        <tr>
+          <td>价税合计</td>
+          <td colspan="4">
+            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
+            <div v-if="printType === 'returnPrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
+          </td>
+          <td colspan="3">
+            <div v-if="printType === 'salePrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
+            <div v-if="printType === 'returnPrint'">{{totalPrice.chineseReturnTotalPrice }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td>摘要</td>
+          <td colspan="7">调拨单：{{shopAllot.formatId}}</td>
+        </tr>
+        <tr>
+          <td rowspan="2">销货单位</td>
           <td>名称</td>
           <td colspan="2">oppo2016</td>
           <td>税务登记号</td>
@@ -177,19 +132,18 @@
           <td>开户银行及账号</td>
           <td colspan="3"></td>
         </tr>
+        </tbody>
+      </table>
+
+      <div class="row">
+        <div class="span3">客户签名：</div>
+        <div class="span2">仓管员：</div>
+        <div class="span2">业务员：</div>
+        <div class="span2">开单人：</div>
       </div>
-      </tbody>
-    </table>
 
-    <div class="row">
-      <div class="span3">客户签名：</div>
-      <div class="span2">仓管员：</div>
-      <div class="span2">业务员：</div>
-      <div class="span2">开单人：</div>
+
     </div>
-
-
-  </div>
   </div>
 
 </template>
@@ -200,6 +154,7 @@
         shopAllot : {},
         shopAllotDetailList:[],
         totalPrice : {},
+        totalQty:null,
         printType:this.$route.query.printType,
       }
     }, methods:{
@@ -225,6 +180,13 @@
           this.shopAllotDetailList = findDetailListRes.data;
           this.shopAllot = findDtoRes.data;
           this.totalPrice = findTotalPriceRes.data;
+          let result = 0;
+          if(this.shopAllotDetailList){
+            for(let storeAllotDetail of this.shopAllotDetailList){
+              result += storeAllotDetail.qty;
+            }
+          }
+          this.totalQty = result;
 
           this.$nextTick(()=>{
             window.print();

@@ -96,7 +96,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             t1.enabled=1
             and t1.employee_id=t2.id
             and t1.login_name in(:loginNameList)
-            and (t2.leave_date is null or t2.leaveDate > :date)
+            and (t2.leave_date is null or t2.leave_date > :date)
         """)
         var paramMap = HashMap<String, Any>()
         paramMap.put("loginNameList", loginNameList)

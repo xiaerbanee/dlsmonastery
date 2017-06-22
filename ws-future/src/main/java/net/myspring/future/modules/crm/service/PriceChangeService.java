@@ -1,11 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RandomUtils;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
 import net.myspring.future.modules.crm.repository.PriceChangeRepository;
@@ -18,6 +20,7 @@ import net.myspring.future.modules.crm.web.form.PriceChangeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,7 +66,9 @@ public class PriceChangeService {
             HashSet hashSet = new HashSet(productTypeList);
             productTypeList.clear();
             productTypeList.addAll(hashSet);
-            priceChangeDto.setProductTypeIdList(productTypeList);
+            if(productTypeList!=null){
+                priceChangeDto.setProductTypeIds(StringUtils.join(productTypeList,CharConstant.COMMA));
+            }
         }
         return priceChangeDto;
     }
@@ -90,13 +95,11 @@ public class PriceChangeService {
             priceChange.setStatus(PriceChangeStatusEnum.抽检中.name());
             priceChangeRepository.save(priceChange);
 
-            List<Product> productList = productRepository.findByProductTypeIds(priceChangeForm.getProductTypeIdList());
             List<PriceChangeProduct> priceChangeProducts = Lists.newArrayList();
-            for(Product product:productList){
+            for(String productTypeId:priceChangeForm.getProductTypeIdList()){
                 PriceChangeProduct priceChangeProduct = new PriceChangeProduct();
                 priceChangeProduct.setPriceChangeId(priceChange.getId());
-                priceChangeProduct.setProductId(product.getId());
-                priceChangeProduct.setProductTypeId(product.getProductTypeId());
+                priceChangeProduct.setProductTypeId(productTypeId);
                 priceChangeProducts.add(priceChangeProduct);
             }
             priceChangeProductRepository.save(priceChangeProducts);

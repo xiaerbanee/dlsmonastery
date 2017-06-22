@@ -3,11 +3,10 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.BillTypeEnum;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.modules.input.dto.ApPayBillDto;
 import net.myspring.cloud.modules.input.dto.ArRefundBillDto;
 import net.myspring.cloud.modules.input.dto.ArRefundBillEntityDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
@@ -111,7 +110,7 @@ public class ArRefundBillService {
                 billKey = customerName + CharConstant.COMMA + bankAcntName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
                 if (!refundBillForDHMap.containsKey(billKey)) {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
-                    arRefundBill.setExtendType(BillTypeEnum.收款退款单_k3.name());
+                    arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
                     arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
@@ -136,7 +135,7 @@ public class ArRefundBillService {
                 billKey = customerName + CharConstant.COMMA + billDate + CharConstant.COMMA + amount + CharConstant.COMMA + remarks;
                 if (!refundBillForCashMap.containsKey(billKey)) {
                     ArRefundBillDto arRefundBill = new ArRefundBillDto();
-                    arRefundBill.setExtendType(BillTypeEnum.收款退款单_k3.name());
+                    arRefundBill.setExtendType(ExtendTypeEnum.收款退款单_k3.name());
                     arRefundBill.setCreatorK3(accountKingdeeBook.getUsername());
                     arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));

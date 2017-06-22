@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="itemCollect" icon="document" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.collect')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>

@@ -14,7 +14,10 @@ import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.repository.*;
+import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
+import net.myspring.basic.modules.sys.domain.Office;
+import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
@@ -22,6 +25,7 @@ import net.myspring.util.excel.*;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.time.LocalTimeUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -69,6 +73,8 @@ public class DutyWorktimeService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private GridFsTemplate storageGridFsTemplate;
+    @Autowired
+    private OfficeRepository officeRepository;
 
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery) {
         Page<DutyWorktimeDto> page = dutyWorktimeRepository.findPage(pageable, dutyWorktimeQuery);
@@ -98,7 +104,6 @@ public class DutyWorktimeService {
             cellTypeMap.get("leave").put(key, ExcelCellStyle.RED.name());
             employeeIdSet.add(dutyLeave.getEmployeeId());
             leaveMap.get(key).add(dutyLeave.getDateType()+"/"+dutyLeave.getLeaveType());
-
         }
         //加班
         Map<String,List<String>> overtimeMap=Maps.newHashMap();
@@ -277,11 +282,19 @@ public class DutyWorktimeService {
 
 
         Map<String, DutyWorktimeExportDto> dutyWorktimeMap = Maps.newTreeMap();
+        Map<String,Employee> employeeMap=employeeRepository.findMap(employeeIdSet);
+        Map<String,Account> accountMap=accountRepository.findMap(CollectionUtil.extractToList(employeeMap.values(),"accountId"));
+        Map<String,Office> officeMap=officeRepository.findMap(CollectionUtil.extractToList(accountMap.values(),"officeId"));
         for (String employeeId : employeeIdSet) {
             for (LocalDate date : LocalDateUtils.getDateList(dateStart, dateEnd)) {
                 String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(date);
+                Employee employee=employeeMap.get(employeeId);
+                Account account=accountMap.get(employee.getAccountId());
+                Office office=officeMap.get(account.getOfficeId());
                 DutyWorktimeExportDto dutyWorktime = new DutyWorktimeExportDto();
                 dutyWorktime.setEmployeeId(employeeId);
+                dutyWorktime.setEmployeeName(employee.getName());
+                dutyWorktime.setOfficeName(office.getName());
                 dutyWorktime.setDutyDate(date);
                 dutyWorktime.setWorktimes(workTimeMap.get(key));
                 dutyWorktime.setLeaves(leaveMap.get(key));
@@ -316,9 +329,9 @@ public class DutyWorktimeService {
         return Lists.newArrayList(dutyWorktimeMap.values());
     }
 
-    public void save(String mongoId, String month, String remarks) {
+    public void save(DutyWorktimeForm dutyWorktimeForm) {
         Map<String, DutyWorktime> dutyWorktimeMap = Maps.newLinkedHashMap();
-        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
+        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
         Workbook workbook = ExcelUtils.getWorkbook(gridFSDBFile.getFilename(), gridFSDBFile.getInputStream());
         Sheet sheetAt = workbook.getSheetAt(0);
         int rowCount = sheetAt.getLastRowNum();
@@ -329,10 +342,10 @@ public class DutyWorktimeService {
                 String loginName = StringUtils.toString(ExcelUtils.getCellValue(sheetAt.getRow(i).getCell(14)));
                 loginNameList.add(loginName);
             }
+            String employeeId = null;
             List<Account> accountList = accountRepository.findByAccessLoginNameList(loginNameList, LocalDate.now());
             Map<String, Account> accountMap = CollectionUtil.extractToMap(accountList, "loginName");
             for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
-                String employeeId = null;
                 Row row = sheetAt.getRow(i);
                 if (row.getLastCellNum() > 14) {
                     String loginName = StringUtils.toString(ExcelUtils.getCellValue(row.getCell(14)));
@@ -352,11 +365,11 @@ public class DutyWorktimeService {
                     }
                 }
                 if (StringUtils.isNotBlank(employeeId) && isDateRow) {
-                    for (int j = 0; j < row.getLastCellNum(); j++) {
+                    for (int j = 1; j < row.getLastCellNum(); j++) {
                         tempDate = String.valueOf(row.getCell(j)).trim();
-                        if (StringUtils.isNotBlank(tempDate)) {
-                            Object worktime = row.getCell(j);
-                            String dateStr = month.split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
+                        if (StringUtils.isNotBlank(tempDate)&&!"null".equals(tempDate)) {
+                            Object worktime = sheetAt.getRow(i+1).getCell(j);
+                            String dateStr = dutyWorktimeForm.getYearMonth().split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
                             LocalDate dutyDate = LocalDateUtils.parse(dateStr);
                             LocalTime startTime = null;
                             LocalTime endTime = null;
@@ -368,10 +381,13 @@ public class DutyWorktimeService {
                                     if (!"-".equals(worktime)) {
                                         String[] worktimes = String.valueOf(worktime).split("-");
                                         if (worktimes[0] != null && StringUtils.isNotBlank(worktimes[0])) {
-                                            startTime = LocalTime.parse(worktimes[0] + ":00");
+                                            if(worktimes[0].equals("31")){
+                                                System.out.println(worktime);
+                                        }
+                                             startTime = LocalTimeUtils.parse(worktimes[0] + ":00");
                                         }
                                         if (worktimes.length > 1 && worktimes[worktimes.length - 1] != null && StringUtils.isNotBlank(worktimes[worktimes.length - 1])) {
-                                            endTime = LocalTime.parse(worktimes[worktimes.length - 1] + ":00");
+                                            endTime = LocalTimeUtils.parse(worktimes[worktimes.length - 1] + ":00");
                                         }
                                     }
                                 }
@@ -379,7 +395,7 @@ public class DutyWorktimeService {
                             // 插入数据
                             if (startTime != null) {
                                 DutyWorktime dutyWorktime = new DutyWorktime();
-                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTime.from(startTime);
+                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTimeUtils.format(startTime);
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(startTime);
@@ -389,7 +405,7 @@ public class DutyWorktimeService {
                             }
                             if (endTime != null) {
                                 DutyWorktime dutyWorktime = new DutyWorktime();
-                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTime.from(endTime);
+                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTimeUtils.format(endTime);
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(endTime);
@@ -418,41 +434,42 @@ public class DutyWorktimeService {
     }
     public String findSimpleExcelSheet(String month,Workbook workbook,List<DutyWorktimeExportDto> dutyWorktimeExporeList) {
         List<List<SimpleExcelColumn>> excelColumnList=Lists.newArrayList();
+        Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"部门"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"姓名"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"打卡日期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"星期"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"打卡时间（上午）"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"打卡时间（下午）"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"加班"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"请假"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"加班调休"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"年假调休"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"免打卡"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"公休"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"出差"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"打卡时间（初次）"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(ExcelCellStyle.HEADER.name(),"打卡时间（末次）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"部门"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"姓名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"打卡日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"星期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"打卡时间（上午）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"打卡时间（下午）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"加班"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"请假"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"加班调休"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"年假调休"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"免打卡"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"公休"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"出差"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"打卡时间（初次）"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),"打卡时间（末次）"));
         excelColumnList.add(simpleExcelColumnList);
         for(DutyWorktimeExportDto dutyWorktimeExportDto:dutyWorktimeExporeList){
             simpleExcelColumnList=Lists.newArrayList();
-            String cellStyle = dutyWorktimeExportDto.getStyle();
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getOfficeName(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getEmployeeName(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(LocalDateUtils.format(dutyWorktimeExportDto.getDutyDate()),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getWeekOfDay(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getStartTime(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getEndTime(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getOvertimes(),CharConstant.ENTER),dutyWorktimeExportDto.getOvertimeCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getLeaves(),CharConstant.ENTER),dutyWorktimeExportDto.getLeaveCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getOvertimeRests(),CharConstant.ENTER),dutyWorktimeExportDto.getOvertimeRestCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getAnnualRests(),CharConstant.ENTER),dutyWorktimeExportDto.getAnnualRestCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getFrees(),CharConstant.ENTER),dutyWorktimeExportDto.getFreeCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getPublicFrees(),CharConstant.ENTER),dutyWorktimeExportDto.getPublicFreeCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(org.apache.commons.lang.StringUtils.join(dutyWorktimeExportDto.getTrips(),CharConstant.ENTER),dutyWorktimeExportDto.getTripCellType()));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getFirstTime(),cellStyle));
-            simpleExcelColumnList.add(new SimpleExcelColumn(dutyWorktimeExportDto.getLastTime(),cellStyle));
+            CellStyle cellStyle = cellStyleMap.get(dutyWorktimeExportDto.getStyle());
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getOfficeName()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getEmployeeName()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,LocalDateUtils.format(dutyWorktimeExportDto.getDutyDate())));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getWeekOfDay()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getStartTime()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getEndTime()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getOvertimeCellType()),StringUtils.join(dutyWorktimeExportDto.getOvertimes(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getLeaveCellType()),StringUtils.join(dutyWorktimeExportDto.getLeaves(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getOvertimeRestCellType()),StringUtils.join(dutyWorktimeExportDto.getOvertimeRests(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getAnnualRestCellType()),StringUtils.join(dutyWorktimeExportDto.getAnnualRests(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getFreeCellType()),StringUtils.join(dutyWorktimeExportDto.getFrees(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getPublicFreeCellType()),StringUtils.join(dutyWorktimeExportDto.getPublicFrees(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyleMap.get(dutyWorktimeExportDto.getTripCellType()),StringUtils.join(dutyWorktimeExportDto.getTrips(),CharConstant.ENTER)));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getFirstTime()));
+            simpleExcelColumnList.add(new SimpleExcelColumn(cellStyle,dutyWorktimeExportDto.getLastTime()));
             excelColumnList.add(simpleExcelColumnList);
         }
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("考勤记录",excelColumnList);

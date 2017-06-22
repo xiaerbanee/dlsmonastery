@@ -39,7 +39,7 @@ class VoucherRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append(" and status = :status ")
         }
         if(StringUtils.isNotBlank(voucherQuery.createdBy)){
-            sb.append(" and createdBy = :createdBy ")
+            sb.append(" and created_by = :createdBy ")
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

@@ -4,6 +4,7 @@ import net.myspring.basic.modules.hr.domain.DutyWorktime;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.service.DutyWorktimeService;
+import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -43,6 +44,11 @@ public class DutyWorktimeController {
         return dutyWorktimeQuery;
     }
 
+    @RequestMapping(value = "getForm")
+    public DutyWorktimeForm getForm(DutyWorktimeForm dutyWorktimeForm){
+        return dutyWorktimeForm;
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery){
         Page<DutyWorktimeDto> page = dutyWorktimeService.findPage(pageable,dutyWorktimeQuery);
@@ -63,8 +69,8 @@ public class DutyWorktimeController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public RestResponse importFile(@RequestParam(value = "mongoId", required = true) String mongoId, String month, String remarks) {
-        dutyWorktimeService.save(mongoId, month, remarks);
+    public RestResponse importFile(DutyWorktimeForm dutyWorktimeForm) {
+        dutyWorktimeService.save(dutyWorktimeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

@@ -12,47 +12,46 @@ import java.math.BigDecimal;
 @Table(name="sys_gl_voucher_entry")
 public class VoucherEntry extends IdEntity<VoucherEntry> {
     //摘要
-    private String fExplanation;
+    private String FExplanation;
     //科目编码
-    private String fAccountId;
+    private String FAccountId;
     //借方金额
-    private BigDecimal fDebit;
+    private BigDecimal FDebit;
     //贷方金额
-    private BigDecimal fCredit;
+    private BigDecimal FCredit;
     //凭证
     private String glVoucherId;
 
-
-    public String getfExplanation() {
-        return fExplanation;
+    public String getFExplanation() {
+        return FExplanation;
     }
 
-    public void setfExplanation(String fExplanation) {
-        this.fExplanation = fExplanation;
+    public void setFExplanation(String FExplanation) {
+        this.FExplanation = FExplanation;
     }
 
-    public String getfAccountId() {
-        return fAccountId;
+    public String getFAccountId() {
+        return FAccountId;
     }
 
-    public void setfAccountId(String fAccountId) {
-        this.fAccountId = fAccountId;
+    public void setFAccountId(String FAccountId) {
+        this.FAccountId = FAccountId;
     }
 
-    public BigDecimal getfDebit() {
-        return fDebit;
+    public BigDecimal getFDebit() {
+        return FDebit;
     }
 
-    public void setfDebit(BigDecimal fDebit) {
-        this.fDebit = fDebit;
+    public void setFDebit(BigDecimal FDebit) {
+        this.FDebit = FDebit;
     }
 
-    public BigDecimal getfCredit() {
-        return fCredit;
+    public BigDecimal getFCredit() {
+        return FCredit;
     }
 
-    public void setfCredit(BigDecimal fCredit) {
-        this.fCredit = fCredit;
+    public void setFCredit(BigDecimal FCredit) {
+        this.FCredit = FCredit;
     }
 
     public String getGlVoucherId() {

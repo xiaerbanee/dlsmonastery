@@ -39,7 +39,7 @@
           <el-table-column  :label="$t('storeAllotForm.cloudQty')" prop="cloudQty"></el-table-column>
           <el-table-column :label="$t('storeAllotForm.billQty')">
             <template scope="scope">
-              <input type="text" v-model="scope.row.billQty" class="el-input__inner"/>
+              <el-input v-model.number="scope.row.billQty"></el-input>
             </template>
           </el-table-column>
 
@@ -85,6 +85,12 @@
         }
       },
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -109,12 +115,29 @@
             this.submitDisabled = false;
           }
         });
+      }, customValidate(){
+        let totalBillQty = 0;
+        for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
+          if(util.isBlank(storeAllotDetail.billQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(storeAllotDetail.billQty) || storeAllotDetail.billQty < 0){
+            return '产品：'+storeAllotDetail.productName+'的调拨数不是一个大于等于0的整数';
+          }
+
+          totalBillQty += storeAllotDetail.billQty;
+        }
+        if(totalBillQty<=0){
+          return "总调拨数要大于0";
+        }
+        return null;
       }, getDetailListForSubmit(){
 
         if(this.inputForm.storeAllotDetailList){
           let tempList=[];
           for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
-            if(util.isNotBlank(storeAllotDetail.billQty)){
+            if(Number.isInteger(storeAllotDetail.billQty) && storeAllotDetail.billQty>0 ){
               tempList.push(storeAllotDetail);
             }
           }

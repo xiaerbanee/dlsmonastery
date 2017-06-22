@@ -22,10 +22,10 @@ class ImooRepository @Autowired constructor(val namedParameterJdbcTemplate:Named
             from
             PlantBasicProduct
             """,BeanPropertyRowMapper(ImooPlantBasicProduct::class.java));
-        }
+    }
 
         fun plantPrdocutImeiDeliverByDate(dateStart: LocalDate,  dateEnd: LocalDate, agentCodes: MutableList<String>): MutableList<ImooPrdocutImeiDeliver>{
-            var paramMap = Maps.newHashMap<String, Any>();
+            val paramMap = Maps.newHashMap<String, Any>();
             paramMap.put("dateStart",dateStart);
             paramMap.put("dateEnd",dateEnd);
             paramMap.put("agentCodes",agentCodes);

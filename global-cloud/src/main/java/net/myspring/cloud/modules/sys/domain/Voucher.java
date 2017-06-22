@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Table(name="sys_gl_voucher")
 public class Voucher extends CompanyEntity<Voucher> {
     //业务日期
-    private LocalDate fDate;
+    private LocalDate FDate;
     private String createdName;
     private Integer version;
     private String status;
@@ -20,12 +20,12 @@ public class Voucher extends CompanyEntity<Voucher> {
     private KingdeeBook kingdeeBook;
     private String kingdeeBookId;
 
-    public LocalDate getfDate() {
-        return fDate;
+    public LocalDate getFDate() {
+        return FDate;
     }
 
-    public void setfDate(LocalDate fDate) {
-        this.fDate = fDate;
+    public void setFDate(LocalDate FDate) {
+        this.FDate = FDate;
     }
 
     public String getCreatedName() {

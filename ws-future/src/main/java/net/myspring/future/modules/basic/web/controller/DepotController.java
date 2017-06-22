@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
@@ -157,7 +159,8 @@ public class DepotController {
         if(StringUtils.isBlank(depotId)){
             return null;
         }
-        return depotService.getDefaultDepartMent(depotId);
+        BdDepartment bdDepartment=depotService.getDefaultDepartment(depotId);
+        return bdDepartment.getFNumber();
     }
 
     @RequestMapping(value = "getRecentMonthSaleAmount")
@@ -169,5 +172,15 @@ public class DepotController {
             throw new ServiceException("depotId不能为空");
         }
         return depotService.getRecentMonthSaleAmount(depotId, monthQty);
+    }
+
+    @RequestMapping(value = "searchDepartment")
+    public String searchDepartment(String depotName){
+        if(StringUtils.isNotBlank(depotName)){
+            Depot depot=depotService.findByName(depotName);
+            BdDepartment bdDepartment=depotService.getDefaultDepartment(depot.getId());
+            return bdDepartment.getFFullName();
+        }
+        return null;
     }
 }
