@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.web.form.DutyLeaveForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -17,6 +18,8 @@ import net.myspring.common.utils.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -42,19 +45,20 @@ public class DutyLeaveValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateStart", "error.dutyDateStart", "开始日期不能为空");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateEnd", "error.dutyDateEnd", "结束日期不能为空");
 
-        if (StringUtils.isNotBlank(dutyLeaveForm.getDutyDateStart() ) && StringUtils.isNotBlank(dutyLeaveForm.getDutyDateEnd())) {
+        if (dutyLeaveForm.getDutyDateStart()!=null && dutyLeaveForm.getDutyDateEnd()!=null) {
             String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+            if(ChronoUnit.DAYS.between(dutyLeaveForm.getDutyDateStart(), LocalDateTime.now())>10){
+                errors.rejectValue("dutyDateStart","error.dutyDateStart","只能申请10天内数据");
+            }
             if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {
-                List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDate(employeeId, LocalDateUtils.parse(dutyLeaveForm.getDutyDateStart()));
+                List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDate(employeeId, dutyLeaveForm.getDutyDateStart());
                 List<String> dateTypes = CollectionUtil.extractToList(dutyLeaves, "dateType");
                 boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyLeaveForm.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyLeaveForm.getDateType()));
                 if (!isNotCross) {
                     errors.rejectValue("dutyDateStart", "error.dutyDateStart", "保存失败，请假时间已存在");
                 }
             } else {
-                LocalDate dateStart = LocalDate.parse(dutyLeaveForm.getDutyDateStart());
-                LocalDate dateEnd = LocalDate.parse(dutyLeaveForm.getDutyDateEnd());
-                List<LocalDate> dateList = LocalDateUtils.getDateList(dateStart, dateEnd);
+                List<LocalDate> dateList = LocalDateUtils.getDateList(dutyLeaveForm.getDutyDateStart(), dutyLeaveForm.getDutyDateEnd());
                 List<DutyLeave> dutyLeaves = dutyLeaveService.findByDutyDateList(employeeId, dateList);
                 Map<LocalDate, List<DutyLeave>> dutyLeaveMap = Maps.newHashMap();
                 for (DutyLeave leave : dutyLeaves) {

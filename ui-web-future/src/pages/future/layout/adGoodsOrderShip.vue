@@ -112,13 +112,13 @@
             extra:{},
         },
         rules: {
-          smallQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
-          mediumQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
-          largeQty: [{required: true, type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          smallQty: [{required: true,  type:"number", message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          mediumQty: [{required: true,  type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
+          largeQty: [{required: true,   type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteAndNumberMessage')}],
           expressOrderExpressCodes: [{required: true, message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
           expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
           expressOrderShouldGet: [{required: true, type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
-          expressOrderRealPay: [{required: true, type:"number",  message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
+          expressOrderRealPay: [{required: true,  type:"number",   message: this.$t('adGoodsOrderShip.prerequisiteMessage')}],
         },
         pageLoading:false,
       }
@@ -126,10 +126,12 @@
     methods:{
       formSubmit(){
 
-          if(!this.validateTableInfo()){
-            this.$message( '明细的开单数必须是不小于0的数字，且总发货数要大于0');
-              return;
+          let validateMsg = this.customValidate();
+          if(util.isNotBlank(validateMsg)){
+            this.$alert(validateMsg);
+            return;
           }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -138,7 +140,7 @@
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
-                this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList")})
+                this.$router.push({name:'adGoodsOrderList',query:util.getQuery("adGoodsOrderList"), params:{_closeFrom:true}});
               }
             }).catch( () => {
               this.submitDisabled = false;
@@ -148,10 +150,10 @@
           }
         })
       },refreshExpressOrderMoney(){
-          console.log("refreshExpressOrderMoney")
-        let smallQty = (this.inputForm.smallQty ? this.inputForm.smallQty : 0);
-        let mediumQty = (this.inputForm.mediumQty ? this.inputForm.mediumQty : 0);
-        let largeQty = (this.inputForm.largeQty ? this.inputForm.largeQty : 0);
+
+        let smallQty = Number.isInteger(this.inputForm.smallQty) ? this.inputForm.smallQty : 0 ;
+        let mediumQty = Number.isInteger(this.inputForm.mediumQty) ? this.inputForm.mediumQty : 0 ;
+        let largeQty = Number.isInteger(this.inputForm.largeQty) ? this.inputForm.largeQty : 0 ;
 
         let shipPrice= smallQty * this.ysyfMap.smallPrice + mediumQty * this.ysyfMap.mediumPrice + largeQty * this.ysyfMap.largePrice;
 
@@ -160,29 +162,37 @@
 
 			  let realPay = shipPrice; //实付运费(实际面单金额)
         for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
-          if(adGoodsOrderDetail.shipQty|| adGoodsOrderDetail.shippedQty){
-            let shipQty = (adGoodsOrderDetail.shipQty ? adGoodsOrderDetail.shipQty : 0);
-            let shippedQty = (adGoodsOrderDetail.shippedQty ? adGoodsOrderDetail.shippedQty : 0);
-            let price = (this.ysyfMap.priceMap[adGoodsOrderDetail.productId] ? this.ysyfMap.priceMap[adGoodsOrderDetail.productId] : 0);
+
+            let shipQty = Number.isInteger(adGoodsOrderDetail.shipQty) ? adGoodsOrderDetail.shipQty : 0;
+            let shippedQty = adGoodsOrderDetail.shippedQty *1;
+
+            let price = (this.ysyfMap.priceMap[adGoodsOrderDetail.productId]  ? this.ysyfMap.priceMap[adGoodsOrderDetail.productId]  : 0);
             realPay += (shipQty+shippedQty) * price;
-          }
+
         }
 			  this.inputForm.expressOrderRealPay=realPay;
 
-      },validateTableInfo(){
-          let totalQty = 0;
+      },customValidate(){
+
+        let totalShipQty = 0;
         for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
-            if(util.isNotBlank(adGoodsOrderDetail.shipQty) && isNaN(adGoodsOrderDetail.shipQty)){
-                return false;
-            }
-            if(util.isNotBlank(adGoodsOrderDetail.shipQty)){
-                if(adGoodsOrderDetail.shipQty<0){
-                    return false;
-                }
-              totalQty += adGoodsOrderDetail.shipQty;
-            }
+          if(util.isBlank(adGoodsOrderDetail.shipQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(adGoodsOrderDetail.shipQty) || adGoodsOrderDetail.shipQty < 0){
+            return '产品：'+adGoodsOrderDetail.productName+'的发货数不是一个大于等于0的整数';
+          }
+          if(adGoodsOrderDetail.shipQty > adGoodsOrderDetail.waitShipQty*1){
+            return '产品：'+adGoodsOrderDetail.productName+'的发货数大于待发货数';
+          }
+
+          totalShipQty += adGoodsOrderDetail.shipQty;
         }
-        return totalQty > 0;
+        if(totalShipQty<=0){
+          return "每次总发货数要大于0";
+        }
+        return null;
       }
       , searchDetail(){
         let val = this.productName;

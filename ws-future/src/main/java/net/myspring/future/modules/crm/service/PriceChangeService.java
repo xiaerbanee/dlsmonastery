@@ -20,6 +20,7 @@ import net.myspring.future.modules.crm.web.form.PriceChangeForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,12 +63,11 @@ public class PriceChangeService {
             PriceChange priceChange = priceChangeRepository.findOne(id);
             priceChangeDto = BeanUtil.map(priceChange,PriceChangeDto.class);
             List<String> productTypeList = CollectionUtil.extractToList(priceChangeProductRepository.findByPriceChangeId(id),"productTypeId");
+            HashSet hashSet = new HashSet(productTypeList);
+            productTypeList.clear();
+            productTypeList.addAll(hashSet);
             if(productTypeList!=null){
-                String productTypeIds = "";
-                for (String productTypeId:productTypeList){
-                    productTypeIds += productTypeId+ CharConstant.COMMA;
-                }
-                priceChangeDto.setProductTypeIds(productTypeIds);
+                priceChangeDto.setProductTypeIds(StringUtils.join(productTypeList,CharConstant.COMMA));
             }
         }
         return priceChangeDto;
