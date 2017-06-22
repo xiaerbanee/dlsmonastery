@@ -14,6 +14,7 @@ import net.myspring.basic.modules.hr.domain.*;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeDto;
 import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.repository.*;
+import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
@@ -328,9 +329,9 @@ public class DutyWorktimeService {
         return Lists.newArrayList(dutyWorktimeMap.values());
     }
 
-    public void save(String mongoId, String month, String remarks) {
+    public void save(DutyWorktimeForm dutyWorktimeForm) {
         Map<String, DutyWorktime> dutyWorktimeMap = Maps.newLinkedHashMap();
-        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
+        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
         Workbook workbook = ExcelUtils.getWorkbook(gridFSDBFile.getFilename(), gridFSDBFile.getInputStream());
         Sheet sheetAt = workbook.getSheetAt(0);
         int rowCount = sheetAt.getLastRowNum();
@@ -341,10 +342,10 @@ public class DutyWorktimeService {
                 String loginName = StringUtils.toString(ExcelUtils.getCellValue(sheetAt.getRow(i).getCell(14)));
                 loginNameList.add(loginName);
             }
+            String employeeId = null;
             List<Account> accountList = accountRepository.findByAccessLoginNameList(loginNameList, LocalDate.now());
             Map<String, Account> accountMap = CollectionUtil.extractToMap(accountList, "loginName");
             for (int i = 1; i < sheetAt.getLastRowNum(); i++) {
-                String employeeId = null;
                 Row row = sheetAt.getRow(i);
                 if (row.getLastCellNum() > 14) {
                     String loginName = StringUtils.toString(ExcelUtils.getCellValue(row.getCell(14)));
@@ -364,11 +365,11 @@ public class DutyWorktimeService {
                     }
                 }
                 if (StringUtils.isNotBlank(employeeId) && isDateRow) {
-                    for (int j = 0; j < row.getLastCellNum(); j++) {
+                    for (int j = 1; j < row.getLastCellNum(); j++) {
                         tempDate = String.valueOf(row.getCell(j)).trim();
-                        if (StringUtils.isNotBlank(tempDate)) {
-                            Object worktime = row.getCell(j);
-                            String dateStr = month.split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
+                        if (StringUtils.isNotBlank(tempDate)&&!"null".equals(tempDate)) {
+                            Object worktime = sheetAt.getRow(i+1).getCell(j);
+                            String dateStr = dutyWorktimeForm.getYearMonth().split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
                             LocalDate dutyDate = LocalDateUtils.parse(dateStr);
                             LocalTime startTime = null;
                             LocalTime endTime = null;
@@ -380,10 +381,13 @@ public class DutyWorktimeService {
                                     if (!"-".equals(worktime)) {
                                         String[] worktimes = String.valueOf(worktime).split("-");
                                         if (worktimes[0] != null && StringUtils.isNotBlank(worktimes[0])) {
-                                            startTime = LocalTime.parse(worktimes[0] + ":00");
+                                            if(worktimes[0].equals("31")){
+                                                System.out.println(worktime);
+                                        }
+                                             startTime = LocalTimeUtils.parse(worktimes[0] + ":00");
                                         }
                                         if (worktimes.length > 1 && worktimes[worktimes.length - 1] != null && StringUtils.isNotBlank(worktimes[worktimes.length - 1])) {
-                                            endTime = LocalTime.parse(worktimes[worktimes.length - 1] + ":00");
+                                            endTime = LocalTimeUtils.parse(worktimes[worktimes.length - 1] + ":00");
                                         }
                                     }
                                 }
@@ -391,7 +395,7 @@ public class DutyWorktimeService {
                             // 插入数据
                             if (startTime != null) {
                                 DutyWorktime dutyWorktime = new DutyWorktime();
-                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTime.from(startTime);
+                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTimeUtils.format(startTime);
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(startTime);
@@ -401,7 +405,7 @@ public class DutyWorktimeService {
                             }
                             if (endTime != null) {
                                 DutyWorktime dutyWorktime = new DutyWorktime();
-                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTime.from(endTime);
+                                String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(dutyDate) + CharConstant.ENTER + LocalTimeUtils.format(endTime);
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(endTime);

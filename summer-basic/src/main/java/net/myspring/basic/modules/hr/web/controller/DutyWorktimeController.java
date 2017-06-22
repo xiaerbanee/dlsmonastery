@@ -69,8 +69,8 @@ public class DutyWorktimeController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public RestResponse importFile(@RequestParam(value = "mongoId", required = true) String mongoId, String month, String remarks) {
-        dutyWorktimeService.save(mongoId, month, remarks);
+    public RestResponse importFile(DutyWorktimeForm dutyWorktimeForm) {
+        dutyWorktimeService.save(dutyWorktimeForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
