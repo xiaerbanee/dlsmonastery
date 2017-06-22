@@ -3,7 +3,8 @@
     <head-tab active="depotDetailList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filter')}}</el-button>
+        <el-button type="primary"  @click="exportData" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.export')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="upload2" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -27,7 +28,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('depotDetailList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -98,7 +98,13 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-       	window.location.href="/api//ws/future/crm/depotDetail/export?"+qs.stringify(this.formData);
+        util.confirmBeforeExportData(this).then(() => {
+          var submitData = util.deleteExtra(this.formData);
+          axios.get('/api/ws/future/crm/depotDetail/export?'+qs.stringify(submitData)).then((response)=> {
+            console.log(response.data)
+            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
+          });
+        }).catch(()=>{});
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
