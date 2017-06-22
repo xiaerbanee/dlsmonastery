@@ -6,6 +6,9 @@ import org.springframework.validation.Errors;
 import net.myspring.common.utils.ValidationUtils;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 /**
  * Created by admin on 2016/12/19.
  */
@@ -36,6 +39,9 @@ public class DutyRestValidator implements Validator {
                     errors.rejectValue("hour", "error.hour", "时长大于可调休时间");
                 }
                 ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
+            }
+            if(ChronoUnit.DAYS.between(dutyRest.getDutyDate(), LocalDateTime.now())>10){
+                errors.rejectValue("dutyDate","error.dutyDate","只能申请10天内数据");
             }
         }
     }

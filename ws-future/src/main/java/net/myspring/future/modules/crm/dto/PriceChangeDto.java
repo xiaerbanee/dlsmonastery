@@ -4,6 +4,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -26,13 +27,11 @@ public class PriceChangeDto extends DataDto<PriceChange> {
     private List<String> productTypeNameList;
 
     public String getProductTypeName(){
-        String productTypeNames = "";
         if(this.productTypeNameList != null){
-            for (String productTypeName:this.productTypeNameList){
-                productTypeNames += productTypeName+" ";
-            }
+            return StringUtils.join(this.productTypeNameList,CharConstant.COMMA);
+
         }
-        return productTypeNames;
+        return "";
     }
 
     public List<String> getProductTypeNameList() {

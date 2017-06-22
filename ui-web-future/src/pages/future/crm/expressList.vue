@@ -25,7 +25,7 @@
                 <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('expressList.fromDepotName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.expressOrderFromDepotId" category="shop" @afterInit="setSearchText"></depot-select>
+                <depot-select v-model="formData.expressOrderFromDepotId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('expressList.expressCompanyName')" :label-width="formLabelWidth">
                 <express-company-select v-model="formData.expressOrderExpressCompanyId" @afterInit="setSearchText"></express-company-select>

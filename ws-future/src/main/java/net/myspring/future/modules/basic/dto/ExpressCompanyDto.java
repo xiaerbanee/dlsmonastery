@@ -15,6 +15,15 @@ public class ExpressCompanyDto extends DataDto<ExpressCompany> {
     private String mobilePhone;
     private String contator;
     private String shouldGetRule;
+    private String  districtId;
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
 
     public String getName() {
         return name;

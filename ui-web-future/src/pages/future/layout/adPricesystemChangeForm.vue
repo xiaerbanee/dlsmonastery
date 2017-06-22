@@ -66,9 +66,11 @@
               width: 300
             }, {
               type: "numeric",
+              format:'0.00',
               width: 150
             }, {
               type: "numeric",
+              format:'0.00',
               width: 150
             }]
           },
