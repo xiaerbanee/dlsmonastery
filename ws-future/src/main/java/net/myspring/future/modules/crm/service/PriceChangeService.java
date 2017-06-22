@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -64,7 +65,7 @@ public class PriceChangeService {
             if(productTypeList!=null){
                 String productTypeIds = "";
                 for (String productTypeId:productTypeList){
-                    productTypeIds += productTypeId+",";
+                    productTypeIds += productTypeId+ CharConstant.COMMA;
                 }
                 priceChangeDto.setProductTypeIds(productTypeIds);
             }
