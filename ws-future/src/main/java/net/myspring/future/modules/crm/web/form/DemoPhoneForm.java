@@ -14,7 +14,6 @@ public class DemoPhoneForm extends BaseForm<BaseForm> {
     private String shopId;
     private String employeeId;
     private String productImeId;
-    /*private List<ProductImeDto> productImeDtoList;*/
 
     public String getProductImeId() {
         return productImeId;

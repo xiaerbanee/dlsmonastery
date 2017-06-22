@@ -66,13 +66,17 @@
           if (valid) {
             axios.post('/api/ws/future/crm/demoPhone/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-            if (!this.isCreate) {
-              this.submitDisabled = false;
-              this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
-            } else {
-              Object.assign(this.$data, this.getData());
-              this.initPage();
-            }
+              if(response.data.success){
+                if (!this.isCreate) {
+                  this.submitDisabled = false;
+                  this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
+                } else {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }
+              }else{
+                this.submitDisabled = false;
+              }
             }).catch(function () {
               that.submitDisabled = false;
             });

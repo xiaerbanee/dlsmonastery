@@ -60,8 +60,12 @@ public class DemoPhoneController {
 
     @RequestMapping(value = "save")
     public RestResponse save(DemoPhoneForm demoPhoneForm){
-        demoPhoneService.save(demoPhoneForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        String value = demoPhoneService.save(demoPhoneForm);
+        if(value!=null){
+            return new RestResponse("保存失败:"+value, ResponseCodeEnum.already_exists.name(),false);
+        }else {
+            return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        }
     }
 
     @RequestMapping(value = "getForm")

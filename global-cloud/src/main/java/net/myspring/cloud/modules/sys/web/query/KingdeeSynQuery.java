@@ -12,8 +12,8 @@ public class KingdeeSynQuery extends BaseQuery{
     private String billNo;
     private String extendId;
     private String extendType;
-    private Boolean success = true;
-    private Boolean locked = false;
+    private Boolean success;
+    private Boolean locked;
     private String kingdeeBookId;
 
     public LocalDate getCreatedDate() {

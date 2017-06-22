@@ -258,7 +258,11 @@ public class DepotService {
 
     }
 
-    public String getDefaultDepartment(String depotId) {
+    public Depot findByName(String name){
+        return  depotRepository.findByName(name);
+    }
+
+    public BdDepartment getDefaultDepartment(String depotId) {
         ClientDto clientDto = clientRepository.findByDepotId(depotId);
         if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
             return null;
@@ -267,7 +271,7 @@ public class DepotService {
         if(bdDepartment == null){
             return null;
         }
-        return bdDepartment.getFNumber();
+        return bdDepartment;
 
     }
 

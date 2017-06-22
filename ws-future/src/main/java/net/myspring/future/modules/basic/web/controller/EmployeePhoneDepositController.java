@@ -103,8 +103,4 @@ public class EmployeePhoneDepositController {
         return employeePhoneDepositService.export(workbook,employeePhoneDepositQuery);
     }
 
-    @RequestMapping(value = "searchDepartment")
-    public String searchDepartment(String depotName){
-        return null;
-    }
 }
