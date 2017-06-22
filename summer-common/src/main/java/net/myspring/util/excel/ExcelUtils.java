@@ -35,8 +35,7 @@ public class ExcelUtils {
             for (SimpleExcelSheet simpleExcelSheet : simpleExcelSheets) {
                 Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
                 if (simpleExcelSheet.getIsExcelColumn()) {
-                    Map<String, CellStyle> cellStyleMap = getCellStyleMap(workbook);
-                    doWriteSheet(sheet, simpleExcelSheet, cellStyleMap);
+                    doWriteSheetExcel(sheet, simpleExcelSheet);
                 } else {
                     doWriteSheet(sheet, simpleExcelSheet);
                 }
@@ -48,8 +47,7 @@ public class ExcelUtils {
     public static ByteArrayInputStream doWrite(Workbook workbook, SimpleExcelSheet simpleExcelSheet) {
         Sheet sheet = workbook.createSheet(simpleExcelSheet.getSheetName());
         if (simpleExcelSheet.getIsExcelColumn()) {
-            Map<String, CellStyle> cellStyleMap = getCellStyleMap(workbook);
-            doWriteSheet(sheet, simpleExcelSheet, cellStyleMap);
+            doWriteSheetExcel(sheet, simpleExcelSheet);
         } else {
             doWriteSheet(sheet, simpleExcelSheet);
         }
@@ -202,7 +200,7 @@ public class ExcelUtils {
         return map;
     }
 
-    private static void doWriteSheet(Sheet sheet, SimpleExcelSheet simpleExcelSheet, Map<String, CellStyle> cellStyleMap) {
+    private static void doWriteSheetExcel(Sheet sheet, SimpleExcelSheet simpleExcelSheet) {
         if (CollectionUtil.isNotEmpty(simpleExcelSheet.getExcelColumnList())) {
             for (int i = 0; i < simpleExcelSheet.getExcelColumnList().size(); i++) {
                 List<SimpleExcelColumn> excelCellList = simpleExcelSheet.getExcelColumnList().get(i);
@@ -210,7 +208,7 @@ public class ExcelUtils {
                 for (int j = 0; j < excelCellList.size(); j++) {
                     SimpleExcelColumn excelCell = excelCellList.get(j);
                     Cell cell = row.createCell(j);
-                    cell.setCellStyle(cellStyleMap.get(excelCell.getCellStyle()));
+                    cell.setCellStyle(excelCell.getCellStyle());
                     Object obj = excelCell.getValue();
                     setCellValue(cell, obj);
                 }
