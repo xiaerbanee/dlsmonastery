@@ -29,7 +29,7 @@ public class PriceChangeDto extends DataDto<PriceChange> {
         String productTypeNames = "";
         if(this.productTypeNameList != null){
             for (String productTypeName:this.productTypeNameList){
-                productTypeNames += productTypeName;
+                productTypeNames += productTypeName+" ";
             }
         }
         return productTypeNames;

@@ -64,7 +64,7 @@ public class PriceChangeService {
             if(productTypeList!=null){
                 String productTypeIds = "";
                 for (String productTypeId:productTypeList){
-                    productTypeIds += productTypeId;
+                    productTypeIds += productTypeId+",";
                 }
                 priceChangeDto.setProductTypeIds(productTypeIds);
             }
