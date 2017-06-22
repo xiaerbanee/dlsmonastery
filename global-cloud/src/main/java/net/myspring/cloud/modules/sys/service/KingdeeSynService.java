@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
+ * 金蝶同步
  * Created by lihx on 2017/6/21.
  */
 @Service
