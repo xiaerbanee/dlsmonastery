@@ -12,20 +12,16 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('depotDetailList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('depotDetailList.productName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('depotDetailList.hasIme')" :label-width="formLabelWidth">
-                <el-select v-model="formData.hasIme" filterable clearable :placeholder="$t('depotDetailList.inputKey')">
-                  <el-option v-for="(value,key) in formData.extra.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
-                </el-select>
+                <bool-select  v-model="formData.hasIme"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('depotDetailList.isSame')" :label-width="formLabelWidth">
-                <el-select v-model="formData.isSame" filterable clearable :placeholder="$t('depotDetailList.inputKey')">
-                  <el-option v-for="(value,key) in formData.extra.bools" :key="key" :label="key | bool2str" :value="value"></el-option>
-                </el-select>
+                <bool-select  v-model="formData.isSame"></bool-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -36,8 +32,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotDetailList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="depot.name" :label="$t('depotDetailList.shopName')" ></el-table-column>
-        <el-table-column prop="product.name" :label="$t('depotDetailList.productName')" ></el-table-column>
+        <el-table-column prop="depotName" :label="$t('depotDetailList.shopName')" ></el-table-column>
+        <el-table-column prop="productName" :label="$t('depotDetailList.productName')" ></el-table-column>
         <el-table-column prop="hasIme" :label="$t('depotDetailList.hasIme')" width="150" sortable>
           <template scope="scope">
             <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
@@ -56,7 +52,11 @@
   </div>
 </template>
 <script>
+  import boolSelect from "components/common/bool-select"
   export default {
+    components:{
+      boolSelect
+    },
     data() {
       return {
         page:{},
@@ -91,7 +91,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
