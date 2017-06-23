@@ -205,6 +205,7 @@
         if(totalBillQty<=0){
           return "总开单数要大于0";
         }
+
         return null;
       }
     },created(){
@@ -244,9 +245,7 @@
           axios.get('/api/ws/future/crm/shopDeposit/findLeftAmount',{params: {type:'形象保证金', depotId:this.adGoodsOrder.shopId}}).then((response)=>{
             this.imageDeposit = response.data;
           });
-
         });
-
       })
     }
   }

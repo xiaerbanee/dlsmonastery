@@ -101,11 +101,11 @@
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList")});
-                  }else{
+                  if (this.isCreate) {
                     Object.assign(this.$data, this.getData());
                     this.initPage();
+                  }else{
+                    this.$router.push({name: 'storeAllotList', query: util.getQuery("storeAllotList"), params:{_closeFrom:true}});
                   }
                 }
             }).catch( () => {

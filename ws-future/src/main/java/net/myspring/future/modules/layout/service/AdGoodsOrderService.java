@@ -447,7 +447,7 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(newAdGoodsOrder);
 
         //开始保存拆分后的detail信息
-        List<AdGoodsOrderDetail> newAdGoodsOrderDetails = Lists.newArrayList();
+        List<AdGoodsOrderDetail> newAdGoodsOrderDetailList = Lists.newArrayList();
         List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
         for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrderDetailList) {
             if (adGoodsOrderDetail.getConfirmQty() > adGoodsOrderDetail.getBillQty()) {
@@ -459,10 +459,13 @@ public class AdGoodsOrderService {
                 newAdGoodsOrderDetail.setBillQty(0);
                 newAdGoodsOrderDetail.setShippedQty(0);
                 newAdGoodsOrderDetail.setAdGoodsOrderId(newAdGoodsOrder.getId());
-                newAdGoodsOrderDetails.add(newAdGoodsOrderDetail);
+                newAdGoodsOrderDetailList.add(newAdGoodsOrderDetail);
             }
         }
-        adGoodsOrderDetailRepository.save(newAdGoodsOrderDetails);
+        if(newAdGoodsOrderDetailList.isEmpty()){
+            throw new ServiceException("所有确认订货数均已开单，不需要拆单");
+        }
+        adGoodsOrderDetailRepository.save(newAdGoodsOrderDetailList);
         newAdGoodsOrder.setAmount(calcAmountByDetailConfirmQty(newAdGoodsOrder));
         adGoodsOrderRepository.save(newAdGoodsOrder);
 
