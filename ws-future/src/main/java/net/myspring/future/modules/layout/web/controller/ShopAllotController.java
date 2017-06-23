@@ -5,11 +5,12 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
+import net.myspring.future.modules.layout.dto.ShopAllotDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.service.ShopAllotDetailService;
 import net.myspring.future.modules.layout.service.ShopAllotService;
+import net.myspring.future.modules.layout.web.form.ShopAllotAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
-import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -54,13 +55,13 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value = "audit")
-    public RestResponse audit(ShopAllotViewOrAuditForm shopAllotViewOrAuditForm) {
-        shopAllotService.audit(shopAllotViewOrAuditForm);
+    public RestResponse audit(ShopAllotAuditForm shopAllotAuditForm) {
+        shopAllotService.audit(shopAllotAuditForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findDetailListForEdit")
-    public List<ShopAllotDetailDto> findDetailListForEdit(String shopAllotId) {
+    public List<ShopAllotDetailSimpleDto> findDetailListForEdit(String shopAllotId) {
         return shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotId);
     }
 

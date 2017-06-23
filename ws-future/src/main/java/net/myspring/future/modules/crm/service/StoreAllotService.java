@@ -22,7 +22,7 @@ import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
@@ -352,9 +352,9 @@ public class StoreAllotService {
         storeAllotRepository.logicDelete(id);
     }
 
-    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+    public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
 
-        List<SimpleStoreAllotDetailDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
         cacheUtils.initCacheInput(result);
 
         if(StringUtils.isNotBlank(fromStoreId)){
@@ -374,7 +374,7 @@ public class StoreAllotService {
         return StringUtils.getSplitList(companyConfigCacheDto.getValue(), ",");
     }
 
-    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+    public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
         LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
         List<String> mergeIdList = getMergeStoreIds();
@@ -384,7 +384,7 @@ public class StoreAllotService {
         }
         String toStoreId =mergeIdList.get(1);
 
-        List<SimpleStoreAllotDetailDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
 
         cacheUtils.initCacheInput(result);
         //TODO 初始化财务存量

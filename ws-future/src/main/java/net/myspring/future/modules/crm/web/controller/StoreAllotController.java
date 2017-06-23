@@ -8,7 +8,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.StoreAllotDetailService;
@@ -93,12 +93,12 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "findDetailListForCommonAllot")
-    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+    public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
         return storeAllotService.findDetailListForCommonAllot(fromStoreId);
     }
 
     @RequestMapping(value = "findDetailListForFastAllot")
-    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+    public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
         return storeAllotService.findDetailListForFastAllot();
 
