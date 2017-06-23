@@ -26,6 +26,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -65,13 +66,25 @@ public class SalOutStockService {
                 KingdeeFormIdEnum.AR_receivable.name()) {
             @Override
             public String getNextBillNo() {
-                if(salOutStockDto.getBillTypeK3().contains("现销")){
-                    return null;
+                if(salOutStockDto.getBillType().contains("现销")){
+                    return "现销";
                 }else{
-                    ArReceivable receivable =arReceivableRepository.findTopOneBySourceBillNo(getBillNo());
-                    return  receivable.getFBillNo();
+                    String billNo = getBillNo();
+                    if (StringUtils.isNotBlank(billNo)){
+                        List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(billNo);
+                        if (receivableList.size() > 0){
+                            for (ArReceivable receivable : receivableList) {
+                                if (receivable != null) {
+                                    return receivable.getFBillNo();
+                                }
+                            }
+                        }else {
+                            return "未生成应收单";
+                        }
+                        return null;
+                    }
+                    return null;
                 }
-
             }
         };
         kingdeeManager.save(kingdeeSynExtendDto);
@@ -118,10 +131,10 @@ public class SalOutStockService {
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
                 SalOutStockDto salOutStockDto = new SalOutStockDto();
-                salOutStockDto.setCreatorK3(accountKingdeeBook.getUsername());
+                salOutStockDto.setCreator(accountKingdeeBook.getUsername());
                 salOutStockDto.setDate(date);
-                salOutStockDto.setDepartmentNumberK3(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
-                salOutStockDto.setBillTypeK3(billType);
+                salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
+                salOutStockDto.setBillType(billType);
                 salOutStockDto.setCustomerNumber(customerNumMap.get(customerName));
                 salOutStockDto.setNote(remarks);
                 billMap.put(billKey, salOutStockDto);
@@ -153,33 +166,25 @@ public class SalOutStockService {
         return kingdeeSynExtendDtoList;
     }
 
-    public List<KingdeeSynExtendDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
-            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-            if(isLogin) {
-                List<String> customerNumberList = Lists.newArrayList();
-                for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
-                    customerNumberList.add(salOutStockDto.getCustomerNumber());
-                }
-                Map<String, String> customerDepartmentMap = Maps.newHashMap();
-                List<String> departmentIdList = Lists.newArrayList();
-                for (BdCustomer bdCustomer : bdCustomerRepository.findByNumberList(customerNumberList)) {
-                    customerDepartmentMap.put(bdCustomer.getFNumber(), bdCustomer.getFSalDeptId());
-                    departmentIdList.add(bdCustomer.getFSalDeptId());
-                }
-                List<BdDepartment> bdDepartmentList = bdDepartmentRepository.findByIdList(departmentIdList);
-                Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
-                for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
-                    salOutStockDto.setCreatorK3(accountKingdeeBook.getUsername());
-                    salOutStockDto.setBillTypeK3(SalOutStockBillTypeEnum.标准销售出库单.name());
-                    salOutStockDto.setDepartmentNumberK3(bdDepartmentMap.get(customerDepartmentMap.get(salOutStockDto.getCustomerNumber())).getFNumber());
-                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
-                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
-                }
-            }
+    public List<KingdeeSynExtendDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList,KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<String> customerNumberList = Lists.newArrayList();
+        for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
+            customerNumberList.add(salOutStockDto.getCustomerNumber());
         }
-        return kingdeeSynExtendDtoList;
+        Map<String, String> customerDepartmentMap = Maps.newHashMap();
+        List<String> departmentIdList = Lists.newArrayList();
+        for (BdCustomer bdCustomer : bdCustomerRepository.findByNumberList(customerNumberList)) {
+            customerDepartmentMap.put(bdCustomer.getFNumber(), bdCustomer.getFSalDeptId());
+            departmentIdList.add(bdCustomer.getFSalDeptId());
+        }
+        List<BdDepartment> bdDepartmentList = bdDepartmentRepository.findByIdList(departmentIdList);
+        Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
+        for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
+            salOutStockDto.setCreator(accountKingdeeBook.getUsername());
+            salOutStockDto.setBillType(SalOutStockBillTypeEnum.标准销售出库单.name());
+            salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(salOutStockDto.getCustomerNumber())).getFNumber());
+        }
+        return save(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
     public SalStockForm getForm(){

@@ -26,8 +26,8 @@ class ArReceivableRepository @Autowired constructor(val namedParameterJdbcTempla
         """,Collections.singletonMap("sourceBillNo",sourceBillNo), BeanPropertyRowMapper(ArReceivable::class.java))
     }
 
-    fun findTopOneBySourceBillNo(sourceBillNo: String): ArReceivable {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findTopOneBySourceBillNo(sourceBillNo: String): MutableList<ArReceivable> {
+        return namedParameterJdbcTemplate.query("""
             select top 1
             t1.FBILLNO,
             t2.FSOURCEBILLNO,
