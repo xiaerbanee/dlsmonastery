@@ -27,8 +27,8 @@ import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
-import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.repository.*;
@@ -44,7 +44,6 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -403,7 +402,6 @@ public class StoreAllotService {
 
     public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
-        LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
         List<String> mergeIdList = getMergeStoreIds();
         if(mergeIdList == null || mergeIdList.size() <=1){
 
@@ -411,7 +409,7 @@ public class StoreAllotService {
         }
         String toStoreId =mergeIdList.get(1);
 
-        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货", RequestUtils.getCompanyId());
 
         cacheUtils.initCacheInput(result);
         //TODO 初始化财务存量
