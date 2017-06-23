@@ -99,7 +99,6 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     var itemList = that.data.activeItem.actionList;
-    console.log(itemList)
     if (itemList.length==0) {
       return;
     }
