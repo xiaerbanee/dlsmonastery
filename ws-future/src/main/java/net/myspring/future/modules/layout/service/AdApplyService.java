@@ -224,6 +224,10 @@ public class AdApplyService {
                 adGoodsOrder.setOutShopId(adApply.getShopId());
                 adGoodsOrder.setShopId(adApply.getShopId());
                 adGoodsOrder.setBillDate(adApplyBillForm.getBillDate());
+                adGoodsOrder.setSmallQty(0);
+                adGoodsOrder.setMediumQty(0);
+                adGoodsOrder.setLargeQty(0);
+                adGoodsOrder.setSplitBill(false);
                 adGoodsOrder.setLocked(true);
                 adGoodsOrder.setBillRemarks(adApplyBillForm.getRemarks());
                 adGoodsOrderMap.put(adApply.getShopId(), adGoodsOrder);
@@ -237,6 +241,8 @@ public class AdApplyService {
             adGoodsOrderDetail.setProductId(adApply.getProductId());
             adGoodsOrderDetail.setPrice(product.getPrice2());
             adGoodsOrderDetail.setShouldGet(product.getShouldGet());
+            adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+            adGoodsOrderDetail.setShippedQty(0);
             adGoodsOrderDetail.setQty(adApply.getApplyQty());
             adGoodsOrderDetail.setConfirmQty(adApply.getConfirmQty());
             adGoodsOrderDetail.setBillQty(adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty());
