@@ -1,5 +1,7 @@
 package net.myspring.basic.modules.hr.web.controller;
 
+import com.google.common.collect.Lists;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.dto.DutySignDto;
 import net.myspring.basic.modules.hr.service.DutySignService;
 import net.myspring.basic.modules.hr.service.PositionService;
@@ -7,6 +9,7 @@ import net.myspring.basic.modules.hr.web.form.DutySignForm;
 import net.myspring.basic.modules.hr.web.query.DutySignQuery;
 import net.myspring.basic.modules.hr.web.validator.DutySignValidator;
 import net.myspring.basic.modules.sys.service.OfficeService;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * Created by liuj on 2016/11/30.
@@ -40,6 +44,9 @@ public class DutySignController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<DutySignDto> list(Pageable pageable, DutySignQuery dutySignQuery) {
         Page<DutySignDto> page = dutySignService.findPage(pageable,dutySignQuery);
+        for(DutySignDto dutySignDto:page.getContent()){
+            setOperationStatus(dutySignDto);
+        }
         return page;
     }
 
@@ -77,5 +84,11 @@ public class DutySignController {
     public String export(DutySignQuery dutySignQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
         return dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
+    }
+
+    private void setOperationStatus(DutySignDto dutySign) {
+        if(dutySign.getCreatedBy().equals(RequestUtils.getAccountId()) && AuditTypeEnum.APPLY.getValue().equals(dutySign.getStatus())) {
+            dutySign.setDeleted(true);
+        }
     }
 }

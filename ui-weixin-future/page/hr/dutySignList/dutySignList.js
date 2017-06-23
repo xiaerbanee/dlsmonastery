@@ -45,6 +45,7 @@ Page({
                     },
                     data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
+
                         that.setData({ page: res.data });
                         wx.hideToast();
                     }
