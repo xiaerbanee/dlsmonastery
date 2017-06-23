@@ -289,7 +289,7 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
     }
 
-    public RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");

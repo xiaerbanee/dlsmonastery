@@ -28,6 +28,7 @@ Page({
     },
     depotSearch: function () {
         var that = this;
+        if(!that.data.name){return;}
         wx.request({
             url: $util.getUrl('ws/future/basic/depot/shop'),
             data: { category: that.data.category, name: that.data.name },

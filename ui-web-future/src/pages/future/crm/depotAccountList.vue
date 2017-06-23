@@ -104,7 +104,7 @@
         this.formVisible = false;
         this.pageRequest();
       }, itemDetail(clientOutId) {
-          this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dutyDateRange: this.formData.dutyDateRange}});
+          this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dateRange:  this.formData.dutyDateRange }});
       }, exportAllDepots() {
 
       util.confirmBeforeExportData(this).then(() => {

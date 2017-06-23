@@ -153,7 +153,7 @@ public class ArOtherRecAbleDto {
         model.put("FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
 }
