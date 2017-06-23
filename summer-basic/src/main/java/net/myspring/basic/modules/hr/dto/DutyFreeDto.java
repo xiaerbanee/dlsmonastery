@@ -13,6 +13,16 @@ public class DutyFreeDto extends DataDto<DutyFree> {
     private String dateType;
     private String status;
 
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public LocalDate getFreeDate() {
         return freeDate;
     }

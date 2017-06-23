@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:null,
+        innerId:this.value,
         itemList : [],
         remoteLoading:false,
       };
@@ -25,7 +25,10 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-        this.$emit('input', newVal);
+
+        if(newVal !== this.value) {
+          this.$emit('input', newVal);
+        }
       },setValue(val) {
         if(this.innerId===val){
           return;
@@ -48,7 +51,7 @@
             });
           })
         }else{
-          this.innerId=[];
+          this.innerId=val;
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

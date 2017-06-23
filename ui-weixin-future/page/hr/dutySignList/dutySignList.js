@@ -48,9 +48,10 @@ Page({
                         for (var item in res.data.content) {
                             var actionList = new Array();
                             actionList.push("详细");
-                            if (item.deleted) {
+                            if (res.data.content[item].deleted) {
                                 actionList.push("删除");
                             }
+                            res.data.content[item].actionList=actionList;
                         }
                         that.setData({ page: res.data });
                         wx.hideToast();
@@ -97,7 +98,7 @@ Page({
         var that = this;
         var id = e.currentTarget.dataset.id;
         var itemList = that.data.activeItem.actionList;
-        if (!itemList) {
+        if (itemList.length==0) {
             return;
         }
         wx.showActionSheet({

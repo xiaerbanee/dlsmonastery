@@ -30,7 +30,7 @@ Page({
       },
       success: function (res) {
         console.log(res.data)
-        that.setData({ formData: res.data});
+        that.setData({ formData: res.data });
         that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
         that.pageRequest();
       }
@@ -63,6 +63,21 @@ Page({
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
+            console.log(res.data.content)
+            for (var item in res.data.content) {
+              var actionList = new Array();
+              actionList.push("详细");
+              if (res.data.content[item].deleted) {
+                actionList.push("删除");
+              }
+              if (res.data.content[item].deleted) {
+                actionList.push("删除");
+              }
+              if (res.data.content[item].deleted) {
+                actionList.push("删除");
+              }
+              res.data.content[item].actionList = actionList;
+            }
             that.setData({ page: res.data });
             wx.hideToast();
           }
