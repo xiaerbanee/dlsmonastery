@@ -26,8 +26,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ formProperty: res.data.extra, formData: res.data })
@@ -47,8 +46,7 @@ Page({
         wx.request({
           url: $util.getUrl("basic/hr/dutyRest"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
@@ -113,7 +111,7 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     var itemList = that.data.activeItem.actionList;
-    if (itemList.length==0) {
+    if (itemList.length == 0) {
       return;
     }
     wx.showActionSheet({
@@ -125,8 +123,7 @@ Page({
               url: $util.getUrl("basic/hr/dutyRest/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
               },
               success: function (res) {
                 that.pageRequest();

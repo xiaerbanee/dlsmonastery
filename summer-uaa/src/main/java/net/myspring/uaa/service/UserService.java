@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
-    public Map<String,Object> login(String username, String password,String weixinCode)  {
+    public Map<String,Object> login(String username, String password,String weixinCode,String accountId)  {
         String url = "http://localhost:1200/login";
         Map<String,Object> map = Maps.newHashMap();
         Boolean success = true;
@@ -61,18 +61,20 @@ public class UserService {
         }
         response.body().close();
 
-
-        RequestBody body = new FormBody.Builder()
-                .add("username", username)
-                .add("password", password)
-                .build();
+        FormBody.Builder builder = new FormBody.Builder();
         if(StringUtils.isNotBlank(weixinCode)) {
-            body = new FormBody.Builder()
-                    .add("username", username)
-                    .add("password", password)
-                    .add("weixinCode", weixinCode)
-                    .build();
+            builder.add("weixinCode", weixinCode);
         }
+        if(StringUtils.isNotBlank(password)) {
+            builder.add("password", password);
+        }
+        if(StringUtils.isNotBlank(username)) {
+            builder.add("username", username);
+        }
+        if(StringUtils.isNotBlank(accountId)) {
+            builder.add("accountId", accountId);
+        }
+        RequestBody body =builder.build();
 
         request = new Request.Builder()
                 .url(response.request().url())

@@ -8,9 +8,11 @@ import net.myspring.cloud.modules.input.service.CnJournalForBankService;
 import net.myspring.cloud.modules.input.web.form.CnJournalForBankForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,19 +58,18 @@ public class CnJournalForBankController {
     }
 
     @RequestMapping(value = "saveForEmployeePhoneDeposit", method= RequestMethod.POST)
-    public RestResponse saveForEmployeePhoneDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
-        RestResponse restResponse = new RestResponse("銀行存取款日记账失败：" ,null, false);
+    public List<KingdeeSynReturnDto>  saveForEmployeePhoneDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
-        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
-            if (kingdeeSynDto.getSuccess()) {
-                restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
-            } else {
-                System.err.println(kingdeeSynDto.getResult());
-                restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(), null, false);
-            }
-        }
-        return restResponse;
+        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
+    }
+
+    @RequestMapping(value = "saveForShopDeposit", method= RequestMethod.POST)
+    public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 }

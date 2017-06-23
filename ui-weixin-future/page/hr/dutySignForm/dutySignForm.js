@@ -31,8 +31,7 @@ Page({
         url: $util.getUrl("basic/hr/dutySign/getForm"),
         data: { id: that.data.options.id },
         header: {
-          'x-auth-token': app.globalData.sessionId,
-          'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
           that.setData({ formData: res.data });
@@ -41,16 +40,15 @@ Page({
             url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
             data: {},
             header: {
-              'x-auth-token': app.globalData.sessionId,
-              'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             method: 'GET',
             success: function (res) {
               var images = new Array();
               images.push({
                 id: res.data[0].id,
-                preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + res.data[0].mongoPreviewId),
-                view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + "&id=" + res.data[0].mongoPreviewId)
+                preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + res.data[0].mongoPreviewId),
+                view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + + "&id=" + res.data[0].mongoPreviewId)
               })
               that.setData({ "formProperty.images": images })
             }
@@ -80,8 +78,7 @@ Page({
           url: $util.getUrl("basic/sys/map/getPoiList?longitude=" + res.longitude + "&latitude=" + res.latitude),
           method: 'GET',
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': 'Bearer' + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           success: function (res) {
             that.setData({ "formProperty.addressList": res.data });
@@ -108,8 +105,7 @@ Page({
         wx.uploadFile({
           url: $util.getUrl('general/sys/folderFile/upload'),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': 'Bearer' + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           filePath: tempFilePaths[0],
           name: 'file',
@@ -120,8 +116,8 @@ Page({
             var folderFile = JSON.parse(res.data)[0];
             images.push({
               id: folderFile.id,
-              preview: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId),
-              view: $util.getUrl('general/sys/folderFile/download?type=preview&x-auth-token=' + app.globalData.sessionId + 'authorization=Bearer' + wx.getStorageSync('token').access_token + '&id=' + folderFile.mongoPreviewId)
+              preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + folderFile.mongoPreviewId),
+              view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + folderFile.mongoPreviewId)
             })
             that.setData({ "formProperty.images": images })
           }
@@ -157,8 +153,7 @@ Page({
       url: $util.getUrl("basic/hr/dutySign/save"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': 'Bearer' + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         console.log(res.data)

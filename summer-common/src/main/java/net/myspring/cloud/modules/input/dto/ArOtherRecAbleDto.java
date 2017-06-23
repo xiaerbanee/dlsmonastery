@@ -122,6 +122,7 @@ public class ArOtherRecAbleDto {
         model.put("FCONTACTUNIT", CollectionUtil.getMap("FNumber", getCustomerNumber()));
         model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FAMOUNTFOR", getAmount());
+        //申请部门
         model.put("FDEPARTMENTID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSALEORGID", CollectionUtil.getMap("FNumber", 100));
         model.put("FSETTLEORGID", CollectionUtil.getMap("FNumber", 100));
@@ -132,7 +133,8 @@ public class ArOtherRecAbleDto {
         List<Object> entity = Lists.newArrayList();
         for (ArOtherRecAbleFEntityDto entityDto : getArOtherRecAbleFEntityDtoList()) {
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            detail.put("FCOSTDEPARTMENTID", CollectionUtil.getMap("FNumber", entityDto.getDepartmentNumber()));
+            //费用承担部门
+            detail.put("FCOSTDEPARTMENTID", CollectionUtil.getMap("FNumber", entityDto.getCostDepartmentNumber()));
             detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
             detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", entityDto.getOtherTypeNumber()));
             detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", entityDto.getExpenseTypeNumber()));
