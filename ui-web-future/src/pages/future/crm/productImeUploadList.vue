@@ -24,7 +24,7 @@
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadList.shopName')">
-                <el-input v-model="formData.shopName" :placeholder="$t('productImeUploadList.likeSearch')"></el-input>
+                <depot-select v-model="formData.shopId" category="shop" ></depot-select>
               </el-form-item>
               <el-form-item :label="$t('productImeUploadList.imeOrMeids')">
                 <el-input  type="textarea" v-model="formData.imeOrMeids"  :placeholder="$t('productImeUploadList.imeOrMeidsMultiLine')"></el-input>
@@ -55,6 +55,7 @@
 </template>
 <script>
 
+  import depotSelect from 'components/future/depot-select'
   import officeSelect from 'components/basic/office-select'
   import monthPicker from 'components/common/month-picker'
 
@@ -62,6 +63,7 @@
     components:{
       officeSelect,
       monthPicker,
+      depotSelect,
     },
     data() {
       return {

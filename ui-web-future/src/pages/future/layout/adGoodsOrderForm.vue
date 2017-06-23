@@ -121,6 +121,11 @@
         }
       },
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
 
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
@@ -135,7 +140,6 @@
                     Object.assign(this.$data, this.getData());
                     this.initPage();
                   }else{
-                    this.submitDisabled = false;
                     this.$router.push({name: 'adGoodsOrderList', query: util.getQuery("adGoodsOrderList"), params:{_closeFrom:true}})
                   }
                 }
@@ -185,6 +189,23 @@
             this.recentSaleDescription='';
           }
         });
+      },customValidate(){
+        let totalQty = 0;
+        for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+          if(util.isBlank(adGoodsOrderDetail.qty)){
+            continue;
+          }
+
+          if(!Number.isInteger(adGoodsOrderDetail.qty) || adGoodsOrderDetail.qty < 0){
+              return '产品：'+adGoodsOrderDetail.productName+'的订货数不是一个大于等于0的整数';
+          }
+
+          totalQty += adGoodsOrderDetail.qty;
+        }
+        if(totalQty<=0){
+          return "总订货数要大于0";
+        }
+        return null;
       },
       searchDetail(){
         let val = this.productName;
@@ -208,9 +229,10 @@
         let tmpTotalQty = 0;
         let tmpTotalPrice = 0;
         for (let adGoodsOrderDetail of  this.inputForm.adGoodsOrderDetailList) {
-          if (adGoodsOrderDetail.qty && adGoodsOrderDetail.productPrice2) {
-            tmpTotalQty = tmpTotalQty + parseInt(adGoodsOrderDetail.qty);
-            tmpTotalPrice = tmpTotalPrice + parseInt(adGoodsOrderDetail.qty) * parseInt(adGoodsOrderDetail.productPrice2);
+
+          if(Number.isInteger(adGoodsOrderDetail.qty)){
+            tmpTotalQty = tmpTotalQty + adGoodsOrderDetail.qty;
+            tmpTotalPrice = tmpTotalPrice +  adGoodsOrderDetail.qty * (adGoodsOrderDetail.productPrice2*1);
           }
         }
         this.totalQty = tmpTotalQty;
@@ -222,7 +244,7 @@
       },getDetailListForSubmit(){
         let tempList = [];
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if (util.isNotBlank(adGoodsOrderDetail.id) || util.isNotBlank(adGoodsOrderDetail.qty)) {
+          if (util.isNotBlank(adGoodsOrderDetail.id) || (Number.isInteger(adGoodsOrderDetail.qty) && adGoodsOrderDetail.qty > 0)) {
             tempList.push(adGoodsOrderDetail)
           }
         }

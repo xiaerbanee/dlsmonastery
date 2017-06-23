@@ -340,8 +340,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             WHERE
             t3.FID = t4.FID
             AND t3.FCONTACTUNIT  IN (:customerIdList)
-            AND t3.FDATE  >:#{dateStart}
-            AND t3.FDATE <:#{dateEnd}
+            AND t3.FDATE  >:dateStart
+            AND t3.FDATE <:dateEnd
             UNION ALL
             SELECT
             t5.FBILLNO AS name,
@@ -353,7 +353,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             t5.FID = t6.FID
             AND t5.FCONTACTUNIT IN (:customerIdList)
             AND t5.FDATE  >:dateStart
-            AND t5.FDATE <:#dateEnd
+            AND t5.FDATE <:dateEnd
         """, paramMap, MyBeanPropertyRowMapper(NameValueDto::class.java))
 
     }

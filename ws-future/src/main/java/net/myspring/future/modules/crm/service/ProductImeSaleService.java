@@ -217,7 +217,7 @@ public class ProductImeSaleService {
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "shopOfficeName", "考核区域"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
-        productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "shopAreaType", "区域类型"));
+        productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "depotShopAreaType", "区域类型"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "核销人"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));

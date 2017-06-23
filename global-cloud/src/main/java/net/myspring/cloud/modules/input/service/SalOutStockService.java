@@ -79,7 +79,7 @@ public class SalOutStockService {
     }
 
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
-        String storeNumber = salStockForm.getStoreNumber();
+        String stockNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -109,7 +109,7 @@ public class SalOutStockService {
             String remarks = HandsontableUtils.getValue(row,6);
 
             SalOutStockFEntityDto salOutStockFEntityDto = new SalOutStockFEntityDto();
-            salOutStockFEntityDto.setStoreNumber(storeNumber);
+            salOutStockFEntityDto.setStockNumber(stockNumber);
             salOutStockFEntityDto.setMaterialNumber(materialNumber);
             salOutStockFEntityDto.setPrice(price);
             salOutStockFEntityDto.setQty(qty);

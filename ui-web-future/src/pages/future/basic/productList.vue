@@ -53,7 +53,7 @@
         <el-table-column fixed prop="name" :label="$t('productList.name')" sortable width="300"></el-table-column>
         <el-table-column prop="code" :label="$t('productList.code')" sortable></el-table-column>
         <el-table-column prop="netType" :label="$t('productList.netType')" sortable></el-table-column>
-        <el-table-column prop="outId" label="outId" sortable></el-table-column>
+        <el-table-column prop="outId" :label="$t('productList.outGroupId')" sortable></el-table-column>
         <el-table-column prop="outGroupId" :label="$t('productList.outGroupId')" sortable></el-table-column>
         <el-table-column prop="outGroupName"  :label="$t('productList.outGroupName')" sortable></el-table-column>
         <el-table-column column-key="productTypeId" prop="productTypeName" :label="$t('productList.productType')" sortable></el-table-column>

@@ -70,7 +70,7 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
     List<StkInventory> findInventoryByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
     //应收
-    @RequestMapping(method = RequestMethod.GET, value = "/report/customerReceive/detail")
+    @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/detail")
     List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
     //应收
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
