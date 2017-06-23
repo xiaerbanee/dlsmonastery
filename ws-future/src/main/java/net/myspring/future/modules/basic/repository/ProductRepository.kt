@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.web.query.ProductQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
@@ -247,6 +248,9 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
         if (StringUtils.isNotEmpty(productQuery.netType)) {
             sb.append("""  and t1.net_type =:netType """)
+        }
+        if (CollectionUtil.isNotEmpty(productQuery.ids)) {
+            sb.append("""  and t1.id in (:ids) """)
         }
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productQuery), BeanPropertyRowMapper(ProductDto::class.java))
     }
