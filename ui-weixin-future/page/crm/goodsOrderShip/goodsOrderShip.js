@@ -65,7 +65,7 @@ Page({
     wx.request({
       url: $util.getUrl("crm/goodsOrder/findByFormatId"),
       data: { formatId: that.data.formData.formatId },
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         console.log(res)
         that.setData({
@@ -81,7 +81,7 @@ Page({
     wx.request({
       url: $util.getUrl( "crm/goodsOrder/ship"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

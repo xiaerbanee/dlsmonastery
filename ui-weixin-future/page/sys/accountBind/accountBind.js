@@ -40,7 +40,7 @@ Page({
         code: that.data.code
       },
       header: {
-        'x-auth-token': app.globalData.sessionId
+        Cookie:"JSESSIONID="+app.globalData.sessionId
       },
       success: function (res) {
         console.log(res)

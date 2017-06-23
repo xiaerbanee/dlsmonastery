@@ -24,16 +24,14 @@ Page({
                 url: $util.getUrl("ws/future/basic/depotShop/findOne"),
                 data: { id: options.id },
                 header: {
-                    'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                    Cookie: "JSESSIONID=" + app.globalData.sessionId
                 },
                 success: function (res) {
                     that.setData({ formData: res.data });
                     wx.request({
                         url: $util.getUrl("ws/future/basic/depotShop/getForm"),
                         header: {
-                            'x-auth-token': app.globalData.sessionId,
-                            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                            Cookie: "JSESSIONID=" + app.globalData.sessionId
                         },
                         success: function (res) {
                             that.setData({ formProperty: res.data });
@@ -102,8 +100,7 @@ Page({
             url: $util.getUrl("ws/future/basic/depotShop/save"),
             data: e.detail.value,
             header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 if (res.data.success) {

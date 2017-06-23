@@ -21,12 +21,11 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         console.log(res);
-        that.setData({ formProperty: res.data})
+        that.setData({ formProperty: res.data })
       }
     })
   },
@@ -68,8 +67,7 @@ Page({
       url: $util.getUrl("basic/hr/dutyRest/save"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         console.log(res.data)

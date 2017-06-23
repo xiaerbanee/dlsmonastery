@@ -21,8 +21,7 @@ Page({
         wx.request({
             url: $util.getUrl("basic/hr/dutySign/getQuery"),
             header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 that.setData({ formData: res.data });
@@ -40,8 +39,7 @@ Page({
                 wx.request({
                     url: $util.getUrl("basic/hr/dutySign"),
                     header: {
-                        'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                        Cookie: "JSESSIONID=" + app.globalData.sessionId
                     },
                     data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
@@ -109,13 +107,12 @@ Page({
                         wx.navigateTo({
                             url: '/page/hr/dutySignForm/dutySignForm?action=detail&id=' + id
                         })
-                    } else if (res.tapIndex == '删除') {
+                    } else if (itemList[res.tapIndex] == '删除') {
                         wx.request({
                             url: $util.getUrl("basic/hr/dutySign/delete"),
                             data: { id: id },
                             header: {
-                                'x-auth-token': app.globalData.sessionId,
-                                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                                Cookie: "JSESSIONID=" + app.globalData.sessionId
                             },
                             success: function (res) {
                                 that.pageRequest();

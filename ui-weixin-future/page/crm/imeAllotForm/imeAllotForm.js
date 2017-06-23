@@ -30,7 +30,6 @@ Page({
     },
     imeSearch: function () {
         var that = this;
-        console.log("++" + that.data.formData.imeStr)
         if ($util.isBlank(that.data.formData.imeStr)) {
             that.setData({ productImeList: {} })
         } else {
@@ -40,7 +39,7 @@ Page({
                     imeStr: that.data.formData.imeStr
                 },
                 header: {
-                    'x-auth-token': app.globalData.sessionId
+                    Cookie: "JSESSIONID=" + app.globalData.sessionId
                 },
                 success: function (res) {
                     that.setData({ productImeList: res.data.productImeList, productImeSearchResult: res.data });
@@ -65,7 +64,7 @@ Page({
         wx.request({
             url: $util.getUrl( "crm/imeAllot/save"),
             data: e.detail.value,
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
             success: function (res) {
                 if (res.data.success) {
                     wx.navigateBack();

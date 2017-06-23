@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.controller;
 
 
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
@@ -32,7 +33,8 @@ public class ShopAdController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ShopAdDto> list(Pageable pageable, ShopAdQuery shopAdQuery) {
-        return shopAdService.findPage(pageable,shopAdQuery);
+        Page<ShopAdDto> page = shopAdService.findPage(pageable, shopAdQuery);
+        return page;
     }
 
     @RequestMapping(value = "getQuery")
@@ -98,5 +100,4 @@ public class ShopAdController {
         Workbook workbook = new SXSSFWorkbook(10000);
         return shopAdService.findSimpleExcelSheets(workbook,shopAdQuery);
     }
-
 }

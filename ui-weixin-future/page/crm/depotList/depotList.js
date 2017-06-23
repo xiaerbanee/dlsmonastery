@@ -22,8 +22,7 @@ Page({
             data: {},
             method: 'GET',
             header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+               Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 that.setData({ formData: res.data });
@@ -41,8 +40,7 @@ Page({
                 wx.request({
                     url: $util.getUrl("ws/future/basic/depotShop"),
                     header: {
-                        'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                        Cookie: "JSESSIONID=" + app.globalData.sessionId
                     },
                     method: 'GET',
                     data: $util.deleteExtra(that.data.formData),

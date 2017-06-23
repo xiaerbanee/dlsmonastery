@@ -53,8 +53,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
@@ -73,8 +72,7 @@ Page({
         wx.request({
           url: $util.getUrl("ws/future/crm/reportScoreOffice"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
