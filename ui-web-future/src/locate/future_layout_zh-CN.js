@@ -121,6 +121,7 @@ export default {
     save:"保存",
     investInCause:'投入理由',
     prerequisiteMessage: "必填信息",
+    loading: "拼命加载中",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "柜台订货详细",

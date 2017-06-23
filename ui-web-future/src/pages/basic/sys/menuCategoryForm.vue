@@ -58,10 +58,10 @@
               axios.post('/api/basic/sys/menuCategory/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
-                if(!this.inputForm.create){
+                if(!that.isCreate){
                   this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList")})
                 }
-              }).catch(function () {
+              }).catch( ()=> {
                 that.submitDisabled = false;
               });
             }else{

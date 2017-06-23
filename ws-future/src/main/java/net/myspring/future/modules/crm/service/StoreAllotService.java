@@ -6,14 +6,19 @@ import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
+import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -22,8 +27,8 @@ import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.repository.*;
@@ -36,9 +41,9 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +88,8 @@ public class StoreAllotService {
     private ProductImeRepository productImeRepository;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private CloudClient cloudClient;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -236,7 +243,8 @@ public class StoreAllotService {
 
         if(storeAllotForm.getSyn()){
             //TODO 金蝶接口调用，调用成功之后设置cloudSynId
-            // cloudSynId=
+            StoreAllotDto storeAllotDto = BeanUtil.map(storeAllotForm,StoreAllotDto.class);
+             String cloudSynId = synToCloud(storeAllotDto);
         }
 
         StoreAllot storeAllot = saveStoreAllot(storeAllotForm);
@@ -248,6 +256,24 @@ public class StoreAllotService {
         storeAllotRepository.save(storeAllot);
 
         return storeAllot;
+    }
+
+    private String synToCloud(StoreAllotDto storeAllotDto){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId(storeAllotDto.getId());
+        transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
+        transferDirectDto.setNote(storeAllotDto.getRemarks());
+        transferDirectDto.setDate(storeAllotDto.getBillDate());
+        List<StoreAllotDetailDto> storeAllotDetailList = storeAllotDto.getStoreAllotDetailDtoList();
+        for (StoreAllotDetailDto detailDto : storeAllotDetailList){
+            StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+            entryDto.setQty(detailDto.getQty());
+            entryDto.setMaterialNumber("");
+            entryDto.setSrcStockNumber("");
+            entryDto.setDestStockNumber("");
+            transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+        }
+        return cloudClient.synForStkTransferDirect(transferDirectDto);
     }
 
     private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
@@ -352,9 +378,9 @@ public class StoreAllotService {
         storeAllotRepository.logicDelete(id);
     }
 
-    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+    public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
 
-        List<SimpleStoreAllotDetailDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
         cacheUtils.initCacheInput(result);
 
         if(StringUtils.isNotBlank(fromStoreId)){
@@ -374,9 +400,8 @@ public class StoreAllotService {
         return StringUtils.getSplitList(companyConfigCacheDto.getValue(), ",");
     }
 
-    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+    public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
-        LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
         List<String> mergeIdList = getMergeStoreIds();
         if(mergeIdList == null || mergeIdList.size() <=1){
 
@@ -384,7 +409,7 @@ public class StoreAllotService {
         }
         String toStoreId =mergeIdList.get(1);
 
-        List<SimpleStoreAllotDetailDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货", RequestUtils.getCompanyId());
 
         cacheUtils.initCacheInput(result);
         //TODO 初始化财务存量

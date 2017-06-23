@@ -1,12 +1,12 @@
-package net.myspring.future.modules.layout.web.form;
+package net.myspring.future.modules.layout.dto;
 
-import net.myspring.common.form.BaseForm;
+import net.myspring.common.dto.IdDto;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 
-
-public class ShopAllotDetailForm extends BaseForm<ShopAllotDetail> {
+public class ShopAllotDetailSimpleDto extends IdDto<ShopAllotDetail> {
 
     private String productId;
+    private String productName;
     private Integer qty;
 
     public String getProductId() {
@@ -17,6 +17,14 @@ public class ShopAllotDetailForm extends BaseForm<ShopAllotDetail> {
         this.productId = productId;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     public Integer getQty() {
         return qty;
     }
@@ -24,7 +32,5 @@ public class ShopAllotDetailForm extends BaseForm<ShopAllotDetail> {
     public void setQty(Integer qty) {
         this.qty = qty;
     }
-
-
 
 }

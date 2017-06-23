@@ -24,7 +24,7 @@
               {{employee.mobilePhone}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.summary')" >
-              总开单数{{totalBillQty}}，总开单金额{{totalBillPrice}}，形象押金金额 ：{{imageDeposit}} 门店应收：{{depotShouldGet}} 开单后应收 ：{{depotShouldGet+totalBillPrice}}
+              总开单数{{totalBillQty}}，总开单金额{{totalBillPrice.toFixed(2)}}，形象押金金额 ：{{imageDeposit.toFixed(2)}} 门店应收：{{depotShouldGet.toFixed(2)}} 开单后应收 ：{{(depotShouldGet+totalBillPrice).toFixed(2)}}
             </el-form-item>
             </el-col>
           <el-col :span="8">
@@ -205,6 +205,7 @@
         if(totalBillQty<=0){
           return "总开单数要大于0";
         }
+
         return null;
       }
     },created(){
@@ -244,9 +245,7 @@
           axios.get('/api/ws/future/crm/shopDeposit/findLeftAmount',{params: {type:'形象保证金', depotId:this.adGoodsOrder.shopId}}).then((response)=>{
             this.imageDeposit = response.data;
           });
-
         });
-
       })
     }
   }

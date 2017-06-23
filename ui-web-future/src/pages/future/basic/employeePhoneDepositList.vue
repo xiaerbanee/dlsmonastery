@@ -21,7 +21,7 @@
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('employeePhoneDepositList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('employeePhoneDepositList.status')" :label-width="formLabelWidth">
-                <el-select v-model="formData.status" filterable :placeholder="$t('employeePhoneDepositList.selectStatus')">
+                <el-select v-model="formData.status" filterable clearable :placeholder="$t('employeePhoneDepositList.selectStatus')">
                   <el-option  v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>

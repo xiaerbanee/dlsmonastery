@@ -4,15 +4,13 @@ import net.myspring.common.dto.IdDto;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
 
-public class SimpleStoreAllotDetailDto extends IdDto<StoreAllotDetail> {
+public class StoreAllotDetailSimpleDto extends IdDto<StoreAllotDetail> {
 
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
-
     private Integer billQty;
     private Integer cloudQty;
-    private String outId;
 
     public Integer getCloudQty() {
         return cloudQty;
@@ -45,14 +43,5 @@ public class SimpleStoreAllotDetailDto extends IdDto<StoreAllotDetail> {
     public void setBillQty(Integer billQty) {
         this.billQty = billQty;
     }
-
-    public String getOutId() {
-        return outId;
-    }
-
-    public void setOutId(String outId) {
-        this.outId = outId;
-    }
-
 
 }
