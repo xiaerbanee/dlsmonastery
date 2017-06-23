@@ -138,7 +138,6 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
-            List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
@@ -160,26 +159,35 @@ public class EmployeePhoneDepositService {
                             employeePhone.setStatus(EmployeePhoneStatusEnum.已交.name());
                             employeePhoneRepository.save(employeePhone);
                         }
-                        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-                        cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
-                        cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
-                        List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-                        CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-                        entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
-                        entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
-                        entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-                        Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
-                        entityForBankDto.setBankAccountNumber(bank.getCode());
-                        Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
-                        entityForBankDto.setComment(depot.getName());
-                        cnJournalEntityForBankDtoList.add(entityForBankDto);
-                        cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-                        cnJournalForBankDtoList.add(cnJournalForBankDto);
                     }
                 }
             }
-            RestResponse restResponse = cloudClient.synForJournalForBank(cnJournalForBankDtoList);
+            RestResponse restResponse = batchSynForCloud(employeePhoneDepositList);
         }
+    }
+
+    public RestResponse batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+        for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
+            entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
+            entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
+            Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
+            entityForBankDto.setBankAccountNumber(bank.getCode());
+            Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
+            entityForBankDto.setComment(depot.getName());
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+        }
+        return cloudClient.synForJournalForBank(cnJournalForBankDtoList);
+
     }
 
     public RestResponse batchSave(String data) {
