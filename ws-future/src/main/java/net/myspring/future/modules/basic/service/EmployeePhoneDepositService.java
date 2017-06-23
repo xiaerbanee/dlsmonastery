@@ -8,6 +8,7 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.common.enums.EmployeePhoneStatusEnum;
@@ -162,11 +163,11 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
-            RestResponse restResponse = batchSynForCloud(employeePhoneDepositList);
+            batchSynForCloud(employeePhoneDepositList);
         }
     }
 
-    private RestResponse batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
+    private List<KingdeeSynReturnDto> batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
             CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
@@ -186,7 +187,7 @@ public class EmployeePhoneDepositService {
             cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
             cnJournalForBankDtoList.add(cnJournalForBankDto);
         }
-        return cloudClient.synForJournalForBank(cnJournalForBankDtoList);
+        return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
 
     }
 
