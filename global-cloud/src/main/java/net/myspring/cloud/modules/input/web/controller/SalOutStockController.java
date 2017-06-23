@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
@@ -51,17 +52,14 @@ public class SalOutStockController {
     }
 
     @RequestMapping(value = "saveForXSCKD")
-    public RestResponse saveForXSCKD(List<SalOutStockDto> salOutStockDtoList) {
+    public List<String> saveForXSCKD(List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
-            if (kingdeeSynExtendDto.getSuccess()){
-                return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
-            }else {
-                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,false);
-            }
+        List<String> kingdeeSynIdList = Lists.newArrayList();
+        for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            kingdeeSynIdList.add(kingdeeSynExtendDto.getId());
         }
-        return null;
+        return kingdeeSynIdList;
     }
 }

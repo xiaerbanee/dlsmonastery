@@ -277,7 +277,7 @@ public class AdApplyService {
             adGoodsOrderRepository.save(adGoodsOrder);
         }
         //TODO 调用金蝶接口
-        RestResponse restResponse = batchSynToCloud(adGoodsOrders);
+       batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -296,7 +296,7 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
     }
 
-    private RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<String> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
