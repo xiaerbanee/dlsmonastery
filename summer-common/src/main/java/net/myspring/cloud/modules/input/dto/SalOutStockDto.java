@@ -22,7 +22,7 @@ public class SalOutStockDto {
     //附加-单据类型
     private String extendType;
     //创建人
-    private String creatorK3;
+    private String creator;
     // 客户编码
     private String customerNumber;
     // 日期
@@ -30,9 +30,9 @@ public class SalOutStockDto {
     // 备注
     private String note;
     //部门编码
-    private String departmentNumberK3;
+    private String departmentNumber;
     //单据类型
-    private String billTypeK3;
+    private String billType;
 
     private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
 
@@ -46,7 +46,7 @@ public class SalOutStockDto {
 
     public String getExtendType() {
         if (extendType == null){
-            return getBillTypeK3()+"-K3";
+            return getBillType()+"-";
         }
         return extendType;
     }
@@ -55,12 +55,12 @@ public class SalOutStockDto {
         this.extendType = extendType;
     }
 
-    public String getCreatorK3() {
-        return creatorK3;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreatorK3(String creatorK3) {
-        this.creatorK3 = creatorK3;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getCustomerNumber() {
@@ -87,20 +87,20 @@ public class SalOutStockDto {
         this.note = note;
     }
 
-    public String getDepartmentNumberK3() {
-        return departmentNumberK3;
+    public String getDepartmentNumber() {
+        return departmentNumber;
     }
 
-    public void setDepartmentNumberK3(String departmentNumberK3) {
-        this.departmentNumberK3 = departmentNumberK3;
+    public void setDepartmentNumber(String departmentNumber) {
+        this.departmentNumber = departmentNumber;
     }
 
-    public String getBillTypeK3() {
-        return billTypeK3;
+    public String getBillType() {
+        return billType;
     }
 
-    public void setBillTypeK3(String billTypeK3) {
-        this.billTypeK3 = billTypeK3;
+    public void setBillType(String billType) {
+        this.billType = billType;
     }
 
     public List<SalOutStockFEntityDto> getSalOutStockFEntityDtoList() {
@@ -114,17 +114,17 @@ public class SalOutStockDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreatorK3());
+        root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
-        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillTypeK3())) {
+        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillType())) {
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
-        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillTypeK3())){
+        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillType())){
             model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
         }
-        model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumberK3()));
+        model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));

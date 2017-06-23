@@ -65,11 +65,23 @@ public class SalReturnStockService {
             @Override
             public String getNextBillNo() {
                 if(salReturnStockDto.getBillType().contains("现销")){
-                    return null;
+                    return "现销";
                 }else{
-                    ArReceivable receivable = arReceivableRepository.findTopOneBySourceBillNo(getBillNo());
-                    return receivable.getFBillNo();
-
+                    String billNo = getBillNo();
+                    if (StringUtils.isNotBlank(billNo)){
+                        List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(billNo);
+                        if (receivableList.size() > 0){
+                            for (ArReceivable receivable : receivableList) {
+                                if (receivable != null) {
+                                    return receivable.getFBillNo();
+                                }
+                            }
+                        }else {
+                            return "未生成应收单";
+                        }
+                        return null;
+                    }
+                    return null;
                 }
             }
         };

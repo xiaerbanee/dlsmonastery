@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeUploadForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row>
           <el-col :span="21">
             <el-form-item>
@@ -13,7 +13,7 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('productImeUploadForm.ime')" prop="imeStr">
-              <el-input type="textarea" :rows="6" v-model="imeStr"
+              <el-input type="textarea" :rows="6" v-model="inputForm.imeStr"
                         :placeholder="$t('productImeUploadForm.inputIme')"></el-input>
             </el-form-item>
             <el-form-item>
@@ -105,15 +105,16 @@
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
           productImeList: [],
-          inputForm: {},
-          imeStr: '',
+          inputForm: {
+            extra: {}
+          },
           errMsg: '',
           productQtyList: [],
           rules: {
-            imeStr: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-            shopId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-            month: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
-            employeeId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage')}],
+            imeStr: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"blur"}],
+            shopId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
+            month: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
+            employeeId: [{required: true, message: this.$t('productImeUploadForm.prerequisiteMessage'),trigger:"change"}],
           },
         }
       },
@@ -127,8 +128,8 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.submitData.imeStr = this.imeStr;
-            axios.post('/api/ws/future/crm/productImeUpload/upload', qs.stringify(this.submitData)).then((response) => {
+            let submitData = util.deleteExtra(this.inputForm);
+            axios.post('/api/ws/future/crm/productImeUpload/upload', qs.stringify(submitData)).then((response) => {
               this.$message(response.data.message);
             if (response.data.success) {
               if (!this.isCreate) {
@@ -148,12 +149,12 @@
       );
       }, onImeStrChange(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.imeStr}}).then((response) =>
+        axios.get('/api/ws/future/crm/productImeUpload/checkForUpload', {params: {imeStr: this.inputForm.imeStr}}).then((response) =>
         {
           this.errMsg = response.data;
         }
       );
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.imeStr}}).then((response) =>
+        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr: this.inputForm.imeStr}}).then((response) =>
         {
           this.productImeList = response.data;
 
@@ -175,13 +176,12 @@
       );
       }, reset(){
         this.searched = false;
-        this.imeStr = '';
         this.errMsg = '';
         this.productImeList = [];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
       }, initPage(){
-        axios.get('/api/ws/future/crm/productImeUpload/findDto').then((response) => {
+        axios.get('/api/ws/future/crm/productImeUpload/getForm').then((response) => {
           this.inputForm = response.data;
       })
       }
