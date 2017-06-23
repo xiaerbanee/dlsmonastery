@@ -105,19 +105,6 @@ router.afterEach(route => {
 })
 
 
-axios.interceptors.request.use(function (config) {
-  if(config.url !='/api/uaa/oauth/token') {
-    if(checkLogin()) {
-      config.headers['Authorization'] = 'Bearer ' + store.state.global.token.access_token;
-    }
-  }
-  return config;
-}, function (error) {
-  // Do something with request error
-  return Promise.reject(error);
-});
-
-
 axios.interceptors.response.use((resp) => {
   return resp;
 }, (error) => {
@@ -140,27 +127,10 @@ axios.interceptors.response.use((resp) => {
 window.axios = axios;
 
 window.checkLogin = function () {
-  var token = store.state.global.token;
-  if(token==null || util.isBlank(token.access_token)) {
+  var account = store.state.global.account;
+  if(account==null || util.isBlank(account.id)) {
     return false;
   } else {
-    var expDate = new Date(token.exp + token.expires_in*1000);
-    var distance = expDate.getTime() - new Date().getTime();
-    if(distance<60*1000) {
-      return false;
-    }
-    //当前需要刷新token
-    if(distance < token.expires_in*500 && !store.state.isRefreshToken) {
-      store.dispatch('setIsRefreshToken',true);
-      let data = {
-        grant_type:'refresh_token',
-        refresh_token:token.refresh_token
-      };
-      axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
-        store.dispatch('setToken',response.data);
-        store.dispatch('setIsRefreshToken',false);
-      });
-    }
     return true;
   }
 }

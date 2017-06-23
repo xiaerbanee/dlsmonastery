@@ -1,4 +1,4 @@
-package net.myspring.general.common.config;
+package net.myspring.tool.common.config;
 
 import feign.RequestInterceptor;
 import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-
     @Bean
     public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oauth2ClientContext, ClientCredentialsResourceDetails resource) {
         return new OAuth2FeignRequestInterceptor(oauth2ClientContext, resource);
@@ -26,6 +25,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/sys/folderFile/download").permitAll().anyRequest().authenticated();
+        http.authorizeRequests().anyRequest().authenticated();
     }
 }

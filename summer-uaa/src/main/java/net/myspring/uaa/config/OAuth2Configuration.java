@@ -64,6 +64,34 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(3600) // 1 hour
                 .refreshTokenValiditySeconds(2592000) // 30 days
                 .and()
+                .withClient("ws-future-service")
+                .secret("ws-future-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
+                .withClient("general-service")
+                .secret("general-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
+                .withClient("cloud-service")
+                .secret("cloud-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
+                .withClient("tool-service")
+                .secret("tool-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
                 .withClient("ui")
                 .secret("password")
                 .authorizedGrantTypes("authorization_code", "refresh_token")

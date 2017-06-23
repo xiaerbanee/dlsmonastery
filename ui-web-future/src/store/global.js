@@ -15,16 +15,6 @@ const getLang = function () {
   return local;
 }
 
-const getToken = function () {
-  var token = window.localStorage.getItem("token");
-  if(token) {
-    token = JSON.parse(token);
-  } else {
-    token = {};
-  }
-  return token;
-}
-
 const getMenus = function () {
   var local = window.localStorage.getItem("menus");
   if(local) {
@@ -61,9 +51,7 @@ export default {
     lang: getLang(),
     menus:getMenus(),
     account:getAccount(),
-    authorityList:getAuthorityList(),
-    token: getToken(),
-    isRefreshToken:false
+    authorityList:getAuthorityList()
   },getters: {
     getQuery: (state, routerName) => {
       var query = {};
@@ -98,14 +86,6 @@ export default {
     setAccount(state,account) {
       localStorage.setItem('account', JSON.stringify(account))
       state.account = account;
-    },
-    setToken(state,token) {
-      token.exp = new Date().getTime();
-      localStorage.setItem('token', JSON.stringify(token));
-      state.token = token;
-    },
-    setIsRefreshToken(state,isRefreshToken) {
-      state.isRefreshToken = isRefreshToken;
     }
   },
   actions: {
@@ -135,19 +115,11 @@ export default {
     },
     setAccount({ commit, state }, account) {
       commit('setAccount', account);
-    },
-    setToken({ commit, state }, token) {
-      commit('setToken', token);
-    },
-    setIsRefreshToken({ commit, state }, isRefreshToken) {
-      commit('setIsRefreshToken', isRefreshToken);
     },clearGlobal({ commit, state }) {
       commit('setTabs', new Map());
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
-      commit('setToken', {});
-      commit('setIsRefreshToken', false);
     }
   }
 }

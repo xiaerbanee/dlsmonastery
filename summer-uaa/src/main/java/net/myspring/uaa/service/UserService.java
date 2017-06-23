@@ -3,6 +3,7 @@ package net.myspring.uaa.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import okhttp3.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
-    public Map<String,Object> login(String username, String password)  {
+    public Map<String,Object> login(String username, String password,String weixinCode)  {
         String url = "http://localhost:1200/login";
         Map<String,Object> map = Maps.newHashMap();
         Boolean success = true;
@@ -60,10 +61,18 @@ public class UserService {
         }
         response.body().close();
 
+
         RequestBody body = new FormBody.Builder()
                 .add("username", username)
                 .add("password", password)
                 .build();
+        if(StringUtils.isNotBlank(weixinCode)) {
+            body = new FormBody.Builder()
+                    .add("username", username)
+                    .add("password", password)
+                    .add("weixinCode", weixinCode)
+                    .build();
+        }
 
         request = new Request.Builder()
                 .url(response.request().url())

@@ -17,10 +17,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 @Configuration
 public class FeignConfig {
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor();
-    }
 
     @Bean
     public Decoder feignDecoder() {

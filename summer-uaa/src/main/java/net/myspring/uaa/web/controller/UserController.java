@@ -8,9 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Map;
@@ -26,14 +24,14 @@ public class UserController {
 
     @RequestMapping(value = "/user/logout")
     @ResponseBody
-    public Boolean logout( Principal principal ) {
+    public Boolean logout(Principal principal) {
         Collection<? extends ExpiringSession> usersSessions = this.sessions
                 .findByIndexNameAndIndexValue(
                         FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME,
-                        principal.getName() )
+                        principal.getName())
                 .values();
-        for( ExpiringSession expiringSession : usersSessions )  {
-            sessions.delete( expiringSession.getId() );
+        for (ExpiringSession expiringSession : usersSessions) {
+            sessions.delete(expiringSession.getId());
         }
         return true;
     }
@@ -56,9 +54,8 @@ public class UserController {
     //模拟UAA登陆，不需要跳转页面
     @RequestMapping(value = "/user/login")
     @ResponseBody
-    public Map<String,Object> login(String username, String password, HttpServletResponse response) {
-        Map<String,Object> map =  userService.login(username,password);
+    public Map<String, Object> login(String username, String password, String weixinCode) {
+        Map<String, Object> map = userService.login(username, password, weixinCode);
         return map;
     }
-
 }
