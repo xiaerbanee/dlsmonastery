@@ -5,8 +5,11 @@ import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.AfterSale;
@@ -30,6 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.Request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -54,6 +58,10 @@ public class AfterSaleService {
     private AfterSaleFleeRepository afterSaleFleeRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
+    @Autowired
+    private OfficeClient officeClient;
 
     public List<AfterSale> findByBadProductImeIdList(List<String> badProductImeIdList){
         return afterSaleRepository.findByBadProductImeIdIn(badProductImeIdList);
@@ -503,6 +511,8 @@ public class AfterSaleService {
     }
 
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery) {
+        afterSaleQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
+        afterSaleQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getAccountId()));
         Page<AfterSaleDto> page = afterSaleRepository.findPage(pageable, afterSaleQuery);
         return page;
     }

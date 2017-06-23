@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by wangzm on 2017/5/12.
  */
-public class AfterSaleQuery {
+public class AfterSaleQuery  extends BaseQuery{
     private String imeStr;
     private String type;
     private String inputType;
