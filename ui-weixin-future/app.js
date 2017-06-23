@@ -39,46 +39,17 @@ App({
         }
     }, checkLogin(cb) {
         var that = this;
-        var token = wx.getStorageSync('token')
-        var distance = that.getDistance();
-        var reflushTokenDustance = wx.getStorageSync('token').expires_in;
+        var weixinAccount = that.globalData.weixinAccount
         //如果没有登陆
-        if (token == "" || $util.isNotBlank(token.access_token) || distance < 60 * 1000) {
-            that.getToken(cb);
-        } else if (distance < (reflushTokenDustance / 2) * 1000) {
-            that.getRefreshToken();
+        if (weixinAccount == null || $util.isNotBlank(weixinAccount.id)) {
+            that.login(cb);
+        } else {
+            typeof cb == "function" && cb();
         }
-    },
-    getRefreshToken: function () {
-        var that = this;
-        var token = wx.getStorageSync('token');
-        var pages = getCurrentPages();
-        var currentPages = pages[pages.length - 1]
-        wx.request({
-            url: $util.getUrl('uaa/oauth/token?username=' + that.globalData.weixinCode + '&password=' + that.globalData.weixinCode + '&weixinCode=' + that.globalData.weixinCode + '&grant_type=refresh_token&refresh_token=' + token.refresh_token),
-            data: {},
-            method: 'POST',
-            success: function (res) {
-                if ($util.isNotBlank(res.data.access_token)) {
-                    res.data.exp = new Date().getTime();
-                    wx.setStorageSync('token', res.data);
-                    wx.navigateTo({
-                        url: '/' + currentPages.__route__
-                    });
-                }
-            }
-        })
-    },
-    getDistance: function () {
-        var that = this;
-        var token = wx.getStorageSync('token');
-        var distance;
-        var expDate = new Date(token.exp + token.expires_in * 1000);
-        return distance = expDate.getTime() - new Date().getTime();
-    }, getToken: function (cb) {
+    }, login: function (cb) {
         var that = this;
         wx.request({
-            url: $util.getUrl('uaa/oauth/token?username=' + that.globalData.weixinCode + '&password=' + that.globalData.weixinCode + '&weixinCode=' + that.globalData.weixinCode + '&grant_type=password'),
+            url: "http://localhost:1200/user/login?weixinCode="+ that.globalData.weixinCode,
             data: {},
             method: 'POST',
             success: function (res) {
@@ -86,9 +57,9 @@ App({
                     wx.navigateTo({
                         url: '/page/sys/accountBind/accountBind'
                     })
-                } else if ($util.isNotBlank(res.data.access_token)) {
-                    res.data.exp = new Date().getTime();
-                    wx.setStorageSync('token', res.data);
+                } else {
+                    console.log(res.data)
+                    that.globalData.sessionId=res.data.JSESSIONID
                     typeof cb == "function" && cb();
                 }
             }

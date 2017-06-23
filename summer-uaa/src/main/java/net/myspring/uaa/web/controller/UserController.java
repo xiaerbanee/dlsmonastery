@@ -54,8 +54,8 @@ public class UserController {
     //模拟UAA登陆，不需要跳转页面
     @RequestMapping(value = "/user/login")
     @ResponseBody
-    public Map<String, Object> login(String username, String password, String weixinCode) {
-        Map<String, Object> map = userService.login(username, password, weixinCode);
+    public Map<String, Object> login(String username, String password, String weixinCode,String accountId) {
+        Map<String, Object> map = userService.login(username, password, weixinCode,accountId);
         return map;
     }
 }
