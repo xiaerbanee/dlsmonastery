@@ -25,8 +25,7 @@ public class CnBankAcntController {
     }
 
     @RequestMapping(value = "findByMaxModifyDate")
-    public List<CnBankAcnt> findByMaxModifyDate(String modifyDate){
-        LocalDateTime maxModifyDate = LocalDateTimeUtils.parse(modifyDate,"yyyy-MM-dd HH:mm:ss");
+    public List<CnBankAcnt> findByMaxModifyDate(LocalDateTime maxModifyDate){
         return cnBankAcntService.findByMaxModifyDate(maxModifyDate);
     }
 

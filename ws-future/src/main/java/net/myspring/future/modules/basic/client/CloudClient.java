@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,25 +25,25 @@ public interface CloudClient {
     List<BdStock> getAllStock();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdStock/findByMaxModifyDate")
-    List<BdStock> findStockByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+    List<BdStock> findStockByMaxModifyDate(@RequestParam(value = "maxModifyDate") LocalDateTime maxModifyDate);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findAll")
     List<BdCustomer> getAllCustomer();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdCustomer/findByMaxModifyDate")
-    List<BdCustomer> findCustomerByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+    List<BdCustomer> findCustomerByMaxModifyDate(@RequestParam(value = "maxModifyDate") LocalDateTime maxModifyDate);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findAll")
     List<BdMaterial> getAllProduct();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdMaterial/findByMaxModifyDate")
-    List<BdMaterial> findMaterialByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+    List<BdMaterial> findMaterialByMaxModifyDate(@RequestParam(value = "maxModifyDate") LocalDateTime maxModifyDate);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findAll")
     List<CnBankAcnt> getAllBank();
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/cnBankAcnt/findByMaxModifyDate")
-    List<CnBankAcnt> findBankAcntByMaxModifyDate(@RequestParam(value = "modifyDate") String modifyDate);//时间格式为yyyy-MM-dd HH:mm:ss
+    List<CnBankAcnt> findBankAcntByMaxModifyDate(@RequestParam(value = "maxModifyDate") LocalDateTime maxModifyDate);
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/arReceivable/findTopOneBySourceBillNo")
     ArReceivable findReceivableByBillNo( @RequestParam(value = "sourceBillNo") String outStockBillNo);
@@ -63,10 +64,10 @@ public interface CloudClient {
     List<BdDepartment> findAllDepartment();
     //其他出库单
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByStockIds")
-    List<StkInventory> findInventorysBystockIds(@RequestParam(value = "stockIds") List<String> stockIds);
+    List<StkInventory> findInventorysByDepotStoreOutIds(@RequestParam(value = "stockIds") List<String> depotStoreOutIds);
     //其他出库单
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/stkInventory/findByMaterialIds")
-    List<StkInventory> findInventorysByProductIds(@RequestParam(value = "materialIdList") List<String> productIds);//outIds
+    List<StkInventory> findInventorysByProductOutIds(@RequestParam(value = "materialIdList") List<String> productOutIds);
     //应收
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/detail")
     List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
