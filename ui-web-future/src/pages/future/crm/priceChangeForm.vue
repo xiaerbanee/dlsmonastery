@@ -62,7 +62,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }
-            }).catch(function () {
+            }).catch( ()=> {
               that.submitDisabled = false;
             });
           }else{

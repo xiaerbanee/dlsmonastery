@@ -8,16 +8,16 @@ import java.time.LocalDate;
  * Created by liuj on 2017/5/11.
  */
 public class SalStockForm extends BaseForm<SalStockForm>{
-    private String storeNumber;
+    private String stockNumber;
     private LocalDate billDate;
     private String json;
 
-    public String getStoreNumber() {
-        return storeNumber;
+    public String getStockNumber() {
+        return stockNumber;
     }
 
-    public void setStoreNumber(String storeNumber) {
-        this.storeNumber = storeNumber;
+    public void setStockNumber(String stockNumber) {
+        this.stockNumber = stockNumber;
     }
 
     public LocalDate getBillDate() {

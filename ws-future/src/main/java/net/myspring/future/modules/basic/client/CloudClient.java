@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.client;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
+import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -81,4 +82,7 @@ public interface CloudClient {
     //标准销售出库单
     @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
     RestResponse synForSalOutStock(List<SalOutStockDto> salOutStockDtoList);
+    //直接调拨单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveAndReturnId")
+    String synForStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
 }

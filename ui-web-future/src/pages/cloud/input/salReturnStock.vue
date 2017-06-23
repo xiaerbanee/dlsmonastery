@@ -3,8 +3,8 @@
     <head-tab active="salReturnStock"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-form-item  label="仓库"   prop="storeNumber">
-          <el-select v-model="formData.storeNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
+        <el-form-item  label="仓库"   prop="stockNumber">
+          <el-select v-model="formData.stockNumber" filterable remote placeholder="请输入关键词" :remote-method="remoteStock" :loading="remoteLoading">
             <el-option v-for="item in stockList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
@@ -69,7 +69,7 @@
           billDate:new Date().toLocaleDateString(),
           json:[],
         },rules: {
-          storeNumber: [{ required: true, message: '必填项'}],
+          stockNumber: [{ required: true, message: '必填项'}],
           billDate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,

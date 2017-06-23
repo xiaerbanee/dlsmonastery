@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  */
 public class SalOutStockFEntityDto {
     //仓库
-    private String storeNumber;
+    private String stockNumber;
     // 价格
     private BigDecimal price;
     // 物料名称
@@ -17,12 +17,12 @@ public class SalOutStockFEntityDto {
     //数量
     private Integer qty;
 
-    public String getStoreNumber() {
-        return storeNumber;
+    public String getStockNumber() {
+        return stockNumber;
     }
 
-    public void setStoreNumber(String storeNumber) {
-        this.storeNumber = storeNumber;
+    public void setStockNumber(String stockNumber) {
+        this.stockNumber = stockNumber;
     }
 
     public BigDecimal getPrice() {

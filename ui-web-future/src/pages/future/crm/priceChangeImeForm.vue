@@ -113,7 +113,7 @@
                 if (response.data.success) {
                   Object.assign(this.$data, this.getData());
                 }
-              }).catch(function () {
+              }).catch( ()=> {
                 that.submitDisabled = false;
               });
             } else {
