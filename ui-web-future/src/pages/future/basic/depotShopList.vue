@@ -35,7 +35,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="depotName" label="门店名称" sortable width="120"></el-table-column>
+        <el-table-column fixed prop="depotName" label="门店名称" sortable ></el-table-column>
         <el-table-column prop="areaType" label="地区属性"  />
         <el-table-column prop="carrierType" label="运营商营业厅类型"  />
         <el-table-column prop="turnoverType" label="营业额分类"  />
