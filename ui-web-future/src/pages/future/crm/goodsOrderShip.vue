@@ -112,7 +112,7 @@
             Object.assign(this.$data, this.getData());
             this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip")})
           }
-        }).catch(function () {
+        }).catch(()=> {
           that.submitDisabled = false;
         });
       },
