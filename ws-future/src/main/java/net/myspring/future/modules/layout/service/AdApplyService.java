@@ -21,7 +21,6 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
@@ -34,14 +33,10 @@ import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
-import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
-import net.myspring.future.modules.layout.web.form.AdApplyDetailForm;
-import net.myspring.future.modules.layout.web.form.AdApplyForm;
-import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
+import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -127,27 +122,25 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
-        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
-            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
-        }
-        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
-            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
-        }
         return adApplyBillForm;
     }
 
-    public List<AdApplyDto> findAdApplyList(String billType){
+    public AdApplyBillTypeChangeForm findAdApplyList(String billType){
+        AdApplyBillTypeChangeForm adApplyBillTypeChangeForm = new AdApplyBillTypeChangeForm();
         List<String> outGroupIds = Lists.newArrayList();
         if(BillTypeEnum.POP.name().equalsIgnoreCase(billType)){
             outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
         }
         if(BillTypeEnum.配件赠品.name().equalsIgnoreCase(billType)){
             outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         cacheUtils.initCacheInput(adApplyDtos);
-        return adApplyDtos;
+        adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
+        return adApplyBillTypeChangeForm;
     }
 
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
@@ -277,7 +270,7 @@ public class AdApplyService {
             adGoodsOrderRepository.save(adGoodsOrder);
         }
         //TODO 调用金蝶接口
-        RestResponse restResponse = batchSynToCloud(adGoodsOrders);
+       batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -296,7 +289,7 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
     }
 
-    private RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<String> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");

@@ -33,9 +33,9 @@
         <el-table-column prop="productCode" :label="$t('adApplyBillForm.productCode')" ></el-table-column>
         <el-table-column prop="productName" sortable :label="$t('adApplyBillForm.productName')" ></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('adApplyBillForm.createdDate')"></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')" ></el-table-column>
-        <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')" ></el-table-column>
-        <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')" ></el-table-column>
+        <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')+'('+totalApplyQty+')'" ></el-table-column>
+        <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')+'('+totalConfirmQty+')'" ></el-table-column>
+        <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')+'('+totalLeftQty+')'" ></el-table-column>
         <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')" >
           <template scope="scope">
             <el-input v-model="scope.row.nowBilledQty"></el-input>
@@ -71,7 +71,10 @@
             billDate: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
             expressCompanyId: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
           },
-          remoteLoading: false
+          remoteLoading: false,
+          totalApplyQty:"0",
+          totalConfirmQty:"0",
+          totalLeftQty:"0"
         };
       },
       formSubmit(){
@@ -112,6 +115,7 @@
         var val=this.productOrShopName;
         if(!val){
           this.filterAdApplyList = this.adApplyList;
+          this.getTotalQty(this.filterAdApplyList);
           return;
         }
         var tempList=new Array();
@@ -128,12 +132,36 @@
           }
         }
         this.filterAdApplyList = tempList;
+        this.getTotalQty(this.filterAdApplyList);
+      },getTotalQty(content){
+        if(content == null){
+          return;
+        }
+        let tempApplyQty = 0;
+        let tempConfirmQty = 0;
+        let tempLeftQty = 0;
+        for(let index in content){
+          let detail=content[index];
+          if(util.isNotBlank(detail.applyQty)){
+            tempApplyQty += detail.applyQty;
+          }
+          if(util.isNotBlank(detail.confirmQty)){
+            tempConfirmQty += detail.confirmQty;
+          }
+          if(util.isNotBlank(detail.leftQty)){
+            tempLeftQty += detail.leftQty;
+          }
+        }
+        this.totalApplyQty = tempApplyQty;
+        this.totalConfirmQty = tempConfirmQty;
+        this.totalLeftQty = tempLeftQty;
       },onchange(){
           if(this.inputForm.billType == null){
               return;
           }
           axios.get('api/ws/future/layout/adApply/findAdApplyList',{params:{billType:this.inputForm.billType}}).then((response) =>{
-            this.setProductList(response.data);
+              this.inputForm.storeId = response.data.storeId;
+            this.setProductList(response.data.adApplyDtoList);
           });
       },
       initPage(){

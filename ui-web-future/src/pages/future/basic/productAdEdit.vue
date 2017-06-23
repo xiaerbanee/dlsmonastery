@@ -129,7 +129,7 @@
               this.inputForm.productList = JSON.stringify(table.getData());
               axios.post('/api/ws/future/basic/product/batchSave', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
                 this.$message(response.data.message);
-              }).catch(function () {
+              }).catch( ()=> {
                 this.submitDisabled = false;
               });
             }
