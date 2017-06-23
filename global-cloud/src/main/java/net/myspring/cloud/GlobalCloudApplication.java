@@ -9,10 +9,11 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
-@EnableResourceServer
+@EnableOAuth2Client
 @EnableDiscoveryClient
 @EnableFeignClients
 @EntityScan(basePackageClasses = {GlobalCloudApplication.class, Jsr310JpaConverters.class})

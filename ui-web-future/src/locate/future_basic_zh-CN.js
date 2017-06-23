@@ -468,6 +468,7 @@ export default {
     name: "名称",
     code: "编码",
     netType: "网络制式",
+    outId:"outId",
     outGroupId: "分组编码",
     outGroupName: "产品类型",
     productType: "产品型号",

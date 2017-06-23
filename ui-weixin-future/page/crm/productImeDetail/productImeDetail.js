@@ -18,7 +18,7 @@ Page({
         var options=that.data.options;
         wx.request({
             url: $util.getUrl("crm/productIme/detail"),
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: { Cookie: "JSESSIONID=" + app.globalData.sessionId},
             data: { productImeId: options.productImeId },
             success: function (res) {
                 that.setData({ productImeDetail: res.data });

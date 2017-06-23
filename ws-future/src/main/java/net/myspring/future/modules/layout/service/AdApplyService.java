@@ -7,6 +7,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -278,7 +279,7 @@ public class AdApplyService {
             adGoodsOrderRepository.save(adGoodsOrder);
         }
         //TODO 调用金蝶接口
-        RestResponse restResponse = batchSynToCloud(adGoodsOrders);
+       batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -297,7 +298,7 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
     }
 
-    private RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
@@ -340,7 +341,7 @@ public class AdApplyService {
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
             salOutStockDtoList.add(salOutStockDto);
         }
-        return cloudClient.synForSalOutStock(salOutStockDtoList);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }
 
@@ -356,7 +357,7 @@ public class AdApplyService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leftQty", "待开单数"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByFilter(adApplyQuery);

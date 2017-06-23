@@ -9,6 +9,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -27,8 +28,8 @@ import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
-import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.repository.*;
@@ -44,7 +45,6 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,7 +245,7 @@ public class StoreAllotService {
         if(storeAllotForm.getSyn()){
             //TODO 金蝶接口调用，调用成功之后设置cloudSynId
             StoreAllotDto storeAllotDto = BeanUtil.map(storeAllotForm,StoreAllotDto.class);
-             String cloudSynId = synToCloud(storeAllotDto);
+            KingdeeSynReturnDto returnDto = synToCloud(storeAllotDto);
         }
 
         StoreAllot storeAllot = saveStoreAllot(storeAllotForm);
@@ -259,7 +259,7 @@ public class StoreAllotService {
         return storeAllot;
     }
 
-    private String synToCloud(StoreAllotDto storeAllotDto){
+    private KingdeeSynReturnDto synToCloud(StoreAllotDto storeAllotDto){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId(storeAllotDto.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
@@ -274,7 +274,7 @@ public class StoreAllotService {
             entryDto.setDestStockNumber("");
             transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
-        return cloudClient.synForStkTransferDirect(transferDirectDto);
+        return cloudClient.synStkTransferDirect(transferDirectDto);
     }
 
     private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
@@ -403,7 +403,6 @@ public class StoreAllotService {
 
     public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
-        LocalDate billDate = LocalDateUtils.parse(LocalDateUtils.format(LocalDate.now()));
         List<String> mergeIdList = getMergeStoreIds();
         if(mergeIdList == null || mergeIdList.size() <=1){
 
@@ -411,7 +410,7 @@ public class StoreAllotService {
         }
         String toStoreId =mergeIdList.get(1);
 
-        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(billDate, toStoreId, "待发货", RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货", RequestUtils.getCompanyId());
 
         cacheUtils.initCacheInput(result);
         //TODO 初始化财务存量

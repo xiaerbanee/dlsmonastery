@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
     data: {
         page: {},
-        formData: {
-            pageNumber: 0,
-            pageSize: 10
-        },
+        formData: {},
         activeItem: null,
         searchHidden: true
     },
@@ -26,8 +23,7 @@ Page({
             data: {},
             method: 'GET',
             header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 that.setData({ formData: res.data })
@@ -45,11 +41,17 @@ Page({
                 wx.request({
                     url: $util.getUrl("basic/hr/dutyTrip"),
                     header: {
-                        'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                        Cookie: "JSESSIONID=" + app.globalData.sessionId
                     },
                     data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
+                        for (var item in res.data.content) {
+                            var actionList = new Array();
+                            if (res.data.content[item].deleted) {
+                                actionList.push("删除");
+                            }
+                            res.data.content[item].actionList = actionList;
+                        }
                         that.setData({ page: res.data });
                         wx.hideToast();
                     }
@@ -94,17 +96,20 @@ Page({
     showActionSheet: function (e) {
         var that = this;
         var id = e.currentTarget.dataset.id;
+        var itemList = that.data.activeItem.actionList;
+        if (itemList.length == 0) {
+            return;
+        }
         wx.showActionSheet({
-            itemList: ["删除"],
+            itemList: itemList,
             success: function (res) {
                 if (!res.cancel) {
-                    if (res.tapIndex == 0) {
+                    if (itemList[res.tapIndex] == "删除") {
                         wx.request({
                             url: $util.getUrl("basic/hr/dutyTrip/delete"),
                             data: { id: id },
                             header: {
-                                'x-auth-token': app.globalData.sessionId,
-                                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                                Cookie: "JSESSIONID=" + app.globalData.sessionId
                             },
                             success: function (res) {
                                 that.pageRequest();
@@ -117,37 +122,37 @@ Page({
     },
     formSubmit: function (e) {
         var that = this;
-        that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+        that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
         that.pageRequest();
     },
     toFirstPage: function () {
         var that = this;
-        that.setData({ "formData.pageNumber": 0 });
+        that.setData({ "formData.page": 0 });
         that.pageRequest();
     },
     toPreviousPage: function () {
         var that = this;
-        that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+        that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
         that.pageRequest();
     },
     toNextPage: function () {
         var that = this;
-        that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+        that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
         that.pageRequest();
     },
     toLastPage: function () {
         var that = this;
-        that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+        that.setData({ "formData.page": that.data.page.totalPages - 1 });
         that.pageRequest();
     },
     toPage: function () {
         var that = this;
-        var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+        var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
         wx.showActionSheet({
             itemList: itemList,
             success: function (res) {
                 if (!res.cancel) {
-                    that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+                    that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
                     that.pageRequest();
                 }
             }

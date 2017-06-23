@@ -23,7 +23,7 @@ Page({
         url: $util.getUrl("crm/priceChangeIme/detail"),
         data: { id: options.id },
         method: 'GET',
-        header: { 'x-auth-token': app.globalData.sessionId },
+        header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
           that.setData({ formData: res.data })
         },
@@ -44,7 +44,7 @@ Page({
         var tempFilePaths = res.tempFilePaths
         wx.uploadFile({
           url: $util.getUrl('sys/folderFile/upload'),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
           filePath: tempFilePaths[0],
           name: 'file',
           formData: { uploadPath: 'priceChangeIme' },
@@ -89,7 +89,7 @@ Page({
     wx.request({
       url: $util.getUrl("crm/priceChangeIme/imageUpload"),
       data: e.detail.value,
-      header: {  'x-auth-token': app.globalData.sessionId  },
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId  },
       success: function (res) {
         console.log(res.data)
         if (res.data.success) {

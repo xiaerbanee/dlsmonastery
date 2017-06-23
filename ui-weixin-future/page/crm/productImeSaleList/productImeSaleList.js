@@ -4,11 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10,
-      isBack: false
-    },
+    formData: { isBack: false },
     searchHidden: true,
     activeItem: null
   },
@@ -32,8 +28,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ formData: res.data });
@@ -51,12 +46,10 @@ Page({
         wx.request({
           url: $util.getUrl("ws/future/crm/productImeSale"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -112,8 +105,7 @@ Page({
               url: $util.getUrl("crm/productImeSale/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
               },
               success: function (res) {
                 that.pageRequest();

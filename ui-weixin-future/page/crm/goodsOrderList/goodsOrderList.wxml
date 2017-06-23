@@ -2,8 +2,8 @@
 <view class="page">
   <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
-      <input type="hidden" name="pageNumber" value="{{formData.pageNumber}}" class="hidden" />
-      <input type="hidden" name="pageSize" value="{{formData.pageSize}}" class="hidden" />
+      <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
+      <input type="hidden" name="Size" value="{{formData.size}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">开始日期</view>

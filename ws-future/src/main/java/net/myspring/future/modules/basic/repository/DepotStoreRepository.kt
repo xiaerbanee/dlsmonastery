@@ -55,6 +55,10 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
 
     fun findByOutIdIn(outList:MutableList<String>):MutableList<DepotStore>
 
+    fun findByEnabledIsTrueAndDepotId(depotId :String): DepotStore
+
+
+
 }
 
 interface DepotStoreRepositoryCustom{

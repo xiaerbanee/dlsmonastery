@@ -467,6 +467,7 @@ export default {
     name: "nama",
     code: "kode",
     netType: "jenis",
+    outId:"outId",
     outGroupId: "perbedaan coding",
     outGroupName: "jenis produk",
     productType: "kode produk",

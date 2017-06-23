@@ -8,12 +8,13 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
-@EnableResourceServer
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableOAuth2Client
 @EntityScan(basePackageClasses = {SummerBasicApplication.class, Jsr310JpaConverters.class})
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 public class SummerBasicApplication {

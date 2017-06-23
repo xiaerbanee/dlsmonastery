@@ -130,9 +130,11 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
+        this.formVisible = false
         axios.get('/api/ws/future/layout/shopBuild/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
           window.location.href="/api/general/sys/folderFile/download?id="+response.data;
         });
+        this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopBuildForm'});
       },itemAction:function(id,action){

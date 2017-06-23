@@ -13,6 +13,16 @@ public class DutyTripDto extends DataDto<DutyTrip> {
     private LocalDate dateEnd;
     private String status;
 
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public LocalDate getDateStart() {
         return dateStart;
     }

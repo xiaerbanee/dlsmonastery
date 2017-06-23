@@ -22,9 +22,7 @@ Page({
       url: $util.getUrl("basic/hr/auditFile/getForm"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
-       },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         that.setData({ 'formProperty.processList': res.data.processTypes })
       }
@@ -34,9 +32,7 @@ Page({
         url: $util.getUrl("basic/hr/auditFile/detail"),
         data: { id:  options.id },
         method: 'GET',
-        header: { 'x-auth-token': app.globalData.sessionId,
-                  'authorization': "Bearer" + wx.getStorageSync('token').access_token
-         },
+        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
           that.setData({ formData: res.data })
         }
@@ -69,8 +65,7 @@ Page({
       url: $util.getUrl("basic/hr/auditFile/save"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
       success: function (res) {
         if (res.data.success) {

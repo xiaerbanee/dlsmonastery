@@ -73,7 +73,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
             customUserDetails = new CustomUserDetails(
-                    username,
+                    accountDto.getLoginName(),
                     accountDto.getPassword(),
                     accountDto.getEnabled(),
                     accountNoExpired,

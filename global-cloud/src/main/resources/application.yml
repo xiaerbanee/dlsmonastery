@@ -28,15 +28,12 @@ eureka:
 
 security:
   oauth2:
+    client:
+      clientId: cloud-service
+      clientSecret: cloud-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
     resource:
-      jwt:
-        keyValue: |
-          -----BEGIN PUBLIC KEY-----
-          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwR84LFHwnK5GXErnwkmD
-          mPOJl4CSTtYXCqmCtlbF+5qVOosu0YsM2DsrC9O2gun6wVFKkWYiMoBSjsNMSI3Z
-          w5JYgh+ldHvA+MIex2QXfOZx920M1fPUiuUPgmnTFS+Z3lmK3/T6jJnmciUPY1pe
-          h4MXL6YzeI0q4W9xNBBeKT6FDGpduc0FC3OlXHfLbVOThKmAUpAWFDwf9/uUA//l
-          3PLchmV6VwTcUaaHp5W8Af/GU4lPGZbTAqOxzB9ukisPFuO1DikacPhrOQgdxtqk
-          LciRTa884uQnkFwSguOEUYf3ni8GNRJauIuW0rVXhMOs78pKvCKmo53M0tqeC6ul
-          +QIDAQAB
-          -----END PUBLIC KEY-----
+      user-info-uri: http://localhost:1100/uaa/user

@@ -3,8 +3,7 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    formData: {
-    },
+    formData: {},
     formProperty:{},
     response:{},
     submitDisabled: false,
@@ -25,7 +24,7 @@ Page({
       url: $util.getUrl("crm/shopImage/getForm"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         console.log(res);
         that.setData({ 'formProperty.imageTypeList': res.data.shopImageTypes })
@@ -63,7 +62,7 @@ Page({
           wx.uploadFile({
             url: $util.getUrl('sys/folderFile/upload'),
             header: {
-              'x-auth-token': app.globalData.sessionId
+              Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             filePath: tempFilePaths[i],
             name: 'file',
@@ -112,7 +111,7 @@ Page({
     wx.request({
       url: $util.getUrl("crm/shopImage/save"),
       data: e.detail.value,
-      header: {'x-auth-token': app.globalData.sessionId},
+      header: {Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
