@@ -2,17 +2,21 @@ package net.myspring.cloud.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.common.enums.VoucherFlexEnum;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.service.*;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
+import net.myspring.cloud.modules.sys.dto.VoucherModel;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +50,8 @@ public class VoucherController {
     private HrEmpInfoService hrEmpInfoService;
     @Autowired
     private BdFlexItemGroupService bdFlexItemGroupService;
+    @Autowired
+    private BdFlexItemPropertyService bdFlexItemPropertyService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<VoucherDto> page(Pageable pageable, VoucherQuery voucherQuery){
@@ -62,27 +68,41 @@ public class VoucherController {
     @RequestMapping(value = "form")
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
-        List<String> list = Lists.newLinkedList();
-        list.add("摘要");
-        list.add("科目名称");
-        List<String> flexItemGroupList = bdFlexItemGroupService.getNameList();
-        list.addAll(flexItemGroupList);
-        list.add("借方金额");
-        list.add("贷方金额");
-        map.put("headerList", list);
-        for (String name : flexItemGroupList){
-            switch (name){
-                case "供应商":  map.put("supplierNameList",bdSupplierService.findAll().stream().map(BdSupplier::getFName).collect(Collectors.toList()));
-                case "客户":    map.put("customerNameList",bdCustomerService.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
-                case "银行账号":map.put("bankAcntNameList",cnBankAcntService.findAll().stream().map(CnBankAcnt::getFName).collect(Collectors.toList()));
-                case "其他类":  map.put("otherTypeNameList",basAssistantService.findByType("其他类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
-                case "部门":    map.put("departmentNameList",bdDepartmentService.findAll().stream().map(BdDepartment::getFFullName).collect(Collectors.toList()));
-                case "费用类":  map.put("expenseTypeNameList",basAssistantService.findByType("费用类").stream().map(BasAssistant::getFDataValue).collect(Collectors.toList()));
-                case "员工":   map.put("empInfoNameList",hrEmpInfoService.findAll().stream().map(HrEmpInfo::getFName).collect(Collectors.toList()));
+        List<String> headerList = Lists.newLinkedList();
+        headerList.add("摘要");
+        headerList.add("科目名称");
+        List<String> flexItemGroupNameList = bdFlexItemGroupService.getNameList();
+        headerList.addAll(flexItemGroupNameList);
+        headerList.add("借方金额");
+        headerList.add("贷方金额");
+        map.put("headerList", headerList);
+        VoucherModel voucherModel = getVoucherModel();
+        map.put("accountNameToFlexGroupNamesMap",voucherService.accountNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList()));
+        map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
+        if (voucherForm.getId() != null){
+            VoucherDto voucherDto = BeanUtil.map(voucherForm,VoucherDto.class);
+            map.put("data",voucherService.initData(voucherDto,voucherModel,flexItemGroupNameList));
+        }else {
+            map.put("data", Lists.newArrayList());
+        }
+        Map<String, Map<String, String>> result = voucherModel.getResult();
+        for (Map<String, String> list : result.values()) {
+            if (result.get(VoucherFlexEnum.供应商.name()).equals(list)){
+                map.put("supplierNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.部门.name()).equals(list)){
+                map.put("departmentNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.客户.name()).equals(list)){
+                map.put("customerNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.其他类.name()).equals(list)){
+                map.put("otherTypeNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.费用类.name()).equals(list)){
+                map.put("expenseTypeNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.员工.name()).equals(list)){
+                map.put("empInfoNameList",list.keySet());
+            }else if(result.get(VoucherFlexEnum.银行账号.name()).equals(list)){
+                map.put("bankAcntNameList",list.keySet());
             }
         }
-        map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
-        voucherService.getForm(map);
         voucherForm.setExtra(map);
         return voucherForm;
     }
@@ -91,5 +111,22 @@ public class VoucherController {
     public RestResponse save(VoucherForm voucherForm) {
 
         return voucherService.save(voucherForm);
+    }
+
+    public VoucherModel getVoucherModel(){
+        VoucherModel model = new VoucherModel();
+        model.setBdAccountList(bdAccountService.findAll());
+        model.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        model.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+        Map<String, Map<String, String>> result=Maps.newHashMap();
+        result.put(VoucherFlexEnum.供应商.name(), bdSupplierService.findAll().stream().collect(Collectors.toMap(BdSupplier::getFName,BdSupplier::getFNumber)));
+        result.put(VoucherFlexEnum.部门.name(), bdDepartmentService.findAll().stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber)));
+        result.put(VoucherFlexEnum.客户.name(), bdCustomerService.findAll().stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber)));
+        result.put(VoucherFlexEnum.其他类.name(), basAssistantService.findByType("其他类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
+        result.put(VoucherFlexEnum.费用类.name(), basAssistantService.findByType("费用类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
+        result.put(VoucherFlexEnum.员工.name(), hrEmpInfoService.findAll().stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber)));
+        result.put(VoucherFlexEnum.银行账号.name(), cnBankAcntService.findAll().stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber)));
+        model.setResult(result);
+        return model;
     }
 }

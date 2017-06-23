@@ -5,6 +5,9 @@ import com.google.common.collect.Maps;
 import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.SalOutStockDto;
+import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
@@ -14,6 +17,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -92,6 +96,8 @@ public class AdGoodsOrderService {
     private RedisTemplate redisTemplate;
     @Autowired
     private GridFsTemplate tempGridFsTemplate;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderRepository.findPage(pageable, adGoodsOrderQuery);
@@ -441,7 +447,7 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(newAdGoodsOrder);
 
         //开始保存拆分后的detail信息
-        List<AdGoodsOrderDetail> newAdGoodsOrderDetails = Lists.newArrayList();
+        List<AdGoodsOrderDetail> newAdGoodsOrderDetailList = Lists.newArrayList();
         List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
         for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrderDetailList) {
             if (adGoodsOrderDetail.getConfirmQty() > adGoodsOrderDetail.getBillQty()) {
@@ -453,10 +459,13 @@ public class AdGoodsOrderService {
                 newAdGoodsOrderDetail.setBillQty(0);
                 newAdGoodsOrderDetail.setShippedQty(0);
                 newAdGoodsOrderDetail.setAdGoodsOrderId(newAdGoodsOrder.getId());
-                newAdGoodsOrderDetails.add(newAdGoodsOrderDetail);
+                newAdGoodsOrderDetailList.add(newAdGoodsOrderDetail);
             }
         }
-        adGoodsOrderDetailRepository.save(newAdGoodsOrderDetails);
+        if(newAdGoodsOrderDetailList.isEmpty()){
+            throw new ServiceException("所有确认订货数均已开单，不需要拆单");
+        }
+        adGoodsOrderDetailRepository.save(newAdGoodsOrderDetailList);
         newAdGoodsOrder.setAmount(calcAmountByDetailConfirmQty(newAdGoodsOrder));
         adGoodsOrderRepository.save(newAdGoodsOrder);
 
@@ -478,18 +487,41 @@ public class AdGoodsOrderService {
 
     private void synWhenBill(AdGoodsOrder adGoodsOrder) {
         //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
-//        K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.SAL_OUTSTOCK.name(),adGoodsOrder.getSaleOutstock(),adGoodsOrder.getId(),adGoodsOrder.getFormatId(), K3CloudSynEntity.ExtendType.柜台订货.name());
-//        k3cloudSynDao.save(k3CloudSynEntity);
-//        K3cloudUtils.save(k3CloudSynEntity);
-//        k3CloudSynEntity.setLocked(true);
-//        k3cloudSynDao.save(k3CloudSynEntity);
-//        adGoodsOrder.setK3CloudSynEntity(k3CloudSynEntity);
-//        adGoodsOrderDao.save(adGoodsOrder);
-//        if(adGoodsOrder.getExpressOrder()!=null){
-//            ExpressOrder exp=adGoodsOrder.getExpressOrder();
-//            exp.setOutCode(adGoodsOrder.getOutCode());
-//            expressOrderDao.save(exp);
-//        }
+        List<String> kingdeeSynIdList = batchSynToCloud(Lists.newArrayList(adGoodsOrder));
+    }
+
+    private List<String> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        for (AdGoodsOrder adGoodsOrder : adGoodsOrderList){
+            SalOutStockDto salOutStockDto = new SalOutStockDto();
+            salOutStockDto.setExtendId(adGoodsOrder.getId());
+            salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
+            salOutStockDto.setDate(adGoodsOrder.getBillDate());
+            salOutStockDto.setCustomerNumber("");
+            salOutStockDto.setNote("");//getFormatId()+Const.CHAR_COMMA+getShopName()+Const.CHAR_COMMA
+                                        //+getContator()+Const.CHAR_COMMA+getMobilePhone()+Const.CHAR_COMMA+getAddress()
+            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+            List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
+            for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
+                SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+                entityDto.setStockNumber("");
+                entityDto.setMaterialNumber("");
+                entityDto.setQty(adGoodsOrderDetail.getBillQty());
+                // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
+                if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
+                    entityDto.setPrice(BigDecimal.ZERO);//产品价格
+                }else{
+                    entityDto.setPrice(BigDecimal.ZERO);
+                }
+                entityDto.setEntryNote("");//getId()+ Const.CHAR_COMMA + getShopName() + Const.CHAR_COMMA+  getContator()+ Const.CHAR_COMMA
+                                            //+ getMobilePhone()+ Const.CHAR_COMMA + getAddress()+ Const.CHAR_COMMA+ getRemarks());
+                entityDtoList.add(entityDto);
+            }
+            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+            salOutStockDtoList.add(salOutStockDto);
+        }
+        return cloudClient.synForSalOutStock(salOutStockDtoList);
+
     }
 
     private void saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder) {

@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
@@ -11,7 +12,9 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
@@ -50,18 +53,15 @@ public class SalOutStockController {
         return null;
     }
 
-    @RequestMapping(value = "saveForXSCKD")
-    public RestResponse saveForXSCKD(List<SalOutStockDto> salOutStockDtoList) {
+    @RequestMapping(value = "saveForXSCKD",method = RequestMethod.POST)
+    public List<String> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
-            if (kingdeeSynExtendDto.getSuccess()){
-                return new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
-            }else {
-                return new RestResponse("入库开单失败：" + kingdeeSynExtendDto.getResult(),null,false);
-            }
+        List<String> kingdeeSynIdList = Lists.newArrayList();
+        for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            kingdeeSynIdList.add(kingdeeSynExtendDto.getId());
         }
-        return null;
+        return kingdeeSynIdList;
     }
 }

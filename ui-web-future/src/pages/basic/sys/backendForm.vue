@@ -50,7 +50,7 @@
               if(!this.inputForm.create){
                 this.$router.push({name:'backendList',query:util.getQuery("backendList")})
               }
-            }).catch(function () {
+            }).catch( ()=> {
               that.submitDisabled = false;
             });
           }else{

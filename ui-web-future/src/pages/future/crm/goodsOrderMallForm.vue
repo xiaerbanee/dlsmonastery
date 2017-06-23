@@ -134,7 +134,7 @@
               this.submitDisabled = false;
               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
             }
-          }).catch(function () {
+          }).catch(()=> {
               that.submitDisabled = false;
             });
           }else{

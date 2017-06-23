@@ -1,11 +1,7 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import com.google.common.collect.Lists;
-import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.Voucher;
-
-import java.util.List;
 
 /**
  * Created by lihx on 2017/4/5.
@@ -17,10 +13,6 @@ public class VoucherDto extends DataDto<Voucher> {
     private String status;
     private String outCode;
     private String kingdeeBookId;
-    private List<BdFlexItemGroup> bdFlexItemGroupList;
-    //明细
-    private List<VoucherEntryDto> voucherEntryDtoList = Lists.newArrayList();
-    private List<String> voucherEntryIdList = Lists.newArrayList();
 
     private Boolean deletable = false;
     private Boolean editable = false;
@@ -73,22 +65,6 @@ public class VoucherDto extends DataDto<Voucher> {
         this.kingdeeBookId = kingdeeBookId;
     }
 
-    public List<VoucherEntryDto> getVoucherEntryDtoList() {
-        return voucherEntryDtoList;
-    }
-
-    public void setVoucherEntryDtoList(List<VoucherEntryDto> voucherEntryDtoList) {
-        this.voucherEntryDtoList = voucherEntryDtoList;
-    }
-
-    public List<String> getVoucherEntryIdList() {
-        return voucherEntryIdList;
-    }
-
-    public void setVoucherEntryIdList(List<String> voucherEntryIdList) {
-        this.voucherEntryIdList = voucherEntryIdList;
-    }
-
     public Boolean getDeletable() {
         return deletable;
     }
@@ -103,13 +79,5 @@ public class VoucherDto extends DataDto<Voucher> {
 
     public void setEditable(Boolean editable) {
         this.editable = editable;
-    }
-
-    public List<BdFlexItemGroup> getBdFlexItemGroupList() {
-        return bdFlexItemGroupList;
-    }
-
-    public void setBdFlexItemGroupList(List<BdFlexItemGroup> bdFlexItemGroupList) {
-        this.bdFlexItemGroupList = bdFlexItemGroupList;
     }
 }

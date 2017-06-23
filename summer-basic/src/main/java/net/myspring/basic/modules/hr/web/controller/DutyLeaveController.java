@@ -2,6 +2,7 @@ package net.myspring.basic.modules.hr.web.controller;
 
 
 import net.myspring.basic.modules.hr.web.validator.DutyLeaveValidator;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
@@ -34,6 +35,9 @@ public class DutyLeaveController {
     public Page<DutyLeaveDto> list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
         dutyLeaveQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyLeaveDto> page = dutyLeaveService.findPage(pageable,dutyLeaveQuery);
+        for(DutyLeaveDto dutyLeaveDto:page.getContent()){
+            setOperationStatus(dutyLeaveDto);
+        }
         return page;
     }
 
@@ -66,5 +70,11 @@ public class DutyLeaveController {
         dutyLeaveService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
+    }
+
+    private void setOperationStatus(DutyLeaveDto dutyLeaveDto){
+        if(dutyLeaveDto.getCreatedBy().equals(RequestUtils.getAccountId())&& AuditTypeEnum.APPLY.getValue().equals(dutyLeaveDto.getStatus())){
+            dutyLeaveDto.setDeleted(true);
+        }
     }
 }

@@ -1,34 +1,29 @@
 package net.myspring.cloud.modules.report.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
-
-import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveDetailQuery {
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
+    private String dateStart;
+    private String dateEnd;
     private List<String> customerIdList = Lists.newArrayList();
 
-    public LocalDate getDateStart() {
+    public String getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(LocalDate dateStart) {
+    public void setDateStart(String dateStart) {
         this.dateStart = dateStart;
     }
 
-    public LocalDate getDateEnd() {
+    public String getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(LocalDate dateEnd) {
+    public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
     }
 

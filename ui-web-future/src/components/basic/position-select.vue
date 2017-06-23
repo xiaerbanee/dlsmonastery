@@ -25,7 +25,9 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-        this.$emit('input', newVal);
+        if(newVal !== this.value) {
+          this.$emit('input', newVal);
+        }
       },setValue(val) {
         if(this.innerId===val){
           return;
@@ -37,7 +39,6 @@
           if(this.innerId instanceof Array){
             idStr=this.innerId.join();
           }
-          console.log("idStr"+idStr)
           axios.get('/api/basic/hr/position/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
@@ -46,7 +47,7 @@
             });
           })
         }else{
-          this.innerId=[];
+          this.innerId=val;
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

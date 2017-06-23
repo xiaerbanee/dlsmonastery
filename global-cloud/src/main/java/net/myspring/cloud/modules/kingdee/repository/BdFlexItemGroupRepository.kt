@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 
 /**
- * 核算维度
+ * 核算维度组
  * Created by lihx on 2017/6/16.
  */
 @Component

@@ -15,9 +15,10 @@ import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotRepository;
+import net.myspring.future.modules.layout.web.form.ShopAllotAuditForm;
+import net.myspring.future.modules.layout.web.form.ShopAllotDetailAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
-import net.myspring.future.modules.layout.web.form.ShopAllotViewOrAuditForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.IdUtils;
@@ -115,15 +116,13 @@ public class ShopAllotService {
             if(StringUtils.isBlank(shopAllotDetailForm.getId())){
                 shopAllotDetail = new ShopAllotDetail();
                 shopAllotDetail.setProductId(shopAllotDetailForm.getProductId());
-                shopAllotDetail.setQty(shopAllotDetailForm.getQty());
                 shopAllotDetail.setShopAllotId(shopAllot.getId());
                 shopAllotDetail.setReturnPrice(fromPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
                 shopAllotDetail.setSalePrice(toPricesystemMap.get(shopAllotDetail.getProductId()).getPrice());
             }else{
                 shopAllotDetail = shopAllotDetailRepository.findOne(shopAllotDetailForm.getId());
-                shopAllotDetail.setQty(shopAllotDetailForm.getQty());
             }
-
+            shopAllotDetail.setQty(shopAllotDetailForm.getQty()==null?0:shopAllotDetailForm.getQty());
             shopAllotDetailsToBeSaved.add(shopAllotDetail);
         }
 
@@ -131,25 +130,25 @@ public class ShopAllotService {
 
     }
 
-    public void audit(ShopAllotViewOrAuditForm shopAllotViewOrAuditForm) {
+    public void audit(ShopAllotAuditForm shopAllotAuditForm) {
 //        Account account = AccountUtils.getAccount();
 //        if(account.getOutId()==null){
 //            return new Message("message_shop_allot_no_finance_message_account",Message.Type.danger);
 //        }
 
-        ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotViewOrAuditForm.getId());
-        shopAllot.setStatus(shopAllotViewOrAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
-        shopAllot.setAuditRemarks(shopAllotViewOrAuditForm.getAuditRemarks());
+        ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotAuditForm.getId());
+        shopAllot.setStatus(shopAllotAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
+        shopAllot.setAuditRemarks(shopAllotAuditForm.getAuditRemarks());
         shopAllot.setAuditBy(RequestUtils.getAccountId());
         shopAllot.setAuditDate(LocalDateTime.now());
         shopAllotRepository.save(shopAllot);
 
-        if( !shopAllotViewOrAuditForm.getPass()) {
+        if( !shopAllotAuditForm.getPass()) {
             return;
         }
 
-        if(shopAllotViewOrAuditForm.getShopAllotDetailList()!=null){
-            for(ShopAllotDetailForm each : shopAllotViewOrAuditForm.getShopAllotDetailList()){
+        if(shopAllotAuditForm.getShopAllotDetailList()!=null){
+            for(ShopAllotDetailAuditForm each : shopAllotAuditForm.getShopAllotDetailList()){
                 ShopAllotDetail  shopAllotDetail = shopAllotDetailRepository.findOne(each.getId());
                 shopAllotDetail.setReturnPrice(each.getReturnPrice());
                 shopAllotDetail.setSalePrice(each.getSalePrice());
@@ -157,7 +156,7 @@ public class ShopAllotService {
             }
         }
 
-        if(shopAllotViewOrAuditForm.getSyn()) {
+        if(shopAllotAuditForm.getSyn()) {
 //                Long defaultStoreId = Long.valueOf(Global.getCompanyConfig(shopAllot.getCompany().getId(), CompanyConfigCode.DEFAULT_STORE_ID.getCode()));
 //                shopAllot.setStore(depotDao.findOne(defaultStoreId));
 //                //都不是寄售门店  一出一退

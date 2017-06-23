@@ -1,7 +1,12 @@
 package net.myspring.cloud.modules.kingdee.domain;
 
+import net.myspring.common.constant.CharConstant;
+import net.myspring.util.text.StringUtils;
+
+import java.util.List;
+
 /**
- * 科目对应核算维度
+ * 科目对应-核算维度组
  * Created by lihx on 2017/4/10.
  */
 public class BdFlexItemGroup {
@@ -31,5 +36,9 @@ public class BdFlexItemGroup {
 
     public void setFName(String FName) {
         this.FName = FName;
+    }
+
+    public List<String> getFNames() {
+        return StringUtils.getSplitList(getFName(), CharConstant.SLASH_LINE);
     }
 }

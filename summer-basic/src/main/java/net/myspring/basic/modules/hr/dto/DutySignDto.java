@@ -22,6 +22,16 @@ public class DutySignDto extends DataDto<DutySign> {
     private String attachment;
     private String status;
 
+    private boolean deleted=false;
+
+    public boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public String getEmployeeName() {
         return employeeName;
     }

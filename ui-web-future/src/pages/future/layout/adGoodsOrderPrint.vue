@@ -46,7 +46,7 @@
         <td></td>
         <td>{{totalBillQty}}</td>
         <td></td>
-        <td>{{totalPrice}}</td>
+        <td>{{totalPrice.toFixed(2)}}</td>
       </tr>
       </tbody>
     </table>
