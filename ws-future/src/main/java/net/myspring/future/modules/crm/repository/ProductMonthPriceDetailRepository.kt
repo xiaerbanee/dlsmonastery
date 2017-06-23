@@ -4,9 +4,6 @@ import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail
 import net.myspring.future.modules.crm.dto.ProductMonthPriceDetailDto
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto
-import net.myspring.future.modules.layout.dto.ShopAllotDetailDto
-import org.bouncycastle.asn1.ua.DSTU4145NamedCurves.params
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate

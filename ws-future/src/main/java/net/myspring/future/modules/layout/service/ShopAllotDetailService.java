@@ -1,8 +1,7 @@
 package net.myspring.future.modules.layout.service;
 
-import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.layout.domain.ShopAllot;
-import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
+import net.myspring.future.modules.layout.dto.ShopAllotDetailSimpleDto;
 import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.future.modules.layout.repository.ShopAllotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,31 +19,13 @@ public class ShopAllotDetailService {
     @Autowired
     private ShopAllotRepository shopAllotRepository;
 
-    @Autowired
-    private CacheUtils cacheUtils;
-
-
-
-    public List<ShopAllotDetailDto> getShopAllotDetailListForNew(String fromDepotId, String toDepotId) {
-
-        List<ShopAllotDetailDto> result = shopAllotDetailRepository.getShopAllotDetailListForNew(fromDepotId, toDepotId);
-
-        cacheUtils.initCacheInput(result);
-
-        return result;
-
+    public List<ShopAllotDetailSimpleDto> getShopAllotDetailListForNew(String fromDepotId, String toDepotId) {
+        return shopAllotDetailRepository.getShopAllotDetailListForNew(fromDepotId, toDepotId);
     }
 
-    public List<ShopAllotDetailDto> getShopAllotDetailListForEdit(String shopAllotId) {
-
+    public List<ShopAllotDetailSimpleDto> getShopAllotDetailListForEdit(String shopAllotId) {
         ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotId);
-
-        List<ShopAllotDetailDto> result = shopAllotDetailRepository.getShopAllotDetailListForEdit(shopAllotId, shopAllot.getFromShopId(), shopAllot.getToShopId());
-
-        cacheUtils.initCacheInput(result);
-
-        return result;
-
+        return shopAllotDetailRepository.getShopAllotDetailListForEdit(shopAllotId, shopAllot.getFromShopId(), shopAllot.getToShopId());
     }
 
 }

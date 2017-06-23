@@ -1,6 +1,8 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.utils.RequestUtils;
@@ -14,6 +16,7 @@ import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,9 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liuj on 2017/5/15.
@@ -116,6 +117,18 @@ public class DepotController {
         return depotService.findDepotAccountList(pageable, depotAccountQuery);
     }
 
+    @RequestMapping(value = "findDepotAccountDetailList")
+    public List<CustomerReceiveDetailDto> findDepotAccountDetailList(String clientOutId, String dateRange) {
+        CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+        customerReceiveDetailQuery.setCustomerIdList(Collections.singletonList(clientOutId));
+        if(StringUtils.isNotBlank(dateRange)){
+            String[] tempParamValues = dateRange.split(" - ");
+            customerReceiveDetailQuery.setDateStart(tempParamValues[0]);
+            customerReceiveDetailQuery.setDateEnd(tempParamValues[1]);
+        }
+
+        return cloudClient.getCustomerReceiveDetailList(customerReceiveDetailQuery);
+    }
 
     @RequestMapping(value="depotAccountExportDetail")
     public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
