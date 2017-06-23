@@ -39,7 +39,7 @@ public class StkTransferDirectService {
             if(isLogin) {
                 kingdeeSynDto = save(stkTransferDirectDto, kingdeeBook);
             }else{
-                kingdeeSynDto= new KingdeeSynDto(false,"未登入金蝶系统");
+                kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
             }
         }
         return kingdeeSynDto;

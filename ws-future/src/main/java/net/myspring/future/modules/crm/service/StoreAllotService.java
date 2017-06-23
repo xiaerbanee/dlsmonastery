@@ -259,7 +259,7 @@ public class StoreAllotService {
         return storeAllot;
     }
 
-    public String synToCloud(StoreAllotDto storeAllotDto){
+    private String synToCloud(StoreAllotDto storeAllotDto){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId(storeAllotDto.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());

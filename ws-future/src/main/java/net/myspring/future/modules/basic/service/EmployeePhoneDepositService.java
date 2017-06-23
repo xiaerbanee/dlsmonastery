@@ -166,7 +166,7 @@ public class EmployeePhoneDepositService {
         }
     }
 
-    public RestResponse batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
+    private RestResponse batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
             CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
