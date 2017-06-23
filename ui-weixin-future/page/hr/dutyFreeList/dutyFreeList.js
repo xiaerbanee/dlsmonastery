@@ -50,6 +50,13 @@ Page({
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
+            for (var item in res.data.content) {
+              var actionList = new Array();
+              if (res.data.content[item].deleted) {
+                actionList.push("删除");
+              }
+              res.data.content[item].actionList = actionList;
+            }
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -98,11 +105,15 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
+    var itemList = that.data.activeItem.actionList;
+    if (itemList.length==0) {
+      return;
+    }
     wx.showActionSheet({
-      itemList: ["删除"],
+      itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (res.tapIndex == 0) {
+          if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("basic/hr/dutyFree/delete"),
               data: { id: id },

@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,20 +41,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-            .and()
-                .authorizeRequests().antMatchers("/**").permitAll()
-                .anyRequest().authenticated()
-            .and()
-                .httpBasic();
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+                .requestMatchers()
+                .antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
+                .and()
+                .authorizeRequests()
+                .anyRequest().authenticated().and().csrf().disable();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new CustomPasswordEncoder();
     }
+
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

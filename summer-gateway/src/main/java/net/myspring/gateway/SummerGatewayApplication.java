@@ -1,12 +1,11 @@
 package net.myspring.gateway;
 
-import net.myspring.gateway.fiter.AccessFilter;
+import net.myspring.gateway.filter.LoginFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -18,7 +17,8 @@ public class SummerGatewayApplication {
 	}
 
 	@Bean
-	public AccessFilter accessFilter() {
-		return new AccessFilter();
+	public LoginFilter loginFilter() {
+		return new LoginFilter();
 	}
+
 }

@@ -1,6 +1,5 @@
 package net.myspring.basic.common.config;
 
-import feign.RequestInterceptor;
 import feign.codec.Decoder;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.ObjectFactory;
@@ -17,11 +16,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  */
 @Configuration
 public class FeignConfig {
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor() {
-        return new OAuth2FeignRequestInterceptor();
-    }
-
     @Bean
     public Decoder feignDecoder() {
         HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(ObjectMapperUtils.getObjectMapper());

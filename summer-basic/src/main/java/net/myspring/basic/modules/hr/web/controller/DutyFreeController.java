@@ -7,6 +7,7 @@ import net.myspring.basic.modules.hr.service.DutyFreeService;
 import net.myspring.basic.modules.hr.web.form.DutyFreeForm;
 import net.myspring.basic.modules.hr.web.query.DutyFreeQuery;
 import net.myspring.basic.modules.hr.web.validator.DutyFreeValidator;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class DutyFreeController {
     public Page<DutyFreeDto> list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         dutyFreeQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyFreeDto> page = dutyFreeService.findPage(pageable, dutyFreeQuery);
+        for(DutyFreeDto dutyFreeDto:page.getContent()){
+            setOperationStatus(dutyFreeDto);
+        }
         return page;
     }
 
@@ -59,5 +63,11 @@ public class DutyFreeController {
         }
         dutyFreeService.save(dutyFreeForm);
         return new RestResponse("保存成功",null);
+    }
+
+    private void setOperationStatus(DutyFreeDto dutyFreeDto){
+        if(dutyFreeDto.getCreatedBy().equals(RequestUtils.getAccountId())&& AuditTypeEnum.APPLY.getValue().equals(dutyFreeDto.getStatus())){
+            dutyFreeDto.setDeleted(true);
+        }
     }
 }

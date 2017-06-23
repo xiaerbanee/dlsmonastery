@@ -136,7 +136,13 @@
           type: 'info'
         }).then(() => {
           this.$store.dispatch('clearGlobal');
-          window.location.reload();
+          axios.post('/user/logout').then(()=>{
+            axios.post('/logout').then(()=>{
+              window.location.reload();
+            }).catch(function () {
+            });
+          }).catch(function () {
+          });
         }).catch(() => {});
       },changeLang(lang) {
         this.$store.dispatch('setLang',lang);

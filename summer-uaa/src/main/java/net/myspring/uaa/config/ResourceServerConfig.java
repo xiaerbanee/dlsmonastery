@@ -1,4 +1,4 @@
-package net.myspring.gateway.config;
+package net.myspring.uaa.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,9 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/user/login").permitAll().anyRequest().authenticated();
     }
 }
