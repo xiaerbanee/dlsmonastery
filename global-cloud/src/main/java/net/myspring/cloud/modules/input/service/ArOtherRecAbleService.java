@@ -115,7 +115,7 @@ public class ArOtherRecAbleService {
             if(StringUtils.isNotBlank(customerForName)){
                 entityDto.setCustomerForNumber(customerNameMap.get(customerForName));
             }
-            entityDto.setDepartmentNumber(departmentNameMap.get(departmentName));
+            entityDto.setCostDepartmentNumber(departmentNameMap.get(departmentName));
             entityDto.setAmount(amount);
             entityDto.setAccountNumber(accountNameMap.get(accountName));
             entityDto.setComment(remarks);
@@ -166,6 +166,22 @@ public class ArOtherRecAbleService {
             kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
         }
         return kingdeeSynDtoList;
+    }
+
+    public List<KingdeeSynDto> saveForShopDeposit(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        for (ArOtherRecAbleDto otherRecAbleDto : arOtherRecAbleDtoList){
+            otherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
+            otherRecAbleDto.setKingdeeName(kingdeeBook.getName());
+            List<ArOtherRecAbleFEntityDto> entityDtoList = otherRecAbleDto.getArOtherRecAbleFEntityDtoList();
+            for (ArOtherRecAbleFEntityDto entityDto : entityDtoList){
+                entityDto.setAccountNumber("2241");//其他应付款
+                entityDto.setCustomerForNumber(null);
+                entityDto.setEmpInfoNumber("0001");//员工
+                entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+                entityDto.setExpenseTypeNumber("6602.000");//无
+            }
+        }
+        return save(arOtherRecAbleDtoList,kingdeeBook,accountKingdeeBook);
     }
 
     public ArOtherRecAbleForm getForm(){

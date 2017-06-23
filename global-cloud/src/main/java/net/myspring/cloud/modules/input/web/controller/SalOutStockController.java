@@ -8,10 +8,13 @@ import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,14 +57,10 @@ public class SalOutStockController {
     }
 
     @RequestMapping(value = "saveForXSCKD",method = RequestMethod.POST)
-    public List<String> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
+    public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
-        List<String> kingdeeSynIdList = Lists.newArrayList();
-        for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
-            kingdeeSynIdList.add(kingdeeSynExtendDto.getId());
-        }
-        return kingdeeSynIdList;
+        return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
     }
 }

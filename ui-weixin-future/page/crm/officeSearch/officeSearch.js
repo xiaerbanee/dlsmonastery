@@ -31,8 +31,7 @@ Page({
             data: { name: that.data.name, type: that.data.type },
             method: 'GET',
             header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                 Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 that.setData({ officeList: res.data })

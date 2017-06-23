@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      pageNumber: 0,
-      pageSize: 10
-    },
+    formData: { },
     searchHidden: true,
     activeItem: null,
     auditList: [{ id: '0', name: '待批(需要我审核)' }, { id: '1', name: '全部' }]
@@ -40,12 +37,9 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("basic/hr/auditFile"),
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
-           },
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
-            console.log(res.data);
             for (var item in res.data.content) {
               if(res.data.content[item].content){
                 res.data.content[item].content = res.data.content[item].content.replace(/\[([^\]]+)\]/g)
@@ -60,32 +54,32 @@ Page({
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }
@@ -145,8 +139,8 @@ Page({
             wx.request({
               url: $util.getUrl("basic/hr/auditFile/delete"),
               data: { id: id },
-              header: { 'x-auth-token': app.globalData.sessionId,
-                        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+              header: {  
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
                },
               success: function (res) {
                 that.pageRequest();
@@ -172,7 +166,7 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: that.data.formData, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: that.data.formData, "formData.page": 0 });
     console.log(that.data.formData.auditTypeName)
     that.pageRequest();
   }

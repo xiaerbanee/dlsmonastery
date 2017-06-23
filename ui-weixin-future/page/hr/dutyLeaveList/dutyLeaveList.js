@@ -25,8 +25,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({
@@ -47,8 +46,7 @@ Page({
         wx.request({
           url: $util.getUrl("basic/hr/dutyLeave"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
@@ -113,20 +111,19 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     var itemList = that.data.activeItem.actionList;
-    if (itemList.length==0) {
+    if (itemList.length == 0) {
       return;
     }
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex]== "删除") {
+          if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("basic/hr/dutyLeave/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
               },
               success: function (res) {
                 that.pageRequest();

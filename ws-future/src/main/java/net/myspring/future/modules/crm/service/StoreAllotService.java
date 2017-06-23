@@ -9,6 +9,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -244,7 +245,7 @@ public class StoreAllotService {
         if(storeAllotForm.getSyn()){
             //TODO 金蝶接口调用，调用成功之后设置cloudSynId
             StoreAllotDto storeAllotDto = BeanUtil.map(storeAllotForm,StoreAllotDto.class);
-             String cloudSynId = synToCloud(storeAllotDto);
+            KingdeeSynReturnDto returnDto = synToCloud(storeAllotDto);
         }
 
         StoreAllot storeAllot = saveStoreAllot(storeAllotForm);
@@ -258,7 +259,7 @@ public class StoreAllotService {
         return storeAllot;
     }
 
-    private String synToCloud(StoreAllotDto storeAllotDto){
+    private KingdeeSynReturnDto synToCloud(StoreAllotDto storeAllotDto){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId(storeAllotDto.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
@@ -273,7 +274,7 @@ public class StoreAllotService {
             entryDto.setDestStockNumber("");
             transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
-        return cloudClient.synForStkTransferDirect(transferDirectDto);
+        return cloudClient.synStkTransferDirect(transferDirectDto);
     }
 
     private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {

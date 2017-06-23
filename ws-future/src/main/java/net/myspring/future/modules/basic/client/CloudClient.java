@@ -1,15 +1,12 @@
 package net.myspring.future.modules.basic.client;
 
-import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
-import net.myspring.cloud.modules.input.dto.SalOutStockDto;
-import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
+import net.myspring.cloud.modules.input.dto.*;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
-import net.myspring.common.response.RestResponse;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -78,11 +75,17 @@ public interface CloudClient {
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
     //银行存款日记账
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEmployeePhoneDeposit")
-    RestResponse synForJournalForBank(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    List<KingdeeSynReturnDto> synJournalBankForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    //银行存款日记账
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForShopDeposit")
+    List<KingdeeSynReturnDto> synJournalBankForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
     //标准销售出库单
     @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
-    List<String> synForSalOutStock(List<SalOutStockDto> salOutStockDtoList);
+    List<KingdeeSynReturnDto> synSalOutStock(List<SalOutStockDto> salOutStockDtoList);
     //直接调拨单
-    @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveAndReturnId")
-    String synForStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
+    @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForStoreAllot")
+    KingdeeSynReturnDto synStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
+    //其他应收单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/arOtherRecAble/saveForShopDeposit")
+    List<KingdeeSynReturnDto> synOtherRecAble(List<ArOtherRecAbleDto> arOtherRecAbleDtoList);
 }

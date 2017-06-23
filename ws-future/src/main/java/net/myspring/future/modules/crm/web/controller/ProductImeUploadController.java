@@ -65,6 +65,10 @@ public class ProductImeUploadController {
         return new RestResponse("退回成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "getForm")
+    public ProductImeUploadForm getForm(ProductImeUploadForm productImeUploadForm) {
+        return productImeUploadForm;
+    }
     @RequestMapping(value = "getQuery")
     public ProductImeUploadQuery getQuery(ProductImeUploadQuery productImeUploadQuery){
         return productImeUploadQuery;
