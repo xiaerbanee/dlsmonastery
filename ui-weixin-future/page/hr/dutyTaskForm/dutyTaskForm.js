@@ -24,9 +24,7 @@ Page({
         url: $util.getUrl("basic/hr/duty/detail"),
         data: { id: options.id, dutyType: options.dutyType },
         method: 'GET',
-        header: { 'x-auth-token': app.globalData.sessionId,
-                  'authorization': "Bearer" + wx.getStorageSync('token').access_token
-         },
+        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
           that.setData({
             dutyType: res.data.dutyType,
@@ -69,7 +67,7 @@ Page({
     wx.request({
       url: $util.getUrl("hr/duty/audit"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();

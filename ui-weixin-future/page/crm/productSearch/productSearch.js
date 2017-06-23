@@ -53,7 +53,9 @@ Page({
         wx.request({
             url: $util.getUrl('crm/product/findHasImeProduct'),
             method: 'GET',
-            header: { 'x-auth-token': app.globalData.sessionId },
+            header: {
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
+            },
             success: function (res) {
                 wx.hideToast();
             }

@@ -40,7 +40,7 @@ Page({
       wx.request({
         url: $util.getUrl("crm/productIme/search"),
         data: { imeStr: that.data.imeStr },
-        header: { 'x-auth-token': app.globalData.sessionId },
+        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
           that.setData({ productImeSearchResult: res.data });
         }

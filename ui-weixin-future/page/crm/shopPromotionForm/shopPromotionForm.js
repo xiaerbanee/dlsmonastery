@@ -22,7 +22,7 @@ Page({
       url: $util.getUrl("crm/shopPromotion/getForm"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
         console.log(res)
         that.setData({ 'formProperty.activityList': res.data.activityType })
@@ -116,7 +116,7 @@ Page({
     wx.request({
       url: $util.getUrl("crm/shopPromotion/save"),
       data: e.detail.value,
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
@@ -144,7 +144,7 @@ Page({
       url: $util.getUrl("crm/shopPromotion/detail"),
       data: { id: that.data.options.id },
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         that.setData({ formData: res.data })
         that.setData({ 'formProperty.activityImage1': $util.getImages(res.data.activityImage1) })

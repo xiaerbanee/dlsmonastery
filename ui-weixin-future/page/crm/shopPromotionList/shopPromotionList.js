@@ -4,10 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      pageNumber: 0,
-      pageSize: 10
-    },
+    formData: {},
     formProperty:{},
     activeItem: null,
     searchHidden: true
@@ -18,7 +15,7 @@ Page({
       url: $util.getUrl("crm/shopPromotion/getQuery"),
       data: {},
       method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         that.setData({ 'formProperty.activityList': res.data.activityType })
       }
@@ -43,7 +40,7 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("crm/shopPromotion"),
-          header: { 'x-auth-token': app.globalData.sessionId },
+          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
             that.setData({ page: res.data });
@@ -112,7 +109,7 @@ Page({
             wx.request({
               url: $util.getUrl("crm/shopPromotion/delete"),
               data: { id: id },
-              header: {'x-auth-token': app.globalData.sessionId},
+              header: {Cookie: "JSESSIONID=" + app.globalData.sessionId},
               success: function (res) {
                 that.pageRequest();
               }
@@ -124,37 +121,37 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

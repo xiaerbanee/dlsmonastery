@@ -25,8 +25,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ formData: res.data });
@@ -39,8 +38,7 @@ Page({
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ 'formProperty.processList': res.data })
@@ -57,19 +55,18 @@ Page({
         wx.request({
           url: $util.getUrl("ws/future/layout/shopAd"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            let content= res.data.content;
+            let content = res.data.content;
             for (var item in content) {
               var actionList = new Array();
               actionList.push("详细");
-              if (content[item].isAuditable&&content[item].processStatus!=="已通过"&&content[item].processStatus!=="未通过") {
+              if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
                 actionList.push("审核");
               }
-              if (content[item].isEditable&&content[item].processStatus!=="已通过"&&content[item].processStatus!=="未通过") {
+              if (content[item].isEditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
                 actionList.push("修改", "删除");
               }
               res.data.content[item].actionList = actionList;
@@ -154,8 +151,7 @@ Page({
               url: $util.getUrl("ws/future/layout/shopAd/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
               },
               success: function (res) {
                 that.pageRequest();
