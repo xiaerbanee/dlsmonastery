@@ -4,6 +4,7 @@ import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.ProductType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,7 +14,7 @@ public class ProductTypeForm extends BaseForm<ProductType> {
     private Boolean scoreType;
     private String code;
     private BigDecimal baokaPrice;
-    private List<String> productIdList;
+    private List<String> productIdList=new ArrayList<>();
 
     private BigDecimal price1;
     private BigDecimal price2;

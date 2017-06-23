@@ -7,7 +7,7 @@
           <el-input  v-model.number="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.productType')" prop="productTypeIdList">
-          <product-type-select  v-model="inputForm.productTypeIdList" :multiple=true></product-type-select>
+          <product-type-select  v-model="inputForm.productTypeIdList" :multiple="true"></product-type-select>
         </el-form-item>
         <el-form-item :label="$t('demoPhoneTypeForm.limitQty')" prop="limitQty">
           <el-input  v-model="inputForm.limitQty" @blur="showQty"></el-input>
@@ -55,7 +55,6 @@
               extra:{},
               demoPhoneTypeOfficeDtos:[],
           },
-
           remoteLoading:false,
           productTypes:[],
           rules: {
