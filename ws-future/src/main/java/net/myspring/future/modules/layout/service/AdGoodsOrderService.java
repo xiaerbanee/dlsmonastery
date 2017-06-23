@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AdGoodsOrderStatusEnum;
@@ -487,10 +488,10 @@ public class AdGoodsOrderService {
 
     private void synWhenBill(AdGoodsOrder adGoodsOrder) {
         //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
-        List<String> kingdeeSynIdList = batchSynToCloud(Lists.newArrayList(adGoodsOrder));
+        List<KingdeeSynReturnDto> kingdeeSynIdList = batchSynToCloud(Lists.newArrayList(adGoodsOrder));
     }
 
-    private List<String> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         for (AdGoodsOrder adGoodsOrder : adGoodsOrderList){
             SalOutStockDto salOutStockDto = new SalOutStockDto();
@@ -520,7 +521,7 @@ public class AdGoodsOrderService {
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
             salOutStockDtoList.add(salOutStockDto);
         }
-        return cloudClient.synForSalOutStock(salOutStockDtoList);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }
 

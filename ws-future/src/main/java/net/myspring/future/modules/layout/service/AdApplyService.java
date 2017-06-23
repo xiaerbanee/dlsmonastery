@@ -7,6 +7,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -289,7 +290,7 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
     }
 
-    private List<String> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
@@ -332,7 +333,7 @@ public class AdApplyService {
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
             salOutStockDtoList.add(salOutStockDto);
         }
-        return cloudClient.synForSalOutStock(salOutStockDtoList);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }
 
