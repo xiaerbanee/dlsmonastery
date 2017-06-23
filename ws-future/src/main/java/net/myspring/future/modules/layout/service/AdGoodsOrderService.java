@@ -519,7 +519,7 @@ public class AdGoodsOrderService {
         }
         salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
 
-        cloudClient.synForSalOutStock(Collections.singletonList(salOutStockDto));
+        cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto));
         //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
 
     }
