@@ -58,17 +58,17 @@
       },
       formSubmit(){
         var that = this;
-        this.submitDisabled = true;
+        this.submitDisabled=true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/basic/sys/officeRule/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
-              if(!this.inputForm.create){
+              if(!that.isCreate){
                 this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList")})
               }
-            }).catch(function () {
+            }).catch( ()=> {
               this.submitDisabled = false;
             });
           }else{
