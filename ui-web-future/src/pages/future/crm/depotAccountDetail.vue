@@ -2,7 +2,7 @@
   <div>
     <head-tab active="depotAccountDetail"></head-tab>
     <div>
-      <el-table :data="depotAccountDetailList"  style="margin-top:5px;"  :element-loading-text="$t('depotAccountDetail.loading')" stripe border :row-class-name="tableRowClassName">
+      <el-table :data="depotAccountDetailList"  :pageHeight="pageHeight" style="margin-top:5px;"  :element-loading-text="$t('depotAccountDetail.loading')" stripe border :row-class-name="tableRowClassName">
         <el-table-column fixed prop="billType" :label="$t('depotAccountDetail.billType')" width="330px"></el-table-column>
         <el-table-column prop="billNo" :label="$t('depotAccountDetail.billNo')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('depotAccountDetail.date')"></el-table-column>
@@ -23,6 +23,7 @@
     data(){
       return{
         depotAccountDetailList:[],
+        pageHeight: 600,
         }
     },
     methods:{
@@ -35,8 +36,9 @@
       }
     },
     created(){
+      this.pageHeight = window.outerHeight -320;
 
-      axios.get('/api/global/cloud/report/customerReceive/list',{params: {customerIdList:[this.$route.query.clientOutId], dateRange:this.$route.query.dutyDateRange}}).then((response)=>{
+      axios.get('/api/ws/future/basic/depot/findDepotAccountDetailList',{params:{clientOutId:this.$route.query.clientOutId, dateRange:this.$route.query.dateRange}} ).then((response)=>{
 
           if(response.data){
             this.depotAccountDetailList=response.data;

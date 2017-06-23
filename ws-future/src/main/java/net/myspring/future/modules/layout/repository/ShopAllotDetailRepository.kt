@@ -3,39 +3,34 @@ package net.myspring.future.modules.layout.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopAllotDetail
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto
+import net.myspring.future.modules.layout.dto.ShopAllotDetailSimpleDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.math.BigDecimal
 import java.util.*
 
 
 interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>, ShopAllotDetailRepositoryCustom{
-
-    fun deleteByShopAllotId(shopAllotId: String)
-
-    fun findByShopAllotId(shopAllotId: String) :List<ShopAllotDetail>
-
 }
-
 
 interface ShopAllotDetailRepositoryCustom{
     fun getShopAllotDetailListForViewOrAudit(shopAllotId: String): MutableList<ShopAllotDetailDto>
 
-    fun getShopAllotDetailListForEdit(shopAllotId: String, fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto>
+    fun getShopAllotDetailListForEdit(shopAllotId: String, fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailSimpleDto>
 
-    fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto>
+    fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailSimpleDto>
 
 }
 
 class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ShopAllotDetailRepositoryCustom {
 
-    override fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto> {
+    override fun getShopAllotDetailListForNew(fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("fromDepotId",fromDepotId)
         paramMap.put("toDepotId",toDepotId)
         return namedParameterJdbcTemplate.query("""
         SELECT
+          NULL id,
           t1.id productId,
           t1.name productName,
           NULL qty
@@ -47,17 +42,18 @@ class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdb
           AND t1.id IN ( SELECT t3.product_id FROM crm_pricesystem_detail t3 WHERE  t3.pricesystem_id = (SELECT depot2.pricesystem_id from crm_depot depot2 where depot2.id = :toDepotId) )
         ORDER BY
             qty DESC
-          """, paramMap, BeanPropertyRowMapper(ShopAllotDetailDto::class.java))
+          """, paramMap, BeanPropertyRowMapper(ShopAllotDetailSimpleDto::class.java))
     }
 
 
-    override fun getShopAllotDetailListForEdit(shopAllotId: String , fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailDto> {
+    override fun getShopAllotDetailListForEdit(shopAllotId: String , fromDepotId: String, toDepotId: String): MutableList<ShopAllotDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("shopAllotId",shopAllotId)
         paramMap.put("fromDepotId",fromDepotId)
         paramMap.put("toDepotId",toDepotId)
         return namedParameterJdbcTemplate.query("""
        SELECT
+            result.id,
             result.productId,
             result.productName,
             result.qty
@@ -65,6 +61,7 @@ class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdb
             (
                 (
                     SELECT
+                        t1.id id,
                         t1.product_id productId,
                         t2.name productName,
                         t1.qty
@@ -78,6 +75,7 @@ class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdb
                 UNION ALL
                     (
                         SELECT
+                            NULL id,
                             t1.id productId,
                             t1.name productName,
                             NULL qty
@@ -96,7 +94,7 @@ class ShopAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdb
             ) result
         ORDER BY
             result.qty DESC
-          """, paramMap, BeanPropertyRowMapper(ShopAllotDetailDto::class.java))
+          """, paramMap, BeanPropertyRowMapper(ShopAllotDetailSimpleDto::class.java))
     }
 
     override fun getShopAllotDetailListForViewOrAudit(shopAllotId: String): MutableList<ShopAllotDetailDto> {

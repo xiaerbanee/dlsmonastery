@@ -57,6 +57,7 @@
       return{
         adGoodsOrder:{},
         adGoodsOrderDetailList:[],
+        submitDisabled:false,
       }
     },
     methods:{

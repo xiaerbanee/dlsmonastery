@@ -3,7 +3,7 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllotDetail
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,16 +17,16 @@ interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> 
 
 interface StoreAllotDetailRepositoryCustom{
 
-    fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String,  companyId: String): MutableList<SimpleStoreAllotDetailDto>
+    fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String,  companyId: String): MutableList<StoreAllotDetailSimpleDto>
 
     fun findByStoreAllotIds(storeAllotIdList: MutableList<String>): MutableList<StoreAllotDetailDto>
 
-    fun findStoreAllotDetailListForNew(companyId: String): MutableList<SimpleStoreAllotDetailDto>
+    fun findStoreAllotDetailListForNew(companyId: String): MutableList<StoreAllotDetailSimpleDto>
 
 }
 
 class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): StoreAllotDetailRepositoryCustom{
-    override fun findStoreAllotDetailListForNew(companyId: String): MutableList<SimpleStoreAllotDetailDto> {
+    override fun findStoreAllotDetailListForNew(companyId: String): MutableList<StoreAllotDetailSimpleDto> {
         return namedParameterJdbcTemplate.query("""
          SELECT
             t1.id productId
@@ -35,7 +35,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
         WHERE
             t1.enabled = 1
             AND t1.company_id = :companyId
-          """, Collections.singletonMap("companyId", companyId), MyBeanPropertyRowMapper(SimpleStoreAllotDetailDto::class.java))
+          """, Collections.singletonMap("companyId", companyId), MyBeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
     }
 
     override fun findByStoreAllotIds(storeAllotIdList: MutableList<String>): MutableList<StoreAllotDetailDto> {
@@ -48,7 +48,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
           """, Collections.singletonMap("storeAllotIdList", storeAllotIdList), MyBeanPropertyRowMapper(StoreAllotDetailDto::class.java))
     }
 
-    override fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String, companyId: String): MutableList<SimpleStoreAllotDetailDto> {
+    override fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String, companyId: String): MutableList<StoreAllotDetailSimpleDto> {
         val params = HashMap<String, Any>()
         params.put("billDate", billDate)
         params.put("toStoreId", toStoreId)
@@ -76,7 +76,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
             ) result
         GROUP BY result.productId
         ORDER BY result.billQty DESC
-                """, params, MyBeanPropertyRowMapper(SimpleStoreAllotDetailDto::class.java))
+                """, params, MyBeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
     }
 
 }

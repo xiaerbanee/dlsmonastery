@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.ProductDto;
@@ -7,6 +8,7 @@ import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.service.AdApplyService;
 import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
+import net.myspring.future.modules.layout.web.form.AdApplyBillTypeChangeForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
@@ -73,9 +75,9 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "findAdApplyList", method = RequestMethod.GET)
-    public List<AdApplyDto> findAdApplyList(String billType){
+    public AdApplyBillTypeChangeForm findAdApplyList(String billType){
         if(StringUtils.isBlank(billType)){
-            return null;
+            throw new ServiceException("未选中开单类型");
         }
         return adApplyService.findAdApplyList(billType);
     }
