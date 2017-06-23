@@ -24,7 +24,7 @@
           </el-form-item>
           <el-form-item :label="$t('accountChangeList.type')" :label-width="formLabelWidth">
             <el-select v-model="formData.type" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
-              <el-option v-for="officeRuleName in formData.extra.typeList" :key="officeRuleName" :label="officeRuleName" :value="officeRuleName"></el-option>
+              <el-option v-for="type in formData.extra.typeList" :key="type" :label="type" :value="type"></el-option>
             </el-select>
           </el-form-item>
         </el-form>

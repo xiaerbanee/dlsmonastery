@@ -1,5 +1,6 @@
 package net.myspring.uaa.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ public class CustomUserDetails implements UserDetails {
     private final String positionId;
     private final String officeId;
     private final String employeeId;
+    @JsonIgnore
     private String password;
     private String roleId;
 
