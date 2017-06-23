@@ -7,6 +7,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -110,7 +111,7 @@ public class AdApplyService {
     }
 
     public AdApplyForm getForm(AdApplyForm adApplyForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyForm.getExtra().put("billTypes",billTypes);
@@ -118,7 +119,7 @@ public class AdApplyService {
     }
 
     public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
@@ -138,6 +139,13 @@ public class AdApplyService {
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
+        //同步财务库存
+       /* Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
+        List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
+        List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
+        for(StkInventory stkInventory:stkInventories){
+            adApplyDtoMap.get(stkInventory.getFMaterialId()).setStoreQty(stkInventory.getFBaseQty());
+        }*/
         cacheUtils.initCacheInput(adApplyDtos);
         adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
         return adApplyBillTypeChangeForm;
@@ -348,7 +356,7 @@ public class AdApplyService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leftQty", "待开单数"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByFilter(adApplyQuery);
