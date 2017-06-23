@@ -61,7 +61,7 @@
                 if(!that.isCreate){
                   this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList")})
                 }
-              }).catch(function () {
+              }).catch( ()=> {
                 that.submitDisabled = false;
               });
             }else{
