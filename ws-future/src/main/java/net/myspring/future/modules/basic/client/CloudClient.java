@@ -78,7 +78,10 @@ public interface CloudClient {
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
     //银行存款日记账
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEmployeePhoneDeposit")
-    RestResponse synForJournalForBank(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    RestResponse synForJournalBankForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    //银行存款日记账
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForShopDeposit")
+    RestResponse synForJournalBankForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
     //标准销售出库单
     @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
     List<String> synForSalOutStock(List<SalOutStockDto> salOutStockDtoList);

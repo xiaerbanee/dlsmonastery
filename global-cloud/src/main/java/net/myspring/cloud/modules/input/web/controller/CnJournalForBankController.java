@@ -71,4 +71,21 @@ public class CnJournalForBankController {
         }
         return restResponse;
     }
+
+    @RequestMapping(value = "saveForShopDeposit", method= RequestMethod.POST)
+    public RestResponse saveForShopDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
+        RestResponse restResponse = new RestResponse("銀行存取款日记账失败：" ,null, false);
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+            if (kingdeeSynDto.getSuccess()) {
+                restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+            } else {
+                System.err.println(kingdeeSynDto.getResult());
+                restResponse = new RestResponse("銀行存取款日记账失败：" + kingdeeSynDto.getResult(), null, false);
+            }
+        }
+        return restResponse;
+    }
 }

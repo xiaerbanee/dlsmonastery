@@ -2,8 +2,12 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -117,6 +121,28 @@ public class ShopDepositService {
 //            list.add(item.getId());
         }
 
+    }
+
+    private RestResponse synForJournalBank(List<ShopDepositDto> shopDepositDtoList){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+        for (ShopDepositDto shopDepositDto : shopDepositDtoList) {
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId(shopDepositDto.getId());//单据ID值
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
+            cnJournalForBankDto.setDate(null);
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            entityForBankDto.setDebitAmount(shopDepositDto.getAmount());
+            entityForBankDto.setCreditAmount(shopDepositDto.getAmount().multiply(new BigDecimal(-1)));
+            entityForBankDto.setDepartmentNumber("");
+            entityForBankDto.setBankAccountNumber("");
+            entityForBankDto.setComment("");
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+        }
+        return cloudClient.synForJournalBankForShopDeposit(cnJournalForBankDtoList);
     }
 
     public ShopDepositDto findDto(String id) {
