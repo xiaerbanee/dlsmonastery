@@ -86,13 +86,15 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
                 left join crm_product t3 on t1.bad_product_id=t3.id
                 left join crm_depot t4 on t1.bad_depot_id=t4.id
-                left join crm_after_sale_detail t5 on t5.after_sale_id=t1.id
+                left join crm_after_sale_flee t8 on t8.after_sale_id=t1.id,
+                crm_after_sale_detail t5
                 left join crm_depot t6 on t5.from_depot_id=t6.id
                 left join crm_depot t7 on t5.to_depot_id=t7.id
-                left join crm_after_sale_flee t8 on t8.after_sale_id=t1.id
                 left join crm_product_ime t9 on t5.replace_product_ime_id=t9.id
              WHERE
                  t1.enabled=1
+                and t5.enabled=1
+                and t5.after_sale_id=t1.id
             """)
             if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
                 sb.append(""" and( t2.ime in (:imeList)  or t8.ime in(:imeList))""")

@@ -45,6 +45,13 @@ Page({
                     },
                     data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
+                        for (var item in res.data.content) {
+                            var actionList = new Array();
+                            actionList.push("详细");
+                            if (item.deleted) {
+                                actionList.push("删除");
+                            }
+                        }
                         that.setData({ page: res.data });
                         wx.hideToast();
                     }
@@ -89,15 +96,19 @@ Page({
     showItemActionSheet: function (e) {
         var that = this;
         var id = e.currentTarget.dataset.id;
+        var itemList = that.data.activeItem.actionList;
+        if (!itemList) {
+            return;
+        }
         wx.showActionSheet({
-            itemList: ["详细", "删除"],
+            itemList: itemList,
             success: function (res) {
                 if (!res.cancel) {
-                    if (res.tapIndex == 0) {
+                    if (itemList[res.tapIndex] == '详细') {
                         wx.navigateTo({
                             url: '/page/hr/dutySignForm/dutySignForm?action=detail&id=' + id
                         })
-                    } else if (res.tapIndex == 1) {
+                    } else if (res.tapIndex == '删除') {
                         wx.request({
                             url: $util.getUrl("basic/hr/dutySign/delete"),
                             data: { id: id },
