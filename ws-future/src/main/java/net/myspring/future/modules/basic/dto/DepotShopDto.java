@@ -39,6 +39,7 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String address;
     private String chainType;
     private boolean doorHead;
+    private boolean specialityStore;
 
     public boolean isDoorHead() {
         return doorHead;
@@ -254,5 +255,13 @@ public class DepotShopDto extends DataDto<DepotShop>{
 
     public void setDepotName(String depotName) {
         this.depotName = depotName;
+    }
+
+    public boolean isSpecialityStore() {
+        return specialityStore;
+    }
+
+    public void setSpecialityStore(boolean specialityStore) {
+        this.specialityStore = specialityStore;
     }
 }
