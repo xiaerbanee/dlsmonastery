@@ -29,8 +29,7 @@ Page({
         'authorization': "Bearer" + wx.getStorageSync('token').access_token
       },
       success: function (res) {
-        console.log(res.data)
-        that.setData({ formData: res.data});
+        that.setData({ formData: res.data });
         that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
         that.pageRequest();
       }
@@ -63,6 +62,18 @@ Page({
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
+            let content= res.data.content;
+            for (var item in content) {
+              var actionList = new Array();
+              actionList.push("详细");
+              if (content[item].isAuditable&&content[item].processStatus!=="已通过"&&content[item].processStatus!=="未通过") {
+                actionList.push("审核");
+              }
+              if (content[item].isEditable&&content[item].processStatus!=="已通过"&&content[item].processStatus!=="未通过") {
+                actionList.push("修改", "删除");
+              }
+              res.data.content[item].actionList = actionList;
+            }
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -121,20 +132,24 @@ Page({
   showActionSheet: function (e) {
     var that = this;
     var id = e.currentTarget.dataset.id;
+    var itemList = that.data.activeItem.actionList;
+    if (itemList.length == 0) {
+      return;
+    }
     wx.showActionSheet({
-      itemList: ["修改", "详细", "删除", "审核"],
+      itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (res.tapIndex == 0) {
+          if (itemList[res.tapIndex] == "修改") {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=update&id=' + id
             })
-          } else if (res.tapIndex == 1) {
+          } else if (itemList[res.tapIndex] == "详细") {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=detail&id=' + id
             })
           }
-          else if (res.tapIndex == 2) {
+          else if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("ws/future/layout/shopAd/delete"),
               data: { id: id },
@@ -146,7 +161,7 @@ Page({
                 that.pageRequest();
               }
             })
-          } else if (res.tapIndex == 3) {
+          } else if (itemList[res.tapIndex] == "审核") {
             wx.navigateTo({
               url: '/page/crm/shopAdForm/shopAdForm?action=audit&id=' + id
             })

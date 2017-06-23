@@ -15,7 +15,9 @@
       };
     },methods:{
       handleChange(newVal) {
-        this.$emit('input', newVal);
+        if(newVal !== this.value) {
+          this.$emit('input', newVal);
+        }
       },
       setValue(val){
           this.innerId=val;

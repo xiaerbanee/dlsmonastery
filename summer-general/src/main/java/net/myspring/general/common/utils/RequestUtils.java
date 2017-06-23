@@ -7,11 +7,13 @@ import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -59,13 +61,8 @@ public class RequestUtils {
     }
 
     private  static Map<String, String> getSecurityMap() {
-        Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
-        Map<String,String> map = Maps.newHashMap();
-        if(details instanceof  OAuth2AuthenticationDetails) {
-            OAuth2AuthenticationDetails oAuth2AuthenticationDetails = (OAuth2AuthenticationDetails)details;
-            Jwt jwt = JwtHelper.decode(oAuth2AuthenticationDetails.getTokenValue());
-            map = ObjectMapperUtils.readValue(jwt.getClaims(),Map.class);
-        }
-        return map;
+        OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
+        LinkedHashMap principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+        return principal;
     }
 }
