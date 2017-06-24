@@ -1,12 +1,12 @@
 function getUrl(url) {
-    var baseUrl =  "http://localhost:1200/api/";
-    var result = baseUrl + url;
-    if(url.indexOf("?") > 0) {
-        result = result + "&requestClient=weixin";
-    } else {
-        result = result + "?requestClient=weixin";
-    }
-    return result;
+  var baseUrl = "http://localhost:1200/api/";
+  var result = baseUrl + url;
+  if (url.indexOf("?") > 0) {
+    result = result + "&requestClient=weixin";
+  } else {
+    result = result + "?requestClient=weixin";
+  }
+  return result;
 }
 
 function formatDate(date, format) {
@@ -53,7 +53,7 @@ function formatLocalDateTime(date) {
 }
 
 function trim(value) {
-  if(!value) {
+  if (!value) {
     return "";
   }
   return value.replace(/(^\s*)|(\s*$)/g, "");
@@ -127,7 +127,7 @@ function getFirstDayOfMonth(date) {
   return date;
 }
 
-function getImages(imageStr,sessionId) {
+function getImages(imageStr, sessionId) {
   var that = this;
   var images = new Array();
   if (imageStr && imageStr != "") {
@@ -155,22 +155,48 @@ function getImageStr(images) {
 }
 
 function getFormatOfficeName(name) {
-  if(!name) {
+  if (!name) {
     return name;
   } else {
-    return name.replace("办事处","");
+    return name.replace("办事处", "");
   }
 }
 
 function deleteExtra(json) {
-    var newJson = JSON.parse(JSON.stringify(json));
-    delete newJson.extra;
-    for(var index in newJson){
-        if(!newJson[index]){
-            delete newJson[index];
-        }
+  var newJson = JSON.parse(JSON.stringify(json));
+  delete newJson.extra;
+  for (var index in newJson) {
+    if (!newJson[index]) {
+      delete newJson[index];
     }
-    return newJson;
+  }
+  return newJson;
+}
+
+function downloadFile(images, id, sessionId,count, cb) {
+  var idList = id.split(",");
+  getFile(images, idList, sessionId,count, cb);
+}
+
+function getFile(images, idList, sessionId,count, cb) {
+  var id = idList.pop()
+  wx.downloadFile({
+    url: getUrl("general/sys/folderFile/download?id=" + id),
+    header: { Cookie: "JSESSIONID=" + sessionId },
+    success: function (res) {
+      images.push({
+        id: id,
+        preview: res.tempFilePath,
+        view: res.tempFilePath
+      })
+      if (idList.length > 0) {
+        getFile(images, idList, sessionId)
+      } else {
+        images.splice(0,images.length-count)
+        typeof cb == "function" && cb();
+      }
+    }
+  })
 }
 
 module.exports = {
@@ -187,9 +213,10 @@ module.exports = {
   getNextPageNumber: getNextPageNumber,
   getPageList: getPageList,
   getFirstDayOfMonth: getFirstDayOfMonth,
-  getImages:getImages,
-  getImageStr:getImageStr,
-  getUrl:getUrl,
-  getFormatOfficeName:getFormatOfficeName,
-  deleteExtra:deleteExtra
+  getImages: getImages,
+  getImageStr: getImageStr,
+  getUrl: getUrl,
+  getFormatOfficeName: getFormatOfficeName,
+  deleteExtra: deleteExtra,
+  downloadFile: downloadFile
 }
