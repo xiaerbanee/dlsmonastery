@@ -6,12 +6,15 @@ import net.myspring.basic.modules.hr.service.DutyAnnualService;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
@@ -34,14 +37,15 @@ public class DutyAnnualController {
     }
 
     @RequestMapping(value = "import/template", method = RequestMethod.GET)
-    public String impotTemplate() throws IOException {
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return dutyAnnualService.findSimpleExcelSheet(workbook);
+    public ModelAndView impotTemplate() throws IOException {
+        SimpleExcelBook simpleExcelSheet = dutyAnnualService.findSimpleExcelSheet();
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView, "simpleExcelBook", simpleExcelSheet);
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public RestResponse importFile(@RequestParam(value = "mongoId", required = true) String mongoId, String annualYear, String remarks) {
-        dutyAnnualService.save(mongoId, annualYear, remarks);
+    public RestResponse importFile(@RequestParam(value = "folderFileId", required = true) String folderFileId, String annualYear, String remarks) {
+        dutyAnnualService.save(folderFileId, annualYear, remarks);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

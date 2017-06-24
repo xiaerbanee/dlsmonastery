@@ -2,6 +2,7 @@ package net.myspring.util.excel;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -41,7 +42,7 @@ public class ExcelUtils {
                 }
             }
         }
-        return getInputStream(workbook);
+        return null;
     }
 
     public static ByteArrayInputStream doWrite(Workbook workbook, SimpleExcelSheet simpleExcelSheet) {
@@ -51,7 +52,29 @@ public class ExcelUtils {
         } else {
             doWriteSheet(sheet, simpleExcelSheet);
         }
-        return getInputStream(workbook);
+        return null;
+    }
+
+    public static Workbook getWorkbook(File file) {
+        Workbook workbook = null;
+        String fileName = file.getName();
+        InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(file);
+            if (inputStream != null) {
+                if (StringUtils.isBlank(fileName)) {
+                    throw new ServiceException("文件不可为空");
+                } else if (fileName.toLowerCase().endsWith("xls")) {
+                    workbook = new HSSFWorkbook(inputStream);
+                } else if (fileName.toLowerCase().endsWith("xlsx")) {
+                    workbook = new XSSFWorkbook(inputStream);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return workbook;
     }
 
     public static Workbook getWorkbook(String fileName, InputStream inputStream) {
