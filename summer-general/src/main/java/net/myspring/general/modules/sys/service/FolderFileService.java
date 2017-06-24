@@ -110,11 +110,11 @@ public class FolderFileService {
     }
 
     public String getUploadPath(FolderFile folderFile) {
-        return uploadRootPath + RequestUtils.getRequestEntity().getCompanyName() + "\\upload\\" + folderFile.getPhysicalName();
+        return uploadRootPath + RequestUtils.getCompanyName() + "\\upload\\" + folderFile.getPhysicalName();
     }
 
     public String getPreviewUploadPath(FolderFile folderFile) {
-        return uploadRootPath + RequestUtils.getRequestEntity().getCompanyName() + "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
+        return uploadRootPath + RequestUtils.getCompanyName() + "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
     }
 
     @Transactional(readOnly = true)

@@ -32,7 +32,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.attachment')" prop="attachment">
-                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :headers="headers" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                     <el-button size="small" type="primary">{{$t('shopPrintForm.clickUpload')}}</el-button>
                     <div slot="tip" class="el-upload__tip">{{$t('shopPrintForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
@@ -74,7 +74,6 @@
             contator: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
             mobilePhone: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')}],
           },
-          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token},
         }
       },
       formSubmit(){
@@ -91,8 +90,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList")})
+                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList"), params:{_closeFrom:true}})
                 }
               }
             }).catch(() => {

@@ -48,7 +48,7 @@ public class ShopBuildQuery extends BaseQuery {
     public String getPositionId() {
         if(StringUtils.isNotBlank(auditType)){
             if(auditType.equalsIgnoreCase("1")){
-                return RequestUtils.getRequestEntity().getPositionId();
+                return RequestUtils.getPositionId();
             }
         }
         return null;

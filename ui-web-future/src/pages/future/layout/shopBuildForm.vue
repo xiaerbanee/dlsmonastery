@@ -34,7 +34,7 @@
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -82,7 +82,6 @@
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
-          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
@@ -99,8 +98,7 @@
                     this.initPage();
                   }
                   else{
-                    this.submitDisabled = false;
-                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
+                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList"), params:{_closeFrom:true}})
                   }
                 }
               }).catch(() => {

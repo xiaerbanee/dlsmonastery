@@ -59,16 +59,7 @@ public class StoreAllotController {
             throw new ServiceException("请录入大库店调拨明细");
         }
 
-        storeAllotService.saveForm(storeAllotForm);
-//        TODO 同步金蝶
-//        if(storeAllotForm.getSyn()){
-//            k3cloudSynService.syn(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name());
-//            if(store.getExpressOrder()!=null){
-//                ExpressOrder expressOrder = store.getExpressOrder();
-//                expressOrder.setOutCode(k3cloudSynService.getOutCode(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name()));
-//                expressOrderService.save(expressOrder);
-//            }
-//        }
+        storeAllotService.save(storeAllotForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

@@ -95,7 +95,7 @@ public class AccountService {
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountList);
@@ -167,7 +167,7 @@ public class AccountService {
 
 
     public String findSimpleExcelSheet(Workbook workbook,AccountQuery accountQuery) throws IOException {
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);

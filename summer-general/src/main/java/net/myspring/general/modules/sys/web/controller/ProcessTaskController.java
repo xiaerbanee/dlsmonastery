@@ -34,7 +34,7 @@ public class ProcessTaskController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProcessTaskDto> list(ProcessTaskQuery processTaskQuery, Pageable pageable) {
         if(!adminIdList.contains(RequestUtils.getAccountId())){
-            processTaskQuery.setPositionId(RequestUtils.getRequestEntity().getPositionId());
+            processTaskQuery.setPositionId(RequestUtils.getPositionId());
         }
         Page<ProcessTaskDto> page=processTaskService.findPage(pageable,processTaskQuery);
         return page;

@@ -34,7 +34,7 @@ public class DutyFreeService {
     }
 
     public DutyFree save(DutyFreeForm dutyFreeForm) {
-        dutyFreeForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
+        dutyFreeForm.setEmployeeId(RequestUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
         DutyFree dutyFree = BeanUtil.map(dutyFreeForm, DutyFree.class);
         dutyFreeRepository.save(dutyFree);

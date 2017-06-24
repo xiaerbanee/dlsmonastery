@@ -1,12 +1,15 @@
 package net.myspring.future.modules.layout.service;
 
-import net.myspring.common.enums.AuditTypeEnum;
+import com.google.common.collect.Lists;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
 import net.myspring.future.modules.layout.domain.ShopAllot;
@@ -51,6 +54,8 @@ public class ShopAllotService {
     @Autowired
     private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
@@ -60,12 +65,23 @@ public class ShopAllotService {
     }
 
     public String checkShop(String fromShopId,String toShopId){
-        //TODO 需要检查与财务系统关联
-        StringBuffer sb = new StringBuffer();
-        Depot fromShop = depotRepository.findOne(fromShopId);
-        Depot toShop = depotRepository.findOne(toShopId);
-        if(fromShopId.equals(toShopId)){
-            sb.append("调拨前后门店不能相同");
+
+        StringBuilder sb = new StringBuilder();
+
+        for(String shopId : Lists.newArrayList(fromShopId, toShopId)){
+            if(StringUtils.isNotBlank(shopId)){
+                Depot shop = depotRepository.findOne(shopId);
+                if(StringUtils.isBlank(shop.getPricesystemId())) {
+                    sb.append(shop.getName()).append("没有绑定价格体系；");
+                }
+                if(StringUtils.isBlank(shop.getClientId()) || StringUtils.isBlank(clientRepository.findOne(shop.getClientId()).getOutCode()) ){
+                    sb.append(shop.getName()).append("没有和财务关联；");
+                }
+            }
+        }
+
+        if(StringUtils.isNotBlank(fromShopId) && StringUtils.isNotBlank(toShopId) && fromShopId.equals(toShopId)){
+            sb.append("调拨前后门店不能相同；");
         }
         return sb.toString();
     }
@@ -75,9 +91,7 @@ public class ShopAllotService {
     }
 
     public ShopAllotDto findDto(String id) {
-        ShopAllotDto shopAllotDto = shopAllotRepository.findShopAllotDto(id);
-        cacheUtils.initCacheInput(shopAllotDto);
-        return shopAllotDto;
+        return shopAllotRepository.findShopAllotDto(id);
     }
 
     public ShopAllot save(ShopAllotForm shopAllotForm) {
@@ -210,13 +224,34 @@ public class ShopAllotService {
 
     public ShopAllotDto findDtoForViewOrAudit(String id) {
         ShopAllotDto shopAllotDto = findDto(id);
-        //TODO 如果是申请状态，需要看到两个门店的应收
-        if(AuditTypeEnum.APPLY.toString().equals(shopAllotDto.getStatus())) {
-//            cloudClient.getCustomerReceiveList();
-//            shopAllotDto.setFromShopShouldGet();
-//            shopAllotDto.setToShopShouldGet();
-//            shopAllot.getFromShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getFromShop().getOutId()));
-//            shopAllot.getToShop().setShouldGet(k3cloudService.findShouldGet(company.getOutDbname(),shopAllot.getToShop().getOutId()));
+
+        if(AuditStatusEnum.申请中.name().equals(shopAllotDto.getStatus())) {
+            List<String> customerIdList = new ArrayList<>();
+            if(StringUtils.isNotBlank(shopAllotDto.getFromShopClientOutId())){
+                customerIdList.add(shopAllotDto.getFromShopClientOutId());
+            }
+            if(StringUtils.isNotBlank(shopAllotDto.getToShopClientOutId())){
+                customerIdList.add(shopAllotDto.getToShopClientOutId());
+            }
+            if(CollectionUtil.isEmpty(customerIdList)){
+                return shopAllotDto ;
+            }
+
+            CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+            customerReceiveQuery.setDateStart(LocalDate.now().toString());
+            customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+            customerReceiveQuery.setCustomerIdList(customerIdList);
+
+            List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+            Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList,"customerId");
+
+            if(StringUtils.isNotBlank(shopAllotDto.getFromShopClientOutId())){
+                shopAllotDto.setFromShopShouldGet(customerReceiveDtoMap.get(shopAllotDto.getFromShopClientOutId()).getEndShouldGet());
+            }
+
+            if(StringUtils.isNotBlank(shopAllotDto.getToShopClientOutId())){
+                shopAllotDto.setToShopShouldGet(customerReceiveDtoMap.get(shopAllotDto.getToShopClientOutId()).getEndShouldGet());
+            }
         }
         return shopAllotDto;
     }

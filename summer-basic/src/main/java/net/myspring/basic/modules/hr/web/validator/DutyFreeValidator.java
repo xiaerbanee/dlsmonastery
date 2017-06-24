@@ -40,7 +40,7 @@ public class DutyFreeValidator implements Validator {
             if (ChronoUnit.DAYS.between(dutyFree.getFreeDate(), LocalDateTime.now()) > 10) {
                 errors.rejectValue("freeDate", "error.freeDate", "只能申请10天内数据");
             }
-            List<DutyFree> freeList = dutyFreeService.findByDate(dutyFree.getFreeDate(), RequestUtils.getRequestEntity().getEmployeeId());
+            List<DutyFree> freeList = dutyFreeService.findByDate(dutyFree.getFreeDate(), RequestUtils.getEmployeeId());
             List<String> dateTypes = CollectionUtil.extractToList(freeList, "dateType");
             boolean isNotCross = CollectionUtil.isEmpty(dateTypes) || (!DutyDateTypeEnum.全天.name().equals(dutyFree.getDateType()) && !dateTypes.contains(DutyDateTypeEnum.全天.name()) && !dateTypes.contains(dutyFree.getDateType()));
             if (!isNotCross) {

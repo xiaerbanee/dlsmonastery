@@ -32,7 +32,7 @@
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.attachment')" prop="attachment">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告申请" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告申请" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopAdForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopAdForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -73,7 +73,6 @@
             width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
             qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
           },
-          headers:{Authorization:'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
@@ -89,8 +88,7 @@
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
+                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList"), params:{_closeFrom:true}})
                 }
               }
             }).catch(()=> {

@@ -9,11 +9,11 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
@@ -21,8 +21,10 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.ProductIme;
@@ -59,6 +61,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -91,6 +94,8 @@ public class StoreAllotService {
     private RedisTemplate redisTemplate;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -235,45 +240,48 @@ public class StoreAllotService {
 
     }
 
-    public StoreAllot saveForm(StoreAllotForm storeAllotForm) {
+    public void save(StoreAllotForm storeAllotForm) {
         //大库调拨单只允许新增和删除，不能修改
         if(!storeAllotForm.isCreate()){
             throw new ServiceException("大库调拨不允许修改");
         }
 
-        if(storeAllotForm.getSyn()){
-            //TODO 金蝶接口调用，调用成功之后设置cloudSynId
-            StoreAllotDto storeAllotDto = BeanUtil.map(storeAllotForm,StoreAllotDto.class);
-            KingdeeSynReturnDto returnDto = synToCloud(storeAllotDto);
-        }
-
+        Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(storeAllotForm.getStoreAllotDetailList(), "productId"));
         StoreAllot storeAllot = saveStoreAllot(storeAllotForm);
-        saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailList());
-        ExpressOrder expressOrder = saveExpressOrder(storeAllot, storeAllotForm);
+        List<StoreAllotDetail> storeAllotDetailList = saveStoreAllotDetails(storeAllot.getId(), storeAllotForm.getStoreAllotDetailList());
+        ExpressOrder expressOrder = saveExpressOrder(storeAllot, storeAllotForm, productMap);
 
-        storeAllot.setExpressOrderId(expressOrder.getId());
-//       TODO  需要设置财务返回的id storeAllot.setCloudSynId();
-        storeAllotRepository.save(storeAllot);
-
-        return storeAllot;
+        if(Boolean.TRUE.equals(storeAllotForm.getSyn())){
+            synToCloud(storeAllot, storeAllotDetailList, expressOrder, productMap);
+        }
     }
 
-    private KingdeeSynReturnDto synToCloud(StoreAllotDto storeAllotDto){
+    private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList, ExpressOrder expressOrder, Map<String, Product> productMap){
+
+        DepotStore fromDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(storeAllot.getFromStoreId());
+        DepotStore toDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(storeAllot.getToStoreId());
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId(storeAllotDto.getId());
+        transferDirectDto.setExtendId(storeAllot.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
-        transferDirectDto.setNote(storeAllotDto.getRemarks());
-        transferDirectDto.setDate(storeAllotDto.getBillDate());
-        List<StoreAllotDetailDto> storeAllotDetailList = storeAllotDto.getStoreAllotDetailDtoList();
-        for (StoreAllotDetailDto detailDto : storeAllotDetailList){
+        transferDirectDto.setNote(storeAllot.getRemarks());
+        transferDirectDto.setDate(storeAllot.getBillDate());
+
+        for (StoreAllotDetail detail : detailList){
             StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-            entryDto.setQty(detailDto.getQty());
-            entryDto.setMaterialNumber("");
-            entryDto.setSrcStockNumber(""); //调出仓库
-            entryDto.setDestStockNumber("");//调入仓库
+            entryDto.setQty(detail.getQty());
+            entryDto.setMaterialNumber(productMap.get(detail.getProductId()).getCode());
+            entryDto.setSrcStockNumber(fromDepotStore.getOutCode()); //调出仓库
+            entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
             transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
-        return cloudClient.synStkTransferDirect(transferDirectDto);
+        KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synStkTransferDirect(transferDirectDto);
+
+        storeAllot.setCloudSynId(kingdeeSynReturnDto.getId());
+        storeAllotRepository.save(storeAllot);
+
+        expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
+        expressOrderRepository.save(expressOrder);
+
     }
 
     private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
@@ -291,11 +299,11 @@ public class StoreAllotService {
         return storeAllot;
     }
 
-    private void saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> storeAllotDetailList) {
+    private List<StoreAllotDetail> saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> detailFormList) {
         //大库调拨只有新增，没有修改
 
         List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
-        for(StoreAllotDetailForm storeAllotDetailForm : storeAllotDetailList){
+        for(StoreAllotDetailForm storeAllotDetailForm : detailFormList){
             if(storeAllotDetailForm == null || storeAllotDetailForm.getBillQty() == null || storeAllotDetailForm.getBillQty() <=0){
                 throw new ServiceException("大库的调拨明细里，调拨数量必须大于0");
             }
@@ -309,10 +317,12 @@ public class StoreAllotService {
             toBeSaved.add(storeAllotDetail);
         }
         storeAllotDetailRepository.save(toBeSaved);
+
+        return toBeSaved;
     }
 
-    private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm) {
-        //增加快递单信息
+    private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm, Map<String, Product> productMap) {
+
         ExpressOrder expressOrder = new ExpressOrder();
         expressOrder.setExtendBusinessId(storeAllot.getBusinessId());
         expressOrder.setExtendId(storeAllot.getId());
@@ -334,8 +344,7 @@ public class StoreAllotService {
             StoreAllotDetailForm storeAllotDetailForm = storeAllotForm.getStoreAllotDetailList().get(i);
             if(storeAllotDetailForm.getBillQty()!=null && storeAllotDetailForm.getBillQty()>0) {
                 totalBillQty = totalBillQty + storeAllotDetailForm.getBillQty();
-                Product product = productRepository.findOne(storeAllotDetailForm.getProductId());
-                if(product!=null && product.getHasIme()) {
+                if(productMap.get(storeAllotDetailForm.getProductId()) != null && productMap.get(storeAllotDetailForm.getProductId()).getHasIme()) {
                     mobileQty = mobileQty + storeAllotDetailForm.getBillQty();
                 }
             }
@@ -350,13 +359,16 @@ public class StoreAllotService {
         }
         expressOrder.setExpressPrintQty(expressPrintQty);
         expressOrderRepository.save(expressOrder);
-        return expressOrder;
 
+        storeAllot.setExpressOrderId(expressOrder.getId());
+        storeAllotRepository.save(storeAllot);
+
+        return expressOrder;
     }
 
     private Integer getExpressPrintQty(Integer totalBillQty) {
 
-        Integer expressPrintQty = 20; //TODO JXOPPO默認爲20  不同的公司不同，這個需要在上其它公司的時候判斷
+        Integer expressPrintQty = 20; // JXOPPO默認爲20  不同的公司不同，這個需要在上其它公司的時候判斷
 
         if(0 == totalBillQty % expressPrintQty){
             expressPrintQty = totalBillQty / expressPrintQty;
@@ -379,14 +391,11 @@ public class StoreAllotService {
     }
 
     public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
-
         List<StoreAllotDetailSimpleDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
         cacheUtils.initCacheInput(result);
-
         if(StringUtils.isNotBlank(fromStoreId)){
-//        TODO 初始化财务存量
+            fulfillCloudQty(fromStoreId, result);
         }
-
         return result;
     }
 
@@ -404,25 +413,35 @@ public class StoreAllotService {
 
         List<String> mergeIdList = getMergeStoreIds();
         if(mergeIdList == null || mergeIdList.size() <=1){
-
             throw  new ServiceException("没有正确配置该公司的MERGE_STORE_IDS");
         }
+        String fromStoreId =mergeIdList.get(0);
         String toStoreId =mergeIdList.get(1);
 
         List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货", RequestUtils.getCompanyId());
-
         cacheUtils.initCacheInput(result);
-        //TODO 初始化财务存量
+        if(StringUtils.isNotBlank(fromStoreId)){
+            fulfillCloudQty(fromStoreId, result);
+        }
 
         result.forEach((each)->{
-            if(each.getBillQty() != null && each.getBillQty()<=0 ) {
+            if(each.getBillQty() != null && each.getBillQty()==0 ) {
                 each.setBillQty(null);
             }
         });
 
-
         return result;
+    }
 
+    private void fulfillCloudQty(String fromStoreId, List<StoreAllotDetailSimpleDto> list) {
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStoreId);
+        List<StkInventory> inventoryList = cloudClient.findInventorysByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        Map<String, StkInventory> inventoryMap = CollectionUtil.extractToMap(inventoryList, "FMaterialId");
+        for(StoreAllotDetailSimpleDto storeAllotDetailSimpleDto : list){
+            if(inventoryMap.containsKey(storeAllotDetailSimpleDto.getProductOutId())){
+                storeAllotDetailSimpleDto.setCloudQty(inventoryMap.get(storeAllotDetailSimpleDto.getProductOutId()).getFBaseQty());
+            }
+        }
     }
 
     public Boolean getShowAllotType() {

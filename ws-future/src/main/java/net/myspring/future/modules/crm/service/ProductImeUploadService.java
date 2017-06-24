@@ -7,6 +7,7 @@ import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -49,6 +50,8 @@ public class ProductImeUploadService {
     private ProductImeSaleRepository productImeSaleRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private DepotManager depotManager;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
@@ -103,7 +106,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         for (ProductIme productIme : productImeList) {
@@ -138,7 +141,6 @@ public class ProductImeUploadService {
             productImeRepository.save(productIme);
 
         }
-
     }
 
     public String checkForUploadBack(List<String> imeList) {
@@ -157,9 +159,8 @@ public class ProductImeUploadService {
                     sb.append("串码：").append(ime).append("未上报，不能退回；");
                 }else if(AuditStatusEnum.已通过.name().equals(productImeDto.getProductImeUploadStatus())) {
                     sb.append("串码：").append(ime).append("的上报记录已经审核通过，不能退回；");
-                    //TODO 判断门店是否有权限
-//                } else if (!DepotUtils.isAccess(productIme.getProductImeUpload().getShop(), true)) {
-//                    message.addText("message_product_ime_upload_no_ime" + ime + "message_product_ime_upload_no_ime" + productIme.getDepotName() + "message_product_ime_upload_upload_back_permission");
+                } else if (!depotManager.isAccess(productImeDto.getProductImeUploadShopId(), true, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                    sb.append("您没有串码：").append(ime).append("所在门店的上报退回权限；");
                 }
 
             }
@@ -190,7 +191,6 @@ public class ProductImeUploadService {
                 productImeUploadRepository.save(productImeUpload);
             }
         }
-
     }
 
     public String export(ProductImeUploadQuery productImeUploadQuery) {

@@ -78,23 +78,28 @@
       },
       formSubmit(){
         this.submitDisabled = true;
-        this.inputForm.data = new Array();
-        let list = table.getData();
-        for (let item in list) {
-          if (!table.isEmptyRow(item)) {
-            this.inputForm.data.push(list[item]);
-          }
-        }
-        this.inputForm.data = JSON.stringify(this.inputForm.data);
-        axios.post('/api/ws/future/layout/adPricesystemChange/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
-          this.$message(response.data.message);
-          if(response.data.success){
-            Object.assign(this.$data, this.getData());
-            this.initPage();
-          }
-        }).catch( ()=> {
-          this.submitDisabled = false;
-        });
+        table.validateCells((valid)=>{
+            if(valid){
+              this.inputForm.data = new Array();
+              let list = table.getData();
+              for (let item in list) {
+                if (!table.isEmptyRow(item)) {
+                  this.inputForm.data.push(list[item]);
+                }
+              }
+              this.inputForm.data = JSON.stringify(this.inputForm.data);
+              axios.post('/api/ws/future/layout/adPricesystemChange/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
+                this.$message(response.data.message);
+                if(response.data.success){
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }
+              }).catch(()=> {
+                this.submitDisabled = false;
+              });
+            }
+        })
+
       }, search() {
         this.setSearchText();
         this.formVisible = false;
