@@ -40,8 +40,13 @@
           this.pageLoading = false;
         })
       },batchPass(){
+        if(!this.multipleSelection || this.multipleSelection.length < 1){
+          this.$message({message:this.$t('dutyTaskList.noSelectionFound'), type: 'warning'});
+          return ;
+        }
         util.confirmBeforeBatchPass(this).then(() => {
           this.pageLoading = true;
+
           axios.get('/api/basic/hr/duty/batchPass',{params:{dutyAuditMap : this.multipleSelection}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();

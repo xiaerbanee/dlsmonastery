@@ -158,7 +158,7 @@
                   });
                   if(!this.isCreate){
                     this.submitDisabled = false;
-                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList")})
+                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
                   } else {
                     Object.assign(this.$data, this.getData());
                     this.initPage();

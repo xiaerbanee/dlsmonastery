@@ -120,8 +120,7 @@
               this.$message(response.data.message);
             if(response.data.success){
               if(!this.isCreate){
-                this.submitDisabled = false;
-                this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList")})
+                this.$router.push({name:'productImeSaleList',query:util.getQuery("productImeSaleList"), params:{_closeFrom:true}})
               }else{
                 Object.assign(this.$data, this.getData());
                 this.initPage();

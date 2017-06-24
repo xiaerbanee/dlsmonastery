@@ -75,7 +75,7 @@
                     Object.assign(this.$data, this.getData());
                     this.initPage();
                   }else{
-                    this.$router.push({name: 'shopGoodsDepositList', query: util.getQuery("shopGoodsDepositList")});
+                    this.$router.push({name: 'shopGoodsDepositList', query: util.getQuery("shopGoodsDepositList"), params:{_closeFrom:true}});
                   }
                 }
               }).catch(() => {
