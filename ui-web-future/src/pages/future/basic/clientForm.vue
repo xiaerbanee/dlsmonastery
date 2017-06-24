@@ -49,7 +49,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               if (!this.isCreate) {
-                this.$router.push({name: 'clientList', query: util.getQuery("clientList")})
+                this.$router.push({name: 'clientList', query: util.getQuery("clientList"),params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;

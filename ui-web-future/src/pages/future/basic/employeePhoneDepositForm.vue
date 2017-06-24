@@ -73,8 +73,7 @@
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList")})
+                  this.$router.push({name:'employeePhoneDepositList',query:util.getQuery("employeePhoneDepositList"),params:{_closeFrom:true}})
                 }
               }).catch(function () {
                 that.submitDisabled = false;
