@@ -130,7 +130,7 @@ public class SalReturnStockDto {
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", 100));
         model.put("FRetcustId", CollectionUtil.getMap("FNumber", getCustomerNumber()));
-        model.put("FHeadNote", getNote()+ "批量开单");
+        model.put("FHeadNote", getNote());
         List<Object> entity = Lists.newArrayList();
         for (SalReturnStockFEntityDto batchBillDetail : getSalReturnStockFEntityDtoList()) {
             if (batchBillDetail.getQty() != null && batchBillDetail.getQty() > 0) {

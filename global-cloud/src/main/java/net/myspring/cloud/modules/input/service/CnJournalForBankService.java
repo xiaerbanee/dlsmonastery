@@ -56,7 +56,7 @@ public class CnJournalForBankService {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                     cnJournalForBankDto.getExtendId(),
                     cnJournalForBankDto.getExtendType(),
-                    KingdeeFormIdEnum.CN_JOURNAL.name(),
+                    KingdeeFormIdEnum.CN_Journal_Bank.name(),
                     cnJournalForBankDto.getJson(),
                     kingdeeBook) {
         };
@@ -149,14 +149,7 @@ public class CnJournalForBankService {
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
         if(isLogin) {
-            kingdeeSynDto = new KingdeeSynDto(
-                    cnJournalForBankDto.getExtendId(),
-                    cnJournalForBankDto.getExtendType(),
-                    KingdeeFormIdEnum.CN_JOURNAL.name(),
-                    cnJournalForBankDto.getJson(),
-                    kingdeeBook) {
-            };
-            kingdeeManager.save(kingdeeSynDto);
+            kingdeeSynDto = save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
         }else{
             kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
         }
