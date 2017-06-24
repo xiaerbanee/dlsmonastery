@@ -10,6 +10,7 @@ import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.ProductBatchForm;
@@ -132,7 +133,7 @@ public class ProductService {
         return productDtoList;
     }
 
-    public  List<ProductDto> findAdProductAndAllowOrder(String billType){
+    public  List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
@@ -141,8 +142,8 @@ public class ProductService {
             String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
-        List<ProductDto> adProductDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductDto.class);
-        return adProductDtos;
+        List<ProductAdApplyDto> productAdApplyDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductAdApplyDto.class);
+        return productAdApplyDtos;
     }
 
     public void save(ProductForm productForm) {
