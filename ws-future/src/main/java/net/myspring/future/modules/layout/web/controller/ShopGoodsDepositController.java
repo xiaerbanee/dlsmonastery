@@ -63,7 +63,7 @@ public class ShopGoodsDepositController {
         //在事务外循环，可以保证当方法内部调用接口报错时，不会全部回滚记录
         for(String id : ids){
             try{
-                shopGoodsDepositService.audit(id);
+                shopGoodsDepositService.auditPass(id);
             }catch(Exception e){
                 errMsgList.add(e.getMessage());
             }

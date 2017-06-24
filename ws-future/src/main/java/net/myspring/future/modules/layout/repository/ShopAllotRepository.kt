@@ -44,10 +44,20 @@ class ShopAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
        SELECT
             sum(t2.qty * t2.sale_price) saleTotalPrice,
             sum(t2.qty * t2.return_price) returnTotalPrice,
+            fromShop.client_id fromShopClientId,
+            fromShop.name fromShopName,
+            toShop.client_id toShopClientId,
+            toShop.name toShopName,
+            fromClient.out_id fromShopClientOutId,
+            toClient.out_id toShopClientOutId,
             t1.*
         FROM
             crm_shop_allot t1
             LEFT JOIN crm_shop_allot_detail t2 ON t1.id = t2.shop_allot_id
+            LEFT JOIN crm_depot fromShop ON t1.from_shop_id = fromShop.id
+            LEFT JOIN crm_client fromClient ON fromShop.client_id = fromClient.id
+            LEFT JOIN crm_depot toShop ON t1.to_shop_id = toShop.id
+            LEFT JOIN crm_client toClient ON toShop.client_id = toClient.id
         WHERE
             t1.enabled = 1
         AND t1.id = :id
@@ -57,11 +67,17 @@ class ShopAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     }
 
     override fun findPage(pageable: Pageable, shopAllotQuery: ShopAllotQuery): Page<ShopAllotDto> {
-
         val sb = StringBuffer()
         sb.append("""
-        SELECT  t1.*
+        SELECT
+                fromShop.name fromShopName,
+                fromShop.client_id fromShopClientId,
+                toShop.name toShopName,
+                toShop.client_id toShopClientId,
+                t1.*
         FROM  crm_shop_allot t1
+                   LEFT JOIN crm_depot fromShop ON t1.from_shop_id = fromShop.id
+                   LEFT JOIN crm_depot toShop ON t1.to_shop_id = toShop.id
         where t1.enabled=1
         """)
         if(StringUtils.isNotBlank(shopAllotQuery.fromShopId)){
