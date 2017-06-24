@@ -59,7 +59,7 @@
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
                 if(!that.isCreate){
-                  this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList")})
+                  this.$router.push({name:'menuCategoryList',query:util.getQuery("menuCategoryList"),params:{_closeFrom:true}})
                 }
               }).catch( ()=> {
                 that.submitDisabled = false;

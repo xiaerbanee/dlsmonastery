@@ -158,7 +158,6 @@
     methods:{
       getData(){
         return {
-          isInit:false,
           submitDisabled:false,
           dutyType:'',
           inputForm:{},
@@ -182,10 +181,7 @@
           if (valid) {
             axios.post('/api/basic/hr/duty/audit',qs.stringify(this.submitData)).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              if(!this.isCreate){
-                this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList")})
-              }
+              this.$router.push({name:'dutyTaskList',query:util.getQuery("dutyTaskList"), params:{_closeFrom:true}})
             }).catch(function () {
               that.submitDisabled = false;
             });
@@ -193,17 +189,13 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
+      },
+    },created () {
         axios.get('/api/basic/hr/duty/getForm',{params:{id:this.$route.query.id,dutyType:this.$route.query.dutyType}}).then((response)=>{
           this.dutyType = response.data.dutyType;
           this.showForm = response.data.item;
           this.inputForm.bools = response.data.boolMap;
         });
-      }
-      this.isInit = true;
     }
   };
 </script>
