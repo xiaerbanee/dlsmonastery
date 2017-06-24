@@ -41,7 +41,7 @@ public class DutyOvertimeService {
     public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
-        dutyOvertimeForm.setEmployeeId(RequestUtils.getRequestEntity().getEmployeeId());
+        dutyOvertimeForm.setEmployeeId(RequestUtils.getEmployeeId());
         DutyOvertime dutyOvertime = BeanUtil.map(dutyOvertimeForm, DutyOvertime.class);
         dutyOvertimeRepository.save(dutyOvertime);
         return dutyOvertime;

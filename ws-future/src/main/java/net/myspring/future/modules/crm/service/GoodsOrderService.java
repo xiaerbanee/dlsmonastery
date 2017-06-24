@@ -329,7 +329,7 @@ public class GoodsOrderService {
                 Boolean showNotAllow = true;
                 //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
                 if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
-                    OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getRequestEntity().getOfficeId());
+                    OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());
                     if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
                         showNotAllow = false;
                     }

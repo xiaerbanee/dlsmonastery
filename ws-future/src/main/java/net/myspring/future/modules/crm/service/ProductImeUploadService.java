@@ -103,7 +103,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         for (ProductIme productIme : productImeList) {

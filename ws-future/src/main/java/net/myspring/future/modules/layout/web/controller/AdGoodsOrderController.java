@@ -133,7 +133,7 @@ public class  AdGoodsOrderController {
 
 //        // 检查用户
 //        if (adGoodsOrderBillForm.getSyn()!=null && adGoodsOrderBillForm.getSyn()) {
-//            RequestUtils.getRequestEntity().get
+//            RequestUtils.get
 //            AccountCommonDto accN
 //            if (StringUtils.isBlank(AccountUtils.getAccount().getOutId())) {
 //                return new Message("message_ad_goods_order_not_finance", Message.Type.danger);

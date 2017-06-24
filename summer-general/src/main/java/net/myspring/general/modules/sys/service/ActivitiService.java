@@ -74,7 +74,7 @@ public class ActivitiService {
         processTask.setName(activitiStartForm.getName());
         processTask.setProcessInstanceId(processInstanceId);
         processTask.setStatus(processStatus);
-        processTask.setOfficeId(RequestUtils.getRequestEntity().getOfficeId());
+        processTask.setOfficeId(RequestUtils.getOfficeId());
         processTask.setPositionId(activitiStartDto.getPositionId());
         processTask.setMessage(activitiStartForm.getMessage());
         processTaskRepository.save(processTask);
