@@ -14,6 +14,8 @@ public class SalReturnStockFEntityDto {
     private String entryNote;
     //数量
     private Integer qty;
+    //仓库
+    private String stockNumber;
 
     public BigDecimal getPrice() {
         return price;
@@ -45,5 +47,13 @@ public class SalReturnStockFEntityDto {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public String getStockNumber() {
+        return stockNumber;
+    }
+
+    public void setStockNumber(String stockNumber) {
+        this.stockNumber = stockNumber;
     }
 }

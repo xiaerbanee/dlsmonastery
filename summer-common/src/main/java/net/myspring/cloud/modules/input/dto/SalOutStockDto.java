@@ -137,7 +137,9 @@ public class SalOutStockDto {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
                 detail.put("FStockID", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entityDto.getMaterialNumber()));
+                //库存状态--可用
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
+                //库存单位--Pcs
                 detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
                 detail.put("FRealQty", entityDto.getQty());
                 detail.put("FBaseUnitQty", entityDto.getQty());

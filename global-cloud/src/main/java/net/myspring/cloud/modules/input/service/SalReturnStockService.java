@@ -124,13 +124,13 @@ public class SalReturnStockService {
             salReturnStockFEntityDto.setPrice(price);
             salReturnStockFEntityDto.setQty(qty);
             salReturnStockFEntityDto.setEntryNote(remarks);
+            salReturnStockFEntityDto.setStockNumber(storeNumber);
 
             String billKey = customerNumMap.get(customerName) + CharConstant.COMMA + billType;
             if (!billMap.containsKey(billKey)) {
                 SalReturnStockDto salReturnStockDto = new SalReturnStockDto();
                 salReturnStockDto.setCreator(accountKingdeeBook.getUsername());
                 salReturnStockDto.setDate(date);
-                salReturnStockDto.setStoreNumber(storeNumber);
                 salReturnStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(customerName)).getFNumber());
                 salReturnStockDto.setBillType(billType);
                 salReturnStockDto.setCustomerNumber(customerNumMap.get(customerName));
@@ -140,17 +140,17 @@ public class SalReturnStockService {
             billMap.get(billKey).getSalReturnStockFEntityDtoList().add(salReturnStockFEntityDto);
         }
 
-        List<SalReturnStockDto> batchBills = Lists.newArrayList(billMap.values());
-        return save(batchBills,kingdeeBook,accountKingdeeBook);
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList(billMap.values());
+        return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
-    public List<KingdeeSynExtendDto> save (List<SalReturnStockDto> batchBills, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynExtendDto> save (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
-        if (CollectionUtil.isNotEmpty(batchBills)) {
+        if (CollectionUtil.isNotEmpty(salReturnStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
-                for (SalReturnStockDto batchBill : batchBills) {
+                for (SalReturnStockDto batchBill : salReturnStockDtoList) {
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill, kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
@@ -159,6 +159,27 @@ public class SalReturnStockService {
         return kingdeeSynExtendDtoList;
     }
 
+    public List<KingdeeSynExtendDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<String> customerNumberList = Lists.newArrayList();
+        for (SalReturnStockDto salReturnStockDto  : salReturnStockDtoList){
+            customerNumberList.add(salReturnStockDto.getCustomerNumber());
+        }
+        Map<String, String> customerDepartmentMap = Maps.newHashMap();
+        List<String> departmentIdList = Lists.newArrayList();
+        for (BdCustomer bdCustomer : bdCustomerRepository.findByNumberList(customerNumberList)) {
+            customerDepartmentMap.put(bdCustomer.getFNumber(), bdCustomer.getFSalDeptId());
+            departmentIdList.add(bdCustomer.getFSalDeptId());
+        }
+        List<BdDepartment> bdDepartmentList = bdDepartmentRepository.findByIdList(departmentIdList);
+        Map<String,BdDepartment> bdDepartmentMap = bdDepartmentList.stream().collect(Collectors.toMap(BdDepartment::getFDeptId, bdDepartment -> bdDepartment));
+        for (SalReturnStockDto returnStockDto : salReturnStockDtoList){
+           returnStockDto.setCreator(accountKingdeeBook.getUsername());
+           returnStockDto.setBillType(SalReturnStockBillTypeEnum.标准销售退货单.name());
+           returnStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(returnStockDto.getCustomerNumber())).getFNumber());
+        }
+        return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
+    }
+    
     public SalStockForm getForm(){
         SalStockForm salStockForm = new SalStockForm();
         Map<String,Object> map = Maps.newHashMap();
