@@ -49,7 +49,7 @@
                   this.initPage();
                 } else {
                   this.submitDisabled = false;
-                  this.$router.push({name:'accountKingdeeBookList',query:util.getQuery("accountKingdeeBookList")})
+                  this.$router.push({name:'accountKingdeeBookList',query:util.getQuery("accountKingdeeBookList"),params:{_closeFrom:true}});
                 }
               }).catch(function () {
                 this.submitDisabled = false;

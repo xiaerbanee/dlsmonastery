@@ -34,7 +34,7 @@ public class SalOutStockDto {
     //单据类型
     private String billType;
 
-    private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
+    private List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
 
     public String getExtendId() {
         return extendId;
@@ -104,11 +104,11 @@ public class SalOutStockDto {
     }
 
     public List<SalOutStockFEntityDto> getSalOutStockFEntityDtoList() {
-        return salOutStockFEntityDtoList;
+        return entityDtoList;
     }
 
-    public void setSalOutStockFEntityDtoList(List<SalOutStockFEntityDto> salOutStockFEntityDtoList) {
-        this.salOutStockFEntityDtoList = salOutStockFEntityDtoList;
+    public void setSalOutStockFEntityDtoList(List<SalOutStockFEntityDto> entityDtoList) {
+        this.entityDtoList = entityDtoList;
     }
 
     @JsonIgnore
@@ -132,27 +132,27 @@ public class SalOutStockDto {
         model.put("FCustomerID", CollectionUtil.getMap("FNumber", getCustomerNumber()));
         model.put("FNote", getNote());
         List<Object> entity = Lists.newArrayList();
-        for (SalOutStockFEntityDto salOutStockFEntityDto: getSalOutStockFEntityDtoList()) {
-            if (salOutStockFEntityDto.getQty() != null && salOutStockFEntityDto.getQty() > 0) {
+        for (SalOutStockFEntityDto entityDto: getSalOutStockFEntityDtoList()) {
+            if (entityDto.getQty() != null && entityDto.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
-                detail.put("FStockID", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getStockNumber()));
-                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", salOutStockFEntityDto.getMaterialNumber()));
+                detail.put("FStockID", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
+                detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entityDto.getMaterialNumber()));
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
-                detail.put("FRealQty", salOutStockFEntityDto.getQty());
-                detail.put("FBaseUnitQty", salOutStockFEntityDto.getQty());
-                detail.put("FPriceUnitQty", salOutStockFEntityDto.getQty());
-                detail.put("FTaxNetPrice", salOutStockFEntityDto.getPrice());
-                detail.put("FSALBASEQTY", salOutStockFEntityDto.getQty());
-                detail.put("FSALUNITQTY", salOutStockFEntityDto.getQty());
-                detail.put("FPRICEBASEQTY", salOutStockFEntityDto.getQty());
+                detail.put("FRealQty", entityDto.getQty());
+                detail.put("FBaseUnitQty", entityDto.getQty());
+                detail.put("FPriceUnitQty", entityDto.getQty());
+                detail.put("FTaxNetPrice", entityDto.getPrice());
+                detail.put("FSALBASEQTY", entityDto.getQty());
+                detail.put("FSALUNITQTY", entityDto.getQty());
+                detail.put("FPRICEBASEQTY", entityDto.getQty());
                 // 是否赠品
-                detail.put("FIsFree", salOutStockFEntityDto.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
-                detail.put("FPrice", salOutStockFEntityDto.getPrice());
-                detail.put("FTaxPrice", salOutStockFEntityDto.getPrice());
-                detail.put("FAmount", new BigDecimal(salOutStockFEntityDto.getQty()).multiply(salOutStockFEntityDto.getPrice()));
-                detail.put("FBefDisAllAmt", new BigDecimal(salOutStockFEntityDto.getQty()).multiply(salOutStockFEntityDto.getPrice()));
-                detail.put("FEntrynote", salOutStockFEntityDto.getEntryNote());
+                detail.put("FIsFree", entityDto.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
+                detail.put("FPrice", entityDto.getPrice());
+                detail.put("FTaxPrice", entityDto.getPrice());
+                detail.put("FAmount", new BigDecimal(entityDto.getQty()).multiply(entityDto.getPrice()));
+                detail.put("FBefDisAllAmt", new BigDecimal(entityDto.getQty()).multiply(entityDto.getPrice()));
+                detail.put("FEntrynote", entityDto.getEntryNote());
                 entity.add(detail);
             }
         }

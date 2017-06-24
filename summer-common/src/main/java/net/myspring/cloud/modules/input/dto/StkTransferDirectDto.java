@@ -21,7 +21,7 @@ public class StkTransferDirectDto {
     //附加-单据类型
     private String extendType;
     //创建人
-    private String creatorK3;
+    private String creator;
     // 日期
     private LocalDate date;
     // 备注
@@ -45,12 +45,12 @@ public class StkTransferDirectDto {
         this.extendType = extendType;
     }
 
-    public String getCreatorK3() {
-        return creatorK3;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreatorK3(String creatorK3) {
-        this.creatorK3 = creatorK3;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public LocalDate getDate() {
@@ -80,7 +80,7 @@ public class StkTransferDirectDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreatorK3());
+        root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);

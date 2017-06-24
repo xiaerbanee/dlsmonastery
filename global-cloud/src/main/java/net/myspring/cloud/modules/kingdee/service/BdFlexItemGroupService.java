@@ -32,19 +32,4 @@ public class BdFlexItemGroupService {
         return bdFlexItemGroupRepository.findAll();
     }
 
-
-    //查询所有使用中的核算维度
-    public List<String> getNameList() {
-        List<BdFlexItemGroup> flexItemGroupList = bdFlexItemGroupRepository.findAll();
-        List<String> list = Lists.newLinkedList();
-        for (BdFlexItemGroup flexItemGroup : flexItemGroupList) {
-            List<String> nameList = StringUtils.getSplitList(flexItemGroup.getFName(), CharConstant.SLASH_LINE);
-            for (String name : nameList) {
-                if (!list.contains(name)) {
-                    list.add(name);
-                }
-            }
-        }
-        return list;
-    }
 }
