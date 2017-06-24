@@ -1,18 +1,8 @@
 package net.myspring.future.common.utils;
 
-import com.google.common.collect.Maps;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,6 +19,7 @@ public class RequestUtils {
             requestEntity.setPositionId(securityMap.get("positionId"));
             requestEntity.setOfficeId(securityMap.get("officeId"));
             requestEntity.setEmployeeId(securityMap.get("employeeId"));
+            requestEntity.setCompanyName(securityMap.get("companyName"));
         }
         return requestEntity;
     }
