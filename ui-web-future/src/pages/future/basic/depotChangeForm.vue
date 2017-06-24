@@ -83,8 +83,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.submitDisabled = false;
-                this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
+                this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList"), params:{_closeFrom:true}})
               }
             }).catch(()=> {
               this.submitDisabled = false;
