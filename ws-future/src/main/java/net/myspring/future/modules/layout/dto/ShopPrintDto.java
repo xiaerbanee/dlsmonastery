@@ -122,7 +122,7 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     }
 
     public Boolean getIsAuditable(){
-        if(RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
+        if(RequestUtils.getPositionId().equals(getProcessPositionId())|| RequestUtils.getAccountId().equalsIgnoreCase("1")){
             return true;
         }else{
             return false;

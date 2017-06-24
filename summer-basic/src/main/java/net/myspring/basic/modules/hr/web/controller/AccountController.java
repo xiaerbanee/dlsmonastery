@@ -166,7 +166,7 @@ public class AccountController {
         map.put("dutySize", dutyList.size());
         map.put("accountMessageSize", accountMessages.size());
         //显示剩余的加班调休时间和年假时间
-        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
         map.put("annualHour", dutyAnnualService.getAvailableHour(employeeId));
         map.put("overtimeHour", dutyOvertimeService.getAvailableHour(employeeId, LocalDate.now()));
         //显示快到期时间

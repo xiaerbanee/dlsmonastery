@@ -126,7 +126,7 @@ public class ProductImeController {
     @RequestMapping(value = "exportReport")
     public String exportReport(ReportQuery reportQuery){
         Workbook workbook = new SXSSFWorkbook(10000);
-        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         reportQuery.setDepotIdList(depotService.filterDepotIds());
         if("按串码".equals(reportQuery.getExportType())){
             reportQuery.setIsDetail(true);

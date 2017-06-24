@@ -527,9 +527,9 @@ public class AdGoodsOrderService {
 
     private String getFormatId(AdGoodsOrder adGoodsOrder) {
         if(StringUtils.isBlank(adGoodsOrder.getParentId()) || adGoodsOrder.getParentId().equals(adGoodsOrder.getId())){
-            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getId());
+            return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getId());
         }
-        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
+        return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
     }
 
     private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {

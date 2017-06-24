@@ -1,5 +1,6 @@
 package net.myspring.future.common.utils;
 
+import com.google.common.collect.Maps;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
@@ -10,32 +11,36 @@ import java.util.Map;
  * Created by liuj on 2017/4/2.
  */
 public class RequestUtils {
-    public static RequestEntity getRequestEntity() {
-        RequestEntity  requestEntity = new RequestEntity();
-        Map<String,String> securityMap = getSecurityMap();
-        if(securityMap.size()>0) {
-            requestEntity.setAccountId(securityMap.get("accountId"));
-            requestEntity.setCompanyId(securityMap.get("companyId"));
-            requestEntity.setPositionId(securityMap.get("positionId"));
-            requestEntity.setOfficeId(securityMap.get("officeId"));
-            requestEntity.setEmployeeId(securityMap.get("employeeId"));
-            requestEntity.setCompanyName(securityMap.get("companyName"));
-        }
-        return requestEntity;
-    }
 
     public static String getAccountId() {
-        return getRequestEntity().getAccountId();
+        return getSecurityMap().get("accountId");
     }
 
     public static String getCompanyId() {
-        return getRequestEntity().getCompanyId();
+        return getSecurityMap().get("companyId");
     }
 
+    public static String getPositionId() {
+        return getSecurityMap().get("positionId");
+    }
 
-    private  static Map<String, String> getSecurityMap() {
+    public static String getCompanyName() {
+        return getSecurityMap().get("companyName");
+    }
+
+    public static String getOfficeId() {
+        return getSecurityMap().get("officeId");
+    }
+
+    public static String getEmployeeId() {
+        return getSecurityMap().get("employeeId");
+    }
+    public  static Map<String, String> getSecurityMap() {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
-        LinkedHashMap principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+        LinkedHashMap principal = Maps.newLinkedHashMap();
+        if(auth !=  null) {
+            principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+        }
         return principal;
     }
 }
