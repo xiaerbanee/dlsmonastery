@@ -46,7 +46,7 @@ public class DutyLeaveValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateEnd", "error.dutyDateEnd", "结束日期不能为空");
 
         if (dutyLeaveForm.getDutyDateStart()!=null && dutyLeaveForm.getDutyDateEnd()!=null) {
-            String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+            String employeeId = RequestUtils.getEmployeeId();
             if(ChronoUnit.DAYS.between(dutyLeaveForm.getDutyDateStart(), LocalDateTime.now())>10){
                 errors.rejectValue("dutyDateStart","error.dutyDateStart","只能申请10天内数据");
             }

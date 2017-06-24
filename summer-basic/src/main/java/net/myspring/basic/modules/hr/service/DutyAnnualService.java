@@ -97,7 +97,7 @@ public class DutyAnnualService {
 
     public void save(String folderFileId, String annualYear, String remarks){
         FolderFileFeignDto folderFileFeignDto=folderFileClient.findById(folderFileId);
-        Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getRequestEntity().getCompanyName())));
+        Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getCompanyName())));
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn("employeeName","用户名"));
         simpleExcelColumnList.add(new SimpleExcelColumn("loginName","登录名"));

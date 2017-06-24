@@ -152,7 +152,6 @@ public class DepotController {
 
     @RequestMapping(value = "scheduleSynArea")
     public RestResponse scheduleSynArea(String accountId) {
-        RequestUtils.getRequestEntity().setAccountId(accountId);
         depotService.scheduleSynArea();
         return new RestResponse("同步成功",null);
     }

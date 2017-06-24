@@ -53,7 +53,7 @@ public class ProductImeSaleValidator implements Validator {
                 for(ProductIme productIme:productImeSearchResultDto.getProductImeList()){
                     if(productIme.getProductImeSaleId()!=null) {
                         sb.append("串码"+productIme.getIme()+"已核销.");
-                    } else if(!depotManager.isAccess(productIme.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
+                    } else if(!depotManager.isAccess(productIme.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
                         sb.append("您没有串码"+productIme.getIme()+"所在门店的核销权限.");
                     }else if(productIme.getProductImeUploadId() != null) {
                         sb.append("串码"+productIme.getIme()+"已上报.");

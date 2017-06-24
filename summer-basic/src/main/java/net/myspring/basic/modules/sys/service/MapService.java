@@ -57,7 +57,7 @@ public class MapService {
 
     public List<String> getGoogleAddressList(String longitude, String latitude) {
         String languge = "en";
-        if("IDVIVO".equals(RequestUtils.getRequestEntity().getCompanyName())) {
+        if("IDVIVO".equals(RequestUtils.getCompanyName())) {
             languge = "id";
         }
         GeocodeResult geocodeResult = GmapUtils.getGeocodeResult(longitude,latitude,mapKey,languge);

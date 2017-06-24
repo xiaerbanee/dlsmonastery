@@ -71,9 +71,9 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
 
     public String getAdGoodsOrderFormatId(){
         if(StringUtils.isBlank(adGoodsOrderParentId) || adGoodsOrderParentId.equals(adGoodsOrderId)){
-            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderId);
+            return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderId);
         }
-        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderParentId)+CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrderId);
+        return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrderParentId)+CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrderId);
     }
 
     public String getAdGoodsOrderBillRemarks() {

@@ -73,7 +73,7 @@ public class DutyController {
     public List<CalendarEventDto> events(String start, String end) {
         LocalDate dateStart= LocalDateUtils.parse(start);
         LocalDate dateEnd= LocalDateUtils.parse(end);
-        List<CalendarEventDto> events = dutyService.findEvent(RequestUtils.getRequestEntity().getEmployeeId(),dateStart,dateEnd);
+        List<CalendarEventDto> events = dutyService.findEvent(RequestUtils.getEmployeeId(),dateStart,dateEnd);
         return events;
     }
 

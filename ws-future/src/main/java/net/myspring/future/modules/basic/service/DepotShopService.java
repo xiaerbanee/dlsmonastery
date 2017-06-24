@@ -53,7 +53,7 @@ public class DepotShopService {
     private TownClient townClient;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery) {
-        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         if (StringUtils.isNotBlank(depotQuery.getOfficeId())) {
             depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
@@ -136,7 +136,7 @@ public class DepotShopService {
     }
 
     public List<DepotReportDto> setReportData(ReportQuery reportQuery) {
-        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         DepotQuery depotQuery = BeanUtil.map(reportQuery, DepotQuery.class);
         List<Depot> depotList = depotRepository.findByFilter(depotQuery);
