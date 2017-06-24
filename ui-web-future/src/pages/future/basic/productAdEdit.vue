@@ -93,7 +93,7 @@
                 {data:"name",readOnly: true, strict: true, width: 450 },
                 {data:"visible", type: "autocomplete", strict: true, source:['是','否'], width: 70},
                 {data:"allowOrder", type: "autocomplete", strict: true, source:['是','否'], width: 80},
-                {data:"price2", type: "numeric", width: 70},
+                {data:"price2", type: "numeric",format:"0.00", width: 70},
                 {data:"expiryDateRemarks", width:150},
                 {data:"volume", type: "numeric", format: '0.00', width: 50},
                 {data:"remarks", width:150},

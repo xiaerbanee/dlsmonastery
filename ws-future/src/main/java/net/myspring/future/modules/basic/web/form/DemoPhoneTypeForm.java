@@ -7,6 +7,7 @@ import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class DemoPhoneTypeForm extends BaseForm<DemoPhoneType> {
     private String name;
-    private List<String> productTypeIdList;
+    private List<String> productTypeIdList=new ArrayList<>();
     private Integer limitQty;
     private LocalDate applyEndDate;
     private LocalDate renewEndDate;

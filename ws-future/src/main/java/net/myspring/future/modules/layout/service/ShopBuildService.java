@@ -101,9 +101,6 @@ public class ShopBuildService {
         return shopBuild;
     }
 
-    public void notify(ShopBuild shopBuild) {
-    }
-
     public String audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopBuild shopBuild;
