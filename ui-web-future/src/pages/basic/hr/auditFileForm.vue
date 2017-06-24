@@ -17,7 +17,7 @@
               <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item :label="$t('auditFileForm.attachment')" prop="attachment">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/文件审批" :headers="headers"  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/文件审批"   :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('auditFileForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('auditFileForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -55,7 +55,6 @@
             processTypeName: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
             title: [{ required: true, message: this.$t('auditFileForm.prerequisiteMessage')}],
           },
-          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
@@ -64,9 +63,7 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
         this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
-          console.log( this.fileList)
           if (valid) {
-            this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
             axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
               if(response.data.message){
                 this.$message(response.data.message);

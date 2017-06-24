@@ -84,11 +84,6 @@ public class FolderFileDto extends DataDto<FolderFile> {
     }
 
     public String getUrl() {
-        String url="/api/general/sys/folderFile/download?id=";
-        if(StringUtils.isNotBlank(getMongoPreviewId())) {
-            return url+getMongoPreviewId()+"&type=preview";
-        }else {
-            return url+getMongoId()+"&type=storage";
-        }
+        return "/api/general/sys/folderFile/view?id=" + getId();
     }
 }

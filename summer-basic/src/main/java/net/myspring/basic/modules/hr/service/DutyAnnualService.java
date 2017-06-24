@@ -14,6 +14,8 @@ import net.myspring.basic.modules.hr.repository.DutyAnnualRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyAnnualForm;
 import net.myspring.basic.modules.hr.web.query.DutyAnnualQuery;
+import net.myspring.basic.modules.sys.client.FolderFileClient;
+import net.myspring.general.modules.sys.dto.FolderFileFeignDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -22,6 +24,7 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,17 +32,18 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static net.myspring.util.excel.ExcelUtils.*;
 
 @Service
+@Transactional
 public class DutyAnnualService {
 
     @Autowired
@@ -54,6 +58,8 @@ public class DutyAnnualService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private GridFsTemplate storageGridFsTemplate;
+    @Autowired
+    private FolderFileClient folderFileClient;
 
     public Double getAvailableHour(String  employeeId) {
         List<DutyAnnual> dutyAnnualList = dutyAnnualRepository.findByEmployeeId(employeeId);
@@ -74,7 +80,8 @@ public class DutyAnnualService {
         return dutyAnnualDtoPage;
     }
 
-    public String findSimpleExcelSheet(Workbook workbook) throws IOException {
+    public SimpleExcelBook findSimpleExcelSheet()  {
+        Workbook workbook = new SXSSFWorkbook(10000);
         List<Employee> employeeList = employeeRepository.findByStatusAndregularDate("在职", LocalDate.now().minusYears(1));
         List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
@@ -83,15 +90,14 @@ public class DutyAnnualService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","年假时间"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","剩余时间"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("年假导入模版",employeeDtoList,simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return simpleExcelBook;
     }
 
-    public void save(String mongoId, String annualYear, String remarks){
-        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(mongoId)));
-        Workbook workbook= ExcelUtils.getWorkbook(gridFSDBFile.getFilename(),gridFSDBFile.getInputStream());
+    public void save(String folderFileId, String annualYear, String remarks){
+        FolderFileFeignDto folderFileFeignDto=folderFileClient.findById(folderFileId);
+        Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getRequestEntity().getCompanyName())));
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn("employeeName","用户名"));
         simpleExcelColumnList.add(new SimpleExcelColumn("loginName","登录名"));
@@ -110,7 +116,10 @@ public class DutyAnnualService {
                     dutyAnnualList.add(BeanUtil.map(dutyAnnualForm,DutyAnnual.class));
                 }
             }
-            dutyAnnualRepository.save(dutyAnnualList);
+            if(CollectionUtil.isNotEmpty(dutyAnnualList)){
+                dutyAnnualRepository.deleteByEmployeeId(dutyAnnualList.stream().map(DutyAnnual::getEmployeeId).collect(Collectors.toList()));
+                dutyAnnualRepository.save(dutyAnnualList);
+            }
         }
     }
 }
