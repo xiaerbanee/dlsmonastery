@@ -493,7 +493,8 @@ export default {
     productName: "nama produk",
     qty: "kuantitas",
     returnPrice: "harga returan",
-    salePrice: "harga"
+    salePrice: "harga",
+    shouldGet:"应收：",
   },
   shopAllotForm: {
     shopAllotForm: "tambah alokasi toko",

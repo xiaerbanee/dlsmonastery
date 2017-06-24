@@ -498,6 +498,7 @@ export default {
     qty: "数量",
     returnPrice: "退货单价",
     salePrice: "开单单价",
+    shouldGet:"应收：",
   },
   shopAllotForm: {
     shopAllotForm: "门店调拨添加",
