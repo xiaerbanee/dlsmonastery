@@ -7,6 +7,7 @@ import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
 import net.myspring.future.modules.crm.dto.ProductImeSearchResultDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,12 @@ public class ProductImeSaleValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ProductImeSale productImeSale = (ProductImeSale)target;
+        ProductImeSaleForm productImeSaleForm = (ProductImeSaleForm)target;
         StringBuilder sb = new StringBuilder();
-        if(StringUtils.isBlank(productImeSale.getIme())) {
+        if(StringUtils.isBlank(productImeSaleForm.getImeStr())) {
             sb.append("请输入串码.");
         }else{
-            List<String> imeList = StringUtils.getSplitList(productImeSale.getIme(), CharConstant.ENTER);
+            List<String> imeList = StringUtils.getSplitList(productImeSaleForm.getImeStr(), CharConstant.ENTER);
             ProductImeSearchResultDto productImeSearchResultDto = productImeService.findProductImeSearchResult(imeList);
             if(CollectionUtil.isNotEmpty(productImeSearchResultDto.getNotExists())) {
                 for(String ime:productImeSearchResultDto.getNotExists()) {
@@ -52,7 +53,7 @@ public class ProductImeSaleValidator implements Validator {
                 for(ProductIme productIme:productImeSearchResultDto.getProductImeList()){
                     if(productIme.getProductImeSaleId()!=null) {
                         sb.append("串码"+productIme.getIme()+"已核销.");
-                    } else if(!depotManager.isAccess(productIme.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
+                    } else if(!depotManager.isAccess(productIme.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
                         sb.append("您没有串码"+productIme.getIme()+"所在门店的核销权限.");
                     }else if(productIme.getProductImeUploadId() != null) {
                         sb.append("串码"+productIme.getIme()+"已上报.");

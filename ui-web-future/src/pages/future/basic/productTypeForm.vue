@@ -10,7 +10,7 @@
           <el-input v-model="inputForm.reportName"></el-input>
         </el-form-item>
         <el-form-item :label="$t('productTypeForm.product')" prop="productIdList">
-          <product-select v-model="inputForm.productIdList" multiple ></product-select>
+          <product-select v-model="inputForm.productIdList" :multiple="true" ></product-select>
         </el-form-item>
         <el-form-item :label="$t('productTypeForm.code')" prop="code">
           <el-input v-model="inputForm.code"></el-input>
@@ -87,8 +87,7 @@
                       Object.assign(this.$data, this.getData());
                       this.initPage();
                     }else{
-                      this.submitDisabled = false;
-                      this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList")})
+                      this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList"),params:{_closeFrom:true}})
                     }
                 }
               }).catch( ()=>{

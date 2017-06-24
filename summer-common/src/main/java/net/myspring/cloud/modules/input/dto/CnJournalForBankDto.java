@@ -25,15 +25,15 @@ public class CnJournalForBankDto {
     //附加-单据类型
     private String extendType;
     //创建人
-    private String creatorK3;
+    private String creator;
     //日期
-    private LocalDate dateK3;
+    private LocalDate date;
     //对方账户（科目）
-    private String accountNumberForBankK3;
+    private String accountNumberForBank;
     //账套名称
-    private String kingdeeNameK3;
+    private String kingdeeName;
     //账套类型
-    private String kingdeeTypeK3;
+    private String kingdeeType;
 
     private List<CnJournalEntityForBankDto> entityForBankDtoList = Lists.newArrayList();
 
@@ -53,44 +53,44 @@ public class CnJournalForBankDto {
         this.extendType = extendType;
     }
 
-    public String getCreatorK3() {
-        return creatorK3;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreatorK3(String creatorK3) {
-        this.creatorK3 = creatorK3;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
-    public LocalDate getDateK3() {
-        return dateK3;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateK3(LocalDate dateK3) {
-        this.dateK3 = dateK3;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getAccountNumberForBankK3() {
-        return accountNumberForBankK3;
+    public String getAccountNumberForBank() {
+        return accountNumberForBank;
     }
 
-    public void setAccountNumberForBankK3(String accountNumberForBankK3) {
-        this.accountNumberForBankK3 = accountNumberForBankK3;
+    public void setAccountNumberForBank(String accountNumberForBank) {
+        this.accountNumberForBank = accountNumberForBank;
     }
 
-    public String getKingdeeNameK3() {
-        return kingdeeNameK3;
+    public String getKingdeeName() {
+        return kingdeeName;
     }
 
-    public void setKingdeeNameK3(String kingdeeNameK3) {
-        this.kingdeeNameK3 = kingdeeNameK3;
+    public void setKingdeeName(String kingdeeName) {
+        this.kingdeeName = kingdeeName;
     }
 
-    public String getKingdeeTypeK3() {
-        return kingdeeTypeK3;
+    public String getKingdeeType() {
+        return kingdeeType;
     }
 
-    public void setKingdeeTypeK3(String kingdeeTypeK3) {
-        this.kingdeeTypeK3 = kingdeeTypeK3;
+    public void setKingdeeType(String kingdeeType) {
+        this.kingdeeType = kingdeeType;
     }
 
     public List<CnJournalEntityForBankDto> getEntityForBankDtoList() {
@@ -104,16 +104,16 @@ public class CnJournalForBankDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreatorK3());
+        root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDATE",  LocalDateUtils.format(getDateK3(),"yyyy-M-d"));
+        model.put("FDATE",  LocalDateUtils.format(getDate(),"yyyy-M-d"));
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SGRJZ01_SYS"));
         model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
         model.put("FAcctBookId", CollectionUtil.getMap("FNumber", "001"));
-        model.put("FSTARTPERIOD", LocalDateUtils.format(getDateK3(),"yyyy.M"));
-        model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getAccountNumberForBankK3()));
+        model.put("FSTARTPERIOD", LocalDateUtils.format(getDate(),"yyyy.M"));
+        model.put("FACCOUNTID", CollectionUtil.getMap("FNumber", getAccountNumberForBank()));
         model.put("FCURRENCYID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FMAINBOOKID", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("FEXCHANGETYPE", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
@@ -124,23 +124,23 @@ public class CnJournalForBankDto {
         for (CnJournalEntityForBankDto entityForBankDto : getEntityForBankDtoList()){
             Map<String, Object> detail = Maps.newLinkedHashMap();
             detail.put("F_PAEC_Base", CollectionUtil.getMap("FNumber", entityForBankDto.getDepartmentNumber()));
-            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", entityForBankDto.getEmpInfoNumberK3()));
-            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", entityForBankDto.getOtherTypeNumberK3()));
-            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", entityForBankDto.getExpenseTypeNumberK3()));
-            if (StringUtils.isNotBlank(entityForBankDto.getCustomerNumberK3())){
-                if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeNameK3())) {
-                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumberK3()));
-                }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeTypeK3())){
-                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumberK3()));
+            detail.put("F_PAEC_Base1", CollectionUtil.getMap("FStaffNumber", entityForBankDto.getEmpInfoNumber()));
+            detail.put("F_PAEC_Assistant", CollectionUtil.getMap("FNumber", entityForBankDto.getOtherTypeNumber()));
+            detail.put("F_PAEC_Assistant1", CollectionUtil.getMap("FNumber", entityForBankDto.getExpenseTypeNumber()));
+            if (StringUtils.isNotBlank(entityForBankDto.getCustomerNumber())){
+                if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeName())) {
+                    detail.put("F_PAEC_Base2", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumber()));
+                }else if (KingdeeTypeEnum.proxy.name().equals(getKingdeeType())){
+                    detail.put("F_YLG_BASE", CollectionUtil.getMap("FNumber", entityForBankDto.getCustomerNumber()));
                 }
             }
-            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityForBankDto.getSettleTypeNumberK3()));
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityForBankDto.getSettleTypeNumber()));
             detail.put("FCREDITAMOUNT", entityForBankDto.getCreditAmount());
             // 借方
             detail.put("FDEBITAMOUNT", entityForBankDto.getDebitAmount());
             detail.put("FVOUCHERGROUPID", CollectionUtil.getMap("FNumber", "PRE001"));
             detail.put("FBANKACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getBankAccountNumber()));
-            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getAccountNumberK3()));
+            detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getAccountNumber()));
             detail.put("FCOMMENT", entityForBankDto.getComment());
             entity.add(detail);
             debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
@@ -154,7 +154,7 @@ public class CnJournalForBankDto {
         model.put("FJOURNALENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
    

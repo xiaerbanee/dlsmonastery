@@ -7,6 +7,8 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -21,7 +23,6 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
@@ -34,14 +35,10 @@ import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
-import net.myspring.future.modules.layout.dto.AdGoodsOrderDto;
 import net.myspring.future.modules.layout.repository.AdApplyRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
-import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
-import net.myspring.future.modules.layout.web.form.AdApplyDetailForm;
-import net.myspring.future.modules.layout.web.form.AdApplyForm;
-import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
+import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
@@ -115,7 +112,7 @@ public class AdApplyService {
     }
 
     public AdApplyForm getForm(AdApplyForm adApplyForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyForm.getExtra().put("billTypes",billTypes);
@@ -123,31 +120,36 @@ public class AdApplyService {
     }
 
     public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
-        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.POP.name())){
-            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
-        }
-        if(adApplyBillForm.getBillType().equalsIgnoreCase(BillTypeEnum.配件赠品.name())){
-            adApplyBillForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
-        }
         return adApplyBillForm;
     }
 
-    public List<AdApplyDto> findAdApplyList(String billType){
+    public AdApplyBillTypeChangeForm findAdApplyList(String billType){
+        AdApplyBillTypeChangeForm adApplyBillTypeChangeForm = new AdApplyBillTypeChangeForm();
         List<String> outGroupIds = Lists.newArrayList();
         if(BillTypeEnum.POP.name().equalsIgnoreCase(billType)){
             outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
         }
         if(BillTypeEnum.配件赠品.name().equalsIgnoreCase(billType)){
             outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
+        //同步财务库存
+        /*Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
+        List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
+        List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
+        for(StkInventory stkInventory:stkInventories){
+            adApplyDtoMap.get(stkInventory.getFMaterialId()).setStoreQty(stkInventory.getFBaseQty());
+        }*/
         cacheUtils.initCacheInput(adApplyDtos);
-        return adApplyDtos;
+        adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
+        return adApplyBillTypeChangeForm;
     }
 
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
@@ -222,6 +224,10 @@ public class AdApplyService {
                 adGoodsOrder.setOutShopId(adApply.getShopId());
                 adGoodsOrder.setShopId(adApply.getShopId());
                 adGoodsOrder.setBillDate(adApplyBillForm.getBillDate());
+                adGoodsOrder.setSmallQty(0);
+                adGoodsOrder.setMediumQty(0);
+                adGoodsOrder.setLargeQty(0);
+                adGoodsOrder.setSplitBill(false);
                 adGoodsOrder.setLocked(true);
                 adGoodsOrder.setBillRemarks(adApplyBillForm.getRemarks());
                 adGoodsOrderMap.put(adApply.getShopId(), adGoodsOrder);
@@ -235,6 +241,8 @@ public class AdApplyService {
             adGoodsOrderDetail.setProductId(adApply.getProductId());
             adGoodsOrderDetail.setPrice(product.getPrice2());
             adGoodsOrderDetail.setShouldGet(product.getShouldGet());
+            adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+            adGoodsOrderDetail.setShippedQty(0);
             adGoodsOrderDetail.setQty(adApply.getApplyQty());
             adGoodsOrderDetail.setConfirmQty(adApply.getConfirmQty());
             adGoodsOrderDetail.setBillQty(adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty());
@@ -276,8 +284,6 @@ public class AdApplyService {
             adGoodsOrder.setExpressOrderId(expressOrder.getId());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
-        //TODO 调用金蝶接口
-        RestResponse restResponse = batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -294,9 +300,12 @@ public class AdApplyService {
             newAdApplys.add(adApply);
         }
         adApplyRepository.save(newAdApplys);
+
+        //TODO 调用金蝶接口
+       batchSynToCloud(adGoodsOrders);
     }
 
-    public RestResponse batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
+    private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findAll(),"id");
         Map<String,Client> clientMap = CollectionUtil.extractToMap(clientRepository.findAll(),"id");
@@ -339,7 +348,31 @@ public class AdApplyService {
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
             salOutStockDtoList.add(salOutStockDto);
         }
-        return cloudClient.synForSalOutStock(salOutStockDtoList);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
+
+    }
+
+    //销售出库单成功示例
+    private List<KingdeeSynReturnDto> batchSynToCloudTest(){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+            SalOutStockDto salOutStockDto = new SalOutStockDto();
+            salOutStockDto.setExtendId("1");
+            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
+            salOutStockDto.setDate(LocalDate.now());
+            salOutStockDto.setCustomerNumber("00001");
+            salOutStockDto.setNote("模拟测试");
+
+            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+            SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+            entityDto.setStockNumber("G00201");
+            entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+            entityDto.setQty(1);
+            entityDto.setPrice(BigDecimal.TEN);
+            entityDto.setEntryNote("模拟测试");
+            entityDtoList.add(entityDto);
+            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+            salOutStockDtoList.add(salOutStockDto);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }
 
@@ -363,7 +396,6 @@ public class AdApplyService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"POP征订"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 }

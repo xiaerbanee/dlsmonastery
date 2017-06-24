@@ -43,7 +43,7 @@
                 <el-input v-model="inputForm.remarks" type="textarea"></el-input>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderForm.summery')">
-                <div style="color:red" >{{$t('adGoodsOrderForm.totalQty')}}：{{totalQty}},{{$t('adGoodsOrderForm.totalAmount')}}：{{totalPrice}}</div>
+                <div style="color:red" >{{$t('adGoodsOrderForm.totalQty')}}：{{totalQty}},{{$t('adGoodsOrderForm.totalAmount')}}：{{totalPrice.toFixed(2)}}</div>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adGoodsOrderForm.save')}}</el-button>

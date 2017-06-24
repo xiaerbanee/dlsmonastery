@@ -21,8 +21,7 @@ Page({
       url: $util.getUrl("ws/future/crm/productImeSale/getSaleForm"),
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         that.setData({ formProperty: res.data })
@@ -53,15 +52,14 @@ Page({
         url: $util.getUrl("ws/future/crm/productImeSale/checkForSale"),
         data: that.data.formData,
         header: {
-          'x-auth-token': app.globalData.sessionId,
-          'authorization': "Bearer" + wx.getStorageSync('token').access_token
+          Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
           console.log(res)
-          if(!res.errMsg){
-          that.setData({ productImeSearchResult: res.data });
-          }else {
-            that.setData({ "response.error": res.data});
+          if (!res.errMsg) {
+            that.setData({ productImeSearchResult: res.data });
+          } else {
+            that.setData({ "response.error": res.data });
           }
         }
       })
@@ -79,8 +77,7 @@ Page({
       url: $util.getUrl("ws/future/crm/productImeSale/sale"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
         if (!res.errMsg) {

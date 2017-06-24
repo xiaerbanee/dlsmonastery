@@ -40,7 +40,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="extendId" label="OA单据ID" sortable width="120"></el-table-column>
+        <el-table-column fixed prop="extendId" label="OA单据ID" sortable ></el-table-column>
         <el-table-column prop="extendType" label="单据分类" ></el-table-column>
         <el-table-column prop="formId" label="单据类型"></el-table-column>
         <el-table-column prop="billNo" label="单据编码"></el-table-column>

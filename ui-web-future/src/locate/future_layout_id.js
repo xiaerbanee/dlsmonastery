@@ -121,6 +121,7 @@ export default {
     save:"simpan",
     investInCause:'投入理由',
     prerequisiteMessage: "必填信息",
+    loading: "拼命加载中",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "perincian bahan",
@@ -492,7 +493,8 @@ export default {
     productName: "nama produk",
     qty: "kuantitas",
     returnPrice: "harga returan",
-    salePrice: "harga"
+    salePrice: "harga",
+    shouldGet:"应收：",
   },
   shopAllotForm: {
     shopAllotForm: "tambah alokasi toko",

@@ -50,8 +50,7 @@
           username:that.username,
           password:that.password
         };
-        axios.post('/api/uaa/oauth/token',qs.stringify(data)).then((response)=>{
-          that.$store.dispatch('setToken',response.data);
+        axios.post('/user/login',qs.stringify(data)).then((response)=>{
           that.initLogin();
         }).catch(function (error) {
           that.$store.dispatch('clearGlobal');

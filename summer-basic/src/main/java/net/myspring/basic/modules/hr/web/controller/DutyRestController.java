@@ -11,6 +11,7 @@ import net.myspring.basic.modules.hr.service.DutyRestService;
 import net.myspring.basic.modules.hr.web.form.DutyRestForm;
 import net.myspring.basic.modules.hr.web.query.DutyRestQuery;
 import net.myspring.basic.modules.hr.web.validator.DutyRestValidator;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,14 +41,17 @@ public class DutyRestController {
     public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
         dutyRestQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyRestDto> page = dutyRestService.findPage(pageable,dutyRestQuery);
+        for(DutyRestDto dutyRestDto:page.getContent()){
+            setOperationStatus(dutyRestDto);
+        }
         return page;
     }
 
     @RequestMapping(value = "getForm")
     public DutyRestForm getForm(DutyRestForm dutyRestForm) {
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
-        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId()));
-        dutyRestForm.setExpiredHour(dutyOvertimeService.getExpiredHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getEmployeeId(), LocalDate.now()));
+        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getEmployeeId()));
+        dutyRestForm.setExpiredHour(dutyOvertimeService.getExpiredHour(RequestUtils.getEmployeeId(), LocalDate.now()));
         dutyRestForm.getExtra().put("restList", DutyRestTypeEnum.values());
         dutyRestForm.getExtra().put("dateList", DutyDateTypeEnum.values());
         return dutyRestForm;
@@ -75,5 +79,11 @@ public class DutyRestController {
         dutyRestService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
+    }
+
+    private void setOperationStatus(DutyRestDto dutyRestDto){
+        if(dutyRestDto.getCreatedBy().equals(RequestUtils.getAccountId())&& AuditTypeEnum.APPLY.getValue().equals(dutyRestDto.getStatus())){
+            dutyRestDto.setDeleted(true);
+        }
     }
 }

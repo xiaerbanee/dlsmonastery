@@ -25,13 +25,15 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-        this.$emit('input', newVal);
+        if(newVal !== this.value) {
+          this.$emit('input', newVal);
+        }
       },setValue(val) {
         if(this.innerId===val){
           return;
         }
+        this.innerId=val;
         if(val){
-          this.innerId=val;
           let idStr=this.innerId;
           if(this.multiple && this.innerId){
             idStr=this.innerId.join();
@@ -48,7 +50,6 @@
             });
           })
         }else{
-          this.innerId=[];
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

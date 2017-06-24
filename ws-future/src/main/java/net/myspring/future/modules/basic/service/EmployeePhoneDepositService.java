@@ -8,6 +8,7 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.EmployeePhoneDepositStatusEnum;
 import net.myspring.future.common.enums.EmployeePhoneStatusEnum;
@@ -103,7 +104,7 @@ public class EmployeePhoneDepositService {
         EmployeePhoneDeposit employeePhoneDeposit;
         if (employeePhoneDepositForm.isCreate()) {
             String bankName = "GC邮（备用金）";
-            if ("JXvivo".equalsIgnoreCase(RequestUtils.getRequestEntity().getCompanyName())) {
+            if ("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())) {
                 bankName = "ZBL邮（备用金）";
             }
             employeePhoneDeposit=BeanUtil.map(employeePhoneDepositForm,EmployeePhoneDeposit.class);
@@ -138,7 +139,6 @@ public class EmployeePhoneDepositService {
             }
             employeePhoneDepositRepository.save(employeePhoneDepositList);
         } else {
-            List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
             Map<String,Product>  productMap=productRepository.findMap(CollectionUtil.extractToList(employeePhoneDepositList,"productId"));
             for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
                 if (EmployeePhoneDepositStatusEnum.省公司审核.name().equals(employeePhoneDeposit.getStatus()) && StringUtils.isBlank(employeePhoneDeposit.getOutCode())) {
@@ -160,26 +160,34 @@ public class EmployeePhoneDepositService {
                             employeePhone.setStatus(EmployeePhoneStatusEnum.已交.name());
                             employeePhoneRepository.save(employeePhone);
                         }
-                        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-                        cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
-                        cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
-                        List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-                        CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-                        entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
-                        entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
-                        entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-                        Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
-                        entityForBankDto.setBankAccountNumber(bank.getCode());
-                        Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
-                        entityForBankDto.setComment(depot.getName());
-                        cnJournalEntityForBankDtoList.add(entityForBankDto);
-                        cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-                        cnJournalForBankDtoList.add(cnJournalForBankDto);
                     }
                 }
             }
-            RestResponse restResponse = cloudClient.synForJournalForBank(cnJournalForBankDtoList);
+            batchSynForCloud(employeePhoneDepositList);
         }
+    }
+
+    private List<KingdeeSynReturnDto> batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+        for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
+            entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
+            entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
+            Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
+            entityForBankDto.setBankAccountNumber(bank.getCode());
+            Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
+            entityForBankDto.setComment(depot.getName());
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+        }
+        return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
     }
 
     public RestResponse batchSave(String data) {
@@ -223,7 +231,7 @@ public class EmployeePhoneDepositService {
                 return new RestResponse("保存失败，门店" + depotName + "在系统中不存在",null);
             }
             String bankName="GC邮（备用金）";
-            if("JXvivo".equalsIgnoreCase(RequestUtils.getRequestEntity().getCompanyName())){
+            if("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())){
                 bankName="ZBL邮（备用金）";
             }
             EmployeePhoneDeposit employeePhoneDeposit = new EmployeePhoneDeposit();
@@ -252,7 +260,7 @@ public class EmployeePhoneDepositService {
     }
 
     public String export(Workbook workbook, EmployeePhoneDepositQuery employeePhoneDepositQuery){
-        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDepositDto> employeePhoneDepositDtoList= employeePhoneDepositRepository.findFilter(employeePhoneDepositQuery);
         cacheUtils.initCacheInput(employeePhoneDepositDtoList);
@@ -270,7 +278,6 @@ public class EmployeePhoneDepositService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导购用机",employeePhoneDepositDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"导购用机"+ LocalDateTimeUtils.format(LocalDateTime.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 }

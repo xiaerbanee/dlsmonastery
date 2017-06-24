@@ -271,7 +271,7 @@
                 if(!this.isCreate){
                   this.$router.push({name:'recruitList',query:util.getQuery("recruitList")})
                 }
-              }).catch(function () {
+              }).catch( ()=> {
                 that.submitDisabled = false;
               });
             }else{

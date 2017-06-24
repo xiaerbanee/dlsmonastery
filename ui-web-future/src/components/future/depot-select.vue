@@ -73,7 +73,7 @@
             });
           })
         }else{
-          this.innerId=[];
+          this.innerId=val;
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

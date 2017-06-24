@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.form;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.basic.domain.AdPricesystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
 public class AdPricesystemForm extends BaseForm<AdPricesystem> {
     private String name;
 
-    private List<String> officeIdList;
+    private List<String> officeIdList=new ArrayList<>();
 
     public String getName() {
         return name;

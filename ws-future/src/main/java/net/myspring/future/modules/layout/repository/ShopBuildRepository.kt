@@ -104,6 +104,9 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
             sb.append("""  and depot.office_id = :officeId """)
         }
+        if (StringUtils.isNotEmpty(shopBuildQuery.processStatus)) {
+            sb.append("""  and t1.process_status = :processStatus """)
+        }
         if (shopBuildQuery.createdDateStart != null) {
             sb.append("""  and t1.created_date >= :createdDateStart """)
         }

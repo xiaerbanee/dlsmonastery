@@ -21,8 +21,7 @@ Page({
             wx.request({
                 url: $util.getUrl('basic/sys/menu/getMobileMenus'),
                 header: {
-                    'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                    Cookie: "JSESSIONID=" + app.globalData.sessionId
                 },
                 success: function (res) {
                     that.setData({ menuList: res.data });
@@ -38,7 +37,7 @@ Page({
             data: {},
             method: 'POST',
             header: {
-                'x-auth-token': app.globalData.sessionId
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function () {
                 that.data.menuList = null

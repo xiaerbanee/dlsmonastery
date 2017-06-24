@@ -88,7 +88,7 @@ public class ProductImeSaleService {
                     sb.append("串码：").append(ime).append("已核销；");
                 } else if(StringUtils.isNotBlank(depot.getDepotStoreId())) {
                     sb.append("串码：").append(ime).append("的所属地点为：").append(depot.getName()).append("，不是门店，无法核销；");
-                } else if(!depotManager.isAccess(depot.getId(), true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
+                } else if(!depotManager.isAccess(depot.getId(), true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }else if(productIme.getProductImeUploadId() != null) {
                     sb.append("串码：").append(ime).append("已上报,不能核销；");
@@ -102,7 +102,7 @@ public class ProductImeSaleService {
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
-        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
         Integer leftCredit =0;
         if(latestProductImeSale!=null){
@@ -156,7 +156,7 @@ public class ProductImeSaleService {
 
                 if(productIme.getProductImeSaleId() ==null) {
                     sb.append("串码：").append(ime).append("还未被核销，不能退回；");
-                } else if(!depotManager.isAccess(depot.getId(),true,RequestUtils.getAccountId(),RequestUtils.getRequestEntity().getOfficeId())) {
+                } else if(!depotManager.isAccess(depot.getId(),true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
                     sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
                 }
                 if(productIme.getProductImeUploadId() != null) {
@@ -171,7 +171,7 @@ public class ProductImeSaleService {
 
     public void saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
-        String employeeId = RequestUtils.getRequestEntity().getEmployeeId();
+        String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
@@ -236,8 +236,7 @@ public class ProductImeSaleService {
 
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"核销列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
 
     }
 }

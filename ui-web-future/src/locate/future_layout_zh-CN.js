@@ -121,6 +121,7 @@ export default {
     save:"保存",
     investInCause:'投入理由',
     prerequisiteMessage: "必填信息",
+    loading: "拼命加载中",
   },
   adGoodsOrderDetail: {
     adGoodsOrderDetail: "柜台订货详细",
@@ -497,6 +498,7 @@ export default {
     qty: "数量",
     returnPrice: "退货单价",
     salePrice: "开单单价",
+    shouldGet:"应收：",
   },
   shopAllotForm: {
     shopAllotForm: "门店调拨添加",

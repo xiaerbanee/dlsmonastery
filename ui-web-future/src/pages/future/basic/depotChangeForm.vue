@@ -49,10 +49,8 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import boolSelect from 'components/common/bool-select'
-  import ElOption from "../../../../node_modules/element-ui/packages/select/src/option.vue";
   export default{
     components:{
-      ElOption,
       depotSelect,boolSelect},
     data(){
       return this.getData()
@@ -85,8 +83,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.submitDisabled = false;
-                this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
+                this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList"), params:{_closeFrom:true}})
               }
             }).catch(()=> {
               this.submitDisabled = false;

@@ -1,6 +1,5 @@
 package net.myspring.tool;
 
-import net.myspring.tool.common.repository.BaseRepositoryImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -16,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableFeignClients
 @EntityScan(basePackageClasses = {GlobalToolApplication.class, Jsr310JpaConverters.class})
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
+@EnableOAuth2Client
 public class GlobalToolApplication {
 
 	public static void main(String[] args) {

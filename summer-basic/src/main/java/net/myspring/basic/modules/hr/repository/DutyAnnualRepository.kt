@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
@@ -26,6 +27,13 @@ interface DutyAnnualRepository : BaseRepository<DutyAnnual,String>,DutyAnnualRep
         order by annualYear desc
     """)
     fun findByEmployeeId(employeeId: String): List<DutyAnnual>
+
+    @Query("""
+        update  #{#entityName} t set enabled=0
+        where t.employeeId in ?1
+    """)
+    @Modifying
+    fun deleteByEmployeeId(employeeId: MutableList<String>): Int
 }
 interface DutyAnnualRepositoryCustom{
     fun findPage(pageable: Pageable, dutyAnnualQuery: DutyAnnualQuery): Page<DutyAnnualDto>

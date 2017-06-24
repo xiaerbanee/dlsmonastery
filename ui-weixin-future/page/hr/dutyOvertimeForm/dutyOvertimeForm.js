@@ -40,8 +40,7 @@ Page({
       url: $util.getUrl("basic/hr/dutyOvertime/save"),
       data: e.detail.value,
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+Cookie:"JSESSIONID="+app.globalData.sessionId
       },
       success: function (res) {
         console.log(res)

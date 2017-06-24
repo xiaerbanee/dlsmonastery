@@ -54,8 +54,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'bankList', query: util.getQuery("bankList")})
+                  this.$router.push({name: 'bankList', query: util.getQuery("bankList"),params:{_closeFrom:true}})
                 }
               }
             }).catch(() => {

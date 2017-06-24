@@ -44,7 +44,7 @@
               <el-input v-model="inputForm.mappingName"></el-input>
             </el-form-item>
             <el-form-item :label="$t('productForm.image')" prop="image">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/货品管理" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/货品管理" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -85,7 +85,6 @@
         rules: {
         },
         remoteLoading:false,
-        headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
       }
     },
       formSubmit(){
@@ -96,7 +95,7 @@
             axios.post('/api/ws/future/basic/product/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(!this.isCreate){
-                this.$router.push({name:'productList',query:util.getQuery("productList")})
+                this.$router.push({name:'productList',query:util.getQuery("productList"),params:{_closeFrom:true}})
               }else{
                 Object.assign(this.$data, this.getData());
                 this.initPage();

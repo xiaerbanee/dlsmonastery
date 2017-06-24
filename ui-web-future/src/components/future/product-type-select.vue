@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:null,
+        innerId:this.value,
         itemList : [],
         remoteLoading:false,
       };
@@ -25,15 +25,24 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-        this.$emit('input', newVal);
+        if(newVal !== this.value) {
+          this.$emit('input', newVal);
+        }
       },setValue(val) {
         if(this.innerId===val){
           return;
         }
         if(val) {
           this.innerId=val;
+          let idStr=this.innerId;
+          if(this.multiple && this.innerId){
+            idStr=this.innerId.join();
+          }
+          if(util.isBlank(idStr)) {
+            return;
+          }
           this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/productType/searchByIds?id=' + this.innerId).then((response)=>{
+          axios.get('/api/ws/future/basic/productType/searchByIds?id=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
             this.$nextTick(()=>{
@@ -41,7 +50,7 @@
             });
           })
         }else{
-          this.innerId=[];
+          this.innerId=val;
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

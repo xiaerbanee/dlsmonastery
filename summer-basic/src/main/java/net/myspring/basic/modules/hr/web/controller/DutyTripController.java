@@ -1,11 +1,13 @@
 package net.myspring.basic.modules.hr.web.controller;
 
 import net.myspring.basic.common.utils.RequestUtils;
+import net.myspring.basic.modules.hr.dto.DutyFreeDto;
 import net.myspring.basic.modules.hr.dto.DutyTripDto;
 import net.myspring.basic.modules.hr.service.DutyTripService;
 import net.myspring.basic.modules.hr.web.form.DutyTripForm;
 import net.myspring.basic.modules.hr.web.query.DutyTripQuery;
 import net.myspring.basic.modules.hr.web.validator.DutyTripValidator;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class DutyTripController {
     public Page<DutyTripDto>  list(Pageable pageable, DutyTripQuery dutyTripQuery){
         dutyTripQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyTripDto> page = dutyTripService.findPage(pageable,dutyTripQuery);
+        for(DutyTripDto dutyTripDto:page.getContent()){
+            setOperationStatus(dutyTripDto);
+        }
         return page;
     }
 
@@ -50,6 +55,12 @@ public class DutyTripController {
         dutyTripService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
+    }
+
+    private void setOperationStatus(DutyTripDto dutyTripDto){
+        if(dutyTripDto.getCreatedBy().equals(RequestUtils.getAccountId())&& AuditTypeEnum.APPLY.getValue().equals(dutyTripDto.getStatus())){
+            dutyTripDto.setDeleted(true);
+        }
     }
 
 }

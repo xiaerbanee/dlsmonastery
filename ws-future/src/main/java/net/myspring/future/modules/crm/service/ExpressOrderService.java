@@ -112,8 +112,7 @@ public class ExpressOrderService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
 
     }
 

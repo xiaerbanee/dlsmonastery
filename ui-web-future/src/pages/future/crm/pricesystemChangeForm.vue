@@ -80,27 +80,25 @@
         }
       },
       formSubmit(){
-        var that = this;
-        that.submitDisabled = true;
+        this.submitDisabled = true;
         table.validateCells(function(valid){
           if(valid) {
-            var form = that.$refs["inputForm"];
+            var form = this.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
-                that.inputForm.data = JSON.stringify(that.settings.data);
-                axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(that.inputForm, {allowDots: true})).then((response)=> {
-                 // alert(response.data.message);
-                  that.$message(response.data.message);
+                this.inputForm.data = JSON.stringify(this.settings.data);
+                axios.post('/api/ws/future/crm/pricesystemChange/save',qs.stringify(this.inputForm, {allowDots: true})).then((response)=> {
+                  this.$message(response.data.message);
                   Object.assign(this.$data, this.getData());
                   this.initPage();
-                }).catch(function () {
-                  that.submitDisabled = false;
+                }).catch( ()=> {
+                  this.submitDisabled = false;
                 });
               }
             })
           } else {
-              that.$message.error("表格中有错误数据");
-              that.submitDisabled = false;
+              this.$message.error("表格中有错误数据");
+              this.submitDisabled = false;
           }
         });
       },handleChange(){

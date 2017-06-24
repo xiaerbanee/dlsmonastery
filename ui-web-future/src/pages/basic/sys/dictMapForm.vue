@@ -56,7 +56,7 @@
                   this.initPage();
                 } else {
                   this.submitDisabled = false;
-                  this.$router.push({name: 'dictMapList', query: util.getQuery("dictMapList")});
+                  this.$router.push({name: 'dictMapList', query: util.getQuery("dictMapList"), params:{_closeFrom:true}});
                 }
               }).catch(function () {
                 that.submitDisabled = false;

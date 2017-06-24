@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.service.DutyOvertimeService;
 import net.myspring.basic.modules.hr.web.form.DutyOvertimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyOvertimeQuery;
 import net.myspring.basic.modules.hr.web.validator.DutyOvertimeValidator;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class DutyOvertimeController {
     public Page<DutyOvertimeDto> list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
         dutyOvertimeQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(pageable,dutyOvertimeQuery);
+        for(DutyOvertimeDto dutyOvertimeDto:page.getContent()){
+            setOperationStatus(dutyOvertimeDto);
+        }
         return page;
     }
 
@@ -51,5 +55,11 @@ public class DutyOvertimeController {
         dutyOvertimeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());
         return restResponse;
+    }
+
+    private void setOperationStatus(DutyOvertimeDto dutyOvertimeDto){
+        if(dutyOvertimeDto.getCreatedBy().equals(RequestUtils.getAccountId()) && AuditTypeEnum.APPLY.getValue().equals(dutyOvertimeDto.getStatus())){
+            dutyOvertimeDto.setDeleted(true);
+        }
     }
 }

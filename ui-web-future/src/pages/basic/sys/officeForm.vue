@@ -125,7 +125,7 @@
                   type: 'error'
                 });
               }
-            }).catch(function () {
+            }).catch( ()=> {
               that.submitDisabled = false;
             });
           } else {

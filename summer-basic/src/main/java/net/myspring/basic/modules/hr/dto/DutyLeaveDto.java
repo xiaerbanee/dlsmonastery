@@ -14,6 +14,16 @@ public class DutyLeaveDto extends DataDto<DutyLeave> {
     private String leaveType;
     private String status;
 
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public LocalDate getDutyDate() {
         return dutyDate;
     }

@@ -16,6 +16,16 @@ public class DutyOvertimeDto extends DataDto<DutyOvertime> {
     private Double hour;
     private String status;
 
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public LocalDate getDutyDate() {
         return dutyDate;
     }

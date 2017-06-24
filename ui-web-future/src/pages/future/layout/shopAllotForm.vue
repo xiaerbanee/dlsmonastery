@@ -16,20 +16,20 @@
           <el-input type="textarea" v-model="inputForm.remarks"></el-input>
         </el-form-item>
 
-        <div v-if="inputForm.fromShopId && inputForm.toShopId ">
-        <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAllotForm.save')}}</el-button>
-        </el-form-item>
-        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
-        <el-table  :data="filterShopAllotDetailList"  style="margin-top:5px;"   stripe border >
-          <el-table-column prop="productName" :label="$t('shopAllotForm.productName')"></el-table-column>
-          <el-table-column prop="qty" :label="$t('shopAllotForm.qty')">
-            <template scope="scope">
-              <el-input v-model.number="scope.row.qty" ></el-input>
-            </template>
-          </el-table-column>
+        <div v-if="inputForm.fromShopId && inputForm.toShopId">
+          <el-form-item>
+            <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('shopAllotForm.save')}}</el-button>
+          </el-form-item>
+          <el-input v-model="productName" @change="searchDetail" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
+          <el-table  :data="filterShopAllotDetailList"  style="margin-top:5px;"   stripe border >
+            <el-table-column prop="productName" :label="$t('shopAllotForm.productName')"></el-table-column>
+            <el-table-column prop="qty" :label="$t('shopAllotForm.qty')">
+              <template scope="scope">
+                <el-input v-model.number="scope.row.qty" ></el-input>
+              </template>
+            </el-table-column>
 
-        </el-table>
+          </el-table>
         </div >
       </el-form>
     </div>
@@ -41,7 +41,6 @@
   export default{
     components:{
       depotSelect,
-
     },
       data(){
         return this.getData();
@@ -83,11 +82,11 @@
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
-                  }else{
+                  if (this.isCreate) {
                     Object.assign(this.$data, this.getData());
                     this.initPage();
+                  }else{
+                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList"), params:{_closeFrom:true}});
                   }
                 }
               }).catch(() => {
@@ -127,13 +126,13 @@
         }
       ,refreshProductListIfNeeded(){
           //只有新增的时候才会刷新产品列表，修改的时候不能修改fromShop和toShop，所以也就不需要再次加载产品列表
-        if(this.inputForm.fromShopId && this.inputForm.toShopId && !this.$route.query.id){
+        if(util.isNotBlank(this.inputForm.fromShopId) && util.isNotBlank(this.inputForm.toShopId) && util.isBlank(this.$route.query.id)){
           axios.get('/api/ws/future/crm/shopAllot/findDetailListForNew',{params:{fromShopId:this.inputForm.fromShopId,toShopId:this.inputForm.toShopId}}).then((response)=>{
-            if(!response.data.success){
-              this.errMsg=response.data.errMsg;
-            }else{
+            if(response.data.success){
               this.errMsg='';
               this.setShopAllotDetailList(response.data.shopAllotDetailList);
+            }else{
+              this.errMsg=response.data.errMsg;
             }
           })
         }
@@ -158,7 +157,8 @@
       },initPage(){
           axios.get('/api/ws/future/crm/shopAllot/getForm').then((response)=>{
             this.inputForm = response.data;
-            if(this.$route.query.id){
+            if(util.isNotBlank(this.$route.query.id)){
+
               axios.get('/api/ws/future/crm/shopAllot/findDetailListForEdit',{params: {shopAllotId:this.$route.query.id}}).then((response)=>{
                 this.setShopAllotDetailList(response.data);
               });

@@ -23,6 +23,7 @@ import net.myspring.future.modules.layout.web.form.AdGoodsOrderShipForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -128,21 +129,8 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value = "bill")
     public RestResponse bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
-
-        //TODO 开单前校验
-
-//        // 检查用户
-//        if (adGoodsOrderBillForm.getSyn()!=null && adGoodsOrderBillForm.getSyn()) {
-//            RequestUtils.getRequestEntity().get
-//            AccountCommonDto accN
-//            if (StringUtils.isBlank(AccountUtils.getAccount().getOutId())) {
-//                return new Message("message_ad_goods_order_not_finance", Message.Type.danger);
-//            }
-//        }
-
         adGoodsOrderService.bill(adGoodsOrderBillForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-
     }
 
     @RequestMapping(value = "getYsyfMap")

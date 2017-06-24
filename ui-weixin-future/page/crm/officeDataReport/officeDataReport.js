@@ -65,8 +65,7 @@ Page({
             productName: formData.productName
           },
           method: 'GET',
-          header: { 'x-auth-token': app.globalData.sessionId,
-          'authorization': "Bearer" + wx.getStorageSync('token').access_token },
+          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
           success: function (res) {
             if (that.data.parentIdArr.length > 1) {
               that.setData({ hideButton: true })

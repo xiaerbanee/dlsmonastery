@@ -8,7 +8,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.crm.dto.SimpleStoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.StoreAllotDetailService;
@@ -59,16 +59,7 @@ public class StoreAllotController {
             throw new ServiceException("请录入大库店调拨明细");
         }
 
-        storeAllotService.saveForm(storeAllotForm);
-//        TODO 同步金蝶
-//        if(storeAllotForm.getSyn()){
-//            k3cloudSynService.syn(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name());
-//            if(store.getExpressOrder()!=null){
-//                ExpressOrder expressOrder = store.getExpressOrder();
-//                expressOrder.setOutCode(k3cloudSynService.getOutCode(store.getId(), K3CloudSynEntity.ExtendType.大库调拨.name()));
-//                expressOrderService.save(expressOrder);
-//            }
-//        }
+        storeAllotService.save(storeAllotForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
@@ -93,12 +84,12 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "findDetailListForCommonAllot")
-    public List<SimpleStoreAllotDetailDto> findDetailListForCommonAllot(String fromStoreId) {
+    public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
         return storeAllotService.findDetailListForCommonAllot(fromStoreId);
     }
 
     @RequestMapping(value = "findDetailListForFastAllot")
-    public List<SimpleStoreAllotDetailDto> findDetailListForFastAllot() {
+    public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
         return storeAllotService.findDetailListForFastAllot();
 

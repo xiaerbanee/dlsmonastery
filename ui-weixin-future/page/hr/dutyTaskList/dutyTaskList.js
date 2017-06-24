@@ -27,9 +27,7 @@ Page({
       success: function (res) {
         wx.request({
           url: $util.getUrl("basic/hr/duty"),
-          header: { 'x-auth-token': app.globalData.sessionId,
-                    'authorization': "Bearer" + wx.getStorageSync('token').access_token
-           },
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
             console.log(res)
@@ -51,9 +49,7 @@ Page({
             url: $util.getUrl("basic/hr/duty/passAll"),
             data: {},
             method: 'GET',
-            header: { 'x-auth-token': app.globalData.sessionId,
-                      'authorization': "Bearer" + wx.getStorageSync('token').access_token
-              },
+            header: { Cookie: "JSESSIONID=" + app.globalData.sessionId},
             success: function (res) {
               that.pageRequest();
             }

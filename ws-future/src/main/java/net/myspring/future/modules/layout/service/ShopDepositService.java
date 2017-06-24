@@ -2,15 +2,19 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
-import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
+import net.myspring.cloud.modules.input.dto.ArOtherRecAbleFEntityDto;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.Client;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
@@ -102,21 +106,57 @@ public class ShopDepositService {
 
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
 //TODO 同步金蝶
-//                String otherTypes="其他应付款-客户押金（批发）-市场保证金";
-//                if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
-//                    K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.AR_OtherRecAble.name(),item.getAROtherRecAbleImage(otherTypes),item.getId(),item.getIdStr(), K3CloudSynEntity.ExtendType.押金列表.name());
-//                    k3cloudSynDao.save(k3CloudSynEntity);
-//                    item.setK3CloudSynEntity(k3CloudSynEntity);
-//                } else {
-//                    K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.CN_JOURNAL.name(),item.getBankJournal(otherTypes),item.getId(),item.getIdStr(), K3CloudSynEntity.ExtendType.押金列表.name());
-//                    k3cloudSynDao.save(k3CloudSynEntity);
-//                    item.setK3CloudSynEntity(k3CloudSynEntity);
-//                }
-//                shopDepositDao.save(item);
-//
-//            list.add(item.getId());
+                if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
+                    List<KingdeeSynReturnDto> returnDtoList = synForOtherRecAble(null);
+                } else {
+                    List<KingdeeSynReturnDto> returnDtoList = synForJournalBank(null);
+                }
         }
 
+    }
+
+    private List<KingdeeSynReturnDto> synForJournalBank(List<ShopDepositDto> shopDepositDtoList){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+        for (ShopDepositDto shopDepositDto : shopDepositDtoList) {
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId(shopDepositDto.getId());//单据ID值
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
+            cnJournalForBankDto.setDate(null);
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            entityForBankDto.setDebitAmount(shopDepositDto.getAmount());
+            entityForBankDto.setCreditAmount(shopDepositDto.getAmount().multiply(new BigDecimal(-1)));
+            entityForBankDto.setDepartmentNumber("");
+            entityForBankDto.setBankAccountNumber("");
+            entityForBankDto.setComment("");
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+        }
+        return cloudClient.synJournalBankForShopDeposit(cnJournalForBankDtoList);
+    }
+
+    private List<KingdeeSynReturnDto> synForOtherRecAble(List<ShopDepositDto> shopDepositDtoList){
+        List<ArOtherRecAbleDto> arOtherRecAbleDtoList = Lists.newArrayList();
+        for (ShopDepositDto shopDepositDto : shopDepositDtoList){
+            ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
+            otherRecAbleDto.setDate(null);
+            otherRecAbleDto.setCustomerNumber("");
+            otherRecAbleDto.setDepartmentNumber("");
+            otherRecAbleDto.setExtendType(ExtendTypeEnum.押金列表.name());
+            otherRecAbleDto.setExtendId("");//单据Id
+            otherRecAbleDto.setAmount(null);
+            List<ArOtherRecAbleFEntityDto> entityDtoList = Lists.newArrayList();
+            ArOtherRecAbleFEntityDto entityDto = new ArOtherRecAbleFEntityDto();
+            entityDto.setCostDepartmentNumber("");//同上
+            entityDto.setAmount(null);//同上
+            entityDto.setComment("");//getShopName()+getRemarks()
+            entityDtoList.add(entityDto);
+            otherRecAbleDto.setArOtherRecAbleFEntityDtoList(entityDtoList);
+            arOtherRecAbleDtoList.add(otherRecAbleDto);
+        }
+        return cloudClient.synOtherRecAble(arOtherRecAbleDtoList);
     }
 
     public ShopDepositDto findDto(String id) {
@@ -167,8 +207,7 @@ public class ShopDepositService {
 
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"押金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
 
     }
 
