@@ -121,8 +121,11 @@ public class ArReceiveBillDto {
         model.put("FRECEIVEAMOUNTFOR_H", sumAmount);
         //表头-实收金额
         model.put("FREALRECAMOUNTFOR", sumAmount);
+        //结算汇率
         model.put("FSETTLERATE", 1);
+        //汇率
         model.put("FEXCHANGERATE", 1);
+        //业务类型
         model.put("FBUSINESSTYPE", 1);
         //销售部门
         model.put("FSALEDEPTID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
