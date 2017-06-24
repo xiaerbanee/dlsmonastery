@@ -115,7 +115,7 @@
                   form.resetFields();
 
                 } else {
-                  this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList")});
+                  this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
                 }
               }
             }).catch( () => {

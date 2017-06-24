@@ -68,8 +68,7 @@
               this.$message(response.data.message);
               if(response.data.success){
                 if (!this.isCreate) {
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList")})
+                  this.$router.push({name: 'demoPhoneList', query: util.getQuery("demoPhoneList"), params:{_closeFrom:true}})
                 } else {
                   Object.assign(this.$data, this.getData());
                   this.initPage();

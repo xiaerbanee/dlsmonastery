@@ -119,7 +119,7 @@ public class ProductImeService {
                 }
             }
             //填充productQty
-            Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "id"));
+            Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(productImeList, "productId"));
             Map<String, Integer> productQtyMap = Maps.newHashMap();
             for (ProductIme productIme : productImeList) {
                 Product product = productMap.get(productIme.getProductId());

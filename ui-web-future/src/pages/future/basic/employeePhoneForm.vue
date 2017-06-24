@@ -13,7 +13,7 @@
           <el-input v-model.number="inputForm.depositAmount"></el-input>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneForm.uploadTime')" :label-width="formLabelWidth">
-          <date-picker  v-model="inputForm.uploadTime" ></date-picker>
+          <date-time-picker  v-model="inputForm.uploadTime" ></date-time-picker>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneForm.productName')" prop="productId">
           <product-select v-model="inputForm.productId"></product-select>
@@ -45,8 +45,9 @@
 <script>
   import productSelect from 'components/future/product-select'
   import depotSelect from 'components/future/depot-select'
+  import dateTimePicker from 'components/common/date-time-picker'
   export default{
-    components:{productSelect,depotSelect},
+    components:{productSelect,depotSelect,dateTimePicker},
     data(){
       return this.getData()
     },

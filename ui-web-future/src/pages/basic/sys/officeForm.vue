@@ -115,7 +115,7 @@
                 this.$message(response.data.message);
                 Object.assign(this.$data,this.getData());
                 if (!that.isCreate) {
-                  this.$router.push({name: 'officeList', query: util.getQuery("officeList")})
+                  this.$router.push({name: 'officeList', query: util.getQuery("officeList"), params:{_closeFrom:true}})
                 }
               }else {
                 that.submitDisabled = false;

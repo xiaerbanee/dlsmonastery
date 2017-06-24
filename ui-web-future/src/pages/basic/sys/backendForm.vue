@@ -48,7 +48,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
               if(!this.inputForm.create){
-                this.$router.push({name:'backendList',query:util.getQuery("backendList")})
+                this.$router.push({name:'backendList',query:util.getQuery("backendList"), params:{_closeFrom:true}})
               }
             }).catch( ()=> {
               that.submitDisabled = false;

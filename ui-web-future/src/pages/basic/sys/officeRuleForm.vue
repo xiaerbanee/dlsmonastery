@@ -66,7 +66,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
               if(!that.isCreate){
-                this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList")})
+                this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList"), params:{_closeFrom:true}})
               }
             }).catch( ()=> {
               this.submitDisabled = false;

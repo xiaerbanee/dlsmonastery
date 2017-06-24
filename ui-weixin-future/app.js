@@ -58,7 +58,6 @@ App({
                         url: '/page/sys/accountBind/accountBind'
                     })
                 } else {
-                    console.log(res.data)
                     that.globalData.sessionId=res.data.JSESSIONID
                     typeof cb == "function" && cb();
                 }

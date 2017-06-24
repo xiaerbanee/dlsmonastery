@@ -73,10 +73,8 @@
                 if (this.isCreate) {
                   Object.assign(this.$data, this.getData());
                   this.initPage();
-
                 }else {
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'bankInList', query: util.getQuery("bankInList")});
+                  this.$router.push({name: 'bankInList', query: util.getQuery("bankInList"), params:{_closeFrom:true}});
                 }
               }
             }).catch( () => {
