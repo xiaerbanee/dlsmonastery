@@ -4,6 +4,7 @@ import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -17,24 +18,16 @@ import java.time.LocalDate;
  */
 interface OppoPlantProductItemelectronSelRepository : BaseRepository<OppoPlantProductItemelectronSel, String>, OppoPlantProductItemelectronSelRepositoryCustom {
 
-
+    @Query("select  t from #{#entityName}  t where t.productNo in (?1)")
+    fun findProductNos(productNos: MutableList<String>): MutableList<OppoPlantProductItemelectronSel>
 
 }
 
 interface OppoPlantProductItemelectronSelRepositoryCustom{
-    fun findProductNos(productNos: MutableList<String>): MutableList<String>
     fun plantProductItemelectronSel(companyId: String, password: String, systemDate: String): MutableList<OppoPlantProductItemelectronSel>
 }
 
 class OppoPlantProductItemelectronSelRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) :OppoPlantProductItemelectronSelRepositoryCustom{
-    override fun findProductNos(productNos: MutableList<String>): MutableList<String>{
-        val paramMap = Maps.newHashMap<String, Any>();
-        paramMap.put("productNos",productNos);
-        return namedParameterJdbcTemplate.query("""
-              select  t.product_no from oppo_plant_product_itemelectron_sel t
-              where t.product_no in (:productNos)
-        """,paramMap, BeanPropertyRowMapper(String::class.java));
-    }
 
     override fun plantProductItemelectronSel(companyId: String, password: String, systemDate: String): MutableList<OppoPlantProductItemelectronSel>{
         val paramMap = Maps.newHashMap<String, Any>();

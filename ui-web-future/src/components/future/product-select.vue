@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled',"hasIme"],
     data() {
       return {
-        innerId:null,
+        innerId:this.value,
         itemList : [],
         remoteLoading:false,
       };
@@ -55,27 +55,23 @@
         if(this.innerId===val){
           return;
         }
-        this.innerId = val;
-        if (val) {
+        if (util.isNotBlank(val)) {
+          this.innerId = val;
           let ids = this.innerId;
           if (this.multiple && this.innerId) {
-            ids = new Array(this.innerId);
-          }
-          if (util.isBlank(ids)) {
-            return;
+            ids = this.innerId.join();
           }
           this.remoteLoading = true;
           axios.get('/api/ws/future/basic/product/filter?ids=' + ids).then((response) => {
             this.itemList = response.data;
             this.remoteLoading = false;
-            this.$nextTick(() => {
-              this.$emit('afterInit');
-            });
           })
-        } else {
-          this.$nextTick(() => {
-            this.$emit('afterInit');
-          });
+        }else{
+          if(this.multiple){
+            this.innerId=[];
+          }else{
+            this.innerId=val;
+          }
         }
       }
     },created () {

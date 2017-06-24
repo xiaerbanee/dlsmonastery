@@ -1,8 +1,11 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -12,6 +15,7 @@ import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
@@ -212,6 +216,138 @@ public class ShopAllotService {
 ////            k3cloudSynService.syn(shopAllot.getId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //    }
 
+    }
+
+    //直接调拨单成功示例
+    public KingdeeSynReturnDto synStkTransferDirectTest(StoreAllotDto storeAllotDto){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId("2");
+        transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
+        transferDirectDto.setNote("模拟测试");
+        transferDirectDto.setDate(LocalDate.now());
+        StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+        entryDto.setQty(1);
+        entryDto.setMaterialNumber("O4805804");//product.outCode
+        entryDto.setSrcStockNumber("G001"); //调出仓库
+        entryDto.setDestStockNumber("G020");//调入仓库
+        transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+        return cloudClient.synStkTransferDirect(transferDirectDto);
+    }
+
+    public KingdeeSynReturnDto synStkTransferDirect(ShopAllotDto shopAllotDto){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId(shopAllotDto.getId());
+        transferDirectDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        transferDirectDto.setNote("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+        transferDirectDto.setDate(LocalDate.now());
+        List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();//开单关联的详细
+        for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
+            if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(shopAllotDetail.getQty());
+                entryDto.setMaterialNumber("");
+                entryDto.setSrcStockNumber(""); //调出仓库
+                entryDto.setDestStockNumber("");//调入仓库
+                entryDto.setNoteEntry("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            }
+        }
+        return cloudClient.synStkTransferDirect(transferDirectDto);
+    }
+
+    //销售出库单成功示例
+    private List<KingdeeSynReturnDto> synSalOutStockTest(){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        SalOutStockDto salOutStockDto = new SalOutStockDto();
+        salOutStockDto.setExtendId("1");
+        salOutStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        salOutStockDto.setDate(LocalDate.now());
+        salOutStockDto.setCustomerNumber("00001");
+        salOutStockDto.setNote("模拟测试");
+
+        List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+        entityDto.setStockNumber("G00201");
+        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+        entityDto.setQty(1);
+        entityDto.setPrice(BigDecimal.TEN);
+        entityDto.setEntryNote("模拟测试");
+        entityDtoList.add(entityDto);
+        salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+        salOutStockDtoList.add(salOutStockDto);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
+
+    }
+
+    private List<KingdeeSynReturnDto> synSalOutStock(ShopAllotDto shopAllotDto){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        SalOutStockDto salOutStockDto = new SalOutStockDto();
+        salOutStockDto.setExtendId("");
+        salOutStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        salOutStockDto.setDate(LocalDate.now());
+        salOutStockDto.setCustomerNumber("00001");
+        salOutStockDto.setNote("模拟测试");
+
+        List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+        List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();//开单关联的详细
+        for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
+            if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
+                SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+                entityDto.setStockNumber("G00201");
+                entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+                entityDto.setQty(null);
+                entityDto.setPrice(null);
+                entityDto.setEntryNote("");
+                entityDtoList.add(entityDto);
+                salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+                salOutStockDtoList.add(salOutStockDto);
+            }
+        }
+        return cloudClient.synSalOutStock(salOutStockDtoList);
+
+    }
+
+    //销售退货单成功示例
+    private List<KingdeeSynReturnDto> synSalReturnStockTest(ShopAllotDto shopAllotDto){
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        SalReturnStockDto returnStockDto = new SalReturnStockDto();
+        returnStockDto.setExtendId("1");
+        returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        returnStockDto.setDate(LocalDate.now());
+        returnStockDto.setCustomerNumber("00001");
+        returnStockDto.setNote("模拟测试");
+        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+        entityDto.setQty(1);
+        entityDto.setPrice(BigDecimal.TEN);
+        entityDto.setEntryNote("模拟测试");
+        entityDto.setStockNumber("CK002");
+        entityDtoList.add(entityDto);
+        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
+        salReturnStockDtoList.add(returnStockDto);
+        return cloudClient.synSalReturnStock(salReturnStockDtoList);
+    }
+
+    private List<KingdeeSynReturnDto> synSalReturnStock(ShopAllotDto shopAllotDto){
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        SalReturnStockDto returnStockDto = new SalReturnStockDto();
+        returnStockDto.setExtendId(shopAllotDto.getId());
+        returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        returnStockDto.setDate(LocalDate.now());
+        returnStockDto.setCustomerNumber("");//shopAllotDto.getFromShop().getRealCode()
+        returnStockDto.setNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
+        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+        entityDto.setMaterialNumber("");// shopAllotDetail.getProduct().getCode()
+        entityDto.setQty(1);//shopAllotDetail.getQty()
+        entityDto.setPrice(null);//shopAllotDetail.getReturnPrice()
+        entityDto.setEntryNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
+        entityDto.setStockNumber("");//getToShop().getDelegateDepot()==null?getStore().getRealCode():getToShop().getDelegateDepot().getRealCode()
+        entityDtoList.add(entityDto);
+        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
+        salReturnStockDtoList.add(returnStockDto);
+        return cloudClient.synSalReturnStock(salReturnStockDtoList);
     }
 
     public List<ShopAllotDetailDto> findDetailListForViewOrAudit(String id) {
