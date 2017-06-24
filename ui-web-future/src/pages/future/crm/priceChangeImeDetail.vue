@@ -90,7 +90,7 @@
                   this.fileList = [];
                   this.submitDisabled = false;
                 } else {
-                  this.$router.push({name:'priceChangeImeList',query:util.getQuery("priceChangeImeList")})
+                  this.$router.push({name:'priceChangeImeList',query:util.getQuery("priceChangeImeList"), params:{_closeFrom:true}})
                 }
               }).catch(function () {
                 this.submitDisabled = false;

@@ -17,7 +17,6 @@ Page({
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res);
         that.setData({'formProperty.crossAreaList':res.data.crossArea,'formProperty.statusList':res.data.status})
       }
     })
@@ -44,7 +43,6 @@ Page({
           header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
           data: that.data.formData,
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
