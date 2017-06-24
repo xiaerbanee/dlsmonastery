@@ -141,7 +141,7 @@ public class AdApplyService {
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         //同步财务库存
-       /* Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
+        /*Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
         List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
         List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
         for(StkInventory stkInventory:stkInventories){
