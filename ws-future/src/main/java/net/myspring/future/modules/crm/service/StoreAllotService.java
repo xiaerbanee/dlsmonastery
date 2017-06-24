@@ -272,13 +272,14 @@ public class StoreAllotService {
             entryDto.setMaterialNumber("");
             entryDto.setSrcStockNumber(""); //调出仓库
             entryDto.setDestStockNumber("");//调入仓库
+            entryDto.setNoteEntry("");//不用填
             transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
         return cloudClient.synStkTransferDirect(transferDirectDto);
     }
 
-    //直接调拨单示例
-    public KingdeeSynReturnDto synToCloudTest(StoreAllotDto storeAllotDto){
+    //直接调拨单成功示例
+    public KingdeeSynReturnDto synToCloudTest(){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId("2");
         transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());

@@ -8,6 +8,7 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -521,6 +522,30 @@ public class AdGoodsOrderService {
 
         cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto));
         //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
+
+    }
+
+    //销售出库单成功示例
+    private List<KingdeeSynReturnDto> batchSynToCloudTest(){
+        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        SalOutStockDto salOutStockDto = new SalOutStockDto();
+        salOutStockDto.setExtendId("1");
+        salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
+        salOutStockDto.setDate(LocalDate.now());
+        salOutStockDto.setCustomerNumber("00001");
+        salOutStockDto.setNote("模拟测试");
+
+        List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+        entityDto.setStockNumber("G00201");
+        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+        entityDto.setQty(1);
+        entityDto.setPrice(BigDecimal.TEN);
+        entityDto.setEntryNote("模拟测试");
+        entityDtoList.add(entityDto);
+        salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+        salOutStockDtoList.add(salOutStockDto);
+        return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }
 
