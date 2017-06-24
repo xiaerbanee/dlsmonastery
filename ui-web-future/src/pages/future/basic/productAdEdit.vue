@@ -124,7 +124,7 @@
         });
       },formSubmit(){
             this.submitDisabled = true;
-            table.validateCells(function(valid) {
+            table.validateCells((valid)=> {
             if(valid) {
               console.log('this:',this);
               this.inputForm.productList = JSON.stringify(table.getData());

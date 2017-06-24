@@ -68,20 +68,14 @@ public class VoucherController {
     @RequestMapping(value = "form")
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
-        List<String> headerList = Lists.newLinkedList();
-        headerList.add("摘要");
-        headerList.add("科目名称");
-        List<String> flexItemGroupNameList = bdFlexItemGroupService.getNameList();
-        headerList.addAll(flexItemGroupNameList);
-        headerList.add("借方金额");
-        headerList.add("贷方金额");
-        map.put("headerList", headerList);
         VoucherModel voucherModel = getVoucherModel();
+        map.put("headerList", voucherService.getHeaders(voucherModel.getBdFlexItemGroupList()));
         map.put("accountNameToFlexGroupNamesMap",voucherService.accountNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList()));
         map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
         if (voucherForm.getId() != null){
             VoucherDto voucherDto = BeanUtil.map(voucherForm,VoucherDto.class);
-            map.put("data",voucherService.initData(voucherDto,voucherModel,flexItemGroupNameList));
+
+            map.put("data",voucherService.initData(voucherDto,voucherModel));
         }else {
             map.put("data", Lists.newArrayList());
         }
@@ -109,8 +103,8 @@ public class VoucherController {
 
     @RequestMapping(value = "save")
     public RestResponse save(VoucherForm voucherForm) {
-
-        return voucherService.save(voucherForm);
+        VoucherModel voucherModel = getVoucherModel();
+        return voucherService.save(voucherForm,voucherModel);
     }
 
     public VoucherModel getVoucherModel(){

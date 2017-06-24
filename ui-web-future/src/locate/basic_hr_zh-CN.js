@@ -534,6 +534,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    noSelectionFound:"没有选中的项，请选择！"
   },
   dutyTripList: {
     dutyTripList: "出差申请",

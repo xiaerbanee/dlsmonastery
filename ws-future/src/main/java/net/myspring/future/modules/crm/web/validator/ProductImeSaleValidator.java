@@ -64,7 +64,5 @@ public class ProductImeSaleValidator implements Validator {
         if(StringUtils.isNotBlank(sb.toString())) {
             errors.rejectValue("ime", "error.ime", sb.toString());
         }
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "shopId", "error.shopId", "请选择门店");
-
     }
 }

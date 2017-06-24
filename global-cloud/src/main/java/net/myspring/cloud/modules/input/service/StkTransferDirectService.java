@@ -4,11 +4,14 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
+import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 直接调拨单
@@ -31,10 +34,9 @@ public class StkTransferDirectService {
         return kingdeeSynDto;
     }
 
-    public KingdeeSynDto saveForWS(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public KingdeeSynDto save(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto = null;
         if (stkTransferDirectDto != null) {
-            stkTransferDirectDto.setCreatorK3(accountKingdeeBook.getUsername());
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 kingdeeSynDto = save(stkTransferDirectDto, kingdeeBook);
@@ -43,5 +45,10 @@ public class StkTransferDirectService {
             }
         }
         return kingdeeSynDto;
+    }
+
+    public KingdeeSynDto saveForWS(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        stkTransferDirectDto.setCreator(accountKingdeeBook.getUsername());
+        return save(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);
     }
 }

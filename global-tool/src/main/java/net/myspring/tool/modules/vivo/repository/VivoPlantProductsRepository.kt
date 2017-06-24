@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository
 interface VivoPlantProductsRepository: BaseRepository<VivoPlantProducts, String> {
 
     @Query("""
-        select t.item_number
+        select t.itemNumber
         from #{#entityName} t
-        where t.item_number in ?1
+        where t.itemNumber in ?1
         """)
     fun findItemNumbers(itemNumbers: MutableCollection<String>): MutableList<String>
 }

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -26,6 +27,8 @@ public class JdbcConfig {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
+
+
 
     @Bean
     public DynamicDataSource dynamicDataSource() {
@@ -81,5 +84,10 @@ public class JdbcConfig {
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dynamicDataSource());
+    }
+
+    @Bean
+    public SimpleJdbcCall simpleJdbcCall(){
+        return new SimpleJdbcCall(dynamicDataSource());
     }
 }

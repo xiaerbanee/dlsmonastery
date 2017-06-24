@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 @Lazy(false)
 public class ScheduleUtils {
-	protected Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private OppoService oppoService;
+//	protected Logger logger = LoggerFactory.getLogger(getClass());
+//	@Autowired
+//	private OppoService oppoService;
 
 	@Transactional
 	public String synOppo(LocalDate date) {

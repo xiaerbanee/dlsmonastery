@@ -69,7 +69,7 @@
                 if(!this.inputForm.id){
                   form.resetFields();
                 } else {
-                  this.$router.push({name:'kingdeeBookList',query:util.getQuery("kingdeeBookList")})
+                  this.$router.push({name:'kingdeeBookList',query:util.getQuery("kingdeeBookList"),params:{_closeFrom:true}});
                 }
               }).catch(function () {
                 this.submitDisabled = false;

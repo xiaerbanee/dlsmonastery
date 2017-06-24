@@ -109,22 +109,16 @@ axios.interceptors.response.use((resp) => {
   return resp;
 }, (error) => {
   if (error.response) {
-    console.log(error)
+
     switch (error.response.status) {
       case 401:
         store.dispatch('clearGlobal');
         window.location.assign('/');
         break;
       case 404:
-        if(error.response.data.path.indexOf("login")){
+        if(error.response.request.responseURL.indexOf("login")){
           store.dispatch('clearGlobal');
-          axios.post('/user/logout').then(()=>{
-            axios.post('/logout').then(()=>{
-              window.location.reload();
-            }).catch(function () {
-            });
-          }).catch(function () {
-          });
+          window.location.assign('/');
           break;
         }
       case 500:
