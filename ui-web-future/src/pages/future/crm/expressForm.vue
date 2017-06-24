@@ -60,8 +60,7 @@
                 this.$message(response.data.message);
                 if(response.data.success) {
                   if (!that.isCreate) {
-                    this.submitDisabled = false;
-                    this.$router.push({name: 'expressList', query: util.getQuery("expressList")});
+                    this.$router.push({name: 'expressList', query: util.getQuery("expressList"), params:{_closeFrom:true}});
                   }else{
                     Object.assign(this.$data, this.getData());
                     this.initPage();

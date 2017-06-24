@@ -58,8 +58,7 @@
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 if(!that.isCreate){
-                  this.submitDisabled = false;
-                  this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList")})
+                  this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList"), params:{_closeFrom:true}})
                 }else{
                   Object.assign(this.$data, this.getData());
                   this.initPage();
