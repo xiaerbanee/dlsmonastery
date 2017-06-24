@@ -6,6 +6,8 @@ import net.myspring.cloud.modules.kingdee.repository.ArReceivableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 下推应收单
  * Created by lihx on 2017/6/17.
@@ -17,6 +19,7 @@ public class ArReceivableService {
     private ArReceivableRepository arReceivableRepository;
 
     public ArReceivable findTopOneBySourceBillNo(String sourceBillNo){
-        return arReceivableRepository.findTopOneBySourceBillNo(sourceBillNo);
+        List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(sourceBillNo);
+        return receivableList.get(0);
     }
 }

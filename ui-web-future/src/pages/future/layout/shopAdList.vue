@@ -51,7 +51,7 @@
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
         <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
         <el-table-column column-key="officeId" prop="officeName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
-        <el-table-column column-key="shopId" prop="shopId"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
+        <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
           <template scope="scope">
             <el-tag :type="scope.row.specialArea ? 'primary' : 'danger'">{{scope.row.specialArea | bool2str}}</el-tag>

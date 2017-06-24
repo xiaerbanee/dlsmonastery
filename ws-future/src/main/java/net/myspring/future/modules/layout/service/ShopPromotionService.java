@@ -40,7 +40,7 @@ public class ShopPromotionService {
         ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
-            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDateTime.now());
+            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDate.now().atStartOfDay());
             shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
             shopPromotionRepository.save(shopPromotion);
         }else{

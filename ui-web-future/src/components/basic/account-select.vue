@@ -10,7 +10,7 @@
     props: ['value','multiple','disabled'],
     data() {
       return {
-        innerId:this.value,
+        innerId:null,
         itemList : [],
         remoteLoading:false,
       };
@@ -25,7 +25,6 @@
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
-
         if(newVal !== this.value) {
           this.$emit('input', newVal);
         }
@@ -33,8 +32,8 @@
         if(this.innerId===val){
           return;
         }
+        this.innerId=val;
         if(val){
-          this.innerId=val;
           let idStr=this.innerId;
           if(this.multiple && this.innerId){
             idStr=this.innerId.join();
@@ -51,7 +50,6 @@
             });
           })
         }else{
-          this.innerId=val;
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

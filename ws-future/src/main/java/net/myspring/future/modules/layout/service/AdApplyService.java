@@ -8,6 +8,7 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -111,7 +112,7 @@ public class AdApplyService {
     }
 
     public AdApplyForm getForm(AdApplyForm adApplyForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyForm.getExtra().put("billTypes",billTypes);
@@ -119,7 +120,7 @@ public class AdApplyService {
     }
 
     public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
-        List<String> billTypes = new ArrayList<>();
+        List<String> billTypes = Lists.newArrayList();
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
@@ -139,6 +140,13 @@ public class AdApplyService {
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
+        //同步财务库存
+       /* Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
+        List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
+        List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
+        for(StkInventory stkInventory:stkInventories){
+            adApplyDtoMap.get(stkInventory.getFMaterialId()).setStoreQty(stkInventory.getFBaseQty());
+        }*/
         cacheUtils.initCacheInput(adApplyDtos);
         adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
         return adApplyBillTypeChangeForm;
@@ -216,6 +224,10 @@ public class AdApplyService {
                 adGoodsOrder.setOutShopId(adApply.getShopId());
                 adGoodsOrder.setShopId(adApply.getShopId());
                 adGoodsOrder.setBillDate(adApplyBillForm.getBillDate());
+                adGoodsOrder.setSmallQty(0);
+                adGoodsOrder.setMediumQty(0);
+                adGoodsOrder.setLargeQty(0);
+                adGoodsOrder.setSplitBill(false);
                 adGoodsOrder.setLocked(true);
                 adGoodsOrder.setBillRemarks(adApplyBillForm.getRemarks());
                 adGoodsOrderMap.put(adApply.getShopId(), adGoodsOrder);
@@ -229,6 +241,8 @@ public class AdApplyService {
             adGoodsOrderDetail.setProductId(adApply.getProductId());
             adGoodsOrderDetail.setPrice(product.getPrice2());
             adGoodsOrderDetail.setShouldGet(product.getShouldGet());
+            adGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
+            adGoodsOrderDetail.setShippedQty(0);
             adGoodsOrderDetail.setQty(adApply.getApplyQty());
             adGoodsOrderDetail.setConfirmQty(adApply.getConfirmQty());
             adGoodsOrderDetail.setBillQty(adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty());

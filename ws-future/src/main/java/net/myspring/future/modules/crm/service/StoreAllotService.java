@@ -270,8 +270,8 @@ public class StoreAllotService {
             StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
             entryDto.setQty(detailDto.getQty());
             entryDto.setMaterialNumber("");
-            entryDto.setSrcStockNumber("");
-            entryDto.setDestStockNumber("");
+            entryDto.setSrcStockNumber(""); //调出仓库
+            entryDto.setDestStockNumber("");//调入仓库
             transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
         return cloudClient.synStkTransferDirect(transferDirectDto);

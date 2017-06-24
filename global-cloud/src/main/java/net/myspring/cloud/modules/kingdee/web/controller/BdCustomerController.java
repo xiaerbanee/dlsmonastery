@@ -43,8 +43,7 @@ public class BdCustomerController {
     }
 
     @RequestMapping(value = "findByMaxModifyDate")
-    public List<BdCustomer> findByMaxModifyDate(String modifyDate){
-        LocalDateTime maxModifyDate = LocalDateTimeUtils.parse(modifyDate,"yyyy-MM-dd HH:mm:ss");
+    public List<BdCustomer> findByMaxModifyDate(LocalDateTime maxModifyDate){
         return bdCustomerService.findByMaxModifyDate(maxModifyDate);
     }
 }

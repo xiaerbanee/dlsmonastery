@@ -188,7 +188,6 @@ public class EmployeePhoneDepositService {
             cnJournalForBankDtoList.add(cnJournalForBankDto);
         }
         return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
-
     }
 
     public RestResponse batchSave(String data) {

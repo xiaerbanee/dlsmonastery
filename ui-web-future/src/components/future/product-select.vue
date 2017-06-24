@@ -45,18 +45,20 @@
           this.itemList = newList;
           this.remoteLoading = false;
         })
-      },  handleChange(newVal) {
+      },
+      handleChange(newVal) {
         if(newVal !== this.value) {
           this.$emit('input', newVal);
         }
-      },setValue(val) {
+      },
+      setValue(val) {
         if(this.innerId===val){
           return;
         }
+        this.innerId = val;
         if (val) {
-          this.innerId = val;
           let ids = this.innerId;
-          if (!this.multiple && this.innerId) {
+          if (this.multiple && this.innerId) {
             ids = new Array(this.innerId);
           }
           if (util.isBlank(ids)) {
@@ -71,7 +73,6 @@
             });
           })
         } else {
-          this.innerId = val;
           this.$nextTick(() => {
             this.$emit('afterInit');
           });
@@ -81,7 +82,7 @@
       this.setValue(this.value);
     },watch: {
       value :function (newVal) {
-          this.setValue(newVal);
+        this.setValue(newVal);
       },
     }
   };

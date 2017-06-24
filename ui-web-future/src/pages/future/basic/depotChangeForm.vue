@@ -49,10 +49,8 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import boolSelect from 'components/common/bool-select'
-  import ElOption from "../../../../node_modules/element-ui/packages/select/src/option.vue";
   export default{
     components:{
-      ElOption,
       depotSelect,boolSelect},
     data(){
       return this.getData()
