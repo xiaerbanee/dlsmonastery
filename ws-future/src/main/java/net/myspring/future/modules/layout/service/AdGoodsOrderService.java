@@ -2,12 +2,12 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -62,10 +62,7 @@ import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -329,11 +326,45 @@ public class AdGoodsOrderService {
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
 
         List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
-
         List<AdGoodsOrderDetailSimpleDto> result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
-
         cacheUtils.initCacheInput(result);
+
+        fulfillCloudQty(adGoodsOrderId, result);
         return result;
+    }
+
+    private void fulfillCloudQty(String adGoodsOrderId, List<AdGoodsOrderDetailSimpleDto> list) {
+        AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderId);
+        String depotId = adGoodsOrder.getStoreId();
+        if(StringUtils.isBlank(adGoodsOrder.getStoreId())){
+            depotId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue();
+        }
+        if(StringUtils.isBlank(depotId)) {
+            return;
+        }
+
+        Map<String, Integer> cloudQtyMap = getCloudQtyMap(depotId);
+        for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : list){
+            if(cloudQtyMap.containsKey(adGoodsOrderDetailSimpleDto.getProductOutId())){
+                adGoodsOrderDetailSimpleDto.setCloudQty(cloudQtyMap.get(adGoodsOrderDetailSimpleDto.getProductOutId()));
+            }
+        }
+    }
+
+    public Map<String, Integer> getCloudQtyMap(String depotId){
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(depotId);
+        if(depotStore == null){
+            return new HashMap<>();
+        }
+        List<StkInventory> inventoryList = cloudClient.findInventorysByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        Map<String, Integer> result = new HashMap<>();
+        for(StkInventory stkInventory : inventoryList){
+            if(stkInventory.getFBaseQty() !=null && stkInventory.getFBaseQty() >0){
+                result.put(stkInventory.getFMaterialId(), stkInventory.getFBaseQty());
+            }
+        }
+        return result;
+
     }
 
     public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
@@ -423,7 +454,10 @@ public class AdGoodsOrderService {
 
         BigDecimal amount = BigDecimal.ZERO;
         for (AdGoodsOrderDetail adGoodsOrderDetail : toBeSaved) {
-            amount = amount.add(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+            if(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2()!=null){
+                amount = amount.add(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2().multiply(new BigDecimal(adGoodsOrderDetail.getBillQty())));
+            }
+
         }
         adGoodsOrder.setAmount(amount);
         adGoodsOrderRepository.save(adGoodsOrder);
@@ -441,6 +475,8 @@ public class AdGoodsOrderService {
         newAdGoodsOrder.setBillType(BillTypeEnum.柜台.name());
         newAdGoodsOrder.setCreatedBy(adGoodsOrder.getCreatedBy());
         newAdGoodsOrder.setCreatedDate(adGoodsOrder.getCreatedDate());
+        newAdGoodsOrder.setEmployeeId(adGoodsOrder.getEmployeeId());
+        newAdGoodsOrder.setInvestInCause(adGoodsOrder.getInvestInCause());
         newAdGoodsOrder.setRemarks(adGoodsOrder.getRemarks());
         newAdGoodsOrder.setParentId(adGoodsOrder.getParentId());
         newAdGoodsOrder.setSplitBill(false);
@@ -461,6 +497,8 @@ public class AdGoodsOrderService {
                 newAdGoodsOrderDetail.setConfirmQty(billEnabledQty);
                 newAdGoodsOrderDetail.setBillQty(0);
                 newAdGoodsOrderDetail.setShippedQty(0);
+                newAdGoodsOrderDetail.setShouldGet(BigDecimal.ZERO);
+                newAdGoodsOrderDetail.setShouldPay(BigDecimal.ZERO);
                 newAdGoodsOrderDetail.setAdGoodsOrderId(newAdGoodsOrder.getId());
                 newAdGoodsOrderDetailList.add(newAdGoodsOrderDetail);
             }
@@ -476,7 +514,7 @@ public class AdGoodsOrderService {
         ExpressOrder expressOrder = new ExpressOrder();
         expressOrder.setExpressCompanyId(adGoodsOrderBillForm.getExpressOrderExpressCompanyId());
         expressOrder.setAddress(adGoodsOrderBillForm.getExpressOrderAddress());
-        expressOrder.setContator(adGoodsOrderBillForm.getExpressOrderContactor());
+        expressOrder.setContator(adGoodsOrderBillForm.getExpressOrderContator());
         expressOrder.setMobilePhone(adGoodsOrderBillForm.getExpressOrderMobilePhone());
         expressOrder.setToDepotId(newAdGoodsOrder.getShopId());
         expressOrder.setLocked(true);
@@ -491,7 +529,7 @@ public class AdGoodsOrderService {
 
     private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder, List<AdGoodsOrderDetail> detailList, Map<String, Product> productMap) {
 
-        Depot depot = depotRepository.findOne(adGoodsOrder.getShopId());
+        Depot depot = depotRepository.findOne(adGoodsOrder.getOutShopId());
         Client client = clientRepository.findOne(depot.getId());
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
 
@@ -573,7 +611,7 @@ public class AdGoodsOrderService {
         expressOrder.setPrintDate(adGoodsOrder.getBillDate());
         expressOrder.setExpressCompanyId(adGoodsOrderBillForm.getExpressOrderExpressCompanyId());
         expressOrder.setAddress(adGoodsOrderBillForm.getExpressOrderAddress());
-        expressOrder.setContator(adGoodsOrderBillForm.getExpressOrderContactor());
+        expressOrder.setContator(adGoodsOrderBillForm.getExpressOrderContator());
         expressOrder.setMobilePhone(adGoodsOrderBillForm.getExpressOrderMobilePhone());
 
         BigDecimal shouldPay = BigDecimal.ZERO;

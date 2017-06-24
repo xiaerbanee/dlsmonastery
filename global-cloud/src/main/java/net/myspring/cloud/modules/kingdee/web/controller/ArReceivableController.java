@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 下推应收单
+ * 下推-应收单
  * Created by lihx on 2017/6/17.
  */
 @RestController

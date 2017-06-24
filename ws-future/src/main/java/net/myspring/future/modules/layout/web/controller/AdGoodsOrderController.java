@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +126,15 @@ public class  AdGoodsOrderController {
         adGoodsOrderBillForm.getExtra().put("defaultExpressCompanyId", expressCompanyService.getDefaultExpressCompanyId());
 
         return adGoodsOrderBillForm;
+    }
+
+
+    @RequestMapping(value = "getCloudQtyMap")
+    public Map<String, Integer> getCloudQtyMap(String storeId) {
+        if(StringUtils.isBlank(storeId)){
+            return new HashMap<>();
+        }
+        return adGoodsOrderService.getCloudQtyMap(storeId);
     }
 
     @RequestMapping(value = "bill")

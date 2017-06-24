@@ -75,8 +75,7 @@
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList")})
+                  this.$router.push({name:'reportScoreList',query:util.getQuery("reportScoreList"), params:{_closeFrom:true}})
                 }
               }).catch(function () {
                 that.submitDisabled = false;
