@@ -36,7 +36,7 @@ public class ArReceiveBillController {
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArReceiveBillDto> arReceiveBillDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 }

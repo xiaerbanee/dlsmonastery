@@ -51,4 +51,13 @@ public class ArReceiveBillService {
         }
         return kingdeeSynDtoList;
     }
+
+    public List<KingdeeSynDto> saveForWS(List<ArReceiveBillDto> arReceiveBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        if (arReceiveBillDtoList.size() > 0) {
+            for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {
+                arReceiveBillDto.setCreator(accountKingdeeBook.getUsername());
+            }
+        }
+        return save(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
+    }
 }
