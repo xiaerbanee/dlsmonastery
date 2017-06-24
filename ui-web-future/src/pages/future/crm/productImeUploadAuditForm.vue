@@ -119,7 +119,7 @@
               Object.assign(this.$data, this.getData());
                 if(response.data.success){
                   if(!this.isCreate){
-                    this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
+                    this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList"), params:{_closeFrom:true}})
                   }
                 }
               }).catch( () => {

@@ -51,7 +51,7 @@
        formSubmit(){
         axios.post('/api/crm/goodsOrder/sign',qs.stringify(this.inputForm)).then((response)=> {
             this.$message(response.data.message);
-            this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+            this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
           }).catch(function () {
            this.submitDisabled = false;
          });

@@ -102,7 +102,7 @@
             axios.post('/api/ws/future/crm/productImeUpload/uploadBack', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
-              this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList")})
+              this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList"), params:{_closeFrom:true}})
 
             }).catch( () => {
               this.submitDisabled = false;
