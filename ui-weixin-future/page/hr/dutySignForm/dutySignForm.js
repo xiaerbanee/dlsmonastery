@@ -34,25 +34,34 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
+          console.log(res.data)
           that.setData({ formData: res.data });
           that.setData({ "submitHidden": true });
-          wx.request({
-            url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
-            data: {},
-            header: {
-              Cookie: "JSESSIONID=" + app.globalData.sessionId
-            },
-            method: 'GET',
+          wx.downloadFile({
+            url: $util.getUrl("general/sys/folderFile/download?id=" + res.data.attachment),
+            header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
             success: function (res) {
-              var images = new Array();
-              images.push({
-                id: res.data[0].id,
-                preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + res.data[0].mongoPreviewId),
-                view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + + "&id=" + res.data[0].mongoPreviewId)
-              })
-              that.setData({ "formProperty.images": images })
+              console.log(res.data)
             }
           })
+          // wx.request({
+          //   url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
+          //   data: {},
+          //   header: {
+          //     Cookie: "JSESSIONID=" + app.globalData.sessionId
+          //   },
+          //   method: 'GET',
+          //   success: function (res) {
+
+          // var images = new Array();
+          // images.push({
+          //   id: res.data[0].id,
+          //   preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + res.data[0].mongoPreviewId),
+          //   view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + + "&id=" + res.data[0].mongoPreviewId)
+          // })
+          // that.setData({ "formProperty.images": images })
+          //   }
+          // })
 
         }
       })
