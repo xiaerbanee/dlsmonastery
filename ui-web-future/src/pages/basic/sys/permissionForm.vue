@@ -72,7 +72,7 @@
                   this.initPage();
                 }else{
                   this.submitDisabled = false;
-                  this.$router.push({name:'permissionList',query:util.getQuery("permissionList")})
+                  this.$router.push({name:'permissionList',query:util.getQuery("permissionList"),params:{_closeFrom:true}});
                 }
               }).catch(function () {
                 that.submitDisabled = false;

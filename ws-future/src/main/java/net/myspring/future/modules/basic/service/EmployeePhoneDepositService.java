@@ -104,7 +104,7 @@ public class EmployeePhoneDepositService {
         EmployeePhoneDeposit employeePhoneDeposit;
         if (employeePhoneDepositForm.isCreate()) {
             String bankName = "GC邮（备用金）";
-            if ("JXvivo".equalsIgnoreCase(RequestUtils.getRequestEntity().getCompanyName())) {
+            if ("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())) {
                 bankName = "ZBL邮（备用金）";
             }
             employeePhoneDeposit=BeanUtil.map(employeePhoneDepositForm,EmployeePhoneDeposit.class);
@@ -231,7 +231,7 @@ public class EmployeePhoneDepositService {
                 return new RestResponse("保存失败，门店" + depotName + "在系统中不存在",null);
             }
             String bankName="GC邮（备用金）";
-            if("JXvivo".equalsIgnoreCase(RequestUtils.getRequestEntity().getCompanyName())){
+            if("JXvivo".equalsIgnoreCase(RequestUtils.getCompanyName())){
                 bankName="ZBL邮（备用金）";
             }
             EmployeePhoneDeposit employeePhoneDeposit = new EmployeePhoneDeposit();
@@ -260,7 +260,7 @@ public class EmployeePhoneDepositService {
     }
 
     public String export(Workbook workbook, EmployeePhoneDepositQuery employeePhoneDepositQuery){
-        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDepositDto> employeePhoneDepositDtoList= employeePhoneDepositRepository.findFilter(employeePhoneDepositQuery);
         cacheUtils.initCacheInput(employeePhoneDepositDtoList);
@@ -278,7 +278,6 @@ public class EmployeePhoneDepositService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导购用机",employeePhoneDepositDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"导购用机"+ LocalDateTimeUtils.format(LocalDateTime.now())+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 }

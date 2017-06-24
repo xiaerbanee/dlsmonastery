@@ -95,7 +95,7 @@ public class AccountService {
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountList);
@@ -167,7 +167,7 @@ public class AccountService {
 
 
     public String findSimpleExcelSheet(Workbook workbook,AccountQuery accountQuery) throws IOException {
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getRequestEntity().getOfficeId()));
+        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);
@@ -184,8 +184,7 @@ public class AccountService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息模版",accountDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){

@@ -26,6 +26,11 @@ public class ShopAttributeController {
         return page;
     }
 
+    @RequestMapping(value="getQuery")
+    public ShopAttributeQuery getQuery(ShopAttributeQuery shopAttributeQuery){
+        return shopAttributeQuery;
+    }
+
     @RequestMapping(value = "getForm")
     public ShopAttributeForm getForm(ShopAttributeForm shopAttributeForm){
         shopAttributeForm=shopAttributeService.getForm(shopAttributeForm);

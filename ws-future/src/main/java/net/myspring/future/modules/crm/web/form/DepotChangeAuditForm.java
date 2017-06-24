@@ -7,7 +7,7 @@ import net.myspring.future.modules.crm.domain.DepotChange;
  * Created by zhangyf on 2017/6/14.
  */
 public class DepotChangeAuditForm extends BaseForm<DepotChange> {
-    private Boolean pass;
+    private Boolean pass = false;
     private String auditRemarks;
 
     public Boolean getPass() {

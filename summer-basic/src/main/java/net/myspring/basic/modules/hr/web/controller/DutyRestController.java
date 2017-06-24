@@ -49,9 +49,9 @@ public class DutyRestController {
 
     @RequestMapping(value = "getForm")
     public DutyRestForm getForm(DutyRestForm dutyRestForm) {
-        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
-        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getRequestEntity().getEmployeeId()));
-        dutyRestForm.setExpiredHour(dutyOvertimeService.getExpiredHour(RequestUtils.getRequestEntity().getEmployeeId(), LocalDate.now()));
+        dutyRestForm.setOvertimeLeftHour(dutyOvertimeService.getAvailableHour(RequestUtils.getEmployeeId(), LocalDate.now()));
+        dutyRestForm.setAnnualLeftHour(dutyAnnualService.getAvailableHour(RequestUtils.getEmployeeId()));
+        dutyRestForm.setExpiredHour(dutyOvertimeService.getExpiredHour(RequestUtils.getEmployeeId(), LocalDate.now()));
         dutyRestForm.getExtra().put("restList", DutyRestTypeEnum.values());
         dutyRestForm.getExtra().put("dateList", DutyDateTypeEnum.values());
         return dutyRestForm;

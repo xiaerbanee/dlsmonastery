@@ -264,9 +264,9 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
 
     public String getFormatId(){
         if(StringUtils.isBlank(parentId) || parentId.equals(getId())){
-            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(getId());
+            return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(getId());
         }
-        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(parentId)+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(getId());
+        return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(parentId)+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(getId());
     }
 
     public String getStoreId() {
@@ -414,7 +414,7 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     }
 
     public Boolean getAuditable(){
-        return RequestUtils.getRequestEntity().getPositionId().equals(getProcessPositionId()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
+        return RequestUtils.getPositionId().equals(getProcessPositionId()) || RequestUtils.getAccountId().equalsIgnoreCase("1");
     }
 
     public Boolean getEditable(){

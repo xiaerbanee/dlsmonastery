@@ -9,7 +9,7 @@
               <el-input v-model="accountForm.loginName" readonly></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.password')" prop="password">
-              <el-input v-model="accountForm.password" placeholder="$t('employeeEditForm.LeaveEmpty')" type="password"></el-input>
+              <el-input v-model="accountForm.password"  type="password"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.confirmPassword')" prop="confirmPassword">
               <el-input v-model="confirmPassword" type="password"></el-input>

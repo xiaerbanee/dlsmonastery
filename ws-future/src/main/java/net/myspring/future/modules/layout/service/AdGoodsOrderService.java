@@ -503,7 +503,6 @@ public class AdGoodsOrderService {
         salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+expressOrder.getContator()+CharConstant.COMMA+expressOrder.getMobilePhone()+CharConstant.COMMA+expressOrder.getAddress());
 
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-
         for(AdGoodsOrderDetail adGoodsOrderDetail:detailList){
             SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
             entityDto.setStockNumber(depotStore.getOutCode());
@@ -519,9 +518,13 @@ public class AdGoodsOrderService {
             entityDtoList.add(entityDto);
         }
         salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+        KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto)).get(0);
 
-        cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto));
-        //TODO 同步金蝶，同時更新自己的adGoodsOrder和expressOrder等，注意同步金蝶需要注意当前用户是否有同步金蝶的同步权限
+        adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
+        adGoodsOrderRepository.save(adGoodsOrder);
+
+        expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
+        expressOrderRepository.save(expressOrder);
 
     }
 
@@ -552,9 +555,9 @@ public class AdGoodsOrderService {
 
     private String getFormatId(AdGoodsOrder adGoodsOrder) {
         if(StringUtils.isBlank(adGoodsOrder.getParentId()) || adGoodsOrder.getParentId().equals(adGoodsOrder.getId())){
-            return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getId());
+            return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getId());
         }
-        return RequestUtils.getRequestEntity().getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
+        return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
     }
 
     private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
@@ -753,8 +756,7 @@ public class AdGoodsOrderService {
 
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "物料订货数据" + LocalDate.now() + ".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
 
     }
 

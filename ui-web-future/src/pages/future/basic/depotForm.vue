@@ -326,7 +326,7 @@
               }
               Object.assign(this.$data, this.getData());
               if(!this.isCreate){
-                this.$router.push({name:'depotList',query:util.getQuery("depotList")})
+                this.$router.push({name:'depotList',query:util.getQuery("depotList"),params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;

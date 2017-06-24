@@ -47,7 +47,7 @@ public class DutyOvertimeValidator implements Validator {
             if (LocalDate.now().toEpochDay() - dutyOvertime.getDutyDate().toEpochDay() > 10) {
                 errors.rejectValue("dutyDate", "error.dutyDate", "加班日期最早只能补填10天内的数据");
             }
-            List<DutyOvertime> dutyOvertimes=dutyOvertimeService.findByDutyDate(RequestUtils.getRequestEntity().getEmployeeId(),dutyOvertime.getDutyDate());
+            List<DutyOvertime> dutyOvertimes=dutyOvertimeService.findByDutyDate(RequestUtils.getEmployeeId(),dutyOvertime.getDutyDate());
             boolean isCreate= StringUtils.isBlank(dutyOvertime.getId());
             if (CollectionUtil.isNotEmpty(dutyOvertimes)) {
                 for (DutyOvertime overtime : dutyOvertimes) {

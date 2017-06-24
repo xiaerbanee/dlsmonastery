@@ -11,13 +11,14 @@ import java.math.BigDecimal;
 
 public class ShopAllotDto extends DataDto<ShopAllot> {
 
-    @CacheInput(inputKey = "depots",inputInstance = "fromShopId",outputInstance = "name")
     private String fromShopName;
+    private String fromShopClientId;
+    private String fromShopClientOutId;
     private String fromShopId;
-    @CacheInput(inputKey = "depots",inputInstance = "toShopId",outputInstance = "name")
     private String toShopName;
+    private String toShopClientId;
+    private String toShopClientOutId;
     private String toShopId;
-
     private String businessId;
     private String outReturnCode;
     private String outSaleCode;
@@ -29,6 +30,46 @@ public class ShopAllotDto extends DataDto<ShopAllot> {
     private BigDecimal toShopShouldGet;
     private String fromJointLevel;
     private String toJoinLevel;
+
+    public String getFromShopClientOutId() {
+        return fromShopClientOutId;
+    }
+
+    public void setFromShopClientOutId(String fromShopClientOutId) {
+        this.fromShopClientOutId = fromShopClientOutId;
+    }
+
+    public String getToShopClientOutId() {
+        return toShopClientOutId;
+    }
+
+    public void setToShopClientOutId(String toShopClientOutId) {
+        this.toShopClientOutId = toShopClientOutId;
+    }
+
+    public String getFromShopClientId() {
+        return fromShopClientId;
+    }
+
+    public void setFromShopClientId(String fromShopClientId) {
+        this.fromShopClientId = fromShopClientId;
+    }
+
+    public String getToShopClientId() {
+        return toShopClientId;
+    }
+
+    public void setToShopClientId(String toShopClientId) {
+        this.toShopClientId = toShopClientId;
+    }
+
+    public String getFromJointLevel() {
+        return fromJointLevel;
+    }
+
+    public String getToJoinLevel() {
+        return toJoinLevel;
+    }
 
     public String isFromJointLevel() {
         return fromJointLevel;

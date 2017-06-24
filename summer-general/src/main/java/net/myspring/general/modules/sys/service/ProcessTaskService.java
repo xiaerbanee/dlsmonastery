@@ -32,7 +32,7 @@ public class ProcessTaskService {
     private OfficeClient officeClient;
 
     public Page<ProcessTaskDto> findPage(Pageable pageable, ProcessTaskQuery processTaskQuery){
-        processTaskQuery.setOfficeIds(officeClient.getOfficeFilterIds(RequestUtils.getRequestEntity().getOfficeId()));
+        processTaskQuery.setOfficeIds(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         Page<ProcessTaskDto> page=processTaskRepository.findPage(pageable,processTaskQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

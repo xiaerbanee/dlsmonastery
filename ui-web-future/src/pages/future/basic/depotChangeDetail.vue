@@ -69,7 +69,7 @@
           if (valid) {
             axios.post('/api/ws/future/crm/depotChange/audit',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList")})
+              this.$router.push({name:'depotChangeList',query:util.getQuery("depotChangeList"),params:{_closeFrom:true}})
             }).catch(function () {
               this.submitDisabled = false;
             });

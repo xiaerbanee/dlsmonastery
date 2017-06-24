@@ -28,14 +28,14 @@
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.fromShop')"  >
               {{shopAllot.fromShopName}}
-              <div v-if="shopAllot.status== '申请中'">
+              <div v-if="shopAllot.status=== '申请中'">
                 {{$t('shopAllotDetail.shouldGet')}} {{shopAllot.fromShopShouldGet}}
               </div>
             </el-form-item>
             <el-form-item :label="$t('shopAllotDetail.toShop')">
 
               {{shopAllot.toShopName}}
-              <div v-if="shopAllot.status== '申请中'">
+              <div v-if="shopAllot.status=== '申请中'">
                 {{$t('shopAllotDetail.shouldGet')}} {{shopAllot.toShopShouldGet}}
               </div>
 
@@ -118,7 +118,7 @@
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success) {
-                this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
+                this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList"), params:{_closeFrom:true}});
               }
             }).catch( () => {
               this.submitDisabled = false;
@@ -135,7 +135,6 @@
       }
     },created(){
 
-        //TODO 门店的应收还没有获取
       axios.get('/api/ws/future/crm/shopAllot/findDtoForViewOrAudit', {params: {id: this.$route.query.id}}).then((response) => {
         this.shopAllot = response.data;
       });

@@ -54,8 +54,7 @@
                 Object.assign(this.$data,this.inputForm);
                 this.initPage();
               }else {
-                this.submitDisabled = false;
-                this.$router.push({name:'chainList',query:util.getQuery("chainList")})
+                this.$router.push({name:'chainList',query:util.getQuery("chainList"),params:{_closeFrom:true}})
               }
             }).catch( ()=> {
               this.submitDisabled = false;

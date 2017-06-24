@@ -141,7 +141,7 @@ public class AdApplyService {
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         //同步财务库存
-       /* Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
+        /*Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
         List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
         List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
         for(StkInventory stkInventory:stkInventories){
@@ -284,8 +284,6 @@ public class AdApplyService {
             adGoodsOrder.setExpressOrderId(expressOrder.getId());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
-        //TODO 调用金蝶接口
-       batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -302,6 +300,9 @@ public class AdApplyService {
             newAdApplys.add(adApply);
         }
         adApplyRepository.save(newAdApplys);
+
+        //TODO 调用金蝶接口
+       batchSynToCloud(adGoodsOrders);
     }
 
     private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
@@ -395,7 +396,6 @@ public class AdApplyService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"POP征订"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
     }
 }

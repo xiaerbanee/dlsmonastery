@@ -9,7 +9,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        String dataSourceType = RequestUtils.getRequestEntity().getDataSourceType();
+        String dataSourceType = RequestUtils.getDataSourceType();
         if(StringUtils.isBlank(dataSourceType)){
             dataSourceType=DataSourceTypeEnum.LOCAL.name();
         }
