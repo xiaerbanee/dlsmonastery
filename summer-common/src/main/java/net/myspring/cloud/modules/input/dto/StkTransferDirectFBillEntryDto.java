@@ -11,6 +11,8 @@ public class StkTransferDirectFBillEntryDto {
     private String srcStockNumber;
     //调入仓库
     private String destStockNumber;
+    //备注
+    private String noteEntry;
 
     public Integer getQty() {
         return qty;
@@ -42,5 +44,13 @@ public class StkTransferDirectFBillEntryDto {
 
     public void setDestStockNumber(String destStockNumber) {
         this.destStockNumber = destStockNumber;
+    }
+
+    public String getNoteEntry() {
+        return noteEntry;
+    }
+
+    public void setNoteEntry(String noteEntry) {
+        this.noteEntry = noteEntry;
     }
 }

@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.sys.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
+import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdAccount;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemGroup;
 import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
@@ -17,6 +18,7 @@ import net.myspring.cloud.modules.sys.repository.VoucherRepository;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -65,11 +67,11 @@ public class VoucherService {
         return voucherDto;
     }
 
-    public RestResponse save(VoucherForm voucherForm){
+    public RestResponse save(VoucherForm voucherForm,VoucherModel voucherModel){
         LocalDate date = voucherForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        RestResponse message = check(data);
+        RestResponse message = check(data,voucherModel);
         if (StringUtils.isNotBlank(message.getMessage())) {
             return message;
         }else{
@@ -80,13 +82,61 @@ public class VoucherService {
         }
     }
 
-    public RestResponse check(List<List<Object>> datas) {
-        RestResponse message;
-        return null;
+    public RestResponse check(List<List<Object>> data,VoucherModel voucherModel) {
+        RestResponse restResponse = new RestResponse("",null,false);
+        //所有科目
+        Map<String, List<String>> map = accountNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList());
+        List<String> header = getHeaders(voucherModel.getBdFlexItemGroupList());
+        BigDecimal debitAmount = BigDecimal.ZERO;
+        BigDecimal creditAmount = BigDecimal.ZERO;
+        for (int i = 0; i < data.size(); i++) {
+            int index = i + 1;
+            List<Object> row = data.get(i);
+            //科目
+            String accountName = HandsontableUtils.getValue(row,1);
+            if (map.containsKey(accountName)) {
+                //科目对应核算维度
+                List<String> FlexGroupNames = map.get(accountName);
+                for (int j = 2; j < row.size() - 2; j++) {
+                    Object FlexGroupNameToElement = row.get(j);
+                    String FlexGroupName = header.get(j);
+                    if (StringUtils.isBlank(FlexGroupNameToElement.toString())) {
+                        if (FlexGroupNames.contains(FlexGroupName)) {
+                            RestErrorField errorField = new RestErrorField("第" + index + "行，" + FlexGroupName + "为必填<br/>",null,"");
+                            restResponse.getErrors().add(errorField);
+                        }
+                    } else {
+                        if (!FlexGroupNames.contains(FlexGroupName)) {
+                            RestErrorField errorField = new RestErrorField("第" + index + "行，" + FlexGroupName + "必须为空<br/>",null,"");
+                            restResponse.getErrors().add(errorField);
+                        }
+                    }
+                }
+            }
+            //借方金额
+            String debitStr = StringUtils.toString(row.get(header.size() - 2)).trim();
+            if(StringUtils.isNotEmpty(debitStr)){
+                debitAmount = debitAmount.add(new BigDecimal(debitStr));
+            }
+            //贷方金额
+            String creditStr = StringUtils.toString(row.get(header.size() - 1)).trim();
+            if(StringUtils.isNotEmpty(creditStr)){
+                creditAmount = creditAmount.add(new BigDecimal(creditStr));
+            }
+            if ((StringUtils.isBlank(debitStr) && StringUtils.isBlank(creditStr)) || (StringUtils.isNotBlank(debitStr) && StringUtils.isNotBlank(creditStr))) {
+                RestErrorField errorField = new RestErrorField("第" + index + "行，借方和贷方请填写一项！<br/>",null,"");
+                restResponse.getErrors().add(errorField);
+            }
+        }
+        if (debitAmount.compareTo(creditAmount) != 0) {
+            RestErrorField errorField = new RestErrorField("借贷方金额必须相等",null,"");
+            restResponse.getErrors().add(errorField);
+        }
+        return restResponse;
     }
 
     //将headers和data赋值
-    public List<List<String>>  initData(VoucherDto voucherDto, VoucherModel voucherModel,List<String> flexItemGroupNameList) {
+    public List<List<String>>  initData(VoucherDto voucherDto, VoucherModel voucherModel) {
         if (voucherDto.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
             //所有科目
@@ -96,7 +146,7 @@ public class VoucherService {
             Map<String, BdFlexItemProperty> flexItemPropertyFlexNumberMap = voucherModel.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFFlexNumber, BdFlexItemProperty -> BdFlexItemProperty));
             //所有使用的核算维度组
             List<String> headers = Lists.newLinkedList();
-            for (String header : flexItemGroupNameList) {
+            for (String header : getFlexItemGroupAllName(voucherModel.getBdFlexItemGroupList())) {
                 headers.add("FDetailID__" + flexItemPropertyNameMap.get(header).getFFlexNumber());
             }
             //设置名称
@@ -155,5 +205,28 @@ public class VoucherService {
             }
         }
         return result;
+    }
+    
+    public List<String> getHeaders(List<BdFlexItemGroup> bdFlexItemGroupList) {
+        List<String> list = Lists.newLinkedList();
+        list.add("摘要");
+        list.add("科目名称");
+        list.addAll(getFlexItemGroupAllName(bdFlexItemGroupList));
+        list.add("借方金额");
+        list.add("贷方金额");
+        return list;
+    }
+
+    //核算维度组--所有不重复的核算名称
+    public List<String> getFlexItemGroupAllName(List<BdFlexItemGroup> bdFlexItemGroupList) {
+        List<String> list = Lists.newLinkedList();
+        for (BdFlexItemGroup flexItemGroup : bdFlexItemGroupList) {
+            for (String name : flexItemGroup.getFNames()) {
+                if (!list.contains(name)) {
+                    list.add(name);
+                }
+            }
+        }
+        return list;
     }
 }
