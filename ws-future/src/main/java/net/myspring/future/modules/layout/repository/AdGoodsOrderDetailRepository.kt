@@ -173,6 +173,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         SELECT
             result.id,
             result.productId,
+            result.productOutId,
             result.productCode,
             result.productName,
             result.productPrice2,
@@ -188,6 +189,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                         t1.product_id productId,
                         t2.code productCode,
                         t2.name productName,
+                        t2.out_id productOutId,
                         t2.price2 productPrice2,
                         t2.remarks productRemarks,
                         t1.qty qty,
@@ -207,6 +209,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             t1.id productId,
                             t1.code productCode,
                             t1.name productName,
+                            t1.out_id productOutId,
                             t1.price2 productPrice2,
                             t1.remarks productRemarks,
                             NULL qty,

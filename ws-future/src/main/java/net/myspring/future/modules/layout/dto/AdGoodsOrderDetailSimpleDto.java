@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class AdGoodsOrderDetailSimpleDto extends IdDto<AdGoodsOrderDetail> {
 
     private String productId;
+    private String productOutId;
     private String productName;
     private String productCode;
     private String productRemarks;
@@ -16,8 +17,16 @@ public class AdGoodsOrderDetailSimpleDto extends IdDto<AdGoodsOrderDetail> {
     private Integer qty;
     private Integer confirmQty;
     private Integer billQty;
-    private Integer stock;
+    private Integer cloudQty;
     private Integer shippedQty;
+
+    public String getProductOutId() {
+        return productOutId;
+    }
+
+    public void setProductOutId(String productOutId) {
+        this.productOutId = productOutId;
+    }
 
     public Integer getWaitShipQty(){
         if(shippedQty != null && billQty != null){
@@ -34,12 +43,12 @@ public class AdGoodsOrderDetailSimpleDto extends IdDto<AdGoodsOrderDetail> {
         this.shippedQty = shippedQty;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getCloudQty() {
+        return cloudQty;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setCloudQty(Integer cloudQty) {
+        this.cloudQty = cloudQty;
     }
 
     public Integer getBillQty() {
