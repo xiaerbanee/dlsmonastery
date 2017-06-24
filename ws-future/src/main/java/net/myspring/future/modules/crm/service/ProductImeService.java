@@ -189,8 +189,7 @@ public class ProductImeService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
     }
 
     public String export(ProductImeQuery productImeQuery) {
@@ -340,8 +339,7 @@ public class ProductImeService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
     }
 
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {

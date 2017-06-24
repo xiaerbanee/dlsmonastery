@@ -102,7 +102,6 @@ public class DutySignService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("签到列表",dutySignList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"签到列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 }

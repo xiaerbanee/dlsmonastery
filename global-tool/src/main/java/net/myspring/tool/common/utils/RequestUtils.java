@@ -57,15 +57,6 @@ public class RequestUtils {
     }
 
 
-    public static DBObject getDbObject(){
-        DBObject dbObject = new BasicDBObject();
-        dbObject.put("createdBy", getAccountId());
-        dbObject.put("companyId",getRequestEntity().getCompanyId());
-        dbObject.put("positionId",getRequestEntity().getPositionId());
-        dbObject.put("officeId",getRequestEntity().getOfficeId());
-        return dbObject;
-    }
-
     private  static Map<String, String> getSecurityMap() {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
         LinkedHashMap principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
