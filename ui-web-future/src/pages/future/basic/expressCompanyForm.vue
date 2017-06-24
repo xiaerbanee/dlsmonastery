@@ -81,8 +81,7 @@
                 Object.assign(this.$data,this.getData());
                 this.initPage;
               }else{
-                this.submitDisabled = false ;
-                this.$router.push({name:'expressCompanyList',query:util.getQuery("expressCompanyList")})
+                this.$router.push({name:'expressCompanyList',query:util.getQuery("expressCompanyList"),params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;

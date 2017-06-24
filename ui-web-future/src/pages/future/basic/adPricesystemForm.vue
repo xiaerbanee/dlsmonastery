@@ -60,8 +60,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.submitDisabled = false ;
-                  this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList")})
+                  this.$router.push({name: 'adPricesystemList', query: util.getQuery("adPricesystemList"),params:{_closeFrom:true}})
                 }
               }else {
                 this.$message({

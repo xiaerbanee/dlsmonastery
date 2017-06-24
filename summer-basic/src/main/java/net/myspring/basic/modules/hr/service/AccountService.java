@@ -184,8 +184,7 @@ public class AccountService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息模版",accountDtoList,simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){

@@ -144,8 +144,7 @@
               Object.assign(this.$data, this.getData());
               this.initPage();
             }else {
-              this.submitDisabled = false;
-              this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList")})
+              this.$router.push({name:'depotShopList',query:util.getQuery("depotShopList"),params:{_closeFrom:true}})
             }
             }).catch(function () {
               that.submitDisabled = false;

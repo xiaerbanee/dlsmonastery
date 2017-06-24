@@ -371,7 +371,6 @@ public class AdApplyService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"POP征订"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
     }
 }

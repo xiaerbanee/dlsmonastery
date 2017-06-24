@@ -95,7 +95,7 @@
             axios.post('/api/ws/future/basic/product/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(!this.isCreate){
-                this.$router.push({name:'productList',query:util.getQuery("productList")})
+                this.$router.push({name:'productList',query:util.getQuery("productList"),params:{_closeFrom:true}})
               }else{
                 Object.assign(this.$data, this.getData());
                 this.initPage();

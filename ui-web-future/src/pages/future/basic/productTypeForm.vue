@@ -87,8 +87,7 @@
                       Object.assign(this.$data, this.getData());
                       this.initPage();
                     }else{
-                      this.submitDisabled = false;
-                      this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList")})
+                      this.$router.push({name: 'productTypeList', query: util.getQuery("productTypeList"),params:{_closeFrom:true}})
                     }
                 }
               }).catch( ()=>{
