@@ -14,9 +14,9 @@ interface VivoProductsRepository: BaseRepository<VivoProducts, String> {
 
     @Query("""
         select
-         t.color_id
+         t.colorId
          from #{#entityName} t
-          where t.color_id in ?1
+          where t.colorId in ?1
         """)
     fun findColorIds(colorIds: MutableList<String>): MutableList<String>
 }
