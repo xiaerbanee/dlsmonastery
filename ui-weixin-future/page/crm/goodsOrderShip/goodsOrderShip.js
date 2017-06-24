@@ -67,7 +67,6 @@ Page({
       data: { formatId: that.data.formData.formatId },
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res)
         that.setData({
           'formData.store': res.data.store, 'formData.shop': res.data.shop, 'formData.store': res.data.store,
           'formData.shipRemarks': res.data.shipRemarks, 'formData.remarks': res.data.remarks

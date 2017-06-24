@@ -25,8 +25,6 @@ public class SalReturnStockDto {
     private String creator;
     // 客户编码
     private String customerNumber;
-    //仓库
-    private String storeNumber;
     // 日期
     private LocalDate date;
     // 备注
@@ -71,14 +69,6 @@ public class SalReturnStockDto {
 
     public void setCustomerNumber(String customerNumber) {
         this.customerNumber = customerNumber;
-    }
-
-    public String getStoreNumber() {
-        return storeNumber;
-    }
-
-    public void setStoreNumber(String storeNumber) {
-        this.storeNumber = storeNumber;
     }
 
     public LocalDate getDate() {
@@ -146,8 +136,10 @@ public class SalReturnStockDto {
             if (batchBillDetail.getQty() != null && batchBillDetail.getQty() > 0) {
                 Map<String, Object> detail = Maps.newLinkedHashMap();
                 detail.put("FMaterialId", CollectionUtil.getMap("FNumber", batchBillDetail.getMaterialNumber()));
-                detail.put("FStockId", CollectionUtil.getMap("FNumber", getStoreNumber()));
+                detail.put("FStockId", CollectionUtil.getMap("FNumber", batchBillDetail.getStockNumber()));
+                //库存状态--可用
                 detail.put("FStockStatusID", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
+                //库存单位--Pcs
                 detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
                 detail.put("FRealQty", batchBillDetail.getQty());
                 detail.put("FBaseunitQty", batchBillDetail.getQty());
@@ -171,6 +163,7 @@ public class SalReturnStockDto {
         subHeadEntity.put("FExchangeRate", 1);
         subHeadEntity.put("FLocalCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         subHeadEntity.put("FExchangeTypeId", CollectionUtil.getMap("FNumber", "HLTX01_SYS"));
+        //结算币别
         subHeadEntity.put("FSettleCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         model.put("SubHeadEntity", subHeadEntity);
         root.put("Model", model);

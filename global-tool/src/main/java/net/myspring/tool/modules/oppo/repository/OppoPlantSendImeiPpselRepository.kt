@@ -15,18 +15,13 @@ import java.time.LocalDate;
 
 interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPpsel, String>, OppoPlantSendImeiPpselRepositoryCustom {
 
-    @Query("""
-    SELECT
-        t FROM #{#entityName} t
-    WHERE
-        t.imei in ?1
-        """)
+    @Query("select  t from #{#entityName}  t where t.imei in (?1)")
     fun findByimeis(imeis:MutableList<String>):MutableList<OppoPlantSendImeiPpsel>
 
 }
 interface OppoPlantSendImeiPpselRepositoryCustom{
     fun findSynList(dateStart:LocalDate,dateEnd:LocalDate,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpsel>
-    fun plantSendImeiPPSel(companyId: String,  password: String, createdTime: String): MutableList<OppoPlantSendImeiPpsel>
+    fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
 }
 
 
@@ -47,11 +42,12 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
             """,paramMap,BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java));
     }
 
-    override fun plantSendImeiPPSel(companyId: String, password: String, createdTime: String): MutableList<OppoPlantSendImeiPpsel>{
+    override fun plantSendImeiPPSel(companyId: String, password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("agentId",companyId);
         paramMap.put("pwd",password);
-        paramMap.put("dta",createdTime);
+        System.err.println("dateTime=="+dateTime);
+        paramMap.put("dta",dateTime);
         val simpleJdbcCall= SimpleJdbcCall(jdbcTemplate);
         return simpleJdbcCall.withProcedureName("plantSendImeiPPSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantSendImeiPpsel>
     }

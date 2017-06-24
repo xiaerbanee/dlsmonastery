@@ -54,7 +54,6 @@ Page({
     },
     imeStrChange: function (e) {
         var that = this;
-        console.log(e.detail.value)
         that.setData({ 'formData.result': e.detail.value })
         that.imeSearch();
     },

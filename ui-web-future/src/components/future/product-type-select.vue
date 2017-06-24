@@ -55,7 +55,6 @@
             this.$emit('afterInit');
           });
         }
-
       }
     },created () {
       this.setValue(this.value);

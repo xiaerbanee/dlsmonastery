@@ -45,11 +45,13 @@ Page({
             method: 'GET',
             success: function (res) {
               var images = new Array();
+              console.log(res.data)
               images.push({
                 id: res.data[0].id,
-                preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + res.data[0].mongoPreviewId),
-                view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + + "&id=" + res.data[0].mongoPreviewId)
+                preview: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + '&id=' + res.data[0].id),
+                view: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + + "&id=" + res.data[0].id)
               })
+              console.log(images)
               that.setData({ "formProperty.images": images })
             }
           })
@@ -114,12 +116,18 @@ Page({
           },
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
-            images.push({
-              id: folderFile.id,
-              preview: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + folderFile.mongoPreviewId),
-              view: $util.getUrl('general/sys/folderFile/download?type=preview&Cookie=JSESSIONID=' + app.globalData.sessionId + '&id=' + folderFile.mongoPreviewId)
+            wx.downloadFile({
+              url: $util.getUrl("general/sys/folderFile/download?id=" + folderFile.id),
+              header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+              success: function (res) {
+                images.push({
+                  id: folderFile.id,
+                  preview:res.tempFilePath,
+                  view:res.tempFilePath
+                })
+                that.setData({ "formProperty.images": images })
+              }
             })
-            that.setData({ "formProperty.images": images })
           }
         })
       }
@@ -136,7 +144,7 @@ Page({
           if (itemList[res.tapIndex] == '预览') {
             wx.previewImage({
               current: that.data.formProperty.images[index].view, // 当前显示图片的http链接
-              urls: [that.data.formProperty.images[0].view]
+              urls: [that.data.formProperty.images[0].view],
             })
           } else {
             that.data.formProperty.images.splice(index, 1);
