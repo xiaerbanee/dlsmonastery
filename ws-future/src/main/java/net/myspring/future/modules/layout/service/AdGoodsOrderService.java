@@ -728,8 +728,7 @@ public class AdGoodsOrderService {
 
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "物料订货数据" + LocalDate.now() + ".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream, simpleExcelBook.getName(), "application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
 
     }
 
