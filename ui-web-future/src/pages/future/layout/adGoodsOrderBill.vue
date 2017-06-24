@@ -29,7 +29,7 @@
             </el-col>
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderBill.adStore')" prop="storeId">
-              <el-select v-model="inputForm.storeId" clearable filterable>
+              <el-select v-model="inputForm.storeId" clearable filterable @input="refreshCloudQty">
                 <el-option v-for="item in inputForm.extra.adStoreList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
@@ -66,10 +66,10 @@
       <process-details v-model="adGoodsOrder.processInstanceId"></process-details>
 
       <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adGoodsOrderBill.inputTwoKey')" style="width:200px;"></el-input>
-      <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')" stripe border >
-        <el-table-column  prop="productCode" :label="$t('adGoodsOrderBill.code')" ></el-table-column>
-        <el-table-column  prop="productName" :label="$t('adGoodsOrderBill.productName')" ></el-table-column>
-        <el-table-column prop="stock" :label="$t('adGoodsOrderBill.stock')"></el-table-column>
+      <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderBill.loading')"  stripe border >
+        <el-table-column prop="productCode" :label="$t('adGoodsOrderBill.code')" ></el-table-column>
+        <el-table-column prop="productName" :label="$t('adGoodsOrderBill.productName')" ></el-table-column>
+        <el-table-column prop="cloudQty" :label="$t('adGoodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="confirmQty" :label="$t('adGoodsOrderBill.confirmQty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('adGoodsOrderBill.billQty')" >
           <template scope="scope">
@@ -81,6 +81,7 @@
     </div>
   </div>
 </template>
+
 <script>
   import expressCompanySelect from 'components/future/express-company-select'
   import boolSelect from 'components/common/bool-select'
@@ -207,13 +208,26 @@
         }
 
         return null;
+      },refreshCloudQty(){
+          if(util.isBlank(this.inputForm.storeId)){
+            for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+              adGoodsOrderDetail.cloudQty = null;
+            }
+            return;
+          }
+        axios.get('/api/ws/future/layout/adGoodsOrder/getCloudQtyMap', {params: {storeId: this.inputForm.storeId}}).then((response) => {
+          for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
+            adGoodsOrderDetail.cloudQty = response.data[adGoodsOrderDetail.productOutId];
+          }
+        });
+
       }
     },created(){
       axios.get('/api/ws/future/layout/adGoodsOrder/getBillForm').then((response)=>{
         this.inputForm = response.data;
 
         axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForBill', {params: {adGoodsOrderId: this.$route.query.id}}).then((response) => {
-          this.setAdGoodsOrderDetailList(response.data);
+          this.setAdGoodsOrderDetailList(response.data ? response.data : [] );
         });
 
         axios.get('/api/ws/future/layout/adGoodsOrder/findDto',{params:{id:this.$route.query.id}}).then((response)=> {
