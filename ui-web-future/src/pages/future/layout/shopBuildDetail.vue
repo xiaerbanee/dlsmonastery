@@ -118,7 +118,7 @@
                 Object.assign(this.$data,this.getData());
                 this.initPage();
                 this.submitDisabled = true;
-                this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList")})
+                this.$router.push({name:'shopBuildList',query:util.getQuery("shopBuildList"),params:{_closeFrom:true}})
               }
             }).catch( ()=> {
               this.submitDisabled = false;

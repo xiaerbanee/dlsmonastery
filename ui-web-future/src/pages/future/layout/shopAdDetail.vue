@@ -85,7 +85,7 @@
                 Object.assign(this.$data,this.getData());
                 this.initPage();
                 this.submitDisabled = true;
-                this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList")})
+                this.$router.push({name:'shopAdList',query:util.getQuery("shopAdList"),params:{_closeFrom:true}})
               }
             }).catch(function () {
               this.submitDisabled = false;
