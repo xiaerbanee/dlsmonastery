@@ -77,7 +77,7 @@
                 this.initPage();
               } else {
                 this.submitDisabled = false;
-                this.$router.push({name: 'roleList', query: util.getQuery("roleList")})
+                this.$router.push({name: 'roleList', query: util.getQuery("roleList"), params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;

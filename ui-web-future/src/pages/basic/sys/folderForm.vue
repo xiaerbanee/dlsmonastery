@@ -50,7 +50,7 @@
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
               if(!this.inputForm.create){
-                this.$router.push({name:'folderList',query:util.getQuery("folderList")})
+                this.$router.push({name:'folderList',query:util.getQuery("folderList"),params:{_closeFrom:true}});
               }
             }).catch(function () {
               that.submitDisabled = false;
