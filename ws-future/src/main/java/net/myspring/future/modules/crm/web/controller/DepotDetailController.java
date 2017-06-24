@@ -1,9 +1,12 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.crm.dto.DepotDetailDto;
 import net.myspring.future.modules.crm.service.DepotDetailService;
 import net.myspring.future.modules.crm.web.query.DepotDetailQuery;
+import net.myspring.future.modules.layout.web.query.ShopAttributeQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -31,13 +34,19 @@ public class DepotDetailController {
     }
 
     @RequestMapping(value="getQuery")
-    public String getQuery(){
-        return null;
+    public DepotDetailQuery getQuery(DepotDetailQuery depotDetailQuery){
+        return depotDetailQuery;
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
     public String export(DepotDetailQuery depotDetailQuery) {
         return depotDetailService.export(depotDetailQuery);
+    }
+
+    @RequestMapping(value="syn")
+    public RestResponse syn(){
+        depotDetailService.syn();
+        return new RestResponse("同步成功", ResponseCodeEnum.updated.name());
     }
 
 }

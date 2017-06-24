@@ -107,8 +107,7 @@ public class ShopGoodsDepositService {
 
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"订金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
     }
 
     private List<ShopGoodsDepositSumDto> findShopGoodsDepositSumDtoList(String companyId) {

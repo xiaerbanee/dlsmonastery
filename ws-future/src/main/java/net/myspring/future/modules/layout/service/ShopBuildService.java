@@ -170,8 +170,7 @@ public class ShopBuildService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"门店建设"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+                return null;
 
     }
 

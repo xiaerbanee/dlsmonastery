@@ -475,8 +475,7 @@ public class DutyWorktimeService {
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("考勤记录",excelColumnList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"考勤记录"+month+".xlsx",simpleExcelSheet);
         ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        GridFSFile gridFSFile = tempGridFsTemplate.store(byteArrayInputStream,simpleExcelBook.getName(),"application/octet-stream; charset=utf-8", RequestUtils.getDbObject());
-        return StringUtils.toString(gridFSFile.getId());
+        return null;
     }
 
     private String getCellStyle(DutyWorktimeExportDto dutyWorktime) {

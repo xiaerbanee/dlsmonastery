@@ -65,9 +65,11 @@
     data() {
       return {
         page:{},
-        formData:{},
-        searchText:'',
+        formData:{
+          extra:{}
+          },
         initPromise:{},
+        searchText:'',
         formVisible: false,
         pageHeight: 600,
         pageLoading: false

@@ -20,16 +20,8 @@ import java.util.Map;
  * Created by liuj on 2017/4/2.
  */
 public class RequestUtils {
-    public static final String REQEUST_ENTITY = "requestEntity";
-
     public static RequestEntity getRequestEntity() {
-        HttpServletRequest request  = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        RequestEntity requestEntity;
-        if(request.getAttribute(REQEUST_ENTITY) != null) {
-            requestEntity = (RequestEntity) request.getAttribute(REQEUST_ENTITY);
-        } else {
-            requestEntity = new RequestEntity();
-        }
+        RequestEntity  requestEntity = new RequestEntity();
         Map<String,String> securityMap = getSecurityMap();
         if(securityMap.size()>0) {
             requestEntity.setAccountId(securityMap.get("accountId"));
@@ -37,9 +29,7 @@ public class RequestUtils {
             requestEntity.setPositionId(securityMap.get("positionId"));
             requestEntity.setOfficeId(securityMap.get("officeId"));
             requestEntity.setEmployeeId(securityMap.get("employeeId"));
-            requestEntity.setCompanyName(securityMap.get("companyName"));
         }
-        request.setAttribute(REQEUST_ENTITY,requestEntity);
         return requestEntity;
     }
 
@@ -51,18 +41,6 @@ public class RequestUtils {
         return getRequestEntity().getCompanyId();
     }
 
-    public static String getRoleId() {
-        return "";
-    }
-
-    public static DBObject getDbObject(){
-        DBObject dbObject = new BasicDBObject();
-        dbObject.put("createdBy", getAccountId());
-        dbObject.put("companyId",getRequestEntity().getCompanyId());
-        dbObject.put("positionId",getRequestEntity().getPositionId());
-        dbObject.put("officeId",getRequestEntity().getOfficeId());
-        return dbObject;
-    }
 
     private  static Map<String, String> getSecurityMap() {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
