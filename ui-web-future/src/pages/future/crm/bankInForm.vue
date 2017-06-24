@@ -76,7 +76,7 @@
 
                 }else {
                   this.submitDisabled = false;
-                  this.$router.push({name: 'bankInList', query: util.getQuery("bankInList")});
+                  this.$router.push({name: 'bankInList', query: util.getQuery("bankInList"), params:{_closeFrom:true}});
                 }
               }
             }).catch( () => {
