@@ -15,13 +15,12 @@ import java.time.LocalDate;
 interface VivoPlantSendimeiRepository: BaseRepository<VivoPlantSendimei, String> {
 
     @Query("""
-        select t.* from #{#entityName} t
-        where t.created_time >= :dateStart
-        and t.created_time  <= :dateEnd
-        and t.company_id in :agentCodes
-        and t.imei not in (select p.ime from crm_product_ime p where p.company_id= :companyId)
+        select t from #{#entityName} t
+        where t.createdTime >=:dateStart
+        and t.createdTime <= :dateEnd
+        and t.companyId in :agentCodes
         """)
-    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>, @Param("companyId") companyId: Long?): MutableList<VivoPlantSendimei>
+    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>
 
     @Query("""
         select t.imei
@@ -32,21 +31,8 @@ interface VivoPlantSendimeiRepository: BaseRepository<VivoPlantSendimei, String>
     @Query("""
         select distinct t.productId
         from #{#entityName} t
-        where t.created_time > :createdTime
-        and t.imei not in (select p.ime from ProductIme p where p.company.id= :companyId )
+        where t.createdTime> :dateStart
         and t.companyId in :agentCodes
         """)
-    fun findErrorItemNumbers(@Param("dateStart") dateStart: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>, @Param("companyId") companyId: Long?): MutableList<String>
-
-
-    @Query("""
-            select t.id,t.company_id,t.bill_id,t.product_id,t.imei,t.imei_state,t.remark,t.created_time,t.main_id,t.insert_time,t.chain_type,t.model,t.meid,t.imei2,pro.product_id as defaultProductId,pro.lx_product_id as lxProductId  from
-            vivo_plant_sendimei t left join vivo_plant_products pro on t.product_id = pro.item_number
-            where t.created_time >= #{dateStart}
-            and t.created_time <= #{dateEnd}
-            and t.company_id in :agentCodes
-        """)
-    fun findSynList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>
-
-
+    fun findErrorItemNumbers(@Param("dateStart") dateStart: LocalDate, @Param("agentCodes") agentCodes: MutableList<String>): MutableList<String>
 }
