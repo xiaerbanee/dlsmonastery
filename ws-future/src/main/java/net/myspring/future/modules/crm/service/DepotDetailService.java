@@ -68,4 +68,6 @@ public class DepotDetailService {
         return null;
     }
 
+    public void syn(){ }
+
 }
