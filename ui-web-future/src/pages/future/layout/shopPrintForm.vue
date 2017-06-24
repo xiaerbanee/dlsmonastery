@@ -90,8 +90,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList")})
+                  this.$router.push({name: 'shopPrintList', query: util.getQuery("shopPrintList"), params:{_closeFrom:true}})
                 }
               }
             }).catch(() => {

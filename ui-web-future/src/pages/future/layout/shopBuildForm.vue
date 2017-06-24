@@ -98,8 +98,7 @@
                     this.initPage();
                   }
                   else{
-                    this.submitDisabled = false;
-                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList")})
+                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList"), params:{_closeFrom:true}})
                   }
                 }
               }).catch(() => {

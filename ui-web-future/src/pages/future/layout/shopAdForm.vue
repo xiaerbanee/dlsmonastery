@@ -72,7 +72,7 @@
             length: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
             width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
             qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-          }
+          },
         }
       },
       formSubmit(){
@@ -88,8 +88,7 @@
                   Object.assign(this.$data, this.getData());
                   this.initPage();
                 }else{
-                  this.submitDisabled = false;
-                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList")})
+                  this.$router.push({name: 'shopAdList', query: util.getQuery("shopAdList"), params:{_closeFrom:true}})
                 }
               }
             }).catch(()=> {
