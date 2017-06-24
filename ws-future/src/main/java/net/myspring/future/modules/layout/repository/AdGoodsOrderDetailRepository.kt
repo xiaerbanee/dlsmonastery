@@ -173,9 +173,9 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         SELECT
             result.id,
             result.productId,
-            result.productOutId,
             result.productCode,
             result.productName,
+            result.productOutId,
             result.productPrice2,
             result.productRemarks,
             result.qty,
