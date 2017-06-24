@@ -23,7 +23,7 @@
               {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='upload'">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('priceChangeImeDetail.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -65,9 +65,7 @@
               pass:'',
               auditRemarks:'',
             },
-            rules: {
-            },
-            headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
+            rules: {}
           }
       },
       methods:{

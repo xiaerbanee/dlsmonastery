@@ -20,7 +20,7 @@
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item  :label="$t('shopImageForm.image')" prop="image">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/形象更换" :headers="headers" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/形象更换"  :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopImageForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopImageForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -59,7 +59,6 @@
             imageType: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}],
             imageSize: [{ required: true, message: this.$t('shopImageForm.prerequisiteMessage')}]
           },
-          headers:{Authorization: 'Bearer ' + this.$store.state.global.token.access_token}
         }
       },
       formSubmit(){
