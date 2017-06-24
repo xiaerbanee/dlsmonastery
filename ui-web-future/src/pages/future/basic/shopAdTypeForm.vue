@@ -59,8 +59,7 @@
                   this.initPage();
                 }
                 else{
-                  this.submitDisabled = false;
-                  this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList")})
+                  this.$router.push({name:'shopAdTypeList',query:util.getQuery("shopAdTypeList"),params:{_closeFrom:true}})
                 }
               }).catch(function () {
                 that.submitDisabled = false;

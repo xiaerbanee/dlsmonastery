@@ -122,8 +122,7 @@
                   Object.assign(this.$data,this.getData());
                   this.initPage();
                 }else {
-                  this.submitDisabled = false;
-                  this.$router.push({name:'depotStoreList',query:util.getQuery("depotStoreList")})
+                  this.$router.push({name:'depotStoreList',query:util.getQuery("depotStoreList"),params:{_closeFrom:true}})
                 }
               }).catch(function () {
                 that.submitDisabled = false;
