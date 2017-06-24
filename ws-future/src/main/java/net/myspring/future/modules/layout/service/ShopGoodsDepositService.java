@@ -123,7 +123,7 @@ public class ShopGoodsDepositService {
         return shopGoodsDepositDto;
     }
 
-    public void audit(String id) {
+    public void auditPass(String id) {
 
         ShopGoodsDepositDto  shopGoodsDepositDto = findDto(id);
 
@@ -137,13 +137,17 @@ public class ShopGoodsDepositService {
             throw new ServiceException(String.format("订金（门店：%s，金额：%.2f）已经同步金蝶，outCode为 %s ；", shopGoodsDepositDto.getShopName(), shopGoodsDepositDto.getAmount(), shopGoodsDepositDto.getOutCode()) );
         }
 
-
         //TODO 同步金蝶
         ShopGoodsDeposit  shopGoodsDeposit = shopGoodsDepositRepository.findOne(id);
         shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
         shopGoodsDeposit.setLocked(true);
         shopGoodsDeposit.setBillDate(LocalDateTime.now());
+
         shopGoodsDepositRepository.save(shopGoodsDeposit);
+
+
+
+
 
     }
 

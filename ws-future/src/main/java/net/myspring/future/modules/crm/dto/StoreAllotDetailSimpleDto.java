@@ -9,8 +9,18 @@ public class StoreAllotDetailSimpleDto extends IdDto<StoreAllotDetail> {
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "outId")
+    private String productOutId;
     private Integer billQty;
     private Integer cloudQty;
+
+    public String getProductOutId() {
+        return productOutId;
+    }
+
+    public void setProductOutId(String productOutId) {
+        this.productOutId = productOutId;
+    }
 
     public Integer getCloudQty() {
         return cloudQty;

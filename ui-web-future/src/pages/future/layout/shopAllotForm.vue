@@ -82,11 +82,11 @@
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(response.data.success) {
-                  if (!this.isCreate) {
-                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList")});
-                  }else{
+                  if (this.isCreate) {
                     Object.assign(this.$data, this.getData());
                     this.initPage();
+                  }else{
+                    this.$router.push({name: 'shopAllotList', query: util.getQuery("shopAllotList"), params:{_closeFrom:true}});
                   }
                 }
               }).catch(() => {
