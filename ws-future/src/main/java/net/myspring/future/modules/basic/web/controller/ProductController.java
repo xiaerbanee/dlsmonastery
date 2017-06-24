@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.web.form.ProductBatchForm;
@@ -115,7 +116,7 @@ public class ProductController {
     }
 
     @RequestMapping(value = "findAdProductAndAllowOrder")
-    public List<ProductDto> findAdProductAndAllowOrder(String billType){
+    public List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType){
         return productService.findAdProductAndAllowOrder(billType);
     }
 }

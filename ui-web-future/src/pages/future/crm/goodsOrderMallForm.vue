@@ -131,8 +131,7 @@
               Object.assign(this.$data, this.getData());
               this.initPage();
             }else{
-              this.submitDisabled = false;
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
             }
           }).catch(()=> {
               that.submitDisabled = false;

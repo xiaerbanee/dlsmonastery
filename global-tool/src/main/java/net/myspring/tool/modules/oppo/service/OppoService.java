@@ -74,7 +74,11 @@ public class OppoService {
                     colorIds.add(oppoPlantProductSel.getColorId().trim());
                 }
             }
-            List<String> localColorIds =oppoPlantProductSelRepository.findColorIds(colorIds);
+            List<String> localColorIds=Lists.newArrayList();
+            List<OppoPlantProductSel> plantProductSels =oppoPlantProductSelRepository.findColorIds(colorIds);
+            if(CollectionUtil.isNotEmpty(plantProductSels)){
+                localColorIds=CollectionUtil.extractToList(plantProductSels,"colorId");
+            }
             for (OppoPlantProductSel oppoPlantProductSel : oppoPlantProductSels) {
                 if (CollectionUtil.isEmpty(localColorIds)||!localColorIds.contains(oppoPlantProductSel.getColorId().trim())) {
                     oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
@@ -94,12 +98,11 @@ public class OppoService {
     public String pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
-            System.err.println("oppoPlantAgentProductSels=="+oppoPlantAgentProductSels.toString());
             List<String> itemNumbers = CollectionUtil.extractToList(oppoPlantAgentProductSels, "itemNumber");
             List<String> localItemNumbers=Lists.newArrayList();
-            System.err.println("itemNumbers=="+itemNumbers.toString());
-            if(CollectionUtil.isNotEmpty(itemNumbers)){
-                localItemNumbers = oppoPlantAgentProductSelRepository.findItemNumbers(itemNumbers);
+            List<OppoPlantAgentProductSel> plantAgentProductSels= oppoPlantAgentProductSelRepository.findItemNumbers(itemNumbers);
+            if(CollectionUtil.isNotEmpty(plantAgentProductSels)){
+                localItemNumbers=CollectionUtil.extractToList(plantAgentProductSels, "itemNumber");
             }
             for (OppoPlantAgentProductSel oppoPlantAgentProductSel : oppoPlantAgentProductSels) {
                 if (!localItemNumbers.contains(oppoPlantAgentProductSel.getItemNumber())) {
@@ -120,7 +123,6 @@ public class OppoService {
         List<OppoPlantSendImeiPpsel> list = Lists.newArrayList();
         List<String> imeis = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
         List<OppoPlantSendImeiPpsel> plantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findByimeis(imeis);
-        System.err.println("localImeis=="+plantSendImeiPpsels.toString());
         List<String> localImeis=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(plantSendImeiPpsels)){
             localImeis=CollectionUtil.extractToList(plantSendImeiPpsels, "imei");
@@ -131,7 +133,6 @@ public class OppoService {
                 list.add(oppoPlantSendImeiPpsel);
             }
         }
-        System.err.println("list=="+list.toString());
         logger.info("开始同步串码");
         if (CollectionUtil.isNotEmpty(list)) {
             oppoPlantSendImeiPpselRepository.save(list);
@@ -145,9 +146,14 @@ public class OppoService {
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
             List<String> productNos = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
-            List<String> localProductNos = oppoPlantProductItemelectronSelRepository.findProductNos(productNos);
+            List<String> localProductNos=Lists.newArrayList();
+            List<OppoPlantProductItemelectronSel> plantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findProductNos(productNos);
+            if(CollectionUtil.isNotEmpty(plantProductItemelectronSels)){
+                localProductNos=CollectionUtil.extractToList(plantProductItemelectronSels, "productNo");
+            }
             for (OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel : oppoPlantProductItemelectronSels) {
                 if (!localProductNos.contains(oppoPlantProductItemelectronSel.getProductNo())) {
+                    oppoPlantProductItemelectronSel.setProductNo(oppoPlantProductItemelectronSel.getProductNo().trim());
                     list.add(oppoPlantProductItemelectronSel);
                 }
             }
