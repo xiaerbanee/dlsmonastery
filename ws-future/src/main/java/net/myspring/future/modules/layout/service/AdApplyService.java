@@ -284,8 +284,6 @@ public class AdApplyService {
             adGoodsOrder.setExpressOrderId(expressOrder.getId());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
-        //TODO 调用金蝶接口
-       batchSynToCloud(adGoodsOrders);
 
         //保存adApply
         List<AdApply> newAdApplys = Lists.newArrayList();
@@ -302,6 +300,9 @@ public class AdApplyService {
             newAdApplys.add(adApply);
         }
         adApplyRepository.save(newAdApplys);
+
+        //TODO 调用金蝶接口
+       batchSynToCloud(adGoodsOrders);
     }
 
     private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
