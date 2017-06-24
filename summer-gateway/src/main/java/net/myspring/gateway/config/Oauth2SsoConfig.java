@@ -38,7 +38,7 @@ public class Oauth2SsoConfig extends OAuth2SsoDefaultConfiguration {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/**/*.html", "/**/*.js", "/**/*.css","/user/login").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

@@ -1,6 +1,5 @@
 package net.myspring.gateway;
 
-import net.myspring.gateway.filter.CookieFilter;
 import net.myspring.gateway.filter.LoginFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,12 +20,6 @@ public class SummerGatewayApplication {
 	public LoginFilter loginFilter() {
 		return new LoginFilter();
 	}
-
-	@Bean
-	public CookieFilter cookieFilter() {
-		return new CookieFilter();
-	}
-
 
 
 }
