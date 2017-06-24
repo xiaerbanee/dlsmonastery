@@ -80,6 +80,7 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
+        console.log(res.data)
         if (!res.errMsg) {
           that.setData({ "response.data": res.data });
           wx.navigateBack();
