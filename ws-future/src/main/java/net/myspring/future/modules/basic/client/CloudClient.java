@@ -83,6 +83,9 @@ public interface CloudClient {
     //标准销售出库单
     @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
     List<KingdeeSynReturnDto> synSalOutStock(List<SalOutStockDto> salOutStockDtoList);
+    //标准销售退货单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/salReturnStock/saveForXSTHD")
+    List<KingdeeSynReturnDto> synSalReturnStock(List<SalReturnStockDto> salReturnStockDtoList);
     //直接调拨单
     @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForStoreAllot")
     KingdeeSynReturnDto synStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);

@@ -2,15 +2,20 @@ package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
+import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
 import net.myspring.cloud.modules.input.service.SalReturnStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -49,5 +54,13 @@ public class SalReturnStockController {
             }
         }
         return null;
+    }
+
+    @RequestMapping(value = "saveForXSTHD",method = RequestMethod.POST)
+    public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalReturnStockDto> salReturnStockDtoList) {
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.saveForXSTHD(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
+        return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
     }
 }
