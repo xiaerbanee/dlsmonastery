@@ -5,14 +5,20 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('chainList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :title="$t('chainList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
-                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('chainList.likeSearch')"></el-input>
+              <el-form-item label="门店" :label-width="formLabelWidth">
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('chainList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item label="门店" :label-width="formLabelWidth">
+                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('chainList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item label="门店" :label-width="formLabelWidth">
+                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -20,7 +26,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('chainList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column prop="name" label="门店名称" sortable></el-table-column>
         <el-table-column prop="createdByName" :label="$t('chainList.createdBy')"></el-table-column>
@@ -51,27 +57,29 @@
   export default {
     data() {
       return {
-        pageLoading: false,
-        pageHeight:600,
         page:{},
         formData:{
-          page:0,
-          size:25,
-          name:''
-        },formLabel:{
-          name:{label: this.$t('chainList.name')}
+          extra:{}
         },
-        formProperty:{},
+        initPromise:{},
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
-        loading:false
+        pageLoading:false
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("shopAttributeList",this.formData);
-        axios.get('/api/ws/future/layout/shopAttribute',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("shopAttributeList",submitData);
+        axios.get('/api/ws/future/layout/shopAttribute',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -102,8 +110,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      this.initPromise=axios.get('/api/ws/future/layout/shopAttribute/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.value,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

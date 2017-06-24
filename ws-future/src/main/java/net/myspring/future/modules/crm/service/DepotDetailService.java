@@ -69,4 +69,6 @@ public class DepotDetailService {
         return StringUtils.toString(gridFSFile.getId());
     }
 
+    public void syn(){ }
+
 }

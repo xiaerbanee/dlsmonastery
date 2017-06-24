@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.filter')}}</el-button>
         <el-button type="primary"  @click="exportData" v-permit="'crm:depotDetail:view'">{{$t('depotDetailList.export')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="upload2" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.syn')}}</el-button>
+        <el-button type="primary" @click="synData" icon="plus" v-permit="'crm:depotDetail:edit'">{{$t('depotDetailList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('depotDetailList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -60,12 +60,11 @@
     data() {
       return {
         page:{},
-        searchText:"",
         formData:{
           extra:{}
         },
-        pickerDateOption:util.pickerDateOption,
-        formProperty:{},
+        initPromise:{},
+        searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false
@@ -105,12 +104,20 @@
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
+      },synData(){
+        axios.get('/api/ws/future/crm/depotDetail/syn').then((response) =>{
+          this.$message(response.data.message);
+          this.pageRequest();
+        })
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      axios.get('/api/ws/future/crm/depotDetail/getQuery').then((response) =>{
-        this.formProperty=response.data;
+      this.initPromise=axios.get('/api/ws/future/crm/depotDetail/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }
