@@ -142,14 +142,16 @@ public class AdApplyService {
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
         cacheUtils.initCacheInput(adApplyDtos);
         //同步财务库存
-        List<String> productOutIds = CollectionUtil.extractToList(adApplyDtos,"productOutId");
-        List<StkInventory> stkInventories = cloudClient.findInventoriesByProductOutIds(productOutIds);
-        Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
-        for(AdApplyDto adApplyDto:adApplyDtos){
-            if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
-                adApplyDto.setStoreQty(stringStkInventoryMap.get(adApplyDto.getProductOutId()).getFBaseQty());
-            }else{
-                adApplyDto.setStoreQty(0);
+        if(adApplyDtos.size()>0){
+            List<String> productOutIds = CollectionUtil.extractToList(adApplyDtos,"productOutId");
+            List<StkInventory> stkInventories = cloudClient.findInventoriesByProductOutIds(productOutIds);
+            Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
+            for(AdApplyDto adApplyDto:adApplyDtos){
+                if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
+                    adApplyDto.setStoreQty(stringStkInventoryMap.get(adApplyDto.getProductOutId()).getFBaseQty());
+                }else{
+                    adApplyDto.setStoreQty(0);
+                }
             }
         }
         adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
