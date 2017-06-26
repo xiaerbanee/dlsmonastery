@@ -11,6 +11,5 @@ import java.util.List;
 public interface OppoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/oppo/synIme")
-   String  findSynImeList(@RequestParam(value = "date")String date);
-
+   String  findSynImeList(@RequestParam(value = "date")String date,@RequestParam(value="agentCode")String agentCode);
 }
