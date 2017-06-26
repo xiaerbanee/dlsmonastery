@@ -2,18 +2,113 @@ package net.myspring.future.modules.crm.web.form;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.form.BaseForm;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class GoodsOrderForm extends BaseForm<GoodsOrder> {
-    private String expressOrderId;
+
+    private boolean syn;
+    private String storeId;
     private String shopId;
-    private String netType;
+    private String status;
+    private String pullStatus;
+    private String outCode;
+    private BigDecimal amount;
     private String shipType;
+    private String netType;
+    private String expressOrderId;
+    private String businessId;
+    private String allotFromStockCode;
+    private String allotToStockCode;
+    private BigDecimal goodsDeposit;
+    private LocalDate billDate;
     private List<String> netTypeList;
     private List<String> shipTypeList;
-    private boolean syn;
+
+    public String getAllotToStockCode() {
+        return allotToStockCode;
+    }
+
+    public LocalDate getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(LocalDate billDate) {
+        this.billDate = billDate;
+    }
+
+    public void setAllotToStockCode(String allotToStockCode) {
+        this.allotToStockCode = allotToStockCode;
+    }
+
+    public BigDecimal getGoodsDeposit() {
+        return goodsDeposit;
+    }
+
+    public void setGoodsDeposit(BigDecimal goodsDeposit) {
+        this.goodsDeposit = goodsDeposit;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
+
+    public String getAllotFromStockCode() {
+        return allotFromStockCode;
+    }
+
+    public void setAllotFromStockCode(String allotFromStockCode) {
+        this.allotFromStockCode = allotFromStockCode;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPullStatus() {
+        return pullStatus;
+    }
+
+    public void setPullStatus(String pullStatus) {
+        this.pullStatus = pullStatus;
+    }
+
+    public String getOutCode() {
+        return outCode;
+    }
+
+    public void setOutCode(String outCode) {
+        this.outCode = outCode;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     public boolean isSyn() {
         return syn;

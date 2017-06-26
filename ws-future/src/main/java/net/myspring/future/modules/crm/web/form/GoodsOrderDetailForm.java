@@ -24,15 +24,6 @@ public class GoodsOrderDetailForm extends BaseForm<GoodsOrderDetail> {
     //办事处已下单数
     private Integer areaQty;
 
-
-    public String getGoodsOrderDetailId() {
-        return goodsOrderDetailId;
-    }
-
-    public void setGoodsOrderDetailId(String goodsOrderDetailId) {
-        this.goodsOrderDetailId = goodsOrderDetailId;
-    }
-
     public String getProductId() {
         return productId;
     }

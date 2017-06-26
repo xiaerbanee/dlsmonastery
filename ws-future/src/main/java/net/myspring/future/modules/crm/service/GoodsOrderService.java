@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -23,6 +24,7 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
@@ -43,12 +45,17 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
+import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
+import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -89,6 +96,8 @@ public class GoodsOrderService {
     private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private ShopGoodsDepositRepository shopGoodsDepositRepository;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -235,6 +244,73 @@ public class GoodsOrderService {
         expressOrder.setTotalQty(totalBillQty);
         expressOrder.setMobileQty(mobileBillQty);
         expressOrderRepository.save(expressOrder);
+        if (goodsOrderBillForm.getSyn()) {
+            syn(BeanUtil.map(goodsOrder,GoodsOrderForm.class));
+        }
+        return goodsOrder;
+    }
+
+    private GoodsOrder syn(GoodsOrderForm goodsOrderForm){
+        Depot shop=depotRepository.findOne(goodsOrderForm.getShopId());
+        //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
+        CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        if (companyConfig!=null&&StringUtils.isNotBlank(companyConfig.getValue())) {
+            String mergeStoreIds =companyConfig.getValue();
+            List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
+            String fromStockId = storeIds.get(0);
+            String toStockId = storeIds.get(1);
+            if (goodsOrderForm.getStoreId().equals(toStockId)) {
+                ClientDto allotFromStock = clientRepository.findByDepotId(fromStockId);
+                ClientDto allotToStock = clientRepository.findByDepotId(toStockId);
+                goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
+                goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
+//                K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
+//                k3CloudSynRepository.save(transCloudSyn);
+            }
+        }
+        if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
+            ClientDto allotFromStock = clientRepository.findByDepotId(goodsOrderForm.getStoreId());
+            ClientDto allotToStock = clientRepository.findByDepotId(shop.getDelegateDepotId());
+            goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
+            goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
+//            K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
+//            k3CloudSynRepository.save(transCloudSyn);
+        } else {
+//            String saleOutstock = goodsOrderManager.getSaleOutstock(goodsOrder);
+//            K3CloudSyn outCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.SAL_OUTSTOCK.name(), K3CloudBillTypeEnum.AR_receivable.name(),saleOutstock , goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
+//            k3CloudSynRepository.save(outCloudSyn);
+        }
+        //如果有定金则收取定金
+        String isNotDepotStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.IS_NOT_DEPOSIT_STORE.name()).getValue();
+        Boolean isNotDepotStore = false;
+        if (goodsOrderForm.getStoreId() != null && StringUtils.isNotBlank(isNotDepotStoreId)) {
+            List<String> storeIds = IdUtils.getIdList(isNotDepotStoreId);
+            if (storeIds.contains(goodsOrderForm.getStoreId())) {
+                isNotDepotStore = true;
+            }
+        }
+        if (!isNotDepotStore && goodsOrderForm.getGoodsDeposit() != null && goodsOrderForm.getGoodsDeposit().compareTo(BigDecimal.ZERO) > 0) {
+            ShopGoodsDeposit last = shopGoodsDepositRepository.findByShopId(goodsOrderForm.getShopId(), "已通过").get(0);
+            ShopGoodsDeposit item = new ShopGoodsDeposit();
+            item.setShopId(shop.getId());
+            item.setBankId(last.getBankId());
+            item.setShopId(goodsOrderForm.getShopId());
+            item.setBankId(last.getBankId());
+            item.setDepartMent(last.getDepartMent());
+            item.setAmount(BigDecimal.ZERO.subtract(goodsOrderForm.getGoodsDeposit()));
+            item.setBillDate(LocalDateTime.of(goodsOrderForm.getBillDate(),LocalTime.MIN));
+            item.setRemarks(goodsOrderForm.getBusinessId());
+            String otherTypes = "其他应付款-订货会订金";
+            //定金转应收
+//            K3CloudSyn otherCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.AR_OtherRecAble.name(), shopGoodsDepositManager.getAROtherRecAbleImage(item, otherTypes), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
+//            k3CloudSynRepository.save(otherCloudSyn);
+//            item.setCloudSynId(otherCloudSyn.getId());
+            item.setStatus("已通过");
+            item.setLocked(true);
+            shopGoodsDepositRepository.save(item);
+        }
+        GoodsOrder goodsOrder= BeanUtil.map(goodsOrderForm,GoodsOrder.class);
+        goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
     }
 
