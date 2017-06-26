@@ -47,8 +47,6 @@ public class CacheService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private CompanyRepository companyRepository;
-    @Autowired
     private BackendRepository backendRepository;
     @Autowired
     private BackendModuleRepository backendModuleRepository;
@@ -67,7 +65,6 @@ public class CacheService {
         cacheUtils.initCache("dictEnums",dictEnumRepository.findAll());
         cacheUtils.initCache("positions",positionRepository.findAll());
         cacheUtils.initCache("menus",menuRepository.findAll());
-        cacheUtils.initCache("companys",companyRepository.findAll());
         cacheUtils.initCache("menuCategorys",menuCategoryRepository.findAll());
         cacheUtils.initCache("backends",backendRepository.findAll());
         cacheUtils.initCache("backendModules",backendModuleRepository.findAll());
