@@ -6,9 +6,6 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.*;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -22,10 +19,10 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.SalOutStockManager;
+import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
@@ -65,7 +62,6 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -97,9 +93,11 @@ public class GoodsOrderService {
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
-    private CloudClient cloudClient;
+    private SalOutStockManager salOutStockManager;
     @Autowired
     private OtherRecAbleManager otherRecAbleManager;
+    @Autowired
+    private StkTransferDirectManager stkTransferDirectManager;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -266,7 +264,7 @@ public class GoodsOrderService {
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
                 goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
                 goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-                synStkTransferDirect(goodsOrderForm);
+                stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
@@ -274,9 +272,9 @@ public class GoodsOrderService {
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
             goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
             goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-            synStkTransferDirect(goodsOrderForm);
+            stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
         } else {
-            synSalOutStock(goodsOrderForm);
+            salOutStockManager.synForGoodsOrder(goodsOrderForm);
         }
         //如果有定金则收取定金
         String isNotDepotStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.IS_NOT_DEPOSIT_STORE.name()).getValue();
@@ -308,62 +306,6 @@ public class GoodsOrderService {
         GoodsOrder goodsOrder= BeanUtil.map(goodsOrderForm,GoodsOrder.class);
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
-    }
-
-    private KingdeeSynReturnDto synStkTransferDirect(GoodsOrderForm goodsOrderForm){
-        if (StringUtils.isNotBlank(goodsOrderForm.getId())) {
-            StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-            transferDirectDto.setExtendId(goodsOrderForm.getId());
-            transferDirectDto.setExtendType(ExtendTypeEnum.货品订货.name());
-            transferDirectDto.setNote(goodsOrderForm.getRemarks());
-            transferDirectDto.setDate(LocalDate.now());
-            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
-            List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-            Map<String, String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product::getCode));
-            for (GoodsOrderDetail detail : goodsOrderDetailList) {
-                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-                entryDto.setQty(detail.getBillQty());
-                entryDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
-                entryDto.setSrcStockNumber(goodsOrderForm.getAllotFromStockCode());
-                entryDto.setDestStockNumber(goodsOrderForm.getAllotToStockCode());
-                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
-            }
-            return cloudClient.synStkTransferDirect(transferDirectDto);
-        }
-        return null;
-    }
-
-    private List<KingdeeSynReturnDto> synSalOutStock(GoodsOrderForm goodsOrderForm){
-        if (StringUtils.isNotBlank(goodsOrderForm.getId())){
-            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
-            DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
-            ClientDto clientDto = clientRepository.findByDepotId(goodsOrderForm.getShopId());
-            List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-            Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
-            List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
-            SalOutStockDto salOutStockDto = new SalOutStockDto();
-            salOutStockDto.setExtendId(goodsOrderForm.getId());
-            salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
-            salOutStockDto.setDate(LocalDate.now());
-            salOutStockDto.setCustomerNumber(clientDto.getOutCode());
-            salOutStockDto.setNote(goodsOrderForm.getRemarks());
-            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-            for (GoodsOrderDetail detail : goodsOrderDetailList) {
-                if (detail.getBillQty() != null && detail.getBillQty() > 0) {
-                    SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                    entityDto.setStockNumber(depotStore.getOutCode());
-                    entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
-                    entityDto.setQty(detail.getBillQty());
-                    entityDto.setPrice(detail.getPrice());
-                    entityDto.setEntryNote(goodsOrderForm.getRemarks());
-                    entityDtoList.add(entityDto);
-                    salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-                    salOutStockDtoList.add(salOutStockDto);
-                }
-            }
-            return cloudClient.synSalOutStock(salOutStockDtoList);
-        }
-        return null;
     }
 
     private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
