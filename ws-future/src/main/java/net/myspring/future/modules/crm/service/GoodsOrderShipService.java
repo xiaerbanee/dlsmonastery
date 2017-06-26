@@ -356,7 +356,7 @@ public class GoodsOrderShipService {
         returnStockDto.setExtendId(goodsOrderDto.getId());
         returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
         returnStockDto.setDate(goodsOrderDto.getBillDate());
-        returnStockDto.setCustomerNumber(clientDto.getOutCode());//shopAllotDto.getFromShop().getRealCode()
+        returnStockDto.setCustomerNumber(clientDto.getOutCode());
         returnStockDto.setNote(goodsOrderDto.getRemarks());
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
 
