@@ -89,11 +89,8 @@
                if(detail.billQty-detail.shippedQty<detail.returnQty){
                  alert("退货数必须小于开单数");
                  return;
-               }else {
-                 if(detail.returnQty>0) {
-                   goodsOrderDetailFormList.push(detail);
-                 }
                }
+               goodsOrderDetailFormList.push(detail);
              }
              submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
              axios.post('/api/ws/future/crm/goodsOrderShip/sreturn',qs.stringify(submitData, {allowDots:true})).then((response)=> {
