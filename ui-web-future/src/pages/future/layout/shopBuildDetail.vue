@@ -14,8 +14,8 @@
             <el-form-item :label="$t('shopBuildDetail.shopName')" prop="shopId">
               {{inputForm.shopName}}
             </el-form-item>
-            <el-form-item :label="$t('shopBuildDetail.monthSaleQty')" prop="monthSaleQty">
-              {{inputForm.monthSaleQty}}
+            <el-form-item :label="$t('shopBuildDetail.monthSaleQty')" prop="recentSaleDescription">
+              {{recentSaleDescription}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopType')" prop="shopType">
               {{inputForm.shopType}}
@@ -101,6 +101,7 @@
             formData:{
               extra:{}
             },
+            recentSaleDescription:'',
             fileList1:[],
             fileList2:[],
             dialogImageUrl:'',
@@ -124,8 +125,24 @@
             this.submitDisabled = false;
           }
         })
-      },
-      handlePreview1(file) {
+      },refreshRecentMonthSaleAmount(){
+        if(util.isBlank(this.inputForm.shopId)){
+          this.recentSaleDescription='';
+          return;
+        }
+
+        axios.get('/api/ws/future/basic/depot/getRecentMonthSaleAmount' , {params: {depotId: this.inputForm.shopId, monthQty:3}}).then((response) => {
+          if(response.data){
+            let tmp = '';
+            for(let key in response.data){
+              tmp = tmp + key +"销量："+  response.data[key] +"台；";
+            }
+            this.recentSaleDescription=tmp;
+          }else{
+            this.recentSaleDescription='';
+          }
+        });
+      }, handlePreview1(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },handlePreview2(file) {
@@ -134,6 +151,7 @@
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
+          this.refreshRecentMonthSaleAmount();
           if(this.inputForm.scenePhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.scenePhoto}}).then((response)=>{
               this.fileList1= response.data;
@@ -144,7 +162,7 @@
               this.fileList2= response.data;
             });
           }
-        })
+        });
         axios.get('/api/ws/future/layout/shopBuild/getAuditForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.formData = response.data;
         })
