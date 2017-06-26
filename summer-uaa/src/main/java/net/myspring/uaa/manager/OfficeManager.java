@@ -30,11 +30,11 @@ public class OfficeManager {
     private String adminIdList;
 
     public List<String> officeFilter(String accountId,String officeId) {
-        List<String> officeIdList = Lists.newArrayList();
+        List<String> officeIdList = Lists.newLinkedList();
         if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
             OfficeDto office = officeRepository.findDtoById(officeId);
             officeIdList.add(office.getId());
-            if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(office.getType())) {
+            if (OfficeTypeEnum.业务部门.name().equalsIgnoreCase(office.getType())) {
                 officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike("%,"+office.getParentId()+",%"), "id"));
             } else {
                 List<OfficeBusinessDto> businessList = officeBusinessRepository.findBusinessIdByOfficeId(office.getId());
@@ -44,9 +44,6 @@ public class OfficeManager {
                     List<OfficeDto> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
                     officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
                 }
-            }
-            if (CollectionUtil.isNotEmpty(officeIdList)) {
-                officeIdList.add("0");
             }
         }
         officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));

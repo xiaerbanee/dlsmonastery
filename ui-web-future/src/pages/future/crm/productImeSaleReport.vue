@@ -129,11 +129,13 @@
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
+            console.log(">>>>>>",response.data)
             this.page = response.data;
             this.pageLoading = false;
           })
         }else {
           axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
+            console.log("++++++++",response.data)
             this.page = response.data;
             this.pageLoading = false;
           })
