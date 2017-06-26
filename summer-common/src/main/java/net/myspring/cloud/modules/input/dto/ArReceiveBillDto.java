@@ -117,10 +117,6 @@ public class ArReceiveBillDto {
         model.put("FSETTLEORGID", CollectionUtil.getMap("FNumber", 100));
         //销售组织
         model.put("FSALEORGID", CollectionUtil.getMap("FNumber", 100));
-        //表头-应收金额
-        model.put("FRECEIVEAMOUNTFOR_H", sumAmount);
-        //表头-实收金额
-        model.put("FREALRECAMOUNTFOR", sumAmount);
         //结算汇率
         model.put("FSETTLERATE", 1);
         //汇率
@@ -129,10 +125,6 @@ public class ArReceiveBillDto {
         model.put("FBUSINESSTYPE", 1);
         //销售部门
         model.put("FSALEDEPTID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
-        //单据状态--已审核
-        model.put("FDOCUMENTSTATUS","C");
-        //作废状态--否
-        model.put("FCancelStatus","A");
         List<Object> entity = Lists.newArrayList();
         for (ArReceiveBillEntryDto entryDto : getArReceiveBillEntryDtoList()) {
             Map<String, Object> detail = Maps.newLinkedHashMap();
@@ -155,6 +147,10 @@ public class ArReceiveBillDto {
             sumAmount = sumAmount.add(entryDto.getAmount());
             entity.add(detail);
         }
+        //表头-应收金额
+        model.put("FRECEIVEAMOUNTFOR_H", sumAmount);
+        //表头-实收金额
+        model.put("FREALRECAMOUNTFOR", sumAmount);
         model.put("FRECEIVEBILLENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
