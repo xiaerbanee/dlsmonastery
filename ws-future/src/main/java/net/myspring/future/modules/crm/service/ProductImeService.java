@@ -207,7 +207,6 @@ public class ProductImeService {
     }
 
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
-        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {

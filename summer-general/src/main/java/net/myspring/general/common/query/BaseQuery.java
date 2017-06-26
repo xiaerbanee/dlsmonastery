@@ -3,14 +3,18 @@ package net.myspring.general.common.query;
 
 import com.google.common.collect.Maps;
 import net.myspring.general.common.utils.RequestUtils;
+import net.myspring.util.collection.CollectionUtil;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
-    private String companyId = RequestUtils.getCompanyId();
+    private String companyId= RequestUtils.getCompanyId();
+
+    private List<String> officeIdList;
 
     private  Integer page = 0;
 
@@ -20,13 +24,23 @@ public class BaseQuery {
 
     private Map<String,Object> extra = Maps.newHashMap();
 
-
     public String getCompanyId() {
         return companyId;
     }
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public List<String> getOfficeIdList() {
+        if(CollectionUtil.isEmpty(officeIdList)){
+            this.officeIdList=RequestUtils.getOfficeIdList();
+        }
+        return officeIdList;
+    }
+
+    public void setOfficeIdList(List<String> officeIdList) {
+        this.officeIdList = officeIdList;
     }
 
     public Integer getPage() {
@@ -59,5 +73,4 @@ public class BaseQuery {
 
     public void setExtra(Map<String, Object> extra) {
         this.extra = extra;
-    }
-}
+    }}
