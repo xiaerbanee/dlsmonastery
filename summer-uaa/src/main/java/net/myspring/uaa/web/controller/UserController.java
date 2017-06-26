@@ -1,10 +1,14 @@
 package net.myspring.uaa.web.controller;
 
+import net.myspring.common.response.RestResponse;
+import net.myspring.uaa.service.AccountWeixinService;
 import net.myspring.uaa.service.UserService;
+import net.myspring.uaa.web.form.AccountWeixinForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.session.ExpiringSession;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,6 +25,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private AccountWeixinService accountWeixinService;
 
     @RequestMapping(value = "/user/logout")
     @ResponseBody
@@ -57,5 +63,11 @@ public class UserController {
     public Map<String, Object> login(String username, String password, String weixinCode,String accountId) {
         Map<String, Object> map = userService.login(username, password, weixinCode,accountId);
         return map;
+    }
+
+    @RequestMapping(value = "/user/bind")
+    @ResponseBody
+    public RestResponse accountBind(AccountWeixinForm accountWeixinForm) {
+        return accountWeixinService.bind(accountWeixinForm);
     }
 }
