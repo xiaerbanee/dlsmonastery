@@ -1,11 +1,13 @@
 package net.myspring.future.modules.third.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import net.myspring.future.common.domain.IdEntity;
 
 import java.time.LocalDateTime;
 
-public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
+@JsonIgnoreProperties(ignoreUnknown=true)
+public class OppoPlantSendImeiPpsel  {
     private String billId;
     private String imei;
     private String meid;
