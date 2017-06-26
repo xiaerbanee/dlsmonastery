@@ -16,7 +16,7 @@ function formatDate(date, format) {
     "h+": date.getHours(), //hour
     "m+": date.getMinutes(), //minute
     "s+": date.getSeconds(), //second
-    "q+": Math.floor((date.getMonth() + 3) / 3), //quarter
+    "q+": Math.floor((date.getMonth() + 3) / 3), //quarter  
     "S": date.getMilliseconds() //millisecond
   }
   if (/(y+)/.test(format)) {
