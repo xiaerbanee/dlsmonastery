@@ -35,8 +35,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -74,6 +76,22 @@ public class OfficeService {
     public List<Office> findByParentIdsLike(String parentId) {
         List<Office> officeList = officeRepository.findByParentIdsLike("%,"+parentId+",%");
         return officeList;
+    }
+
+    public List<String> getTopOfficeListByIdList(List<String> officeIdList){
+        List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(officeIdList);
+        List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
+        Map<String,OfficeRule> officeRuleMap=officeRuleList.stream().collect(Collectors.toMap(OfficeRule::getId,OfficeRule -> OfficeRule));
+        Map<Integer, List<String>> levelMap = Maps.newTreeMap();
+        for(Office office:officeList){
+            OfficeRule officeRule=officeRuleMap.get(office.getOfficeRuleId());
+            Integer key = Integer.valueOf(officeRule.getLevel());
+            if (!levelMap.containsKey(key)) {
+                levelMap.put(key, Lists.newArrayList());
+            }
+            levelMap.get(key).add(office.getId());
+        }
+        return levelMap.get(0);
     }
 
 

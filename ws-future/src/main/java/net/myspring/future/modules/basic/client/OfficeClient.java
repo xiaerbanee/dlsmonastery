@@ -18,6 +18,9 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeFilterIds")
     List<String> getOfficeFilterIds(@RequestParam(value = "officeId") String officeId);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getTopIdsByFilter")
+    List<String> getTopIdsByFilter();
+
     @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findByOfficeRuleName")
     List<OfficeDto> findByOfficeRuleName(@RequestParam(value = "officeRuleName")String officeRuleName);
 

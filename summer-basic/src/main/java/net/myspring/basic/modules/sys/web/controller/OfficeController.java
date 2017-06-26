@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.JointTypeEnum;
 import net.myspring.basic.common.enums.OfficeTypeEnum;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "sys/office")
@@ -63,6 +65,16 @@ public class OfficeController {
             officeIdList = officeService.getOfficeFilterIds(officeId);
         }
         return officeIdList;
+    }
+
+    @RequestMapping(value = "getTopIdsByFilter")
+    public List<String> getTopIdsByFilter(){
+        List<String> officeIds=Lists.newArrayList();
+        List<String> filterOfficeIds=officeService.getOfficeFilterIds(RequestUtils.getOfficeId());
+        if(CollectionUtil.isNotEmpty(filterOfficeIds)){
+            officeIds=officeService.getTopOfficeListByIdList(filterOfficeIds);
+        }
+        return officeIds;
     }
 
     @RequestMapping(value = "findByOfficeRuleName")
