@@ -12,6 +12,8 @@ public class ArReceiveBillEntryDto {
     private String bankAcntNumber;
     //备注
     private String comment;
+    //结算方式
+    private String settleTypeNumber;
 
     public BigDecimal getAmount() {
         return amount;
@@ -35,5 +37,13 @@ public class ArReceiveBillEntryDto {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getSettleTypeNumber() {
+        return settleTypeNumber;
+    }
+
+    public void setSettleTypeNumber(String settleTypeNumber) {
+        this.settleTypeNumber = settleTypeNumber;
     }
 }
