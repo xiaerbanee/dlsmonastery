@@ -15,17 +15,10 @@ import javax.persistence.PrePersist;
  * Created by liuj on 2017/4/12.
  */
 @MappedSuperclass
-@FilterDef(name = "companyFilter", parameters = { @ParamDef(name = "companyId", type = "string") })
-@Filters({ @Filter(name = "companyFilter", condition = "company_id =:companyId") })
 public class CompanyEntity<T> extends DataEntity<T> {
 
     @Column(updatable = false)
-    private String companyId;
-
-    @PrePersist
-    public void prePersist() {
-        this.companyId = RequestUtils.getCompanyId();
-    }
+    private String companyId="1";
 
     public String getCompanyId() {
         return companyId;
