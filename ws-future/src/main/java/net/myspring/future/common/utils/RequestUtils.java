@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,31 +14,40 @@ import java.util.Map;
 public class RequestUtils {
 
     public static String getAccountId() {
-        return getSecurityMap().get("accountId");
+        return (String) getSecurityMap().get("accountId");
     }
 
     public static String getCompanyId() {
-        return getSecurityMap().get("companyId");
-    }
-
-    public static String getPositionId() {
-        return getSecurityMap().get("positionId");
+        return (String) getSecurityMap().get("companyId");
     }
 
     public static String getCompanyName() {
-        return getSecurityMap().get("companyName");
+        return (String) getSecurityMap().get("companyName");
+    }
+
+    public static String getPositionId() {
+        return (String) getSecurityMap().get("positionId");
+    }
+
+    public static String getDataSourceType() {
+        return (String) getSecurityMap().get("dataSourceType");
     }
 
     public static String getOfficeId() {
-        return getSecurityMap().get("officeId");
+        return (String) getSecurityMap().get("officeId");
     }
 
     public static String getEmployeeId() {
-        return getSecurityMap().get("employeeId");
+        return (String) getSecurityMap().get("employeeId");
     }
-    public  static Map<String, String> getSecurityMap() {
+
+    public static List<String> getOfficeIdList() {
+        return (List<String>) getSecurityMap().get("officeIdList");
+    }
+
+    public  static Map<String, Object> getSecurityMap() {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
-        LinkedHashMap principal = Maps.newLinkedHashMap();
+        LinkedHashMap<String,Object> principal = Maps.newLinkedHashMap();
         if(auth !=  null) {
             principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
         }

@@ -88,7 +88,6 @@
               util.copyValue(response.data,this.inputForm)
             })
           });
-          this.isInit = true;
         }
       },created(){
         this.initPage();

@@ -7,10 +7,10 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.createdPositionIds')" prop="createdPositionIds">
-          <position-select v-model="inputForm.createdPositionIdList" multiple></position-select>
+          <position-select v-model="inputForm.createdPositionIdList" :multiple = "true"></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.viewPositionIds')" prop="viewPositionIds">
-          <position-select v-model="inputForm.viewPositionIdList" multiple></position-select>
+          <position-select v-model="inputForm.viewPositionIdList" :multiple="true"></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.auditFileType')" prop="auditFileType">
           <bool-radio-group v-model="inputForm.auditFileType"></bool-radio-group>

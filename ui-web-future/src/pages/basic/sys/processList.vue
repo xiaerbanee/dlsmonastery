@@ -49,7 +49,7 @@
       })
     },activated(){
       this.initPromise.then(()=>{
-        this.pageRequest();
+
       })
     }
   };
