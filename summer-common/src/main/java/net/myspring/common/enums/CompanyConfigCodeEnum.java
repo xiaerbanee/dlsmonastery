@@ -47,5 +47,6 @@ public enum CompanyConfigCodeEnum {
 	MERGE_STORE_IDS,
 	CLOUD_DB_NAME,
 	PRODUCT_NAME,
+	COMPANY_NAME,
 	EXPRESS_PRINT_QTY;
 }
