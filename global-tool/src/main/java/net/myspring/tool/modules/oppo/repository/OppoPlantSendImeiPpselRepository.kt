@@ -3,6 +3,7 @@ package net.myspring.tool.modules.oppo.repository;
 import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
+import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpselDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -20,7 +21,7 @@ interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPps
 
 }
 interface OppoPlantSendImeiPpselRepositoryCustom{
-    fun findSynList(dateStart:LocalDate,dateEnd:LocalDate,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpsel>
+    fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto>
     fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
 }
 
@@ -28,25 +29,32 @@ interface OppoPlantSendImeiPpselRepositoryCustom{
 @Component
 class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) :OppoPlantSendImeiPpselRepositoryCustom {
 
-    override fun findSynList(dateStart:LocalDate, dateEnd:LocalDate, agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpsel> {
+    override fun findSynList(dateStart:String, dateEnd:String, agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
         paramMap.put("agentCodes",agentCodes);
 
         return namedParameterJdbcTemplate.query("""
-            select t.id,t.company_id,t.bill_id,t.imei,t.meid,t.created_time,t.dls_product_id,t.imei_state,t.remarks,t.ime2 from oppo_plant_send_imei_ppsel t
-            where t.created_time >= :dateStart
-            and t.created_time <= :dateEnd
-            and t.company_id in (:agentCodes)
-            """,paramMap,BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java));
+         select
+            t.*, g.color_id as colorId,
+            g.product_id as productId,
+            g.lx_product_id as lxProductId
+        from
+            oppo_plant_send_imei_ppsel t,
+            oppo_plant_agent_product_sel g
+        where
+            t.dls_product_id = g.item_number
+         and t.created_time>=:dateStart
+         and t.created_time<=:dateEnd
+        and t.company_id in (:agentCodes)
+            """,paramMap,BeanPropertyRowMapper(OppoPlantSendImeiPpselDto::class.java));
     }
 
     override fun plantSendImeiPPSel(companyId: String, password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("agentId",companyId);
         paramMap.put("pwd",password);
-        System.err.println("dateTime=="+dateTime);
         paramMap.put("dta",dateTime);
         val simpleJdbcCall= SimpleJdbcCall(jdbcTemplate);
         return simpleJdbcCall.withProcedureName("plantSendImeiPPSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantSendImeiPpsel>

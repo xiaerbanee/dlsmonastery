@@ -1,19 +1,17 @@
 package net.myspring.tool.modules.oppo.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.myspring.tool.common.config.JdbcConfig;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,13 +167,12 @@ public class OppoService {
 
 
     @Transactional
-    public  List<OppoPlantSendImeiPpsel>  synIme(String date) {
+    public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
         LocalDate nowDate= LocalDateUtils.parse(date);
-        LocalDate dateStart = nowDate.minusDays(1);
-        LocalDate dateEnd = nowDate.plusDays(1);
-       List<String>  mainCodes=Lists.newArrayList();
-        mainCodes.add("M13AMB");
-        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
-        return oppoPlantSendImeiPpsels;
+        String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
+        String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
+        return oppoPlantSendImeiPpselDtos;
     }
  }

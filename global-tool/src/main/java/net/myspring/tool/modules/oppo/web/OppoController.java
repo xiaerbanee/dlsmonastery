@@ -75,10 +75,9 @@ public class OppoController {
     }
 
     @RequestMapping(value = "synIme")
-    public String synIme(String date) {
-//        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselDtos = oppoService.synIme(date);
-//        return ObjectMapperUtils.writeValueAsString(oppoPlantSendImeiPpselDtos);
-        return "";
+    public String synIme(String date,String agentCode) {
+        List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoService.synIme(date,agentCode);
+        return ObjectMapperUtils.writeValueAsString(oppoPlantSendImeiPpselDtos);
     }
 
     //代理商经销商基础数据上抛
