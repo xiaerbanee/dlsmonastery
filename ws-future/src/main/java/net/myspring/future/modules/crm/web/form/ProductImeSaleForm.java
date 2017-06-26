@@ -3,24 +3,28 @@ package net.myspring.future.modules.crm.web.form;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
-import net.myspring.future.modules.crm.domain.ProductImeUpload;
 import net.myspring.util.text.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
+
 public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
 
     private String imeStr;
-    private String shopId;
     private String buyer;
     private Integer buyerAge;
     private String buyerSex;
     private String buyerPhone;
+    private List<ProductImeSaleDetailForm> productImeSaleDetailList;
 
+    public List<ProductImeSaleDetailForm> getProductImeSaleDetailList() {
+        return productImeSaleDetailList;
+    }
+
+    public void setProductImeSaleDetailList(List<ProductImeSaleDetailForm> productImeSaleDetailList) {
+        this.productImeSaleDetailList = productImeSaleDetailList;
+    }
 
     public List<String> getImeList(){
         if(imeStr == null){
@@ -35,14 +39,6 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
 
     public void setImeStr(String imeStr) {
         this.imeStr = imeStr;
-    }
-
-    public String getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
     }
 
     public String getBuyer() {

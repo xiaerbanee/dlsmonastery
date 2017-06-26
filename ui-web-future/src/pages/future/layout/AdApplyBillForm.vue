@@ -58,7 +58,6 @@
     methods:{
       getData(){
         return {
-          isInit: false,
           submitDisabled: false,
           productOrShopName: "",
           filterAdApplyList:[],

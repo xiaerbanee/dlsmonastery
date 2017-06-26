@@ -6,6 +6,8 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.dto.ProductImeForSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
@@ -72,6 +74,10 @@ public class ProductImeSaleController {
         return productImeSaleService.checkForSaleBack(imeList);
     }
 
+    @RequestMapping(value="findProductImeForSaleDto")
+    public List<ProductImeForSaleDto> findProductImeForSaleDto(String imeStr) {
+        return productImeSaleService.findProductImeForSaleDto(imeStr);
+    }
 
     @RequestMapping(value = "sale")
     public RestResponse sale(ProductImeSaleForm productImeSaleForm, BindingResult bindResult) {

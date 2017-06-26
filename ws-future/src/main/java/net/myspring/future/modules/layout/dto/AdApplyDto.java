@@ -31,8 +31,18 @@ public class AdApplyDto extends DataDto<AdApply> {
     private String productCode;
     @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "price2")
     private BigDecimal price2;
+    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "outId")
+    private String productOutId;
     private Integer storeQty;
     private Integer nowBilledQty;
+
+    public String getProductOutId() {
+        return productOutId;
+    }
+
+    public void setProductOutId(String productOutId) {
+        this.productOutId = productOutId;
+    }
 
     public Integer getNowBilledQty() {
         return nowBilledQty;

@@ -46,7 +46,7 @@ public class SalOutStockDto {
 
     public String getExtendType() {
         if (extendType == null){
-            return getBillType()+"-";
+            return getBillType()+"-K3";
         }
         return extendType;
     }

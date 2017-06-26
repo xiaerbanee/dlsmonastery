@@ -125,10 +125,9 @@
     },
     methods:{
       formSubmit(){
-          var that=this;
+        var that=this;
         that.submitDisabled = true;
         var form = this.$refs["inputForm"];
-
         form.validate((valid) => {
           if (valid) {
             var submitData = util.deleteExtra(this.inputForm);

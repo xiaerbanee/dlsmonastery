@@ -140,14 +140,20 @@ public class AdApplyService {
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);
-        //同步财务库存
-        /*Map<String,AdApplyDto> adApplyDtoMap = CollectionUtil.extractToMap(adApplyDtos,"productId");
-        List<String> productIds = CollectionUtil.extractToList(productRepository.findAll(),"outId");
-        List<StkInventory> stkInventories = cloudClient.findInventoryByProductIds(productIds);
-        for(StkInventory stkInventory:stkInventories){
-            adApplyDtoMap.get(stkInventory.getFMaterialId()).setStoreQty(stkInventory.getFBaseQty());
-        }*/
         cacheUtils.initCacheInput(adApplyDtos);
+        //同步财务库存
+        if(adApplyDtos.size()>0){
+            List<String> productOutIds = CollectionUtil.extractToList(adApplyDtos,"productOutId");
+            List<StkInventory> stkInventories = cloudClient.findInventoriesByProductOutIds(productOutIds);
+            Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
+            for(AdApplyDto adApplyDto:adApplyDtos){
+                if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
+                    adApplyDto.setStoreQty(stringStkInventoryMap.get(adApplyDto.getProductOutId()).getFBaseQty());
+                }else{
+                    adApplyDto.setStoreQty(0);
+                }
+            }
+        }
         adApplyBillTypeChangeForm.setAdApplyDtoList(adApplyDtos);
         return adApplyBillTypeChangeForm;
     }
@@ -165,18 +171,19 @@ public class AdApplyService {
         List<AdApply> adApplyList = Lists.newArrayList();
         for(ProductAdForm productAdForm:adApplyForm.getProductAdForms()){
             Integer applyQty = productAdForm.getApplyQty();
-            if(applyQty!=null&&applyQty>0){
-                AdApply adApply = new AdApply();
-                adApply.setApplyQty(applyQty);
-                adApply.setConfirmQty(applyQty);
-                adApply.setBilledQty(0);
-                adApply.setLeftQty(applyQty);
-                adApply.setShopId(adApplyForm.getShopId());
-                adApply.setProductId(productAdForm.getId());
-                adApply.setRemarks(adApplyForm.getRemarks());
-                adApply.setExpiryDateRemarks(productAdForm.getExpiryDateRemarks());
-                adApplyList.add(adApply);
+            if(applyQty!=null && applyQty < 0){
+                throw new ServiceException("每个货品的开单数量不可小于0");
             }
+            AdApply adApply = new AdApply();
+            adApply.setApplyQty(applyQty);
+            adApply.setConfirmQty(applyQty);
+            adApply.setBilledQty(0);
+            adApply.setLeftQty(applyQty);
+            adApply.setShopId(adApplyForm.getShopId());
+            adApply.setProductId(productAdForm.getId());
+            adApply.setRemarks(adApplyForm.getRemarks());
+            adApply.setExpiryDateRemarks(productAdForm.getExpiryDateRemarks());
+            adApplyList.add(adApply);
         }
         adApplyRepository.save(adApplyList);
     }
@@ -187,10 +194,14 @@ public class AdApplyService {
         }
         Product product = productRepository.findOne(adApplyGoodsForm.getProductId());
         if(product == null){
-            return;
+            throw new ServiceException("该货品未找到");
         }
         List<AdApply> adApplyList = Lists.newArrayList();
         for (DepotAdApplyForm depotAdApplyForm:adApplyGoodsForm.getDepotAdApplyForms()){
+            Integer applyQty = depotAdApplyForm.getApplyQty();
+            if(applyQty!=null && applyQty < 0){
+                throw new ServiceException("每个货品的开单数量不可小于0");
+            }
             AdApply adApply = new AdApply();
             adApply.setProductId(adApplyGoodsForm.getProductId());
             adApply.setShopId(depotAdApplyForm.getId());
@@ -208,6 +219,7 @@ public class AdApplyService {
     public void billSave(AdApplyBillForm adApplyBillForm){
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
         Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");
+        Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<AdApply> adApplyList = adApplyRepository.findAll(adApplyId);
         Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
         List<AdGoodsOrderDetail> adGoodsOrderDetails = Lists.newArrayList();
@@ -217,6 +229,14 @@ public class AdApplyService {
         }
         //生成AdGoodsOrder
         for(AdApply adApply:adApplyList){
+            Integer nowBilledQty = adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty();
+            Integer storeQty = adApplyDetailFormMap.get(adApply.getId()).getStoreQty();
+            if(nowBilledQty != null && nowBilledQty < 0){
+                throw new ServiceException("每个货品订货数量不可以小于0");
+            }
+            if(nowBilledQty > storeQty){
+                throw new ServiceException("每个货品订货数量不可以大于库存数量");
+            }
             if(!adGoodsOrderMap.containsKey(adApply.getShopId())){
                 AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
                 adGoodsOrder.setBillType(adApplyBillForm.getBillType());
@@ -235,7 +255,7 @@ public class AdApplyService {
             }
             AdGoodsOrder adGoodsOrder = adGoodsOrderMap.get(adApply.getShopId());
             adGoodsOrders.add(adGoodsOrder);
-            Product product = productRepository.findOne(adApply.getProductId());
+            Product product = productMap.get(adApply.getProductId());
             AdGoodsOrderDetail adGoodsOrderDetail = new AdGoodsOrderDetail();
             adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
             adGoodsOrderDetail.setProductId(adApply.getProductId());
@@ -245,8 +265,9 @@ public class AdApplyService {
             adGoodsOrderDetail.setShippedQty(0);
             adGoodsOrderDetail.setQty(adApply.getApplyQty());
             adGoodsOrderDetail.setConfirmQty(adApply.getConfirmQty());
-            adGoodsOrderDetail.setBillQty(adApplyDetailFormMap.get(adApply.getId()).getNowBilledQty());
+            adGoodsOrderDetail.setBillQty(nowBilledQty);
             adGoodsOrderDetails.add(adGoodsOrderDetail);
+
         }
         adGoodsOrderDetailRepository.save(adGoodsOrderDetails);
 

@@ -356,7 +356,7 @@ public class AdGoodsOrderService {
         if(depotStore == null){
             return new HashMap<>();
         }
-        List<StkInventory> inventoryList = cloudClient.findInventorysByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
         Map<String, Integer> result = new HashMap<>();
         for(StkInventory stkInventory : inventoryList){
             if(stkInventory.getFBaseQty() !=null && stkInventory.getFBaseQty() >0){

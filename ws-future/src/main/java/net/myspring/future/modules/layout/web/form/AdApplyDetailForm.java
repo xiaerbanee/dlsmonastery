@@ -10,6 +10,15 @@ public class AdApplyDetailForm extends BaseForm<AdApply>{
 
     private String shopId;
     private Integer nowBilledQty;
+    private Integer storeQty;
+
+    public Integer getStoreQty() {
+        return storeQty;
+    }
+
+    public void setStoreQty(Integer storeQty) {
+        this.storeQty = storeQty;
+    }
 
     public String getShopId() {
         return shopId;

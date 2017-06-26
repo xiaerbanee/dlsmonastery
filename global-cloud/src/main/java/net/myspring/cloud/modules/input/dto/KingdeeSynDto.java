@@ -19,6 +19,7 @@ public class KingdeeSynDto extends DataDto<KingdeeSyn> {
     private String result;
     private Boolean autoAudit = true;
     private KingdeeBook kingdeeBook;
+    private Boolean locked;
 
     public KingdeeSynDto(String extendId,String extendType,String formId, String content,KingdeeBook kingdeeBook) {
         this.extendId = extendId;
@@ -112,5 +113,13 @@ public class KingdeeSynDto extends DataDto<KingdeeSyn> {
             return kingdeeBook.getId();
         }
         return null;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 }

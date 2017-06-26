@@ -110,7 +110,7 @@
             this.continueShip = true;
           } else {
             Object.assign(this.$data, this.getData());
-            this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip")})
+            this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip"), params:{_closeFrom:true}})
           }
         }).catch(()=> {
           that.submitDisabled = false;
@@ -122,6 +122,15 @@
         }
         var boxImeStr=this.inputForm.boxImeStr;
         var imeStr=this.inputForm.imeStr;
+        console.log("boxImeStr"+boxImeStr)
+        console.log("imeStr"+imeStr)
+        if(util.isBlank(imeStr)&&util.isBlank(boxImeStr)){
+          if(isSubmit) {
+            alert("请填入发货串码或箱号");
+            this.submitDisabled = false;
+          }
+          return
+        }
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
           this.shipResult = response.data;
           //错误信息
@@ -143,7 +152,7 @@
             var item = this.goodsOrder.goodsOrderDetailDtoList[index];
             if(item.hasIme) {
               item.shipQty = shipQtyMap[item.productId];
-              item.leftQty = item.realBillQty - item.shippedQty - shipQty;
+              item.leftQty = item.realBillQty - item.shippedQty - item.shipQty;
             } else {
               item.shipQty = item.realBillQty-item.shippedQty;
               item.leftQty = 0;
@@ -153,15 +162,15 @@
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {
-              if(util.isBlank(this.shipResult.warnMsg)) {
-                this.formSubmit();
-              } else {
-                if (confirm("还有货品未发送完，确认保存？")) {
+                if(util.isBlank(this.shipResult.warnMsg)) {
                   this.formSubmit();
                 } else {
-                  this.submitDisabled = false;
+                  if (confirm("还有货品未发送完，确认保存？")) {
+                    this.formSubmit();
+                  } else {
+                    this.submitDisabled = false;
+                  }
                 }
-              }
             } else {
               alert("请先处理错误信息");
               this.submitDisabled = false;

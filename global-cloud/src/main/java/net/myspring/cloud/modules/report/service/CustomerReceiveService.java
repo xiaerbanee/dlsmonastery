@@ -37,44 +37,47 @@ public class CustomerReceiveService {
         LocalDate dateStart = LocalDateUtils.parse(customerReceiveQuery.getDateStart(),"yyyy-MM-dd");
         LocalDate dateEnd = LocalDateUtils.parse(customerReceiveQuery.getDateEnd(),"yyyy-MM-dd");
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
-        List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerIdList);
-        List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd,customerIdList);
-        //期初结余
-        Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        //期末结余
-        Map<String,BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        for(CustomerReceiveDto customerReceiveDto:beginList) {
-            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
-                customerIdList.add(customerReceiveDto.getCustomerId());
+        if (customerIdList.size() > 0 && dateStart != null && dateEnd != null) {
+            List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
+            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd, customerIdList);
+            //期初结余
+            Map<String, BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+            //期末结余
+            Map<String, BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+            for (CustomerReceiveDto customerReceiveDto : beginList) {
+                if (!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                    customerIdList.add(customerReceiveDto.getCustomerId());
+                }
             }
-        }
-        for(CustomerReceiveDto customerReceiveDto:endList) {
-            if(!customerIdList.contains(customerReceiveDto.getCustomerId())) {
-                customerIdList.add(customerReceiveDto.getCustomerId());
+            for (CustomerReceiveDto customerReceiveDto : endList) {
+                if (!customerIdList.contains(customerReceiveDto.getCustomerId())) {
+                    customerIdList.add(customerReceiveDto.getCustomerId());
+                }
             }
-        }
-        List<BdCustomer> customerList =  bdCustomerRepository.findByIdList(customerIdList);
-        List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
-        for(BdCustomer bdCustomer:customerList) {
-            CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
-            customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
-            customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
-            customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
-            customerReceiveDto.setCustomerName(bdCustomer.getFName());
-            customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
-            customerReceiveDtoList.add(customerReceiveDto);
-        }
-        if(customerReceiveQuery.getQueryDetail()) {
-            CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
-            customerReceiveDetailQuery.setCustomerIdList(customerIdList);
-            customerReceiveDetailQuery.setDateStart(customerReceiveQuery.getDateStart());
-            customerReceiveDetailQuery.setDateEnd(customerReceiveQuery.getDateEnd());
-            Map<String,List<CustomerReceiveDetailDto>> customerReceiveDetailMap =findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
-            for(CustomerReceiveDto customerReceiveDto:customerReceiveDtoList) {
-                customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
+            List<BdCustomer> customerList = bdCustomerRepository.findByIdList(customerIdList);
+            List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
+            for (BdCustomer bdCustomer : customerList) {
+                CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
+                customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
+                customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
+                customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
+                customerReceiveDto.setCustomerName(bdCustomer.getFName());
+                customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
+                customerReceiveDtoList.add(customerReceiveDto);
             }
+            if (customerReceiveQuery.getQueryDetail()) {
+                CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+                customerReceiveDetailQuery.setCustomerIdList(customerIdList);
+                customerReceiveDetailQuery.setDateStart(customerReceiveQuery.getDateStart());
+                customerReceiveDetailQuery.setDateEnd(customerReceiveQuery.getDateEnd());
+                Map<String, List<CustomerReceiveDetailDto>> customerReceiveDetailMap = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
+                for (CustomerReceiveDto customerReceiveDto : customerReceiveDtoList) {
+                    customerReceiveDto.setCustomerReceiveDetailDtoList(customerReceiveDetailMap.get(customerReceiveDto.getCustomerId()));
+                }
+            }
+            return customerReceiveDtoList;
         }
-        return customerReceiveDtoList;
+        return null;
     }
 
     public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(LocalDate dateStart,LocalDate dateEnd,String customerId) {
