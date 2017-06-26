@@ -77,7 +77,6 @@ public class DepotService {
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
         List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
-        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         if(CollectionUtil.isNotEmpty(depotList)) {
             depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
         }
@@ -90,7 +89,6 @@ public class DepotService {
 
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
         List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
-        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         if(CollectionUtil.isNotEmpty(depotList)) {
             depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
         }
@@ -235,7 +233,6 @@ public class DepotService {
     }
 
     public void synArea(DepotQuery depotQuery){
-      depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
       depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
       List<Depot> depotList=depotRepository.findByFilter(depotQuery);
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);

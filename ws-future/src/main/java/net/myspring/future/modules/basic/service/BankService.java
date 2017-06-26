@@ -43,7 +43,6 @@ public class BankService {
     }
 
     public Page<BankDto> findPage(Pageable pageable,BankQuery bankQuery) {
-        bankQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         Page<BankDto> page = bankRepository.findPage(pageable, bankQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

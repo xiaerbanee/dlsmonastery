@@ -6,6 +6,7 @@ import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.dto.DictMapDto
 import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -163,6 +164,9 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         if(StringUtils.isNotBlank(officeQuery.name)) {
             sb.append(" and name like concat('%',:name,'%')");
         }
+        if(CollectionUtil.isNotEmpty(officeQuery.officeIdList)) {
+            sb.append(" and id IN (:officeIdList)");
+        }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
         var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(officeQuery), BeanPropertyRowMapper(OfficeDto::class.java));
@@ -208,6 +212,9 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
         }
         if(StringUtils.isNotBlank(officeQuery.id)) {
             sb.append(" and office.name = :id")
+        }
+        if(CollectionUtil.isNotEmpty(officeQuery.officeIdList)) {
+            sb.append(" and id IN (:officeIdList)");
         }
         sb.append("""
             order by office.name

@@ -3,6 +3,8 @@ package net.myspring.future.common.query;
 
 import com.google.common.collect.Maps;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,9 @@ public class BaseQuery {
     }
 
     public List<String> getOfficeIdList() {
+        if(CollectionUtil.isEmpty(officeIdList)){
+            this.officeIdList=RequestUtils.getOfficeIdList();
+        }
         return officeIdList;
     }
 

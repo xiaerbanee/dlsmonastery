@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.Employee
 import net.myspring.basic.modules.hr.dto.EmployeeDto
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery
 import net.myspring.basic.modules.sys.dto.RoleDto
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -111,7 +112,10 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             sb.append(" AND employee.account_id in(select t1.id from hr_account t1 where t1.enabled=1 and t1.position_id=:positionId)");
         }
         if(StringUtils.isNotBlank(employeeQuery.officeId)) {
-            sb.append(" and employee.office_id =:officeId");
+            sb.append(" and account.office_id =:officeId");
+        }
+        if(CollectionUtil.isNotEmpty(employeeQuery.officeIdList)) {
+            sb.append(" and account.office_id in (:officeIdList)");
         }
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
             sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
