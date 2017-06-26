@@ -16,12 +16,33 @@
       };
     } ,methods:{
       remoteSelect(query) {
-        if(query=="" || query == this.innerId || query == util.getLabel(this.itemList,this.innerId,"name")) {
+        if(util.isBlank(query)) {
           return;
         }
         this.remoteLoading = true;
         axios.get('/api/basic/hr/employee/search',{params:{key:query}}).then((response)=>{
-          this.itemList=response.data;
+          var newList = new Array();
+          var idList = new Array();
+          if(this.multiple && this.innerId) {
+            idList = this.innerId;
+          } else {
+            if(util.isNotBlank(this.innerId)) {
+              idList.push(this.innerId);
+            }
+          }
+          for(var index in this.itemList) {
+            var item = this.itemList[index];
+            if(idList.indexOf(item.id)>=0) {
+              newList.push(item);
+            }
+          }
+          for(var index in response.data) {
+            var item = response.data[index];
+            if(idList.indexOf(item.id)<0) {
+              newList.push(item);
+            }
+          }
+          this.itemList = newList;
           this.remoteLoading = false;
         })
       }, handleChange(newVal) {
@@ -34,11 +55,14 @@
         }
         if(val){
           this.innerId=val;
-          this.remoteLoading = true;
           let idStr=this.innerId;
-          if(this.innerId instanceof Array){
+          if(this.multiple && this.innerId){
             idStr=this.innerId.join();
           }
+          if(util.isBlank(idStr)) {
+            return;
+          }
+          this.remoteLoading = true;
           axios.get('/api/basic/hr/employee/findByIds?idStr='+idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
