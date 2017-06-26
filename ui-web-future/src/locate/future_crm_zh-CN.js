@@ -1529,6 +1529,7 @@ export default {
     save: "保存",
     filter: "过滤",
     prerequisiteMessage: "必填信息",
+    prerequisiteAndNumberMessage: "请输入一个合法的数值",
     inputLegalValue: "请输入合法的数值",
     search:'搜索',
     reset:'重置',
@@ -1538,6 +1539,9 @@ export default {
     productImeSaleCreatedDate:'核销时间',
     productImeUploadEmployeeName:'保卡上报员工',
     productImeUploadCreatedDate:'保卡上报时间',
+    pleaseSelectSaleShop:'请选择核销门店',
+    alreadySaleShopName:'已核销门店',
+    saleShopName:'核销门店',
   },
 
   productImeSaleBackForm: {
