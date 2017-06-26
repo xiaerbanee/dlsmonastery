@@ -49,7 +49,7 @@
             axios.post('/api/general/sys/folder/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
-              if(!this.inputForm.create){
+              if(!that.isCreate){
                 this.$router.push({name:'folderList',query:util.getQuery("folderList"),params:{_closeFrom:true}});
               }
             }).catch(function () {
@@ -59,18 +59,16 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data,this.getData());
+      },initPage(){
         axios.get('/api/general/sys/folder/getForm').then((response)=>{
           this.inputForm = response.data;
           axios.get('/api/general/sys/folder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
-          })
-        })
+          });
+        });
       }
-      this.isInit = true;
+    },created(){
+        this.initPage();
     }
   }
 </script>
