@@ -54,7 +54,7 @@ public class ApPayBillService {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 apPayBillDto.getExtendId(),
                 apPayBillDto.getExtendType(),
-                KingdeeFormIdEnum.AP_PayBill.name(),
+                KingdeeFormIdEnum.AP_PAYBILL.name(),
                 apPayBillDto.getJson(),
                 kingdeeBook) {
             };

@@ -147,6 +147,7 @@ public class CnJournalForBankDto {
             debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
             creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
         }
+        //贷方（负）
         model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
         model.put("FCREDITSUMAMOUNT", creditAmounts);
         // 借方

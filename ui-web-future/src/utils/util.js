@@ -135,7 +135,14 @@ util.confirmBeforeExportData = function(vueObj){
   });
 }
 
+util.confirmBefore = function(vueObj){
+  return vueObj.$confirm("是否确定操作", vueObj.$t('util.typeOfWarningBeforeExportData'), {
+    confirmButtonText: vueObj.$t('util.confirmButton'),
+    cancelButtonText:  vueObj.$t('util.cancelButton'),
 
+    type: 'warning'
+  });
+}
 
 
 util.getQuery = function (routerName) {

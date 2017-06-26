@@ -18,7 +18,9 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     //金蝶单号
     private String outCode;
     //门店所在区域
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "areaId")
     private String shopAreaName;
+    private String shopAreaId;
     private String businessId;
     private LocalDate billDate;
     private LocalDateTime shipDate;
@@ -56,11 +58,19 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
-    public Boolean getUseTicket() {
+    public String getShopAreaId() {
+        return shopAreaId;
+    }
+
+    public void setShopAreaId(String shopAreaId) {
+        this.shopAreaId = shopAreaId;
+    }
+
+    public Boolean getIsUseTicket() {
         return isUseTicket;
     }
 
-    public void setUseTicket(Boolean useTicket) {
+    public void setIsUseTicket(Boolean useTicket) {
         isUseTicket = useTicket;
     }
 

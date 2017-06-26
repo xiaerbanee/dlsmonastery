@@ -1,20 +1,24 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
+import net.myspring.future.modules.crm.dto.ProductImeForSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.repository.ProductImeSaleRepository;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
+import net.myspring.future.modules.crm.web.form.ProductImeSaleDetailForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -35,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,14 +114,18 @@ public class ProductImeSaleService {
             leftCredit=latestProductImeSale.getLeftCredit();
         }
 
-        Depot depot = depotRepository.findOne(productImeSaleForm.getShopId());
+        Map<String, ProductImeSaleDetailForm> detailFormMap = CollectionUtil.extractToMap(productImeSaleForm.getProductImeSaleDetailList(), "productImeId");
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
         for (ProductIme productIme : productImeList) {
 
+            String saleShopId = productIme.getDepotId();
+            if(detailFormMap.get(productIme.getId())!=null &&StringUtils.isNotBlank(detailFormMap.get(productIme.getId()).getSaleShopId())){
+                saleShopId = detailFormMap.get(productIme.getId()).getSaleShopId();
+            }
             ProductImeSale productImeSale = new ProductImeSale();
             productImeSale.setEmployeeId(employeeId);
             productImeSale.setProductImeId(productIme.getId());
-            productImeSale.setShopId(depot.getId());
+            productImeSale.setShopId(saleShopId);
             productImeSale.setRemarks(productImeSaleForm.getRemarks());
             productImeSale.setBuyer(productImeSaleForm.getBuyer());
             productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
@@ -135,8 +144,8 @@ public class ProductImeSaleService {
             productImeSaleRepository.save(productImeSale);
 
             productIme.setProductImeSaleId(productImeSale.getId());
-            productIme.setDepotId(depot.getId());
-            productIme.setRetailShopId(depot.getId());
+            productIme.setDepotId(saleShopId);
+            productIme.setRetailShopId(saleShopId);
             productImeRepository.save(productIme);
 
         }
@@ -238,5 +247,39 @@ public class ProductImeSaleService {
         ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
         return null;
 
+    }
+
+    public List<ProductImeForSaleDto> findProductImeForSaleDto(String imeStr) {
+        if (StringUtils.isBlank(imeStr)) {
+            return new ArrayList<>();
+        }
+        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
+        List<ProductImeForSaleDto> result = productImeSaleRepository.findProductImeForSaleDto(imeList, RequestUtils.getCompanyId());
+        cacheUtils.initCacheInput(result);
+
+            for(ProductImeForSaleDto productImeForSaleDto : result) {
+                productImeForSaleDto.setEditable(false);
+                productImeForSaleDto.setFromChain(false);
+                    //如果用户对此串码是可以编辑的，那么直接出库的门店为所在门店，否则说明是该串码在连锁门店，需要用户选择对应核销门店。
+                    if(productImeForSaleDto.getProductImeSaleId()==null && depotManager.isAccess(productImeForSaleDto.getDepotId(),true, RequestUtils.getAccountId(),RequestUtils.getOfficeId()) && StringUtils.isBlank(productImeForSaleDto.getDepotDepotStoreId())) {
+                        productImeForSaleDto.setEditable(true);
+                        //如果是关联连锁体系的，核销为自己管辖的连锁体系
+                        if(!depotManager.isAccess(productImeForSaleDto.getDepotId(),false, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                            productImeForSaleDto.setFromChain(true);
+                            productImeForSaleDto.setAccessChainDepotList(new ArrayList<>());
+                            List<Depot> chainDepotList = depotRepository.findByChainId(productImeForSaleDto.getDepotChainId());
+                            for(Depot depot : chainDepotList) {
+                                if(depotManager.isAccess(depot.getId(), false, RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
+                                    DepotDto depotDto = new DepotDto();
+                                    depotDto.setId(depot.getId());
+                                    depotDto.setName(depot.getName());
+                                    productImeForSaleDto.getAccessChainDepotList().add(depotDto);
+                                }
+                            }
+                        }
+                    }
+            }
+
+        return result;
     }
 }

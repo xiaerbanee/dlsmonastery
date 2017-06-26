@@ -163,15 +163,30 @@
       }else if(action =="ship"){
         this.$router.push({name:'goodsOrderShip',query:{id:id}})
       }else if(action=="sign"){
-        //todo
+        util.confirmBefore(this).then(() => {
+          axios.get('/api/ws/future/crm/goodsOrderShip/sign',{params:{goodsOrderId:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       }else if(action =="shipBack"){
-        //todo
+        util.confirmBefore(this).then(() => {
+          axios.get('/api/ws/future/crm/goodsOrderShip/shipBack', {params: {goodsOrderId: id}}).then((response) => {
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        })
       }else if(action == "mallOrder"){
         //todo
       }else if(action =="sreturn"){
-        //todo
+        this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }else if(action =="delete"){
-       //todo
+        util.confirmBeforeDelRecord(this).then(() => {
+          axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
       }else if(action=="storePrint"){
         window.open("/#/future/crm/goodsOrderStorePrint?id="+id,",");
       }else if(action=="expressPrint"){

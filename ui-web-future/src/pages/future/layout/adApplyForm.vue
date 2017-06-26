@@ -31,8 +31,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="name" :label="$t('adApplyForm.productName')"></el-table-column>
-        <el-table-column prop="expiryDateRemarks" sortable :label="$t('adApplyForm.expiryDateRemarks')"></el-table-column>
-        <el-table-column prop="remarks" sortable :label="$t('adApplyForm.remarks')"></el-table-column>
+        <el-table-column prop="expiryDateRemarks" :label="$t('adApplyForm.expiryDateRemarks')"></el-table-column>
+        <el-table-column prop="remarks" :label="$t('adApplyForm.remarks')"></el-table-column>
         <el-table-column prop="price2" :label="$t('adApplyForm.price2')"></el-table-column>
       </el-table>
     </div>
@@ -78,8 +78,8 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch( ()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
