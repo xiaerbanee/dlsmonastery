@@ -44,18 +44,13 @@ Page({
             },
             method: 'GET',
             success: function (res) {
-              let images = new Array();
-              // images.push({
-              //   id: res.data[0].id,
-              //   preview: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + '&id=' + res.data[0].id),
-              //   view: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + + "&id=" + res.data[0].id)
-              // })
-              // that.setData({ "formProperty.images":images})
-              app.autoLogin(function () {
-                that.initPage()
-              });
-              let imageArr = $util.viewImage(images, folderFile.id, res.tempFilePath, res.tempFilePath);
-              that.setData({ "formProperty.images": imageArr })
+              var images = new Array();
+              var folderFile = res.data;
+              for (var i in folderFile) {
+                $util.downloadFile(images, folderFile[i].id, app.globalData.sessionId, 2, function () {
+                  that.setData({ "formProperty.images": images });
+                });
+              }
             }
           })
 
@@ -118,12 +113,8 @@ Page({
           },
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
-            app.autoLogin(function () {
-              that.initPage()
-            });
-            $util.downloadFile(images, folderFile.id, app.globalData.sessionId,2, function () {
-              console.log(images)
-              that.setData({"formProperty.images":images});
+            $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 2, function () {
+              that.setData({ "formProperty.images": images });
             });
           }
         })
@@ -154,6 +145,7 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
+    e.detail.value.attachment = $util.getImageStr(that.data.formProperty.images, app.globalData.sessionId);
     wx.request({
       url: $util.getUrl("basic/hr/dutySign/save"),
       data: e.detail.value,
@@ -164,6 +156,7 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
+          that.setData({"response.error":res.data.message})
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }

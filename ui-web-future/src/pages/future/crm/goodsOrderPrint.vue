@@ -61,7 +61,7 @@
       }
     },
     mounted() {
-      setTimeout("window.print()",1000);
+     setTimeout(function(){window.print()},1000);
     },
     methods:{
       findOne(){

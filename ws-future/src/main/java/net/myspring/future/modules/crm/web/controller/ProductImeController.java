@@ -119,6 +119,10 @@ public class ProductImeController {
         }else{
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
         }
+        List<String> topFilterOfficeIdList=officeClient.getTopIdsByFilter();
+        if(CollectionUtil.isNotEmpty(topFilterOfficeIdList)&&topFilterOfficeIdList.size()==1){
+            reportQuery.setOfficeId(topFilterOfficeIdList.get(0));
+        }
         reportQuery.setScoreType(true);
         return reportQuery;
     }

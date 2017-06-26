@@ -59,13 +59,13 @@
           this.innerId=val;
           let idStr=this.innerId;
           if(this.multiple && this.innerId){
-            idStr=this.innerId.join();
+            idStr=this.innerId;
           }
           if(util.isBlank(idStr)) {
             return;
           }
           this.remoteLoading = true;
-          axios.get('/api/ws/future/basic/depot/findByIds'+'?idStr=' + idStr).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/findByIds?idStr=' + idStr).then((response)=>{
             this.itemList=response.data;
             this.remoteLoading = false;
             this.$nextTick(()=>{

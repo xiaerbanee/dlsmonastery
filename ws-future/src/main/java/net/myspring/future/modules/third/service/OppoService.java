@@ -3,18 +3,16 @@ package net.myspring.future.modules.third.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
 import net.myspring.future.modules.third.domain.*;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
@@ -23,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.reflect.misc.ConstructorUtil;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +41,8 @@ public class OppoService {
     private ProductImeRepository productImeRepository;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private CompanyConfigClient companyConfigClient;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -69,34 +67,29 @@ public class OppoService {
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-MM-dd");
         }
-        String agentCode= CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
-        if(StringUtils.isEmpty(agentCode)){
-            agentCode="M13AMB,M13CMB,M13DMB,M13EMB,M13FMB,M13GMB,M13HMB,M13JMB,M13KMB";
+        String agentCode= companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name());
+        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        List<String> lxAgentCodes=Lists.newArrayList();
+        if(StringUtils.isNotBlank(lxAgentCode)){
+            lxAgentCodes=StringUtils.getSplitList(lxAgentCode,CharConstant.COMMA);
         }
-        List<String> lxAgentCodes=null;
-        CompanyConfigCacheDto companyLxAgentcode = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
-        if(StringUtils.isNotBlank(companyLxAgentcode.getValue())){
-            lxAgentCodes=StringUtils.getSplitList(companyLxAgentcode.getValue(),CharConstant.COMMA);
+        List<String> agentCodes=Lists.newArrayList();
+        if(StringUtils.isNotBlank(agentCode)){
+            agentCodes=StringUtils.getSplitList(agentCode,CharConstant.COMMA);
         }
         String goodStoreProduct = "";
         String lxDefaultStoreId = null;
-        CompanyConfigCacheDto companyCacheDto= CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
-        if(companyCacheDto!=null&&!"WZOPPO".equals(companyCacheDto.getValue())){
+        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name());
+        if(!"WZOPPO".equals(companyName)){
             goodStoreProduct = "7070";
         }
-        String defaultStoreId = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
-        String goodStoreId ="";
-        CompanyConfigCacheDto goodStoreIdCacheDto= CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.GOOD_STORE_ID.name());
-        if(goodStoreIdCacheDto!=null&&StringUtils.isNotBlank(goodStoreIdCacheDto.getValue())){
-            goodStoreId=goodStoreIdCacheDto.getValue();
-        }
-        logger.info("agentCode=="+agentCode+"\tlxAgentCodes==="+lxAgentCodes);
-        String imeStr=oppoClient.findSynImeList(date,agentCode);
-        logger.info("imeStr=="+imeStr);
-        if(StringUtils.isBlank(imeStr)){
+        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name());
+        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name());
+        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=oppoClient.findSynImeList(date,agentCode);
+        logger.info("oppoPlantSendImeiPpsels=="+oppoPlantSendImeiPpsels.toString());
+        if(CollectionUtil.isEmpty(oppoPlantSendImeiPpsels)){
             return "同步成功";
         }
-        List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=ObjectMapperUtils.readValue(imeStr, ArrayList.class);
         List<String> imeList= CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
         Map<String,ProductIme> productImeMap= Maps.newHashMap();
         List<ProductIme> productImeList=productImeRepository.findByImeList(imeList);
@@ -112,8 +105,10 @@ public class OppoService {
                     itemNumberSet.add(oppoPlantSendImeiPpsel.getDlsProductId());
                 }
             }else{
-                if(StringUtils.isBlank(oppoPlantSendImeiPpsel.getProductId())){
-                    itemNumberSet.add(oppoPlantSendImeiPpsel.getDlsProductId());
+                if(CollectionUtil.isNotEmpty(agentCodes)&&agentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())){
+                    if(StringUtils.isBlank(oppoPlantSendImeiPpsel.getProductId())){
+                        itemNumberSet.add(oppoPlantSendImeiPpsel.getDlsProductId());
+                    }
                 }
             }
         }
@@ -127,7 +122,7 @@ public class OppoService {
             String imei=oppoPlantSendImeiPpsel.getImei();
             if(!productImeMap.containsKey(imei)){
                 ProductIme productIme = new ProductIme();
-                if(lxAgentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())){
+                if(CollectionUtil.isNotEmpty(lxAgentCodes)&&lxAgentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())){
                     productIme.setDepotId(lxDefaultStoreId);
                     productIme.setRetailShopId(lxDefaultStoreId);
                     productIme.setProductId(oppoPlantSendImeiPpsel.getLxProductId());
@@ -157,7 +152,7 @@ public class OppoService {
             }else{
                 productImeMap.get(imei).setColorId(oppoPlantSendImeiPpsel.getColorId());
                 productImeMap.get(imei).setItemNumber(oppoPlantSendImeiPpsel.getDlsProductId());
-                if(lxAgentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())){
+                if(CollectionUtil.isNotEmpty(lxAgentCodes)&&lxAgentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())){
                     productImeMap.get(imei).setProductId(oppoPlantSendImeiPpsel.getLxProductId());
                 }else{
                     productImeMap.get(imei).setProductId(oppoPlantSendImeiPpsel.getProductId());

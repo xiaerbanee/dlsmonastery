@@ -14,13 +14,7 @@ import javax.persistence.PrePersist;
 public class CompanyEntity<T> extends DataEntity<T> {
 
     @Column(updatable = false)
-    private String companyId;
-
-
-    @PrePersist
-    public void prePersist() {
-        this.companyId = RequestUtils.getCompanyId();
-    }
+    private String companyId="1";
 
     public String getCompanyId() {
         return companyId;
