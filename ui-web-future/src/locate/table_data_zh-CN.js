@@ -232,6 +232,7 @@ export default {
       goodsOrderShipList: "货品发货",
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",
+      goodsOrderPrint:"打印",
       imeAllotForm: "串码调拨编辑",
       imeAllotBatchForm: "串码批量调拨编辑",
       imeAllotList: "串码调拨",
