@@ -3,29 +3,18 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ExpressOrder
-
-import net.myspring.future.modules.crm.domain.GoodsOrderDetail
-import net.myspring.future.modules.crm.dto.BankInDto
-import net.myspring.future.modules.crm.dto.ExpressDto
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
-import net.myspring.future.modules.crm.dto.PriceChangeDto
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery
-import net.myspring.future.modules.crm.web.query.PriceChangeQuery
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
-import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
 
 interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, ExpressOrderRepositoryCustom {
@@ -37,8 +26,6 @@ interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, Express
 interface ExpressOrderRepositoryCustom{
     fun findPage(pageable : Pageable, expressOrderQuery : ExpressOrderQuery): Page<ExpressOrderDto>
 
-    fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto?
-
     fun findDto(id: String): ExpressOrderDto
 }
 
@@ -47,40 +34,35 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
 
         return namedParameterJdbcTemplate.queryForObject("""
        SELECT
+            fromDepot.name fromDepotName,
+            toDepot.name toDepotName,
+            toDepot.district_id toDepotDistrictId,
+            expressCompany.name expressCompanyName,
             t1.*
         FROM
             crm_express_order t1
+            LEFT JOIN crm_depot fromDepot ON t1.from_depot_id = fromDepot.id
+            LEFT JOIN crm_depot toDepot ON t1.to_depot_id = toDepot.id
+            LEFT JOIN crm_express_company expressCompany ON t1.express_company_id = expressCompany.id
         WHERE
-            t1.enabled=1 and t1.id = :id
+            t1.id = :id
           """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
-    }
-
-    override fun findDtoByGoodsOrderId(goodsOrderId: String): ExpressOrderDto? {
-
-        val result =  namedParameterJdbcTemplate.query("""
-        SELECT
-            t1.*
-        FROM
-            crm_express_order t1, crm_goods_order t2
-        WHERE
-            t1.enabled=1  and t1.id = t2.express_order_id
-            and t2.id = :goodsOrderId
-          """, Collections.singletonMap("goodsOrderId", goodsOrderId), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
-
-        if(result.size >= 1){
-            return result[0]
-        }else {
-            return null
-        }
     }
 
     override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto> {
         val sb = StringBuilder()
         sb.append("""
         SELECT
+            fromDepot.name fromDepotName,
+            toDepot.name toDepotName,
+            toDepot.district_id toDepotDistrictId,
+            expressCompany.name expressCompanyName,
             t1.*
         FROM
             crm_express_order t1
+            LEFT JOIN crm_depot fromDepot ON t1.from_depot_id = fromDepot.id
+            LEFT JOIN crm_depot toDepot ON t1.to_depot_id = toDepot.id
+            LEFT JOIN crm_express_company expressCompany ON t1.express_company_id = expressCompany.id
         WHERE
             t1.enabled=1
         """)
@@ -112,34 +94,13 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
             sb.append("""  and t1.express_print_date is  null  """)
         }
         if(StringUtils.isNotBlank(expressOrderQuery.fromDepotName)){
-            sb.append("""
-                 and t1.from_depot_id in(
-                                                    select fromDepot.id
-                                                    from crm_depot fromDepot
-                                                    where fromDepot.name like concat('%',:fromDepotName,'%')
-                                                              and fromDepot.enabled=1
-                                                     )
-            """)
+            sb.append("""  and fromDepot.name like concat('%',:fromDepotName,'%') """)
         }
         if(StringUtils.isNotBlank(expressOrderQuery.toDepotName)){
-            sb.append("""
-                 and t1.to_depot_id in(
-                                                select toDepot.id
-                                                from crm_depot toDepot
-                                                where toDepot.name like concat('%', :toDepotName,'%')
-                                                          and toDepot.enabled=1
-                                                )
-            """)
+            sb.append("""  and toDepot.name like concat('%', :toDepotName,'%')   """)
         }
         if(StringUtils.isNotBlank(expressOrderQuery.expressCompanyName)){
-            sb.append("""
-                  and t1.express_company_id in(
-                                                select expressCompany.id
-                                                from crm_express_company expressCompany
-                                                where expressCompany.name like concat('%',:expressCompanyName,'%')
-                                                          and expressCompany.enabled=1
-                                                )
-            """)
+            sb.append("""  and expressCompany.name like concat('%',:expressCompanyName,'%')  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

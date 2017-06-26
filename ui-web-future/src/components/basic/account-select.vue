@@ -32,8 +32,8 @@
         if(this.innerId===val){
           return;
         }
-        this.innerId=val;
         if(val){
+          this.innerId=val;
           let idStr=this.innerId;
           if(this.multiple && this.innerId){
             idStr=this.innerId.join();
@@ -50,6 +50,11 @@
             });
           })
         }else{
+          if(this.multiple){
+            this.innerId = [];
+          }else{
+            this.innerId = val
+          }
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });

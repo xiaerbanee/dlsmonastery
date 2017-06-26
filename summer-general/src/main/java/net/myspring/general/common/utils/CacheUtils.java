@@ -30,7 +30,7 @@ public class CacheUtils {
     }
 
 
-    public void initCache(String keyPrefix, List<Object> entities) {
+    public void initCache(String keyPrefix, List entities) {
         initCache(keyPrefix,entities,"id");
     }
 

@@ -143,7 +143,7 @@
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList")})
+              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
             }).catch(function () {
               that.submitDisabled = false;
             });

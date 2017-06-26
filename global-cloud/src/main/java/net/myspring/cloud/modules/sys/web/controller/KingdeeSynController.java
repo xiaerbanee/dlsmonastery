@@ -1,6 +1,8 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
@@ -44,9 +46,13 @@ public class KingdeeSynController {
 
     @RequestMapping(value = "syn")
     public RestResponse syn(String id){
-        KingdeeSyn kingdeeSyn = kingdeeSynService.findOne(id);
-        //待写
-        RestResponse restResponse = new RestResponse("未同步", null,false);
+        RestResponse restResponse;
+        KingdeeSynDto kingdeeSyn = kingdeeSynService.syn(id);
+        if (kingdeeSyn.getSuccess()){
+            restResponse = new RestResponse("同步成功", null,true);
+        }else{
+            restResponse = new RestResponse("同步失败", null,false);
+        }
         return restResponse;
     }
 

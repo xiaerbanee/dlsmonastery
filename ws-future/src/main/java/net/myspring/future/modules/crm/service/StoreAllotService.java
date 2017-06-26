@@ -3,7 +3,6 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
@@ -18,6 +17,7 @@ import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -44,7 +44,6 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -94,6 +93,8 @@ public class StoreAllotService {
     private RedisTemplate redisTemplate;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private ExpressUtils expressUtils;
     @Autowired
     private DepotStoreRepository depotStoreRepository;
 
@@ -355,7 +356,7 @@ public class StoreAllotService {
         //设置需要打印的快递单个数
         Integer expressPrintQty = 0;
         if (ShipTypeEnum.总部发货.name().equals(storeAllot.getShipType())) {
-            expressPrintQty = getExpressPrintQty(totalBillQty);
+            expressPrintQty = expressUtils.getExpressPrintQty(totalBillQty);
         }
         expressOrder.setExpressPrintQty(expressPrintQty);
         expressOrderRepository.save(expressOrder);
@@ -365,19 +366,6 @@ public class StoreAllotService {
 
         return expressOrder;
     }
-
-    private Integer getExpressPrintQty(Integer totalBillQty) {
-
-        Integer expressPrintQty = 20; // JXOPPO默認爲20  不同的公司不同，這個需要在上其它公司的時候判斷
-
-        if(0 == totalBillQty % expressPrintQty){
-            expressPrintQty = totalBillQty / expressPrintQty;
-        } else{
-            expressPrintQty = totalBillQty / expressPrintQty + 1;
-        }
-        return expressPrintQty;
-    }
-
 
     public StoreAllotDto findStoreAllotDtoById(String id) {
         StoreAllotDto result = storeAllotRepository.findDto(id);
@@ -435,7 +423,7 @@ public class StoreAllotService {
 
     private void fulfillCloudQty(String fromStoreId, List<StoreAllotDetailSimpleDto> list) {
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStoreId);
-        List<StkInventory> inventoryList = cloudClient.findInventorysByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
         Map<String, StkInventory> inventoryMap = CollectionUtil.extractToMap(inventoryList, "FMaterialId");
         for(StoreAllotDetailSimpleDto storeAllotDetailSimpleDto : list){
             if(inventoryMap.containsKey(storeAllotDetailSimpleDto.getProductOutId())){

@@ -62,12 +62,12 @@ public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
     List<BdDepartment> findAllDepartment();
-    //其他出库单
+    //库存-其他出库单
     @RequestMapping(method = RequestMethod.POST, value = "/kingdee/stkInventory/findByStockIds")
-    List<StkInventory> findInventorysByDepotStoreOutIds(List<String> depotStoreOutIds);
-    //其他出库单
+    List<StkInventory> findInventoriesByDepotStoreOutIds(List<String> depotStoreOutIds);
+    //库存-其他出库单
     @RequestMapping(method = RequestMethod.POST, value = "/kingdee/stkInventory/findByMaterialIds")
-    List<StkInventory> findInventorysByProductOutIds(List<String> productOutIds);
+    List<StkInventory> findInventoriesByProductOutIds(List<String> productOutIds);
     //应收
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/detail")
     List<CustomerReceiveDetailDto> getCustomerReceiveDetailList(CustomerReceiveDetailQuery customerReceiveDetailQuery);
@@ -80,6 +80,12 @@ public interface CloudClient {
     //银行存款日记账
     @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForShopDeposit")
     List<KingdeeSynReturnDto> synJournalBankForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    //其他应收单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/arOtherRecAble/saveForShopDeposit")
+    List<KingdeeSynReturnDto> synOtherRecAble(List<ArOtherRecAbleDto> arOtherRecAbleDtoList);
+    //收款单
+    @RequestMapping(method = RequestMethod.POST, value = "/input/arReceiveBill/saveForWS")
+    List<KingdeeSynReturnDto> synReceiveBill(List<ArReceiveBillDto> arReceiveBillDtoList);
     //标准销售出库单
     @RequestMapping(method = RequestMethod.POST, value = "/input/salOutStock/saveForXSCKD")
     List<KingdeeSynReturnDto> synSalOutStock(List<SalOutStockDto> salOutStockDtoList);
@@ -89,7 +95,5 @@ public interface CloudClient {
     //直接调拨单
     @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForStoreAllot")
     KingdeeSynReturnDto synStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
-    //其他应收单
-    @RequestMapping(method = RequestMethod.POST, value = "/input/arOtherRecAble/saveForShopDeposit")
-    List<KingdeeSynReturnDto> synOtherRecAble(List<ArOtherRecAbleDto> arOtherRecAbleDtoList);
+
 }

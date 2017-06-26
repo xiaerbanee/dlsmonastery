@@ -10,16 +10,16 @@
     props: ['value','multiple','disabled',"hasIme"],
     data() {
       return {
-        innerId:this.value,
+        innerId:null,
         itemList : [],
         remoteLoading:false,
       };
-    } ,methods:{
-      remoteSelect(query) {
-        if(util.isBlank(query)) {
-          return;
-        }
-        this.remoteLoading = true;
+  } ,methods:{
+    remoteSelect(query) {
+      if(util.isBlank(query)) {
+        return;
+      }
+      this.remoteLoading = true;
         axios.get("/api/ws/future/basic/product/filter", {params:{name:query,hasIme:this.hasIme}}).then((response)=>{
           var newList = new Array();
           var idList = new Array();
@@ -45,33 +45,40 @@
           this.itemList = newList;
           this.remoteLoading = false;
         })
-      },
-      handleChange(newVal) {
+      },  handleChange(newVal) {
         if(newVal !== this.value) {
           this.$emit('input', newVal);
         }
-      },
-      setValue(val) {
+      },setValue(val) {
         if(this.innerId===val){
           return;
         }
-        if (util.isNotBlank(val)) {
+        if (val) {
           this.innerId = val;
           let ids = this.innerId;
-          if (this.multiple && this.innerId) {
-            ids = this.innerId.join();
+          if (!this.multiple && this.innerId) {
+            ids = new Array(this.innerId);
+          }
+          if (util.isBlank(ids)) {
+            return;
           }
           this.remoteLoading = true;
           axios.get('/api/ws/future/basic/product/filter?ids=' + ids).then((response) => {
             this.itemList = response.data;
             this.remoteLoading = false;
+            this.$nextTick(() => {
+              this.$emit('afterInit');
+            });
           })
-        }else{
+        } else {
           if(this.multiple){
-            this.innerId=[];
+            this.innerId = [];
           }else{
-            this.innerId=val;
+            this.innerId = val
           }
+          this.$nextTick(() => {
+            this.$emit('afterInit');
+          });
         }
       }
     },created () {

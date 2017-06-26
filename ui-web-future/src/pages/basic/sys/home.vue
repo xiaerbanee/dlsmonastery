@@ -145,6 +145,9 @@ export default {
       axios.get('/api/ws/future/basic/cache/init').then((response) =>{
         this.$message(response.data.message);
       })
+      axios.get('/api/general/sys/cache/init').then((response) =>{
+        this.$message(response.data.message);
+      })
     }
   },
   created(){

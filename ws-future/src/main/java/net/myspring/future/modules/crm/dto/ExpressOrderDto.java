@@ -15,15 +15,14 @@ import java.time.LocalDateTime;
 public class ExpressOrderDto extends DataDto<ExpressOrder> {
 
     private String expressCompanyId;
-    @CacheInput(inputKey = "expressCompanies",inputInstance = "expressCompanyId",outputInstance = "name")
     private String expressCompanyName;
     private String fromDepotId;
-    @CacheInput(inputKey = "depots",inputInstance = "fromDepotId",outputInstance = "name")
     private String fromDepotName;
     private String toDepotId;
-    @CacheInput(inputKey = "depots",inputInstance = "toDepotId",outputInstance = "name")
     private String toDepotName;
-
+    private String toDepotDistrictId;
+    @CacheInput(inputKey = "districts",inputInstance = "toDepotDistrictId",outputInstance = "city")
+    private String toDepotDistrictCity;
     private BigDecimal shouldGet;
     private BigDecimal shouldPay;
     private String address;
@@ -46,6 +45,22 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
     private BigDecimal averageWeight;
 
     private String expressCodes;
+
+    public String getToDepotDistrictCity() {
+        return toDepotDistrictCity;
+    }
+
+    public void setToDepotDistrictCity(String toDepotDistrictCity) {
+        this.toDepotDistrictCity = toDepotDistrictCity;
+    }
+
+    public String getToDepotDistrictId() {
+        return toDepotDistrictId;
+    }
+
+    public void setToDepotDistrictId(String toDepotDistrictId) {
+        this.toDepotDistrictId = toDepotDistrictId;
+    }
 
     public String getFormatId() {
 

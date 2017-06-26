@@ -2,6 +2,8 @@ package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductImeSale
+import net.myspring.future.modules.crm.dto.ProductImeDto
+import net.myspring.future.modules.crm.dto.ProductImeForSaleDto
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery
 import net.myspring.util.repository.MySQLDialect
@@ -49,9 +51,49 @@ interface ProductImeSaleRepositoryCustom{
     fun findDto(id: String): ProductImeSaleDto
 
     fun findForBatchUpload(dateStart: LocalDateTime, dateEnd: LocalDateTime, officeIds: List<String>): List<ProductImeSaleDto>
+
+    fun findProductImeForSaleDto(imeList: List<String>, companyId: String): List<ProductImeForSaleDto>
 }
 
 class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeSaleRepositoryCustom {
+    override fun findProductImeForSaleDto(imeList: List<String>, companyId: String): List<ProductImeForSaleDto> {
+        if(imeList.isEmpty()){
+            return ArrayList()
+        }
+
+        val params = HashMap<String, Any>()
+        params.put("imeList", imeList)
+        params.put("companyId", companyId)
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+            sale.created_date productImeSaleCreatedDate,
+            sale.employee_id productImeSaleEmployeeId,
+            sale.shop_id productImeSaleShopId,
+            sale.id productImeSaleId,
+            upload.created_date productImeUploadCreatedDate,
+            validProductIme.*
+        FROM
+        (
+            SELECT
+            product.product_type_id, depot.office_id depotOfficeId, depot.chain_id depotChainId, depot.depot_store_id depotDepotStoreId, t1.*
+            FROM
+            crm_product_ime t1,
+            crm_depot depot,
+            crm_product product
+            WHERE
+                t1.enabled = 1
+                AND t1.depot_id = depot.id
+                AND depot.enabled = 1
+                AND t1.company_id =  :companyId
+                AND t1.product_id =  product.id
+                AND product.enabled =  1
+                AND t1.ime in (:imeList)
+            ) validProductIme
+            LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
+            LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
+                """, params, BeanPropertyRowMapper(ProductImeForSaleDto::class.java))
+    }
+
     override fun findForBatchUpload(dateStart: LocalDateTime, dateEnd: LocalDateTime, officeIds: List<String>): List<ProductImeSaleDto> {
       if(officeIds.isEmpty()){
           return ArrayList()

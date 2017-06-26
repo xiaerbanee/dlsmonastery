@@ -11,7 +11,7 @@ public class AdGoodsOrderBillForm extends BaseForm<AdGoodsOrder> {
 
     private LocalDate billDate;
     private String storeId;
-    private String expressOrderContactor;
+    private String expressOrderContator;
     private String expressOrderAddress;
     private String billAddress;
     private String expressOrderExpressCompanyId;
@@ -46,12 +46,12 @@ public class AdGoodsOrderBillForm extends BaseForm<AdGoodsOrder> {
         this.storeId = storeId;
     }
 
-    public String getExpressOrderContactor() {
-        return expressOrderContactor;
+    public String getExpressOrderContator() {
+        return expressOrderContator;
     }
 
-    public void setExpressOrderContactor(String expressOrderContactor) {
-        this.expressOrderContactor = expressOrderContactor;
+    public void setExpressOrderContator(String expressOrderContator) {
+        this.expressOrderContator = expressOrderContator;
     }
 
     public String getExpressOrderAddress() {
