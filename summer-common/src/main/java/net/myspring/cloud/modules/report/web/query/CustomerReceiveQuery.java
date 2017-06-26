@@ -17,6 +17,14 @@ public class CustomerReceiveQuery extends BaseQuery{
     private List<String> customerIdList = Lists.newArrayList();
     private Boolean queryDetail = false;
 
+    public CustomerReceiveQuery(){};
+
+    public CustomerReceiveQuery(String dateStart,String dateEnd,String customerId){
+        this.dateStart=dateStart;
+        this.dateEnd=dateEnd;
+        this.customerIdList=Lists.newArrayList(customerId);
+    };
+
     public String getDateStart() {
        if (StringUtils.isBlank(dateStart)){
            return LocalDateUtils.format(LocalDate.now().minusMonths(1L));

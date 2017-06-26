@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.NetTypeEnum;
@@ -8,8 +9,10 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderPrintDto;
 import net.myspring.future.modules.crm.service.GoodsOrderShipService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,8 +51,12 @@ public class GoodsOrderShipController {
     }
 
     @RequestMapping(value = "shipCheck")
-    public Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
-        return goodsOrderShipService.shipCheck(goodsOrderShipForm);
+    public  Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
+        Map<String,Object> map= Maps.newHashMap();
+        if(StringUtils.isNotBlank(goodsOrderShipForm.getBoxImeStr())||StringUtils.isNotBlank(goodsOrderShipForm.getImeStr())){
+            map=goodsOrderShipService.shipCheck(goodsOrderShipForm);
+        }
+        return map;
     }
 
 
@@ -57,6 +64,30 @@ public class GoodsOrderShipController {
     public RestResponse ship(GoodsOrderShipForm goodsOrderShipForm) {
          goodsOrderShipService.ship(goodsOrderShipForm);
          return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "sign")
+    public RestResponse sign(String goodsOrderId) {
+        goodsOrderShipService.sign(goodsOrderId);
+        return new RestResponse("签收成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "shipBack")
+    public RestResponse shipBack(String goodsOrderId) {
+        goodsOrderShipService.shipBack(goodsOrderId);
+        return new RestResponse("重发成功",ResponseCodeEnum.saved.name());
+    }
+
+
+    @RequestMapping(value = "sreturn")
+    public RestResponse sreturn(GoodsOrderForm goodsOrderForm) {
+        goodsOrderShipService.sreturn(goodsOrderForm);
+        return new RestResponse("销售退货成功",ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "getSreturn")
+    public GoodsOrderDto getSreturn(String id) {
+        return goodsOrderShipService.getSreturn(id);
     }
 
     @RequestMapping(value = "getShip")

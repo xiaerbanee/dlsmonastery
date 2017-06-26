@@ -3,6 +3,8 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
@@ -10,8 +12,11 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
@@ -30,6 +35,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,6 +72,10 @@ public class GoodsOrderShipService {
     private ExpressRepository expressRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private CloudClient cloudClient;
+    @Autowired
+    private ClientRepository clientRepository;
 
     /**
      * 查找货品发货表格所有数据（待发货，带签收，已完成）
@@ -117,10 +127,12 @@ public class GoodsOrderShipService {
                 imeSet.add(productIme.getIme2());
             }
             Product product = productMap.get(productIme.getProductId());
-            if (!goodsOrderDetailMap.containsKey(product.getId())) {
-                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
-            } else {
-                goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
+            if(product!=null){
+                if (!goodsOrderDetailMap.containsKey(product.getId())) {
+                    restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
+                } else {
+                    goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
+                }
             }
         }
         for (String boxIme : goodsOrderShipForm.getBoxImeList()) {
@@ -323,14 +335,15 @@ public class GoodsOrderShipService {
 
     public void sign(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
-        goodsOrder.setStatus(GoodsOrderStatusEnum.已完成.name());
-        goodsOrderRepository.save(goodsOrder);
+        if(goodsOrder!=null&&GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())){
+            goodsOrder.setStatus(GoodsOrderStatusEnum.已完成.name());
+            goodsOrderRepository.save(goodsOrder);
+        }
     }
 
 
     public void shipBack(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
-        Depot store = depotRepository.findOne(goodsOrder.getStoreId());
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByGoodsOrderId(goodsOrderId);
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
         Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
@@ -368,6 +381,8 @@ public class GoodsOrderShipService {
         }
         if(goodsOrder != null) {
             goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
+            Depot shop=depotRepository.findOne(goodsOrder.getShopId());
+            goodsOrderDto.setShopAreaId(shop.getAreaId());
             cacheUtils.initCacheInput(goodsOrderDto);
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
             List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
@@ -380,6 +395,18 @@ public class GoodsOrderShipService {
             }
             goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
         }
+        return goodsOrderDto;
+    }
+
+    public GoodsOrderDto getSreturn(String id){
+        GoodsOrderDto goodsOrderDto=getShip(id);
+        String date=LocalDateTimeUtils.format(LocalDateTime.now());
+        Depot depot=depotRepository.findOne(goodsOrderDto.getShopId());
+        goodsOrderDto.setShopCredit(depot.getCredit());
+        Client client=clientRepository.findOne(depot.getClientId());
+        CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(date,date,client.getOutId());
+        List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getShouldGet());
         return goodsOrderDto;
     }
 }

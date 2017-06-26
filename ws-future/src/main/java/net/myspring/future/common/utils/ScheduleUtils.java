@@ -10,7 +10,6 @@ public class ScheduleUtils {
     @Autowired
     private OppoClient oppoClient;
 
-    @Scheduled(cron = "*/5 * * * * ?")
     public  void synFactory() {
         oppoClient.findSynImeList("2017-06-23");
     }
