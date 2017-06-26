@@ -3,7 +3,7 @@ var app = getApp();
 Page({
   data: {
     formData: {},
-    formProperty: {},
+    formProperty: { images: [] },
     response: {},
     submitDisabled: false,
     submitHidden: false,
@@ -44,15 +44,18 @@ Page({
             },
             method: 'GET',
             success: function (res) {
-              var images = new Array();
-              console.log(res.data)
-              images.push({
-                id: res.data[0].id,
-                preview: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + '&id=' + res.data[0].id),
-                view: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + + "&id=" + res.data[0].id)
-              })
-              console.log(images)
-              that.setData({ "formProperty.images": images })
+              let images = new Array();
+              // images.push({
+              //   id: res.data[0].id,
+              //   preview: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + '&id=' + res.data[0].id),
+              //   view: $util.getUrl('general/sys/folderFile/download?x_cookie=' + app.globalData.sessionId + + "&id=" + res.data[0].id)
+              // })
+              // that.setData({ "formProperty.images":images})
+              app.autoLogin(function () {
+                that.initPage()
+              });
+              let imageArr = $util.viewImage(images, folderFile.id, res.tempFilePath, res.tempFilePath);
+              that.setData({ "formProperty.images": imageArr })
             }
           })
 
@@ -97,9 +100,8 @@ Page({
   },
   addImage: function (e) {
     var that = this;
-    var images = [];
+    var images = that.data.formProperty.images;
     wx.chooseImage({
-      count: 1,
       sizeType: ['compressed'],
       sourceType: ['camera'],
       success: function (res) {
@@ -116,18 +118,13 @@ Page({
           },
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
-            wx.downloadFile({
-              url: $util.getUrl("general/sys/folderFile/download?id=" + folderFile.id),
-              header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-              success: function (res) {
-                images.push({
-                  id: folderFile.id,
-                  preview:res.tempFilePath,
-                  view:res.tempFilePath
-                })
-                that.setData({ "formProperty.images": images })
-              }
-            })
+            app.autoLogin(function () {
+              that.initPage()
+            });
+            $util.downloadFile(images, folderFile.id, app.globalData.sessionId,2, function () {
+              console.log(images)
+              that.setData({"formProperty.images":images});
+            });
           }
         })
       }
@@ -164,7 +161,6 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
         } else {
