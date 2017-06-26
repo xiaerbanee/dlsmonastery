@@ -1,13 +1,15 @@
 package net.myspring.uaa.security;
 
 import com.google.common.collect.Sets;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
+import net.myspring.uaa.manager.OfficeManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.repository.CompanyRepository;
+import net.myspring.uaa.repository.CompanyConfigRepository;
 import net.myspring.util.collection.CollectionUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +39,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private WeixinManager weixinManager;
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyConfigRepository companyConfigRepository;
+    @Autowired
+    private OfficeManager officeManager;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -67,7 +71,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             accountDto = accountDtoRepository.findByLoginName(username);
         }
         if(accountDto != null) {
-            accountDto.setCompanyName(companyRepository.findNameById(accountDto.getCompanyId()));
+            accountDto.setCompanyName(companyConfigRepository.findByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()));
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
@@ -87,7 +91,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     accountDto.getEmployeeId(),
                     accountDto.getCompanyName(),
                     accountDto.getRoleId(),
-                    null
+                    officeManager.officeFilter(accountDto.getId(),accountDto.getOfficeId())
             );
         }
         return customUserDetails;
