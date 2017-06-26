@@ -90,7 +90,7 @@
       },itemAdd(){
         this.$router.push({ name: 'pricesystemForm'})
       },toSee(){
-        this.$router.push({name:'pricesystemView'})
+        /*this.$router.push({name:'pricesystemView'})*/
       },itemAction:function(id,action){
           if(action=="edit") {
             this.$router.push({ name: 'pricesystemForm', query: { id: id }})
