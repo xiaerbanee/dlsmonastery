@@ -60,9 +60,9 @@
         activityEntity:{},
       }
     },
-//    mounted() {
-//      setTimeout(function(){window.print()},1000);
-//    },
+    mounted() {
+     setTimeout(function(){window.print()},1000);
+    },
     methods:{
       findOne(){
         axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{

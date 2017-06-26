@@ -44,7 +44,7 @@
         <view class="pageable_footer_item" bindtap="toPreviousPage">上页</view>
       </view>
       <view class="weui-flex__item">
-        <view class="pageable_footer_item" bindtap="toPage">{{page.number+1}}/{{page.totalPages}}</view>
+        <view class="pageable_footer_item" bindtap="toPage">{{page.number+1?page.number+1:1}}/{{page.totalPages?page.totalPages:1}}</view>
       </view>
       <view class="weui-flex__item">
         <view class="pageable_footer_item" bindtap="toNextPage">下页</view>
