@@ -62,10 +62,10 @@ public interface CloudClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/kingdee/bdDepartment/findAll")
     List<BdDepartment> findAllDepartment();
-    //其他出库单
+    //库存-其他出库单
     @RequestMapping(method = RequestMethod.POST, value = "/kingdee/stkInventory/findByStockIds")
     List<StkInventory> findInventorysByDepotStoreOutIds(List<String> depotStoreOutIds);
-    //其他出库单
+    //库存-其他出库单
     @RequestMapping(method = RequestMethod.POST, value = "/kingdee/stkInventory/findByMaterialIds")
     List<StkInventory> findInventorysByProductOutIds(List<String> productOutIds);
     //应收
