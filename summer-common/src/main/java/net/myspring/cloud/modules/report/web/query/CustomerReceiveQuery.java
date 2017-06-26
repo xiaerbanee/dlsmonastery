@@ -12,40 +12,40 @@ import java.util.List;
  * Created by liuj on 2017/5/11.
  */
 public class CustomerReceiveQuery extends BaseQuery{
-    private String dateStart;
-    private String dateEnd;
+    private LocalDate dateStart;
+    private LocalDate dateEnd;
     private List<String> customerIdList = Lists.newArrayList();
     private Boolean queryDetail = false;
 
     public CustomerReceiveQuery(){};
 
-    public CustomerReceiveQuery(String dateStart,String dateEnd,String customerId){
+    public CustomerReceiveQuery(LocalDate dateStart,LocalDate dateEnd,String customerId){
         this.dateStart=dateStart;
         this.dateEnd=dateEnd;
         this.customerIdList=Lists.newArrayList(customerId);
     };
 
-    public String getDateStart() {
-       if (StringUtils.isBlank(dateStart)){
-           return LocalDateUtils.format(LocalDate.now().minusMonths(1L));
+    public LocalDate getDateStart() {
+       if (dateStart == null){
+           return LocalDate.now().minusMonths(1L);
        }else {
            return dateStart;
        }
     }
 
-    public void setDateStart(String dateStart) {
+    public void setDateStart(LocalDate dateStart) {
         this.dateStart = dateStart;
     }
 
-    public String getDateEnd() {
-        if (StringUtils.isBlank(dateEnd)){
-            return LocalDateUtils.format(LocalDate.now());
+    public LocalDate getDateEnd() {
+        if (dateEnd == null){
+            return LocalDate.now();
         }else {
             return dateEnd;
         }
     }
 
-    public void setDateEnd(String dateEnd) {
+    public void setDateEnd(LocalDate dateEnd) {
         this.dateEnd =  dateEnd;
     }
 

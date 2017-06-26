@@ -51,6 +51,7 @@ export default {
       cloudBatchBillCategory:"批量录入",
       cloudReportCategory:"财务报表",
       cloudSysCategory:"系统设置",
+      cloudCenterCategory:"个人中心",
       goodsOrderCategory:"订货管理",
     },
     menu:{
@@ -232,6 +233,7 @@ export default {
       goodsOrderShipList: "货品发货",
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",
+      goodsOrderPrint:"打印",
       imeAllotForm: "串码调拨编辑",
       imeAllotBatchForm: "串码批量调拨编辑",
       imeAllotList: "串码调拨",

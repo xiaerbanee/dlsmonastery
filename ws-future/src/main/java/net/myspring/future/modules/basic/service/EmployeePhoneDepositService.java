@@ -170,18 +170,17 @@ public class EmployeePhoneDepositService {
     private List<KingdeeSynReturnDto> batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
+            Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
+            Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
             CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
             cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
             cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
             List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-
             CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
             entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
             entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
             entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-            Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
             entityForBankDto.setBankAccountNumber(bank.getCode());
-            Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
             entityForBankDto.setComment(depot.getName());
             cnJournalEntityForBankDtoList.add(entityForBankDto);
             cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
@@ -260,7 +259,6 @@ public class EmployeePhoneDepositService {
     }
 
     public String export(Workbook workbook, EmployeePhoneDepositQuery employeePhoneDepositQuery){
-        employeePhoneDepositQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         employeePhoneDepositQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         List<EmployeePhoneDepositDto> employeePhoneDepositDtoList= employeePhoneDepositRepository.findFilter(employeePhoneDepositQuery);
         cacheUtils.initCacheInput(employeePhoneDepositDtoList);

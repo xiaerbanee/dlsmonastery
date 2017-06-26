@@ -512,7 +512,6 @@ public class AfterSaleService {
 
     public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery) {
         afterSaleQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        afterSaleQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getAccountId()));
         Page<AfterSaleDto> page = afterSaleRepository.findPage(pageable, afterSaleQuery);
         return page;
     }

@@ -38,7 +38,9 @@
           return{
             submitDisabled:false,
             products:{},
-            inputForm:{},
+            inputForm:{
+                extra:{}
+            },
             rules: {
               productId: [{ required: true, message: this.$t('adApplyGoods.prerequisiteMessage')}]
             },
@@ -47,12 +49,12 @@
         },
       formSubmit(){
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            var tempList = new Array();
-            for(var index in this.inputForm.depotAdApplyForms){
-              var detail = this.inputForm.depotAdApplyForms[index];
+            let tempList = new Array();
+            for(let index in this.inputForm.depotAdApplyForms){
+              let detail = this.inputForm.depotAdApplyForms[index];
               if(util.isNotBlank(detail.applyQty)){
                 tempList.push(detail)
                }
@@ -65,7 +67,7 @@
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }
-            }).catch(function () {
+            }).catch(()=> {
               this.submitDisabled = false;
             });
           }else{

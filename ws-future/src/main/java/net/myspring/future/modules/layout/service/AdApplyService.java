@@ -224,6 +224,7 @@ public class AdApplyService {
         Map<String,AdGoodsOrder> adGoodsOrderMap = Maps.newHashMap();
         List<AdGoodsOrderDetail> adGoodsOrderDetails = Lists.newArrayList();
         List<AdGoodsOrder> adGoodsOrders = Lists.newArrayList();
+        List<ExpressOrder> expressOrders = Lists.newArrayList();
         if(adApplyList == null){
             return;
         }
@@ -273,6 +274,7 @@ public class AdApplyService {
 
         //自动开单
         String maxBusinessId = adGoodsOrderRepository.findMaxBusinessId(adApplyBillForm.getBillDate());
+
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
 
             adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
@@ -300,8 +302,8 @@ public class AdApplyService {
             }else{
                 expressOrder.setExpressPrintQty(1);
             }
-
             expressOrderRepository.save(expressOrder);
+            expressOrders.add(expressOrder);
             adGoodsOrder.setExpressOrderId(expressOrder.getId());
             adGoodsOrderRepository.save(adGoodsOrder);
         }
@@ -323,7 +325,16 @@ public class AdApplyService {
         adApplyRepository.save(newAdApplys);
 
         //TODO 调用金蝶接口
-       batchSynToCloud(adGoodsOrders);
+       List<KingdeeSynReturnDto> kingdeeSynReturnDtos = batchSynToCloud(adGoodsOrders);
+        if(kingdeeSynReturnDtos.size()!=adGoodsOrders.size()){
+            throw new ServiceException("同步金蝶开单数据有误");
+        }
+       for(int i = 0;i<adGoodsOrders.size();i++){
+           adGoodsOrders.get(i).setCloudSynId(kingdeeSynReturnDtos.get(i).getId());
+           expressOrders.get(i).setOutCode(kingdeeSynReturnDtos.get(i).getBillNo());
+       }
+       adGoodsOrderRepository.save(adGoodsOrders);
+       expressOrderRepository.save(expressOrders);
     }
 
     private List<KingdeeSynReturnDto> batchSynToCloud(List<AdGoodsOrder> adGoodsOrderList){
@@ -343,7 +354,7 @@ public class AdApplyService {
             DepotStore depotstore = depotStoreRepository.findOne(outShop.getDepotStoreId());
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(adGoodsOrder.getId());
-            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
+            salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
             salOutStockDto.setDate(adGoodsOrder.getBillDate());
             salOutStockDto.setCustomerNumber(client.getOutCode());
             salOutStockDto.setNote(adGoodsOrder.getId()+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
@@ -369,30 +380,6 @@ public class AdApplyService {
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
             salOutStockDtoList.add(salOutStockDto);
         }
-        return cloudClient.synSalOutStock(salOutStockDtoList);
-
-    }
-
-    //销售出库单成功示例
-    private List<KingdeeSynReturnDto> batchSynToCloudTest(){
-        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
-            SalOutStockDto salOutStockDto = new SalOutStockDto();
-            salOutStockDto.setExtendId("1");
-            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
-            salOutStockDto.setDate(LocalDate.now());
-            salOutStockDto.setCustomerNumber("00001");
-            salOutStockDto.setNote("模拟测试");
-
-            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-            SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-            entityDto.setStockNumber("G00201");
-            entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
-            entityDto.setQty(1);
-            entityDto.setPrice(BigDecimal.TEN);
-            entityDto.setEntryNote("模拟测试");
-            entityDtoList.add(entityDto);
-            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-            salOutStockDtoList.add(salOutStockDto);
         return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }

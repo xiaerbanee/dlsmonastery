@@ -168,20 +168,18 @@ public class ArOtherRecAbleService {
         return kingdeeSynDtoList;
     }
 
-    public List<KingdeeSynDto> saveForShopDeposit(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        for (ArOtherRecAbleDto otherRecAbleDto : arOtherRecAbleDtoList){
-            otherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
-            otherRecAbleDto.setKingdeeName(kingdeeBook.getName());
-            List<ArOtherRecAbleFEntityDto> entityDtoList = otherRecAbleDto.getArOtherRecAbleFEntityDtoList();
-            for (ArOtherRecAbleFEntityDto entityDto : entityDtoList){
-                entityDto.setAccountNumber("2241");//其他应付款
-                entityDto.setCustomerForNumber(null);
-                entityDto.setEmpInfoNumber("0001");//员工
-                entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
-                entityDto.setExpenseTypeNumber("6602.000");//无
-            }
+    public KingdeeSynDto saveForWS(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
+        arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
+        String customerNumber = arOtherRecAbleDto.getCustomerNumber();
+        BdCustomer bdCustomer = bdCustomerRepository.findByNumber(customerNumber);
+        BdDepartment bdDepartment = bdDepartmentRepository.findByCustId(bdCustomer.getFCustId());
+        arOtherRecAbleDto.setDepartmentNumber(bdDepartment.getFNumber());
+        List<ArOtherRecAbleFEntityDto> entityDtoList = arOtherRecAbleDto.getArOtherRecAbleFEntityDtoList();
+        for (ArOtherRecAbleFEntityDto entityDto : entityDtoList){
+            entityDto.setCostDepartmentNumber(bdDepartment.getFNumber());
         }
-        return save(arOtherRecAbleDtoList,kingdeeBook,accountKingdeeBook);
+        return save(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
     }
 
     public ArOtherRecAbleForm getForm(){

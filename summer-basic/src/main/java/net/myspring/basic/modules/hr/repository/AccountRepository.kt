@@ -5,6 +5,7 @@ import net.myspring.basic.modules.hr.domain.Account
 import net.myspring.basic.modules.hr.dto.AccountDto
 import net.myspring.basic.modules.hr.web.query.AccountQuery
 import net.myspring.cloud.modules.kingdee.domain.StkInventory
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -110,13 +111,15 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             SELECT
             t1.*
             FROM
-            hr_account t1,sys_office office
+            hr_account t1
             WHERE
             t1.enabled=1
-            and t1.office_id=office.id
         """)
         if (accountQuery.loginName != null) {
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
+        }
+        if(CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
+            sb.append(" and t1.office_id  IN (:officeIdList)");
         }
         if (accountQuery.officeId != null) {
             sb.append(" AND t1.office_id = :officeId ")
@@ -152,12 +155,6 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
                 )
             """)
         }
-        if (accountQuery.officeIds != null && accountQuery.officeIds.size != 0) {
-            sb.append("""
-                and office.id IN :officeIds
-            """)
-        }
-
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(accountQuery),BeanPropertyRowMapper(Account::class.java))
     }
 
@@ -182,6 +179,9 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
         if (accountQuery.officeId != null) {
             sb.append(" AND t1.office_id = :officeId ")
+        }
+        if (CollectionUtil.isNotEmpty(accountQuery.officeIdList)) {
+            sb.append(" AND t1.office_id in ( :officeIdList) ")
         }
         if (accountQuery.officeName != null) {
             sb.append("""

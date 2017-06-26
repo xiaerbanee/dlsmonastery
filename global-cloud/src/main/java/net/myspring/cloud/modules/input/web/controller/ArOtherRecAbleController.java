@@ -58,11 +58,11 @@ public class ArOtherRecAbleController {
     }
 
     @RequestMapping(value = "saveForShopDeposit",method = RequestMethod.POST)
-    public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArOtherRecAbleDto> arOtherRecAbleDtoList) {
+    public KingdeeSynReturnDto saveForShopDeposit(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arOtherRecAbleService.saveForShopDeposit(arOtherRecAbleDtoList,kingdeeBook,accountKingdeeBook);
-        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
+        KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
+        return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
     }
 
 }

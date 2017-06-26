@@ -19,15 +19,11 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.domain.Client;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
-import net.myspring.future.modules.basic.repository.ClientRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.SalOutStockManager;
+import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
@@ -79,6 +75,8 @@ public class GoodsOrderService {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private DepotStoreRepository depotStoreRepository;
+    @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private RedisTemplate redisTemplate;
@@ -94,6 +92,12 @@ public class GoodsOrderService {
     private CacheUtils cacheUtils;
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
+    @Autowired
+    private SalOutStockManager salOutStockManager;
+    @Autowired
+    private OtherRecAbleManager otherRecAbleManager;
+    @Autowired
+    private StkTransferDirectManager stkTransferDirectManager;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -256,25 +260,21 @@ public class GoodsOrderService {
             String fromStockId = storeIds.get(0);
             String toStockId = storeIds.get(1);
             if (goodsOrderForm.getStoreId().equals(toStockId)) {
-                ClientDto allotFromStock = clientRepository.findByDepotId(fromStockId);
-                ClientDto allotToStock = clientRepository.findByDepotId(toStockId);
+                DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
+                DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
                 goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
                 goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-//                K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//                k3CloudSynRepository.save(transCloudSyn);
+                stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
-            ClientDto allotFromStock = clientRepository.findByDepotId(goodsOrderForm.getStoreId());
-            ClientDto allotToStock = clientRepository.findByDepotId(shop.getDelegateDepotId());
+            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
+            DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
             goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
             goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-//            K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(transCloudSyn);
+            stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
         } else {
-//            String saleOutstock = goodsOrderManager.getSaleOutstock(goodsOrder);
-//            K3CloudSyn outCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.SAL_OUTSTOCK.name(), K3CloudBillTypeEnum.AR_receivable.name(),saleOutstock , goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(outCloudSyn);
+            salOutStockManager.synForGoodsOrder(goodsOrderForm);
         }
         //如果有定金则收取定金
         String isNotDepotStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.IS_NOT_DEPOSIT_STORE.name()).getValue();
@@ -296,10 +296,8 @@ public class GoodsOrderService {
             item.setAmount(BigDecimal.ZERO.subtract(goodsOrderForm.getGoodsDeposit()));
             item.setBillDate(LocalDateTime.of(goodsOrderForm.getBillDate(),LocalTime.MIN));
             item.setRemarks(goodsOrderForm.getBusinessId());
-            String otherTypes = "其他应付款-订货会订金";
             //定金转应收
-//            K3CloudSyn otherCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.AR_OtherRecAble.name(), shopGoodsDepositManager.getAROtherRecAbleImage(item, otherTypes), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(otherCloudSyn);
+            otherRecAbleManager.synForGoodOrder(item);
 //            item.setCloudSynId(otherCloudSyn.getId());
             item.setStatus("已通过");
             item.setLocked(true);
@@ -309,7 +307,6 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
     }
-
 
     private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
         Depot shop = depotRepository.findOne(goodsOrderForm.getShopId());
