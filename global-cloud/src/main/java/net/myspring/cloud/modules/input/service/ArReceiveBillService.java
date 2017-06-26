@@ -28,7 +28,7 @@ public class ArReceiveBillService {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arReceiveBillDto.getExtendId(),
                 arReceiveBillDto.getExtendType(),
-                KingdeeFormIdEnum.AR_ReceiveBill.name(),
+                KingdeeFormIdEnum.AR_RECEIVEBILL.name(),
                 arReceiveBillDto.getJson(),
                 kingdeeBook) {
         };

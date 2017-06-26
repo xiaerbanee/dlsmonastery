@@ -1,6 +1,7 @@
 package net.myspring.common.enums;
 
 /**
+ * 结算方式
  * Created by lihx on 2017/6/26.
  */
 public enum SettleTypeEnum {

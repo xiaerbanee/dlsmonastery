@@ -60,10 +60,10 @@ public class SalOutStockService {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salOutStockDto.getExtendId(),
                 salOutStockDto.getExtendType(),
-                KingdeeFormIdEnum.SAL_OutStock.name(),
+                KingdeeFormIdEnum.SAL_OUTSTOCK.name(),
                 salOutStockDto.getJson(),
                 kingdeeBook,
-                KingdeeFormIdEnum.AR_Receivable.name()) {
+                KingdeeFormIdEnum.AR_receivable.name()) {
             @Override
             public String getNextBillNo() {
                 if(salOutStockDto.getBillType().contains("现销")){

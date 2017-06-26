@@ -84,7 +84,7 @@ public class BankInService {
 
     }
 
-    //收款单失败示例
+    //收款单成功示例
     public List<KingdeeSynReturnDto> synReceiveBill(){
         List<ArReceiveBillDto> salReturnStockDtoList = Lists.newArrayList();
         ArReceiveBillDto receiveBillDto = new ArReceiveBillDto();
