@@ -58,7 +58,7 @@
               <view class="weui-uploader__input-box">
                 <view class="weui-uploader__input" bindtap="addImage"></view>
               </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
+              <view class="weui-cell__ft" wx:if="{{response.data.attachment}}">
                 <icon type="warn" class="warn"></icon>
               </view>
             </view>
