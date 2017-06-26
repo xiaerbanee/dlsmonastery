@@ -123,8 +123,8 @@ public class DepotController {
         customerReceiveDetailQuery.setCustomerIdList(Collections.singletonList(clientOutId));
         if(StringUtils.isNotBlank(dateRange)){
             String[] tempParamValues = dateRange.split(" - ");
-            customerReceiveDetailQuery.setDateStart(tempParamValues[0]);
-            customerReceiveDetailQuery.setDateEnd(tempParamValues[1]);
+            customerReceiveDetailQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
+            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
         }
 
         return cloudClient.getCustomerReceiveDetailList(customerReceiveDetailQuery);

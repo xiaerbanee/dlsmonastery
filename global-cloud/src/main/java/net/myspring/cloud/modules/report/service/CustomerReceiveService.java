@@ -34,8 +34,8 @@ public class CustomerReceiveService {
     private BdCustomerRepository bdCustomerRepository;
 
     public List<CustomerReceiveDto>  findCustomerReceiveDtoList(CustomerReceiveQuery customerReceiveQuery) {
-        LocalDate dateStart = LocalDateUtils.parse(customerReceiveQuery.getDateStart(),"yyyy-MM-dd");
-        LocalDate dateEnd = LocalDateUtils.parse(customerReceiveQuery.getDateEnd(),"yyyy-MM-dd");
+        LocalDate dateStart = customerReceiveQuery.getDateStart();
+        LocalDate dateEnd =  customerReceiveQuery.getDateEnd();
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
         if (customerIdList.size() > 0 && dateStart != null && dateEnd != null) {
             List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
@@ -82,8 +82,8 @@ public class CustomerReceiveService {
 
     public List<CustomerReceiveDetailDto> findCustomerReceiveDetailDtoList(LocalDate dateStart,LocalDate dateEnd,String customerId) {
         CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
-        customerReceiveDetailQuery.setDateStart(LocalDateUtils.format(dateStart,"yyyy-MM-dd"));
-        customerReceiveDetailQuery.setDateEnd(LocalDateUtils.format(dateEnd,"yyyy-MM-dd"));
+        customerReceiveDetailQuery.setDateStart(dateStart);
+        customerReceiveDetailQuery.setDateEnd(dateEnd);
         customerReceiveDetailQuery.getCustomerIdList().add(customerId);
         Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
         return map.get(customerId);
@@ -101,7 +101,7 @@ public class CustomerReceiveService {
 
     //一个customerId对应List<CustomerReceiveDetailDto>
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
-        LocalDate dateStart =  LocalDateUtils.parse(customerReceiveDetailQuery.getDateStart(),"yyyy-MM-dd");
+        LocalDate dateStart =  customerReceiveDetailQuery.getDateStart();
         //期初应收
         List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
