@@ -37,12 +37,8 @@ class StkInventoryRepository @Autowired constructor(val namedParameterJdbcTempla
             t1.FBASEQTY
         FROM
             T_STK_INVENTORY t1
-        WHERE
-            t1.FSTOCKID in = :stockId
-            t1.FMATERIALID = :materialId
         """)
-        sb.append(" t1.FSTOCKID in = :stockId ")
-        sb.append(" and t1.FMATERIALID in (:materialIdList) ")
+        sb.append(" WHERE t1.FMATERIALID in (:materialIdList) ")
         var paramMap = HashMap<String, Any>()
         paramMap.put("materialIdList", materialIdList)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(StkInventory::class.java))

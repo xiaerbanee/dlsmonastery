@@ -117,10 +117,6 @@ public class ArReceiveBillDto {
         model.put("FSETTLEORGID", CollectionUtil.getMap("FNumber", 100));
         //销售组织
         model.put("FSALEORGID", CollectionUtil.getMap("FNumber", 100));
-        //表头-应收金额
-        model.put("FRECEIVEAMOUNTFOR_H", sumAmount);
-        //表头-实收金额
-        model.put("FREALRECAMOUNTFOR", sumAmount);
         //结算汇率
         model.put("FSETTLERATE", 1);
         //汇率
@@ -129,19 +125,21 @@ public class ArReceiveBillDto {
         model.put("FBUSINESSTYPE", 1);
         //销售部门
         model.put("FSALEDEPTID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
-        //单据状态--已审核
-        model.put("FDOCUMENTSTATUS","C");
-        //作废状态--否
-        model.put("FCancelStatus","A");
         List<Object> entity = Lists.newArrayList();
         for (ArReceiveBillEntryDto entryDto : getArReceiveBillEntryDtoList()) {
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            //结算方式--电汇
-            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS04_SYS"));
+            //结算方式
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entryDto.getSettleTypeNumber()));
             //收款用途--
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
-            //对方科目代码--银行存款
-            detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
+            //对方科目代码
+            if ("JSFS04_SYS".equals(entryDto.getSettleTypeNumber())){//结算方式--电汇（JSFS04_SYS）
+                //对方科目代码--银行存款(1002)
+                detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1002"));
+            }else if ("JSFS01_SYS".equals(entryDto.getSettleTypeNumber())){//结算方式--现金（JSFS01_SYS）
+                //对方科目代码--库存现金(1001)
+                detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", "1001"));
+            }
             //表体-应收金额
             detail.put("FRECTOTALAMOUNTFOR", entryDto.getAmount());
             //折后金额
@@ -149,12 +147,18 @@ public class ArReceiveBillDto {
             //表体-实收金额
             detail.put("FREALRECAMOUNTFOR_D", entryDto.getAmount());
             //我方银行账号
-            detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entryDto.getBankAcntNumber()));
+            if("JSFS04_SYS".equals(entryDto.getSettleTypeNumber())){//结算方式--电汇（JSFS04_SYS）
+                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entryDto.getBankAcntNumber()));
+            }
             //备注
             detail.put("FCOMMENT", entryDto.getComment());
             sumAmount = sumAmount.add(entryDto.getAmount());
             entity.add(detail);
         }
+        //表头-应收金额
+        model.put("FRECEIVEAMOUNTFOR_H", sumAmount);
+        //表头-实收金额
+        model.put("FREALRECAMOUNTFOR", sumAmount);
         model.put("FRECEIVEBILLENTRY", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);

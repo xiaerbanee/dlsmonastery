@@ -6,6 +6,7 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
@@ -83,20 +84,21 @@ public class BankInService {
 
     }
 
-    //收款单失败示例
+    //收款单成功示例
     public List<KingdeeSynReturnDto> synReceiveBill(){
         List<ArReceiveBillDto> salReturnStockDtoList = Lists.newArrayList();
         ArReceiveBillDto receiveBillDto = new ArReceiveBillDto();
         receiveBillDto.setExtendId("1");
         receiveBillDto.setExtendType(ExtendTypeEnum.销售收款.name());
         receiveBillDto.setDate(LocalDate.now());
-        receiveBillDto.setCustomerNumber("0001054");
+        receiveBillDto.setCustomerNumber("00001");
         receiveBillDto.setDepartmentNumber("4000");
         List<ArReceiveBillEntryDto> entityDtoList = Lists.newArrayList();
         ArReceiveBillEntryDto entityDto = new ArReceiveBillEntryDto();
         entityDto.setAmount(BigDecimal.TEN);
         entityDto.setBankAcntNumber("1002.00011");
         entityDto.setComment("模拟测试");
+        entityDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());
         entityDtoList.add(entityDto);
         receiveBillDto.setArReceiveBillEntryDtoList(entityDtoList);
         salReturnStockDtoList.add(receiveBillDto);

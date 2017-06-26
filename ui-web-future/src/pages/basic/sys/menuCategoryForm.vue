@@ -68,10 +68,7 @@
               this.submitDisabled = false;
             }
           })
-        }
-      },activated () {
-        if(!this.$route.query.headClick || !this.isInit) {
-          Object.assign(this.$data,this.getData());
+        },initPage(){
           axios.get('/api/basic/sys/menuCategory/getForm').then((response)=>{
             this.inputForm = response.data;
           axios.get('/api/basic/sys/menuCategory/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -79,7 +76,8 @@
             })
           })
         }
-        this.isInit = true;
+      },created(){
+        this.initPage();
       }
     }
 </script>

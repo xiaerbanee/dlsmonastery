@@ -109,6 +109,7 @@ public class CnJournalForBankDto {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDATE",  LocalDateUtils.format(getDate(),"yyyy-M-d"));
+        //单据类型--
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "SGRJZ01_SYS"));
         model.put("FPAYORGID", CollectionUtil.getMap("FNumber", "100"));
         model.put("FAcctBookId", CollectionUtil.getMap("FNumber", "001"));
@@ -146,6 +147,7 @@ public class CnJournalForBankDto {
             debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
             creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
         }
+        //贷方（负）
         model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
         model.put("FCREDITSUMAMOUNT", creditAmounts);
         // 借方

@@ -60,7 +60,7 @@ public class ArRefundBillService {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arRefundBillDto.getExtendId(),
                 arRefundBillDto.getExtendType(),
-                KingdeeFormIdEnum.AR_RefundBill.name(),
+                KingdeeFormIdEnum.AR_REFUNDBILL.name(),
                 arRefundBillDto.getJson(),
                 kingdeeBook) {
         };

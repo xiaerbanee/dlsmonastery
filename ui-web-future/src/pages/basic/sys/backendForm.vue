@@ -27,6 +27,7 @@
     methods:{
       getData(){
         return{
+          isCreate:this.$route.query.id==null,
           isInit:false,
           submitDisabled:false,
           inputForm:{
@@ -47,7 +48,7 @@
             axios.post('/api/basic/sys/backend/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data,this.getData());
-              if(!this.inputForm.create){
+              if(!this.isCreate){
                 this.$router.push({name:'backendList',query:util.getQuery("backendList"), params:{_closeFrom:true}})
               }
             }).catch( ()=> {
@@ -57,10 +58,7 @@
             this.submitDisabled = false;
           }
         })
-      }
-    },activated () {
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data,this.getData());
+      },initPage(){
         axios.get('/api/basic/sys/backend/getForm').then((response)=> {
           this.inputForm = response.data;
           axios.get('/api/basic/sys/backend/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -68,7 +66,8 @@
           });
         });
       }
-      this.isInit = true;
+    },created(){
+        this.initPage();
     }
   }
 </script>
