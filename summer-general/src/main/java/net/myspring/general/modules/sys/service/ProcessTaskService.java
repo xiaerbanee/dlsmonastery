@@ -2,8 +2,6 @@ package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.general.common.utils.CacheUtils;
-import net.myspring.general.common.utils.RequestUtils;
-import net.myspring.general.modules.sys.client.OfficeClient;
 import net.myspring.general.modules.sys.domain.ProcessTask;
 import net.myspring.general.modules.sys.dto.ProcessTaskDto;
 import net.myspring.general.modules.sys.repository.ProcessTaskRepository;
@@ -16,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wangzm on 2017/6/5.
@@ -28,11 +25,8 @@ public class ProcessTaskService {
     private ProcessTaskRepository processTaskRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private OfficeClient officeClient;
 
     public Page<ProcessTaskDto> findPage(Pageable pageable, ProcessTaskQuery processTaskQuery){
-        processTaskQuery.setOfficeIds(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         Page<ProcessTaskDto> page=processTaskRepository.findPage(pageable,processTaskQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

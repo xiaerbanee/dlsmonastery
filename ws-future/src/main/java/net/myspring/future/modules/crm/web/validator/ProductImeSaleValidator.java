@@ -62,7 +62,7 @@ public class ProductImeSaleValidator implements Validator {
             }
         }
         if(StringUtils.isNotBlank(sb.toString())) {
-            errors.rejectValue("ime", "error.ime", sb.toString());
+            errors.rejectValue("imeStr", "error.imeStr", sb.toString());
         }
     }
 }

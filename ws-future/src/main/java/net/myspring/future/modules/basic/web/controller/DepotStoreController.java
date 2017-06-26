@@ -92,7 +92,6 @@ public class DepotStoreController {
 
     @RequestMapping(value = "storeReport")
     public Page<DepotStoreDto> storeReport(Pageable pageable,ReportQuery reportQuery){
-        reportQuery.setOfficeIdList(officeClient.getOfficeFilterIds(RequestUtils.getOfficeId()));
         reportQuery.setDepotIdList(depotService.filterDepotIds());
         DepotStoreQuery depotStoreQuery = BeanUtil.map(reportQuery, DepotStoreQuery.class);
         Page<DepotStoreDto> page = depotStoreService.findPage(pageable,depotStoreQuery);

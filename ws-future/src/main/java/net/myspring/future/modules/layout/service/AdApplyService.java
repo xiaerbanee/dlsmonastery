@@ -384,30 +384,6 @@ public class AdApplyService {
 
     }
 
-    //销售出库单成功示例
-    private List<KingdeeSynReturnDto> batchSynToCloudTest(){
-        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
-            SalOutStockDto salOutStockDto = new SalOutStockDto();
-            salOutStockDto.setExtendId("1");
-            salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
-            salOutStockDto.setDate(LocalDate.now());
-            salOutStockDto.setCustomerNumber("00001");
-            salOutStockDto.setNote("模拟测试");
-
-            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-            SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-            entityDto.setStockNumber("G00201");
-            entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
-            entityDto.setQty(1);
-            entityDto.setPrice(BigDecimal.TEN);
-            entityDto.setEntryNote("模拟测试");
-            entityDtoList.add(entityDto);
-            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-            salOutStockDtoList.add(salOutStockDto);
-        return cloudClient.synSalOutStock(salOutStockDtoList);
-
-    }
-
     public String findSimpleExcelSheets(Workbook workbook,AdApplyQuery adApplyQuery){
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 

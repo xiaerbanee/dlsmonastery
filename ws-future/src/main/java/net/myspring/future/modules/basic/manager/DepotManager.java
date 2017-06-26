@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.manager;
 
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -45,7 +46,7 @@ public class DepotManager {
     public boolean isAccess(String depotId, boolean checkChain,String accountId,String officeId) {
         Depot depot=depotRepository.findOne(depotId);
         List<String> depotIds = filterDepotIds(accountId);
-        List<String> officeIds=officeClient.getOfficeFilterIds(officeId);
+        List<String> officeIds= RequestUtils.getOfficeIdList();
         if(CollectionUtil.isNotEmpty(depotIds)) {
             if(depotIds.contains(depot.getId())) {
                 return true;
@@ -67,7 +68,6 @@ public class DepotManager {
     public List<String> getChainIds(String accountId) {
         DepotQuery depotQuery=new DepotQuery();
         depotQuery.setDepotIdList(filterDepotIds(accountId));
-        depotQuery.setOfficeIdList(officeClient.getOfficeFilterIds(accountId));
         List<String> chainIds = depotRepository.findChainIds(depotQuery);
         return chainIds;
     }

@@ -5,15 +5,15 @@
       <button class="weui-btn" type="primary" bindtap="imeScan">扫描</button>
     </view>
     <view class="weui-cells weui-cells_after-title form_bd">
-      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="ime">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="imeStr">
         <view class="weui-cell__hd">
           <view class="weui-label">串码</view>
         </view>
         <view class="weui-cell__bd">
-          <input class="hidden" value="{{formData.imeStr}}" name="ime" />
+          <input class="hidden" value="{{formData.imeStr}}" name="imeStr" />
           <input class="weui-input" bindblur="imeChange" value="{{formData.imeStr}}" name="imeStr" />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.ime}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.imeStr}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -29,7 +29,7 @@
             </view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -41,7 +41,7 @@
           <input class="hidden" name="shopId" value="{{formProperty.shops[0].id}}" />
           <view value="{{formProperty.shops[0].id}}" class="weui-input">{{formProperty.shops[0].name}}</view>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.errors.shopId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -113,14 +113,14 @@
   </form>
   <view class="weui-panel">
     <view class="weui-panel__bd panel_bd">
-      <block wx:for-items="{{productImeSearchResult.productImeList}}" wx:for-item="item" wx:key="item.id">
+      <block wx:for-items="{{productImeSearchResult}}" wx:for-item="item" wx:key="item.id">
         <navigator url="/page/crm/productImeDetail/productImeDetail?productImeId= {{item.id}}" class="weui-media-box weui-media-box_text">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.ime}}</view>
-          <view class="weui-media-box__desc item_style">产品名称：{{item.product.name}} </view>
-          <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSale.shop.name}}</view>
+          <view class="weui-media-box__desc item_style">产品名称：{{item.productName}} </view>
+          <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSaleShopName}}</view>
           <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate}}</view>
-          <view class="weui-media-box__desc item_style">核销人：{{item.productImeSale.employee.name}}</view>
-          <view class="weui-media-box__desc item_style">核销时间：{{item.productImeSale.createdDate}}</view>
+          <view class="weui-media-box__desc item_style">核销人：{{item.productImeSaleEmployeeName}}</view>
+          <view class="weui-media-box__desc item_style">核销时间：{{item.createdDate}}</view>
         </navigator>
       </block>
     </view>

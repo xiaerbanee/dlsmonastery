@@ -15,9 +15,6 @@ import java.util.Map;
 @FeignClient("summer-basic")
 public interface OfficeClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getOfficeFilterIds")
-    List<String> getOfficeFilterIds(@RequestParam(value = "officeId") String officeId);
-
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getTopIdsByFilter")
     List<String> getTopIdsByFilter();
 
