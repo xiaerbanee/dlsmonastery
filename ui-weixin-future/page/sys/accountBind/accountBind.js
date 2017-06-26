@@ -33,7 +33,7 @@ Page({
     }
     that.setData({ disabled: true });
     wx.request({
-      url: $util.getUrl("uaa/accountWeixin/bind"),
+      url: "http://localhost:1200/user/bind",
       data: {
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,
