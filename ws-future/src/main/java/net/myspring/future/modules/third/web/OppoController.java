@@ -19,8 +19,8 @@ public class OppoController {
     private OppoService oppoService;
 
     @RequestMapping(value="synIme")
-    public void synIme(String date){
-        oppoService.synIme(date);
+    public String synIme(String date){
+        return oppoService.synIme(date);
     }
 
     @RequestMapping(value="findOppoCustomerAllots")
