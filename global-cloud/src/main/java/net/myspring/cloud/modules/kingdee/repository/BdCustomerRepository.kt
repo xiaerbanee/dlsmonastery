@@ -101,7 +101,33 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FNUMBER in (:numberList)
         """, Collections.singletonMap("numberList",numberList), BeanPropertyRowMapper(BdCustomer::class.java))
+    }
 
+    fun findByNumber(number: String): BdCustomer {
+        return namedParameterJdbcTemplate.queryForObject("""
+            SELECT
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
+            WHERE
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+                and t1.FFORBIDSTATUS = 'A'
+                and t1.FDOCUMENTSTATUS = 'C'
+                and t1.FNUMBER = :number
+        """, Collections.singletonMap("number",number), BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
     fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer> {

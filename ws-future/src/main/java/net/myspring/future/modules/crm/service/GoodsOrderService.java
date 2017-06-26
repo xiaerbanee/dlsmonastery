@@ -6,6 +6,9 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.*;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -19,16 +22,11 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Client;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.PricesystemDetail;
-import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.ClientDto;
-import net.myspring.future.modules.basic.repository.ClientRepository;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
+import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
@@ -52,10 +50,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import org.bouncycastle.cert.ocsp.Req;
-import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -70,6 +65,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -82,6 +78,8 @@ public class GoodsOrderService {
     private GoodsOrderImeRepository goodsOrderImeRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
@@ -98,6 +96,10 @@ public class GoodsOrderService {
     private CacheUtils cacheUtils;
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
+    @Autowired
+    private CloudClient cloudClient;
+    @Autowired
+    private OtherRecAbleManager otherRecAbleManager;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -260,25 +262,21 @@ public class GoodsOrderService {
             String fromStockId = storeIds.get(0);
             String toStockId = storeIds.get(1);
             if (goodsOrderForm.getStoreId().equals(toStockId)) {
-                ClientDto allotFromStock = clientRepository.findByDepotId(fromStockId);
-                ClientDto allotToStock = clientRepository.findByDepotId(toStockId);
+                DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
+                DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
                 goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
                 goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-//                K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//                k3CloudSynRepository.save(transCloudSyn);
+                synStkTransferDirect(goodsOrderForm);
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
-            ClientDto allotFromStock = clientRepository.findByDepotId(goodsOrderForm.getStoreId());
-            ClientDto allotToStock = clientRepository.findByDepotId(shop.getDelegateDepotId());
+            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
+            DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
             goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
             goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-//            K3CloudSyn transCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(), goodsOrderManager.getTransferDirectBill(goodsOrder), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(transCloudSyn);
+            synStkTransferDirect(goodsOrderForm);
         } else {
-//            String saleOutstock = goodsOrderManager.getSaleOutstock(goodsOrder);
-//            K3CloudSyn outCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.SAL_OUTSTOCK.name(), K3CloudBillTypeEnum.AR_receivable.name(),saleOutstock , goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(outCloudSyn);
+            synSalOutStock(goodsOrderForm);
         }
         //如果有定金则收取定金
         String isNotDepotStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.IS_NOT_DEPOSIT_STORE.name()).getValue();
@@ -300,10 +298,8 @@ public class GoodsOrderService {
             item.setAmount(BigDecimal.ZERO.subtract(goodsOrderForm.getGoodsDeposit()));
             item.setBillDate(LocalDateTime.of(goodsOrderForm.getBillDate(),LocalTime.MIN));
             item.setRemarks(goodsOrderForm.getBusinessId());
-            String otherTypes = "其他应付款-订货会订金";
             //定金转应收
-//            K3CloudSyn otherCloudSyn = new K3CloudSyn(K3CloudBillTypeEnum.AR_OtherRecAble.name(), shopGoodsDepositManager.getAROtherRecAbleImage(item, otherTypes), goodsOrder.getId(), goodsOrder.getFormatId(), CloudSynExtendTypeEnum.货品订货.name());
-//            k3CloudSynRepository.save(otherCloudSyn);
+            otherRecAbleManager.synForGoodOrder(item);
 //            item.setCloudSynId(otherCloudSyn.getId());
             item.setStatus("已通过");
             item.setLocked(true);
@@ -314,6 +310,61 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
+    private KingdeeSynReturnDto synStkTransferDirect(GoodsOrderForm goodsOrderForm){
+        if (StringUtils.isNotBlank(goodsOrderForm.getId())) {
+            StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+            transferDirectDto.setExtendId(goodsOrderForm.getId());
+            transferDirectDto.setExtendType(ExtendTypeEnum.货品订货.name());
+            transferDirectDto.setNote(goodsOrderForm.getRemarks());
+            transferDirectDto.setDate(LocalDate.now());
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
+            List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
+            Map<String, String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product::getCode));
+            for (GoodsOrderDetail detail : goodsOrderDetailList) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(detail.getBillQty());
+                entryDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
+                entryDto.setSrcStockNumber(goodsOrderForm.getAllotFromStockCode());
+                entryDto.setDestStockNumber(goodsOrderForm.getAllotToStockCode());
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            }
+            return cloudClient.synStkTransferDirect(transferDirectDto);
+        }
+        return null;
+    }
+
+    private List<KingdeeSynReturnDto> synSalOutStock(GoodsOrderForm goodsOrderForm){
+        if (StringUtils.isNotBlank(goodsOrderForm.getId())){
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
+            DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
+            ClientDto clientDto = clientRepository.findByDepotId(goodsOrderForm.getShopId());
+            List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
+            Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
+            List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+            SalOutStockDto salOutStockDto = new SalOutStockDto();
+            salOutStockDto.setExtendId(goodsOrderForm.getId());
+            salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
+            salOutStockDto.setDate(LocalDate.now());
+            salOutStockDto.setCustomerNumber(clientDto.getOutCode());
+            salOutStockDto.setNote(goodsOrderForm.getRemarks());
+            List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+            for (GoodsOrderDetail detail : goodsOrderDetailList) {
+                if (detail.getBillQty() != null && detail.getBillQty() > 0) {
+                    SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
+                    entityDto.setStockNumber(depotStore.getOutCode());
+                    entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
+                    entityDto.setQty(detail.getBillQty());
+                    entityDto.setPrice(detail.getPrice());
+                    entityDto.setEntryNote(goodsOrderForm.getRemarks());
+                    entityDtoList.add(entityDto);
+                    salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+                    salOutStockDtoList.add(salOutStockDto);
+                }
+            }
+            return cloudClient.synSalOutStock(salOutStockDtoList);
+        }
+        return null;
+    }
 
     private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
         Depot shop = depotRepository.findOne(goodsOrderForm.getShopId());
