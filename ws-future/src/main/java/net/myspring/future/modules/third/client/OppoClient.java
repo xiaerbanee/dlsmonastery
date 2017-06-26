@@ -1,5 +1,6 @@
 package net.myspring.future.modules.third.client;
 
+import net.myspring.future.modules.third.domain.OppoPlantSendImeiPpsel;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface OppoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/oppo/synIme")
-   String  findSynImeList(@RequestParam(value = "date")String date,@RequestParam(value="agentCode")String agentCode);
+   List<OppoPlantSendImeiPpsel>  findSynImeList(@RequestParam(value = "date")String date, @RequestParam(value="agentCode")String agentCode);
 }

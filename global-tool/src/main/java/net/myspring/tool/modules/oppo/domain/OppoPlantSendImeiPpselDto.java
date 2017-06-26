@@ -1,13 +1,9 @@
 package net.myspring.tool.modules.oppo.domain;
 
-
-import net.myspring.tool.common.domain.IdEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 public class OppoPlantSendImeiPpselDto  {
+    private String id;
     private String billId;
     private String imei;
     private String meid;
@@ -20,6 +16,14 @@ public class OppoPlantSendImeiPpselDto  {
     private String colorId;
     private String lxProductId;
     private String productId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBillId() {
         return billId;
