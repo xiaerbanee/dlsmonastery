@@ -14,6 +14,7 @@ import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -182,7 +183,7 @@ public class CnJournalForBankService {
             cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());
             for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalForBankDto.getEntityForBankDtoList()) {
                 cnJournalEntityForBankDto.setAccountNumber("2241");//其他应付款
-                cnJournalEntityForBankDto.setSettleTypeNumber("JSFS04_SYS");//电汇
+                cnJournalEntityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
                 cnJournalEntityForBankDto.setEmpInfoNumber("0001");//员工
                 cnJournalEntityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
                 cnJournalEntityForBankDto.setExpenseTypeNumber("6602.000");//无

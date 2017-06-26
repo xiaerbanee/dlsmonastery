@@ -2,11 +2,16 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.mongodb.gridfs.GridFSFile;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
+import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto;
@@ -30,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -44,6 +50,8 @@ public class ShopGoodsDepositService {
     private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
@@ -144,11 +152,25 @@ public class ShopGoodsDepositService {
         shopGoodsDeposit.setBillDate(LocalDateTime.now());
 
         shopGoodsDepositRepository.save(shopGoodsDeposit);
+    }
 
+    private List<KingdeeSynReturnDto> batchSynForCloud(){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+            cnJournalForBankDto.setExtendId("2");
+            cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
+            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
 
-
-
-
+            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+            entityForBankDto.setDebitAmount(BigDecimal.ZERO);
+            entityForBankDto.setCreditAmount(BigDecimal.TEN.multiply(new BigDecimal(-1)));
+            entityForBankDto.setDepartmentNumber("4000");
+            entityForBankDto.setBankAccountNumber("1002.00011");
+            entityForBankDto.setComment("模拟测试");
+            cnJournalEntityForBankDtoList.add(entityForBankDto);
+            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+            cnJournalForBankDtoList.add(cnJournalForBankDto);
+        return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
     }
 
 }

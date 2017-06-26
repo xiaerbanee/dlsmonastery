@@ -9,7 +9,6 @@ import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
