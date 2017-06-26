@@ -3,8 +3,12 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
+import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
+import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
@@ -15,9 +19,12 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
@@ -50,6 +57,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,6 +78,8 @@ public class GoodsOrderShipService {
     private ExpressOrderManager expressOrderManager;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private ExpressRepository expressRepository;
     @Autowired
@@ -332,6 +342,36 @@ public class GoodsOrderShipService {
         goodsOrder.setAmount(amount);
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
+    }
+
+    private List<KingdeeSynReturnDto> synSalReturnStock(GoodsOrderDto goodsOrderDto){
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderDto.getId());
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderDto.getStoreId());
+        ClientDto clientDto = clientRepository.findByDepotId(goodsOrderDto.getShopId());
+        List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
+        Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
+
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        SalReturnStockDto returnStockDto = new SalReturnStockDto();
+        returnStockDto.setExtendId(goodsOrderDto.getId());
+        returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
+        returnStockDto.setDate(goodsOrderDto.getBillDate());
+        returnStockDto.setCustomerNumber(clientDto.getOutCode());
+        returnStockDto.setNote(goodsOrderDto.getRemarks());
+        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
+
+        for (GoodsOrderDetail detail : goodsOrderDetailList){
+            SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+            entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
+            entityDto.setQty(detail.getReturnQty());
+            entityDto.setPrice(detail.getPrice());
+            entityDto.setEntryNote(goodsOrderDto.getRemarks());
+            entityDto.setStockNumber(depotStore.getOutCode());
+            entityDtoList.add(entityDto);
+        }
+        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
+        salReturnStockDtoList.add(returnStockDto);
+        return cloudClient.synSalReturnStock(salReturnStockDtoList);
     }
 
     public void sign(String goodsOrderId) {
