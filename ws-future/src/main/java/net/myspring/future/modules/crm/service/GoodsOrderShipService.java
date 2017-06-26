@@ -36,6 +36,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -317,12 +319,12 @@ public class GoodsOrderShipService {
 
     public GoodsOrder sreturn(GoodsOrderForm goodsOrderForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailFormList(),"goodsOrderDetailId"));
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailFormList(),"id"));
         BigDecimal amount = BigDecimal.ZERO;
         for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailFormList()) {
-            GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getGoodsOrderDetailId());
+            GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
             if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() > 0) {
-                goodsOrderDetail.setReturnQty(goodsOrderDetail.getReturnQty());
+                goodsOrderDetail.setReturnQty(goodsOrderDetailForm.getReturnQty());
                 goodsOrderDetailRepository.save(goodsOrderDetail);
             }
             amount  = amount.add(new BigDecimal( goodsOrderDetail.getRealBillQty()).multiply(goodsOrderDetail.getPrice()));
@@ -400,13 +402,13 @@ public class GoodsOrderShipService {
 
     public GoodsOrderDto getSreturn(String id){
         GoodsOrderDto goodsOrderDto=getShip(id);
-        String date=LocalDateTimeUtils.format(LocalDateTime.now());
+        String date= LocalDateUtils.format(LocalDate.now());
         Depot depot=depotRepository.findOne(goodsOrderDto.getShopId());
         goodsOrderDto.setShopCredit(depot.getCredit());
         Client client=clientRepository.findOne(depot.getClientId());
         CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(date,date,client.getOutId());
         List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-        goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getShouldGet());
+        goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getEndShouldGet());
         return goodsOrderDto;
     }
 }

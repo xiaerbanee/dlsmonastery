@@ -18,7 +18,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     //金蝶单号
     private String outCode;
     //门店所在区域
-    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "areaId")
+    @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
     private String shopAreaName;
     private String shopAreaId;
     private String businessId;

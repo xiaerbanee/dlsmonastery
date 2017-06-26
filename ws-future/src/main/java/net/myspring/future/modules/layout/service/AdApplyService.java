@@ -143,7 +143,7 @@ public class AdApplyService {
         cacheUtils.initCacheInput(adApplyDtos);
         //同步财务库存
         List<String> productOutIds = CollectionUtil.extractToList(adApplyDtos,"productOutId");
-        List<StkInventory> stkInventories = cloudClient.findInventorysByProductOutIds(productOutIds);
+        List<StkInventory> stkInventories = cloudClient.findInventoriesByProductOutIds(productOutIds);
         Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
         for(AdApplyDto adApplyDto:adApplyDtos){
             if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
