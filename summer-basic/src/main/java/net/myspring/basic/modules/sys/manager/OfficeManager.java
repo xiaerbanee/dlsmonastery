@@ -41,7 +41,7 @@ public class OfficeManager {
             officeIdList.add(office.getId());
             if (OfficeTypeEnum.业务部门.name().equalsIgnoreCase(office.getType())) {
                 officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike("%,"+office.getId()+",%"), "id"));
-            } else {
+            } else if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(office.getType())) {
                 List<OfficeBusiness> businessList = officeBusinessRepository.findBusinessIdById(office.getId());
                 if (CollectionUtil.isNotEmpty(businessList)) {
                     List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
@@ -49,6 +49,8 @@ public class OfficeManager {
                     List<Office> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
                     officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
                 }
+            }else {
+                officeIdList.add("0");
             }
         }
         officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
