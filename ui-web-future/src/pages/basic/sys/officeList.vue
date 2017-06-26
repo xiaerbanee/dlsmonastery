@@ -62,6 +62,7 @@
         formData:{
             extra:{}
         },
+        initPromise:{},
         formProperty:{},
         formLabelWidth: '120px',
         formVisible: false,
@@ -118,11 +119,14 @@
     },created () {
         var that=this;
         that.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/office/getQuery').then((response) =>{
+        this.initPromise=axios.get('/api/basic/sys/office/getQuery').then((response) =>{
         that.formData=response.data;
-      util.copyValue(that.$route.query,that.formData);
-      that.pageRequest();
+        util.copyValue(that.$route.query,that.formData);
     });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>
