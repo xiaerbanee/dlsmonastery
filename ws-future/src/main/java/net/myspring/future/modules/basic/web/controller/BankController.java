@@ -1,5 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.domain.Bank;
@@ -8,6 +10,7 @@ import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.basic.web.query.BankQuery;
 import net.myspring.future.modules.basic.web.form.BankForm;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +60,16 @@ public class BankController {
     @RequestMapping(value = "findOne")
     public BankDto findOne(String id){
         return bankService.findOne(id);
+    }
+
+    @RequestMapping(value = "findByIds")
+    public List<BankDto> findById(String ids) {
+        List<BankDto> bankDtoList = Lists.newArrayList();
+        if(StringUtils.isNotBlank(ids)){
+            List<String> idList=StringUtils.getSplitList(ids, CharConstant.COMMA);
+            bankDtoList =bankService.findByIds(idList);
+        }
+        return bankDtoList;
     }
 
     @RequestMapping(value = "search")

@@ -180,9 +180,9 @@
       })
       })
       }else if(action=="ship"){
-        window.open('/#/future/crm/goodsOrderPrint?id=' + id, '', '');
+        var newWindow=window.open('/#/future/crm/goodsOrderPrint?id=' + id);
       }else if(action=="expressPrint"){
-         window.open('/#/future/crm/goodsOrderShipPrint?id=' + id, '', '');
+         window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
       }
     }
  },created () {

@@ -91,6 +91,7 @@
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
+          this.inputForm.image = util.getFolderFileIdStr(this.fileList);
           if (valid) {
             axios.post('/api/ws/future/basic/product/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
@@ -121,6 +122,11 @@
               util.copyValue(response.data,this.inputForm);
               if(response.data.productType != null){
                 this.productTypeList = response.data.productType;
+              }
+              if (this.inputForm.image != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.image}}).then((response) => {
+                  this.fileList = response.data;
+                });
               }
             });
           }

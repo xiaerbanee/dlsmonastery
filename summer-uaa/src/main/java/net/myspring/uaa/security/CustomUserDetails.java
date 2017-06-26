@@ -27,8 +27,23 @@ public class CustomUserDetails implements UserDetails {
     @JsonIgnore
     private String password;
     private String roleId;
+    private List<String> officeIdList;
 
-    public CustomUserDetails(String username,String password,boolean enabled,boolean accountNonExpired,boolean credentialsNonExpired,boolean accountNonLocked,Collection<? extends GrantedAuthority> authorities,String accountId,String companyId,String positionId,String officeId,String employeeId,String companyName,String roleId) {
+    public CustomUserDetails(String username
+            ,String password
+            ,boolean enabled
+            ,boolean accountNonExpired
+            ,boolean credentialsNonExpired
+            ,boolean accountNonLocked
+            ,Collection<? extends GrantedAuthority> authorities
+            ,String accountId
+            ,String companyId
+            ,String positionId
+            ,String officeId
+            ,String employeeId
+            ,String companyName
+            ,String roleId
+            ,List<String> officeIdList) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -46,6 +61,7 @@ public class CustomUserDetails implements UserDetails {
         this.employeeId=employeeId;
         this.companyName=companyName;
         this.roleId=roleId;
+        this.officeIdList = officeIdList;
     }
 
 
@@ -111,4 +127,9 @@ public class CustomUserDetails implements UserDetails {
     public String getRoleId() {
         return roleId;
     }
+
+    public List<String> getOfficeIdList() {
+        return officeIdList;
+    }
+
 }

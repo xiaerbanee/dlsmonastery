@@ -117,4 +117,10 @@ public class BankService {
         }
         return bankDto;
     }
+
+    public List<BankDto> findByIds(List<String> ids){
+        List<Bank> positionList = bankRepository.findAll(ids);
+        List<BankDto> positionDtoList=BeanUtil.map(positionList,BankDto.class);
+        return positionDtoList;
+    }
 }

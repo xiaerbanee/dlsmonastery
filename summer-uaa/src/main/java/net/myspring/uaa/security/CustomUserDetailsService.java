@@ -86,7 +86,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     accountDto.getOfficeId(),
                     accountDto.getEmployeeId(),
                     accountDto.getCompanyName(),
-                    accountDto.getRoleId()
+                    accountDto.getRoleId(),
+                    null
             );
         }
         return customUserDetails;
