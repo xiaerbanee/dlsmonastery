@@ -100,8 +100,10 @@ public class KingdeeManager {
             }
             kingdeeSynDto.setBillNo(billNo);
             kingdeeSynDto.setSuccess(true);
+            kingdeeSynDto.setLocked(true);
         } else {
             kingdeeSynDto.setSuccess(false);
+            kingdeeSynDto.setLocked(false);
         }
         kingdeeSynDto.setResult(ObjectMapperUtils.writeValueAsString(resultMap));
         KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynDto,KingdeeSyn.class);
@@ -139,8 +141,10 @@ public class KingdeeManager {
             result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
             resultMap.put("NEXT_AUDIT",result);
             kingdeeSynExtendDto.setSuccess(true);
+            kingdeeSynExtendDto.setLocked(true);
         } else {
             kingdeeSynExtendDto.setSuccess(false);
+            kingdeeSynExtendDto.setLocked(false);
         }
         kingdeeSynExtendDto.setResult(ObjectMapperUtils.writeValueAsString(result));
         KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynExtendDto,KingdeeSyn.class);

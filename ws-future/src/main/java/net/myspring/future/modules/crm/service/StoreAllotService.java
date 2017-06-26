@@ -435,7 +435,7 @@ public class StoreAllotService {
 
     private void fulfillCloudQty(String fromStoreId, List<StoreAllotDetailSimpleDto> list) {
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStoreId);
-        List<StkInventory> inventoryList = cloudClient.findInventorysByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
         Map<String, StkInventory> inventoryMap = CollectionUtil.extractToMap(inventoryList, "FMaterialId");
         for(StoreAllotDetailSimpleDto storeAllotDetailSimpleDto : list){
             if(inventoryMap.containsKey(storeAllotDetailSimpleDto.getProductOutId())){
