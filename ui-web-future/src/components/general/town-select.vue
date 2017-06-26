@@ -50,7 +50,11 @@
             });
           })
         }else{
-          this.innerId=val;
+          if(this.multiple){
+            this.innerId = [];
+          }else{
+            this.innerId = val
+          }
           this.$nextTick(()=>{
             this.$emit('afterInit');
           });
