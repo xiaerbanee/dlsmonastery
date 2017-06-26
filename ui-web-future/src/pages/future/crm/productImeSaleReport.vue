@@ -129,13 +129,11 @@
         if(!this.nextIsShop){
           this.formData.depotId=""
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
-            console.log(">>>>>>",response.data)
             this.page = response.data;
             this.pageLoading = false;
           })
         }else {
           axios.post('/api/ws/future/basic/depotShop/depotReportDate',qs.stringify(submitData)).then((response) => {
-            console.log("++++++++",response.data)
             this.page = response.data;
             this.pageLoading = false;
           })
@@ -196,7 +194,10 @@
         this.pageHeight = window.outerHeight -320;
         this.initPromise=axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
           this.formData = response.data;
-          this.formData.scoreType=this.formData.scoreType?"1":"0"
+          this.formData.scoreType=this.formData.scoreType?"1":"0";
+          if(response.data.officeId){
+            this.officeIds.push(response.data.officeId);
+          }
           util.copyValue(this.$route.query, this.formData);
       })
     },activated(){
