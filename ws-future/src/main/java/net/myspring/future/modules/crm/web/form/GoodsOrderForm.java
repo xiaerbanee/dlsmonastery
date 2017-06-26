@@ -13,6 +13,15 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String shipType;
     private List<String> netTypeList;
     private List<String> shipTypeList;
+    private boolean syn;
+
+    public boolean isSyn() {
+        return syn;
+    }
+
+    public void setSyn(boolean syn) {
+        this.syn = syn;
+    }
 
     private List<GoodsOrderDetailForm> goodsOrderDetailFormList = Lists.newArrayList();
 
