@@ -89,16 +89,13 @@
                if(detail.billQty-detail.shippedQty<detail.returnQty){
                  alert("退货数必须小于开单数");
                  return;
-               }else {
-                 if(detail.returnQty>0) {
-                   goodsOrderDetailFormList.push(detail);
-                 }
                }
+               goodsOrderDetailFormList.push(detail);
              }
              submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
              axios.post('/api/ws/future/crm/goodsOrderShip/sreturn',qs.stringify(submitData, {allowDots:true})).then((response)=> {
                this.$message(response.data.message);
-               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
+               this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip"), params:{_closeFrom:true}})
              }).catch(function () {
                that.submitDisabled = false;
              });
