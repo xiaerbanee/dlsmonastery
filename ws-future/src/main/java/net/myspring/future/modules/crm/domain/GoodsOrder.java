@@ -26,6 +26,15 @@ public class GoodsOrder extends CompanyEntity<GoodsOrder> {
     private Boolean splitBill;
     private String netType;
     private String expressOrderId;
+    private Boolean lxMallOrder;
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public String getStoreId() {
         return storeId;

@@ -38,7 +38,9 @@ export default {
     auditDate:"审批时间",
     comment:"审批备注",
   },
-
+  bankSelect:{
+    cashIn:'现金收款',
+  },
   menuManager:{
     basicManager:"基础管理",
     businessManager:"业务管理",

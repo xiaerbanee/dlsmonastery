@@ -313,6 +313,8 @@ public class GoodsOrderService {
         ExpressOrder expressOrder = new ExpressOrder();
         if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
             expressOrder = expressOrderRepository.findOne(goodsOrderForm.getExpressOrderId());
+        }else{
+            expressOrder.setExpressPrintQty(0);
         }
         expressOrder.setExtendId(goodsOrderForm.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
@@ -329,6 +331,7 @@ public class GoodsOrderService {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
         Depot shop = depotRepository.findOne(goodsOrder.getShopId());
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+        expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(goodsOrderBillForm.getContator());
@@ -336,6 +339,7 @@ public class GoodsOrderService {
         expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
+        expressOrder.setPrintDate(goodsOrder.getBillDate());
         return expressOrder;
     }
 
