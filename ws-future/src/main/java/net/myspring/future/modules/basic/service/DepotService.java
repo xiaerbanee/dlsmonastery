@@ -15,6 +15,7 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -280,4 +281,10 @@ public class DepotService {
     public Map<String, Integer> getCloudQtyMap(String storeId) {
         return depotManager.getCloudQtyMap(storeId);
     }
+
+    public List<CustomerDto>  findOppoCustomers(){
+        List<CustomerDto> customerDtos=depotRepository.findOppoCustomers();
+        return customerDtos;
+    }
+
 }

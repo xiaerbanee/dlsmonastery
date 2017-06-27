@@ -10,7 +10,7 @@
         </view>
         <view class="weui-cell__bd ">
           <picker mode="date" name="scoreDate" value="{{formData.scoreDate}}" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.scoreDate}}</view>
+            <view class="weui-input">{{formData.scoreDate?formData.scoreDate:""}}</view>
           </picker>
         </view>
       </view>
@@ -30,11 +30,11 @@
           <view class="weui-label">排序</view>
         </view>
         <view class="weui-cell__bd">
-          <input type="hidden" name="order" value="{{formData.order}}" class="hidden" />
+          <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
           <radio-group class="radio-group" bindchange="bindRadioChange">
             <label class="radio weui-input">
-              <radio value="date_rank: DESC" checked="{{radioChecked.dateChecked}}" />日排名
-              <radio value="month_rank: DESC" checked="{{radioChecked.monthChecked}}" />月排名
+              <radio value="date_rank,ASC" checked="{{radio.dateChecked}}" />日排名
+              <radio value="month_rank,ASC" checked="{{radio.monthChecked}}" />月排名
             </label>
           </radio-group>
         </view>

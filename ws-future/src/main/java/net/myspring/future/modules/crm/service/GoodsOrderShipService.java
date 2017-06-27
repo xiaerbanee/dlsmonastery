@@ -209,7 +209,6 @@ public class GoodsOrderShipService {
         Map<String,Product> productMap=productRepository.findMap(productIdList);
         List<ProductPrintDto> productPrintDtoList=Lists.newArrayList();
         Integer totalQty=0;
-        BigDecimal totalPrice=BigDecimal.ZERO;
         BigDecimal total=BigDecimal.ZERO;
         for(GoodsOrderDetail goodsOrderDetail:goodsOrderDetailList){
             if(goodsOrderDetail.getRealBillQty()>0){
@@ -222,7 +221,6 @@ public class GoodsOrderShipService {
                 if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
                     productPrintDto.setPrice(product.getRetailPrice());
                     productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
-                    totalPrice=totalPrice.add(productPrintDto.getPrice());
                     total=total.add(productPrintDto.getTotal());
                 }
                 productPrintDtoList.add(productPrintDto);
@@ -231,7 +229,6 @@ public class GoodsOrderShipService {
         ProductPrintDto productPrintDto=new ProductPrintDto();
         productPrintDto.setProductName("合计");
         productPrintDto.setQty(totalQty);
-        productPrintDto.setPrice(totalPrice.compareTo(BigDecimal.ZERO)<=0?null:totalPrice);
         productPrintDto.setTotal(total.compareTo(BigDecimal.ZERO)<=0?null:total);
         productPrintDtoList.add(productPrintDto);
         goodsOrderPrintDto.setProductList(productPrintDtoList);

@@ -8,24 +8,26 @@
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('oppoPlantAgentProductSelList.filter')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="inputForm"  ref="inputForm" >
           <el-row :gutter="8">
-            <el-col :span="24">
-              <el-form-item :label="$t('productAdEdit.code')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.name" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
+            <el-col :span="12">
+              <el-form-item :label="$t('物料描述')" :label-width="formLabelWidth">
+                <el-input v-model="inputForm.name" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productAdEdit.code')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.code" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
+              <el-form-item :label="$t('物料编号')" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="inputForm.code" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productAdEdit.allowBill')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.code" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item :label="$t('型号')" :label-width="formLabelWidth">
+                <el-input v-model="inputForm.code" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">{{$t('productAdEdit.sure')}}</el-button>
+          <el-button type="primary" @click="search()">{{$t('确定')}}</el-button>
         </div>
       </search-dialog>
       <div ref="handsontable" style="height:1200px;overflow:hidden;margin-top:20px"></div>
@@ -38,8 +40,10 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
+  import ElCol from "element-ui/packages/col/src/col";
   var table = null;
   export default {
+    components: {ElCol},
     data(){
       return this.getData()
     },mounted() {
@@ -69,33 +73,56 @@
             startCols: 5,
             colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品', 'LX对应货品', '统计型号'],
             columns: [{
+              data:'id',
               strict: true,
+              readOnly: true,
               width: 200
             }, {
+              data:'',
               strict: true,
+              readOnly: true,
               width: 200
             }, {
+              data:'',
               strict: true,
+              readOnly: true,
               width: 200
             }, {
+              data:'',
               strict: true,
+              readOnly: true,
               width: 200
             }, {
+              data:'',
               strict: true,
+              readOnly: true,
               width: 100
             }, {
               strict: true,
+              readOnly: true,
               width: 100
             }, {
+              data:'',
+              type: "autocomplete",
+              allowEmpty: true,
               strict: true,
               width: 100
             }, {
-              type: "date",
-              dateFormat: "YYYY-MM-DD",
-              strict: false,
+              data:'productId',
+              type: "autocomplete",
+              allowEmpty: true,
+              strict: true,
+              source:function () {
+
+              },
               width: 100
             }, {
+              data:'lxProductId',
+              readOnly: true,
               strict: true,
+              source:function () {
+
+              },
               width: 100
             }],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -115,27 +142,15 @@
               if (!table.isEmptyRow(item)) {
                 let row = list[item];
                 let createForm = {};
-                createForm.productName = row[0];
-                createForm.storeName = row[1];
-                createForm.ime = row[2];
-                createForm.ime2 = row[3];
-                createForm.boxIme = row[4];
-                createForm.meid = row[5];
-                createForm.billId = row[6];
-                createForm.createdTimeStr = row[7];
-                createForm.remarks = row[8];
-                createForm.itemNumber = row[9];
+                createForm.id = row[0];
+                createForm.productId = row[6];
+                createForm.lxProductId = row[7];
                 tableData.push(createForm);
               }
             }
-            this.inputForm.productImeCreateFormList = tableData;
-            if (tableData.length == 0) {
-              this.$message.error("请录入需要添加的串码信息");
-              this.submitDisabled = false;
-              return;
-            }
+            this.inputForm.dataList = tableData;
 
-            axios.post('/api/ws/future/crm/productIme/batchCreate', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            axios.post('', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
@@ -153,7 +168,7 @@
         this.formVisible = false;
         this.setSearchText();
         let submitData = util.deleteExtra(this.inputForm);
-        util.setQuery("productList",submitData);
+        util.setQuery("oppoPlantAgentProductSelList",submitData);
         axios.get('',{params:submitData}).then((response) => {
           this.settings.data  = null;
           table.loadData(this.settings.data);
@@ -161,10 +176,8 @@
       },synData(){
 
       },initPage(){
-        axios.get('/api/ws/future/crm/productIme/getBatchCreateForm').then((response)=>{
+        axios.get('').then((response)=>{
           this.inputForm = response.data;
-          this.settings.columns[0].source = response.data.extra.productNameList;
-          this.settings.columns[1].source = response.data.extra.storeNameList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }

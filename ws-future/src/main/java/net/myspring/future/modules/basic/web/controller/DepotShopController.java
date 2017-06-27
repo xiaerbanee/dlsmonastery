@@ -1,4 +1,5 @@
 package net.myspring.future.modules.basic.web.controller;
+import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
@@ -9,6 +10,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
+import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.dto.DepotReportDetailDto;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
@@ -23,6 +25,7 @@ import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +63,9 @@ public class DepotShopController {
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotShopDto> list(Pageable pageable, DepotQuery depotShopQuery){
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
+        for(DepotShopDto depotShopDto:page.getContent()){
+            setOperationStatus(depotShopDto);
+        }
         return page;
     }
     @RequestMapping(value = "getQuery")
@@ -151,4 +157,9 @@ public class DepotShopController {
         DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(reportQuery);
         return depotReportDetailDto;
     }
+
+    private void setOperationStatus(DepotShopDto depotShopDto) {
+
+    }
+
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("ws-future")
 public interface CustomerClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/basic/depot/getCustomers")
+    @RequestMapping(method = RequestMethod.GET, value = "/basic/depot/findOppoCustomers")
     String  findCustomerDtoList();
 
 
