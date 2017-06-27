@@ -200,12 +200,9 @@
           this.$router.push({ name: 'productImeDetail', query: { id: id }})
         }
       },exportData(){
-
         util.confirmBeforeExportData(this).then(() => {
           util.copyValue(this.formData,this.submitData);
-          axios.get('/api/ws/future/crm/productIme/export?'+qs.stringify(this.submitData)).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href="/api/ws/future/crm/productIme/export?"+qs.stringify(this.submitData);
         }).catch(()=>{});
       }
     },created () {

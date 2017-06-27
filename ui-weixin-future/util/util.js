@@ -168,6 +168,8 @@ function deleteExtra(json) {
   for (var index in newJson) {
     if (!newJson[index]) {
       delete newJson[index];
+    }else if((newJson[index] instanceof Array)&&newJson[index].length==0){
+      delete newJson[index];
     }
   }
   return newJson;
