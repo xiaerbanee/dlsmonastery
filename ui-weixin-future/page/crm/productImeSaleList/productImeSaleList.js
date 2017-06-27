@@ -7,17 +7,16 @@ Page({
     formData: { isBack: false },
     searchHidden: true,
     activeItem: null,
-    scrollTop:null
-  },
-  toUpper(){
-    this.setData({scrollTop:0})
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
     var that = this;
     that.setData({
       "formData.createdDateStart": $util.formatLocalDate($util.addMonth(new Date, -1)),
       "formData.createdDateEnd": $util.formatLocalDate(new Date)
-    })
+    });
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -54,10 +53,9 @@ Page({
           },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
-            that.toUpper();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
