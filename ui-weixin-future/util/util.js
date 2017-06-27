@@ -173,12 +173,12 @@ function deleteExtra(json) {
   return newJson;
 }
 
-function downloadFile(images, id, sessionId,count, cb) {
+function downloadFile(images, id, sessionId, count, cb) {
   var idList = id.split(",");
-  getFile(images, idList, sessionId,count, cb);
+  getFile(images, idList, sessionId, count, cb);
 }
 
-function getFile(images, idList, sessionId,count, cb) {
+function getFile(images, idList, sessionId, count, cb) {
   var id = idList.pop()
   wx.downloadFile({
     url: getUrl("general/sys/folderFile/download?id=" + id),
@@ -192,11 +192,25 @@ function getFile(images, idList, sessionId,count, cb) {
       if (idList.length > 0) {
         getFile(images, idList, sessionId)
       } else {
-        images.splice(0,images.length-count)
+        images.splice(0, images.length - count)
         typeof cb == "function" && cb();
       }
     }
   })
+}
+
+function getWindowHeight() {
+  var height = null;
+  wx.getSystemInfo({
+    success: function (res) {
+      height = res.windowHeight;
+    }
+  });
+  return height;
+}
+
+function toUpper() {
+  return 0;
 }
 
 module.exports = {
@@ -218,5 +232,7 @@ module.exports = {
   getUrl: getUrl,
   getFormatOfficeName: getFormatOfficeName,
   deleteExtra: deleteExtra,
-  downloadFile: downloadFile
+  downloadFile: downloadFile,
+  getWindowHeight: getWindowHeight,
+  toUpper:toUpper
 }

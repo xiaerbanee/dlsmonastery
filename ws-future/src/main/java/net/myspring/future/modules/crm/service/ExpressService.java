@@ -165,6 +165,7 @@ public class ExpressService {
             expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
             expressOrder.setPrintDate(LocalDate.now());
             expressOrder.setExpressCompanyId(getDefaultExpressCompanyId());
+            expressOrder.setExpressPrintQty(0);
         } else {
             expressOrder = expressOrderRepository.findOne(expressForm.getExpressOrderId());
         }

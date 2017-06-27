@@ -25,7 +25,7 @@
                 <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
-                <process-status-select v-model="formData.processStatus" type="门店建设申请"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="ShopBuild" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.fixtureType')" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>

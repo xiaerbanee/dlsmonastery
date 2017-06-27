@@ -1,14 +1,12 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.crm.domain.BankIn;
@@ -25,9 +23,6 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -35,14 +30,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -50,19 +42,15 @@ import java.util.List;
 public class BankInService {
     @Autowired
     private CloudClient cloudClient;
-
     @Autowired
     private BankInRepository bankInRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         Page<BankInDto> page = bankInRepository.findPage(pageable, bankInQuery);
-
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -108,19 +96,25 @@ public class BankInService {
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
-            bankIn = BeanUtil.map(bankInForm, BankIn.class);
-            bankInRepository.save(bankIn);
+            bankIn = new BankIn();
+        }else{
+            bankIn = bankInRepository.findOne(bankInForm.getId());
+        }
+        bankIn.setShopId(bankInForm.getShopId());
+        bankIn.setType(bankInForm.getType());
+        bankIn.setBankId(bankInForm.getBankId());
+        bankIn.setInputDate(bankInForm.getInputDate());
+        bankIn.setAmount(bankInForm.getAmount());
+        bankIn.setSerialNumber(bankInForm.getSerialNumber());
+        bankInRepository.save(bankIn);
 
+        if(bankInForm.isCreate()) {
             ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("销售收款",  bankIn.getId(),BankIn.class.getSimpleName(),bankIn.getAmount().toString()));
             bankIn.setProcessFlowId(activitiStartDto.getProcessFlowId());
             bankIn.setProcessStatus(activitiStartDto.getProcessStatus());
             bankIn.setProcessInstanceId(activitiStartDto.getProcessInstanceId());
             bankIn.setPositionId(activitiStartDto.getPositionId());
             bankIn.setProcessTypeId(activitiStartDto.getProcessTypeId());
-            bankInRepository.save(bankIn);
-        } else {
-            bankIn = bankInRepository.findOne(bankInForm.getId());
-            ReflectionUtil.copyProperties(bankInForm,bankIn);
             bankInRepository.save(bankIn);
         }
         return bankIn;
@@ -130,28 +124,10 @@ public class BankInService {
         bankInRepository.logicDelete(id);
     }
 
-    public void batchAudit(String[] ids, boolean pass) {
-        if(ids == null){
-            return;
-        }
-        List<String> idList = Arrays.asList(ids);
-        for(String id : idList){
-            BankInAuditForm bankInAuditForm = new BankInAuditForm();
-            bankInAuditForm.setAuditRemarks("批量通过");
-            bankInAuditForm.setId(id);
-            bankInAuditForm.setPass(pass);
-            bankInAuditForm.setSyn(true);
-            bankInAuditForm.setBillDate(LocalDate.now());
-
-            audit(bankInAuditForm);
-        }
-    }
-
-    public String export(BankInQuery bankInQuery) {
+    public SimpleExcelBook export(BankInQuery bankInQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "bankName", "银行"));
@@ -165,14 +141,10 @@ public class BankInService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        PageRequest pageRequest = new PageRequest(0,10000);
-        List<BankInDto> bankInDtoList = bankInRepository.findPage(pageRequest, bankInQuery).getContent();
-        cacheUtils.initCacheInput(bankInDtoList);
-
+        List<BankInDto> bankInDtoList = findPage(new PageRequest(0,10000), bankInQuery).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售收款列表", bankInDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"销售收款列表"+ LocalDateUtils.format(LocalDate.now()) +".xlsx", simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"销售收款列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 
     public BankInDto findDto(String id) {

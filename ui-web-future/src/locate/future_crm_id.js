@@ -313,7 +313,8 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid,"
+    inputLegalValue: "silahkan masukkan angka yang valid,",
+    prerequisiteAndPositiveNumberMessage: "请输入一个大于0的数值",
   },
   bankInList: {
     bankInList: "kredit penjualan",

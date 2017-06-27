@@ -290,6 +290,7 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    prerequisiteAndPositiveNumberMessage: "请输入一个大于0的数值",
 
   },
   bankInList: {

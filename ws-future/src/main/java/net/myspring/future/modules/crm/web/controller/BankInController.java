@@ -5,13 +5,12 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BankInTypeEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -32,9 +32,6 @@ public class BankInController {
 
     @Autowired
     private BankInService bankInService;
-    @Autowired
-    private BankService bankService;
-
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<BankInDto> list(Pageable pageable, BankInQuery bankInQuery){
@@ -43,16 +40,9 @@ public class BankInController {
 
     @RequestMapping(value = "getQuery")
     public BankInQuery getQuery(BankInQuery bankInQuery){
-
-        List<String> processStatusList = new ArrayList<>();
-        processStatusList.add("已通过");
-        processStatusList.add("未通过");
-        bankInQuery.getExtra().put("processStatusList",processStatusList);
-
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
         bankInQuery.setCreatedDateRange(firstDayOfMonth.toString() + " - " + today.toString()  );
-
         return bankInQuery;
     }
 
@@ -82,7 +72,23 @@ public class BankInController {
     @RequestMapping(value = "batchAudit")
     public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, boolean pass){
 
-        bankInService.batchAudit(ids, pass);
+        if(ids == null || ids.length == 0){
+            throw new ServiceException("请选择需要批量审批的记录");
+        }
+        LocalDate billDate = LocalDate.now();
+
+        List<String> idList = Arrays.asList(ids);
+        for(String id : idList){
+            BankInAuditForm bankInAuditForm = new BankInAuditForm();
+            bankInAuditForm.setAuditRemarks("批量通过");
+            bankInAuditForm.setId(id);
+            bankInAuditForm.setPass(pass);
+            bankInAuditForm.setSyn(true);
+            bankInAuditForm.setBillDate(billDate);
+
+            bankInService.audit(bankInAuditForm);
+        }
+
         return new RestResponse("批量审核成功",ResponseCodeEnum.audited.name());
     }
 
@@ -107,9 +113,8 @@ public class BankInController {
     }
 
     @RequestMapping(value="export")
-    public String export(BankInQuery bankInQuery) {
-
-        return bankInService.export(bankInQuery);
+    public ModelAndView export(BankInQuery bankInQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", bankInService.export(bankInQuery));
     }
 
 

@@ -441,11 +441,10 @@ public class GoodsOrderShipService {
 
     public GoodsOrderDto getSreturn(String id){
         GoodsOrderDto goodsOrderDto=getShip(id);
-        String date= LocalDateUtils.format(LocalDate.now());
         Depot depot=depotRepository.findOne(goodsOrderDto.getShopId());
         goodsOrderDto.setShopCredit(depot.getCredit());
         Client client=clientRepository.findOne(depot.getClientId());
-        CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(date,date,client.getOutId());
+        CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(LocalDate.now(),LocalDate.now(),client.getOutId());
         List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
         goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getEndShouldGet());
         return goodsOrderDto;

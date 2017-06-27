@@ -42,7 +42,6 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
 
     private BigDecimal weight;
     private Integer totalQty;
-    private BigDecimal averageWeight;
 
     private String expressCodes;
 
@@ -103,11 +102,10 @@ public class ExpressOrderDto extends DataDto<ExpressOrder> {
     }
 
     public BigDecimal getAverageWeight() {
-        return averageWeight;
-    }
-
-    public void setAverageWeight(BigDecimal averageWeight) {
-        this.averageWeight = averageWeight;
+        if(weight!=null && totalQty!=null && totalQty>0){
+            return weight.divide(new BigDecimal(totalQty),2, BigDecimal.ROUND_HALF_UP);
+        }
+        return BigDecimal.ZERO;
     }
 
     public BigDecimal getWeight() {
