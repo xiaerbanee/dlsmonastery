@@ -54,7 +54,7 @@
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.expressCodes')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.expressOrderIds" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
+                <el-input type="textarea" v-model="formData.expressCodes" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')" :label-width="formLabelWidth">
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
@@ -68,7 +68,7 @@
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.expressCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.expressOrderId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
+                <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -90,7 +90,7 @@
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderList.netType')" ></el-table-column>
-        <el-table-column prop="expressOrderId" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
+        <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">

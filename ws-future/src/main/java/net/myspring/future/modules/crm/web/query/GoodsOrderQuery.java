@@ -41,10 +41,10 @@ public class GoodsOrderQuery extends BaseQuery {
     private LocalDateTime createdDateEnd;
     private LocalDateTime createdDateStart;
 
-    private String expressOrderIds;
-    private List<String> expressOrderIdList;
+    private String expressCodes;
+    private List<String> expresscodeList;
 
-    private String expressOrderId;
+    private String expressCode;
     private String status;
     private List<String> statusList;
     private String remarks;
@@ -206,6 +206,22 @@ public class GoodsOrderQuery extends BaseQuery {
         this.outCode = outCode;
     }
 
+    public String getExpressCodes() {
+        return expressCodes;
+    }
+
+    public void setExpressCodes(String expressCodes) {
+        this.expressCodes = expressCodes;
+    }
+
+    public String getExpressCode() {
+        return expressCode;
+    }
+
+    public void setExpressCode(String expressCode) {
+        this.expressCode = expressCode;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -248,39 +264,19 @@ public class GoodsOrderQuery extends BaseQuery {
         return createdDateEnd;
     }
 
+    public List<String> getExpresscodeList() {
+        return expresscodeList;
+    }
+
+    public void setExpresscodeList(List<String> expresscodeList) {
+        this.expresscodeList = expresscodeList;
+    }
+
     public List<String> getBusinessIdList() {
         return businessIdList;
     }
 
     public void setBusinessIdList(List<String> businessIdList) {
         this.businessIdList = businessIdList;
-    }
-
-    public void setBillDateEnd(LocalDateTime billDateEnd) {
-        this.billDateEnd = billDateEnd;
-    }
-
-    public String getExpressOrderIds() {
-        return expressOrderIds;
-    }
-
-    public void setExpressOrderIds(String expressOrderIds) {
-        this.expressOrderIds = expressOrderIds;
-    }
-
-    public List<String> getExpressOrderIdList() {
-        return expressOrderIdList;
-    }
-
-    public void setExpressOrderIdList(List<String> expressOrderIdList) {
-        this.expressOrderIdList = expressOrderIdList;
-    }
-
-    public String getExpressOrderId() {
-        return expressOrderId;
-    }
-
-    public void setExpressOrderId(String expressOrderId) {
-        this.expressOrderId = expressOrderId;
     }
 }
