@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
 import net.myspring.basic.common.enums.WorkTimeTypeEnum;
@@ -69,8 +68,6 @@ public class DutyWorktimeService {
     private AccountRepository accountRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private GridFsTemplate storageGridFsTemplate;
     @Autowired
