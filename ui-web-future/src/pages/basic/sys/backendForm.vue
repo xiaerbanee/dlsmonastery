@@ -28,7 +28,6 @@
       getData(){
         return{
           isCreate:this.$route.query.id==null,
-          isInit:false,
           submitDisabled:false,
           inputForm:{
             extra:{}
@@ -47,8 +46,10 @@
           if (valid) {
             axios.post('/api/basic/sys/backend/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data,this.getData());
-              if(!this.isCreate){
+              if(this.isCreate){
+                Object.assign(this.$data,this.getData());
+                this.initPage();
+              }else{
                 this.$router.push({name:'backendList',query:util.getQuery("backendList"), params:{_closeFrom:true}})
               }
             }).catch( ()=> {
