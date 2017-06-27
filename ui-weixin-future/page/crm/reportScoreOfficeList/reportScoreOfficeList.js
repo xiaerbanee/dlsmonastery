@@ -31,6 +31,18 @@ Page({
   },
   initPage: function () {
     var that = this;
+    wx.request({
+      url: $util.getUrl("ws/future/crm/reportScoreOffice/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
+      success: function (res) {
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
+        that.pageRequest();
+      }
+    })
     if (that.data.options.areaId) {
       that.setData({ "formData.areaId": that.data.options.areaId });
       that.setData({ "formData.areaName": that.data.options.areaName });
@@ -48,18 +60,6 @@ Page({
         });
       }
     });
-    wx.request({
-      url: $util.getUrl("ws/future/crm/reportScoreOffice/getQuery"),
-      data: {},
-      method: 'GET',
-      header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
-      },
-      success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
-        that.pageRequest();
-      }
-    })
 
   },
   pageRequest: function () {

@@ -20,6 +20,7 @@
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
           <picker name="areaId" range="{{fromProperty.areaList}}" range-key="name" value="{{formData.areaId}}" bindchange="bindArea">
+            <input type="text" name="areaName" value="{{formData.areaName}}" style="display:none" />
             <view class="weui-input">{{formData.areaName}}</view>
           </picker>
         </view>
