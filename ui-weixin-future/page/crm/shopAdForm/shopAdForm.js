@@ -173,7 +173,6 @@ Page({
       },
       success: function (res) {
         that.setData({ formData: res.data })
-        console.log(">>>>>>", res.data.attachment)
         wx.request({
           url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
           data: {},
@@ -184,14 +183,14 @@ Page({
           success: function (res) {
             var images = new Array();
             var folderFile = res.data;
-            for (let i in folderFile) {
-                console.log('i:',i);
-                console.log('id:', folderFile[i].id);
-                $util.downloadFile(images, folderFile[i].id, app.globalData.sessionId, 9, function () {
-                  console.log(images)
+            var idList  = res.data.map(function(item){
+              return item.id;
+            });
+            idList = idList.join();
+            $util.downloadFile(images, idList, app.globalData.sessionId, 9, function () {
+                  console.log('before dataSet:',images)
                   that.setData({ "formProperty.images": images });
                 });
-            }
           }
         })
       }
