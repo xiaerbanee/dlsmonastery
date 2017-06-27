@@ -5,6 +5,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdApply
 import net.myspring.future.modules.layout.dto.AdApplyDto
 import net.myspring.future.modules.layout.web.query.AdApplyQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -82,6 +83,12 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
             sb.append("""  and t1.shop_id = :shopId """)
         }
+        if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
+            sb.append("""  and t1.shop_id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(adApplyQuery.officeIdList)) {
+            sb.append("""  and t1.shop_id in (select depot.id from crm_depot depot where depot.office_id in (:officeIdList)) """)
+        }
         if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
@@ -125,6 +132,12 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         """)
         if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
             sb.append("""  and t1.shop_id = :shopId """)
+        }
+        if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
+            sb.append("""  and t1.shop_id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(adApplyQuery.officeIdList)) {
+            sb.append("""  and t1.shop_id in (select depot.id from crm_depot depot where depot.office_id in (:officeIdList)) """)
         }
         if (StringUtils.isNotEmpty(adApplyQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)

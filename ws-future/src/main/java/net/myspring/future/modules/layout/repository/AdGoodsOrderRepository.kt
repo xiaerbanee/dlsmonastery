@@ -133,6 +133,12 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(adGoodsOrderQuery.processStatus)) {
             sb.append("""  and t1.process_status = :processStatus """)
         }
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.depotIdList)) {
+            sb.append("""  and t1.shop_id in (:depotIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.officeIdList)) {
+            sb.append("""  and shop.office_id in (:officeIdList)  """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())

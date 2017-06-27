@@ -281,7 +281,6 @@ public class AdGoodsOrderService {
     }
 
     public AdGoodsOrderDto findDto(String id) {
-
         AdGoodsOrderDto adGoodsOrderDto = adGoodsOrderRepository.findDto(id);
         cacheUtils.initCacheInput(adGoodsOrderDto);
         return adGoodsOrderDto;

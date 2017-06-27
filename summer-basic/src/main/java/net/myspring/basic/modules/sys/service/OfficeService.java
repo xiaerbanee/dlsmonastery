@@ -181,13 +181,16 @@ public class OfficeService {
     }
 
     public RestResponse checkSave(OfficeForm officeForm) {
-        Office parent = officeRepository.findOne(officeForm.getParentId());
+        Office parent = null;
+        if(StringUtils.isNotBlank(officeForm.getParentId())){
+            parent =officeRepository.findOne(officeForm.getParentId());
+        }
         if (OfficeTypeEnum.业务部门.name().equals(officeForm.getType())) {
             OfficeRule topOfficeRule = officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             OfficeRule officeRule = officeRuleRepository.findOne(officeForm.getOfficeRuleId());
-            if (parent != null && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
+            if (StringUtils.isNotBlank(officeForm.getParentId()) && topOfficeRule.getId().equals(officeForm.getOfficeRuleId())) {
                 return new RestResponse("顶级业务部门不能设置上级", null,false);
-            } else if (parent != null) {
+            } else if (StringUtils.isNotBlank(officeForm.getParentId())) {
                 if (!officeRule.getParentId().equals(parent.getOfficeRuleId())) {
                     return new RestResponse("业务部门上级类型不正确", null,false);
                 }
@@ -222,19 +225,19 @@ public class OfficeService {
 
     public Office save(OfficeForm officeForm) {
         Office office;
-        if(StringUtils.isNotBlank(officeForm.getParentId())&&OfficeTypeEnum.业务部门.name().equals(officeForm.getJointType())){
+        if(StringUtils.isNotBlank(officeForm.getParentId())&&OfficeTypeEnum.业务部门.name().equals(officeForm.getType())){
             OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParentId(),officeRule.getId()));
         }
         if (officeForm.isCreate()) {
             office = BeanUtil.map(officeForm, Office.class);
             officeRepository.save(office);
-            if(officeForm.getParent()==null){
+            if(StringUtils.isBlank(officeForm.getParentId())){
                 officeForm.setAreaId(office.getId());
             }
             officeRepository.save(office);
         } else {
-            if(officeForm.getParent()==null){
+            if(StringUtils.isBlank(officeForm.getParentId())){
                 officeForm.setAreaId(officeForm.getId());
             }
             office = officeRepository.findOne(officeForm.getId());

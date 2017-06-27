@@ -1,9 +1,11 @@
 package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public class AccountDto extends DataDto<Account> {
     private String employeeId;
     private String companyId;
     private String outId;
+    private String companyName;
 
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
@@ -34,8 +37,6 @@ public class AccountDto extends DataDto<Account> {
     private LocalDate leaveDate;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "regularDate")
     private LocalDate regularDate;
-    @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
-    private String companyName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "name")
     private String employeeName;
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
@@ -48,6 +49,7 @@ public class AccountDto extends DataDto<Account> {
     public void setOutId(String outId) {
         this.outId = outId;
     }
+
     public LocalDate getEntryDate() {
         return entryDate;
     }
@@ -81,6 +83,9 @@ public class AccountDto extends DataDto<Account> {
     }
 
     public String getCompanyName() {
+        if(StringUtils.isBlank(companyName)){
+            this.companyName= RequestUtils.getCompanyName();
+        }
         return companyName;
     }
 

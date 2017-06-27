@@ -86,12 +86,10 @@ public class OfficeForm extends BaseForm<Office> {
     }
 
     public String getParentIds() {
-        if(StringUtils.isBlank(parentIds)){
-            if(parent!=null){
-                this.parentIds=parent.getParentIds()+parent.getId()+CharConstant.COMMA;
-            }else {
-                this.parentIds= TreeConstant.ROOT_PARENT_IDS;
-            }
+        if(parent!=null){
+            this.parentIds=parent.getParentIds()+parent.getId()+CharConstant.COMMA;
+        }else {
+            this.parentIds= TreeConstant.ROOT_PARENT_IDS;
         }
         return parentIds;
     }
