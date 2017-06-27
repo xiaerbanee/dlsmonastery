@@ -71,7 +71,6 @@
           }
         };
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           multiple:true,
           submitDisabled:false,
