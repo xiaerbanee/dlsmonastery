@@ -18,7 +18,7 @@
               {{bankIn.serialNumber}}
             </el-form-item>
             <el-form-item :label="$t('bankInDetail.synInfo')">
-              金蝶同步
+              <el-button type="text" @click="toKingdeeSynList"  >{{$t('bankInDetail.toKingdeeSynList')}}</el-button>
              </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -125,6 +125,8 @@
             });
           }
         });
+      },toKingdeeSynList(){
+        this.$router.push({ name: 'kingdeeSynList', query: { extendId: this.bankIn.id, extendType:'销售收款' }});
       }
     },created(){
       this.initPage();

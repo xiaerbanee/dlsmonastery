@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.client;
+package net.myspring.tool.common.client;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("ws-future")
 public interface CustomerClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/basic/depot/getCustomers")
+    @RequestMapping(method = RequestMethod.GET, value = "/basic/depot/findOppoCustomers")
     String  findCustomerDtoList();
 
 

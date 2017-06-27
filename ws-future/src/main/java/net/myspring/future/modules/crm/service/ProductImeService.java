@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.InputTypeEnum;
@@ -45,13 +44,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +65,6 @@ public class ProductImeService {
     private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
@@ -158,7 +153,7 @@ public class ProductImeService {
         return productImeDtoList;
     }
 
-    public String export(List<ProductImeDto> productImeDtoList) {
+    public SimpleExcelBook export(List<ProductImeDto> productImeDtoList) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
@@ -187,12 +182,12 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        return simpleExcelBook;
     }
 
-    public String export(ProductImeQuery productImeQuery) {
+    public SimpleExcelBook export(ProductImeQuery productImeQuery) {
         List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000), productImeQuery).getContent();
         cacheUtils.initCacheInput(productImeDtoList);
         return export(productImeDtoList);
@@ -210,7 +205,7 @@ public class ProductImeService {
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
-            reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
+            reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
             lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
@@ -227,8 +222,9 @@ public class ProductImeService {
                     }
                 }
             }
+            List<String> filterOfficeIdList=RequestUtils.getOfficeIdList();
             for (String officeId : lastRuleMap.keySet()) {
-                if (!map.containsKey(officeId)) {
+                if (!map.containsKey(officeId)&&filterOfficeIdList.contains(officeId)) {
                     map.put(officeId, new ProductImeReportDto(officeId, 0));
                 }
             }

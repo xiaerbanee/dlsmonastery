@@ -1,6 +1,5 @@
 package net.myspring.tool.modules.oppo.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
@@ -8,17 +7,19 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.RequestUtils;
-import net.myspring.tool.modules.oppo.client.CustomerClient;
-import net.myspring.tool.modules.oppo.client.DistrictClient;
+import net.myspring.tool.common.client.CustomerClient;
+import net.myspring.tool.common.client.DistrictClient;
 import net.myspring.tool.modules.oppo.client.OppoClient;
 import net.myspring.tool.modules.oppo.domain.*;
-import net.myspring.tool.modules.oppo.dto.CustomerDto;
-import net.myspring.tool.modules.oppo.dto.DistrictDto;
+import net.myspring.tool.common.dto.CustomerDto;
+import net.myspring.tool.common.dto.DistrictDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,8 @@ public class OppoPushSerivce {
     @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
     private static Map<String,String> areaDepotMap=Maps.newHashMap();
     private static Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
 
@@ -51,10 +54,10 @@ public class OppoPushSerivce {
     //上抛oppo门店数据,只上抛二代和渠道门店
     public List<OppoCustomer> getOppoCustomers() {
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
-        String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
         String customerStr=customerClient.findCustomerDtoList();
+        logger.info("customerStr=="+customerStr);
         List<CustomerDto> customerDtosList= ObjectMapperUtils.readValue(customerStr, ArrayList.class);
         String districtStr=districtClient.findDistrictList();
         List<DistrictDto>  districtDtoList=ObjectMapperUtils.readValue(districtStr,ArrayList.class);
@@ -122,7 +125,7 @@ public class OppoPushSerivce {
     //上抛运营商属性
     public List<OppoCustomerOperatortype> getOppoCustomerOperatortype() {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
-        initAreaDepotMap("1");
+        initAreaDepotMap();
         String customerStr=customerClient.findCustomerDtoList();
         List<CustomerDto> customerDtosList= ObjectMapperUtils.readValue(customerStr, ArrayList.class);
         for(CustomerDto customerDto:customerDtosList){
@@ -156,8 +159,8 @@ public class OppoPushSerivce {
 
     //发货退货调拨数据上抛
     public List<OppoCustomerAllot>  getOppoCustomerAllot(LocalDate dateStart, LocalDate dateEnd){
-        String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
+        String companyId="1";
         String oppoCustomerAllotStr=oppoClient.findOppoCustomerAllots(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerAllot> oppoCustomerAllots=ObjectMapperUtils.readValue(oppoCustomerAllotStr, ArrayList.class);
         Map<String, String> productColorMap = getProductColorMap();
@@ -186,7 +189,7 @@ public class OppoPushSerivce {
     //上抛一代二代库存数据,不包括门店数据
     public List<OppoCustomerStock> getOppoCustomerStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
         Map<String, String> productColorMap = getProductColorMap();
        String oppoCustomerStockStr=oppoClient.findOppoCustomerStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
@@ -211,7 +214,7 @@ public class OppoPushSerivce {
     //获取渠道串码收货数据
     public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         List<OppoCustomerImeiStock> oppoCustomerImeiStocks = Lists.newArrayList();
         Map<String, String> productColorMap = getProductColorMap();
         String oppoCustomerImeiStockStr=oppoClient.findOppoCustomerImeiStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
@@ -229,7 +232,7 @@ public class OppoPushSerivce {
     //获取店核销总数据
     public List<OppoCustomerSale> getOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         String oppoCustomerSaleStr=oppoClient.findOppoCustomerSales(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerSale> oppoCustomerSales=ObjectMapperUtils.readValue(oppoCustomerSaleStr,ArrayList.class);
         return oppoCustomerSales;
@@ -238,7 +241,7 @@ public class OppoPushSerivce {
     //	门店销售明细数据抛转
     public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         String districtStr=districtClient.findDistrictList();
         List<DistrictDto>  districtDtoList=ObjectMapperUtils.readValue(districtStr,ArrayList.class);
         Map<String,DistrictDto>  districtDtoMap=Maps.newHashMap();
@@ -257,7 +260,7 @@ public class OppoPushSerivce {
     //门店销售数据汇总
     public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         String oppoCustomerSaleCountStr=oppoClient.findOppoCustomerSaleCounts(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerSaleCount> oppoCustomerSaleCounts= ObjectMapperUtils.readValue(oppoCustomerSaleCountStr,ArrayList.class);
@@ -273,7 +276,7 @@ public class OppoPushSerivce {
     //门店售后退货汇总
     public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         String oppoCustomerAfterSaleImeiStr=oppoClient.findOppoCustomerAfterSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis= ObjectMapperUtils.readValue(oppoCustomerAfterSaleImeiStr,ArrayList.class);
@@ -287,7 +290,7 @@ public class OppoPushSerivce {
     //门店演示机汇总数据
     public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
-        initAreaDepotMap(companyId);
+        initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
         String oppoCustomerDeomoPhones=oppoClient.findOppoCustomerDemoPhones(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones= ObjectMapperUtils.readValue(oppoCustomerDeomoPhones,ArrayList.class);
@@ -298,7 +301,7 @@ public class OppoPushSerivce {
     }
 
 
-    private void initAreaDepotMap(String companyId){
+    private void initAreaDepotMap(){
         String customerStr=customerClient.findCustomerDtoList();
         List<CustomerDto> customerDtosList= ObjectMapperUtils.readValue(customerStr, ArrayList.class);
         for(CustomerDto customerDto:customerDtosList){

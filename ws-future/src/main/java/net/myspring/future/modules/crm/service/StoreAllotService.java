@@ -52,12 +52,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -85,8 +83,6 @@ public class StoreAllotService {
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
@@ -203,7 +199,7 @@ public class StoreAllotService {
 
     }
 
-    public String export(StoreAllotQuery storeAllotQuery) {
+    public SimpleExcelBook export(StoreAllotQuery storeAllotQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -235,9 +231,9 @@ public class StoreAllotService {
         cacheUtils.initCacheInput(storeAllotImeDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
+        ExcelUtils.doWrite(workbook,simpleExcelSheetList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        return simpleExcelBook;
 
     }
 

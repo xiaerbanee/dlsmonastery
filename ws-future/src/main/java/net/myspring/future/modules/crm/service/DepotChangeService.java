@@ -1,11 +1,9 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.DepotChangeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
@@ -27,7 +25,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +45,6 @@ public class DepotChangeService {
     private PricesystemRepository pricesystemRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
     public Page<DepotChangeDto> findPage(Pageable pageable, DepotChangeQuery depotChangeQuery){
         Page<DepotChangeDto> page = depotChangeRepository.findPage(pageable,depotChangeQuery);

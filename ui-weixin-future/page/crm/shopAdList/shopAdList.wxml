@@ -1,9 +1,10 @@
 <import src="/page/template/pageable/pageable" />
-<view class="page">
+<scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
   <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
+      <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">开始日期</view>
@@ -30,7 +31,8 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdTypeId}}" bindchange="bindAdType">
-            <view class="weui-input">{{formData.shopAdTypeName}}</view>
+            <input type="text" name="shopAdTypeName" value="{{formData.shopAdTypeName}}" style="display:none" />
+            <view class="weui-input">{{formData.shopAdTypeName?formData.shopAdTypeName:""}}</view>
           </picker>
         </view>
       </view>
@@ -67,4 +69,4 @@
     </view>
   </view>
   <template is="footer" data="{{page}}" />
-</view>
+</scroll-view>

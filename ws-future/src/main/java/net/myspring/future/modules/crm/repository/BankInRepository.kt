@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.BankIn
 import net.myspring.future.modules.crm.dto.BankInDto
 import net.myspring.future.modules.crm.web.query.BankInQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -99,6 +100,12 @@ class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         }
         if(StringUtils.isNotBlank(bankInQuery.serialNumber)){
             sb.append("""  and t1.serial_number like concat('%',:serialNumber,'%')  """)
+        }
+        if(CollectionUtil.isNotEmpty(bankInQuery.depotIdList)){
+            sb.append("""  and t1.shop_id in (:depotIdList)  """)
+        }
+        if(CollectionUtil.isNotEmpty(bankInQuery.officeIdList)){
+            sb.append("""  and depot.office_id in (:officeIdList)  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

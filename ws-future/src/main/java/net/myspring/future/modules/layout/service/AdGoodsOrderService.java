@@ -7,7 +7,6 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -22,6 +21,7 @@ import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +61,10 @@ import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -94,9 +96,9 @@ public class AdGoodsOrderService {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderRepository.findPage(pageable, adGoodsOrderQuery);
@@ -280,7 +282,6 @@ public class AdGoodsOrderService {
     }
 
     public AdGoodsOrderDto findDto(String id) {
-
         AdGoodsOrderDto adGoodsOrderDto = adGoodsOrderRepository.findDto(id);
         cacheUtils.initCacheInput(adGoodsOrderDto);
         return adGoodsOrderDto;
@@ -342,28 +343,12 @@ public class AdGoodsOrderService {
             return;
         }
 
-        Map<String, Integer> cloudQtyMap = getCloudQtyMap(depotId);
+        Map<String, Integer> cloudQtyMap = depotManager.getCloudQtyMap(depotId);
         for(AdGoodsOrderDetailSimpleDto adGoodsOrderDetailSimpleDto : list){
             if(cloudQtyMap.containsKey(adGoodsOrderDetailSimpleDto.getProductOutId())){
                 adGoodsOrderDetailSimpleDto.setCloudQty(cloudQtyMap.get(adGoodsOrderDetailSimpleDto.getProductOutId()));
             }
         }
-    }
-
-    public Map<String, Integer> getCloudQtyMap(String depotId){
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(depotId);
-        if(depotStore == null){
-            return new HashMap<>();
-        }
-        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
-        Map<String, Integer> result = new HashMap<>();
-        for(StkInventory stkInventory : inventoryList){
-            if(stkInventory.getFBaseQty() !=null && stkInventory.getFBaseQty() >0){
-                result.put(stkInventory.getFMaterialId(), stkInventory.getFBaseQty());
-            }
-        }
-        return result;
-
     }
 
     public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
@@ -559,6 +544,7 @@ public class AdGoodsOrderService {
         KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto)).get(0);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
+        adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
         adGoodsOrderRepository.save(adGoodsOrder);
 
         expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());

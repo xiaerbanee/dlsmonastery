@@ -56,7 +56,7 @@
             shopId: [{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
             type:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
             inputDate:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
-            amount:[{ required: true, type:"number", message: this.$t('bankInForm.prerequisiteAndPositiveNumberMessage'), range :{min:0.01}}],
+            amount:[{ required: true, type:"number", message: this.$t('bankInForm.prerequisiteAndPositiveNumberMessage')}],
             serialNumber:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}]
           }
         }

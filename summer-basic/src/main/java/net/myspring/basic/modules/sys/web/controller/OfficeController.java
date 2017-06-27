@@ -133,7 +133,7 @@ public class OfficeController {
     @RequestMapping(value = "delete")
     public RestResponse delete(OfficeForm officeForm) {
         RestResponse restResponse = officeService.checkDelete(officeForm);
-        if(restResponse.getSuccess()){
+        if(!restResponse.getSuccess()){
             return restResponse;
         }
         officeService.logicDelete(officeForm);

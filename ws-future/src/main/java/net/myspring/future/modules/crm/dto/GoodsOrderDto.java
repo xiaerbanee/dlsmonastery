@@ -53,6 +53,7 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String address;
     private String contator;
     private String mobilePhone;
+    private String expressOrderExpressCodes;
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
@@ -321,5 +322,13 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setPullStatus(String pullStatus) {
         this.pullStatus = pullStatus;
+    }
+
+    public String getExpressOrderExpressCodes() {
+        return expressOrderExpressCodes;
+    }
+
+    public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
+        this.expressOrderExpressCodes = expressOrderExpressCodes;
     }
 }

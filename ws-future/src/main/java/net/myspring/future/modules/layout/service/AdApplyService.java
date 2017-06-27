@@ -23,6 +23,7 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
@@ -89,11 +90,12 @@ public class AdApplyService {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
+    private DepotManager depotManager;
     @Autowired
     private CloudClient cloudClient;
 
     public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
+        adApplyQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<AdApplyDto> page = adApplyRepository.findPage(pageable, adApplyQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

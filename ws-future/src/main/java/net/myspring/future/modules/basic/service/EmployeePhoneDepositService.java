@@ -2,7 +2,6 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.modules.sys.dto.AccountCommonDto;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
@@ -17,7 +16,6 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.AccountClient;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -38,7 +36,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -68,13 +65,7 @@ public class EmployeePhoneDepositService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private DepotManager depotManager;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
     @Autowired
     private CloudClient cloudClient;
     @Autowired

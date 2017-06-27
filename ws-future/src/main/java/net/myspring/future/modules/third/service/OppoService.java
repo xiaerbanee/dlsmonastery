@@ -67,8 +67,8 @@ public class OppoService {
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-MM-dd");
         }
-        String agentCode= companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name());
-        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        String agentCode= companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace("\"","");
         List<String> lxAgentCodes=Lists.newArrayList();
         if(StringUtils.isNotBlank(lxAgentCode)){
             lxAgentCodes=StringUtils.getSplitList(lxAgentCode,CharConstant.COMMA);
@@ -78,17 +78,16 @@ public class OppoService {
             agentCodes=StringUtils.getSplitList(agentCode,CharConstant.COMMA);
         }
         String goodStoreProduct = "";
-        String lxDefaultStoreId = null;
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name());
+        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         if(!"WZOPPO".equals(companyName)){
             goodStoreProduct = "7070";
         }
-        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name());
-        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name());
+        String defaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).replace("\"","");
+        String goodStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.GOOD_STORE_ID.name()).replace("\"","");
+        String lxDefaultStoreId=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"","");
         List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=oppoClient.findSynImeList(date,agentCode);
-        logger.info("oppoPlantSendImeiPpsels=="+oppoPlantSendImeiPpsels.toString());
         if(CollectionUtil.isEmpty(oppoPlantSendImeiPpsels)){
-            return "同步成功";
+            return "同步成功,同步"+oppoPlantSendImeiPpsels.size()+"条串码";
         }
         List<String> imeList= CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
         Map<String,ProductIme> productImeMap= Maps.newHashMap();
@@ -161,8 +160,28 @@ public class OppoService {
         }
         List<ProductIme> productImes=new ArrayList<ProductIme>(productImeMap.values());
         productImeRepository.save(productImes);
-        return "串码同步成功";
+
+        //同步电子保卡
+        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.synProductItemelectronSel(date,agentCode);
+        List<ProductIme> localProductImeList=Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)){
+            Map<String,OppoPlantProductItemelectronSel> productItemelectronSelMap=Maps.newHashMap();
+            for(OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel:oppoPlantProductItemelectronSels){
+                productItemelectronSelMap.put(oppoPlantProductItemelectronSel.getProductNo(),oppoPlantProductItemelectronSel);
+            }
+            List<String> productNoList= CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
+            localProductImeList=productImeRepository.findByImeList(productNoList);
+            for(ProductIme productIme:localProductImeList){
+                productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
+            }
+        }
+        if(CollectionUtil.isNotEmpty(localProductImeList)){
+            productImeRepository.save(localProductImeList);
+        }
+        return "串码同步成功，同步"+productImes.size()+"条串码,同步"+localProductImeList.size()+"条电子保卡";
     }
+
+
 //
 //
     public List<OppoCustomerAllot> findOppoCustomerAllots(LocalDate dateStart, LocalDate dateEnd, String companyId){

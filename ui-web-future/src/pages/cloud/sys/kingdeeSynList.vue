@@ -59,7 +59,7 @@
           <template scope="scope">
             <el-button size="small" v-if="!scope.row.success" @click.native="itemAction(scope.row.id,'syn')">重新同步</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
-            <el-button size="small" v-if="scope.row.locked" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" v-if="!scope.row.locked" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

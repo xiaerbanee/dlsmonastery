@@ -1,23 +1,19 @@
-package net.myspring.tool.modules.oppo.web;
+package net.myspring.tool.modules.oppo.web.controller;
 
-import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.common.config.JdbcConfig;
-import net.myspring.tool.common.utils.RequestUtils;
+import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
-import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,38 +34,36 @@ public class OppoController {
     private RedisTemplate redisTemplate;
     @Autowired
     private OppoPushSerivce oppoPushSerivce;
+    @Autowired
+    private CompanyConfigClient companyConfigClient;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "syn")
     public String synFactoryOppo(String date) {
-        List<String> mainCodes = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue(), CharConstant.COMMA);
-        List<String> mainPasswords = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).getValue(), CharConstant.COMMA);
-        if(CollectionUtil.isEmpty(mainCodes)){
-            mainCodes.add("M13AMB");
-        }
-        if(CollectionUtil.isEmpty(mainPasswords)){
-            mainPasswords.add("OP098");
-        }
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String[] agentCodes=agentCode.split(CharConstant.COMMA);
+        String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
+        String[] passWords=passWord.split(CharConstant.COMMA);
         LocalDate localDate = LocalDateUtils.parse(date);
-        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.plantProductSel(mainCodes.get(0), mainPasswords.get(0), "");
+        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.plantProductSel(agentCodes[0], passWords[0], "");
         //同步颜色编码
         logger.info("开始同步颜色编码");
         oppoService.pullPlantProductSels(oppoPlantProductSels);
         logger.info("开始同步物料编码");
 //        同步物料编码
-        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(mainCodes.get(0), mainPasswords.get(0), "");
+        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(agentCodes[0], passWords[0], "");
         String message = oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
         logger.info("开始同步发货串码");
         //同步发货串吗
-        for (int i = 0; i < mainCodes.size(); i++) {
-            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(mainCodes.get(i), mainPasswords.get(i), date);
+        for (int i = 0; i < agentCodes.length; i++) {
+            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(agentCodes[i], passWords[i], date);
             if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
-                oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, mainCodes.get(i));
+                oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, agentCodes[i]);
             }
         }
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(mainCodes.get(0), mainPasswords.get(0), localDate);
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], localDate);
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         return "OPPO同步成功";
     }
@@ -80,10 +74,20 @@ public class OppoController {
         return oppoPlantSendImeiPpselDtos;
     }
 
+    @RequestMapping(value = "synProductItemelectronSel")
+    public List<OppoPlantProductItemelectronSel> synProductItemelectronSel(String date,String agentCode) {
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.synProductItemelectronSel(date,agentCode);
+        return oppoPlantProductItemelectronSels;
+    }
+
+
+
+
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
     public String pullOppoCustomers(String key, String createdDate, HttpServletResponse response, Model model) {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
         if (!localKey.equals(key)) {
