@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.InputTypeEnum;
@@ -45,13 +44,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +65,6 @@ public class ProductImeService {
     private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private OfficeClient officeClient;
     @Autowired
