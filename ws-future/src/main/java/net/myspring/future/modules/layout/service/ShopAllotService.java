@@ -374,7 +374,7 @@ public class ShopAllotService {
             }
 
             CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-            customerReceiveQuery.setDateStart(LocalDate.now().toString());
+            customerReceiveQuery.setDateStart(LocalDate.now());
             customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
             customerReceiveQuery.setCustomerIdList(customerIdList);
 

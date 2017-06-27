@@ -76,8 +76,9 @@ public class UserService {
         }
         RequestBody body =builder.build();
 
+        HttpUrl requestUrl = response.request().url();
         request = new Request.Builder()
-                .url(response.request().url())
+                .url(requestUrl)
                 .post(body)
                 .build();
         try {
@@ -86,21 +87,24 @@ public class UserService {
             success = false;
         }
         response.body().close();
-
-        request = new Request.Builder()
-                .url(response.priorResponse().request().url())
-                .build();
-        try {
-            response= client.newCall(request).execute();
-        } catch (IOException e) {
-            success =  false;
-        }
-        response.body().close();
-        List<Cookie> cookieList = client.cookieJar().loadForRequest(request.url());
         String sessionId = "";
-        for(Cookie cookie:cookieList) {
-            if("JSESSIONID".equals(cookie.name())) {
-                sessionId = cookie.value();
+        if(requestUrl.toString().equals(response.priorResponse().request().url().toString())) {
+            success = false;
+        } else {
+            request = new Request.Builder()
+                    .url(response.priorResponse().request().url())
+                    .build();
+            try {
+                response= client.newCall(request).execute();
+            } catch (IOException e) {
+                success =  false;
+            }
+            response.body().close();
+            List<Cookie> cookieList = client.cookieJar().loadForRequest(request.url());
+            for(Cookie cookie:cookieList) {
+                if("JSESSIONID".equals(cookie.name())) {
+                    sessionId = cookie.value();
+                }
             }
         }
         map.put("success",success);

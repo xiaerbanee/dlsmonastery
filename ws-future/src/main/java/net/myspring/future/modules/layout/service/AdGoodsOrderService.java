@@ -212,23 +212,22 @@ public class AdGoodsOrderService {
         String expressOrderId = adGoodsOrder.getExpressOrderId();
         if (StringUtils.isBlank(expressOrderId)) {
             expressOrder = new ExpressOrder();
-            expressOrder.setShipType(ShipTypeEnum.总部发货.name());
-            expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
-            expressOrder.setExtendId(adGoodsOrder.getId());
-            expressOrder.setPrintDate(LocalDate.now());
-            expressOrder.setLocked(true);
+            expressOrder.setExpressPrintQty(0);
         } else {
             expressOrder = expressOrderRepository.findOne(expressOrderId);
         }
-
+        expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
+        expressOrder.setToDepotId(adGoodsOrder.getShopId());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.物料订单.name());
+        expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressOrderExpressCompanyId());
+        expressOrder.setShipType(ShipTypeEnum.总部发货.name());
+        expressOrder.setPrintDate(LocalDate.now());
+        expressOrder.setLocked(true);
+        expressOrder.setExtendId(adGoodsOrder.getId());
         expressOrder.setContator(adGoodsOrderForm.getExpressOrderContator());
         expressOrder.setMobilePhone(adGoodsOrderForm.getExpressOrderMobilePhone());
         expressOrder.setAddress(adGoodsOrderForm.getExpressOrderAddress());
         expressOrder.setExpressCodes(adGoodsOrderForm.getExpressOrderExpressCodes());
-        expressOrder.setExtendBusinessId(adGoodsOrder.getBusinessId());
-        expressOrder.setToDepotId(adGoodsOrder.getShopId());
-        expressOrder.setExpressCompanyId(adGoodsOrderForm.getExpressOrderExpressCompanyId());
-
         expressOrderRepository.save(expressOrder);
 
         adGoodsOrder.setExpressOrderId(expressOrder.getId());
@@ -522,6 +521,7 @@ public class AdGoodsOrderService {
         expressOrder.setShipType(ShipTypeEnum.总部发货.name());
         expressOrder.setPrintDate(LocalDate.now());
         expressOrder.setExtendId(newAdGoodsOrder.getId());
+        expressOrder.setExpressPrintQty(0);
         expressOrderRepository.save(expressOrder);
         newAdGoodsOrder.setExpressOrderId(expressOrder.getId());
         adGoodsOrderRepository.save(newAdGoodsOrder);

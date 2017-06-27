@@ -8,6 +8,7 @@ import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.service.ExpressOrderService;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
@@ -31,12 +33,9 @@ public class ExpressOrderController {
     }
 
     @RequestMapping(value = "getQuery")
-    public ExpressOrderQuery getQuery() {
-        ExpressOrderQuery result = new ExpressOrderQuery();
-        result.getExtra().put("extendTypeList",ExpressOrderTypeEnum.getList());
-        result.setExtendType(ExpressOrderTypeEnum.手机订单.name());
-
-        return result;
+    public ExpressOrderQuery getQuery(ExpressOrderQuery expressOrderQuery) {
+        expressOrderQuery.getExtra().put("extendTypeList",ExpressOrderTypeEnum.getList());
+        return expressOrderQuery;
     }
 
     @RequestMapping(value = "save")
@@ -54,13 +53,13 @@ public class ExpressOrderController {
     }
 
     @RequestMapping(value = "exportEMS", method = RequestMethod.GET)
-    public String exportEMS(ExpressOrderQuery expressOrderQuery) throws IOException {
-        return expressOrderService.exportEMS(expressOrderQuery);
+    public ModelAndView exportEMS(ExpressOrderQuery expressOrderQuery) throws IOException {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", expressOrderService.exportEMS(expressOrderQuery));
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(ExpressOrderQuery expressOrderQuery) throws IOException {
-        return expressOrderService.export(expressOrderQuery);
+    public ModelAndView export(ExpressOrderQuery expressOrderQuery) throws IOException {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", expressOrderService.export(expressOrderQuery));
     }
 
     @RequestMapping(value = "findDto")

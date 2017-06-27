@@ -9,46 +9,44 @@
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('bankInList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+      <search-dialog :title="$t('bankInList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData" label-width="150px">
           <el-row :gutter="4">
             <el-col :span="10">
-              <el-form-item :label="$t('bankInList.id')" :label-width="formLabelWidth">
-                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('bankInList.preciseSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.id')">
+                <el-input v-model="formData.id" :placeholder="$t('bankInList.preciseSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.shopName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.shopName')">
+                <el-input v-model="formData.shopName" :placeholder="$t('bankInList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.billDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('bankInList.billDate')">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.amount')" :label-width="formLabelWidth">
-                <el-input v-model="formData.amount" auto-complete="off" :placeholder="$t('bankInList.preciseSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.amount')">
+                <el-input v-model="formData.amount" :placeholder="$t('bankInList.preciseSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.inputDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('bankInList.inputDate')">
                 <date-range-picker  v-model="formData.inputDateRange"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('bankInList.outCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.outCode')">
+                <el-input v-model="formData.outCode" :placeholder="$t('bankInList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.bankName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.bankName" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.bankName')">
+                <el-input v-model="formData.bankName" :placeholder="$t('bankInList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.processStatus')" :label-width="formLabelWidth">
-                <el-select v-model="formData.processStatus" clearable filterable :placeholder="$t('bankInList.selectProcessStatus')">
-                  <el-option v-for="status in formData.extra.processStatusList" :key="status" :label="status" :value="status"></el-option>
-                </el-select>
+              <el-form-item :label="$t('bankInList.processStatus')">
+                <process-status-select v-model="formData.processStatus"  type="BankIn" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.createdBy')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('bankInList.createdBy')">
                 <account-select  v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('bankInList.createdDate')">
                 <date-range-picker  v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('bankInList.serialNumber')" :label-width="formLabelWidth">
-                <el-input v-model="formData.serialNumber" auto-complete="off" :placeholder="$t('bankInList.likeSearch')"></el-input>
+              <el-form-item :label="$t('bankInList.serialNumber')">
+                <el-input v-model="formData.serialNumber" :placeholder="$t('bankInList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -74,10 +72,10 @@
         <el-table-column prop="remarks" :label="$t('bankInList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('bankInList.operation')">
           <template scope="scope">
-            <div class="action"><el-button size="small"  v-permit="'crm:bankIn:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button></div>
-            <div class="action"><el-button size="small"  v-if="scope.row.auditable"   v-permit="'crm:bankIn:audit'" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button></div>
-            <div class="action"><el-button size="small"  v-if="scope.row.editable"   v-permit="'crm:bankIn:edit'" @click.native="itemAction(scope.row.id, 'edit')">{{$t('bankInList.edit')}}</el-button></div>
-            <div class="action"><el-button size="small"  v-if="scope.row.editable" v-permit="'crm:bankIn:delete'" @click.native="itemAction(scope.row.id, 'delete')">{{$t('bankInList.delete')}}</el-button></div>
+            <div class="action" v-permit="'crm:bankIn:view'"><el-button size="small" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.auditable" v-permit="'crm:bankIn:audit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:bankIn:edit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('bankInList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable" v-permit="'crm:bankIn:delete'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'delete')">{{$t('bankInList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -86,11 +84,13 @@
   </div>
 </template>
 <script>
-  import accountSelect from 'components/basic/account-select'
+  import accountSelect from 'components/basic/account-select';
+  import processStatusSelect from 'components/general/process-status-select';
 
   export default{
     components:{
       accountSelect,
+      processStatusSelect,
     },
     data() {
       return {
@@ -102,11 +102,9 @@
         formData:{
             extra:{}
         },
-        formLabelWidth: '120px',
         formVisible: false,
         selects:[],
         submitDisabled:false,
-
       };
     },
     methods: {
@@ -118,23 +116,20 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("bankInList",submitData);
         axios.get('/api/ws/future/crm/bankIn?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
-        })
-
+        });
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
         this.pageRequest();
-
       },sortChange(column) {
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
-
       },search() {
         this.formVisible = false;
         this.pageRequest();
@@ -148,7 +143,6 @@
         }else if(action==="audit"){
           this.$router.push({ name: 'bankInDetail', query: { id: id, action:action}})
         }else if(action==="delete"){
-
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get("/api/ws/future/crm/bankIn/delete",{params:{id:id}}).then((response)=>{
               this.$message(response.data.message);
@@ -176,24 +170,23 @@
             this.pageLoading = false;
             this.submitDisabled = false;
             this.pageRequest();
+          }).catch(()=>{
+            this.pageLoading = false;
+            this.submitDisabled = false;
+            this.pageRequest();
           });
         }).catch(()=>{});
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/bankIn/export?'+qs.stringify(this.submitData)).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href='/api/ws/future/crm/bankIn/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }
     },created () {
-      let that = this;
-      that.pageHeight = window.outerHeight -320;
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/bankIn/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
-
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
-
     },activated(){
         this.initPromise.then(()=>{
           this.pageRequest();

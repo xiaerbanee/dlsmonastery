@@ -56,7 +56,7 @@
         if (val) {
           this.innerId = val;
           let ids = this.innerId;
-          if (!this.multiple && this.innerId) {
+          if (this.multiple && this.innerId) {
             ids = this.innerId;
           }
           if (util.isBlank(ids)) {
