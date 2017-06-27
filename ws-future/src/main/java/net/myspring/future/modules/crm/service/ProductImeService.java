@@ -153,7 +153,7 @@ public class ProductImeService {
         return productImeDtoList;
     }
 
-    public String export(List<ProductImeDto> productImeDtoList) {
+    public SimpleExcelBook export(List<ProductImeDto> productImeDtoList) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
@@ -182,12 +182,12 @@ public class ProductImeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        return simpleExcelBook;
     }
 
-    public String export(ProductImeQuery productImeQuery) {
+    public SimpleExcelBook export(ProductImeQuery productImeQuery) {
         List<ProductImeDto> productImeDtoList = productImeRepository.findPage(new PageRequest(0, 10000), productImeQuery).getContent();
         cacheUtils.initCacheInput(productImeDtoList);
         return export(productImeDtoList);
