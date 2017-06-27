@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('adApplyGoods.productName')" prop="productId">
-          <product-select v-model="inputForm.productId"></product-select>
+          <product-select v-model="inputForm.productId" outGroupName="POP"></product-select>
         </el-form-item>
         <el-form-item :label="$t('adApplyGoods.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks" type="textarea"></el-input>
