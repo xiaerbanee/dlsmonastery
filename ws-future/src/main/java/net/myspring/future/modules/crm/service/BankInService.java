@@ -7,8 +7,10 @@ import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.repository.BankInRepository;
@@ -48,8 +50,11 @@ public class BankInService {
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
+        bankInQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<BankInDto> page = bankInRepository.findPage(pageable, bankInQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

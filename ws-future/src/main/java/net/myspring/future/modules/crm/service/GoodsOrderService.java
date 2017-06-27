@@ -20,6 +20,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
@@ -98,6 +99,8 @@ public class GoodsOrderService {
     private OtherRecAbleManager otherRecAbleManager;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
+    @Autowired
+    private DepotManager depotManager;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
@@ -107,6 +110,7 @@ public class GoodsOrderService {
         if (goodsOrderQuery.getBusinessIds() != null) {
             goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
         }
+        goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

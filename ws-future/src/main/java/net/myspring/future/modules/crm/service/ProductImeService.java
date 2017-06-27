@@ -210,7 +210,7 @@ public class ProductImeService {
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
-            reportQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
+            reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
             lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
@@ -227,8 +227,9 @@ public class ProductImeService {
                     }
                 }
             }
+            List<String> filterOfficeIdList=RequestUtils.getOfficeIdList();
             for (String officeId : lastRuleMap.keySet()) {
-                if (!map.containsKey(officeId)) {
+                if (!map.containsKey(officeId)&&filterOfficeIdList.contains(officeId)) {
                     map.put(officeId, new ProductImeReportDto(officeId, 0));
                 }
             }

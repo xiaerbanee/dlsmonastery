@@ -120,6 +120,12 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNoneBlank(goodsOrderQuery.expressOrderId)) {
             sb.append(" and express_order_id like concat('%',:expressOrderId,'%')")
         }
+        if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
+            sb.append(" and shop_id in (select shop.id from crm_depot shop where shop.office_id in (:officeIdList))")
+        }
+        if (CollectionUtil.isNotEmpty(goodsOrderQuery.depotIdList)) {
+            sb.append(" and shop_id in (:depotIdList)")
+        }
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
