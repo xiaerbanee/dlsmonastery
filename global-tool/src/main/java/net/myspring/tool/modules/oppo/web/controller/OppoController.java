@@ -1,8 +1,8 @@
-package net.myspring.tool.modules.oppo.web;
+package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.modules.oppo.client.CompanyConfigClient;
+import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;

@@ -1,6 +1,5 @@
 package net.myspring.tool.modules.oppo.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
@@ -8,12 +7,12 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.utils.RequestUtils;
-import net.myspring.tool.modules.oppo.client.CustomerClient;
-import net.myspring.tool.modules.oppo.client.DistrictClient;
+import net.myspring.tool.common.client.CustomerClient;
+import net.myspring.tool.common.client.DistrictClient;
 import net.myspring.tool.modules.oppo.client.OppoClient;
 import net.myspring.tool.modules.oppo.domain.*;
-import net.myspring.tool.modules.oppo.dto.CustomerDto;
-import net.myspring.tool.modules.oppo.dto.DistrictDto;
+import net.myspring.tool.common.dto.CustomerDto;
+import net.myspring.tool.common.dto.DistrictDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;

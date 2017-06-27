@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.dto;
+package net.myspring.tool.common.dto;
 
 import net.myspring.util.cahe.annotation.CacheInput;
 
