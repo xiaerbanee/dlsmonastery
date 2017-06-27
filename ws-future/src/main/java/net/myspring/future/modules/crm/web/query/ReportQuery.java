@@ -93,9 +93,6 @@ public class ReportQuery extends BaseQuery{
 
 
     public String getOfficeId() {
-        if(CollectionUtil.isNotEmpty(officeIds)){
-            this.officeId=null;
-        }
         return officeId;
     }
 

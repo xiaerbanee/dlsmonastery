@@ -1,9 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.dto.DepotDetailDto;
 import net.myspring.future.modules.crm.repository.DepotDetailRepository;
 import net.myspring.future.modules.crm.web.query.DepotDetailQuery;
@@ -11,7 +9,6 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
-import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -19,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,8 +31,6 @@ public class DepotDetailService {
     private DepotDetailRepository depotDetailRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
     public Page<DepotDetailDto> findPage(Pageable pageable, DepotDetailQuery depotDetailQuery){
 

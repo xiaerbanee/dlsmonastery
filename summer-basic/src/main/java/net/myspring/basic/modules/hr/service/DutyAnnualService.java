@@ -1,15 +1,12 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.DutyAnnual;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.DutyAnnualDto;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
-import net.myspring.basic.modules.hr.repository.AccountRepository;
 import net.myspring.basic.modules.hr.repository.DutyAnnualRepository;
 import net.myspring.basic.modules.hr.repository.EmployeeRepository;
 import net.myspring.basic.modules.hr.web.form.DutyAnnualForm;
@@ -28,15 +25,11 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,13 +44,7 @@ public class DutyAnnualService {
     @Autowired
     private EmployeeRepository employeeRepository;
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
     @Autowired
     private FolderFileClient folderFileClient;
 

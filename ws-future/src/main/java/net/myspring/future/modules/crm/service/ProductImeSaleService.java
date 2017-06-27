@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -33,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +57,6 @@ public class ProductImeSaleService {
     private ProductRepository productRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
     public Page<ProductImeSaleDto> findPage(Pageable pageable, ProductImeSaleQuery productImeSaleQuery) {
 

@@ -34,7 +34,7 @@ class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
             SELECT t1.*
             FROM  sys_office t1
             where t1.enabled=1
-            and t1.parent_id=:parentId
+            and t1.parent_ids like :parentId
         """)
         var paramMap = Maps.newHashMap<String, String>();
         paramMap.put("parentId",parentId)

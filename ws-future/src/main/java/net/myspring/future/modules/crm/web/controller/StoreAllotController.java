@@ -16,6 +16,8 @@ import net.myspring.future.modules.crm.service.StoreAllotService;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +25,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -174,10 +178,11 @@ public class StoreAllotController {
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
-    @RequestMapping(value="export")
-    public String export(StoreAllotQuery storeAllotQuery) {
-
-        return storeAllotService.export(storeAllotQuery);
+    @RequestMapping(value="export",method = RequestMethod.GET)
+    public ModelAndView export(StoreAllotQuery storeAllotQuery) throws IOException {
+        SimpleExcelBook simpleExcelBook = storeAllotService.export(storeAllotQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
 }

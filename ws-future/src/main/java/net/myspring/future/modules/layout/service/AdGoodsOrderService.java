@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,8 +92,6 @@ public class AdGoodsOrderService {
     private ActivitiClient activitiClient;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private CloudClient cloudClient;
 
@@ -280,7 +277,6 @@ public class AdGoodsOrderService {
     }
 
     public AdGoodsOrderDto findDto(String id) {
-
         AdGoodsOrderDto adGoodsOrderDto = adGoodsOrderRepository.findDto(id);
         cacheUtils.initCacheInput(adGoodsOrderDto);
         return adGoodsOrderDto;
@@ -559,6 +555,7 @@ public class AdGoodsOrderService {
         KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto)).get(0);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
+        adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
         adGoodsOrderRepository.save(adGoodsOrder);
 
         expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
