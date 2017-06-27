@@ -1,13 +1,14 @@
 <template>
   <div>
     <el-select v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+      <el-option v-if="includeCashIn" :key="0" :label="$t('bankSelect.cashIn')" :value="0"></el-option>
       <el-option v-for="item in itemList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value', 'multiple', 'disabled'],
+    props: ['value', 'multiple', 'disabled', 'includeCashIn'],
     data() {
       return {
         innerId: null,
@@ -80,6 +81,7 @@
               this.$emit('afterInit');
             })
           }
+        }
       }, created() {
         this.setValue(this.value);
       }, watch: {
@@ -87,7 +89,6 @@
           this.setValue(newVal);
         }
       }
-    }
   }
 
 </script>

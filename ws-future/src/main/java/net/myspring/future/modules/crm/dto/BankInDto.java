@@ -116,7 +116,6 @@ public class BankInDto extends DataDto<BankIn> {
         this.bankId = bankId;
     }
 
-
     public String getSerialNumber() {
         return serialNumber;
     }
@@ -158,16 +157,11 @@ public class BankInDto extends DataDto<BankIn> {
     }
 
     public Boolean getAuditable(){
-
         return !getFinished();
     }
 
     public Boolean getEditable(){
-        //TODO 判斷editable要修改
-        if(locked == null || processStatus ==null){
-            return Boolean.TRUE;
-        }
-        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId() != null && (RequestUtils.getAccountId().equals(getCreatedBy()) )) {
+        if (!Boolean.TRUE.equals(locked) && !getFinished() && RequestUtils.getAccountId() != null && (RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAccountId().equalsIgnoreCase("1"))) {
             return Boolean.TRUE;
         } else {
             return Boolean.FALSE;

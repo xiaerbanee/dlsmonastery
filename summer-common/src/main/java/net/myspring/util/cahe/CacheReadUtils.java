@@ -16,6 +16,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ReflectionUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -148,7 +149,12 @@ public class CacheReadUtils {
             Object object = null;
 
             if (cache != null) {
-                String json = new String(cache);
+                String json = null;
+                try {
+                    json = new String(cache,"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 object = ObjectMapperUtils.readValue(json,Object.class);
             }
             if (object != null) {

@@ -12,16 +12,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
 
 interface BankInRepository : BaseRepository<BankIn, String>, BankInRepositoryCustom {
-
-    fun findByShopIdAndType(shopId: String, type: String): BankIn
-
 }
 
 interface BankInRepositoryCustom{
@@ -40,16 +36,11 @@ class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             depot.client_id shopClientId,
             t1.*
         FROM
-            crm_bank_in t1,
-            crm_depot depot,
-            crm_bank bank
+            crm_bank_in t1
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_bank bank ON t1.bank_id = bank.id
         WHERE
-            t1.enabled = 1
-            AND t1.shop_id = depot.id
-            AND depot.enabled = 1
-            AND t1.bank_id = bank.id
-            AND bank.enabled = 1
-            AND t1.id = :id
+            t1.id = :id
           """, Collections.singletonMap("id", id), BeanPropertyRowMapper(BankInDto::class.java))
     }
 
@@ -62,15 +53,11 @@ class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             depot.client_id shopClientId,
             t1.*
         FROM
-            crm_bank_in t1,
-            crm_depot depot,
-            crm_bank bank
+            crm_bank_in t1
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_bank bank ON t1.bank_id = bank.id
         WHERE
             t1.enabled = 1
-            AND t1.shop_id = depot.id
-            AND depot.enabled = 1
-            AND t1.bank_id = bank.id
-            AND bank.enabled = 1
         """)
         if(StringUtils.isNotBlank(bankInQuery.id)){
             sb.append("""  and t1.id=:id  """)
@@ -121,14 +108,11 @@ class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
             sb.append("""  and depot.office_id in (:officeIdList)  """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(bankInQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(BankInDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(bankInQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(BankInDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
-
     }
-
-
 }

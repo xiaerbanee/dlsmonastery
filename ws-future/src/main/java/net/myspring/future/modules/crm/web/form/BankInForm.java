@@ -12,14 +12,10 @@ public class BankInForm extends BaseForm<BankIn> {
 
     private String shopId;
     private String type;
-
     private String bankId;
-
     private LocalDate inputDate;
     private BigDecimal amount;
     private String serialNumber;
-
-    private List<String>  typeList;
 
     public String getShopId() {
         return shopId;
@@ -36,14 +32,6 @@ public class BankInForm extends BaseForm<BankIn> {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public List<String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<String> typeList) {
-        this.typeList = typeList;
     }
 
     public String getBankId() {

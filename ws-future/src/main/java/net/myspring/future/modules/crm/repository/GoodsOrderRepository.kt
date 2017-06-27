@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.GoodsOrder
 import net.myspring.future.modules.crm.dto.GoodsOrderDto
+import net.myspring.future.modules.crm.dto.ImeAllotDto
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
@@ -28,9 +30,24 @@ interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
 
     fun findNextBusinessId(companyId:String,date: LocalDate): String
+
+    fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+    override fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String> {
+
+        if(CollectionUtil.isEmpty(businessIdList)){
+            return ArrayList()
+        }
+        return namedParameterJdbcTemplate.queryForList("""
+            select t.business_id
+            from crm_goods_order t
+            where t.business_id in (:businessIdList)
+                      and t.lx_mall_order=1
+                      and t.enabled = 1
+                """, Collections.singletonMap("businessIdList", businessIdList), String::class.java)
+    }
 
     override fun findNextBusinessId(companyId:String,date: LocalDate): String {
         var sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date";

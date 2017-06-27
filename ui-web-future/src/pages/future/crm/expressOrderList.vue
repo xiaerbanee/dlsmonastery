@@ -9,45 +9,44 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('expressOrderList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('expressOrderList.fromDepotName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.fromDepotName" auto-complete="off" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
+              <el-form-item :label="$t('expressOrderList.fromDepotName')">
+                <el-input v-model="formData.fromDepotName" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.toDepotName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.toDepotName" auto-complete="off" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
+              <el-form-item :label="$t('expressOrderList.toDepotName')">
+                <el-input v-model="formData.toDepotName" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.expressCompanyName')" :label-width="formLabelWidth">
-                <el-input v-model="formData.expressCompanyName" auto-complete="off" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
+              <el-form-item :label="$t('expressOrderList.expressCompanyName')">
+                <el-input v-model="formData.expressCompanyName" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.extendBusinessIdStart')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.extendBusinessIdStart')">
                 <el-input v-model="formData.extendBusinessIdStart" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.printDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.printDate')">
               <date-range-picker v-model="formData.printDateRange"></date-range-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('expressOrderList.extendType')" :label-width="formLabelWidth">
-                <el-select v-model="formData.extendType" clearable filterable :placeholder="$t('expressOrderList.selectExtendType')">
+              <el-form-item :label="$t('expressOrderList.extendType')">
+                <el-select v-model="formData.extendType" clearable :placeholder="$t('expressOrderList.selectExtendType')">
                   <el-option v-for="item in formData.extra.extendTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.outPrint')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.outPrint')">
                 <bool-select v-model="formData.outPrint"></bool-select>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.expressPrint')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.expressPrint')">
                 <bool-select v-model="formData.expressPrint"></bool-select>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.extendBusinessId')" :label-width="formLabelWidth">
-                <el-input v-model="formData.extendBusinessId" auto-complete="off" :placeholder="$t('expressOrderList.preciseSearch')"></el-input>
+              <el-form-item :label="$t('expressOrderList.extendBusinessId')">
+                <el-input v-model="formData.extendBusinessId" :placeholder="$t('expressOrderList.preciseSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-
           <el-button type="primary" @click="search()">{{$t('expressOrderList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -130,7 +129,6 @@
             extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
         formVisible: false,
       };
     },
@@ -173,23 +171,20 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/expressOrder/export?'+qs.stringify(this.submitData)).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href='/api/ws/future/crm/expressOrder/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
-
       },exportEMSData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/expressOrder/exportEMS?'+qs.stringify(this.submitData)).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href='/api/ws/future/crm/expressOrder/exportEMS?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
-
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
       this.initPromise=axios.get('/api/ws/future/crm/expressOrder/getQuery').then((response) =>{
         this.formData=response.data;
+        if(!this.formData.extendType){
+          this.formData.extendType = '手机订单';
+        }
         util.copyValue(this.$route.query, this.formData);
       });
     },activated(){

@@ -42,30 +42,32 @@
     methods:{
       getData() {
           return{
-            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{},
             rules: {
-            }
+              fromDepotId: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+              toDepotId: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+              expressCompanyId: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+              contator: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+              address: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+              mobilePhone: [{ required: true, message: this.$t('imeAllotForm.prerequisiteMessage')}],
+            },
           }
       },
         formSubmit(){
-          var that = this;
+          this.submitDisabled = true;
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              this.submitDisabled = true;
               axios.post('/api/ws/future/crm/expressOrder/save', qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
-                if(!that.isCreate){
-                  this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList"), params:{_closeFrom:true}})
-                }else{
-                  Object.assign(this.$data, this.getData());
-                  this.initPage();
-                }
+                //快递打印功能只能修改
+                this.$router.push({name:'expressOrderList',query:util.getQuery("expressOrderList"), params:{_closeFrom:true}})
               }).catch( () => {
-                that.submitDisabled = false;
+                this.submitDisabled = false;
               });
+            }else{
+              this.submitDisabled = false;
             }
           })
         },initPage(){
