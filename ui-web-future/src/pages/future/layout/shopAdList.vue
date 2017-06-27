@@ -31,7 +31,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.processStatus')" :label-width="formLabelWidth">
-                <process-status-select v-model="formData.processStatus" type="广告申请"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="ShopAd" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
