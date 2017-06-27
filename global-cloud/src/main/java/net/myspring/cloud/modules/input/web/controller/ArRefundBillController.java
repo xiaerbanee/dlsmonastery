@@ -8,6 +8,7 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,7 @@ public class ArRefundBillController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ArRefundBillForm apPayBillForm) {
-        RestResponse restResponse = new RestResponse("收款退款单失败", null, false);
+        RestResponse restResponse = new RestResponse("", null, false);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(apPayBillForm,kingdeeBook,accountKingdeeBook);
@@ -44,8 +45,7 @@ public class ArRefundBillController {
             if (kingdeeSynDto.getSuccess()) {
                 restResponse = new RestResponse("收款退款单成功：" + kingdeeSynDto.getBillNo(), null, true);
             } else {
-                System.err.println(kingdeeSynDto.getResult());
-                restResponse = new RestResponse("收款退款单失败：" + kingdeeSynDto.getResult(), null, false);
+                throw new ServiceException("收款退款单失败："+kingdeeSynDto.getResult());
             }
         }
         return restResponse;

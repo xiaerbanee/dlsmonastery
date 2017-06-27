@@ -8,6 +8,7 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +42,7 @@ public class PurMrbController {
         if (kingdeeSynDto.getSuccess()){
             restResponse = new RestResponse("采购退料成功：" + kingdeeSynDto.getBillNo(),null,true);
         }else {
-            System.err.println(kingdeeSynDto.getResult());
-            restResponse = new RestResponse("采购退料失败：" + kingdeeSynDto.getResult(),null,true);
+            throw new ServiceException("采购退料失败："+kingdeeSynDto.getResult());
         }
         return restResponse;
     }
