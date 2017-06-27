@@ -5,6 +5,7 @@ import net.myspring.future.modules.crm.domain.ReportScoreArea
 import net.myspring.future.modules.crm.dto.ReportScoreAreaDto
 import net.myspring.future.modules.crm.dto.ReportScoreOfficeDto
 import net.myspring.future.modules.crm.web.query.ReportScoreAreaQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -38,6 +39,8 @@ class ReportScoreAreaRepositoryImpl @Autowired constructor(val namedParameterJdb
             sb.append("""  and t1.office_id =:areaId """)
         if(reportScoreAreaQuery.scoreDate!=null)
             sb.append("""  and t1.score_date  =:scoreDate """)
+        if(CollectionUtil.isNotEmpty(reportScoreAreaQuery.officeIdList))
+            sb.append("""  and t1.office_Id in (:officeIdList) """)
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(reportScoreAreaQuery), BeanPropertyRowMapper(ReportScoreAreaDto::class.java))
