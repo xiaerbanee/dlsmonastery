@@ -195,4 +195,12 @@ public class DepotController {
         }
         return null;
     }
+
+    @RequestMapping(value = "getCloudQtyMap")
+    public Map<String, Integer> getCloudQtyMap(String storeId) {
+        if(StringUtils.isBlank(storeId)){
+            return new HashMap<>();
+        }
+        return depotService.getCloudQtyMap(storeId);
+    }
 }

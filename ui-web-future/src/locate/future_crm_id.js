@@ -935,6 +935,7 @@ export default {
     shipPrint:'快递单',
     print: "出库单",
     ship: "发货",
+    lxMallOrder: "天翼购订货",
   },
   goodsOrderPrint: {},
   goodsOrderShipList: {

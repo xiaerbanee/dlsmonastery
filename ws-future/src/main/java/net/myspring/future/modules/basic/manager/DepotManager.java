@@ -1,16 +1,23 @@
 package net.myspring.future.modules.basic.manager;
 
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/15.
@@ -21,7 +28,11 @@ public class DepotManager {
     @Autowired
     private DepotRepository depotRepository;
     @Autowired
+    private DepotStoreRepository depotStoreRepository;
+    @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private CloudClient cloudClient;
 
     public Depot save(Depot depot) {
         if(StringUtils.isNotBlank(depot.getClientId())) {
@@ -72,4 +83,20 @@ public class DepotManager {
         return chainIds;
     }
 
+
+    public Map<String, Integer> getCloudQtyMap(String depotId){
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(depotId);
+        if(depotStore == null){
+            return new HashMap<>();
+        }
+        List<StkInventory> inventoryList = cloudClient.findInventoriesByDepotStoreOutIds(Collections.singletonList(depotStore.getOutId()));
+        Map<String, Integer> result = new HashMap<>();
+        for(StkInventory stkInventory : inventoryList){
+            if(stkInventory.getFBaseQty() !=null && stkInventory.getFBaseQty() >0){
+                result.put(stkInventory.getFMaterialId(),  stkInventory.getFBaseQty());
+            }
+        }
+
+        return result;
+    }
 }
