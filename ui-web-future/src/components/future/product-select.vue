@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"  :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :  :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
 </template>
 <script>
   export default {
-    props: ['value','multiple','disabled',"hasIme"],
+    props: ['value','multiple','disabled',"hasIme","outGroupName"],
     data() {
       return {
         innerId:null,
@@ -20,7 +20,7 @@
         return;
       }
       this.remoteLoading = true;
-        axios.get("/api/ws/future/basic/product/filter", {params:{name:query,hasIme:this.hasIme}}).then((response)=>{
+        axios.get("/api/ws/future/basic/product/filter", {params:{name:query,hasIme:this.hasIme,outGroupName:this.outGroupName}}).then((response)=>{
           var newList = new Array();
           var idList = new Array();
           if(this.multiple && this.innerId) {
