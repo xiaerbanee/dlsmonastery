@@ -1,6 +1,7 @@
 package net.myspring.future.common.query;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.collection.CollectionUtil;
@@ -15,9 +16,9 @@ import java.util.Map;
 public class BaseQuery {
     private String companyId= RequestUtils.getCompanyId();
 
-    private List<String> officeIdList;
+    private List<String> officeIdList= Lists.newArrayList();
 
-    private List<String> depotIdList;
+    private List<String> depotIdList= Lists.newArrayList();
 
     private  Integer page = 0;
 

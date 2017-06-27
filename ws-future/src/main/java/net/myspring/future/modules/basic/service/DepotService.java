@@ -38,19 +38,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -59,8 +56,6 @@ public class DepotService {
     private DepotRepository depotRepository;
     @Autowired
     private ClientRepository clientRepository;
-    @Autowired
-    private OfficeClient officeClient;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -71,8 +66,6 @@ public class DepotService {
     private ProductImeRepository productImeRepository;
     @Autowired
     private CloudClient cloudClient;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
@@ -282,5 +275,9 @@ public class DepotService {
             recentMonthSaleAmountMap.put(month, saleQty);
         }
         return recentMonthSaleAmountMap;
+    }
+
+    public Map<String, Integer> getCloudQtyMap(String storeId) {
+        return depotManager.getCloudQtyMap(storeId);
     }
 }

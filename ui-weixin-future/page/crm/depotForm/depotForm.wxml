@@ -26,6 +26,14 @@
           <input name="address" class="weui-input" value="{{formData.address}}" disabled/>
         </view>
       </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">所属区域</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="officeName" class="weui-input" value="{{formData.officeName}}" disabled/>
+        </view>
+      </view>
     </view>
     <view class="weui-cells__title">基础资料</view>
     <view class="weui-cells weui-cells_after-title">

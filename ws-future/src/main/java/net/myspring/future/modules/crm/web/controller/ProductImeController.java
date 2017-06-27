@@ -33,6 +33,9 @@ import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -43,8 +46,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -92,10 +98,11 @@ public class ProductImeController {
         return productImeService.findDtoListByImes(imeStr);
     }
 
-    @RequestMapping(value="export")
-    public String export(ProductImeQuery productImeQuery) {
-
-        return productImeService.export(productImeQuery);
+    @RequestMapping(value="export",method = RequestMethod.GET)
+    public ModelAndView export(ProductImeQuery productImeQuery) {
+        SimpleExcelBook simpleExcelBook = productImeService.export(productImeQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     @RequestMapping(value = "search")
@@ -240,11 +247,12 @@ public class ProductImeController {
         return result;
     }
 
-    @RequestMapping(value="batchExport")
-    public String batchExport(String allImeStr) {
-
+    @RequestMapping(value="batchExport", method = RequestMethod.GET)
+    public ModelAndView batchExport(String allImeStr) throws IOException {
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);
-        return productImeService.export(productImeService.batchQuery(allImeList));
+        SimpleExcelBook simpleExcelBook = productImeService.export(productImeService.batchQuery(allImeList));
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
 }

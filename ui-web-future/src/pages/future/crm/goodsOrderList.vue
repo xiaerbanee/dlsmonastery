@@ -70,6 +70,9 @@
               <el-form-item :label="$t('goodsOrderList.expressCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
+              <el-form-item :label="$t('goodsOrderList.lxMallOrder')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.lxMallOrder"></bool-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -113,11 +116,13 @@
   import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
   import accountSelect from 'components/basic/account-select'
+  import boolSelect from 'components/common/bool-select'
   export default{
     components:{
       officeSelect,
       depotSelect,
       accountSelect,
+      boolSelect,
     },
     data() {
     return {

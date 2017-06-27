@@ -43,7 +43,6 @@
     methods:{
       getData(){
         return{
-          isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           inputForm:{
@@ -64,8 +63,10 @@
           if (valid) {
             axios.post('/api/basic/sys/officeRule/save',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data,this.getData());
-              if(!that.isCreate){
+              if(this.isCreate){
+                Object.assign(this.$data, this.getData);
+                this.initPage();
+              }else{
                 this.$router.push({name:'officeRuleList',query:util.getQuery("officeRuleList"), params:{_closeFrom:true}})
               }
             }).catch( ()=> {

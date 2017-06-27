@@ -1,7 +1,6 @@
 package net.myspring.general.modules.sys.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.general.common.utils.CacheUtils;
 import net.myspring.general.common.utils.RequestUtils;
@@ -20,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
@@ -48,12 +44,6 @@ public class FolderFileService {
 
     @Autowired
     private FolderFileRepository folderFileRepository;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
-    @Autowired
-    private GridFsTemplate previewGridFsTemplate;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private CacheUtils cacheUtils;
 

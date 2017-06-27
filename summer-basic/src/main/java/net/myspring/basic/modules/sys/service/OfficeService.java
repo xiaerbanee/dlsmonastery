@@ -277,7 +277,7 @@ public class OfficeService {
             List<String> removeIdList = CollectionUtil.subtract(officeLeaderIdList, officeForm.getLeaderIdList());
             List<String> addIdList = CollectionUtil.subtract(officeForm.getLeaderIdList(), officeLeaderIdList);
             List<OfficeLeader> leaderList = Lists.newArrayList();
-            for (String leaderId : officeForm.getLeaderIdList()) {
+            for (String leaderId : addIdList) {
                 leaderList.add(new OfficeLeader(office.getId(), leaderId));
             }
             officeLeaderRepository.setEnabledByOfficeId(true, office.getId());

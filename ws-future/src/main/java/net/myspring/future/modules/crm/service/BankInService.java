@@ -10,7 +10,13 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Bank;
+import net.myspring.future.modules.basic.domain.Client;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.BankRepository;
+import net.myspring.future.modules.basic.repository.ClientRepository;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.repository.BankInRepository;
@@ -35,8 +41,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -46,6 +52,12 @@ public class BankInService {
     private CloudClient cloudClient;
     @Autowired
     private BankInRepository bankInRepository;
+   @Autowired
+    private DepotRepository depotRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private BankRepository bankRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
@@ -62,7 +74,6 @@ public class BankInService {
 
     public void audit(BankInAuditForm bankInAuditForm){
 
-        //TODO 需要同步金蝶
         BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), bankInAuditForm.getPass()));
         if("已通过".equals(activitiCompleteDto.getProcessStatus())){
@@ -75,27 +86,36 @@ public class BankInService {
         bankIn.setBillDate(bankInAuditForm.getBillDate() == null ? LocalDate.now() : bankInAuditForm.getBillDate());
         bankInRepository.save(bankIn);
 
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && "已通过".equals(activitiCompleteDto.getProcessStatus())){
+            synToCloud(bankIn, bankInAuditForm);
+        }
     }
 
-    //收款单成功示例
-    public List<KingdeeSynReturnDto> synReceiveBill(){
-        List<ArReceiveBillDto> salReturnStockDtoList = Lists.newArrayList();
+    private void synToCloud(BankIn bankIn, BankInAuditForm bankInAuditForm) {
+        Depot depot = depotRepository.findOne(bankIn.getShopId());
+        Client client = clientRepository.findOne(depot.getId());
+
         ArReceiveBillDto receiveBillDto = new ArReceiveBillDto();
-        receiveBillDto.setExtendId("1");
+        receiveBillDto.setExtendId(bankIn.getId());
         receiveBillDto.setExtendType(ExtendTypeEnum.销售收款.name());
-        receiveBillDto.setDate(LocalDate.now());
-        receiveBillDto.setCustomerNumber("00001");
-        receiveBillDto.setDepartmentNumber("4000");
-        List<ArReceiveBillEntryDto> entityDtoList = Lists.newArrayList();
+        receiveBillDto.setDate(bankIn.getBillDate());
+        receiveBillDto.setCustomerNumber(client.getOutCode());
         ArReceiveBillEntryDto entityDto = new ArReceiveBillEntryDto();
-        entityDto.setAmount(BigDecimal.TEN);
-        entityDto.setBankAcntNumber("1002.00011");
-        entityDto.setComment("模拟测试");
-        entityDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());
-        entityDtoList.add(entityDto);
-        receiveBillDto.setArReceiveBillEntryDtoList(entityDtoList);
-        salReturnStockDtoList.add(receiveBillDto);
-        return cloudClient.synReceiveBill(salReturnStockDtoList);
+        entityDto.setAmount(bankIn.getAmount());
+        if("0".equals(bankIn.getBankId())){
+            entityDto.setSettleTypeNumber(SettleTypeEnum.现金.getFNumber());
+        }else{
+            Bank bank = bankRepository.findOne(bankIn.getBankId());
+            entityDto.setBankAcntNumber(bank.getCode());
+            entityDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());
+        }
+        entityDto.setComment("审："+bankInAuditForm.getAuditRemarks() +"   申："+bankIn.getRemarks());
+        receiveBillDto.setArReceiveBillEntryDtoList(Collections.singletonList(entityDto));
+        KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synReceiveBill(Collections.singletonList(receiveBillDto)).get(0);
+
+        bankIn.setCloudSynId(kingdeeSynReturnDto.getId());
+        bankIn.setOutCode(kingdeeSynReturnDto.getBillNo());
+        bankInRepository.save(bankIn);
     }
 
     public BankIn save(BankInForm bankInForm) {
@@ -111,6 +131,7 @@ public class BankInService {
         bankIn.setInputDate(bankInForm.getInputDate());
         bankIn.setAmount(bankInForm.getAmount());
         bankIn.setSerialNumber(bankInForm.getSerialNumber());
+        bankIn.setRemarks(bankInForm.getRemarks());
         bankInRepository.save(bankIn);
 
         if(bankInForm.isCreate()) {

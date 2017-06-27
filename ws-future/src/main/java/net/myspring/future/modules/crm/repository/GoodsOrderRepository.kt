@@ -123,6 +123,12 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
             sb.append(" and t1.express_order_id in(select express_order_id from crm_express where code like concat('%',:expressCode,'%'))")
         }
+        if (goodsOrderQuery.lxMallOrder != null && goodsOrderQuery.lxMallOrder) {
+            sb.append(" and lx_mall_order = 1  ")
+        }
+        if (goodsOrderQuery.lxMallOrder != null && !goodsOrderQuery.lxMallOrder) {
+            sb.append(" and lx_mall_order = 0  ")
+        }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
             sb.append(" and t1.shop_id in (select shop.id from crm_depot shop where shop.office_id in (:officeIdList))")
         }
