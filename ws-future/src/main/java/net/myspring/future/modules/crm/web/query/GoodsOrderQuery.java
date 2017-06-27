@@ -14,6 +14,7 @@ public class GoodsOrderQuery extends BaseQuery {
     private String businessId;
     private String businessIds;
     private List<String> businessIdList;
+    private Boolean lxMallOrder;
 
 
 
@@ -48,6 +49,14 @@ public class GoodsOrderQuery extends BaseQuery {
     private String status;
     private List<String> statusList;
     private String remarks;
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public List<String> getStatusList() {
         return statusList;

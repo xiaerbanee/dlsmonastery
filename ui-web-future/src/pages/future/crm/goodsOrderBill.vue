@@ -22,10 +22,10 @@
               <bool-radio-group v-model="inputForm.syn"  ></bool-radio-group>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shipType')" >
-              {{inputForm.shipType}}
+              {{goodsOrder.shipType}}
             </el-form-item>
             <el-form-item label="网络制式" >
-              {{inputForm.netType}}
+              {{goodsOrder.netType}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
               <el-input type="textarea" v-model="inputForm.remarks"></el-input>
@@ -117,6 +117,7 @@
           extra:{}
         },
         shop:{},
+        goodsOrder:{},
         shouldGet:null,
         summary:"",
         rules: {},
@@ -187,12 +188,29 @@
         }
         this.summary = "总开单数为：" + totalBillQty + "，总开单金额为：" + totalBillAmount + ",总订货数为：" + totalQty + ",总订货金额为：" + totalAmount;
       },storeChange(){
+          if(!this.inputForm.goodsOrderDetailList){
+              return;
+          }
           //设置库存
+          if(util.isBlank(this.inputForm.storeId)){
+            for(let goodsOrderDetail of this.inputForm.goodsOrderDetailList){
+              goodsOrderDetail.storeQty = null;
+            }
+            return;
+          }
+          axios.get('/api/ws/future/basic/depot/getCloudQtyMap', {params: {storeId: this.inputForm.storeId}}).then((response) => {
+            for(let goodsOrderDetail of this.inputForm.goodsOrderDetailList){
+              if(response.data[goodsOrderDetail.productOutId] !== undefined) {
+                  goodsOrderDetail.storeQty = response.data[goodsOrderDetail.productOutId];
+                }
+            }
+          });
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
         this.inputForm = response.data;
         axios.get('/api/ws/future/crm/goodsOrder/getBill',{params: {id:this.$route.query.id}}).then((response)=>{
+          this.goodsOrder = response.data;
           util.copyValue(response.data,this.inputForm);
           this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
           this.filterProducts();

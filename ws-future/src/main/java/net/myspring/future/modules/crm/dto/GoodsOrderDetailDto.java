@@ -11,6 +11,9 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "outId")
+    private String productOutId;
+
     private Boolean hasIme;
     private BigDecimal price;
     private Integer qty;
@@ -28,6 +31,24 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private Integer leftQty;
 
     private Integer realBillQty;
+
+    private Integer storeQty;
+
+    public String getProductOutId() {
+        return productOutId;
+    }
+
+    public void setProductOutId(String productOutId) {
+        this.productOutId = productOutId;
+    }
+
+    public Integer getStoreQty() {
+        return storeQty;
+    }
+
+    public void setStoreQty(Integer storeQty) {
+        this.storeQty = storeQty;
+    }
 
     public Integer getBillQty() {
         return billQty;
