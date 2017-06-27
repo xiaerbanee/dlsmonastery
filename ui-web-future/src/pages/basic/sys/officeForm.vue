@@ -82,7 +82,6 @@
     methods: {
       getData(){
         return {
-          isInit:false,
           isCreate: this.$route.query.id == null,
           multiple:true,
           submitDisabled: false,
@@ -113,8 +112,10 @@
             axios.post('/api/basic/sys/office/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response) => {
               if(response.data.success){
                 this.$message(response.data.message);
-                Object.assign(this.$data,this.getData());
-                if (!that.isCreate) {
+                if (this.isCreate) {
+                  Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }else {
                   this.$router.push({name: 'officeList', query: util.getQuery("officeList"), params:{_closeFrom:true}})
                 }
               }else {

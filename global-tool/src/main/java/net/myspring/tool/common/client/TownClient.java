@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.client;
+package net.myspring.tool.common.client;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

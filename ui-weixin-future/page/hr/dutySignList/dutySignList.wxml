@@ -1,9 +1,10 @@
 <import src="/page/template/pageable/pageable" />
 <scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
-  <form  wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
+  <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
+      <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">签到开始</view>
@@ -23,13 +24,13 @@
             <view class="weui-input">{{formData.dutyDateEnd?formData.dutyDateEnd:""}}</view>
           </picker>
         </view>
-      </view> 
+      </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">地址</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="address" class="weui-input" value="{{formData.address}}"/>
+          <input name="address" class="weui-input" value="{{formData.address}}" />
         </view>
       </view>
     </view>
@@ -43,10 +44,10 @@
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showItemActionSheet" bindtouchstart="itemActive">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.createdDate}}</view>
-          <view class="weui-media-box__desc item_style">地址:{{item.address}}</view>
+          <view class="weui-media-box__desc item_style">地址:{{item.address?item.address:"未填写"}}</view>
           <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
           <view class="weui-media-box__info">
-              <view class="weui-media-box__info__meta">创建人</view>
+            <view class="weui-media-box__info__meta">创建人</view>
             <view class="weui-media-box__info__meta">{{item.createdByName}}</view>
             <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
           </view>

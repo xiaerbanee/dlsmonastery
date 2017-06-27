@@ -103,12 +103,8 @@
         });
       },
       exportData(){
-
         util.confirmBeforeExportData(this).then(() => {
-
-          axios.get('/api/ws/future/crm/productIme/batchExport', {params: {allImeStr:this.allImeStr}}).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href="/api/ws/future/crm/productIme/batchExport?allImeStr="+this.allImeStr;
         }).catch(()=>{});
       },
       reset(){

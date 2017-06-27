@@ -55,7 +55,6 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
-          console.log(res)
           if (res.errMsg) {
             that.setData({ "response.error": res.data });
           }
@@ -68,7 +67,6 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
-          console.log(res)
           that.setData({ productImeSearchResult: res.data });
         }
       })
@@ -89,7 +87,6 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(">>>>>>>>>>",res.data)
         if (res.data.success) {
           that.setData({ "response.data": res.data });
           wx.navigateBack();
@@ -97,9 +94,6 @@ Page({
           that.setData({"response.error":res.data.message})
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
-      },
-      fail:function(res){
-        console.log("____________",res)
       }
     })
   },

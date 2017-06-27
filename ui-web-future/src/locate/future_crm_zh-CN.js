@@ -357,6 +357,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
     save: "保存",
     remarks:"备注",
+    toKingdeeSynList:'查看同步信息',
   },
   demoPhoneForm: {
     demoPhoneForm: "演示用机编辑",
@@ -719,6 +720,7 @@ export default {
     shipPrint:'快递单',
     print: "出库单",
     ship: "发货",
+    lxMallOrder: "天翼购订货",
   },
   goodsOrderForm: {
     goodsOrderForm: "货品订货编辑",

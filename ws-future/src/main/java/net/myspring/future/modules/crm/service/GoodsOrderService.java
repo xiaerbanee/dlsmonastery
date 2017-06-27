@@ -6,6 +6,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -19,6 +20,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
@@ -60,9 +62,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -101,11 +101,13 @@ public class GoodsOrderService {
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private CloudClient cloudClient;
 
     @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
-        if (goodsOrderQuery.getExpressOrderIds() != null) {
-            goodsOrderQuery.setExpressOrderIdList(Arrays.asList(goodsOrderQuery.getExpressOrderIds().split("\n|,")));
+        if (goodsOrderQuery.getExpressCodes() != null) {
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
         }
         if (goodsOrderQuery.getBusinessIds() != null) {
             goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
@@ -489,12 +491,32 @@ public class GoodsOrderService {
                 goodsOrderDetailDtoList.add(goodsOrderDetailDto);
             }
         }
-        //设置areaQty及stockQty
+
+        // 设置areaQty及stockQty
+        Map<String, Integer> cloudQtyMap = depotManager.getCloudQtyMap( goodsOrderDto.getStoreId());
+        Map<String, Integer> areaBillQtyMap = getAreaBillQtyMap( shop.getAreaId(), id);
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
-            goodsOrderDetailDto.setAreaQty(0);
+            goodsOrderDetailDto.setAreaQty(areaBillQtyMap.get(goodsOrderDetailDto.getProductId()));
+            goodsOrderDetailDto.setStoreQty(cloudQtyMap.get(goodsOrderDetailDto.getProductOutId()));
         }
         goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
         return goodsOrderDto;
+    }
+
+    private Map<String,Integer> getAreaBillQtyMap(String areaId, String exceptGoodsOrderId) {
+
+        List<GoodsOrderDetail> areaDetailList = goodsOrderDetailRepository.findByAreaIdAndCreatedDate(areaId, LocalDateTime.of(LocalDate.now(), LocalTime.MIN),LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.MIN));
+        Map<String,Integer>  areaBillQtyMap = Maps.newHashMap();
+        for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
+            if(!goodsOrderDetail.getGoodsOrderId().equals(exceptGoodsOrderId)) {
+                if(!areaBillQtyMap.containsKey(goodsOrderDetail.getProductId())) {
+                    areaBillQtyMap.put(goodsOrderDetail.getProductId(),0);
+                }
+                areaBillQtyMap.put(goodsOrderDetail.getProductId(),areaBillQtyMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getBillQty());
+            }
+        }
+
+        return areaBillQtyMap;
     }
 
     public GoodsOrderDto findDetail(String id) {

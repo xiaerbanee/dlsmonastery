@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +49,9 @@ public class BankInController {
 
     @RequestMapping(value = "save")
     public RestResponse save(BankInForm bankInForm) {
+        if(bankInForm.getAmount() == null || bankInForm.getAmount().compareTo(BigDecimal.ZERO) <= 0){
+            throw new ServiceException("到账金额必须大于0");
+        }
         bankInService.save(bankInForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
