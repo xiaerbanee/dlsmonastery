@@ -18,7 +18,7 @@
                 <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.processStatus')" :label-width="formLabelWidth">
-                <process-status-select v-model="formData.processStatus" type="广告物料及制作申请"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="ShopPrint" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.createdBy')" :label-width="formLabelWidth">
                 <account-select  v-model="formData.createdBy" @afterInit="setSearchText"></account-select>

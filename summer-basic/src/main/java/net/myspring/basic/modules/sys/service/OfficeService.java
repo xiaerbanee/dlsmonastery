@@ -91,7 +91,8 @@ public class OfficeService {
             }
             levelMap.get(key).add(office.getId());
         }
-        return levelMap.get(0);
+        List<Integer> keyList = Lists.newArrayList(levelMap.keySet());
+        return levelMap.get(keyList.get(0));
     }
 
 

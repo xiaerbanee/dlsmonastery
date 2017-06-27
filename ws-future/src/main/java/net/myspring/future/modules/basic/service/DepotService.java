@@ -124,8 +124,8 @@ public class DepotService {
         cacheUtils.initCacheInput(page.getContent());
 
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-        customerReceiveQuery.setDateStart(LocalDateUtils.format(depotAccountQuery.getDutyDateStart(),"yyyy-MM-dd"));
-        customerReceiveQuery.setDateEnd(LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(),"yyyy-MM-dd"));
+        customerReceiveQuery.setDateStart(depotAccountQuery.getDutyDateStart());
+        customerReceiveQuery.setDateEnd(depotAccountQuery.getDutyDateEnd());
         customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
         List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
         Map<String, CustomerReceiveDto> customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");

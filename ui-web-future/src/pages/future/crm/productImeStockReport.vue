@@ -189,7 +189,10 @@
         this.pageHeight = window.outerHeight -320;
         this.initPromise=axios.get('/api/ws/future/crm/productIme/getReportQuery').then((response) => {
         this.formData = response.data;
-        this.formData.scoreType=this.formData.scoreType?"1":"0"
+        this.formData.scoreType=this.formData.scoreType?"1":"0";
+          if(response.data.officeId){
+            this.officeIds.push(response.data.officeId);
+          }
         util.copyValue(this.$route.query, this.formData);
       })
     },activated(){
