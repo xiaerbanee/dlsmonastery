@@ -2,10 +2,8 @@ package net.myspring.future.modules.basic.service;
 
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.EmployeePhone;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -24,7 +22,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -39,12 +36,6 @@ public class EmployeePhoneService {
     private EmployeePhoneRepository employeePhoneRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
-    @Autowired
-    private OfficeClient officeClient;
     @Autowired
     private DepotManager depotManager;
 

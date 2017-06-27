@@ -47,8 +47,6 @@ public class ShopGoodsDepositService {
     @Autowired
     private ShopGoodsDepositRepository shopGoodsDepositRepository;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private CloudClient cloudClient;

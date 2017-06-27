@@ -6,6 +6,10 @@ import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
+import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
+import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
+import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.util.collection.CollectionUtil;
@@ -23,6 +27,10 @@ import java.util.List;
 public class ArReceiveBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
+    @Autowired
+    private BdCustomerRepository bdCustomerRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
 
     private KingdeeSynDto save(ArReceiveBillDto arReceiveBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
@@ -56,6 +64,10 @@ public class ArReceiveBillService {
         if (arReceiveBillDtoList.size() > 0) {
             for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {
                 arReceiveBillDto.setCreator(accountKingdeeBook.getUsername());
+                String customerNumber = arReceiveBillDto.getCustomerNumber();
+                BdCustomer bdCustomer = bdCustomerRepository.findByNumber(customerNumber);
+                BdDepartment bdDepartment = bdDepartmentRepository.findByCustId(bdCustomer.getFCustId());
+                arReceiveBillDto.setDepartmentNumber(bdDepartment.getFNumber());
             }
         }
         return save(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
