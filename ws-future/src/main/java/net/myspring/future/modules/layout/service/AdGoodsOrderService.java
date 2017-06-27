@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,8 +92,6 @@ public class AdGoodsOrderService {
     private ActivitiClient activitiClient;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private CloudClient cloudClient;
 
