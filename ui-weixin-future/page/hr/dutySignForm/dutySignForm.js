@@ -36,24 +36,11 @@ Page({
         success: function (res) {
           that.setData({ formData: res.data });
           that.setData({ "submitHidden": true });
-          wx.request({
-            url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
-            data: {},
-            header: {
-              Cookie: "JSESSIONID=" + app.globalData.sessionId
-            },
-            method: 'GET',
-            success: function (res) {
-              var images = new Array();
-              var folderFile = res.data;
-              for (var i in folderFile) {
-                $util.downloadFile(images, folderFile[i].id, app.globalData.sessionId, 2, function () {
-                  that.setData({ "formProperty.images": images });
-                });
-              }
-            }
-          })
-
+          var images = new Array();
+          that.setData({ formData: res.data })
+          $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 9, function () {
+            that.setData({ "formProperty.images": images });
+          });
         }
       })
     }
@@ -97,6 +84,7 @@ Page({
     var that = this;
     var images = that.data.formProperty.images;
     wx.chooseImage({
+      count: 1,
       sizeType: ['compressed'],
       sourceType: ['camera'],
       success: function (res) {
@@ -113,7 +101,7 @@ Page({
           },
           success: function (res) {
             var folderFile = JSON.parse(res.data)[0];
-            $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 2, function () {
+            $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 1, function () {
               that.setData({ "formProperty.images": images });
             });
           }
@@ -156,7 +144,7 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({"response.error":res.data.message})
+          that.setData({ "response.error": res.data.message })
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }

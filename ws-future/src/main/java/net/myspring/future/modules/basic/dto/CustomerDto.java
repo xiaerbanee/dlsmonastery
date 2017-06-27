@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.dto;
+package net.myspring.future.modules.basic.dto;
 
 import net.myspring.util.cahe.annotation.CacheInput;
 
@@ -6,7 +6,6 @@ import net.myspring.util.cahe.annotation.CacheInput;
  * Created by guolm on 2017/6/10.
  */
 public class CustomerDto {
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "areaId")
     private String areaId;
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")

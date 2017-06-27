@@ -43,7 +43,6 @@ Page({
 Cookie:"JSESSIONID="+app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else {

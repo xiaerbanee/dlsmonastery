@@ -1,8 +1,8 @@
-package net.myspring.tool.modules.oppo.web;
+package net.myspring.tool.modules.oppo.web.controller;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.modules.oppo.client.CompanyConfigClient;
+import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
@@ -86,7 +86,8 @@ public class OppoController {
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
     public String pullOppoCustomers(String key, String createdDate, HttpServletResponse response, Model model) {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
         if (!localKey.equals(key)) {

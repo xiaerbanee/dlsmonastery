@@ -30,7 +30,6 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
-            console.log(res)
             that.setData({ page: res.data });
             wx.hideToast();
           }

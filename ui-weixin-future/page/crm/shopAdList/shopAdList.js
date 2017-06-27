@@ -7,10 +7,13 @@ Page({
     formData: {},
     formProperty: {},
     searchHidden: true,
-    activeItem: null
+    activeItem: null,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
-
+    var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -66,13 +69,14 @@ Page({
               if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
                 actionList.push("审核");
               }
-              if (content[item].isEditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
+              if (content[item].isEditable && content[item].processStatus == "办事处产品经理审核") {
                 actionList.push("修改", "删除");
               }
               res.data.content[item].actionList = actionList;
             }
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
