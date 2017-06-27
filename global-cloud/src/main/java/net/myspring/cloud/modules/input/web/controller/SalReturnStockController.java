@@ -10,6 +10,7 @@ import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +43,18 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "save")
     public RestResponse save(SalStockForm salStockForm) {
+        RestResponse restResponse = new RestResponse("",null,true);;
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm,kingdeeBook,accountKingdeeBook);
         for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
             if (kingdeeSynExtendDto.getSuccess()){
-                return new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
+                restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(),null,true);
             }else {
-                System.err.println(kingdeeSynExtendDto.getResult());
-                return new RestResponse("开单退货失败：" + kingdeeSynExtendDto.getResult(),null,true);
+                throw new ServiceException("开单退货失败："+kingdeeSynExtendDto.getResult());
             }
         }
-        return null;
+        return restResponse;
     }
 
     @RequestMapping(value = "saveForXSTHD",method = RequestMethod.POST)
@@ -61,6 +62,11 @@ public class SalReturnStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.saveForXSTHD(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
+        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
+            if (!kingdeeSynExtendDto.getSuccess()){
+                throw new ServiceException("开单退货失败："+kingdeeSynExtendDto.getResult());
+            }
+        }
         return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
     }
 }
