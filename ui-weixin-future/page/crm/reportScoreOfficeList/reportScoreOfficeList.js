@@ -5,14 +5,12 @@ var sliderWidth = 96;
 Page({
   data: {
     page: {},
-    formData: {
-      order: "month_rank: DESC"
-    },
-    radioChecked: {
+    formData: {},
+    fromProperty: {},
+    radio: {
       dateChecked: false,
       monthChecked: true
     },
-    fromProperty: {},
     searchHidden: true,
     tabs: ["考核区域", "办事处"],
     activeIndex: "0",
@@ -31,6 +29,13 @@ Page({
   },
   initPage: function () {
     var that = this;
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({
+          sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2
+        });
+      }
+    });
     wx.request({
       url: $util.getUrl("ws/future/crm/reportScoreOffice/getQuery"),
       data: {},
@@ -39,27 +44,19 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList, formData: res.data });
+        if (that.data.options.areaId) {
+          that.setData({ "formData.areaId": that.data.options.areaId });
+          that.setData({ "formData.areaName": that.data.options.areaName });
+        }
+        if (that.data.options.scoreDate) {
+          that.setData({ "formData.scoreDate": that.data.options.scoreDate });
+        } else {
+          that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+        }
         that.pageRequest();
       }
     })
-    if (that.data.options.areaId) {
-      that.setData({ "formData.areaId": that.data.options.areaId });
-      that.setData({ "formData.areaName": that.data.options.areaName });
-    }
-    if (that.data.options.scoreDate) {
-      that.setData({ "formData.scoreDate": that.data.options.scoreDate });
-    }
-    if ($util.trim(that.data.formData.scoreDate) == "") {
-      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
-    }
-    wx.getSystemInfo({
-      success: function (res) {
-        that.setData({
-          sliderLeft: (res.windowWidth / that.data.tabs.length - sliderWidth) / 2
-        });
-      }
-    });
 
   },
   pageRequest: function () {
@@ -96,14 +93,14 @@ Page({
   },
   bindRadioChange: function (e) {
     var that = this;
-    if ("month_rank: DESC" == e.detail.value) {
-      that.setData({ "radioChecked.monthChecked": true });
-      that.setData({ "radioChecked.dateChecked": false });
+    if ("month_rank,ASC" == e.detail.value) {
+      that.setData({ "radio.monthChecked": true });
+      that.setData({ "radio.dateChecked": false });
     } else {
-      that.setData({ "radioChecked.monthChecked": false });
-      that.setData({ "radioChecked.dateChecked": true });
+      that.setData({ "radio.monthChecked": false });
+      that.setData({ "radio.dateChecked": true });
     }
-    that.setData({ "formData.order": e.detail.value });
+    that.setData({ "formData.sort": e.detail.value });
   },
   bindDateChange: function (e) {
     this.setData({ "formData.scoreDate": e.detail.value });
