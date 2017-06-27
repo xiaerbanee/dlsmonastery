@@ -184,8 +184,9 @@ Page({
           success: function (res) {
             var images = new Array();
             var folderFile = res.data;
-            console.log('data:',res.data);
             for (let i in folderFile) {
+                console.log('i:',i);
+                console.log('id:', folderFile[i].id);
                 $util.downloadFile(images, folderFile[i].id, app.globalData.sessionId, 9, function () {
                   console.log(images)
                   that.setData({ "formProperty.images": images });
