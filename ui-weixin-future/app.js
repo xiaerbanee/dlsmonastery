@@ -48,7 +48,6 @@ App({
         }
     }, login: function (cb) {
         var that = this;
-        console.log("1111")
         wx.request({
             url: "http://localhost:1200/user/login?weixinCode="+ that.globalData.weixinCode,
             data: {},
@@ -59,7 +58,6 @@ App({
                         url: '/page/sys/accountBind/accountBind'
                     })
                 } else {
-                  console.log("1111")
                     that.globalData.sessionId=res.data.JSESSIONID
                     typeof cb == "function" && cb();
                 }

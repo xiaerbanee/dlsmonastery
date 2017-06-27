@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled" :  :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
+    <el-select  ref="select" v-model="innerId"  filterable remote :multiple="multiple" :disabled="disabled"   :placeholder="$t('su_district.inputKey')" :remote-method="remoteSelect" :loading="remoteLoading"  :clearable=true @change="handleChange">
       <el-option v-for="item in itemList" :key="item.id" :label="item.name" :value="item.id"></el-option>
     </el-select>
   </div>
