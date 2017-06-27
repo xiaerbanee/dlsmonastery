@@ -41,7 +41,7 @@
       <div class="span1">记账：</div>
       <div class="span2">收款：</div>
       <div class="span2">仓管员：</div>
-      <div class="span2">制单：</div>
+      <div class="span2">制单：{{account.createdByName}}</div>
       <div class="span2">提货人：</div>
     </div>
   </div>
@@ -52,8 +52,8 @@
       return{
         isCreate:this.$route.query.id==null,
         submitDisabled:false,
-        goodsOrder:{
-        },
+        account:{},
+        goodsOrder:{},
         rules: {
           pass: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
         },
@@ -71,6 +71,7 @@
       }
     },created(){
       this.findOne();
+      this.account=JSON.parse(window.localStorage.getItem("account"));
     }
   }
 </script>
