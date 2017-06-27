@@ -55,11 +55,11 @@
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.dutyDate}}</view>
-          <view class="weui-media-box__desc item_style">{{item.type}}</view>
+          <view class="weui-media-box__desc item_style">调休类型:{{item.type}}</view>
           <view class="weui-media-box__desc item_style" wx:if="{{item.type=='加班调休'}}">时间:{{item.timeStart}}~{{item.timeEnd}}</view>
           <view class="weui-media-box__desc item_style" wx:if="{{item.type=='年假调休'}}">时间类型:{{item.dateType}}</view>
-          <view class="weui-media-box__desc item_style">备注:{{item.remarks}}</view>
-          <view class="weui-media-box__desc item_style">{{item.status}}</view>
+          <view class="weui-media-box__desc item_style">备注:{{item.remarks?item.remarks:"未填写"}}</view>
+          <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">创建时间</view>
             <view class="weui-media-box__info__meta">{{item.createdDate}}</view>

@@ -37,7 +37,7 @@
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.dutyDate}}</view>
           <view class="weui-media-box__desc item_style">时间范围:{{item.timeStart}}~{{item.timeEnd}}</view>
           <view class="weui-media-box__desc item_style">加班时间:{{item.hour}}</view>
-          <view class="weui-media-box__desc item_style">备注:{{item.remarks}}</view>
+          <view class="weui-media-box__desc item_style">备注:{{item.remarks?item.remarks:"未填写"}}</view>
           <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">创建时间</view>
