@@ -13,11 +13,10 @@ public class Voucher extends CompanyEntity<Voucher> {
     //业务日期
     private LocalDate FDate;
     private String createdName;
-    private Integer version;
+    private Integer version = 0;
     private String status;
     //返回的单号
     private String outCode;
-    private KingdeeBook kingdeeBook;
     private String kingdeeBookId;
 
     public LocalDate getFDate() {
@@ -58,14 +57,6 @@ public class Voucher extends CompanyEntity<Voucher> {
 
     public void setOutCode(String outCode) {
         this.outCode = outCode;
-    }
-
-    public KingdeeBook getKingdeeBook() {
-        return kingdeeBook;
-    }
-
-    public void setKingdeeBook(KingdeeBook kingdeeBook) {
-        this.kingdeeBook = kingdeeBook;
     }
 
     public String getKingdeeBookId() {

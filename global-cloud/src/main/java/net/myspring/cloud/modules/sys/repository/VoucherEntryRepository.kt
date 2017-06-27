@@ -10,11 +10,9 @@ import org.springframework.data.repository.query.Param
  */
 interface VoucherEntryRepository : BaseRepository<VoucherEntry,String>{
     @Query("""
-        SELECT
-        t1
-        FROM  #{#entityName} t1
-        WHERE
-        t1.glVoucherId = :voucherId
+        SELECT t
+        FROM  #{#entityName} t
+        WHERE t.glVoucherId = :voucherId
      """)
     fun findByVoucherId(@Param("voucherId")voucherId:String):MutableList<VoucherEntry>
 }

@@ -97,7 +97,7 @@
       };
     },
     mounted() {
-      axios.get('/api/global/cloud/sys/voucher/form').then((response)=>{
+      axios.get('/api/global/cloud/sys/voucher/form',{params:{id:this.$route.query.id}}).then((response)=>{
         let extra = response.data.extra;
         this.settings.colHeaders = extra.headerList;
         accountNameToFlexGroupNamesMap = extra.accountNameToFlexGroupNamesMap;

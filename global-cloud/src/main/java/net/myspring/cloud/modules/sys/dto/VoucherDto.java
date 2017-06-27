@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.sys.dto;
 
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 
@@ -13,6 +14,7 @@ public class VoucherDto extends DataDto<Voucher> {
     private String status;
     private String outCode;
     private String kingdeeBookId;
+    private KingdeeBook kingdeeBook;
 
     private Boolean deletable = false;
     private Boolean editable = false;
@@ -79,5 +81,13 @@ public class VoucherDto extends DataDto<Voucher> {
 
     public void setEditable(Boolean editable) {
         this.editable = editable;
+    }
+
+    public KingdeeBook getKingdeeBook() {
+        return kingdeeBook;
+    }
+
+    public void setKingdeeBook(KingdeeBook kingdeeBook) {
+        this.kingdeeBook = kingdeeBook;
     }
 }
