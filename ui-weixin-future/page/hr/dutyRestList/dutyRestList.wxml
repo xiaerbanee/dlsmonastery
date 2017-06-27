@@ -1,5 +1,5 @@
 <import src="/page/template/pageable/pageable" />
-<view class="page">
+<scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
   <form wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
@@ -70,4 +70,4 @@
     </view>
   </view>
   <template is="footer" data="{{page}}" />
-</view>
+</scroll-view>
