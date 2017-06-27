@@ -14,7 +14,7 @@ Page({
   },
   onLoad: function (options) {
     var that = this;
-    that.data.options = options
+    that.data.options = options;
     app.autoLogin(function () {
       that.initPage()
     })
