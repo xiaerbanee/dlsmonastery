@@ -5,18 +5,18 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -203,4 +203,11 @@ public class DepotController {
         }
         return depotService.getCloudQtyMap(storeId);
     }
+
+    @RequestMapping(value="findOppoCustomers")
+    public String findOppoCustomers(){
+        List<CustomerDto> oppoCustomers=depotService.findOppoCustomers();
+        return ObjectMapperUtils.writeValueAsString(oppoCustomers);
+    }
+
 }
