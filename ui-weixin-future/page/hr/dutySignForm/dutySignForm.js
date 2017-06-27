@@ -132,7 +132,7 @@ Page({
           if (itemList[res.tapIndex] == '预览') {
             wx.previewImage({
               current: that.data.formProperty.images[index].view, // 当前显示图片的http链接
-              urls: [that.data.formProperty.images[0].view],
+              urls: [that.data.formProperty.images[index].view],
             })
           } else {
             that.data.formProperty.images.splice(index, 1);
