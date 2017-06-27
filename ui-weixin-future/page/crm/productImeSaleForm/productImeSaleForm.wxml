@@ -117,9 +117,9 @@
         <navigator url="/page/crm/productImeDetail/productImeDetail?productImeId= {{item.id}}" class="weui-media-box weui-media-box_text">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.ime}}</view>
           <view class="weui-media-box__desc item_style">产品名称：{{item.productName}} </view>
-          <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSaleShopName}}</view>
-          <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate}}</view>
-          <view class="weui-media-box__desc item_style">核销人：{{item.productImeSaleEmployeeName}}</view>
+          <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSaleShopName?item.productImeSaleShopName:""}}</view>
+          <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate?item.retailDate:""}}</view>
+          <view class="weui-media-box__desc item_style">核销人：{{item.productImeSaleEmployeeName?item.productImeSaleEmployeeName:""}}</view>
           <view class="weui-media-box__desc item_style">核销时间：{{item.createdDate}}</view>
         </navigator>
       </block>

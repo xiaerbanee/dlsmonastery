@@ -22,7 +22,7 @@ Page({
             data: {},
             method: 'GET',
             header: {
-               Cookie: "JSESSIONID=" + app.globalData.sessionId
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function (res) {
                 that.setData({ formData: res.data });
@@ -32,6 +32,7 @@ Page({
     },
     pageRequest: function () {
         var that = this;
+       console.log( $util.deleteExtra(that.data.formData))
         wx.showToast({
             title: '加载中',
             icon: 'loading',
@@ -45,6 +46,7 @@ Page({
                     method: 'GET',
                     data: $util.deleteExtra(that.data.formData),
                     success: function (res) {
+                        console.log(res.data)
                         that.setData({ page: res.data });
                         wx.hideToast();
                     }

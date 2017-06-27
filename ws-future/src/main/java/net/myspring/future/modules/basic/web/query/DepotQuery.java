@@ -20,8 +20,6 @@ public class DepotQuery extends BaseQuery {
     private String name;
     private String areaId;
     private String officeId;
-    private List<String> officeIdList= Lists.newArrayList();
-    private List<String> depotIdList= Lists.newArrayList();
     //直营，代理
     private Boolean clientIsNull;
     //pop门店
@@ -55,22 +53,6 @@ public class DepotQuery extends BaseQuery {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getOfficeIdList() {
-        return officeIdList;
-    }
-
-    public void setOfficeIdList(List<String> officeIdList) {
-        this.officeIdList = officeIdList;
-    }
-
-    public List<String> getDepotIdList() {
-        return depotIdList;
-    }
-
-    public void setDepotIdList(List<String> depotIdList) {
-        this.depotIdList = depotIdList;
     }
 
     public Boolean getClientIsNull() {

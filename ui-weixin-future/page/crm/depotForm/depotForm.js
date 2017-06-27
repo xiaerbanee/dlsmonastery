@@ -27,6 +27,7 @@ Page({
                     Cookie: "JSESSIONID=" + app.globalData.sessionId
                 },
                 success: function (res) {
+                    console.log(res.data)
                     that.setData({ formData: res.data });
                     wx.request({
                         url: $util.getUrl("ws/future/basic/depotShop/getForm"),
