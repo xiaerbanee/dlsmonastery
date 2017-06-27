@@ -290,6 +290,7 @@ export default {
     inputLegalValue: "masukkan angka yang valid",
     save: "simpan",
     remarks: "备注",
+    toKingdeeSynList:'查看同步信息',
   },
   bankInForm: {
     bankInForm: "tambah kredit penjualan",

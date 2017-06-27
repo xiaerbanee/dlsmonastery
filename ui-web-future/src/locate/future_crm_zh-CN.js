@@ -357,6 +357,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
     save: "保存",
     remarks:"备注",
+    toKingdeeSynList:'查看同步信息',
   },
   demoPhoneForm: {
     demoPhoneForm: "演示用机编辑",
