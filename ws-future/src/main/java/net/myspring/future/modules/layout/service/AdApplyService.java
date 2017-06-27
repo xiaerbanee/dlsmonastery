@@ -331,6 +331,7 @@ public class AdApplyService {
         }
        for(int i = 0;i<adGoodsOrders.size();i++){
            adGoodsOrders.get(i).setCloudSynId(kingdeeSynReturnDtos.get(i).getId());
+           adGoodsOrders.get(i).setOutCode(kingdeeSynReturnDtos.get(i).getBillNo());
            expressOrders.get(i).setOutCode(kingdeeSynReturnDtos.get(i).getBillNo());
        }
        adGoodsOrderRepository.save(adGoodsOrders);
