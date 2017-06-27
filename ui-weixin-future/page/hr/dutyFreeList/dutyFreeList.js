@@ -4,14 +4,15 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      page: 0,
-      size: 10
-    },
+    formData: {},
     activeItem: null,
-    searchHidden: true
+    searchHidden: true,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
+    var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -57,6 +58,7 @@ Page({
             }
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }

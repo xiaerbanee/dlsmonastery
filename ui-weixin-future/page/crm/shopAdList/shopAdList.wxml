@@ -30,7 +30,8 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="shopAdTypeId" range="{{formProperty.shopAdTypeList}}" range-key="name" value="{{formData.shopAdTypeId}}" bindchange="bindAdType">
-            <view class="weui-input">{{formData.shopAdTypeName}}</view>
+            <input type="text" name="shopAdTypeName" value="{{formData.shopAdTypeName}}" style="display:none" />
+            <view class="weui-input">{{formData.shopAdTypeName?formData.shopAdTypeName:""}}</view>
           </picker>
         </view>
       </view>

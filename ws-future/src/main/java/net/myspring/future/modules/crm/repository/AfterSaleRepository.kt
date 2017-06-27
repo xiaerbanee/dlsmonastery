@@ -99,6 +99,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
                 sb.append(""" and( t2.ime in (:imeList)  or t8.ime in(:imeList))""")
             }
+            if(CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)){
+                sb.append("""and t4.id in (:depotIdList)""")
+            }
+            if(CollectionUtil.isNotEmpty(afterSaleQuery.officeIdList)){
+                sb.append(""" and t4.office_id in (:officeIdList)""")
+            }
             if(afterSaleQuery.inputDateStart!=null){
                 sb.append(""" and t5.input_date>=:inputDateStart""")
             }
@@ -143,6 +149,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         """)
         if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
             sb.append(""" and t2.ime in (:imeList) """)
+        }
+        if(CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)){
+            sb.append("""and t4.id in (:depotIdList)""")
+        }
+        if(CollectionUtil.isNotEmpty(afterSaleQuery.officeIdList)){
+            sb.append(""" and t4.office_id in (:officeIdList)""")
         }
         if(afterSaleQuery.inputDateStart!=null){
             sb.append(""" and t5.input_date>=:inputDateStart""")

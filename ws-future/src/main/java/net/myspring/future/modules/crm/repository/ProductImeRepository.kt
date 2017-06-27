@@ -175,6 +175,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t3.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+            sb.append(""" and t3.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t3.id in (:depotIdList) """)
         }
@@ -244,6 +247,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t6.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+            sb.append(""" and t6.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t6.id in (:depotIdList) """)
         }
@@ -301,6 +307,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+            sb.append(""" and t2.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
@@ -356,6 +365,9 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
+        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+            sb.append(""" and t2.office_id in (:officeIds) """)
+        }
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
@@ -365,7 +377,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
             sb.append(""" group by t4.id """)
         }
-        println("销售报表按电子报卡"+productImeReportQuery.officeId)
+        println("销售报表按电子报卡"+productImeReportQuery.officeIdList)
         println(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }

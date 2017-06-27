@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
@@ -15,6 +16,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.ProductService;
@@ -61,6 +63,8 @@ public class ProductImeController {
     private DepotShopService depotShopService;
     @Autowired
     private OfficeClient officeClient;
+    @Autowired
+    private DepotManager depotManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page list(Pageable pageable,ProductImeQuery productImeQuery){
@@ -119,10 +123,6 @@ public class ProductImeController {
         }else{
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.电子保卡.name());
         }
-        List<String> topFilterOfficeIdList=officeClient.getTopIdsByFilter();
-        if(CollectionUtil.isNotEmpty(topFilterOfficeIdList)&&topFilterOfficeIdList.size()==1){
-            reportQuery.setOfficeId(topFilterOfficeIdList.get(0));
-        }
         reportQuery.setScoreType(true);
         return reportQuery;
     }
@@ -135,6 +135,7 @@ public class ProductImeController {
             reportQuery.setIsDetail(true);
         }
         reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
+        reportQuery.setOfficeId(null);
         List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
         return productImeService.getMongoDbId(workbook,depotReportList,reportQuery);
     }
