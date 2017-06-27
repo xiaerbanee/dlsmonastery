@@ -1,4 +1,4 @@
-package net.myspring.tool.modules.oppo.dto;
+package net.myspring.tool.common.dto;
 
 public class DistrictDto {
 

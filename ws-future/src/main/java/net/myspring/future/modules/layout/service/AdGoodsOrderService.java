@@ -555,6 +555,7 @@ public class AdGoodsOrderService {
         KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto)).get(0);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
+        adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
         adGoodsOrderRepository.save(adGoodsOrder);
 
         expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());

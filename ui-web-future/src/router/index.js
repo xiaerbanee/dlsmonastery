@@ -9,6 +9,7 @@ import businessLayout from './future_layout'
 import cloudSys from './cloud_sys'
 import cloudReport from './cloud_report'
 import cloudInput from './cloud_input'
+import toolSys from './tool_sys'
 
 Vue.use(Router)
 
@@ -27,6 +28,7 @@ const routes = [
   ...cloudSys,
   ...cloudReport,
   ...cloudInput,
+  ...toolSys,
   redirect
 ]
 

@@ -1,5 +1,5 @@
 <import src="/page/template/pageable/pageable" />
-<view class="page">
+<scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
   <form class="page__bd" wx:if="{{!searchHidden}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
@@ -23,11 +23,11 @@
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showItemActionSheet" bindtouchstart="itemActive">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.depotName}}</view>
-          <view class="weui-media-box__desc item_style">所属区域:{{item.officeName}}</view>
+          <view class="weui-media-box__desc item_style">所属区域:{{item.officeName?item.officeName:""}}</view>
           <view class="weui-media-box__desc item_style">创建人:{{item.createdByName}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">最后修改人：</view>
-            <view class="weui-media-box__info__meta">{{item.lastModifiedByName}}</view>
+            <view class="weui-media-box__info__meta">{{item.lastModifiedByName?item.lastModifiedByName:""}}</view>
             <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
           </view>
         </view>
@@ -35,4 +35,4 @@
     </view>
   </view>
   <template is="footer" data="{{page}}" />
-</view>
+</scroll-view>
