@@ -29,7 +29,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,13 +44,7 @@ public class ShopDepositService {
     @Autowired
     private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
     private CloudClient cloudClient;
-    @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
-    private ClientRepository clientRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
