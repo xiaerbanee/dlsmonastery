@@ -45,8 +45,6 @@ public class OppoController {
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
         String[] passWords=passWord.split(CharConstant.COMMA);
-        logger.info("mainCodes111==="+agentCodes[0]);
-        logger.info("mainPasswords111==="+passWords[0]);
         LocalDate localDate = LocalDateUtils.parse(date);
         List<OppoPlantProductSel> oppoPlantProductSels=oppoService.plantProductSel(agentCodes[0], passWords[0], "");
         //同步颜色编码
