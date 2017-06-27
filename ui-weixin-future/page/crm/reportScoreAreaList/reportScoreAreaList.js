@@ -111,7 +111,7 @@ Page({
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
     wx.navigateTo({
-      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + 'areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
+      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
     })
   },
 

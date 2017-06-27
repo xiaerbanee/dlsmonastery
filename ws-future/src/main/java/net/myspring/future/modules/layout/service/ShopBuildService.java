@@ -1,12 +1,9 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.repository.ShopBuildRepository;
@@ -28,7 +25,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +43,6 @@ public class ShopBuildService {
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
 
 
     public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {

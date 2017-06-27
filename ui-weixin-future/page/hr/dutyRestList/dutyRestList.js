@@ -7,11 +7,13 @@ Page({
     formData: {},
     formProperty: {},
     searchHidden: true,
-    activeItem: null
+    activeItem: null,
+    scrollTop: null,
+    height: null
   },
   onLoad: function () {
     var that = this;
-
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -30,14 +32,12 @@ Page({
       },
       success: function (res) {
         that.setData({ formProperty: res.data.extra, formData: res.data })
-        console.log(that.data.formProperty)
         that.pageRequest();
       }
     })
   },
   pageRequest: function () {
     var that = this;
-    console.log(that.data.formData)
     wx.showToast({
       title: '加载中',
       icon: 'loading',
@@ -59,6 +59,7 @@ Page({
             }
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
