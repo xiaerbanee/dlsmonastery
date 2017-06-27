@@ -14,7 +14,7 @@ Page({
   },
   onLoad: function (options) {
     var that = this;
-    that.data.options = options
+    that.data.options = options;
     app.autoLogin(function () {
       that.initPage()
     })
@@ -97,7 +97,7 @@ Page({
             filePath: tempFilePaths[i],
             name: 'file',
             formData: {
-              uploadPath: 'dutySign'
+              uploadPath: 'shopAd'
             },
             success: function (res) {
               var folderFile = JSON.parse(res.data)[0];
@@ -123,7 +123,6 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
-          console.log(res.data)
           if (res.data.success) {
             wx.navigateBack();
           } else {
@@ -172,28 +171,11 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
+        var images = new Array();
         that.setData({ formData: res.data })
-        console.log(">>>>>>", res.data.attachment)
-        wx.request({
-          url: $util.getUrl('general/sys/folderFile/findByIds?ids=' + res.data.attachment),
-          data: {},
-          header: {
-            Cookie: "JSESSIONID=" + app.globalData.sessionId
-          },
-          method: 'GET',
-          success: function (res) {
-            var images = new Array();
-            var folderFile = res.data;
-            for (let i in folderFile) {
-                console.log('i:',i);
-                console.log('id:', folderFile[i].id);
-                $util.downloadFile(images, folderFile[i].id, app.globalData.sessionId, 9, function () {
-                  console.log(images)
-                  that.setData({ "formProperty.images": images });
-                });
-            }
-          }
-        })
+        $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 9, function () {
+          that.setData({ "formProperty.images": images });
+        });
       }
     })
   }

@@ -215,9 +215,11 @@
             }
             return;
           }
-        axios.get('/api/ws/future/layout/adGoodsOrder/getCloudQtyMap', {params: {storeId: this.inputForm.storeId}}).then((response) => {
+        axios.get('/api/ws/future/basic/depot/getCloudQtyMap', {params: {storeId: this.inputForm.storeId}}).then((response) => {
           for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
-            adGoodsOrderDetail.cloudQty = response.data[adGoodsOrderDetail.productOutId];
+            if(response.data[adGoodsOrderDetail.productOutId] !== undefined) {
+              adGoodsOrderDetail.cloudQty = response.data[adGoodsOrderDetail.productOutId];
+            }
           }
         });
 

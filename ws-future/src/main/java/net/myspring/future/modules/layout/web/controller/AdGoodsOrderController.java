@@ -128,15 +128,6 @@ public class  AdGoodsOrderController {
         return adGoodsOrderBillForm;
     }
 
-
-    @RequestMapping(value = "getCloudQtyMap")
-    public Map<String, Integer> getCloudQtyMap(String storeId) {
-        if(StringUtils.isBlank(storeId)){
-            return new HashMap<>();
-        }
-        return adGoodsOrderService.getCloudQtyMap(storeId);
-    }
-
     @RequestMapping(value = "bill")
     public RestResponse bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
         adGoodsOrderService.bill(adGoodsOrderBillForm);
