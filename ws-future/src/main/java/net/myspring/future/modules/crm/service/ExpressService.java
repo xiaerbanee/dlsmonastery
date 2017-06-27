@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.constant.CharConstant;
@@ -25,7 +24,6 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -34,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,8 +57,7 @@ public class ExpressService {
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
+
 
     public Page<ExpressDto> findPage(Pageable pageable, ExpressQuery expressQuery) {
         Page<ExpressDto> page = expressRepository.findPage(pageable, expressQuery);
