@@ -192,9 +192,10 @@ function getFile(images, idList, sessionId, count, cb) {
         view: res.tempFilePath
       })
       if (idList.length > 0) {
-        getFile(images, idList, sessionId)
+        getFile(images, idList, sessionId,count,cb)
       } else {
         images.splice(0, images.length - count)
+        images.reverse();
         typeof cb == "function" && cb();
       }
     }

@@ -111,6 +111,19 @@
     },
     methods:{
       getData(){
+        let checkLoginName = (rule, value, callback)=>{
+          if (!value) {
+            return callback(new Error('必填信息'));
+          }else {
+            axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.$route.query.id).then((response)=>{
+              if(response.data.success){
+                return callback();
+              }else {
+                return callback(new Error(response.data.message));
+              }
+            })
+          }
+        };
         return {
           isCreate: this.$route.query.id == null,
           submitDisabled: false,
@@ -129,7 +142,7 @@
             entryDate: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
           },
           accountRules: {
-            loginName: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
+            loginName: [{ required: true,validator: checkLoginName}],
             officeId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
             positionId: [{required: true, message: this.$t('employeeForm.prerequisiteMessage')}],
           },
@@ -166,6 +179,8 @@
                 }).catch( ()=> {
                   that.submitDisabled = false;
                 });
+              } else {
+                this.submitDisabled = false;
               }
             })
           }else{
