@@ -58,7 +58,7 @@ public class StkInStockController {
         List<KingdeeSynDto> kingdeeSynDtoList = stkInStockService.save(stkInStockForm,kingdeeBook,accountKingdeeBook);
         for(KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList){
             if (kingdeeSynDto.getSuccess()){
-                restResponse = new RestResponse("采购入库成功：" + kingdeeSynDto.getResult(),null,true);
+                restResponse = new RestResponse("采购入库成功：" + kingdeeSynDto.getBillNo(),null,true);
             }else {
                 throw new ServiceException("采购入库失败："+kingdeeSynDto.getResult());
             }
