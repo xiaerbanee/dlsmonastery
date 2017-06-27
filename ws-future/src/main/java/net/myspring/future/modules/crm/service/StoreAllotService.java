@@ -86,8 +86,6 @@ public class StoreAllotService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private GridFsTemplate tempGridFsTemplate;
-    @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
     private RedisTemplate redisTemplate;
@@ -203,7 +201,7 @@ public class StoreAllotService {
 
     }
 
-    public String export(StoreAllotQuery storeAllotQuery) {
+    public SimpleExcelBook export(StoreAllotQuery storeAllotQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -235,9 +233,9 @@ public class StoreAllotService {
         cacheUtils.initCacheInput(storeAllotImeDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
+        ExcelUtils.doWrite(workbook,simpleExcelSheetList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        return simpleExcelBook;
 
     }
 
