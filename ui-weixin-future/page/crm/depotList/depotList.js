@@ -6,9 +6,14 @@ Page({
         page: {},
         formData: {},
         searchHidden: true,
-        activeItem: null
+        activeItem: null,
+        scrollTop: null,
+        height: null
     },
-    onLoad: function (options) { },
+    onLoad: function (options) {
+        var that = this;
+        that.setData({ height: $util.getWindowHeight() })
+    },
     onShow: function () {
         var that = this;
         app.autoLogin(function () {
@@ -32,7 +37,7 @@ Page({
     },
     pageRequest: function () {
         var that = this;
-       console.log( $util.deleteExtra(that.data.formData))
+        console.log($util.deleteExtra(that.data.formData))
         wx.showToast({
             title: '加载中',
             icon: 'loading',
@@ -49,6 +54,7 @@ Page({
                         console.log(res.data)
                         that.setData({ page: res.data });
                         wx.hideToast();
+                        that.setData({ scrollTop: $util.toUpper() });
                     }
                 })
             }
