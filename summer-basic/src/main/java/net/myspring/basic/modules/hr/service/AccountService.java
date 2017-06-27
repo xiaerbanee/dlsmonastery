@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Account;
@@ -31,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +55,6 @@ public class AccountService {
     private EmployeeRepository employeeRepository;
     @Autowired
     private RoleManager roleManager;
-    @Autowired
-    private GridFsTemplate tempGridFsTemplate;
     @Autowired
     private OfficeManager officeManager;
     @Autowired
