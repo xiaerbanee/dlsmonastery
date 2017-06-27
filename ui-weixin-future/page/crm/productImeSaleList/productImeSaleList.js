@@ -6,14 +6,17 @@ Page({
     page: {},
     formData: { isBack: false },
     searchHidden: true,
-    activeItem: null
+    activeItem: null,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
     var that = this;
     that.setData({
       "formData.createdDateStart": $util.formatLocalDate($util.addMonth(new Date, -1)),
       "formData.createdDateEnd": $util.formatLocalDate(new Date)
-    })
+    });
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -52,6 +55,7 @@ Page({
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -153,5 +157,5 @@ Page({
         }
       }
     });
-  },
+  }
 })

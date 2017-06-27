@@ -1,5 +1,5 @@
 <import src="/page/template/pageable/pageable" />
-<view class="page">
+<scroll-view class="page" name="pageHeader" scroll-top="{{scrollTop}}" scroll-y="true" style="height:{{height}}px">
   <form class="{{searchHidden?'hidden':''}}" bindsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
@@ -55,15 +55,11 @@
           <view class="weui-media-box__desc item_style">产品名称：{{item.productImeProductName}} </view>
           <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate?item.retailDate:""}}</view>
           <view class="weui-media-box__desc item_style">核销人：{{item.employeeName}}</view>
-          <view class="weui-media-box__info">
-            <view class="weui-media-box__info__meta">核销时间：</view>
-            <view class="weui-media-box__info__meta">{{item.createdDate}}</view>
-            <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>
-          </view>
+          <view class="weui-media-box__desc item_style">核销时间：{{item.createdDate}}</view>
           <view class="weui-media-box__desc item_style" wx:if="{{item.isBack}}">退回</view>
         </view>
       </view>
     </view>
   </view>
   <template is="footer" data="{{page}}" />
-</view>
+</scroll-view>

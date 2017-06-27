@@ -1,5 +1,5 @@
 <template name="header">
-  <view class="weui-flex pageable_header">
+  <view class="weui-flex pageable_header" id="pageable_header">
     <view class="weui-flex__item pageable_header_item" bindtap="add">
       <view class="pageable_header_item_text">添加</view>
       <image src="/image/icons/add.png" class="pageable_header_item_image"></image>

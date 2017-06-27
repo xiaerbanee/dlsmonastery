@@ -12,6 +12,7 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
@@ -27,8 +28,6 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +55,6 @@ public class ExpressOrderService {
 
     public Page<ExpressOrderDto> findPage(Pageable pageable, ExpressOrderQuery expressOrderQuery) {
         Page<ExpressOrderDto> page = expressOrderRepository.findPage(pageable, expressOrderQuery);
-        page.getContent().stream().filter(each-> (each.getWeight()!=null && each.getTotalQty()!=null&&each.getTotalQty()>0)).forEach(each -> each.setAverageWeight(each.getWeight().divide(new BigDecimal(each.getTotalQty()),2, BigDecimal.ROUND_HALF_UP)));
-
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
@@ -79,7 +76,7 @@ public class ExpressOrderService {
         expressOrderRepository.save(eo);
     }
 
-    public String exportEMS(ExpressOrderQuery expressOrderQuery) {
+    public SimpleExcelBook exportEMS(ExpressOrderQuery expressOrderQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<List<SimpleExcelColumn>> excelColumnList=Lists.newArrayList();
@@ -89,21 +86,21 @@ public class ExpressOrderService {
 
         List<SimpleExcelColumn> headColumnList=Lists.newArrayList();
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"邮件号"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"配货单号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*配货单号"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"客户订单号"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人姓名"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人联系方式"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*寄件人姓名"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*寄件人联系方式"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人联系方式（2）"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人地址"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*寄件人地址"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人公司"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件省"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件市"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件县"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"寄件人邮编"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"收件人姓名"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"收件人联系方式"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*收件人姓名"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*收件人联系方式"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"收件人联系方式（2）"));
-        headColumnList.add(new SimpleExcelColumn(headCellStyle,"收件人地址"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"*收件人地址"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"收件人公司"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"到件省/直辖市"));
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"到件城市"));
@@ -133,8 +130,13 @@ public class ExpressOrderService {
         excelColumnList.add(headColumnList);
 
         List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
+        List<String>  extendBusinessIdList= CollectionUtil.extractToList(expressOrderDtoList,"extendBusinessId");
+        List<String>  lxMallOrderBusinessIdList=goodsOrderRepository.findLxMallOrderBybusinessIdList(extendBusinessIdList);
+
+
         for(ExpressOrderDto expressOrderDto : expressOrderDtoList){
-            for(int i = 0; i< expressOrderDto.getExpressPrintQty();i++){
+            int printQty = (expressOrderDto.getExpressPrintQty()== null ? 0 : expressOrderDto.getExpressPrintQty());
+            for(int i = 0; i< printQty;i++){
                 List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"11"));
@@ -142,7 +144,11 @@ public class ExpressOrderService {
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"沈丽萍"));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"0791-88513567"));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,expressOrderDto.getFormatId()));
-                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"南昌市洪都北大道636号西格玛商务大厦16楼("+expressOrderDto.getFromDepotName()+")"));
+                boolean lxMallOrder=false;
+                if(StringUtils.isNotBlank(expressOrderDto.getExtendBusinessId())&&lxMallOrderBusinessIdList.contains(expressOrderDto.getExtendBusinessId())){
+                    lxMallOrder=true;
+                }
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"南昌市洪都北大道636号西格玛商务大厦16楼("+expressOrderDto.getFromDepotName()+(lxMallOrder?"  天翼购订货":"")+")"));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"南昌市欧珀电子有限公司"));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"江西省"));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"南昌市"));
@@ -151,7 +157,7 @@ public class ExpressOrderService {
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,expressOrderDto.getContator()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,expressOrderDto.getMobilePhone()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
-                if(expressOrderDto.getExpressPrintQty()==1) {
+                if(printQty==1) {
                     simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle, expressOrderDto.getAddress()));   //收件人地址
                 } else {
                     simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"(" + (i + 1) + ")" + expressOrderDto.getAddress())); //收件人地址
@@ -187,12 +193,11 @@ public class ExpressOrderService {
         }
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("邮政快递打印列表",excelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"邮政快递打印列表"+StringUtils.trimToEmpty(expressOrderQuery.getExtendBusinessIdStart())+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"邮政快递打印列表"+StringUtils.trimToEmpty(expressOrderQuery.getExtendBusinessIdStart())+".xlsx",simpleExcelSheet);
     }
 
-    public String export(ExpressOrderQuery expressOrderQuery) {
+    public SimpleExcelBook export(ExpressOrderQuery expressOrderQuery) {
         Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
@@ -216,10 +221,8 @@ public class ExpressOrderService {
         List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("快递打印列表", expressOrderDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递打印列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream=ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"快递打印列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 
     public ExpressOrderDto findByGoodsOrderId(String goodsOrderId) {

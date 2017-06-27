@@ -5,10 +5,14 @@ Page({
   data: {
     page: {},
     formData: {},
+    searchHidden: true,
     activeItem: null,
-    searchHidden: true
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
+    var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
@@ -54,6 +58,7 @@ Page({
             }
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -122,7 +127,7 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {

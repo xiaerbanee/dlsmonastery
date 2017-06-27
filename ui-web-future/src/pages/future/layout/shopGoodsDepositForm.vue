@@ -9,7 +9,7 @@
               <depot-select  :disabled="!isCreate" category="shop" v-model="inputForm.shopId"  @input="shopIdChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.bank')" prop="bankId" >
-              <bank-select v-model="inputForm.bankId"></bank-select>
+              <bank-select v-model="inputForm.bankId" includeCash=true></bank-select>
             </el-form-item>
             <el-form-item :label="$t('shopGoodsDepositForm.amount')" prop="amount">
               <el-input  v-model.number="inputForm.amount"></el-input>
