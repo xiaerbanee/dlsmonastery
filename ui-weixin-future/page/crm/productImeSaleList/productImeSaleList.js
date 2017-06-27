@@ -6,7 +6,11 @@ Page({
     page: {},
     formData: { isBack: false },
     searchHidden: true,
-    activeItem: null
+    activeItem: null,
+    scrollTop:null
+  },
+  toUpper(){
+    this.setData({scrollTop:0})
   },
   onLoad: function (option) {
     var that = this;
@@ -52,6 +56,7 @@ Page({
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.toUpper();
           }
         })
       }
@@ -153,5 +158,5 @@ Page({
         }
       }
     });
-  },
+  }
 })
