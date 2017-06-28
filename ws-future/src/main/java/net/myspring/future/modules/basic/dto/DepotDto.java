@@ -48,6 +48,7 @@ public class DepotDto extends DataDto<Depot> {
     private String areaType;
     private Boolean rebate;
 
+
     public String getDelegateDepotId() {
         return delegateDepotId;
     }
@@ -136,11 +137,11 @@ public class DepotDto extends DataDto<Depot> {
         this.adShop = adShop;
     }
 
-    public Boolean getHidden() {
+    public Boolean getIsHidden() {
         return isHidden;
     }
 
-    public void setHidden(Boolean hidden) {
+    public void setIsHidden(Boolean hidden) {
         isHidden = hidden;
     }
 
