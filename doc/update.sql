@@ -999,3 +999,13 @@ update crm_depot t1,crm_client t2 set t1.client_id=t2.id where t1.out_id=t2.out_
 
 update crm_depot_store t1,crm_depot t2 set t1.joint_level='一级' where t1.depot_id=t2.id and t2.type=100;
 update crm_depot_store t1,crm_depot t2 set t1.joint_level='二级' where t1.depot_id=t2.id and t2.type>100;
+
+ALTER TABLE `crm_depot`
+  ADD COLUMN `company_group`  varchar(64) NULL AFTER `client_id`;
+
+ALTER TABLE `crm_depot`
+  ADD COLUMN `pop_shop`  tinyint(1) NULL AFTER `company_group`;
+
+update crm_depot set pop_shop = 0;
+
+update crm_depot_shop set door_head=0 where door_head is null;
