@@ -1,20 +1,27 @@
-package net.myspring.tool.modules.oppo.repository;
+package net.myspring.future.modules.third.repository;
 
+import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.third.domain.OppoCustomerAfterSaleImei
-import net.myspring.future.modules.third.domain.OppoCustomerStock
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
-import java.time.LocalDate
-import java.time.LocalDateTime
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
-/**
- * Created by admin on 2016/10/11.
- */
-interface OppoCustomerAfterSaleImeiRepository : BaseRepository<OppoCustomerAfterSaleImei, String> {
+interface OppoCustomerAfterSaleImeiRepository : BaseRepository<OppoCustomerAfterSaleImei, String>, OppoCustomerAfterSaleImeiRepositoryCustom {
 
-    @Query("""
+}
+interface OppoCustomerAfterSaleImeiRepositoryCustom{
+    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerAfterSaleImei>
+
+}
+class OppoCustomerAfterSaleImeiRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerAfterSaleImeiRepositoryCustom{
+    override fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerAfterSaleImei>{
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateStart",dateStart);
+        paramMap.put("dateEnd",dateEnd);
+        paramMap.put("companyId",companyId);
+        return namedParameterJdbcTemplate.query("""
          select
             af.bad_depot_id as customerid,
             af.created_date as date,
@@ -30,7 +37,6 @@ interface OppoCustomerAfterSaleImeiRepository : BaseRepository<OppoCustomerAfter
             and af.created_date <=:dateEnd
             and af.enabled = 1
             and af.company_id = :companyId
-        """)
-    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerAfterSaleImei>
-
+        """,paramMap, BeanPropertyRowMapper(OppoCustomerAfterSaleImei::class.java));
+    }
 }

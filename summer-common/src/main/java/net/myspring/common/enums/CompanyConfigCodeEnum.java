@@ -48,5 +48,6 @@ public enum CompanyConfigCodeEnum {
 	CLOUD_DB_NAME,
 	PRODUCT_NAME,
 	COMPANY_NAME,
+	DEFAULT_PROVINCE_ID,
 	EXPRESS_PRINT_QTY;
 }

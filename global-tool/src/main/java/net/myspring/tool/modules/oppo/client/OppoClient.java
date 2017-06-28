@@ -1,10 +1,13 @@
 package net.myspring.tool.modules.oppo.client;
 
 import feign.Param;
+import net.myspring.tool.modules.oppo.domain.*;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 /**
  * Created by guolm on 2017/6/11.
@@ -14,27 +17,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface OppoClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerAllots")
-    String  findOppoCustomerAllots(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerAllot> findOppoCustomerAllots(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerStocks")
-    String  findOppoCustomerStocks(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerStock> findOppoCustomerStocks(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerImeiStocks")
-    String  findOppoCustomerImeiStocks(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSales")
-    String  findOppoCustomerSales(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerSale> findOppoCustomerSales(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSaleImes")
-    String  findOppoCustomerSaleImes(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerSaleImei> findOppoCustomerSaleImes(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerSaleCounts")
-    String  findOppoCustomerSaleCounts(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerSaleCount> findOppoCustomerSaleCounts(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerAfterSaleImeis")
-    String  findOppoCustomerAfterSaleImes(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerAfterSaleImei> findOppoCustomerAfterSaleImes(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
     @RequestMapping(method = RequestMethod.GET, value = "third/factory/oppo/findOppoCustomerDemoPhones")
-    String  findOppoCustomerDemoPhones(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
+    List<OppoCustomerDemoPhone>  findOppoCustomerDemoPhones(@RequestParam(value = "dateStart")String dateStart, @RequestParam(value = "dateEnd") String dateEnd, @RequestParam(value = "companyId") String companyId);
 
 }

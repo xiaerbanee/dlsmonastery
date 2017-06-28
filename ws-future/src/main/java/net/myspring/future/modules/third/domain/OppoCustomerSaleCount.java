@@ -1,6 +1,11 @@
 package net.myspring.future.modules.third.domain;
 
-public class OppoCustomerSaleCount {
+import net.myspring.future.common.domain.IdEntity;
+
+import javax.persistence.Entity;
+
+@Entity
+public class OppoCustomerSaleCount extends IdEntity<OppoCustomerSaleCount> {
     private String shopCode;
     private String agentCode;
     private String productCode;

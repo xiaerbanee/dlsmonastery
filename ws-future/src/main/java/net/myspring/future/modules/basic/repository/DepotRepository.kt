@@ -304,7 +304,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             de.name as depotName,
             de.depot_store_id as storeId,
             de.depot_shop_id as shopId,
-            st.joint_leavel as jointLeavel,
+            st.joint_level as jointLeavel,
             sh.sale_point_type as salePointType,
             de.mobile_phone as mobilePhone,
             sh.area_type as areaType,

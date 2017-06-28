@@ -1,8 +1,11 @@
 package net.myspring.future.modules.third.domain;
 
-import java.time.LocalDate;
+import net.myspring.future.common.domain.IdEntity;
 
-public class OppoCustomerAllot {
+import javax.persistence.Entity;
+import java.time.LocalDate;
+@Entity
+public class OppoCustomerAllot  extends IdEntity<OppoCustomerAllot> {
     private String fromCustomerid;
     private String toCustomerid;
     private String productcode;

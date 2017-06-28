@@ -1,10 +1,17 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import net.myspring.tool.common.domain.IdEntity;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Created by guolm on 2016/7/16.
  */
-public class OppoCustomer {
-
+@Entity
+@Table(name="oppo_push_customer")
+public class OppoCustomer  extends IdEntity<OppoCustomer> {
     private String customerid;
     private String customername;
     private String agentid;
@@ -14,7 +21,7 @@ public class OppoCustomer {
     private String dealertel;
     private String citytype;
     private String bussinesscenter;
-    private String chainName;
+    private String chainname;
     private String saletype;
     private String doorhead;
     private String enabledate;
@@ -55,12 +62,12 @@ public class OppoCustomer {
         this.cabinetnum = cabinetnum;
     }
 
-    public String getChainName() {
-        return chainName;
+    public String getChainname() {
+        return chainname;
     }
 
-    public void setChainName(String chainName) {
-        this.chainName = chainName;
+    public void setChainname(String chainname) {
+        this.chainname = chainname;
     }
 
     public String getCity() {

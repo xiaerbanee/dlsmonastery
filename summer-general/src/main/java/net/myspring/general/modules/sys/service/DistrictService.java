@@ -38,4 +38,8 @@ public class DistrictService {
         List<DistrictDto> districtDtoList=BeanUtil.map(districtList,DistrictDto.class);
         return districtDtoList;
     }
+
+    public List<District> findAll(){
+        return districtRepository.findAll();
+    }
 }

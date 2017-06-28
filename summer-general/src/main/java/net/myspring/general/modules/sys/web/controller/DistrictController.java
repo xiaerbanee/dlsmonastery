@@ -1,5 +1,6 @@
 package net.myspring.general.modules.sys.web.controller;
 
+import net.myspring.general.modules.sys.domain.District;
 import net.myspring.general.modules.sys.dto.DistrictDto;
 import net.myspring.general.modules.sys.dto.TownDto;
 import net.myspring.general.modules.sys.service.DistrictService;
@@ -32,5 +33,10 @@ public class DistrictController {
     @RequestMapping(value = "findOne")
     public DistrictDto findOne(String id) {
         return districtService.findOne(id);
+    }
+
+    @RequestMapping(value = "findAll")
+    public List<District> findAll() {
+        return districtService.findAll();
     }
 }
