@@ -996,3 +996,6 @@ INSERT INTO crm_client (
     out_type='门店'
 );
 update crm_depot t1,crm_client t2 set t1.client_id=t2.id where t1.out_id=t2.out_id and t1.out_type='门店';
+
+update crm_depot_store t1,crm_depot t2 set t1.joint_level='一级' where t1.depot_id=t2.id and t2.type=100;
+update crm_depot_store t1,crm_depot t2 set t1.joint_level='二级' where t1.depot_id=t2.id and t2.type>100;
