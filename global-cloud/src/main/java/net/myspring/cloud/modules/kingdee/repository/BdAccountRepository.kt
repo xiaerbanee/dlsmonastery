@@ -59,7 +59,7 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
     }
 
     fun findByNumber(number:String):BdAccount?{
-        return namedParameterJdbcTemplate.queryForObject("""
+        var list =  namedParameterJdbcTemplate.query("""
             select
                 t1.FACCTID,
                 t2.FFULLNAME,
@@ -79,10 +79,15 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
                 AND t1.FFORBIDSTATUS = 'A'
                 and t1.FNUMBER = :number
         """,Collections.singletonMap("number",number),BeanPropertyRowMapper(BdAccount::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     fun findByName(name:String):BdAccount?{
-        return namedParameterJdbcTemplate.queryForObject("""
+        var list = namedParameterJdbcTemplate.query("""
             select
                 t1.FACCTID,
                 t2.FFULLNAME,
@@ -102,6 +107,11 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
                 AND t1.FFORBIDSTATUS = 'A'
                 and t2.FNAME = :name
         """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdAccount::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     fun findByNameList(nameList:List<String>):MutableList<BdAccount>?{

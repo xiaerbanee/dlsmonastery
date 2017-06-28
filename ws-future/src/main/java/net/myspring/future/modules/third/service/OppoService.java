@@ -12,6 +12,7 @@ import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
 import net.myspring.future.modules.third.domain.*;
+import net.myspring.future.modules.third.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.time.LocalDateUtils;
 import net.myspring.util.text.StringUtils;
@@ -31,7 +32,6 @@ import java.util.Set;
  * Created by guolm on 2017/5/23.
  */
 @Service
-@Transactional
 public class OppoService {
     @Autowired
     private OppoClient oppoClient;
@@ -43,11 +43,8 @@ public class OppoService {
     private RedisTemplate redisTemplate;
     @Autowired
     private CompanyConfigClient companyConfigClient;
-
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-
-//    @Autowired
-//    private OppoCustomerAllotRepository oppoCustomerAllotRepository;
+    @Autowired
+    private OppoCustomerAllotRepository oppoCustomerAllotRepository;
 //    @Autowired
 //    private OppoCustomerStockRepository oppoCustomerStockRepository;
 //    @Autowired
@@ -55,14 +52,17 @@ public class OppoService {
 //    @Autowired
 //    private OppoCustomerSaleRepository oppoCustomerSaleRepository;
 //    @Autowired
-//    private OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
+//    OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
 //    @Autowired
 //    private OppoCustomerSaleCountRepository oppoCustomerSaleCountRepository;
 //    @Autowired
 //    private OppoCustomerAfterSaleImeiRepository oppoCustomerAfterSaleImeiRepository;
 //    @Autowired
 //    private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
-//
+
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Transactional
     public String synIme(String date){
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-MM-dd");
@@ -182,53 +182,50 @@ public class OppoService {
     }
 
 
-//
-//
     public List<OppoCustomerAllot> findOppoCustomerAllots(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(dateStart,dateEnd,companyId);
-//        return oppoCustomerAllots;
-        return null;
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerAllots;
     }
-//
+
     public List<OppoCustomerStock> findOppoCustomerStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        return oppoCustomerStocks;
         return null;
     }
-//
+
     public List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerImeiStock> oppoCustomerStocks=oppoCustomerImeiStockRepository.findAll(dateStart,dateEnd,companyId);
-//        return oppoCustomerStocks;
+//        List<OppoCustomerImeiStock> oppoCustomerStocks=oppoCustomerImeiStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+//        return oppoCustomerStocks;'
         return null;
     }
-//
+
     public List<OppoCustomerSale> findOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        return oppoCustomerSales;
         return null;
     }
-//
+
     public List<OppoCustomerSaleImei> findOppoCustomerSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        cacheUtils.initCacheInput(oppoCustomerSaleImeis);
 //        return oppoCustomerSaleImeis;
         return null;
     }
-//
+
     public List<OppoCustomerSaleCount>  findOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        return oppoCustomerSaleCounts;
         return null;
     }
-//
+
     public List<OppoCustomerAfterSaleImei> findOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        return oppoCustomerAfterSaleImeis;
         return null;
     }
-//
+
     public List<OppoCustomerDemoPhone> findOppoCustomerDemoPhones(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(dateStart,dateEnd,companyId);
+//        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
 //        return oppoCustomerDemoPhones;
         return null;
     }
