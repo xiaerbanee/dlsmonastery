@@ -22,10 +22,10 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.common.tree.TreeNode;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -137,9 +138,10 @@ public class AccountController {
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(AccountQuery accountQuery) throws IOException {
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return accountService.findSimpleExcelSheet(workbook, accountQuery);
+    public ModelAndView export(AccountQuery accountQuery) throws IOException {
+        SimpleExcelBook simpleExcelBook = accountService.findSimpleExcelSheet(accountQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     @RequestMapping(value = "getAccountInfo")
