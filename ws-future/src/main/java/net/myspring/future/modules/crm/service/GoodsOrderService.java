@@ -8,6 +8,8 @@ import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -116,6 +118,29 @@ public class GoodsOrderService {
         goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
+
+        if (CollectionUtil.isNotEmpty(page.getContent())) {
+            CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+            customerReceiveQuery.setDateStart(LocalDate.now());
+            customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+            List<String> clientOutIdList = CollectionUtil.extractToList(page.getContent(), "clientOutId");
+            customerReceiveQuery.setCustomerIdList(clientOutIdList);
+            List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+            Map<String, CustomerReceiveDto> customerReceiveDtoMap = new HashMap<>();
+            if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
+                customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
+            }
+
+            for (GoodsOrderDto goodsOrderDto : page.getContent()) {
+                if (GoodsOrderStatusEnum.待开单.name().equals(goodsOrderDto.getStatus())) {
+                    if(StringUtils.isNotBlank(goodsOrderDto.getClientOutId())){
+                        BigDecimal shouldGet = customerReceiveDtoMap.containsKey(goodsOrderDto.getClientOutId()) ?  customerReceiveDtoMap.get(goodsOrderDto.getClientOutId()).getEndShouldGet() : BigDecimal.ZERO ;
+                        goodsOrderDto.setShopShouldGet(shouldGet);
+                    }
+                }
+            }
+        }
+
         return page;
     }
 
@@ -207,7 +232,7 @@ public class GoodsOrderService {
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
-        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
 
         for (int i = goodsOrderBillForm.getGoodsOrderBillDetailFormList().size() - 1; i >= 0; i--) {
             GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderBillDetailFormList().get(i);
@@ -450,7 +475,12 @@ public class GoodsOrderService {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrderDto.getExpressOrderId());
 
         goodsOrderDto.setBillDate(LocalDate.now());
-        goodsOrderDto.setExpressCompanyId(expressOrder.getCompanyId());
+        if(StringUtils.isNotBlank(expressOrder.getExpressCompanyId())){
+            goodsOrderDto.setExpressCompanyId(expressOrder.getExpressCompanyId());
+        }else{
+            String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
+            goodsOrderDto.setExpressCompanyId(StringUtils.trimToNull(defaultExpressCompanyId));
+        }
 
         //是否自动同步，根据门店是否包含client
         goodsOrderDto.setSyn(false);
@@ -458,6 +488,16 @@ public class GoodsOrderService {
         if(StringUtils.isNotBlank(shop.getClientId())) {
             Client client = clientRepository.findOne(shop.getClientId());
             goodsOrderDto.setSyn(client != null);
+            if(client!=null){
+                CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+                customerReceiveQuery.setDateStart(LocalDate.now());
+                customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+                customerReceiveQuery.setCustomerIdList(Lists.newArrayList(client.getOutId()));
+                List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+                if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
+                    goodsOrderDto.setShopShouldGet(customerReceiveDtoList.get(0).getEndShouldGet());
+                }
+            }
         }
         goodsOrderDto.setShipType(expressOrder.getShipType());
         goodsOrderDto.setAddress(expressOrder.getAddress());
@@ -501,6 +541,8 @@ public class GoodsOrderService {
             goodsOrderDetailDto.setStoreQty(cloudQtyMap.get(goodsOrderDetailDto.getProductOutId()));
         }
         goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
+
+
         return goodsOrderDto;
     }
 

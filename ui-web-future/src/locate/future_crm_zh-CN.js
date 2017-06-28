@@ -838,6 +838,7 @@ export default {
     billQty: "开单数",
     price: "单价",
     hasIme: "包含串码",
+    prerequisiteMessage: "必填信息",
   },
   goodsOrderShipList: {
     goodsOrderShipList: "货品发货",

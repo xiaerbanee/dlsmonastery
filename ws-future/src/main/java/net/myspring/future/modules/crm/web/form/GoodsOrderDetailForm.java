@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  */
 public class GoodsOrderDetailForm extends BaseForm<GoodsOrderDetail> {
     //表单信息
-    private String goodsOrderDetailId;
+
     private String productId;
     private Integer qty;
     private Integer returnQty;

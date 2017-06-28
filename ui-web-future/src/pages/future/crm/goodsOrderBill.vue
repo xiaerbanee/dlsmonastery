@@ -54,7 +54,7 @@
               {{shop.credit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
-              {{shouldGet}}
+              {{goodsOrder.shopShouldGet}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
               {{shop.remarks}}
@@ -120,7 +120,15 @@
         goodsOrder:{},
         shouldGet:null,
         summary:"",
-        rules: {},
+        rules: {
+          storeId: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          billDate: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          expressCompanyId: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          syn: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          contator: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          address: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+          mobilePhone: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
+        },
         pageLoading:false
       }
     },
@@ -135,7 +143,7 @@
             var  goodsOrderBillDetailFormList = new Array();
             for(var index in this.filterDetailList) {
               var filterDetail = this.filterDetailList[index];
-              if(util.isNotBlank(filterDetail.goodsOrderDetailId) || util.isNotBlank(filterDetail.billQty)) {
+              if(util.isNotBlank(filterDetail.id) || util.isNotBlank(filterDetail.billQty)) {
                 goodsOrderBillDetailFormList.push(filterDetail);
               }
             }
