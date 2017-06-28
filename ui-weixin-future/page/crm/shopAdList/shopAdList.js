@@ -39,21 +39,21 @@ Page({
       },
       success: function (res) {
         that.setData({ formData: res.data });
-        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes });
+        wx.request({
+          url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=广告申请"),
+          data: {},
+          method: 'GET',
+          header: {
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
+          },
+          success: function (res) {
+            that.setData({ 'formProperty.processList': res.data })
+          }
+        })
         that.pageRequest();
       }
     });
-    wx.request({
-      url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=广告申请"),
-      data: {},
-      method: 'GET',
-      header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
-      },
-      success: function (res) {
-        that.setData({ 'formProperty.processList': res.data })
-      }
-    })
   },
   pageRequest: function () {
     var that = this;

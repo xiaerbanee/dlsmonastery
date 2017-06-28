@@ -17,8 +17,8 @@ Page({
     wx.login({
       success: function (res) {
         that.setData({
-        code: res.code
-      })
+          code: res.code
+        })
       }
     })
   },
@@ -40,12 +40,18 @@ Page({
         code: that.data.code
       },
       header: {
-        Cookie:"JSESSIONID="+app.globalData.sessionId
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res)
         if (res.data.success) {
-          wx.navigateBack({ delta: 10 })
+          wx.showModal({
+            title: "绑定成功",
+            content: res.data.message,
+            showCancel: false,
+            success: function (res) {
+              wx.redirectTo({  url:"/page/sys/home/home"})
+            }
+          });
         } else {
           wx.showModal({
             title: "绑定失败",

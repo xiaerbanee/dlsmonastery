@@ -12,20 +12,22 @@ Page({
   onLoad: function (options) {
     var that = this;
     that.data.options = options;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function () {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
     that.getLocation();
     if (that.data.options.action == 'add') {
       that.setData({ "formData.dutyDateTime": $util.formatLocalDateTime(new Date()) });
-      wx.showToast({
-        title: '加载中',
-        icon: 'loading',
-        duration: 10000
-      });
     } else {
       wx.request({
         url: $util.getUrl("basic/hr/dutySign/getForm"),
