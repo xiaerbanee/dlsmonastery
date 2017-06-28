@@ -43,4 +43,23 @@ class StkInventoryRepository @Autowired constructor(val namedParameterJdbcTempla
         paramMap.put("materialIdList", materialIdList)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(StkInventory::class.java))
     }
+
+    fun findByMaterialIdsAndStockId(materialIdList:List<String>,stockId:String): MutableList<StkInventory>?{
+        var sb = StringBuilder()
+        sb.append("""
+        SELECT
+            t1.FSTOCKID,
+            t1.FMATERIALID,
+            t1.FBASEQTY
+        FROM
+            T_STK_INVENTORY t1
+        WHERE t1.FMATERIALID in (:materialIdList)
+             and t1.FSTOCKID = :stockId
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("materialIdList", materialIdList)
+        paramMap.put("stockId",stockId)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(StkInventory::class.java))
+    }
+
 }

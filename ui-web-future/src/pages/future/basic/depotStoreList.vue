@@ -18,14 +18,17 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
-        <el-table-column  prop="depotName" label="名称" sortable ></el-table-column>
-        <el-table-column prop="type" label="仓库类型"  />
-        <el-table-column prop="storeGroup" label="分组"  />
+        <el-table-column prop="areaName" label="办事处"  />
         <el-table-column prop="officeName" label="机构"  />
+        <el-table-column  prop="depotName" label="名称" ></el-table-column>
+        <el-table-column prop="contator" label="联系人"  />
+        <el-table-column prop="mobilePhone" label="手机"  />
+        <el-table-column prop="storeGroup" label="分组"  />
+        <el-table-column prop="type" label="仓库类型"  />
         <el-table-column prop="taxName" label="税务门店名称"  />
         <el-table-column prop="delegateDepotName" label="寄售门店" />
         <el-table-column prop="remarks" label="备注" />
-        <el-table-column prop="locked" label="是否广告仓库" width="120">
+        <el-table-column prop="popShop" label="是否广告仓库" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.popShop ? 'primary' : 'danger'">{{scope.row.popShop | bool2str}}</el-tag>
           </template>

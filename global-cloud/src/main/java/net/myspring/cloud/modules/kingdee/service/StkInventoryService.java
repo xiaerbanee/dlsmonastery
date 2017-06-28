@@ -25,4 +25,8 @@ public class StkInventoryService {
     public List<StkInventory> findByMaterialIdList(List<String> materialId){
         return stkInventoryRepository.findByMaterialIdList(materialId);
     }
+
+    public List<StkInventory> findByMaterialIdsAndStockId(List<String> materialId,String stockId){
+        return stkInventoryRepository.findByMaterialIdsAndStockId(materialId,stockId);
+    }
 }
