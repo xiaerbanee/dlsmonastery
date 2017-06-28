@@ -28,7 +28,7 @@
           <view class="weui-label">地址</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <view class="weui-input">{{formData.address}}</view>
+          <view class="weui-input">{{formData.address?formData.address:"未填写"}}</view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
