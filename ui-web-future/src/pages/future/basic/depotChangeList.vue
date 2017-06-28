@@ -45,7 +45,7 @@
         <el-table-column fixed="right" :label="$t('depotChangeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:depotChange:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('depotChangeList.detail')}}</el-button></div>
-            <div class="action" v-if="scope.row.status.indexOf('通过')<0" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:depotChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('depotChangeList.audit')}}</el-button></div>
             <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:depotChange:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('depotChangeList.delete')}}</el-button></div>
           </template>
         </el-table-column>

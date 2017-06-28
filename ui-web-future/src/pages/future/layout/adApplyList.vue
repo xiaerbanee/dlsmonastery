@@ -6,7 +6,8 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyForm')}}</el-button>
         <el-button type="primary" @click="itemBillAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyBillForm')}}</el-button>
         <el-button type="primary" @click="grain" icon="plus" v-permit="'crm:adApply:goods'">{{$t('adApplyList.adApplyGoods')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adApply:view'">{{$t('adApplyList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adApply:view'">{{$t('adApplyList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:adApply:view'">{{$t('adApplyList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
@@ -35,7 +36,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportData()">{{$t('adApplyList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -119,9 +119,9 @@
       },grain(){
         this.$router.push({name: 'adApplyGoods'});
       },exportData(){
-        axios.get('/api/ws/future/layout/adApply/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/layout/adApply/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },getTotalQty(content){
           if(content == null){
               return;

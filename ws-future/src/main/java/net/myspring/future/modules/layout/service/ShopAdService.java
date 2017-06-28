@@ -24,7 +24,9 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -162,8 +165,8 @@ public class ShopAdService {
         shopAdRepository.logicDelete(id);
     }
 
-    public String findSimpleExcelSheets(Workbook workbook, ShopAdQuery shopAdQuery) throws IOException{
-
+    public SimpleExcelBook export(ShopAdQuery shopAdQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
@@ -177,8 +180,7 @@ public class ShopAdService {
         List<ShopAdDto> shopAdDtoList = shopAdRepository.findByFilter(shopAdQuery);
         cacheUtils.initCacheInput(shopAdDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("广告申请", shopAdDtoList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"广告申请"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"广告申请列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 }
