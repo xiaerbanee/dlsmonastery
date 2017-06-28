@@ -4,6 +4,8 @@ rename table api_imoo_prdocut_imei_deliver to imoo_prdocut_imei_deliver;
 rename table api_imoo_product_map to imoo_product_map;
 rename table api_oppo_plant_product_itemelectron_sel to oppo_plant_product_itemelectron_sel;
 rename table api_oppo_plant_send_imei_ppsel to oppo_plant_send_imei_ppsel;
+rename table api_oppo_plant_agent_product_sel to oppo_plant_agent_product_sel;
+rename table api_oppo_plant_product_sel to oppo_plant_product_sel;
 rename table api_vivo_plant_electronicsn to vivo_plant_electronicsn;
 rename table api_vivo_plant_products to vivo_plant_products;
 rename table api_vivo_plant_sendimei to vivo_plant_sendimei;
@@ -458,7 +460,7 @@ CREATE TABLE `sys_process_task` (
 
 ALTER TABLE `sys_process_type`
 CHANGE COLUMN `view_permission_id` `view_position_ids`  varchar(255) NULL DEFAULT NULL AFTER `name`,
-CHANGE COLUMN `create_permission_id` `create_position_ids`  varchar(255) NULL DEFAULT NULL AFTER `view_position_ids`;
+CHANGE COLUMN `create_permission_id` `created_position_ids`  varchar(255) NULL DEFAULT NULL AFTER `view_position_ids`;
 
 update sys_process_type set view_position_ids=null,create_position_ids=null;
 
@@ -544,5 +546,344 @@ CREATE TABLE `sys_role_permission` (
   KEY `last_modified_by` (`last_modified_by`) USING BTREE,
   KEY `last_modified_date` (`last_modified_date`) USING BTREE
 );
+
+
+rename table hr_office to sys_office;
+
+
+
+DROP TABLE IF EXISTS `oppo_push_customer`;
+CREATE TABLE `oppo_push_customer` (
+  `customerid` varchar(255) NOT NULL,
+  `customername` varchar(255) NOT NULL,
+  `agentid` varchar(255) DEFAULT NULL,
+  `companyid` varchar(255) DEFAULT NULL,
+  `dealertype` varchar(255) DEFAULT NULL,
+  `dealergrade` varchar(255) DEFAULT NULL,
+  `dealertel` varchar(255) DEFAULT NULL,
+  `citytype` varchar(255) DEFAULT NULL,
+  `bussinesscenter` varchar(255) DEFAULT NULL,
+  `chainName` varchar(255) DEFAULT NULL,
+  `saletype` varchar(255) DEFAULT NULL,
+  `doorhead` varchar(255) DEFAULT NULL,
+  `enabledate` varchar(255) DEFAULT NULL,
+  `customertype` varchar(255) DEFAULT NULL,
+  `keydealer` varchar(255) DEFAULT NULL,
+  `isenable` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `village` varchar(255) DEFAULT NULL,
+  `dealerarea` varchar(255) DEFAULT NULL,
+  `framenum` varchar(255) DEFAULT NULL,
+  `deskdoublenum` varchar(255) DEFAULT NULL,
+  `desksinglenum` varchar(255) DEFAULT NULL,
+  `cabinetnum` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`customerid`)
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_after_sale_imei`;
+CREATE TABLE `oppo_push_customer_after_sale_imei` (
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `trans_type` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_allot`;
+CREATE TABLE `oppo_push_customer_allot` (
+  `from_customerid` varchar(255) NOT NULL,
+  `to_customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `qty` int(20) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_demo_phone`;
+CREATE TABLE `oppo_push_customer_demo_phone` (
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_imei_stock`;
+CREATE TABLE `oppo_push_customer_imei_stock` (
+  `customerid` varchar(255) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `transType` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_operator_type`;
+CREATE TABLE `oppo_push_customer_operator_type` (
+  `customerid` varchar(255) NOT NULL,
+  `customername` varchar(255) NOT NULL,
+  `operatortype` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_sale`;
+CREATE TABLE `oppo_push_customer_sale` (
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `total_sale_qty` int(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_sale_count`;
+CREATE TABLE `oppo_push_customer_sale_count` (
+  `shop_code` varchar(255) DEFAULT NULL,
+  `agent_code` varchar(255) DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `sale_time` date DEFAULT NULL,
+  `qty` int(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_sale_imei`;
+CREATE TABLE `oppo_push_customer_sale_imei` (
+  `imei` varchar(255) DEFAULT NULL,
+  `saletime` datetime DEFAULT NULL,
+  `custname` varchar(255) DEFAULT NULL,
+  `custmobile` varchar(255) DEFAULT NULL,
+  `custsex` varchar(255) DEFAULT NULL,
+  `salepromoter` varchar(255) DEFAULT NULL,
+  `shopcode` varchar(255) DEFAULT NULL,
+  `shopname` varchar(255) DEFAULT NULL,
+  `agentcode` varchar(255) DEFAULT NULL,
+  `agentname` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `oppo_push_customer_stock`;
+CREATE TABLE `oppo_push_customer_stock` (
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `qty` int(64) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS `sys_account_kingdee_book`;
+CREATE TABLE `sys_account_kingdee_book` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `account_id` bigint(20) NOT NULL,
+  `username` varchar(64) DEFAULT NULL,
+  `password` varchar(64) DEFAULT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `version` int(11) NOT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `locked` tinyint(1) DEFAULT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `kingdee_book_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `account_kingdee_book` (`account_id`,`kingdee_book_id`) USING BTREE
+);
+
+
+DROP TABLE IF EXISTS `sys_backend`;
+CREATE TABLE `sys_backend` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`) USING BTREE,
+  KEY `created_date` (`created_date`) USING BTREE,
+  KEY `last_modified_by` (`last_modified_by`) USING BTREE,
+  KEY `last_modified_date` (`last_modified_date`) USING BTREE
+);
+
+DROP TABLE IF EXISTS `sys_backend_module`;
+CREATE TABLE `sys_backend_module` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `backend_id` bigint(20) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `icon` varchar(64) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`) USING BTREE,
+  KEY `created_date` (`created_date`) USING BTREE,
+  KEY `last_modified_by` (`last_modified_by`) USING BTREE,
+  KEY `last_modified_date` (`last_modified_date`) USING BTREE
+);
+DROP TABLE IF EXISTS `sys_localization`;
+
+DROP TABLE IF EXISTS `sys_gl_voucher`;
+CREATE TABLE `sys_gl_voucher` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `fdate` date DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
+  `created_name` varchar(64) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `last_modified_by` bigint(20) DEFAULT NULL,
+  `last_modified_date` datetime DEFAULT NULL,
+  `version` int(11) DEFAULT NULL,
+  `locked` tinyint(1) DEFAULT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `status` varchar(64) NOT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
+  `out_code` varchar(64) DEFAULT NULL,
+  `kingdee_book_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `created_by` (`created_by`) USING BTREE,
+  KEY `created_date` (`created_date`) USING BTREE,
+  KEY `last_modified_by` (`last_modified_by`) USING BTREE,
+  KEY `last_modified_date` (`last_modified_date`) USING BTREE,
+  KEY `process_status` (`status`) USING BTREE
+);
+
+
+DROP TABLE IF EXISTS `sys_gl_voucher_entry`;
+CREATE TABLE `sys_gl_voucher_entry` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `gl_voucher_id` bigint(20) NOT NULL,
+  `fexplanation` varchar(2000) DEFAULT NULL,
+  `faccountid` varchar(255) DEFAULT NULL,
+  `fdebit` decimal(10,2) DEFAULT NULL,
+  `fcredit` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+DROP TABLE IF EXISTS `sys_gl_voucher_entry_flow`;
+CREATE TABLE `sys_gl_voucher_entry_flow` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `gl_voucher_entry_id` bigint(20) NOT NULL,
+  `name` varchar(64) DEFAULT NULL,
+  `value` varchar(64) DEFAULT NULL,
+  `code` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+DROP TABLE IF EXISTS `sys_kingdee_book`;
+CREATE TABLE `sys_kingdee_book` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `company_id` bigint(20) DEFAULT NULL,
+  `name` varchar(64) NOT NULL,
+  `type` varchar(64) DEFAULT NULL,
+  `kingdee_url` varchar(64) DEFAULT NULL,
+  `kingdee_post_url` varchar(64) DEFAULT NULL,
+  `kingdee_username` varchar(64) DEFAULT NULL,
+  `kingdee_password` varchar(255) DEFAULT NULL,
+  `kingdee_dbid` varchar(64) DEFAULT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `version` int(11) NOT NULL,
+  `remarks` varchar(255) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `locked` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `sys_kingdee_syn`;
+CREATE TABLE `sys_kingdee_syn` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `extend_id` bigint(20) DEFAULT NULL,
+  `extend_type` varchar(64) DEFAULT NULL,
+  `form_id` varchar(64) DEFAULT NULL,
+  `next_form_id` varchar(64) DEFAULT NULL,
+  `content` text,
+  `success` tinyint(1) DEFAULT NULL,
+  `result` text,
+  `bill_no` varchar(64) DEFAULT NULL,
+  `next_bill_no` varchar(64) DEFAULT NULL,
+  `auto_audit` tinyint(1) DEFAULT NULL,
+  `company_id` bigint(20) NOT NULL,
+  `kingdee_book_id` bigint(20) DEFAULT NULL,
+  `created_by` bigint(20) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `last_modified_by` bigint(20) NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT '0',
+  `locked` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+DROP TABLE IF EXISTS `sys_monitor`;
+
+ALTER TABLE `sys_menu`
+  ADD COLUMN `code`  varchar(255) NULL AFTER `mobile_icon`,
+  ADD COLUMN `company_id`  bigint(20) NULL AFTER `code`;
+
+update sys_menu set company_id=1;
+
+ALTER TABLE `sys_menu_category`
+  ADD COLUMN `code`  varchar(255) NULL AFTER `enabled`,
+  ADD COLUMN `backend_module_id`  bigint(20) NULL AFTER `code`,
+  ADD COLUMN `company_id`  bigint(20) NULL AFTER `backend_module_id`;
+
+UPDATE sys_menu_category set company_id=1;
+
+ALTER TABLE `sys_office`
+  ADD COLUMN `office_rule_id`  bigint(20) NULL AFTER `sort`,
+  ADD COLUMN `area_id`  bigint(20) NULL AFTER `office_rule_id`,
+  ADD COLUMN `joint_level`  varchar(64) NULL AFTER `area_id`;
+
+
 
 ### memo(更新depot_store,depot_shop数据)
