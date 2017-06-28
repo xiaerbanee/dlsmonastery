@@ -11,7 +11,7 @@
             <el-option v-for="item in accountForBankList" :key="item.fnumber" :label="item.fname" :value="item.fnumber"></el-option>
           </el-select>
         </el-form-item>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
@@ -98,8 +98,7 @@
           billDate: [{ required: true, message: '必填项'}],
           accountNumber: [{ required: true, message: '必填项'}],
         },
-        submitDisabled:false,
-        remoteLoading:false
+        submitDisabled:false
       };
     },
     mounted() {

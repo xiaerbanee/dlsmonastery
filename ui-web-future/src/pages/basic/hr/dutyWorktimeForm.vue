@@ -8,7 +8,7 @@
         <el-form-item :label="$t('dutyWorktimeForm.yearMonth')" prop="yearMonth">
           <el-date-picker v-model="inputForm.yearMonth"  type="month" :placeholder="$t('dutyWorktimeForm.selectMonth')"></el-date-picker>
         </el-form-item>
-        <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="mongoId">
+        <el-form-item :label="$t('dutyWorktimeForm.importFile')" prop="folderFileId">
           <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/dutyWorktime" multiple    :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
             <el-button size="small" type="primary">{{$t('dutyWorktimeForm.clickUpload')}}</el-button>
             <div class="el-upload__tip" slot="tip">{{$t('dutyWorktimeForm.uploadImageSizeFor5000KB')}}</div>
@@ -42,7 +42,7 @@
               extra:{}
             },
             rules: {
-              mongoId: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
+              folderFileId: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
               yearMonth: [{ required: true, message: this.$t('dutyWorktimeForm.prerequisiteMessage')}],
             },
           }
@@ -51,7 +51,7 @@
           var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
-          this.inputForm.mongoId = util.getMongoId(this.fileList);
+          this.inputForm.folderFileId = util.getFolderFileIdStr(this.fileList);
           form.validate((valid) => {
             if (valid) {
               console.log(this.inputForm);

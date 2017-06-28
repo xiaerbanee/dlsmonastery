@@ -16,9 +16,16 @@ Page({
     },
     onShow: function () {
         var that = this;
-        app.autoLogin(function () {
-            that.initPage()
-        });
+        wx.showToast({
+            title: '加载中',
+            icon: 'loading',
+            duration: 10000,
+            success: function () {
+                app.autoLogin(function () {
+                    that.initPage()
+                });
+            }
+        })
     },
     initPage: function () {
         var that = this;
@@ -37,26 +44,17 @@ Page({
     },
     pageRequest: function () {
         var that = this;
-        console.log($util.deleteExtra(that.data.formData))
-        wx.showToast({
-            title: '加载中',
-            icon: 'loading',
-            duration: 10000,
-            success: function () {
-                wx.request({
-                    url: $util.getUrl("ws/future/basic/depotShop"),
-                    header: {
-                        Cookie: "JSESSIONID=" + app.globalData.sessionId
-                    },
-                    method: 'GET',
-                    data: $util.deleteExtra(that.data.formData),
-                    success: function (res) {
-                        console.log(res.data)
-                        that.setData({ page: res.data });
-                        wx.hideToast();
-                        that.setData({ scrollTop: $util.toUpper() });
-                    }
-                })
+        wx.request({
+            url: $util.getUrl("ws/future/basic/depotShop"),
+            header: {
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
+            },
+            method: 'GET',
+            data: $util.deleteExtra(that.data.formData),
+            success: function (res) {
+                that.setData({ page: res.data });
+                wx.hideToast();
+                that.setData({ scrollTop: $util.toUpper() });
             }
         })
     },

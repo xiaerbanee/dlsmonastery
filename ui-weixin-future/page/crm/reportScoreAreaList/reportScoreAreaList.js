@@ -5,33 +5,38 @@ var sliderWidth = 96;
 Page({
   data: {
     page: {},
-    formData: {
-      order: "month_rank: DESC"
-    },
+    formData: {},
     fromProperty: {},
+    radio: {
+      dateChecked: false,
+      monthChecked: true
+    },
     searchHidden: true,
     tabs: ["考核区域", "办事处"],
     activeIndex: "1",
     sliderLeft: 0,
-    radioChecked: {
-      dateChecked: false,
-      monthChecked: true
-    },
+    scrollTop: null,
+    height: null
   },
   onLoad: function (options) {
     var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
-    if ($util.trim(that.data.formData.scoreDate) == "") {
-      that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
-    }
     wx.getSystemInfo({
       success: function (res) {
         that.setData({
@@ -47,7 +52,8 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ 'fromProperty.areaList': res.data.extra.areaList });
+        that.setData({ 'fromProperty.areaList': res.data.extra.areaList, formData: res.data });
+        that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         that.pageRequest();
       }
     })
@@ -68,6 +74,7 @@ Page({
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -96,21 +103,21 @@ Page({
   },
   bindRadioChange: function (e) {
     var that = this;
-    if ("month_rank: DESC" == e.detail.value) {
-      that.setData({ "radioChecked.monthChecked": true });
-      that.setData({ "radioChecked.dateChecked": false });
+    if ("month_rank,ASC" == e.detail.value) {
+      that.setData({ "radio.monthChecked": true });
+      that.setData({ "radio.dateChecked": false });
     } else {
-      that.setData({ "radioChecked.monthChecked": false });
-      that.setData({ "radioChecked.dateChecked": true });
+      that.setData({ "radio.monthChecked": false });
+      that.setData({ "radio.dateChecked": true });
     }
-    that.setData({ "formData.order": e.detail.value });
+    that.setData({ "formData.sort": e.detail.value });
   },
 
   toScoreOffice: function (e) {
     var that = this;
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
     })
   },

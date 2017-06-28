@@ -1,7 +1,6 @@
 package net.myspring.general.modules.sys.web.controller;
 
 import com.google.common.collect.Lists;
-import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.general.modules.sys.domain.Folder;
 import net.myspring.general.common.utils.RequestUtils;

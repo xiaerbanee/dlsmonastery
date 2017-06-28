@@ -2,7 +2,6 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.gridfs.GridFSFile;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
@@ -53,7 +52,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

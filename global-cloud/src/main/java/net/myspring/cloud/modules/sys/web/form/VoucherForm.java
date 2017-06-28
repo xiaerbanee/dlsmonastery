@@ -13,64 +13,9 @@ import java.util.List;
  * Created by lihx on 2017/4/12.
  */
 public class VoucherForm extends BaseForm<Voucher> {
-    private String FDate;
-    private String createdName;
-    private String companyId;
-    private String status;
-    private String outCode;
-    private String kingdeeBookId;
-
-
     private LocalDate billDate;
     private String json;
 
-    public String getFDate() {
-        return FDate;
-    }
-
-    public void setFDate(String FDate) {
-        this.FDate = FDate;
-    }
-
-    public String getCreatedName() {
-        return createdName;
-    }
-
-    public void setCreatedName(String createdName) {
-        this.createdName = createdName;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getOutCode() {
-        return outCode;
-    }
-
-    public void setOutCode(String outCode) {
-        this.outCode = outCode;
-    }
-
-    public String getKingdeeBookId() {
-        return kingdeeBookId;
-    }
-
-    public void setKingdeeBookId(String kingdeeBookId) {
-        this.kingdeeBookId = kingdeeBookId;
-    }
 
     public LocalDate getBillDate() {
         return billDate;

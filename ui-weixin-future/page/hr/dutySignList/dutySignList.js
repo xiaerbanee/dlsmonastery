@@ -16,9 +16,16 @@ Page({
     },
     onShow: function () {
         var that = this;
-        app.autoLogin(function () {
-            that.initPage()
-        });
+        wx.showToast({
+            title: '加载中',
+            icon: 'loading',
+            duration: 10000,
+            success: function (res) {
+                app.autoLogin(function () {
+                    that.initPage()
+                });
+            }
+        })
     },
     initPage: function () {
         var that = this;
@@ -35,31 +42,24 @@ Page({
     },
     pageRequest: function () {
         var that = this
-        wx.showToast({
-            title: '加载中',
-            icon: 'loading',
-            duration: 10000,
+        wx.request({
+            url: $util.getUrl("basic/hr/dutySign"),
+            header: {
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
+            },
+            data: $util.deleteExtra(that.data.formData),
             success: function (res) {
-                wx.request({
-                    url: $util.getUrl("basic/hr/dutySign"),
-                    header: {
-                        Cookie: "JSESSIONID=" + app.globalData.sessionId
-                    },
-                    data: $util.deleteExtra(that.data.formData),
-                    success: function (res) {
-                        for (var item in res.data.content) {
-                            var actionList = new Array();
-                            actionList.push("详细");
-                            if (res.data.content[item].deleted) {
-                                actionList.push("删除");
-                            }
-                            res.data.content[item].actionList = actionList;
-                        }
-                        that.setData({ page: res.data });
-                        wx.hideToast();
-                        that.setData({ scrollTop: $util.toUpper() });
+                for (var item in res.data.content) {
+                    var actionList = new Array();
+                    actionList.push("详细");
+                    if (res.data.content[item].deleted) {
+                        actionList.push("删除");
                     }
-                })
+                    res.data.content[item].actionList = actionList;
+                }
+                that.setData({ page: res.data });
+                wx.hideToast();
+                that.setData({ scrollTop: $util.toUpper() });
             }
         })
     },

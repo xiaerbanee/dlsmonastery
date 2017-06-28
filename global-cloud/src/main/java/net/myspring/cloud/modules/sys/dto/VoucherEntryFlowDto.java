@@ -11,7 +11,6 @@ public class VoucherEntryFlowDto extends DataDto<VoucherEntryFlow> {
     private String name;
     //核算维度名称
     private String flexName;
-
     //核算维度名称
     private String value;
     //核算维度值
