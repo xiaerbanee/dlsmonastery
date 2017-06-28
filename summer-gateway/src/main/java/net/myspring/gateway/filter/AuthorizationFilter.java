@@ -73,8 +73,11 @@ public class AuthorizationFilter extends ZuulFilter {
             return null;
         }else{
             ctx.setSendZuulResponse(false);
-            ctx.setResponseStatusCode(401);
-            ctx.setResponseBody("{\"result\":\"没权限!\"}");
+            try {
+                ctx.getResponse().sendError(401,"无权限");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
     }

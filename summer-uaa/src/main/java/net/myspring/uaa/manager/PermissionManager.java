@@ -6,6 +6,7 @@ import net.myspring.uaa.dto.PermissionDto;
 import net.myspring.uaa.repository.AccountPermissionRepository;
 import net.myspring.uaa.repository.PermissionRepository;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,9 +44,12 @@ public class PermissionManager {
         }
         Map<String,String> map= Maps.newHashMap();
         for(PermissionDto permissionDto:permissionList){
-            String permissionKey=permissionDto.getUrl()+permissionDto.getMethod();
-            if(!map.containsKey(permissionKey)){
-                map.put(permissionKey,permissionDto.getPermission());
+            List<String> uslList= StringUtils.getSplitList(permissionDto.getUrl(),CharConstant.COMMA);
+            for(String url:uslList){
+                String permissionKey=url+permissionDto.getMethod();
+                if(!map.containsKey(permissionKey)){
+                    map.put(permissionKey,permissionDto.getPermission());
+                }
             }
         }
         redisTemplate.opsForValue().set(key,map);

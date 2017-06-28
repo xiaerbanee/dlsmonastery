@@ -182,11 +182,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             }
         }
         if (depotShopQuery.adShop != null) {
-            if(depotShopQuery.adShop){
-                sb.append("  and t1.ad_shop is NULL ")
-            }else{
-                sb.append("  and t1.ad_shop is NOT NULL ")
-            }
+            sb.append("  and t1.ad_shop = " + ":adShop")
         }
         if (depotShopQuery.popShop != null) {
             if(depotShopQuery.popShop){
