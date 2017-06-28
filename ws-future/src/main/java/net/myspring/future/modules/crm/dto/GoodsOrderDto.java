@@ -40,6 +40,9 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")
     private String clientName;
+    @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "outId")
+    private String clientOutId;
+
     private String pricesystemId;
     @CacheInput(inputKey = "pricesystems",inputInstance = "pricesystemId",outputInstance = "name")
     private String pricesystemName;
@@ -58,6 +61,14 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public String getClientOutId() {
+        return clientOutId;
+    }
+
+    public void setClientOutId(String clientOutId) {
+        this.clientOutId = clientOutId;
+    }
 
     public String getShopAreaId() {
         return shopAreaId;
@@ -330,5 +341,20 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     public void setExpressOrderExpressCodes(String expressOrderExpressCodes) {
         this.expressOrderExpressCodes = expressOrderExpressCodes;
+    }
+
+    public BigDecimal getShopShouldGetAfterBill(){
+        if(amount !=null && shopShouldGet != null){
+            return amount.add(shopShouldGet);
+        }
+        if(amount == null){
+            return shopShouldGet;
+        }
+
+        if(shopShouldGet == null){
+            return amount;
+        }
+        return null;
+
     }
 }

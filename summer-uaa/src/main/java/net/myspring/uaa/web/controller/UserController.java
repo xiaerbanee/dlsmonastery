@@ -1,6 +1,7 @@
 package net.myspring.uaa.web.controller;
 
 import net.myspring.common.response.RestResponse;
+import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.service.AccountWeixinService;
 import net.myspring.uaa.service.UserService;
 import net.myspring.uaa.web.form.AccountWeixinForm;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -69,5 +71,11 @@ public class UserController {
     @ResponseBody
     public RestResponse accountBind(AccountWeixinForm accountWeixinForm) {
         return accountWeixinService.bind(accountWeixinForm);
+    }
+
+    @RequestMapping(value = "/user/getWeixinAccounts")
+    @ResponseBody
+    public List<AccountWeixinDto> getWeixinAccounts(String weixinCode) {
+        return userService.getWeixinAccountList(weixinCode);
     }
 }

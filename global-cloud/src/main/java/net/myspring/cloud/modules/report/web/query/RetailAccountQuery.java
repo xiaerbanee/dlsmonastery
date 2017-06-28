@@ -12,6 +12,9 @@ public class RetailAccountQuery {
     private List<String> departmentNumber;
 
     public YearMonth getMonthStart() {
+        if (monthStart == null){
+            return  YearMonth.now().minusMonths(3L);
+        }
         return monthStart;
     }
 
@@ -20,6 +23,9 @@ public class RetailAccountQuery {
     }
 
     public YearMonth getMonthEnd() {
+        if (monthEnd == null){
+            return YearMonth.now().minusMonths(1L);
+        }
         return monthEnd;
     }
 

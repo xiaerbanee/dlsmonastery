@@ -3,7 +3,7 @@
 </style>
 <template>
   <div>
-    <head-tab active="retailReport"></head-tab>
+    <head-tab active="retailAccount"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
@@ -78,8 +78,8 @@
       };
     },
     mounted () {
-      axios.get("/api/global/cloud/report/retailReport/report").then((response)=>{
-        this.settings.data = response.data.retailReport;
+      axios.get("/api/global/cloud/report/retailAccount/list").then((response)=>{
+        this.settings.data = response.data.retailAccount;
 //        this.settings.nestedHeaders = response.data.nestedHeader;
         this.formData.startMonth = response.data.startMonth;
         this.formData.endMonth = response.data.endMonth;
@@ -89,10 +89,10 @@
     methods: {
       search(){
         this.formVisible = false;
-        util.getQuery("retailReport");
-        util.setQuery("retailReport",this.formData);
+        util.getQuery("retailAccount");
+        util.setQuery("retailAccount",this.formData);
         util.copyValue(this.formData,this.submitData);
-        axios.get("/api/global/cloud/report/retailReport/report",{params:this.submitData}).then((response)=>{
+        axios.get("/api/global/cloud/report/retailAccount/report",{params:this.submitData}).then((response)=>{
           this.settings.data = response.data.consignmentDtoList;
           this.formData.dateRange = response.data.dateRange;
         })
