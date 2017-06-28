@@ -109,6 +109,7 @@ public class ShopBuildService {
             try {
                 ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
                 if(activitiCompleteDto!=null){
+                    shopBuild.setLocked(true);
                     shopBuild.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
                     shopBuild.setProcessPositionId(activitiCompleteDto.getPositionId());
                     shopBuild.setProcessStatus(activitiCompleteDto.getProcessStatus());

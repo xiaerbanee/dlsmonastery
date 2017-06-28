@@ -57,7 +57,7 @@ App({
                             url: '/page/sys/accountBind/accountBind'
                         })
                     } else if (weixinAccounts.length == 1) {
-                        weixinAccount = weixinAccounts[0];
+                        that.globalData.weixinAccount= weixinAccounts[0];
                         that.login(cb)
                     } else {
                         typeof cb == "function" && cb();
@@ -71,8 +71,8 @@ App({
         var that = this;
         wx.request({
             url: $util.getUaaUrl('user/login'),
-            data: { weixinCode: that.globalData.weixinCode, accountId: that.globalData.weixinAccount.id },
-            method: 'POST',
+            data: { weixinCode: that.globalData.weixinCode, accountId: that.globalData.weixinAccount.accountId },
+            method: 'GET',
             success: function (res) {
                 that.globalData.sessionId = res.data.JSESSIONID
                 wx.request({
@@ -82,7 +82,6 @@ App({
                     },
                     data: { "isMobile": true },
                     success: function (res) {
-                        console.log(res.data.account)
                         that.globalData.menuList = res.data.menus;
                         that.globalData.weixinAccount = res.data.account;
                         wx.setStorageSync('authorityList', res.data.authorityList);
