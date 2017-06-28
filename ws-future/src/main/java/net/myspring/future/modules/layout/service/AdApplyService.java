@@ -236,9 +236,9 @@ public class AdApplyService {
             if(nowBilledQty != null && nowBilledQty < 0){
                 throw new ServiceException("每个货品订货数量不可以小于0");
             }
-            if(nowBilledQty > storeQty){
+            /*if(nowBilledQty > storeQty){
                 throw new ServiceException("每个货品订货数量不可以大于库存数量");
-            }
+            }*/
             if(!adGoodsOrderMap.containsKey(adApply.getShopId())){
                 AdGoodsOrder adGoodsOrder = new AdGoodsOrder();
                 adGoodsOrder.setBillType(adApplyBillForm.getBillType());
@@ -347,13 +347,13 @@ public class AdApplyService {
         for (AdGoodsOrder adGoodsOrder : adGoodsOrderList){
             Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
             Client client = clientMap.get(outShop.getClientId());
+            DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
             if(client == null || StringUtils.isBlank(client.getOutId())){
                 throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
             }
-            if(outShop.getDepotStoreId() == null || StringUtils.isBlank(outShop.getDepotStoreId())){
+            if(depotStore == null || depotStore.getOutCode() == null){
                 throw new ServiceException(client.getName() + " 没有关联财务仓库，不能申请");
             }
-            DepotStore depotstore = depotStoreRepository.findOne(outShop.getDepotStoreId());
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(adGoodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
@@ -366,7 +366,7 @@ public class AdApplyService {
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 Product product = productMap.get(adGoodsOrderDetail.getProductId());
                 SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                entityDto.setStockNumber(depotstore.getOutCode());
+                entityDto.setStockNumber(depotStore.getOutCode());
                 entityDto.setMaterialNumber(product.getCode());
                 entityDto.setQty(adGoodsOrderDetail.getBillQty());
                 // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
