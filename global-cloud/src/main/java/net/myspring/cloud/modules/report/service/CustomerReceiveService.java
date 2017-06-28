@@ -41,26 +41,24 @@ public class CustomerReceiveService {
             List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
             List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd, customerIdList);
             //期初结余
-            Map<String, BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+            Map<String, BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             //期末结余
-            Map<String, BigDecimal> endMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-            for (CustomerReceiveDto customerReceiveDto : beginList) {
-                if (!customerIdList.contains(customerReceiveDto.getCustomerId())) {
-                    customerIdList.add(customerReceiveDto.getCustomerId());
-                }
-            }
-            for (CustomerReceiveDto customerReceiveDto : endList) {
-                if (!customerIdList.contains(customerReceiveDto.getCustomerId())) {
-                    customerIdList.add(customerReceiveDto.getCustomerId());
-                }
-            }
+            Map<String, BigDecimal> custIdToEndAccountMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             List<BdCustomer> customerList = bdCustomerRepository.findByIdList(customerIdList);
             List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
             for (BdCustomer bdCustomer : customerList) {
                 CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
                 customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
-                customerReceiveDto.setBeginShouldGet(beginMap.get(bdCustomer.getFCustId()));
-                customerReceiveDto.setEndShouldGet(endMap.get(bdCustomer.getFCustId()));
+                if (custIdToBeginAccountMap.get(bdCustomer.getFCustId()) != null){
+                    customerReceiveDto.setBeginShouldGet(custIdToBeginAccountMap.get(bdCustomer.getFCustId()));
+                }else {
+                    customerReceiveDto.setBeginShouldGet(BigDecimal.ZERO);
+                }
+                if (custIdToEndAccountMap.get(bdCustomer.getFCustId()) != null){
+                    customerReceiveDto.setEndShouldGet(custIdToEndAccountMap.get(bdCustomer.getFCustId()));
+                }else {
+                    customerReceiveDto.setEndShouldGet(BigDecimal.ZERO);
+                }
                 customerReceiveDto.setCustomerName(bdCustomer.getFName());
                 customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
                 customerReceiveDtoList.add(customerReceiveDto);
@@ -104,10 +102,10 @@ public class CustomerReceiveService {
         LocalDate dateStart =  customerReceiveDetailQuery.getDateStart();
         //期初应收
         List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
-        Map<String,BigDecimal> beginMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+        Map<String,BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,销售出库 销售退货，收款，退款)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
-        //查找备注
+        //设置主单备注
         List<NameValueDto> remarksList = customerReceiveRepository.findRemarks(customerReceiveDetailQuery);
         Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
         for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
@@ -147,7 +145,7 @@ public class CustomerReceiveService {
                 }
                 int index = 0;
                 List<CustomerReceiveDetailDto> list = result.get(customerId);
-                BigDecimal endShouldGet = beginMap.get(customerId);
+                BigDecimal endShouldGet = custIdToBeginAccountMap.get(customerId);
                 List<CustomerReceiveDetailDto> mainList = mainMap.get(customerId);
 
                 CustomerReceiveDetailDto customerReceiveDetailDto= new CustomerReceiveDetailDto();
