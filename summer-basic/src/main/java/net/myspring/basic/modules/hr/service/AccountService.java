@@ -26,6 +26,7 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -162,7 +162,8 @@ public class AccountService {
     }
 
 
-    public String findSimpleExcelSheet(Workbook workbook,AccountQuery accountQuery) throws IOException {
+    public SimpleExcelBook findSimpleExcelSheet(AccountQuery accountQuery) throws IOException {
+        Workbook workbook = new SXSSFWorkbook(10000);
         accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
@@ -178,9 +179,9 @@ public class AccountService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "regularDate", "转正日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "leaveDate", "离职日期"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("账户信息模版",accountDtoList,simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        return simpleExcelBook;
     }
 
     public void saveAccountAndPermission(AccountForm accountForm){

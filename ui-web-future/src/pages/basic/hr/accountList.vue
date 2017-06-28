@@ -112,9 +112,7 @@
       },exportData(){
         this.formVisible = false;
         var submitData = util.deleteExtra(this.formData);
-        axios.get('/api/basic/hr/account/export?'+qs.stringify(submitData)).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        window.location.href="/api/basic/hr/account/export?"+qs.stringify(submitData);
       },itemAuthAdd(){
         this.$router.push({name:"accountAuthorityForm"})
       },itemAction:function(id,action){

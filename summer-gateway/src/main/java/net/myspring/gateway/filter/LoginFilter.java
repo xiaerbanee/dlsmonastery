@@ -50,8 +50,10 @@ public class LoginFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         String responseData = "";
         try {
-            responseData = CharStreams.toString(new InputStreamReader(ctx.getResponseDataStream(), "UTF-8"));
-            ctx.setResponseBody(responseData);
+            if(ctx.getResponseDataStream()!=null){
+                responseData = CharStreams.toString(new InputStreamReader(ctx.getResponseDataStream(), "UTF-8"));
+                ctx.setResponseBody(responseData);
+            }
         } catch (IOException e) {
         }
         if(StringUtils.isNotBlank(responseData)) {

@@ -2,8 +2,17 @@ package net.myspring.uaa.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
+import net.myspring.uaa.dto.PermissionDto;
+import net.myspring.uaa.dto.WeixinSessionDto;
+import net.myspring.uaa.repository.AccountPermissionRepository;
+import net.myspring.uaa.repository.PermissionRepository;
+import net.myspring.util.collection.CollectionUtil;
 import okhttp3.*;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService {
+
     public Map<String,Object> login(String username, String password,String weixinCode,String accountId)  {
         String url = "http://localhost:1200/login";
         Map<String,Object> map = Maps.newHashMap();

@@ -16,8 +16,6 @@ public class FolderFileDto extends DataDto<FolderFile> {
     private String physicalName;
     private Integer version = 0;
     private String folderId;
-    private String mongoId;
-    private String mongoPreviewId;
 
     public String getName() {
         return name;
@@ -65,22 +63,6 @@ public class FolderFileDto extends DataDto<FolderFile> {
 
     public void setFolderId(String folderId) {
         this.folderId = folderId;
-    }
-
-    public String getMongoId() {
-        return mongoId;
-    }
-
-    public void setMongoId(String mongoId) {
-        this.mongoId = mongoId;
-    }
-
-    public String getMongoPreviewId() {
-        return mongoPreviewId;
-    }
-
-    public void setMongoPreviewId(String mongoPreviewId) {
-        this.mongoPreviewId = mongoPreviewId;
     }
 
     public String getUrl() {

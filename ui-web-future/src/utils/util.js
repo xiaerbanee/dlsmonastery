@@ -346,17 +346,6 @@ util.getFolderFileIdStr = function (array) {
 
 util.getMongoId = function (array) {
   var idList = new Array();
-  if (array != null && array.length > 0) {
-    for (var i = 0; i < array.length; i++) {
-      if (array[i].id != null) {
-        idList.push(array[i].id);
-      } else {
-        if (array[i].response != null && array[i].response.length > 0 && array[i].response[0].mongoId != null) {
-          idList.push(array[i].response[0].mongoId);
-        }
-      }
-    }
-  }
   return idList.join();
 }
 

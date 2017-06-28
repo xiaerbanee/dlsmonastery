@@ -175,7 +175,7 @@ public class ExpressService {
 
     }
 
-    public String export(ExpressQuery expressQuery) {
+    public SimpleExcelBook export(ExpressQuery expressQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -204,11 +204,9 @@ public class ExpressService {
         List<ExpressDto> expressDtoList = findPage(new PageRequest(0,10000), expressQuery).getContent();
         simpleExcelSheetList.add(new SimpleExcelSheet("快递单列表", expressDtoList, expressColumnList));
 
+        ExcelUtils.doWrite(workbook,simpleExcelSheetList);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递单列表"+LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
-
+        return simpleExcelBook;
     }
 
     public ExpressDto findDto(String id) {
