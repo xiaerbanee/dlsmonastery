@@ -24,9 +24,12 @@ public class OppoController {
     }
 
     @RequestMapping(value="findOppoCustomerAllots")
-    public String findOppoCustomerAllots(String dateStart,String dateEnd,String companyId){
+    public List<OppoCustomerAllot> findOppoCustomerAllots(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerAllot> oppoCustomerAllots=oppoService.findOppoCustomerAllots(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateStart),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerAllots);
+        for(OppoCustomerAllot oppoCustomerAllot:oppoCustomerAllots){
+            System.err.println("oppoCustomerAllot=="+oppoCustomerAllot.getFromCustomerid()+"\t"+oppoCustomerAllot.getToCustomerid()+"\t"+oppoCustomerAllot.getProductcode()+"\t"+oppoCustomerAllot.getDate()+"\t"+oppoCustomerAllot.getQty());
+        }
+        return oppoCustomerAllots;
     }
 
     @RequestMapping(value="findOppoCustomerStocks")

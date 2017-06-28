@@ -94,7 +94,7 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         } else {
-            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomers();
+            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomers(factoryAgentName);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
             responseMessage.setResult("success");
         }
@@ -105,7 +105,8 @@ public class OppoController {
     @RequestMapping(value = "pullCustomerOperatortype", method = RequestMethod.GET)
     @ResponseBody
     public String pullOppoCustomerOperatortype(String key, String createdDate, HttpServletResponse response, Model model) {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
         if (!localKey.equals(key)) {
@@ -123,7 +124,8 @@ public class OppoController {
     @RequestMapping(value ="pullCustomerAllot", method = RequestMethod.GET)
     @ResponseBody
     public String pullOppoCustomersAllot(String key, String dateStart, String dateEnd, HttpServletResponse response, Model model) {
-        String factoryAgentName="M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){

@@ -1,6 +1,13 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="oppo_push_customer_sale_count")
 public class OppoCustomerSaleCount {
+    @Id
     private String shopCode;
     private String agentCode;
     private String productCode;

@@ -1,12 +1,18 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
  * Created by guolm on 2016/7/16.
  */
+@Entity
+@Table(name="oppo_push_customer_allot")
 public class OppoCustomerAllot {
+    @Id
     private String fromCustomerid;
     private String toCustomerid;
     private LocalDate date;
