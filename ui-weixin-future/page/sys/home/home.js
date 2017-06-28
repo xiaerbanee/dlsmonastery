@@ -8,12 +8,15 @@ Page({
         menuList: null
     },
     onLoad: function (options) {
+
     },
     onShow: function (options) {
         var that = this;
-        app.autoLogin(function () {
-            that.initPage();
-        })
+        if (that.data.weixinAccountsHidden) {
+            app.autoLogin(function () {
+                that.initPage();
+            })
+        }
     }, initPage: function () {
         var that = this;
         that.setData({ weixinAccountsHidden: true })
