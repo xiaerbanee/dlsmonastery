@@ -1003,3 +1003,7 @@ update crm_depot_store t1,crm_depot t2 set t1.joint_level='二级' where t1.depo
 ALTER TABLE `crm_depot`
   ADD COLUMN `company_group`  varchar(64) NULL AFTER `client_id`;
 
+ALTER TABLE `crm_depot`
+  ADD COLUMN `pop_shop`  tinyint(1) NULL AFTER `company_group`;
+
+update crm_depot set pop_shop = 0;
