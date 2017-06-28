@@ -9,8 +9,7 @@ import java.math.BigDecimal;
  * Created by wangzm on 2017/4/21.
  */
 public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
-    //表单信息
-    private String goodsOrderDetailId;
+
     private String productId;
     private Integer qty;
     private Integer billQty;
@@ -21,14 +20,6 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     private Boolean allowBill;
     //办事处已开单数
     private Integer areaQty;
-
-    public String getGoodsOrderDetailId() {
-        return goodsOrderDetailId;
-    }
-
-    public void setGoodsOrderDetailId(String goodsOrderDetailId) {
-        this.goodsOrderDetailId = goodsOrderDetailId;
-    }
 
     public String getProductId() {
         return productId;

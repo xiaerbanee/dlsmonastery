@@ -21,10 +21,15 @@
             </el-form-item>
             <div v-show="inputForm.shopId">
               <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-                <el-select  :disabled="!isCreate" v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
+                <el-select  :disabled="!isCreate" v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="netTypeChange">
                   <el-option v-for="item in inputForm.extra.netTypeList" :key="item":label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
+              <div v-if="inputForm.netType==='联信'">
+                <el-form-item :label="$t('goodsOrderForm.lxMallOrder')" prop="lxMallOrder">
+                  <bool-select v-model="inputForm.lxMallOrder"></bool-select>
+                </el-form-item>
+              </div>
               <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
                 <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
                   <el-option v-for="item in inputForm.extra.shipTypeList" :key="item":label="item" :value="item"></el-option>
@@ -78,9 +83,12 @@
 </template>
 <script>
   import depotSelect from 'components/future/depot-select'
+  import boolSelect from 'components/common/bool-select';
+
   export default{
     components:{
-      depotSelect
+      depotSelect,
+      boolSelect,
     },
     data(){
       return this.getData()
@@ -105,6 +113,7 @@
             shopId: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
             netType: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
             shipType: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
+            lxMallOrder: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
           }
         }
       },
@@ -162,7 +171,12 @@
           this.shop = response.data;
         });
         this.refreshDetailList();
-      },refreshDetailList(){
+      },
+      netTypeChange(){
+        this.inputForm.lxMallOrder = null;
+        this.refreshDetailList();
+      }
+      ,refreshDetailList(){
         if(this.isCreate ) {
           if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
             this.pageLoading = true;

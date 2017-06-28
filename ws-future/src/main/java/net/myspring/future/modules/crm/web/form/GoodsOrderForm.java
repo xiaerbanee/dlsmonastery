@@ -27,8 +27,17 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String allotToStockCode;
     private BigDecimal goodsDeposit;
     private LocalDate billDate;
+    private Boolean lxMallOrder;
     private List<String> netTypeList;
     private List<String> shipTypeList;
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public String getAllotToStockCode() {
         return allotToStockCode;
