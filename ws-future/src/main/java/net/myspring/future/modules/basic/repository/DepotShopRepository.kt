@@ -350,7 +350,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             SELECT
                 t1.id AS 'depotId',
                 t1.name as 'depotName',
-                t1.office_id,
+                t1.area_id areaId,
+                t1.office_id officeId,
                 t2.*
             FROM
                 crm_depot t1,
