@@ -134,9 +134,8 @@ public class ProductImeController {
         return reportQuery;
     }
 
-    @RequestMapping(value = "exportReport")
-    public String exportReport(ReportQuery reportQuery){
-        Workbook workbook = new SXSSFWorkbook(10000);
+    @RequestMapping(value = "exportReport",method = RequestMethod.GET)
+    public ModelAndView exportReport(ReportQuery reportQuery) throws IOException{
         reportQuery.setDepotIdList(depotService.filterDepotIds());
         if("按串码".equals(reportQuery.getExportType())){
             reportQuery.setIsDetail(true);
@@ -144,7 +143,9 @@ public class ProductImeController {
         reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
         reportQuery.setOfficeId(null);
         List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
-        return productImeService.getFolderFileId(workbook,depotReportList,reportQuery);
+        SimpleExcelBook simpleExcelBook = productImeService.getFolderFileId(depotReportList,reportQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     @RequestMapping(value = "getBatchCreateForm")

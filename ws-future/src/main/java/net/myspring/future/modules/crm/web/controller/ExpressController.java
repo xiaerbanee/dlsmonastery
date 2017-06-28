@@ -8,6 +8,8 @@ import net.myspring.future.modules.crm.dto.ExpressDto;
 import net.myspring.future.modules.crm.service.ExpressService;
 import net.myspring.future.modules.crm.web.form.ExpressForm;
 import net.myspring.future.modules.crm.web.query.ExpressQuery;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "crm/express")
@@ -59,10 +64,11 @@ public class ExpressController {
 
     }
 
-    @RequestMapping(value="export")
-    public String export(ExpressQuery expressQuery) {
-
-        return expressService.export(expressQuery);
+    @RequestMapping(value="export",method = RequestMethod.GET)
+    public ModelAndView export(ExpressQuery expressQuery) throws IOException {
+        SimpleExcelBook simpleExcelBook = expressService.export(expressQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     @RequestMapping(value="getForm")

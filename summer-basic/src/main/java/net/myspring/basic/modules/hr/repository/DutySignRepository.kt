@@ -90,7 +90,7 @@ class DutySignRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(dutySignQuery.dutyDateStart!=null){
             sql.append("""
-                   AND t1.duty_date > :dutyDateStart
+                   AND t1.duty_date >= :dutyDateStart
                 """);
         }
         if(dutySignQuery.dutyDateEnd!=null){

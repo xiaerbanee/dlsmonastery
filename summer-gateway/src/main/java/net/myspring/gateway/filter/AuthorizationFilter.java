@@ -48,6 +48,9 @@ public class AuthorizationFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
+//        if(!"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())){
+//            return true;
+//        }
         return false;
     }
 
