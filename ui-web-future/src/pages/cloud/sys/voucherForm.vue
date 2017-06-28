@@ -16,7 +16,7 @@
           {{credit}}
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
           <el-button type="primary" @click="formSubmitAndAudit" icon="check">保存且审核</el-button>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>

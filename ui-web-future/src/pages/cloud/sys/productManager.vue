@@ -4,7 +4,7 @@
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :inline="true">
         <el-button type="primary" @click="syn" icon="check">同步</el-button>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px"></div>
       </el-form>
     </div>
