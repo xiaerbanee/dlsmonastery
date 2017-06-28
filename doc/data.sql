@@ -105,4 +105,7 @@ WHERE
 	)
 AND t1.enabled = 1;
 
+update sys_menu set code="clientList" where name="客户管理";
+
+update sys_menu set code="depotStoreList" where name="仓库管理";
 
