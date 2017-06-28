@@ -9,6 +9,17 @@ function getUrl(url) {
     return result;
 }
 
+function getUaaUrl(url) {
+    var baseUrl = "http://localhost:1200/";
+    var result = baseUrl + url;
+    if (url.indexOf("?") > 0) {
+        result = result + "&requestClient=weixin";
+    } else {
+        result = result + "?requestClient=weixin";
+    }
+    return result;
+}
+
 function formatDate(date, format) {
     var o = {
         "M+": date.getMonth() + 1, //month
@@ -237,5 +248,6 @@ module.exports = {
     deleteExtra: deleteExtra,
     downloadFile: downloadFile,
     getWindowHeight: getWindowHeight,
+    getUaaUrl: getUaaUrl,
     toUpper:toUpper
 }
