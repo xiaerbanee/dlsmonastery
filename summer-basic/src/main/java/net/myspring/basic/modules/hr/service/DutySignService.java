@@ -15,6 +15,7 @@ import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,7 +81,8 @@ public class DutySignService {
         return dutySignForm;
     }
 
-    public String findSimpleExcelSheet(Workbook workbook, DutySignQuery dutySignQuery){
+    public SimpleExcelBook findSimpleExcelSheet(DutySignQuery dutySignQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
         List<DutySignDto> dutySignList = dutySignRepository.findByFilter(dutySignQuery);
         List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"employeeName","姓名"));
@@ -94,8 +96,8 @@ public class DutySignService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"remarks","备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"status","状态"));
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("签到列表",dutySignList,simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"签到列表"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        return simpleExcelBook;
     }
 }
