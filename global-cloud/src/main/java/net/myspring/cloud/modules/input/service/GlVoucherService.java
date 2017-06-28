@@ -10,12 +10,15 @@ import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * 凭证录入
  * Created by lihx on 2017/6/26.
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class GlVoucherService {
     @Autowired
     private KingdeeManager kingdeeManager;
