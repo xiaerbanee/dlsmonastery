@@ -52,7 +52,7 @@ Page({
             method: 'GET',
             data: $util.deleteExtra(that.data.formData),
             success: function (res) {
-                var edit = wx.getStorageSync("authorityList").indexOf("crm:shopAd:edit");
+                var edit = wx.getStorageSync("authorityList").indexOf("crm:depotShop:edit");
                 if (edit != -1) {
                     for (var item in res.data.content) {
                         var actionList = new Array();

@@ -46,8 +46,9 @@
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template scope="scope">
-            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small"  v-permit="'crm:expressCompany:edit'" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small"   @click.native="itemAction(scope.row.id,'depotShopEdit')">基础属性修改</el-button>
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'depotEdit')">业务属性修改</el-button>
+            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,8 +112,10 @@
           this.pageRequest();
         });
       },itemAction:function(id,action){
-        if(action=="edit") {
+        if(action=="depotShopEdit") {
           this.$router.push({ name: 'depotShopForm', query: { id: id }})
+        }else if(action=="depotEdit") {
+          this.$router.push({ name: 'shopForm', query: { id: id }})
         }else if(action=="delete"){
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/basic/depotShop/delete',{params:{id:id}}).then((response) =>{

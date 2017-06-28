@@ -31,8 +31,8 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, Collections.singletonMap("nameList", nameList), BeanPropertyRowMapper(HrEmpInfo::class.java))
     }
 
-    fun findByName(name: String): HrEmpInfo {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findByName(name: String): HrEmpInfo? {
+        var list =  namedParameterJdbcTemplate.query("""
             select
                 t1.FNUMBER,
                 t2.FNAME,
@@ -47,6 +47,11 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t2.FNAME in (:name)
         """, Collections.singletonMap("name", name), BeanPropertyRowMapper(HrEmpInfo::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     fun findAll(): MutableList<HrEmpInfo> {

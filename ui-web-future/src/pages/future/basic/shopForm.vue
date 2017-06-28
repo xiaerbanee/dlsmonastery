@@ -166,6 +166,9 @@
           this.inputForm = response.data;
           axios.get('/api/ws/future/basic/depotShop/findShop',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
+            if(util.isNotBlank(this.inputForm.clientId)){
+              this.clientList =new Array({id:response.data.clientId,name:response.data.clientName})
+            }
           });
         })
 
