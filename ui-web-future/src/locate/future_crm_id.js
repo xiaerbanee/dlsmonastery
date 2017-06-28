@@ -866,7 +866,8 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    lxMallOrder: "天翼购订货",
   },
   goodsOrderList: {
     goodsOrderList: "pengiriman barang",
