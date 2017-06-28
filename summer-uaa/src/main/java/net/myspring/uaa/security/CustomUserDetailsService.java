@@ -53,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String weixinCode = request.getParameter("weixinCode");
         if(StringUtils.isNotBlank(weixinCode)) {
-            String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
+            String accountId = ObjectUtils.toString(request.getParameter("accountId"));
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
             if(weixinSessionDto != null && StringUtils.isNotBlank(weixinSessionDto.getOpenid())) {
                 List<AccountWeixinDto> accountWeixinDtoList = accountWeixinDtoRepository.findByOpenId(weixinSessionDto.getOpenid());

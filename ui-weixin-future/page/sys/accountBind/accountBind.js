@@ -33,7 +33,7 @@ Page({
     }
     that.setData({ disabled: true });
     wx.request({
-      url: "http://localhost:1200/user/bind",
+      url: $util.getUaaUrl("/user/bind"),
       data: {
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,

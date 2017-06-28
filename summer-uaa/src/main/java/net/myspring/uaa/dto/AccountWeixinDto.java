@@ -12,6 +12,25 @@ public class AccountWeixinDto {
     private String companyId;
     private String openId;
 
+    private String accountName;
+    private String companyName;
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public String getId() {
         return id;
     }
