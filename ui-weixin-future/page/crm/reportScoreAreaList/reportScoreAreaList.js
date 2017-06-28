@@ -15,15 +15,25 @@ Page({
     tabs: ["考核区域", "办事处"],
     activeIndex: "1",
     sliderLeft: 0,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (options) {
     var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
@@ -64,6 +74,7 @@ Page({
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         })
       }
@@ -106,7 +117,7 @@ Page({
     var that = this;
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
     })
   },

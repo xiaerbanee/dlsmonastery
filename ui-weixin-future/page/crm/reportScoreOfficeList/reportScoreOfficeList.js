@@ -15,17 +15,27 @@ Page({
     tabs: ["考核区域", "办事处"],
     activeIndex: "0",
     sliderLeft: 0,
-    options: null
+    options: null,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (options) {
     var that = this;
-    that.setData({ options: options })
+    that.setData({ options: options });
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
@@ -57,7 +67,6 @@ Page({
         that.pageRequest();
       }
     })
-
   },
   pageRequest: function () {
     var that = this;
@@ -75,6 +84,7 @@ Page({
           success: function (res) {
             that.setData({ page: res.data });
             wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
           }
         });
       }
