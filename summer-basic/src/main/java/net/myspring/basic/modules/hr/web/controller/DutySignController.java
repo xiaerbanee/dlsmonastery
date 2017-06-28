@@ -12,6 +12,8 @@ import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -80,10 +84,11 @@ public class DutySignController {
         return dutySignForm;
     }
 
-    @RequestMapping(value = "export")
-    public String export(DutySignQuery dutySignQuery) {
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return dutySignService.findSimpleExcelSheet(workbook,dutySignQuery);
+    @RequestMapping(value = "export",method = RequestMethod.GET)
+    public ModelAndView export(DutySignQuery dutySignQuery) throws IOException {
+        SimpleExcelBook simpleExcelBook = dutySignService.findSimpleExcelSheet(dutySignQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     private void setOperationStatus(DutySignDto dutySign) {
