@@ -42,4 +42,13 @@ WHERE
 
 update sys_office t1,db_oppo_test.sys_office t2 set t1.office_rule_id=t2.office_rule_id,t1.area_id=t2.area_id where t1.name=t2.name;
 
+INSERT INTO sys_role SELECT
+	t1.*
+FROM
+	db_oppo_test.sys_role t1
+WHERE
+	t1.enabled = 1;
+
+	update hr_position t1,db_oppo_test.hr_position t2 set t1.role_id=t2.role_id where t1.`name`=t2.`name`;
+
 
