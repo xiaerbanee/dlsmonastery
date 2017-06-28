@@ -195,4 +195,7 @@ update sys_menu_category set enabled=false where name='提成基准';
 update sys_menu_category set enabled=false where name='K3Cloud';
 update sys_menu_category set enabled=false where name='报表中心';
 
+update sys_menu set mobile=FALSE;
+update sys_menu set mobile=TRUE where name in ("每日排名","仓库管理","广告申请","串码核销","请假申请","签到列表","加班申请","调休申请","免打考勤","出差申请");
+
 
