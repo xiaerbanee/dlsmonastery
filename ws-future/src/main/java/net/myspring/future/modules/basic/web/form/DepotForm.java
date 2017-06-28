@@ -231,11 +231,11 @@ public class DepotForm extends BaseForm<Depot> {
         this.adShop = adShop;
     }
 
-    public Boolean getHidden() {
+    public Boolean getIsHidden() {
         return isHidden;
     }
 
-    public void setHidden(Boolean hidden) {
+    public void setIsHidden(Boolean hidden) {
         isHidden = hidden;
     }
 
