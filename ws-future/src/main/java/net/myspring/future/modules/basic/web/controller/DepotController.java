@@ -15,7 +15,6 @@ import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -205,9 +204,9 @@ public class DepotController {
     }
 
     @RequestMapping(value="findOppoCustomers")
-    public String findOppoCustomers(){
+    public List<CustomerDto> findOppoCustomers(){
         List<CustomerDto> oppoCustomers=depotService.findOppoCustomers();
-        return ObjectMapperUtils.writeValueAsString(oppoCustomers);
+        return oppoCustomers;
     }
 
 }

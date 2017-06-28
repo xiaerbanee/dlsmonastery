@@ -88,8 +88,8 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("nameList",nameList),BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
-    fun findByCustId(custId:String): BdDepartment {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findByCustId(custId:String): BdDepartment? {
+        val list = namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
                 t1.FNUMBER,
@@ -109,6 +109,11 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
                         where t3.FCUSTID = :custId
                     )
         """,Collections.singletonMap("custId",custId), BeanPropertyRowMapper(BdDepartment::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     //SalDeptId是BdCustomer对象关联BdDepartment的字段

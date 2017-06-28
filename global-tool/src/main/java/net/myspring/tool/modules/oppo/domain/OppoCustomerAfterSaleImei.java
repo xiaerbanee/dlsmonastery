@@ -1,12 +1,17 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
  * Created by guolm on 2016/9/6.
  */
+@Entity
+@Table(name="oppo_push_customer_after_sale_imei")
 public class OppoCustomerAfterSaleImei {
-
+    @Id
     private String customerid;
     private LocalDateTime date;
     private String productCode;

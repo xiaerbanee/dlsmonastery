@@ -68,8 +68,8 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         """,Collections.singletonMap("modifyDate",modifyDate.toString()), BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
-    fun findByName(name: String): BdMaterial {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findByName(name: String): BdMaterial? {
+        var list = namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
                 t1.FNUMBER,
@@ -93,10 +93,15 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t2.FNAME = :name
         """,Collections.singletonMap("name",name),BeanPropertyRowMapper(BdMaterial::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
-    fun findByNumber(number: String): BdMaterial {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findByNumber(number: String): BdMaterial? {
+        var list = namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
                 t1.FNUMBER,
@@ -120,6 +125,11 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
                 and t1.FDOCUMENTSTATUS = 'C'
                 and t1.FNUMBER = :number
         """,Collections.singletonMap("number",number),BeanPropertyRowMapper(BdMaterial::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     fun findByNameList(nameList: List<String>): MutableList<BdMaterial> {

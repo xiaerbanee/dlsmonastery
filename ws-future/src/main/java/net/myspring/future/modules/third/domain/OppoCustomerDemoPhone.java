@@ -1,11 +1,15 @@
 package net.myspring.future.modules.third.domain;
 
+import net.myspring.future.common.domain.IdEntity;
+
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 /**
  * Created by guolm on 2016/9/6.
  */
-public class OppoCustomerDemoPhone {
+@Entity
+public class OppoCustomerDemoPhone extends IdEntity<OppoCustomerDemoPhone> {
 
     private String customerid;
     private LocalDateTime date;

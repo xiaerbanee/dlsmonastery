@@ -887,3 +887,115 @@ ALTER TABLE `sys_office`
 
 
 ### memo(更新depot_store,depot_shop数据)
+INSERT INTO crm_depot_store (
+  SELECT
+    id,
+    id as depot_id,
+    type,
+    created_by,
+    created_date,
+    last_modified_by,
+    last_modified_date,
+    remarks,
+    version,
+    locked,
+    enabled,
+    1 as company_id,
+    out_id,
+    out_group_id,
+    out_group_name,
+    out_date,
+    null as store_group,
+    null as joint_level,
+    null as out_code
+  FROM
+    crm_depot
+  WHERE
+    type <= 500
+);
+
+INSERT INTO crm_depot_shop (
+SELECT
+id,
+id as depot_id,
+area_type,
+created_by,
+created_date,
+last_modified_by,
+last_modified_date,
+remarks,
+version,
+locked,
+enabled,
+'1' as company_id,
+has_guide,
+lng,
+lat,
+check_stock,
+town_type,
+chain_type,
+carrier_type,
+turnover_type,
+business_type,
+channel_type,
+sale_point_type,
+bussiness_center,
+bussiness_center_name,
+door_head,
+speciality_store,
+speciality_store_type,
+report_name,
+shop_area,
+frame_num,
+desk_double_num,
+desk_single_num,
+cabinet_num,
+enable_date,
+town_name,
+ad_shop_bsc,
+town_id
+FROM
+crm_depot
+WHERE
+type >= 500
+);
+
+ALTER TABLE `crm_depot`
+  ADD COLUMN `depot_store_id`  bigint(20) NULL AFTER `task_qty`,
+  ADD COLUMN `depot_shop_id`  bigint(20) NULL AFTER `depot_store_id`;
+
+update crm_depot t1,crm_depot_store t2 set t1.depot_store_id=t2.id where t1.id=t2.depot_id;
+update crm_depot t1,crm_depot_shop t2 set t1.depot_shop_id=t2.id where t1.id=t2.depot_id;
+
+ALTER TABLE `crm_depot`
+  ADD COLUMN `client_id`  bigint(20) NULL AFTER `depot_shop_id`;
+
+
+INSERT INTO crm_client (
+  SELECT
+    id,
+    name,
+    mobile_phone,
+    created_by,
+    created_date,
+    last_modified_by,
+    last_modified_date,
+    remarks,
+    version,
+    locked,
+    enabled,
+    '1' as company_id,
+    out_id,
+    out_group_id,
+    out_group_name,
+    out_date,
+    null as out_code
+  FROM
+    crm_depot
+  WHERE
+    out_type='门店'
+);
+update crm_depot t1,crm_client t2 set t1.client_id=t2.id where t1.out_id=t2.out_id and t1.out_type='门店';
+
+update crm_depot_store t1,crm_depot t2 set t1.joint_level='一级' where t1.depot_id=t2.id and t2.type=100;
+update crm_depot_store t1,crm_depot t2 set t1.joint_level='二级' where t1.depot_id=t2.id and t2.type>100;

@@ -1,20 +1,30 @@
-package net.myspring.tool.modules.oppo.repository;
+package net.myspring.future.modules.third.repository;
 
+import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.third.domain.OppoCustomerAllot
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
-import java.time.LocalDate
-import java.time.LocalDateTime
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
+interface OppoCustomerAllotRepository : BaseRepository<OppoCustomerAllot, String>, OppoCustomerAllotRepositoryCustom {
 
-/**
- * Created by admin on 2016/10/11.
- */
-interface OppoCustomerAllotRepository : BaseRepository<OppoCustomerAllot, String> {
+}
+interface OppoCustomerAllotRepositoryCustom{
+    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerAllot>
+}
 
-    @Query("""
-             select
+class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerAllotRepositoryCustom{
+    override fun findAll(dateStart: String,dateEnd: String,companyId:String) : MutableList<OppoCustomerAllot>{
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateStart", dateStart);
+        paramMap.put("dateEnd", dateEnd);
+        paramMap.put("companyId", companyId);
+
+        System.err.println("aaaa==="+dateStart+"\t"+dateEnd+"\t"+companyId);
+
+        return namedParameterJdbcTemplate.query("""
+            select
                 go.store_id as fromCustomerid,go.shop_id as toCustomerid,de.product_id as productcode,sum(de.shipped_qty) as qty
                 from
                     crm_goods_order go,
@@ -54,7 +64,6 @@ interface OppoCustomerAllotRepository : BaseRepository<OppoCustomerAllot, String
                     and t.`status` = '已通过'
                     and t.product_ime_id=im.id
                     group by t.from_depot_id,t.to_depot_id,im.product_id
-        """)
-    fun findAll(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId:String): MutableList<OppoCustomerAllot>
-
+        """, paramMap, BeanPropertyRowMapper(OppoCustomerAllot::class.java));
+    }
 }

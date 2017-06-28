@@ -1,10 +1,13 @@
 package net.myspring.future.modules.third.domain;
 
+import net.myspring.future.common.domain.IdEntity;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
-public class OppoCustomerSaleImei {
+@Entity
+public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei> {
     private String imei;
     private LocalDateTime saletime;
     private String custname;
