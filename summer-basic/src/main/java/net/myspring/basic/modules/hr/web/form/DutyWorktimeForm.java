@@ -9,15 +9,15 @@ import net.myspring.common.form.BaseForm;
  */
 
 public class DutyWorktimeForm extends BaseForm<DutyWorktime> {
-    private String mongoId;
+    private String folderFileId;
     private String yearMonth;
 
-    public String getMongoId() {
-        return mongoId;
+    public String getFolderFileId() {
+        return folderFileId;
     }
 
-    public void setMongoId(String mongoId) {
-        this.mongoId = mongoId;
+    public void setFolderFileId(String folderFileId) {
+        this.folderFileId = folderFileId;
     }
 
     public String getYearMonth() {

@@ -42,7 +42,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-aop")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
-	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	compile 'org.apache.poi:poi:3.10-FINAL'
 	compile 'org.apache.poi:poi-ooxml:3.10-FINAL'
 	compile 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL'
