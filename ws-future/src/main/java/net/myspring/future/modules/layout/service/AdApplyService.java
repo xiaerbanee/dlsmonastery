@@ -48,7 +48,9 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -141,8 +143,9 @@ public class AdApplyService {
         cacheUtils.initCacheInput(adApplyDtos);
         //同步财务库存
         if(adApplyDtos.size()>0){
-            List<String> productOutIds = CollectionUtil.extractToList(adApplyDtos,"productOutId");
-            List<StkInventory> stkInventories = cloudClient.findInventoriesByProductOutIds(productOutIds);
+            List<String> storeId = Lists.newArrayList();
+            storeId.add(adApplyBillTypeChangeForm.getStoreId());
+            List<StkInventory> stkInventories = cloudClient.findInventoriesByDepotStoreOutIds(storeId);
             Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
             for(AdApplyDto adApplyDto:adApplyDtos){
                 if(stringStkInventoryMap.get(adApplyDto.getProductOutId())!=null){
@@ -383,7 +386,8 @@ public class AdApplyService {
 
     }
 
-    public String findSimpleExcelSheets(Workbook workbook,AdApplyQuery adApplyQuery){
+    public SimpleExcelBook export(AdApplyQuery adApplyQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
@@ -401,8 +405,7 @@ public class AdApplyService {
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByFilter(adApplyQuery);
         cacheUtils.initCacheInput(adApplyDtos);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"POP征订"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"POP征订列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 }

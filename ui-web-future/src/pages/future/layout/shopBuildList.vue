@@ -4,9 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filterOrExport')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchBlack')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -40,7 +41,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="exportData()" v-permit="'crm:shopBuild:view'" icon="upload">{{$t('shopBuildList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('shopBuildList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -130,11 +130,9 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        this.formVisible = false
-        axios.get('/api/ws/future/layout/shopBuild/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
-        this.pageRequest();
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/layout/shopBuild/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },itemAdd(){
         this.$router.push({ name: 'shopBuildForm'});
       },itemAction:function(id,action){

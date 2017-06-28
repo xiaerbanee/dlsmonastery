@@ -21,7 +21,9 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -146,7 +149,8 @@ public class ShopBuildService {
         shopBuildRepository.logicDelete(id);
     }
 
-    public String findSimpleExcelSheets(Workbook workbook, ShopBuildQuery shopBuildQuery) {
+    public SimpleExcelBook export(ShopBuildQuery shopBuildQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
@@ -163,9 +167,8 @@ public class ShopBuildService {
         List<ShopBuildDto> shopBuildList = shopBuildRepository.findByFilter(shopBuildQuery);
         cacheUtils.initCacheInput(shopBuildList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"门店建设"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"门店建设列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
 
     }
 
