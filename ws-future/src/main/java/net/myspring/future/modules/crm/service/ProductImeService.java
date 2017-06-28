@@ -278,7 +278,7 @@ public class ProductImeService {
         }
     }
 
-    public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
+    public String getFolderFileId(Workbook workbook, List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));

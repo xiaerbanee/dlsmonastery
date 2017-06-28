@@ -17,9 +17,6 @@ spring:
   jpa:
     show-sql: true
 
-  data:
-    mongodb:
-      uri: mongodb://168.192.1.20:1600/file
 server:
   port: 1400
   tomcat:

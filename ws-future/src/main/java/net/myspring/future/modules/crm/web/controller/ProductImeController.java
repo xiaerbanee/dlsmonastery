@@ -144,7 +144,7 @@ public class ProductImeController {
         reportQuery.setOfficeIds(officeClient.getChildOfficeIds(reportQuery.getOfficeId()));
         reportQuery.setOfficeId(null);
         List<DepotReportDto> depotReportList=depotShopService.getProductImeReportList(reportQuery);
-        return productImeService.getMongoDbId(workbook,depotReportList,reportQuery);
+        return productImeService.getFolderFileId(workbook,depotReportList,reportQuery);
     }
 
     @RequestMapping(value = "getBatchCreateForm")

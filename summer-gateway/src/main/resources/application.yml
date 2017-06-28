@@ -1,4 +1,11 @@
 spring:
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    database: 0
+    max-idle: 25
+    max-total: 50
   application:
     name: summer-gateway
 server:

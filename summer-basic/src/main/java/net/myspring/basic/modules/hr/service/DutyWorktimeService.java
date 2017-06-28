@@ -3,7 +3,6 @@ package net.myspring.basic.modules.hr.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.mongodb.gridfs.GridFSDBFile;
 import net.myspring.basic.common.enums.DutyDateTypeEnum;
 import net.myspring.basic.common.enums.DutyRestTypeEnum;
 import net.myspring.basic.common.enums.WorkTimeTypeEnum;
@@ -31,13 +30,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -68,8 +65,6 @@ public class DutyWorktimeService {
     private AccountRepository accountRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private GridFsTemplate storageGridFsTemplate;
     @Autowired
     private OfficeRepository officeRepository;
 
@@ -328,8 +323,8 @@ public class DutyWorktimeService {
 
     public void save(DutyWorktimeForm dutyWorktimeForm) {
         Map<String, DutyWorktime> dutyWorktimeMap = Maps.newLinkedHashMap();
-        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
-        Workbook workbook = ExcelUtils.getWorkbook(gridFSDBFile.getFilename(), gridFSDBFile.getInputStream());
+//        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
+        Workbook workbook = ExcelUtils.getWorkbook(new File("aaa"));
         Sheet sheetAt = workbook.getSheetAt(0);
         int rowCount = sheetAt.getLastRowNum();
         if (rowCount > 1) {
