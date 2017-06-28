@@ -50,15 +50,7 @@ public class SalOutStockManager {
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
             ClientDto clientDto = clientRepository.findByDepotId(goodsOrderForm.getShopId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-            List<Product> productList = productRepository.findByEnabledIsTrueAndIdIn(productIdList);
-            Map<String,String> productIdToOutCodeMap = Maps.newHashMap();
-            for (Product product : productList){
-                if (StringUtils.isNoneEmpty(product.getCode())){
-                    productIdToOutCodeMap.put(product.getId(),product.getCode());
-                }else {
-                    throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
-                }
-            }
+            Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product->Product));
             List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(goodsOrderForm.getId());
@@ -71,7 +63,12 @@ public class SalOutStockManager {
                 if (detail.getBillQty() != null && detail.getBillQty() > 0) {
                     SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
                     entityDto.setStockNumber(depotStore.getOutCode());
-                    entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
+                    Product product = productIdToOutCodeMap.get(detail.getProductId());
+                    if (product.getCode() != null){
+                        entityDto.setMaterialNumber(product.getCode());
+                    }else{
+                        throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
+                    }
                     entityDto.setQty(detail.getBillQty());
                     entityDto.setPrice(detail.getPrice());
                     entityDto.setEntryNote(goodsOrderForm.getRemarks());
