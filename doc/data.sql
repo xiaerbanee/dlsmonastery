@@ -51,4 +51,57 @@ WHERE
 
 	update hr_position t1,db_oppo_test.hr_position t2 set t1.role_id=t2.role_id where t1.`name`=t2.`name`;
 
+	INSERT into sys_company_config SELECT t1.* FROM db_oppo_test.sys_company_config t1 where t1.code in ("COMPANY_NAME","DEFAULT_PROVINCE_ID");
+
+	INSERT INTO sys_menu (
+	id,
+	NAME,
+	sort,
+	mobile,
+	menu_category_id,
+	created_by,
+	created_date,
+	last_modified_by,
+	last_modified_date,
+	remarks,
+	version,
+	locked,
+	enabled,
+	visible,
+	mobile_href,
+	mobile_icon,
+	`code`,
+	href,
+	company_id
+) SELECT
+	t1.id,
+	t1.`NAME`,
+	t1.sort,
+	t1.mobile,
+	t1.menu_category_id,
+	t1.created_by,
+	t1.created_date,
+	t1.last_modified_by,
+	t1.last_modified_date,
+	t1.remarks,
+	t1.version,
+	t1.locked,
+	t1.enabled,
+	t1.visible,
+	t1.mobile_href,
+	t1.mobile_icon,
+	t1.`code`,
+	"" AS href,
+	1 AS company_id
+FROM
+	db_oppo_test.sys_menu t1
+WHERE
+	t1.`name` not in(
+		SELECT
+			t2. NAME
+		FROM
+			sys_menu t2
+	)
+AND t1.enabled = 1;
+
 
