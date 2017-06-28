@@ -7,6 +7,7 @@ import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -303,8 +304,8 @@ public class GoodsOrderService {
             item.setBillDate(LocalDateTime.of(goodsOrderForm.getBillDate(),LocalTime.MIN));
             item.setRemarks(goodsOrderForm.getBusinessId());
             //定金转应收
-            otherRecAbleManager.synForGoodOrder(item);
-//            item.setCloudSynId(otherCloudSyn.getId());
+            KingdeeSynReturnDto kingdeeSynReturnDto = otherRecAbleManager.synForGoodOrder(item);
+            item.setCloudSynId(kingdeeSynReturnDto.getId());
             item.setStatus("已通过");
             item.setLocked(true);
             shopGoodsDepositRepository.save(item);
