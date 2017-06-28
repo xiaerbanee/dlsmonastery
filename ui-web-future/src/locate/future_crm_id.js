@@ -800,7 +800,8 @@ export default {
     qty: "kuantitas",
     billQty: "jumlah nota",
     price: "harga",
-    hasIme: "string kode"
+    hasIme: "string kode",
+    prerequisiteMessage: "必填信息",
   },
   goodsOrderDetail: {
     goodsOrderDetail: "货品订货详细",
