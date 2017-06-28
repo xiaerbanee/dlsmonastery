@@ -44,7 +44,7 @@ public class AccountWeixinService {
                     if (accountWeixin.getOpenId().equals(weixinSessionDto.getOpenid())) {
                         return new RestResponse("账号绑定成功",null);
                     } else {
-                        return new RestResponse("绑定失败，已绑定其他微信号", null);
+                        return new RestResponse("绑定失败，已绑定其他微信号", null,false);
                     }
                 }
             } else  if (CollectionUtil.isEmpty(accountWeixinList)){
@@ -56,6 +56,6 @@ public class AccountWeixinService {
                 return new RestResponse("账号绑定成功",null);
             }
         }
-        return new RestResponse("绑定失败，登陆名或者密码不正确", null);
+        return new RestResponse("绑定失败，登陆名或者密码不正确", null,false);
     }
 }
