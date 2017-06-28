@@ -39,6 +39,15 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String processStatus;
     private String processInstanceId;
     private String processPositionId;
+    private Boolean locked;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public String getShopType() {
         return shopType;

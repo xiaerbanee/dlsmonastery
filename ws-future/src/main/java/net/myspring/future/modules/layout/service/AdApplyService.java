@@ -100,10 +100,8 @@ public class AdApplyService {
     }
 
     public AdApplyDto findOne(String id){
-        AdApplyDto adApplyDto;
-        if(StringUtils.isBlank(id)){
-            adApplyDto = new AdApplyDto();
-        } else {
+        AdApplyDto adApplyDto = new AdApplyDto();
+        if(StringUtils.isNotBlank(id)){
             AdApply adApply= adApplyRepository.findOne(id);
             adApplyDto = BeanUtil.map(adApply,AdApplyDto.class);
             cacheUtils.initCacheInput(adApplyDto);
