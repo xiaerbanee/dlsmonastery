@@ -1007,3 +1007,5 @@ ALTER TABLE `crm_depot`
   ADD COLUMN `pop_shop`  tinyint(1) NULL AFTER `company_group`;
 
 update crm_depot set pop_shop = 0;
+
+update crm_depot_shop set door_head=0 where door_head is null;

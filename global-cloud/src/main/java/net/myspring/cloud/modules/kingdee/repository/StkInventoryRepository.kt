@@ -43,4 +43,5 @@ class StkInventoryRepository @Autowired constructor(val namedParameterJdbcTempla
         paramMap.put("materialIdList", materialIdList)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(StkInventory::class.java))
     }
+
 }
