@@ -25,7 +25,8 @@ App({
         sessionId: "",
         userInfo: null,
         weixinCode: null,
-        weixinAccount: null
+        weixinAccount: null,
+        menuList:[],
     },
     //检查用户是否登陆，如果未登陆，自动登陆
     autoLogin: function (cb) {
@@ -41,7 +42,7 @@ App({
         var that = this;
         var weixinAccount = that.globalData.weixinAccount
         //如果没有登陆
-        if (weixinAccount == null || $util.isNotBlank(weixinAccount.id)) {
+        if (weixinAccount == null || !$util.isNotBlank(weixinAccount.id)) {
             that.login(cb);
         } else {
             typeof cb == "function" && cb();
@@ -49,7 +50,7 @@ App({
     }, login: function (cb) {
         var that = this;
         wx.request({
-            url: "http://localhost:1200/user/login?weixinCode="+ that.globalData.weixinCode,
+            url: $util.getUaaUrl('user/login?weixinCode=' + that.globalData.weixinCode),
             data: {},
             method: 'POST',
             success: function (res) {
@@ -58,8 +59,19 @@ App({
                         url: '/page/sys/accountBind/accountBind'
                     })
                 } else {
-                    that.globalData.sessionId=res.data.JSESSIONID
-                    typeof cb == "function" && cb();
+                    that.globalData.sessionId = res.data.JSESSIONID
+                    wx.request({
+                        url: $util.getUrl('basic/hr/account/getAccountInfo'),
+                        header: {
+                            Cookie: "JSESSIONID=" + res.data.JSESSIONID
+                        },
+                         data: {"isMobile":true},
+                        success: function (res) {
+                            that.globalData.menuList=res.data.menus;
+                            that.globalData.weixinAccount=res.data.account;
+                             typeof cb == "function" && cb();
+                        }
+                    });
                 }
             }
         })

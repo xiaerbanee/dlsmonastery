@@ -3,9 +3,9 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
     data: {
-        menuList: null,
         weixinAccounts: null,
-        weixinAccountsHidden: true
+        weixinAccountsHidden: true,
+        menuList: null
     },
     onLoad: function (options) {
     },
@@ -17,14 +17,16 @@ Page({
     }, initPage: function () {
         var that = this;
         that.setData({ weixinAccountsHidden: true })
-        if (that.data.menuList == null) {
+        that.setData({ menuList: app.globalData.menuList })
+        if (that.data.menuList == null || that.data.menuList.length == 0) {
             wx.request({
                 url: $util.getUrl('basic/sys/menu/getMobileMenus'),
                 header: {
                     Cookie: "JSESSIONID=" + app.globalData.sessionId
                 },
                 success: function (res) {
-                    that.setData({ menuList: res.data });
+                    app.globalData.menuList = res.data
+                    that.setData({ menuList: res.data })
                 }
             });
 
@@ -33,14 +35,15 @@ Page({
     switchAccount: function (e) {
         var that = this;
         wx.request({
-            url: $util.getUrl('logout'),
+            url: $util.getUaaUrl('/user/logout'),
             data: {},
             method: 'POST',
             header: {
                 Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function () {
-                that.data.menuList = null
+                app.globalData.menuList = null
+                app.globalData.weixinAccount = null
                 that.setData({ weixinAccountsHidden: false })
             }
         })

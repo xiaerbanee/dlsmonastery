@@ -29,9 +29,7 @@ class AccountWeixinDtoRepository @Autowired constructor(val namedParameterJdbcTe
     fun findByAccountId(accountId: String): MutableList<AccountWeixinDto> {
         return namedParameterJdbcTemplate.query("""
                     SELECT
-                    t1.company_id,
-                    t1.account_id,
-                    t1.open_id
+                    t1.*
                     FROM
                     hr_account_weixin t1
                     WHERE
