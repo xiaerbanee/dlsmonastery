@@ -13,6 +13,7 @@ import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -52,6 +53,9 @@ public class StkInStockService {
                 kingdeeBook) {
         };
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("采购入库失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

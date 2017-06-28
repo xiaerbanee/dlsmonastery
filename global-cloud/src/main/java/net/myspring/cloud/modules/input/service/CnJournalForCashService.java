@@ -14,6 +14,8 @@ import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,9 @@ public class CnJournalForCashService {
                 kingdeeBook) {
         };
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("现金日记账失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

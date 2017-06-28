@@ -18,6 +18,7 @@ import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class StkMisDeliveryService {
                 stkMisDeliveryDto.getJson(),
                 kingdeeBook);
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("其他出库单失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

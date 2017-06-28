@@ -23,6 +23,7 @@ import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -90,6 +91,9 @@ public class SalOutStockService {
             }
         };
         kingdeeManager.save(kingdeeSynExtendDto);
+        if (!kingdeeSynExtendDto.getSuccess()){
+            throw new ServiceException("销售入库单："+kingdeeSynExtendDto.getResult());
+        }
         return kingdeeSynExtendDto;
     }
 
