@@ -110,6 +110,7 @@ public class ShopAdService {
                 ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
 
                 if(activitiCompleteDto!=null){
+                    shopAd.setLocked(true);
                     shopAd.setProcessFlowId(activitiCompleteDto.getProcessFlowId());
                     shopAd.setProcessStatus(activitiCompleteDto.getProcessStatus());
                     shopAd.setProcessPositionId(activitiCompleteDto.getPositionId());

@@ -179,7 +179,7 @@ function deleteExtra(json) {
     for (var index in newJson) {
         if (!newJson[index]) {
             delete newJson[index];
-        }else if((newJson[index] instanceof Array)&&newJson[index].length==0){
+        } else if ((newJson[index] instanceof Array) && newJson[index].length == 0) {
             delete newJson[index];
         }
     }
@@ -187,8 +187,10 @@ function deleteExtra(json) {
 }
 
 function downloadFile(images, id, sessionId, count, cb) {
-    var idList = id.split(",");
-    getFile(images, idList, sessionId, count, cb);
+    if (id) {
+        var idList = id.split(",");
+        getFile(images, idList, sessionId, count, cb);
+    }
 }
 
 function getFile(images, idList, sessionId, count, cb) {
@@ -203,7 +205,7 @@ function getFile(images, idList, sessionId, count, cb) {
                 view: res.tempFilePath
             })
             if (idList.length > 0) {
-                getFile(images, idList, sessionId,count,cb)
+                getFile(images, idList, sessionId, count, cb)
             } else {
                 images.splice(0, images.length - count)
                 images.reverse();
@@ -249,5 +251,5 @@ module.exports = {
     downloadFile: downloadFile,
     getWindowHeight: getWindowHeight,
     getUaaUrl: getUaaUrl,
-    toUpper:toUpper
+    toUpper: toUpper
 }

@@ -33,7 +33,7 @@ Page({
     }
     that.setData({ disabled: true });
     wx.request({
-      url: "http://localhost:1200/user/bind",
+      url: $util.getUaaUrl("/user/bind"),
       data: {
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,
@@ -45,22 +45,21 @@ Page({
       success: function (res) {
         if (res.data.success) {
           wx.showModal({
-            title: "绑定成功",
+            title: "小提示",
             content: res.data.message,
             showCancel: false,
             success: function (res) {
-              wx.redirectTo({  url:"/page/sys/home/home"})
+              that.setData({ disabled: false });
+              wx.switchTab({ url: '/page/sys/home/home' })
             }
-          });
+          })
         } else {
           wx.showModal({
-            title: "绑定失败",
+            title: "小提示",
             content: res.data.message,
             showCancel: false,
             success: function (res) {
-              if (res.confirm) {
-                that.setData({ disabled: false });
-              }
+              that.setData({ disabled: false });
             }
           });
         }

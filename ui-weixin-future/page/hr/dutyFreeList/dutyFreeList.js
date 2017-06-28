@@ -44,7 +44,6 @@ Page({
   },
   pageRequest: function () {
     var that = this;
-
     wx.request({
       url: $util.getUrl("basic/hr/dutyFree"),
       header: {

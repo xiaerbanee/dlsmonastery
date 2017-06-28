@@ -39,9 +39,6 @@
           </el-col>
           <el-col :span="12">
             <div v-show="inputForm.shopId">
-              <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
-                {{shop.depotType}}
-              </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.priceSystem')" prop="pricesystem">
                 {{shop.pricesystemName}}
               </el-form-item>

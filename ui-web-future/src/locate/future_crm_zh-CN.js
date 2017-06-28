@@ -755,6 +755,7 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    lxMallOrder: "天翼购订货",
   },
   goodsOrderDetail: {
     goodsOrderDetail: "货品订货详细",

@@ -16,7 +16,7 @@
           <date-time-picker  v-model="inputForm.uploadTime" ></date-time-picker>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneForm.productName')" prop="productId">
-          <product-select v-model="inputForm.productId"></product-select>
+          <product-select v-model="inputForm.productId" hasIme=true></product-select>
         </el-form-item>
         <el-form-item :label="$t('employeePhoneForm.jobPrice')" prop="jobPrice">
           <el-input v-model.number="inputForm.jobPrice"></el-input>
