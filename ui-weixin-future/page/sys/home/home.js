@@ -19,7 +19,6 @@ Page({
         }
     }, initPage: function () {
         var that = this;
-        console.log(app.globalData.weixinAccounts)
         if (app.globalData.weixinAccounts.length > 1 && app.globalData.weixinAccount == null) {
             that.setData({ weixinAccountsHidden: false, weixinAccounts: app.globalData.weixinAccounts })
         } else {
