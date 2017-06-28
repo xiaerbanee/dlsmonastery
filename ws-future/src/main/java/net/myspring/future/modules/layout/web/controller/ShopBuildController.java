@@ -7,6 +7,7 @@ import net.myspring.future.modules.layout.service.ShopBuildService;
 import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopBuildForm;
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery;
+import net.myspring.util.excel.ExcelView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
@@ -86,9 +88,8 @@ public class ShopBuildController {
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(ShopBuildQuery shopBuildQuery) throws IOException{
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return shopBuildService.findSimpleExcelSheets(workbook,shopBuildQuery);
+    public ModelAndView export(ShopBuildQuery shopBuildQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",shopBuildService.export(shopBuildQuery));
     }
 
     @RequestMapping(value = "getForm")

@@ -10,6 +10,7 @@ import net.myspring.future.modules.layout.web.form.ShopAdAuditForm;
 import net.myspring.future.modules.layout.web.form.ShopAdForm;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import net.myspring.future.modules.layout.web.validator.ShopAdValidator;
+import net.myspring.util.excel.ExcelView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -96,8 +98,7 @@ public class ShopAdController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(ShopAdQuery shopAdQuery) throws IOException{
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return shopAdService.findSimpleExcelSheets(workbook,shopAdQuery);
+    public ModelAndView export(ShopAdQuery shopAdQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",shopAdService.export(shopAdQuery));
     }
 }

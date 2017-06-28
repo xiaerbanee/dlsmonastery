@@ -29,9 +29,4 @@ public class StkInventoryController {
     public List<StkInventory> findByMaterialIdList(@RequestBody List<String> productOutIds){
         return stkInventoryService.findByMaterialIdList(productOutIds);
     }
-
-    @RequestMapping(value = "findByMaterialIdsAndStockId",method = RequestMethod.POST)
-    public List<StkInventory> findByMaterialIdsAndStockId(@RequestBody List<String> productOutIds,String StoreOutId){
-        return stkInventoryService.findByMaterialIdsAndStockId(productOutIds,StoreOutId);
-    }
 }
