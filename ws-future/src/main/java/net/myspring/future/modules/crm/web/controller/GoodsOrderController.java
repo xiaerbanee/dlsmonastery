@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
@@ -14,10 +15,12 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
+import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,6 +105,14 @@ public class GoodsOrderController {
 
     @RequestMapping(value = "bill")
     public RestResponse bill(GoodsOrderBillForm goodsOrderBillForm) {
+        if(CollectionUtil.isEmpty(goodsOrderBillForm.getGoodsOrderBillDetailFormList())){
+            throw new ServiceException("开单明细不能为空");
+        }
+        for(GoodsOrderBillDetailForm goodsOrderBillDetailForm : goodsOrderBillForm.getGoodsOrderBillDetailFormList()){
+            if(goodsOrderBillDetailForm.getPrice()==null || goodsOrderBillDetailForm.getPrice().compareTo(BigDecimal.ZERO)<0){
+                throw new ServiceException("开单明细的单价必须大于等于0");
+            }
+        }
         goodsOrderService.bill(goodsOrderBillForm);
         return new RestResponse("开单成功", ResponseCodeEnum.saved.name());
     }

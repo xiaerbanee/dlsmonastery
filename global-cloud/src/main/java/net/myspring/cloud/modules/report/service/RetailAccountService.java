@@ -29,7 +29,7 @@ import static net.myspring.cloud.common.constant.KingdeeConstant.DOUBLE_ZERO;
 import static net.myspring.cloud.common.constant.KingdeeConstant.TOTAL_DEPARTMENT;
 
 /**
- * 零售账户报表
+ * 零售费用报表
  * Created by lihx on 2017/6/7.
  */
 @Service
