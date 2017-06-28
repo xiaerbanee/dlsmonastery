@@ -34,6 +34,9 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
+    private String areaId;
+    @CacheInput(inputKey="offices",inputInstance = "areaId",outputInstance = "name")
+    private String areaName;
     private String contator;
     private String mobilePhone;
     private String address;
@@ -263,5 +266,21 @@ public class DepotShopDto extends DataDto<DepotShop>{
 
     public void setSpecialityStore(boolean specialityStore) {
         this.specialityStore = specialityStore;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }

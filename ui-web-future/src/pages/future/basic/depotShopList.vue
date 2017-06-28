@@ -36,10 +36,15 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="depotName" label="门店名称" sortable ></el-table-column>
+        <el-table-column prop="areaName" label="办事处"  />
+        <el-table-column prop="officeName" label="机构"  />
         <el-table-column prop="areaType" label="地区属性"  />
         <el-table-column prop="carrierType" label="运营商营业厅类型"  />
         <el-table-column prop="turnoverType" label="营业额分类"  />
         <el-table-column prop="channelType" label="运营商类型" />
+        <el-table-column prop="pricesystemType" label="价格体系"  />
+        <el-table-column prop="chainType" label="连锁体系"  />
+        <el-table-column prop="adPricesystemType" label="物料价格体系"  />
         <el-table-column prop="salePointType" label="门店类型"  />
         <el-table-column prop="townType" label="乡镇类型"  />
         <el-table-column prop="shopArea" label="面积大小"  />
@@ -87,6 +92,7 @@
         util.setQuery("depotShopList",this.formData);
         console.log(this.formData)
         axios.get('/api/ws/future/basic/depotShop',{params:this.formData}).then((response) => {
+          console.log(response.data)
           this.page = response.data;
           this.pageLoading = false;
         })
