@@ -30,7 +30,6 @@ Page({
         var that = this;
         var index = event.currentTarget.dataset.index;
         app.globalData.weixinAccount = that.data.weixinAccounts[index];
-        console.log(app.globalData.weixinAccount)
         that.setData({ weixinAccountsHidden: true })
         app.login(function () {
             that.initPage();
@@ -52,9 +51,19 @@ Page({
                         Cookie: "JSESSIONID=" + app.globalData.sessionId
                     },
                     success: function (res) {
+                        that.setData({ menuList: [] })
                         app.globalData.menuList = null
                         app.globalData.weixinAccount = null
                         that.setData({ weixinAccountsHidden: false })
+                        wx.request({
+                            url: $util.getUaaUrl('user/getWeixinAccounts?weixinCode=' + app.globalData.weixinCode),
+                            data: {},
+                            method: 'POST',
+                            success: function (res) {
+                                app.globalData.weixinAccounts = res.data;
+                                that.setData({ weixinAccounts: res.data })
+                            },
+                        })
                     },
                 })
             }

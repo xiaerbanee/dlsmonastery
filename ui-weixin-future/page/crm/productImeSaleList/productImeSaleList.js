@@ -55,6 +55,7 @@ Page({
       },
       data: $util.deleteExtra(that.data.formData),
       success: function (res) {
+        console.log(res.data)
         that.setData({ page: res.data });
         wx.hideToast();
         that.setData({ scrollTop: $util.toUpper() });
@@ -99,26 +100,6 @@ Page({
   },
   showItemActionSheet: function (e) {
     var that = this;
-    var id = e.currentTarget.dataset.id;
-    wx.showActionSheet({
-      itemList: ["删除"],
-      success: function (res) {
-        if (!res.cancel) {
-          if (res.tapIndex == 0) {
-            wx.request({
-              url: $util.getUrl("crm/productImeSale/delete"),
-              data: { id: id },
-              header: {
-                Cookie: "JSESSIONID=" + app.globalData.sessionId
-              },
-              success: function (res) {
-                that.pageRequest();
-              }
-            })
-          }
-        }
-      }
-    });
   },
   formSubmit: function (e) {
     var that = this;
