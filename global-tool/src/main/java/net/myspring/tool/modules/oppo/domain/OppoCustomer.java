@@ -1,17 +1,21 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.myspring.tool.common.domain.IdEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by guolm on 2016/7/16.
  */
 @Entity
 @Table(name="oppo_push_customer")
-public class OppoCustomer  extends IdEntity<OppoCustomer> {
+public class OppoCustomer {
+    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private String customerid;
     private String customername;
     private String agentid;
