@@ -6,7 +6,8 @@
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopAd:edit'">{{$t('shopAdList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopAd:view'">{{$t('shopAdList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopAd:view'">{{$t('shopAdList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -43,7 +44,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:shopAd:view'">{{$t('expressOrderList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('expressOrderList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -143,9 +143,9 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
-        axios.get('/api/ws/future/layout/shopAd/export?'+qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/layout/shopAd/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },batchPass(){
         if(!this.multipleSelection || this.multipleSelection.length < 1){
           this.$message(this.$t('shopAdList.noSelectionFound'));

@@ -12,6 +12,7 @@ import net.myspring.future.modules.layout.web.form.AdApplyBillTypeChangeForm;
 import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -93,8 +94,7 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(AdApplyQuery adApplyQuery) throws IOException {
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return adApplyService.findSimpleExcelSheets(workbook,adApplyQuery);
+    public ModelAndView export(AdApplyQuery adApplyQuery) throws IOException {
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",adApplyService.export(adApplyQuery));
     }
 }

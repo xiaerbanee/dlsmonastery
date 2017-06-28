@@ -123,7 +123,8 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.tax_name AS 'taxName',
                 t1.delegate_depot_id AS 'delegateDepotId',
                 depot.name as 'delegateDepotName',
-                t1.pop_shop AS 'popShop'
+                t1.pop_shop AS 'popShop',
+                t1.area_id,t1.contator,t1.mobile_phone
             FROM
                 crm_depot t1 left join crm_depot depot on t1.delegate_depot_id=depot.id,
                 crm_depot_store t2

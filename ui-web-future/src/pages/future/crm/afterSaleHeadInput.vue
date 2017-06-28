@@ -285,7 +285,7 @@
         })
       }, onchange(type){
         if (this.type == '窜货机') {
-          this.$router.push({ name: 'afterSaleHeadFleeInput',query:{action:this.$route.query.action}})
+          this.$router.push({ name: 'afterSaleHeadFleeInput',query:{action:this.$route.query.action}, params:{_closeFrom:true}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

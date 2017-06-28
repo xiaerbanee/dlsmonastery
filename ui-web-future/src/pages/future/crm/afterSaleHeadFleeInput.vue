@@ -296,7 +296,7 @@
         })
       }, onchange(type){
         if (this.type == '售后机') {
-          this.$router.push({ name: 'afterSaleHeadInput',query:{action:this.$route.query.action}})
+          this.$router.push({ name: 'afterSaleHeadInput',query:{action:this.$route.query.action}, params:{_closeFrom:true}})
         }else {
           let categoryList=new Array();
           categoryList.push("退机类型")

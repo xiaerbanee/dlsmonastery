@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.manager;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
@@ -48,7 +50,7 @@ public class SalOutStockManager {
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
             ClientDto clientDto = clientRepository.findByDepotId(goodsOrderForm.getShopId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-            Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
+            Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product->Product));
             List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(goodsOrderForm.getId());
@@ -61,7 +63,12 @@ public class SalOutStockManager {
                 if (detail.getBillQty() != null && detail.getBillQty() > 0) {
                     SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
                     entityDto.setStockNumber(depotStore.getOutCode());
-                    entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
+                    Product product = productIdToOutCodeMap.get(detail.getProductId());
+                    if (product.getCode() != null){
+                        entityDto.setMaterialNumber(product.getCode());
+                    }else{
+                        throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
+                    }
                     entityDto.setQty(detail.getBillQty());
                     entityDto.setPrice(detail.getPrice());
                     entityDto.setEntryNote(goodsOrderForm.getRemarks());
