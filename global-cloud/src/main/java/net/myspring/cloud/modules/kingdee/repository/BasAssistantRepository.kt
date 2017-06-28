@@ -35,8 +35,8 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("nameList", nameList), BeanPropertyRowMapper(BasAssistant::class.java))
     }
 
-    fun findByName(name: String): BasAssistant {
-        return namedParameterJdbcTemplate.queryForObject("""
+    fun findByName(name: String): BasAssistant? {
+        var list = namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FENTRYID,
                 t1.FNUMBER,
@@ -55,6 +55,11 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
                 AND t1.FFORBIDSTATUS = 'A'
                 AND t2.FDATAVALUE = :name
         """, Collections.singletonMap("name", name), BeanPropertyRowMapper(BasAssistant::class.java))
+        if(list.size>0){
+            return list[0]
+        }else{
+            return null
+        }
     }
 
     fun findByType(type: String): MutableList<BasAssistant> {
