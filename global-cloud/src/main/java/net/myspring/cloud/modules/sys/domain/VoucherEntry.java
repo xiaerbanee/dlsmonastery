@@ -14,7 +14,7 @@ public class VoucherEntry extends IdEntity<VoucherEntry> {
     //摘要
     private String FExplanation;
     //科目编码
-    private String FAccountId;
+    private String FAccountid;
     //借方金额
     private BigDecimal FDebit;
     //贷方金额
@@ -30,12 +30,12 @@ public class VoucherEntry extends IdEntity<VoucherEntry> {
         this.FExplanation = FExplanation;
     }
 
-    public String getFAccountId() {
-        return FAccountId;
+    public String getFAccountid() {
+        return FAccountid;
     }
 
-    public void setFAccountId(String FAccountId) {
-        this.FAccountId = FAccountId;
+    public void setFAccountid(String FAccountid) {
+        this.FAccountid = FAccountid;
     }
 
     public BigDecimal getFDebit() {

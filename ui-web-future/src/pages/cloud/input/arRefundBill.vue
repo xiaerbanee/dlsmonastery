@@ -3,7 +3,7 @@
     <head-tab active="arRefundBill"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 25px"></div>
       </el-form>
     </div>
@@ -39,8 +39,7 @@
         formData:{
           json:[],
         },rules: {},
-        submitDisabled:false,
-        remoteLoading:false
+        submitDisabled:false
       };
     },
     mounted() {

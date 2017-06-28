@@ -46,7 +46,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
-	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 	runtime('mysql:mysql-connector-java:5.1.42')
 	runtime('org.springframework.boot:spring-boot-devtools')

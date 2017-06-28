@@ -17,8 +17,8 @@ Page({
     wx.login({
       success: function (res) {
         that.setData({
-        code: res.code
-      })
+          code: res.code
+        })
       }
     })
   },
@@ -33,28 +33,33 @@ Page({
     }
     that.setData({ disabled: true });
     wx.request({
-      url: "http://localhost:1200/user/bind",
+      url: $util.getUaaUrl("/user/bind"),
       data: {
         loginName: e.detail.value.loginName,
         password: e.detail.value.password,
         code: that.data.code
       },
       header: {
-        Cookie:"JSESSIONID="+app.globalData.sessionId
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res)
         if (res.data.success) {
-          wx.navigateBack({ delta: 10 })
-        } else {
           wx.showModal({
-            title: "绑定失败",
+            title: "小提示",
             content: res.data.message,
             showCancel: false,
             success: function (res) {
-              if (res.confirm) {
-                that.setData({ disabled: false });
-              }
+              that.setData({ disabled: false });
+              wx.switchTab({ url: '/page/sys/home/home' })
+            }
+          })
+        } else {
+          wx.showModal({
+            title: "小提示",
+            content: res.data.message,
+            showCancel: false,
+            success: function (res) {
+              that.setData({ disabled: false });
             }
           });
         }

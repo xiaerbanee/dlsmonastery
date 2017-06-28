@@ -20,8 +20,15 @@ Page({
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function () {
-      that.initPage()
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
     });
   },
   initPage: function () {
@@ -41,25 +48,18 @@ Page({
   },
   pageRequest: function () {
     var that = this;
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading',
-      duration: 10000,
+    wx.request({
+      url: $util.getUrl("ws/future/crm/productImeSale"),
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
+      data: $util.deleteExtra(that.data.formData),
       success: function (res) {
-        wx.request({
-          url: $util.getUrl("ws/future/crm/productImeSale"),
-          header: {
-            Cookie: "JSESSIONID=" + app.globalData.sessionId
-          },
-          data: $util.deleteExtra(that.data.formData),
-          success: function (res) {
-            that.setData({ page: res.data });
-            wx.hideToast();
-            that.setData({ scrollTop: $util.toUpper() });
-          }
-        })
+        that.setData({ page: res.data });
+        wx.hideToast();
+        that.setData({ scrollTop: $util.toUpper() });
       }
-    });
+    })
   },
   add: function () {
     wx.navigateTo({
@@ -99,26 +99,6 @@ Page({
   },
   showItemActionSheet: function (e) {
     var that = this;
-    var id = e.currentTarget.dataset.id;
-    wx.showActionSheet({
-      itemList: ["删除"],
-      success: function (res) {
-        if (!res.cancel) {
-          if (res.tapIndex == 0) {
-            wx.request({
-              url: $util.getUrl("crm/productImeSale/delete"),
-              data: { id: id },
-              header: {
-                Cookie: "JSESSIONID=" + app.globalData.sessionId
-              },
-              success: function (res) {
-                that.pageRequest();
-              }
-            })
-          }
-        }
-      }
-    });
   },
   formSubmit: function (e) {
     var that = this;

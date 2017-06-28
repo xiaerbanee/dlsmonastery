@@ -7,6 +7,8 @@ import java.time.LocalDate;
 public class ReportScoreAreaQuery extends BaseQuery{
     private LocalDate scoreDate;
     private String areaId;
+    private String sort = "month_rank,ASC";
+
 
     public LocalDate getScoreDate() {
         return scoreDate;
@@ -22,5 +24,15 @@ public class ReportScoreAreaQuery extends BaseQuery{
 
     public void setAreaId(String areaId) {
         this.areaId = areaId;
+    }
+
+    @Override
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    @Override
+    public String getSort() {
+        return sort;
     }
 }

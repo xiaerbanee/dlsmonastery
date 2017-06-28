@@ -17,9 +17,16 @@ Page({
   },
   onShow: function () {
     var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
@@ -32,53 +39,46 @@ Page({
       },
       success: function (res) {
         that.setData({ formData: res.data });
-        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes })
-        that.pageRequest();
-      }
-    });
-    wx.request({
-      url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=广告申请"),
-      data: {},
-      method: 'GET',
-      header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
-      },
-      success: function (res) {
-        that.setData({ 'formProperty.processList': res.data })
-      }
-    })
-  },
-  pageRequest: function () {
-    var that = this;
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading',
-      duration: 10000,
-      success: function (res) {
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypes });
         wx.request({
-          url: $util.getUrl("ws/future/layout/shopAd"),
+          url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=广告申请"),
+          data: {},
+          method: 'GET',
           header: {
             Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
-          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            let content = res.data.content;
-            for (var item in content) {
-              var actionList = new Array();
-              actionList.push("详细");
-              if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
-                actionList.push("审核");
-              }
-              if (content[item].isEditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
-                actionList.push("修改", "删除");
-              }
-              res.data.content[item].actionList = actionList;
-            }
-            that.setData({ page: res.data });
-            wx.hideToast();
-            that.setData({ scrollTop: $util.toUpper() });
+            that.setData({ 'formProperty.processList': res.data })
           }
         })
+        that.pageRequest();
+      }
+    });
+  },
+  pageRequest: function () {
+    var that = this;
+    wx.request({
+      url: $util.getUrl("ws/future/layout/shopAd"),
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
+      data: $util.deleteExtra(that.data.formData),
+      success: function (res) {
+        let content = res.data.content;
+        for (var item in content) {
+          var actionList = new Array();
+          actionList.push("详细");
+          if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
+            actionList.push("审核");
+          }
+          if (content[item].isEditable && content[item].processStatus == "办事处产品经理审核") {
+            actionList.push("修改", "删除");
+          }
+          res.data.content[item].actionList = actionList;
+        }
+        that.setData({ page: res.data });
+        wx.hideToast();
+        that.setData({ scrollTop: $util.toUpper() });
       }
     })
   },

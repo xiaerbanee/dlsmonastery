@@ -800,7 +800,8 @@ export default {
     qty: "kuantitas",
     billQty: "jumlah nota",
     price: "harga",
-    hasIme: "string kode"
+    hasIme: "string kode",
+    prerequisiteMessage: "必填信息",
   },
   goodsOrderDetail: {
     goodsOrderDetail: "货品订货详细",
@@ -865,7 +866,8 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    lxMallOrder: "天翼购订货",
   },
   goodsOrderList: {
     goodsOrderList: "pengiriman barang",

@@ -6,6 +6,7 @@ import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.OfficeManager;
+import net.myspring.uaa.manager.PermissionManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
@@ -42,6 +43,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private CompanyConfigRepository companyConfigRepository;
     @Autowired
     private OfficeManager officeManager;
+    @Autowired
+    private PermissionManager permissionManager;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,7 +53,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         HttpServletRequest request  = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String weixinCode = request.getParameter("weixinCode");
         if(StringUtils.isNotBlank(weixinCode)) {
-            String accountId = ObjectUtils.toString(request.getAttribute("accountId"));
+            String accountId = ObjectUtils.toString(request.getParameter("accountId"));
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(weixinCode);
             if(weixinSessionDto != null && StringUtils.isNotBlank(weixinSessionDto.getOpenid())) {
                 List<AccountWeixinDto> accountWeixinDtoList = accountWeixinDtoRepository.findByOpenId(weixinSessionDto.getOpenid());
@@ -76,6 +79,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
+            permissionManager.permissionCachePut(accountDto.getCompanyName(),accountDto.getId(),accountDto.getRoleId());
             customUserDetails = new CustomUserDetails(
                     accountDto.getLoginName(),
                     accountDto.getPassword(),

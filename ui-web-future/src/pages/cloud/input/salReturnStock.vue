@@ -11,7 +11,7 @@
         <el-form-item  label="日期"  prop="billDate">
           <date-picker v-model="formData.billDate"></date-picker>
         </el-form-item>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+        <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>

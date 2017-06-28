@@ -100,6 +100,7 @@ public class ShopPrintService {
         activitiCompleteForm.setProcessTypeId(shopPrint.getProcessTypeId());
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(activitiCompleteForm);
         if(activitiCompleteDto!=null){
+            shopPrint.setLocked(true);
             shopPrint.setProcessStatus(activitiCompleteDto.getProcessStatus());
             shopPrint.setProcessPositionId(activitiCompleteDto.getPositionId());
             shopPrint.setProcessFlowId(activitiCompleteDto.getProcessFlowId());

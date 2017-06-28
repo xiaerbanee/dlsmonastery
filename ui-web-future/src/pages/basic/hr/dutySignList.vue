@@ -106,9 +106,7 @@
       },exportData(){
         this.formVisible = false;
         var submitData = util.deleteExtra(this.formData);
-        axios.get('/api/basic/hr/dutySign/export?'+qs.stringify(submitData)).then((response) => {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        })
+        window.location.href="/api/basic/hr/dutySign/export?"+qs.stringify(submitData);
 			}
     },created () {
       this.pageHeight = window.outerHeight -320;

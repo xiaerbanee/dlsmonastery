@@ -2,7 +2,7 @@ spring:
   application:
     name: ws-future
   datasource:
-    url: jdbc:mysql://168.192.1.17:3316/db_oppo_test?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
     username: root
     password: bbk@123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -13,9 +13,7 @@ spring:
     database: 0
     max-idle: 25
     max-total: 50
-  data:
-    mongodb:
-      uri: mongodb://168.192.1.20:1600/file
+
   jpa:
     show-sql: true
 server:

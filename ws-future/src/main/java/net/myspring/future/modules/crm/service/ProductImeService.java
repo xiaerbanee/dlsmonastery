@@ -278,7 +278,8 @@ public class ProductImeService {
         }
     }
 
-    public String getMongoDbId(Workbook workbook, List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
+    public SimpleExcelBook getFolderFileId(List<DepotReportDto> depotReportList, ReportQuery reportQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));
@@ -332,9 +333,9 @@ public class ProductImeService {
         }
         cacheUtils.initCacheInput(depotReportList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("销售报表" + reportQuery.getExportType(), depotReportList, simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "销售报表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        return simpleExcelBook;
     }
 
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {

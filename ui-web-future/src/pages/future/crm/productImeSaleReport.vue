@@ -185,9 +185,7 @@
         this.pageRequest();
       }, exportData(command) {
         this.formData.exportType=command;
-        axios.post('/api/ws/future/crm/productIme/exportReport', qs.stringify(util.deleteExtra(this.formData))).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        window.location.href="/api/ws/future/crm/productIme/exportReport?"+qs.stringify(util.deleteExtra(this.formData));
         this.formData.exportType=null;
       },saleReportGrid(){
 
