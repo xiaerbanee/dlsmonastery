@@ -42,7 +42,4 @@ WHERE
 
 update sys_office t1,db_oppo_test.sys_office t2 set t1.office_rule_id=t2.office_rule_id,t1.area_id=t2.area_id where t1.name=t2.name;
 
-INSERT into sys_process_task SELECT t1. * FROM db_oppo_test.sys_process_task t1 where t1.enabled=1;
-
-
 
