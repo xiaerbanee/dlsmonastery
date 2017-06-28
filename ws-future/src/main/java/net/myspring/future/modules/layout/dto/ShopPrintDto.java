@@ -23,6 +23,15 @@ public class ShopPrintDto extends DataDto<ShopPrint>{
     private String processStatus;
     private String processPositionId;
     private String processInstanceId;
+    private Boolean locked;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

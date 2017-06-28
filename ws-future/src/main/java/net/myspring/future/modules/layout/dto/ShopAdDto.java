@@ -32,6 +32,15 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String processStatus;
     private String processPositionId;
     private String processInstanceId;
+    private Boolean locked;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public String getAttachment() {
         return attachment;
