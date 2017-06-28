@@ -15,14 +15,13 @@ class AccountWeixinDtoRepository @Autowired constructor(val namedParameterJdbcTe
     fun findByOpenId(openId: String): MutableList<AccountWeixinDto> {
         return namedParameterJdbcTemplate.query("""
                     SELECT
-                    t1.company_id,
-                    t1.account_id,
-                    t1.open_id
+                    t1.*,t2.login_name as 'accountName'
                     FROM
-                    hr_account_weixin t1
+                    hr_account_weixin t1,hr_account t2
                     WHERE
                     t1.open_id = :openId
                     and t1.enabled=1
+                    and t1.account_id=t2.id
                 """, Collections.singletonMap("openId",openId),BeanPropertyRowMapper(AccountWeixinDto::class.java));
     }
 

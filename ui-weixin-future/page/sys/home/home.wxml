@@ -5,7 +5,7 @@
         <view class="page__title page__title_style">请选择账号</view>
       </view>
       <view class="page__bd page__bd_spacing">
-        <button type="primary" class="page__bd_company" wx:for="{{weixinAccounts}}" wx:for-index="index" wx:key="item.id" data-index="{{index}}" bindtap="login">{{item.companyName}}_{{item.accountName}}</button>
+        <button type="primary" class="page__bd_company" wx:for="{{weixinAccounts}}" wx:for-index="index" wx:key="item.id" data-index="{{index}}" bindtap="login">{{item.accountName}}</button>
       </view>
     </view>
   </view>

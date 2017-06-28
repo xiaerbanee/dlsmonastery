@@ -8,43 +8,55 @@ Page({
         menuList: null
     },
     onLoad: function (options) {
+
     },
     onShow: function (options) {
         var that = this;
-        app.autoLogin(function () {
-            that.initPage();
-        })
+        if (that.data.weixinAccountsHidden) {
+            app.autoLogin(function () {
+                that.initPage();
+            })
+        }
     }, initPage: function () {
         var that = this;
-        that.setData({ weixinAccountsHidden: true })
-        that.setData({ menuList: app.globalData.menuList })
-        if (that.data.menuList == null || that.data.menuList.length == 0) {
-            wx.request({
-                url: $util.getUrl('basic/sys/menu/getMobileMenus'),
-                header: {
-                    Cookie: "JSESSIONID=" + app.globalData.sessionId
-                },
-                success: function (res) {
-                    app.globalData.menuList = res.data
-                    that.setData({ menuList: res.data })
-                }
-            });
-
+        console.log(app.globalData.weixinAccounts)
+        if (app.globalData.weixinAccounts.length > 1 && app.globalData.weixinAccount == null) {
+            that.setData({ weixinAccountsHidden: false, weixinAccounts: app.globalData.weixinAccounts })
+        } else {
+            that.setData({ weixinAccountsHidden: true })
+            that.setData({ menuList: app.globalData.menuList })
         }
+    }, login: function (event) {
+        var that = this;
+        var index = event.currentTarget.dataset.index;
+        app.globalData.weixinAccount = that.data.weixinAccounts[index];
+        console.log(app.globalData.weixinAccount)
+        that.setData({ weixinAccountsHidden: true })
+        app.login(function () {
+            that.initPage();
+        })
     },
     switchAccount: function (e) {
         var that = this;
         wx.request({
             url: $util.getUaaUrl('/user/logout'),
-            data: {},
             method: 'POST',
             header: {
                 Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
             success: function () {
-                app.globalData.menuList = null
-                app.globalData.weixinAccount = null
-                that.setData({ weixinAccountsHidden: false })
+                wx.request({
+                    url: $util.getUaaUrl('/logout'),
+                    method: 'POST',
+                    header: {
+                        Cookie: "JSESSIONID=" + app.globalData.sessionId
+                    },
+                    success: function (res) {
+                        app.globalData.menuList = null
+                        app.globalData.weixinAccount = null
+                        that.setData({ weixinAccountsHidden: false })
+                    },
+                })
             }
         })
     },
