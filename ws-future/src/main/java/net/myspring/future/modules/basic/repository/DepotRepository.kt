@@ -182,14 +182,10 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             }
         }
         if (depotShopQuery.adShop != null) {
-            sb.append("  and t1.ad_shop = " + ":adShop")
+            sb.append("  and t1.ad_shop = :adShop")
         }
         if (depotShopQuery.popShop != null) {
-            if(depotShopQuery.popShop){
-                sb.append("  and t1.pop_shop is NULL ")
-            }else{
-                sb.append("  and t1.pop_shop is NOT NULL ")
-            }
+            sb.append("  and t1.pop_shop = :popShop ")
         }
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
