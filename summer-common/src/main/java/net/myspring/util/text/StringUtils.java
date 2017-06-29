@@ -30,6 +30,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		return list;
 	}
 
+	public static  String appendString(String first,String sec,String separator){
+		if(isBlank(first)&&isBlank(sec)){
+			return "";
+		}else if(isBlank(first)){
+			return sec;
+		}else if(isBlank(sec)){
+			return first;
+		}else {
+			return first+separator+sec;
+		}
+	}
+
 	public static String reverse(String str) {
 		return str == null?null:(new StringBuilder(str)).reverse().toString();
 	}

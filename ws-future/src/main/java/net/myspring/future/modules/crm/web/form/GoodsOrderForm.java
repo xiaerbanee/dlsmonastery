@@ -119,7 +119,7 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
         this.amount = amount;
     }
 
-    public boolean isSyn() {
+    public boolean getSyn() {
         return syn;
     }
 
