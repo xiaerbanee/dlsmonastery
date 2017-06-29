@@ -59,7 +59,14 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
-        var sb = StringBuilder("select t1.*,t2.express_codes as expressOrderExpressCodes from crm_goods_order t1,crm_express_order t2 where t1.express_order_id=t2.id")
+        var sb = StringBuilder("""
+            SELECT
+              t2.express_codes as expressOrderExpressCodes,
+              t1.*
+            FROM crm_goods_order t1
+                      LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+            where  t1.enabled = 1
+        """)
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.statusList)) {
             sb.append(" and t1.status in (:statusList)")
         }
@@ -109,8 +116,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.created_date <:createdDateEnd")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.expressCodes)) {
-            sb.append(""" and express_order_id in (
-            select express_order_id from crm_express where code in (:expresscodeList)
+            sb.append("""   and t1.express_order_id in (
+            select express.express_order_id from crm_express express where express.code in (:expresscodeList)
             )
          """)
         }
@@ -121,13 +128,13 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.remarks like concat('%',:remarks,'%')")
         }
         if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
-            sb.append(" and t1.express_order_id in(select express_order_id from crm_express where code like concat('%',:expressCode,'%'))")
+            sb.append(" and t1.express_order_id in(select express.express_order_id from crm_express express where express.code like concat('%',:expressCode,'%'))")
         }
         if (goodsOrderQuery.lxMallOrder != null && goodsOrderQuery.lxMallOrder) {
-            sb.append(" and lx_mall_order = 1  ")
+            sb.append(" and t1.lx_mall_order = 1  ")
         }
         if (goodsOrderQuery.lxMallOrder != null && !goodsOrderQuery.lxMallOrder) {
-            sb.append(" and lx_mall_order = 0  ")
+            sb.append(" and t1.lx_mall_order = 0  ")
         }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
             sb.append(" and t1.shop_id in (select shop.id from crm_depot shop where shop.office_id in (:officeIdList))")

@@ -14,6 +14,7 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -146,11 +147,11 @@ public class GoodsOrderService {
     }
 
     //检测门店
-    public RestResponse validateShop(String shopId) {
+    private String validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
-        RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
+
         if(StringUtils.isBlank(shop.getPricesystemId())) {
-            restResponse.getErrors().add(new RestErrorField("没有价格体系","no_pricesystem","shopId"));
+            return "门店没有价格体系";
         }
         //检查当前客户是否有未处理订单
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
@@ -158,14 +159,20 @@ public class GoodsOrderService {
         goodsOrderQuery.setStatus(GoodsOrderStatusEnum.待开单.name());
         List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findAll(new PageRequest(0, 1), goodsOrderQuery).getContent();
         if (CollectionUtil.isNotEmpty(goodsOrderDtoList)) {
-            restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
+            return "门店有未处理的单据";
         }
-        return restResponse;
+        return null;
     }
 
     //保存及修改订单
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
+        if(isCreate){
+            String validateMsg = validateShop(goodsOrderForm.getShopId());
+            if(StringUtils.isNotBlank(validateMsg)){
+                throw new ServiceException(validateMsg);
+            }
+        }
         GoodsOrder goodsOrder;
         //保存订单
         if(isCreate) {
@@ -427,7 +434,6 @@ public class GoodsOrderService {
                     GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
                     goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
                     goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailDto.setAllowOrder(allowOrder);
                     goodsOrderDetailDtoList.add(goodsOrderDetailDto);
                 }
             }
@@ -447,6 +453,7 @@ public class GoodsOrderService {
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
             Product product= productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setProductName(product.getName());
+            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder() && product.getAllowBill());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setAreaQty(areaDetailMap.get(product.getId()));
         }
