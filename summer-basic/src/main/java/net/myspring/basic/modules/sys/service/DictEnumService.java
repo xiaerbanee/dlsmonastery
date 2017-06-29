@@ -67,7 +67,6 @@ public class DictEnumService {
         }
     }
 
-    @Transactional
     public DictEnum save(DictEnumForm dictEnumForm) {
         DictEnum dictEnum;
         if(dictEnumForm.isCreate()) {
@@ -81,7 +80,6 @@ public class DictEnumService {
         return dictEnum;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         dictEnumRepository.logicDelete(id);
     }

@@ -109,7 +109,6 @@ public class GoodsOrderService {
     @Autowired
     private CloudClient cloudClient;
 
-    @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
             goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
@@ -147,7 +146,6 @@ public class GoodsOrderService {
     }
 
     //检测门店
-    @Transactional(readOnly = true)
     public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class EmployeeService {
     
     @Autowired
@@ -73,12 +74,10 @@ public class EmployeeService {
         return employee;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         employeeRepository.logicDelete(id);
     }
 
-    @Transactional(readOnly = true)
     public List<EmployeeDto> findByIds(List<String> ids){
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();

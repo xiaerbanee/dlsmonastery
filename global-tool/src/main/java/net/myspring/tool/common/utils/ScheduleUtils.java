@@ -15,12 +15,13 @@ import java.util.List;
 
 @Service
 @Lazy(false)
+@Transactional
 public class ScheduleUtils {
 //	protected Logger logger = LoggerFactory.getLogger(getClass());
 //	@Autowired
 //	private OppoService oppoService;
 
-	@Transactional
+
 	public String synOppo(LocalDate date) {
 		return null;
 		//List<String> mainCodes = Arrays.asList(oppoService.getCodes("FACTORY_AGENT_CODES").split(CharConstant.COMMA));

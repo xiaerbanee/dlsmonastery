@@ -438,7 +438,6 @@ public class AfterSaleService {
 
 
     //坏机返厂
-    @Transactional
     public void toCompany(AfterSaleToCompanyForm afterSaleToCompanyForm) {
         List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeInAndType(afterSaleToCompanyForm.getImeList(),afterSaleToCompanyForm.getType());
         List<AfterSaleDetail> afterSaleDetails = afterSaleDetailRepository.findByAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList, "id"));
@@ -460,7 +459,6 @@ public class AfterSaleService {
 
 
     //工厂返回
-    @Transactional
     public void fromCompany(List<List<String>> datas, LocalDate fromCompanyDate) {
         List<String> imeList = Lists.newArrayList();
         List<String> productNameList = Lists.newArrayList();

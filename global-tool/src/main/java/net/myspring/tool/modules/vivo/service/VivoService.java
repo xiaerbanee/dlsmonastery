@@ -26,6 +26,7 @@ import java.util.Set;
  */
 @Service
 @LocalDataSource
+@Transactional
 public class VivoService {
     @Autowired
     private VivoRepository vivoRepository;
@@ -64,7 +65,6 @@ public class VivoService {
 
     //获取颜色编码
     @LocalDataSource
-    @Transactional(readOnly = false)
     public void pullProducts(List<VivoProducts> vivoProducts){
         if(CollectionUtil.isNotEmpty(vivoProducts)) {
             List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
@@ -81,7 +81,6 @@ public class VivoService {
         }
     }
     //获取物料编码
-    @Transactional(readOnly = false)
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
@@ -104,7 +103,6 @@ public class VivoService {
 
     //查询发货串码
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
         List<VivoPlantSendimei> list = Lists.newArrayList();
         Map<String,List<VivoPlantSendimei>> agentCodeMap= Maps.newHashMap();
@@ -154,7 +152,6 @@ public class VivoService {
         return "电子保卡同步成功,共同步"+list.size()+"条数据";
     }
 
-    @Transactional
     public  List<VivoPlantSendimei>  synIme(String date) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         LocalDate dateStart = nowDate.minusDays(1);
