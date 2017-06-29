@@ -36,9 +36,9 @@
         <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')+'('+totalApplyQty+')'" ></el-table-column>
         <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')+'('+totalConfirmQty+')'" ></el-table-column>
         <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')+'('+totalLeftQty+')'" ></el-table-column>
-        <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')" >
+        <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')+'('+totalNowBilledQty+')'" >
           <template scope="scope">
-            <el-input v-model="scope.row.nowBilledQty"></el-input>
+            <el-input v-model.number="scope.row.nowBilledQty" @input="getTotalNowBilledQty()"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="storeQty" sortable :label="$t('adApplyBillForm.financeQty')" ></el-table-column>
@@ -71,12 +71,19 @@
             expressCompanyId: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
           },
           remoteLoading: false,
-          totalApplyQty:"0",
-          totalConfirmQty:"0",
-          totalLeftQty:"0"
+          totalApplyQty:0,
+          totalConfirmQty:0,
+          totalLeftQty:0,
+          totalNowBilledQty:0,
         };
       },
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         let that = this;
         that.submitDisabled = true;
         let form = that.$refs["inputForm"];
@@ -108,6 +115,31 @@
             }
           }
           return tempList;
+      },customValidate(){
+        let totalQty = 0;
+        for(let index of this.filterAdApplyList){
+          if(util.isBlank(index.nowBilledQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(index.nowBilledQty) || index.nowBilledQty < 0){
+            return '门店：'+index.shopName+'的订货数不是一个大于等于0的整数';
+          }
+
+          totalQty += index.nowBilledQty;
+        }
+        if(totalQty<=0){
+          return "总订货数要大于0";
+        }
+        return null;
+      },getTotalNowBilledQty(){
+        let tempTotalNowBilledQty = 0;
+        for(let index of this.filterAdApplyList){
+          if(util.isNotBlank(index.nowBilledQty)&&Number.isInteger(index.nowBilledQty)){
+            tempTotalNowBilledQty += index.nowBilledQty;
+          }
+        }
+        this.totalNowBilledQty = tempTotalNowBilledQty;
       },
       searchDetail(){
         var val=this.productOrShopName;
