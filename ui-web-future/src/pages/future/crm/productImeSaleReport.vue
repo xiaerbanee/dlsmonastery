@@ -129,7 +129,6 @@
         util.setQuery("productImeSaleReport",submitData);
         if(!this.nextIsShop){
           this.formData.depotId=""
-          console.log(submitData)
           axios.post('/api/ws/future/crm/productIme/productImeReport',qs.stringify(submitData)).then((response) => {
             this.page = response.data;
             this.pageLoading = false;

@@ -38,3 +38,6 @@ weixin:
 
 setting:
     adminIdList:  1
+
+logging:
+  file: summer-uaa.log

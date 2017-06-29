@@ -37,7 +37,13 @@ security:
     resource:
       user-info-uri: http://localhost:1100/uaa/user
 
+app:
+  print:
+    version: 1.2
 
 ribbon:
   ReadTimeout: 600000
   ConnectTimeout: 600000
+
+logging:
+  file: ws-future.log
