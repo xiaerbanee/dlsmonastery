@@ -7,6 +7,7 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
@@ -32,22 +33,22 @@ public class StkTransferDirectManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForGoodsOrder(GoodsOrderForm goodsOrderForm){
-        if (StringUtils.isNotBlank(goodsOrderForm.getId())) {
+    public KingdeeSynReturnDto synForGoodsOrder(GoodsOrder goodsOrder, String allotFormStockCode,String allotToStokeCode){
+        if (StringUtils.isNotBlank(goodsOrder.getId())) {
             StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-            transferDirectDto.setExtendId(goodsOrderForm.getId());
+            transferDirectDto.setExtendId(goodsOrder.getId());
             transferDirectDto.setExtendType(ExtendTypeEnum.货品订货.name());
-            transferDirectDto.setNote(goodsOrderForm.getRemarks());
+            transferDirectDto.setNote(goodsOrder.getRemarks());
             transferDirectDto.setDate(LocalDate.now());
-            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
             Map<String, String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product::getCode));
             for (GoodsOrderDetail detail : goodsOrderDetailList) {
                 StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
                 entryDto.setQty(detail.getBillQty());
                 entryDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
-                entryDto.setSrcStockNumber(goodsOrderForm.getAllotFromStockCode());
-                entryDto.setDestStockNumber(goodsOrderForm.getAllotToStockCode());
+                entryDto.setSrcStockNumber(allotFormStockCode);
+                entryDto.setDestStockNumber(allotToStokeCode);
                 transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
             }
             return cloudClient.synStkTransferDirect(transferDirectDto);
