@@ -36,3 +36,8 @@ security:
       scope: server
     resource:
       user-info-uri: http://localhost:1100/uaa/user
+
+
+ribbon:
+  ReadTimeout: 600000
+  ConnectTimeout: 600000

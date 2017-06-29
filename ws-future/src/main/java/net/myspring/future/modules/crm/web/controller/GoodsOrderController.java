@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,17 +51,20 @@ public class GoodsOrderController {
 
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
         Page<GoodsOrderDto> page = goodsOrderService.findAll(pageable, goodsOrderQuery);
         return page;
     }
 
     @RequestMapping(value = "detail")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderDto detail(String id) {
         return goodsOrderService.findDetail(id);
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
@@ -70,6 +74,7 @@ public class GoodsOrderController {
 
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
         goodsOrderForm.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
@@ -77,17 +82,20 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "findDetailList")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public List<GoodsOrderDetailDto> findDetailList(String id, String shopId, String netType, String shipType) {
         return goodsOrderService.findDetailList(id,shopId,netType,shipType);
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
         goodsOrderService.save(goodsOrderForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getBillForm")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){
         //设置仓库
         GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());
@@ -99,11 +107,13 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBill")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderDto getBill(String id) {
         return goodsOrderService.getBill(id);
     }
 
     @RequestMapping(value = "bill")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public RestResponse bill(GoodsOrderBillForm goodsOrderBillForm) {
         if(CollectionUtil.isEmpty(goodsOrderBillForm.getGoodsOrderBillDetailFormList())){
             throw new ServiceException("开单明细不能为空");
@@ -118,11 +128,13 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "findOne")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderDto findOne(String id) {
         return goodsOrderService.findOne(id);
     }
 
     @RequestMapping(value="delete")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:delete')")
     public RestResponse delete(String id) {
         goodsOrderService.delete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());

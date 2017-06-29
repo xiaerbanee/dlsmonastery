@@ -4,6 +4,7 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.ProductRepository;
@@ -11,7 +12,9 @@ import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.elasticsearch.xpack.monitoring.collector.Collector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,5 +57,15 @@ public class StkTransferDirectManager {
             return cloudClient.synStkTransferDirect(transferDirectDto);
         }
         return null;
+    }
+
+    public String getOutCode(String extendId,String extendType){
+        List<KingdeeSynReturnDto> kingdeeSynReturnDtos = cloudClient.findByExtendIdAndExtendType(extendId, extendType);
+        String result="";
+        if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
+            List<String> billNoList=kingdeeSynReturnDtos.stream().map(KingdeeSynReturnDto::getBillNo).collect(Collectors.toList());
+            result=StringUtils.join(billNoList, CharConstant.COMMA);
+        }
+        return result;
     }
 }

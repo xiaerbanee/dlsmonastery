@@ -22,6 +22,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,12 +44,14 @@ public class StoreAllotController {
     private StoreAllotDetailService storeAllotDetailService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public Page<StoreAllotDto> list(Pageable pageable, StoreAllotQuery storeAllotQuery){
         return storeAllotService.findPage(pageable, storeAllotQuery);
 
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:edit')")
     public RestResponse save(StoreAllotForm storeAllotForm) {
 
         //TODO 需要完善金蝶的控制
@@ -68,6 +71,7 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
 
         storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
@@ -78,21 +82,25 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "findForView")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotDto findForView(String id) {
         return storeAllotService.findStoreAllotDtoById(id);
     }
 
     @RequestMapping(value = "findDetailList")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public List<StoreAllotDetailDto> findDetailList(String storeAllotId) {
         return storeAllotDetailService.findByStoreAllotId(storeAllotId);
     }
 
     @RequestMapping(value = "findDetailListForCommonAllot")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
         return storeAllotService.findDetailListForCommonAllot(fromStoreId);
     }
 
     @RequestMapping(value = "findDetailListForFastAllot")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
 
         return storeAllotService.findDetailListForFastAllot();
@@ -100,6 +108,7 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "findDto")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotDto findDto(String id) {
 
         if(StringUtils.isBlank(id)){
@@ -111,6 +120,7 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "print")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:print')")
     public StoreAllotDto print(String id) {
 
         if(StringUtils.isBlank(id)){
@@ -142,43 +152,51 @@ public class StoreAllotController {
     }
 
     @RequestMapping(value = "getStoreAllotData")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public String getStoreAllotData() {
         return null;
     }
 
     @RequestMapping(value = "getCloudQty")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public String getCloudQty() {
         return null;
     }
 
     @RequestMapping(value="getQuery")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotQuery getQuery(StoreAllotQuery storeAllotQuery) {
         storeAllotQuery.getExtra().put("statusList",StoreAllotStatusEnum.getList());
         return storeAllotQuery;
     }
 
     @RequestMapping(value = "ship", method=RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
     public String shipForm() {
         return null;
     }
 
     @RequestMapping(value = "shipBoxAndIme", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
     public Map<String, Object> shipBoxAndIme(String id, String boxImeStr, String imeStr) {
         return storeAllotService.shipBoxAndIme(id, boxImeStr, imeStr);
     }
 
     @RequestMapping(value = "ship", method=RequestMethod.POST)
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
     public RestResponse ship() {
         return null;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:delete')")
     public RestResponse delete(String id) {
         storeAllotService.delete(id);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value="export",method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public ModelAndView export(StoreAllotQuery storeAllotQuery) throws IOException {
         SimpleExcelBook simpleExcelBook = storeAllotService.export(storeAllotQuery);
         ExcelView excelView = new ExcelView();

@@ -19,12 +19,6 @@
             <el-option v-for="item in inputForm.extra.roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="请求Url" prop="url">
-          <el-input v-model="inputForm.url"></el-input>
-        </el-form-item>
-        <el-form-item label="请求方法类型" prop="method">
-          <el-input v-model="inputForm.method"></el-input>
-        </el-form-item>
         <el-form-item :label="$t('permissionForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
@@ -53,8 +47,6 @@
               menuId: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
               permission: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
               name: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
-              url: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
-              method: [{ required: true, message: this.$t('permissionForm.prerequisiteMessage')}],
             },
             remoteLoading:false
           }

@@ -18,6 +18,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,17 +37,20 @@ public class ShopAllotController {
     private ShopAllotDetailService shopAllotDetailService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public Page<ShopAllotDto> list(Pageable pageable, ShopAllotQuery shopAllotQuery){
         return shopAllotService.findPage(pageable, shopAllotQuery);
     }
 
     @RequestMapping(value = "logicDelete")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:delete')")
     public RestResponse logicDelete(String id) {
         shopAllotService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:delete')")
     public RestResponse save(ShopAllotForm shopAllotForm) {
         if(CollectionUtil.isEmpty(shopAllotForm.getShopAllotDetailList())){
             throw new ServiceException("请录入门店调拨明细");
@@ -56,17 +60,20 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value = "audit")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:audit')")
     public RestResponse audit(ShopAllotAuditForm shopAllotAuditForm) {
         shopAllotService.audit(shopAllotAuditForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findDetailListForEdit")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public List<ShopAllotDetailSimpleDto> findDetailListForEdit(String shopAllotId) {
         return shopAllotDetailService.getShopAllotDetailListForEdit(shopAllotId);
     }
 
     @RequestMapping(value = "findDetailListForNew")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public Map<String, Object> findDetailListForNew(String fromShopId, String toShopId) {
         Map<String, Object> result = new HashMap<>();
 
@@ -90,16 +97,19 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value="findTotalPrice")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public Map<String, Object> findTotalPrice(String id) {
         return  shopAllotService.findTotalPrice(id);
     }
 
     @RequestMapping(value="findDetailListForViewOrAudit")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public List<ShopAllotDetailDto> findDetailListForViewOrAudit(String id) {
         return  shopAllotService.findDetailListForViewOrAudit(id);
     }
 
     @RequestMapping(value="findDtoForViewOrAudit")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public ShopAllotDto findDtoForViewOrAudit(String id) {
         if(StringUtils.isBlank(id)){
             return new ShopAllotDto();
@@ -108,6 +118,7 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value="findDto")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public ShopAllotDto findDto(String id) {
         if(StringUtils.isBlank(id)){
             return new ShopAllotDto();
@@ -116,12 +127,14 @@ public class ShopAllotController {
     }
 
     @RequestMapping(value="getQuery")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public ShopAllotQuery getQuery(ShopAllotQuery shopAllotQuery) {
         shopAllotQuery.getExtra().put("statusList",AuditStatusEnum.getList());
         return shopAllotQuery;
     }
 
     @RequestMapping(value="getForm")
+    @PreAuthorize("hasPermission(null,'crm:shopAllot:view')")
     public ShopAllotForm getForm(ShopAllotForm shopAllotForm) {
         return shopAllotForm;
     }

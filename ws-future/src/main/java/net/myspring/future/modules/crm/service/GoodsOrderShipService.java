@@ -22,6 +22,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
@@ -88,6 +89,8 @@ public class GoodsOrderShipService {
     private CloudClient cloudClient;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private StkTransferDirectManager stkTransferDirectManager;
 
     /**
      * 查找货品发货表格所有数据（待发货，带签收，已完成）
@@ -195,6 +198,11 @@ public class GoodsOrderShipService {
                 expressOrder.setOutPrintDate(LocalDateTime.now());
             }
             expressOrderRepository.save(expressOrder);
+        }
+        if(StringUtils.isEmpty(goodsOrder.getOutCode())){
+            String outCode = stkTransferDirectManager.getOutCode(goodsOrder.getId(), ExtendTypeEnum.货品订货.name());
+            goodsOrder.setOutCode(outCode);
+            goodsOrderRepository.save(goodsOrder);
         }
         List<String> depotIdList=Lists.newArrayList(goodsOrder.getShopId(),goodsOrder.getStoreId());
         Map<String,Depot> depotMap=depotRepository.findMap(depotIdList);
@@ -326,6 +334,10 @@ public class GoodsOrderShipService {
 
     public GoodsOrder sreturn(GoodsOrderForm goodsOrderForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
+        if(StringUtils.isEmpty(goodsOrder.getOutCode())){
+            String outCode = stkTransferDirectManager.getOutCode(goodsOrder.getId(), ExtendTypeEnum.货品订货.name());
+            goodsOrder.setOutCode(outCode);
+        }
         Map<String,GoodsOrderDetail> goodsOrderDetailMap = goodsOrderDetailRepository.findMap(CollectionUtil.extractToList(goodsOrderForm.getGoodsOrderDetailFormList(),"id"));
         BigDecimal amount = BigDecimal.ZERO;
         for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailFormList()) {
@@ -338,11 +350,24 @@ public class GoodsOrderShipService {
         }
         goodsOrder.setAmount(amount);
         goodsOrderRepository.save(goodsOrder);
-        List<KingdeeSynReturnDto> kingdeeSynReturnDtos = synSalReturnStock(goodsOrder);
-        if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
-            KingdeeSynReturnDto kingdeeSynReturnDto=kingdeeSynReturnDtos.get(0);
-            goodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
-            goodsOrderRepository.save(goodsOrder);
+        if(goodsOrderForm.getSyn()){
+            Depot depot=depotRepository.findOne(goodsOrder.getShopId());
+            String allotFormStockCode=null;
+            String allotToStockCode=null;
+            if (StringUtils.isNotBlank(depot.getDelegateDepotId())) {
+                DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
+                DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(depot.getDelegateDepotId());
+                allotFormStockCode=allotFromStock.getOutCode();
+                allotToStockCode=allotToStock.getOutCode();
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
+            } else {
+                List<KingdeeSynReturnDto> kingdeeSynReturnDtos = synSalReturnStock(goodsOrder);
+                if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
+                    goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
+                }
+            }
+
         }
         return goodsOrder;
     }
