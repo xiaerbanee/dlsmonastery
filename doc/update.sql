@@ -1009,3 +1009,6 @@ ALTER TABLE `crm_depot`
 update crm_depot set pop_shop = 0;
 
 update crm_depot_shop set door_head=0 where door_head is null;
+update crm_depot_shop set speciality_store=0 where speciality_store is null;
+
+update crm_depot set pop_shop=ad_shop where ad_shop=1
