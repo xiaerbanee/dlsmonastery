@@ -12,10 +12,12 @@ import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class ArReceiveBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -41,6 +44,9 @@ public class ArReceiveBillService {
                 kingdeeBook) {
         };
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("收款单失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

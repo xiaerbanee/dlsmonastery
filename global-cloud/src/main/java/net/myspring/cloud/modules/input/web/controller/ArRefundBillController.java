@@ -44,8 +44,6 @@ public class ArRefundBillController {
         for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
             if (kingdeeSynDto.getSuccess()) {
                 restResponse = new RestResponse("收款退款单成功：" + kingdeeSynDto.getBillNo(), null, true);
-            } else {
-                throw new ServiceException("收款退款单失败："+kingdeeSynDto.getResult());
             }
         }
         return restResponse;

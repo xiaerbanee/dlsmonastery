@@ -38,11 +38,6 @@ public class ArReceiveBillController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynDto kingdeeSynExtendDto : kingdeeSynDtoList){
-            if (!kingdeeSynExtendDto.getSuccess()){
-                throw new ServiceException("收款单失败："+kingdeeSynExtendDto.getResult());
-            }
-        }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 }
