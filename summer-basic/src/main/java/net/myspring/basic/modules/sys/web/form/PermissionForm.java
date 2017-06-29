@@ -19,27 +19,9 @@ public class PermissionForm extends BaseForm<Permission> {
     private String name;
     private String permission;
     private String remarks;
-    private String url;
-    private String method;
     private List<MenuDto> menuList= Lists.newArrayList();
     private List<RoleDto> roleList = Lists.newArrayList();
     private List<String> roleIdList = Lists.newArrayList();
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
 
     public List<String> getRoleIdList() {
         return roleIdList;

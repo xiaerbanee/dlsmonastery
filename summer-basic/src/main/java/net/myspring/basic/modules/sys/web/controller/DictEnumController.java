@@ -30,7 +30,7 @@ public class DictEnumController {
     private DictEnumService dictEnumService;
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'sys:dictEnum:edit')")
+    @PreAuthorize("hasPermission(null,'sys:dictEnum:view')")
     public Page<DictEnumDto>  list(Pageable pageable, DictEnumQuery dictEnumQuery){
         Page<DictEnumDto> page = dictEnumService.findPage(pageable,dictEnumQuery);
         return page;
