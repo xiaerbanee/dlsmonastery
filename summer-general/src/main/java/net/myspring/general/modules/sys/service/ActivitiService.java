@@ -27,6 +27,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,6 +38,7 @@ import java.util.Map;
  * Created by wangzm on 2017/4/25.
  */
 @Service
+@Transactional
 public class ActivitiService {
     @Autowired
     protected ActivitiUtils activitiUtils;

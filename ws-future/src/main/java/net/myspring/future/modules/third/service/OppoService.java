@@ -32,6 +32,7 @@ import java.util.Set;
  * Created by guolm on 2017/5/23.
  */
 @Service
+@Transactional
 public class OppoService {
     @Autowired
     private OppoClient oppoClient;
@@ -62,7 +63,6 @@ public class OppoService {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Transactional
     public String synIme(String date){
         if(StringUtils.isBlank(date)){
             date= LocalDateUtils.formatLocalDate(LocalDate.now(),"yyyy-MM-dd");

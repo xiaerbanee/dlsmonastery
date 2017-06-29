@@ -87,6 +87,12 @@ public class GoodsOrderController {
         return goodsOrderService.findDetailList(id,shopId,netType,shipType);
     }
 
+    @RequestMapping(value = "validateShop")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    public RestResponse validateShop(String shopId) {
+        return goodsOrderService.validateShop(shopId);
+    }
+
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {

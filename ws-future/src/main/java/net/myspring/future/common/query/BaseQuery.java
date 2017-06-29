@@ -1,6 +1,7 @@
 package net.myspring.future.common.query;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.future.common.utils.RequestUtils;
@@ -14,10 +15,12 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
+    @JsonIgnore
     private String companyId= RequestUtils.getCompanyId();
 
+    @JsonIgnore
     private List<String> officeIdList= Lists.newArrayList();
-
+    @JsonIgnore
     private List<String> depotIdList= Lists.newArrayList();
 
     private  Integer page = 0;

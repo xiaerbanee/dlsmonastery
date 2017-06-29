@@ -13,6 +13,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * Created by liuj on 2017-03-02.
  */
 @Service
+@Transactional
 public class MapService {
 
     @Value("${weixin.app.name}")

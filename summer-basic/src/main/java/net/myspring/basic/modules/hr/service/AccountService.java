@@ -125,7 +125,6 @@ public class AccountService {
         return account;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         accountRepository.logicDelete(id);
     }
@@ -205,7 +204,6 @@ public class AccountService {
         }
     }
 
-    @Transactional(readOnly = true)
     public List<AccountDto> findByIds(List<String> ids){
         List<Account> districts = accountRepository.findAll(ids);
         List<AccountDto> districtDtos= BeanUtil.map(districts,AccountDto.class);
