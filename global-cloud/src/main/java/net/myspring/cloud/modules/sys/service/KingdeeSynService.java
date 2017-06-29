@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * 金蝶同步
@@ -52,6 +53,10 @@ public class KingdeeSynService {
 
     public KingdeeSyn findOne(String id){
         return kingdeeSynRepository.findOne(id);
+    }
+
+    public List<KingdeeSyn> findByExtendIdAndExtendType(String extendId, String extendType){
+        return kingdeeSynRepository.findByExtendIdAndExtendType(extendId,extendType);
     }
 
     public KingdeeSynDto syn(String id){

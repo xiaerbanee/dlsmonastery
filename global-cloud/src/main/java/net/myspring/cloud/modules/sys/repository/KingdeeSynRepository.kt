@@ -19,7 +19,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  * Created by lihx on 2017/6/21.
  */
 interface  KingdeeSynRepository : BaseRepository<KingdeeSyn, String>,KingdeeSynRepositoryCustom{
-
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.enabled = 1
+        and t.extendId = :extendId
+        and t.extendType = :extendType
+     """)
+    fun findByExtendIdAndExtendType (@Param("extendId")extendId:String,@Param("extendType")extendType:String): MutableList<KingdeeSyn>?
 }
 
 interface KingdeeSynRepositoryCustom{
