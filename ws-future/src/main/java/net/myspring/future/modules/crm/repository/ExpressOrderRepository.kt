@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -21,6 +22,12 @@ interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, Express
 
     fun findByExtendIdAndExtendType(extendId: String, extendType: String): ExpressOrder
 
+    @Query("select t from #{#entityName} t where t.extendType=?1 and t.extendId in (?2) and t.enabled=1")
+    fun findByTypeAndExtendIds(extendType: String, extendIds: List<String>): List<ExpressOrder>
+
+
+    @Query("select t from #{#entityName} t where t.extendType=?1 and t.extendBusinessId in (?2) and t.enabled=1")
+    fun findByTypeAndBusinessIds(extendType: String, extendBusinessIds: List<String>): List<ExpressOrder>
 }
 
 interface ExpressOrderRepositoryCustom{
