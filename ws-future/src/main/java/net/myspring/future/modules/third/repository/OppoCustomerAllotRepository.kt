@@ -25,7 +25,7 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
 
         return namedParameterJdbcTemplate.query("""
             select
-                go.store_id as fromCustomerid,go.shop_id as toCustomerid,de.product_id as productcode,sum(de.shipped_qty) as qty
+                go.store_id as fromCustomerid,go.shop_id as toCustomerid,de.product_id as productcode,go.ship_date as date,sum(de.shipped_qty) as qty
                 from
                     crm_goods_order go,
                     crm_goods_order_detail de
@@ -39,7 +39,7 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
                     group by go.store_id,go.shop_id,de.product_id
             union
             select
-                st.from_store_id as fromCustomerid,st.to_store_id as toCustomerid,de.product_id as productcode,sum(de.shipped_qty) as qty
+                st.from_store_id as fromCustomerid,st.to_store_id as toCustomerid,de.product_id as productcode,st.ship_date as date,sum(de.shipped_qty) as qty
                 from
                     crm_store_allot st,
                     crm_store_allot_detail de
@@ -53,7 +53,7 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
                     group by st.from_store_id,st.to_store_id,de.product_id
             union
             select
-                t.from_depot_id as fromCustomerid,t.to_depot_id as toCustomerid,im.product_id as productcode,count(*) as qty
+                t.from_depot_id as fromCustomerid,t.to_depot_id as toCustomerid,im.product_id as productcode,t.audit_date as date,count(*) as qty
                 from
                     crm_ime_allot t,crm_product_ime im
                 where

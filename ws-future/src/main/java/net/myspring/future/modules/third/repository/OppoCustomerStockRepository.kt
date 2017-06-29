@@ -23,12 +23,17 @@ class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJ
         return namedParameterJdbcTemplate.query("""
              select
                   de.id as customerid,
-                  pro.name as productcode ,
+                  pro.id as productcode ,
                   count(*) as qty
               from
                 crm_product_ime im left join crm_product_ime_upload up on im.product_ime_upload_id = up.id,crm_depot de,crm_product pro
                 where
-                    im.depot_id = de.id
+                    im.depot_id is not null
+                    and im.depot_id = de.id
+                    and im.created_date>=:dateStart
+                    and im.created_date<:dateEnd
+                    and im.company_id = :companyId
+                    and im.enabled = 1
                     and (
                         im.retail_date is null
                         or im.retail_date >:dateEnd
@@ -36,11 +41,6 @@ class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJ
                     and (
                         up.id is null or up.created_date > :dateEnd
                     )
-                    and im.company_id = :companyId
-                    and im.created_date>=:dateStart
-                    and im.created_date < :dateEnd
-                    and im.enabled = 1
-                    and de.enabled = 1
                     and pro.enabled=1
                     and im.product_id = pro.id
                     group by de.id,pro.id asc

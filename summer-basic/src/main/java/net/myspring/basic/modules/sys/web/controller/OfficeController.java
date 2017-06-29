@@ -196,4 +196,11 @@ public class OfficeController {
     public OfficeQuery getQuery(OfficeQuery officeQuery){
         return officeQuery;
     }
+
+    @RequestMapping(value = "findAll")
+    public List<Office> findAll(){
+        List<Office> officeList = officeService.findAll();
+        return officeList;
+    }
+
 }

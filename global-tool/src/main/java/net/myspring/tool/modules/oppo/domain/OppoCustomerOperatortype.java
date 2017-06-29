@@ -1,8 +1,9 @@
 package net.myspring.tool.modules.oppo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Created by guolm on 2016/8/11.
@@ -10,10 +11,23 @@ import javax.persistence.Table;
 @Entity
 @Table(name="oppo_push_customer_operator_type")
 public class OppoCustomerOperatortype {
+    @JsonIgnore
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private String customerid;
     private String customername;
     private String operatortype;
+    @JsonIgnore
+    private LocalDateTime createdDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCustomerid() {
         return customerid;
@@ -37,5 +51,13 @@ public class OppoCustomerOperatortype {
 
     public void setOperatortype(String operatortype) {
         this.operatortype = operatortype;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

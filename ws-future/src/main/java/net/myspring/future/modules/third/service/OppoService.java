@@ -45,8 +45,8 @@ public class OppoService {
     private CompanyConfigClient companyConfigClient;
     @Autowired
     private OppoCustomerAllotRepository oppoCustomerAllotRepository;
-//    @Autowired
-//    private OppoCustomerStockRepository oppoCustomerStockRepository;
+    @Autowired
+    private OppoCustomerStockRepository oppoCustomerStockRepository;
 //    @Autowired
 //    private OppoCustomerImeiStockRepository oppoCustomerImeiStockRepository;
 //    @Autowired
@@ -188,9 +188,8 @@ public class OppoService {
     }
 
     public List<OppoCustomerStock> findOppoCustomerStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerStocks;
-        return null;
+        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerStocks;
     }
 
     public List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){

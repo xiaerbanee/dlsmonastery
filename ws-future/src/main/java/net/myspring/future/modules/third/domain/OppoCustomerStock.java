@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import java.time.LocalDate;
 @Entity
 public class OppoCustomerStock extends IdEntity<OppoCustomerStock> {
-
     private String customerid;
     private LocalDate date;
     private Integer qty;
