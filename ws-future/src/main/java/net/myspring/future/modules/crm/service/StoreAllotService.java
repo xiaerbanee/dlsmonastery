@@ -23,6 +23,7 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
@@ -93,6 +94,8 @@ public class StoreAllotService {
     private ExpressUtils expressUtils;
     @Autowired
     private DepotStoreRepository depotStoreRepository;
+    @Autowired
+    private StkTransferDirectManager stkTransferDirectManager;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -254,24 +257,7 @@ public class StoreAllotService {
     }
 
     private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList, ExpressOrder expressOrder, Map<String, Product> productMap){
-
-        DepotStore fromDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(storeAllot.getFromStoreId());
-        DepotStore toDepotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(storeAllot.getToStoreId());
-        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId(storeAllot.getId());
-        transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
-        transferDirectDto.setNote(storeAllot.getRemarks());
-        transferDirectDto.setDate(storeAllot.getBillDate());
-
-        for (StoreAllotDetail detail : detailList){
-            StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-            entryDto.setQty(detail.getQty());
-            entryDto.setMaterialNumber(productMap.get(detail.getProductId()).getCode());
-            entryDto.setSrcStockNumber(fromDepotStore.getOutCode()); //调出仓库
-            entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
-            transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
-        }
-        KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synStkTransferDirect(transferDirectDto);
+        KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForStoreAllot(storeAllot,detailList,productMap);
 
         storeAllot.setCloudSynId(kingdeeSynReturnDto.getId());
         storeAllotRepository.save(storeAllot);
