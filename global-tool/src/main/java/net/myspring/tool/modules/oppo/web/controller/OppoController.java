@@ -145,7 +145,8 @@ public class OppoController {
     @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
     @ResponseBody
     public String pullCustomerStock(String key,String createdDate,HttpServletResponse response, Model model)  {
-        String factoryAgentName="M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+createdDate);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){
@@ -153,7 +154,7 @@ public class OppoController {
             responseMessage.setResult("false");
         }else{
             logger.info("库存上抛开始："+new Date());
-            LocalDate dateStart= LocalDateUtils.parse(createdDate);
+            LocalDate dateStart= LocalDateUtils.parse(createdDate).plusMonths(-12);
             LocalDate dateEnd=LocalDateUtils.parse(createdDate).plusDays(1);
             List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStock(dateStart,dateEnd);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));

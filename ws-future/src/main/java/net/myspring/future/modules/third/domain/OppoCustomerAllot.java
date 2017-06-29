@@ -4,13 +4,15 @@ import net.myspring.future.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 public class OppoCustomerAllot  extends IdEntity<OppoCustomerAllot> {
     private String fromCustomerid;
     private String toCustomerid;
     private String productcode;
     private Integer qty;
-    private LocalDate date;
+    private LocalDateTime date;
 
     public String getFromCustomerid() {
         return fromCustomerid;
@@ -44,11 +46,11 @@ public class OppoCustomerAllot  extends IdEntity<OppoCustomerAllot> {
         this.qty = qty;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Created by guolm on 2016/7/16.
@@ -41,6 +42,9 @@ public class OppoCustomer {
     private String deskdoublenum;
     private String desksinglenum;
     private String cabinetnum;
+    @JsonIgnore
+    private LocalDateTime createdDate;
+
 
     public String getAgentid() {
         return agentid;
@@ -240,5 +244,13 @@ public class OppoCustomer {
 
     public void setVillage(String village) {
         this.village = village;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

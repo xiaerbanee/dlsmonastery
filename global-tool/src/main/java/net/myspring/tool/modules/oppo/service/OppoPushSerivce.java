@@ -12,9 +12,7 @@ import net.myspring.tool.common.client.DistrictClient;
 import net.myspring.tool.modules.oppo.client.OppoClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.common.dto.CustomerDto;
-import net.myspring.tool.modules.oppo.repository.OppoCustomerOperatortypeRepository;
-import net.myspring.tool.modules.oppo.repository.OppoCustomerRepository;
-import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
+import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -27,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -52,6 +51,10 @@ public class OppoPushSerivce {
     private OppoCustomerRepository oppoCustomerRepository;
     @Autowired
     private OppoCustomerOperatortypeRepository oppoCustomerOperatortypeRepository;
+    @Autowired
+    private OppoCustomerAllotRepository oppoCustomerAllotRepository;
+    @Autowired
+    private OppoCustomerStockRepository oppoCustomerStockRepository;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -67,14 +70,21 @@ public class OppoPushSerivce {
         initAreaDepotMap();
         Map<String, OppoCustomer> oppoCustomersMap = Maps.newHashMap();
         List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
-        logger.info("customerDtosList=="+customerDtosList.toString());
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
         Map<String,DistrictEntity>  districtMap=Maps.newHashMap();
         for(DistrictEntity districtEntity:districtList){
             districtMap.put(districtEntity.getId(),districtEntity);
         }
+        List<OfficeEntity> offices=officeClient.findAll();
+        Map<String,OfficeEntity>  officeMap=Maps.newHashMap();
+        for(OfficeEntity officeEntity:offices){
+            officeMap.put(officeEntity.getId(),officeEntity);
+        }
         for(CustomerDto customerDto:customerDtosList){
             String depotId=getDepotId(customerDto);
+            if(StringUtils.isNotBlank(customerDto.getAreaId())){
+                customerDto.setAreaName(officeMap.get(customerDto.getAreaId()).getName());
+            }
             if (!oppoCustomersMap.containsKey(depotId)) {
                 OppoCustomer oppoCustomer = new OppoCustomer();
                 oppoCustomer.setCustomerid(depotId);
@@ -118,6 +128,7 @@ public class OppoPushSerivce {
                 oppoCustomer.setDeskdoublenum(StringUtils.isBlank(customerDto.getFrameNum())?"":customerDto.getFrameNum());
                 oppoCustomer.setDesksinglenum(StringUtils.isBlank(customerDto.getDeskSingleNum())?"":customerDto.getDeskSingleNum());
                 oppoCustomer.setCabinetnum(StringUtils.isBlank(customerDto.getCabinetNum())?"":customerDto.getCabinetNum());
+                oppoCustomer.setCreatedDate(LocalDateTime.now());
                 oppoCustomersMap.put(oppoCustomer.getCustomerid(), oppoCustomer);
             }
         }
@@ -146,6 +157,7 @@ public class OppoPushSerivce {
                         oppoCustomerOperatortype.setCustomerid(getDepotId(customerDto));
                         oppoCustomerOperatortype.setCustomername(getAreaDepotName(customerDto));
                         oppoCustomerOperatortype.setOperatortype(customerDto.getCarrierType());
+                        oppoCustomerOperatortype.setCreatedDate(LocalDateTime.now());
                         oppoCustomerOperatortypeList.add(oppoCustomerOperatortype);
                     }
                 }else{
@@ -157,6 +169,7 @@ public class OppoPushSerivce {
                                 oppoCustomerOperatortype.setCustomerid(getDepotId(customerDto));
                                 oppoCustomerOperatortype.setCustomername(getAreaDepotName(customerDto));
                                 oppoCustomerOperatortype.setOperatortype(channelName);
+                                oppoCustomerOperatortype.setCreatedDate(LocalDateTime.now());
                                 oppoCustomerOperatortypeList.add(oppoCustomerOperatortype);
                             }
                         }
@@ -164,7 +177,6 @@ public class OppoPushSerivce {
                 }
             }
         }
-        logger.info("oppoCustomerOperatortypeList==="+oppoCustomerOperatortypeList.toString());
         if(CollectionUtil.isNotEmpty(oppoCustomerOperatortypeList)){
             oppoCustomerOperatortypeRepository.save(oppoCustomerOperatortypeList);
         }
@@ -172,6 +184,8 @@ public class OppoPushSerivce {
     }
 
     //发货退货调拨数据上抛
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerAllot>  getOppoCustomerAllot(LocalDate dateStart, LocalDate dateEnd){
         initAreaDepotMap();
         String companyId="1";
@@ -182,24 +196,30 @@ public class OppoPushSerivce {
             String fromDepotId=getDepotId(customerDtoMap.get(oppoCustomerAllot.getFromCustomerid()));
             String toDepotId=getDepotId(customerDtoMap.get(oppoCustomerAllot.getToCustomerid()));
             if(!fromDepotId.equals(toDepotId)){
-                String key = fromDepotId +CharConstant.UNDER_LINE+ toDepotId + CharConstant.UNDER_LINE+ productColorMap.get(oppoCustomerAllot.getProductcode());
-                if (!oppoCustomerAllotMap.containsKey(key)) {
-                    OppoCustomerAllot allot = new OppoCustomerAllot();
-                    allot.setFromCustomerid(fromDepotId);
-                    allot.setToCustomerid(toDepotId);
-                    allot.setProductcode(productColorMap.get(oppoCustomerAllot.getProductcode()));
-                    allot.setDate(dateStart);
-                    allot.setQty(0);
-                    oppoCustomerAllotMap.put(key, allot);
+                String colorId=productColorMap.get(oppoCustomerAllot.getProductcode());
+                if(StringUtils.isNotEmpty(colorId)){
+                    String key = fromDepotId +CharConstant.UNDER_LINE+ toDepotId + CharConstant.UNDER_LINE+ productColorMap.get(oppoCustomerAllot.getProductcode());
+                    if (!oppoCustomerAllotMap.containsKey(key)) {
+                        OppoCustomerAllot allot = new OppoCustomerAllot();
+                        allot.setFromCustomerid(fromDepotId);
+                        allot.setToCustomerid(toDepotId);
+                        allot.setProductcode(productColorMap.get(oppoCustomerAllot.getProductcode()));
+                        allot.setDate(oppoCustomerAllot.getDate());
+                        allot.setQty(0);
+                        oppoCustomerAllotMap.put(key, allot);
+                    }
+                    oppoCustomerAllotMap.get(key).setQty(oppoCustomerAllotMap.get(key).getQty() + oppoCustomerAllot.getQty());
                 }
-                oppoCustomerAllotMap.get(key).setQty(oppoCustomerAllotMap.get(key).getQty() + oppoCustomerAllot.getQty());
             }
         }
         List<OppoCustomerAllot>  oppoCustomerAllotList=new ArrayList<OppoCustomerAllot>(oppoCustomerAllotMap.values());
+        oppoCustomerAllotRepository.save(oppoCustomerAllotList);
         return  oppoCustomerAllotList;
     }
 
     //上抛一代二代库存数据,不包括门店数据
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerStock> getOppoCustomerStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -208,22 +228,28 @@ public class OppoPushSerivce {
         List<OppoCustomerStock> oppoCustomerStocks=oppoClient.findOppoCustomerStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         for(OppoCustomerStock oppoCustomerStock:oppoCustomerStocks){
             String customerId=getDepotId(customerDtoMap.get(oppoCustomerStock.getCustomerid()));
-            String key=customerId+ CharConstant.UNDER_LINE+productColorMap.get(oppoCustomerStock.getProductcode());
-            if(!oppoCustomerStockHashMap.containsKey(key)){
-                OppoCustomerStock customerStock = new OppoCustomerStock();
-                customerStock.setCustomerid(customerId);
-                customerStock.setDate(dateStart);
-                customerStock.setProductcode(productColorMap.get(oppoCustomerStock.getProductcode()));
-                customerStock.setQty(0);
-                oppoCustomerStockHashMap.put(key, customerStock);
+            String colorId=productColorMap.get(oppoCustomerStock.getProductcode());
+            if(StringUtils.isNotEmpty(colorId)){
+                String key=customerId+ CharConstant.UNDER_LINE+productColorMap.get(oppoCustomerStock.getProductcode());
+                if(!oppoCustomerStockHashMap.containsKey(key)){
+                    OppoCustomerStock customerStock = new OppoCustomerStock();
+                    customerStock.setCustomerid(customerId);
+                    customerStock.setDate(dateStart);
+                    customerStock.setProductcode(productColorMap.get(oppoCustomerStock.getProductcode()));
+                    customerStock.setQty(0);
+                    oppoCustomerStockHashMap.put(key, customerStock);
+                }
+                oppoCustomerStockHashMap.get(key).setQty(oppoCustomerStockHashMap.get(key).getQty() + oppoCustomerStock.getQty());
             }
-            oppoCustomerStockHashMap.get(key).setQty(oppoCustomerStockHashMap.get(key).getQty() + oppoCustomerStock.getQty());
         }
         List<OppoCustomerStock>  oppoCustomerStockList=new ArrayList<OppoCustomerStock>(oppoCustomerStockHashMap.values());
+        oppoCustomerStockRepository.save(oppoCustomerStockList);
         return oppoCustomerStockList;
     }
 
     //获取渠道串码收货数据
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -241,6 +267,8 @@ public class OppoPushSerivce {
     }
 
     //获取店核销总数据
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerSale> getOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -249,6 +277,8 @@ public class OppoPushSerivce {
     }
 
     //	门店销售明细数据抛转
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -266,6 +296,8 @@ public class OppoPushSerivce {
     }
 
     //门店销售数据汇总
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -281,6 +313,8 @@ public class OppoPushSerivce {
 
 
     //门店售后退货汇总
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -294,6 +328,8 @@ public class OppoPushSerivce {
     }
 
     //门店演示机汇总数据
+    @LocalDataSource
+    @Transactional
     public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -307,15 +343,9 @@ public class OppoPushSerivce {
 
 
     private void initAreaDepotMap(){
-        List<OfficeEntity> offices=officeClient.findAll();
-        Map<String,OfficeEntity>  officeMap=Maps.newHashMap();
-        for(OfficeEntity officeEntity:offices){
-            officeMap.put(officeEntity.getId(),officeEntity);
-        }
         List<CustomerDto> customerDtosList=customerClient.findCustomerDtoList();
         for(CustomerDto customerDto:customerDtosList){
-            customerDto.setAreaName(officeMap.get(customerDto.getAreaId()).getName());
-            if(customerDtoMap.containsKey(customerDto.getDepotId())){
+            if(!customerDtoMap.containsKey(customerDto.getDepotId())){
                 customerDtoMap.put(customerDto.getDepotId(),customerDto);
             }
             if(isArea(customerDto)){

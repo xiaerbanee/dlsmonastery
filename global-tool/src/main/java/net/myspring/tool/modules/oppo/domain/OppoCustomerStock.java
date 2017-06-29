@@ -1,18 +1,32 @@
 package net.myspring.tool.modules.oppo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="oppo_push_customer_stock")
 public class OppoCustomerStock {
+    @JsonIgnore
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private String customerid;
     private LocalDate date;
     private Integer qty;
     private String productcode;
+    @JsonIgnore
+    private LocalDateTime createdDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCustomerid() {
         return customerid;
@@ -44,5 +58,13 @@ public class OppoCustomerStock {
 
     public void setQty(Integer qty) {
         this.qty = qty;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }
