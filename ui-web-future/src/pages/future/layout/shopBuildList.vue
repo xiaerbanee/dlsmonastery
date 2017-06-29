@@ -3,9 +3,9 @@
     <head-tab active="shopBuildList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.add')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchBlack')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filter')}}</el-button>
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.export')}}</el-button>
         <span v-html="searchText"></span>

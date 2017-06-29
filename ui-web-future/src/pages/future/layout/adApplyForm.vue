@@ -25,9 +25,9 @@
       </el-row>
       <el-table :data="filterProduct"  stripe border>
         <el-table-column prop="code" :label="$t('adApplyForm.productCode')"></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyForm.applyQty')">
+        <el-table-column prop="applyQty" :label="$t('adApplyForm.applyQty')+'('+totalApplyQty+')'">
           <template scope="scope">
-            <el-input v-model="scope.row.applyQty"></el-input>
+            <el-input v-model.number="scope.row.applyQty" @input="getTotalApplyQty()"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="name" :label="$t('adApplyForm.productName')"></el-table-column>
@@ -62,10 +62,17 @@
             billType: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}],
             shopId: [{ required: true, message: this.$t('adApplyForm.prerequisiteMessage')}]
           },
-          remoteLoading:false
+          remoteLoading:false,
+          totalApplyQty:0,
         }
       },
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
@@ -85,6 +92,31 @@
             this.submitDisabled = false;
           }
         })
+      },customValidate(){
+        let totalQty = 0;
+        for(let index of this.filterProduct){
+          if(util.isBlank(index.applyQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(index.applyQty) || index.applyQty < 0){
+            return '货品：'+index.name+'的订货数不是一个大于等于0的整数';
+          }
+
+          totalQty += index.applyQty;
+        }
+        if(totalQty<=0){
+          return "总订货数要大于0";
+        }
+        return null;
+      },getTotalApplyQty(){
+        let tempTotalApplyQty = 0;
+        for(let index of this.filterProduct){
+          if(util.isNotBlank(index.applyQty)&&Number.isInteger(index.applyQty)){
+            tempTotalApplyQty += index.applyQty;
+          }
+        }
+        this.totalApplyQty = tempTotalApplyQty;
       },
        searchDetail(){
          let val=this.productName;

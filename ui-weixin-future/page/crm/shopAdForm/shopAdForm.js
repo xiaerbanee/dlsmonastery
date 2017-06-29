@@ -84,11 +84,12 @@ Page({
     var that = this;
     var images = that.data.formProperty.images;
     wx.chooseImage({
+      count: 9,
       sizeType: ['compressed'],
       sourceType: ['camera'],
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
-        for (var i in tempFilePaths) {
+        for (let i in tempFilePaths) {
           wx.uploadFile({
             url: $util.getUrl('general/sys/folderFile/upload'),
             header: {
