@@ -102,10 +102,9 @@
         this.searchDetail();
       },getProductForSubmit(){
           let tempList=new Array();
-          for(let index in this.adApplyList){
-            let detail=this.adApplyList[index];
-            if(util.isNotBlank(detail.nowBilledQty)){
-              tempList.push(detail);
+          for(let index of this.adApplyList){
+            if(util.isNotBlank(index.nowBilledQty)){
+              tempList.push(index);
             }
           }
           return tempList;
@@ -118,16 +117,14 @@
           return;
         }
         var tempList=new Array();
-        for(var index in this.adApplyList){
-          var detail=this.adApplyList[index];
-          if(util.isNotBlank(detail.nowBilledQty)){
-            tempList.push(detail)
+        for(var index of this.adApplyList){
+          if(util.isNotBlank(index.nowBilledQty)){
+            tempList.push(index)
           }
         }
-        for(var index in this.adApplyList){
-          var detail=this.adApplyList[index];
-          if((util.contains(detail.shopName,val)||util.contains(detail.productName,val))&&util.isBlank(detail.nowBilledQty)){
-            tempList.push(detail)
+        for(var index of this.adApplyList){
+          if((util.contains(index.shopName,val)||util.contains(index.productName,val))&&util.isBlank(index.nowBilledQty)){
+            tempList.push(index)
           }
         }
         this.filterAdApplyList = tempList;
@@ -139,16 +136,15 @@
         let tempApplyQty = 0;
         let tempConfirmQty = 0;
         let tempLeftQty = 0;
-        for(let index in content){
-          let detail=content[index];
-          if(util.isNotBlank(detail.applyQty)){
-            tempApplyQty += detail.applyQty;
+        for(let index of content){
+          if(util.isNotBlank(index.applyQty)){
+            tempApplyQty += index.applyQty;
           }
-          if(util.isNotBlank(detail.confirmQty)){
-            tempConfirmQty += detail.confirmQty;
+          if(util.isNotBlank(index.confirmQty)){
+            tempConfirmQty += index.confirmQty;
           }
-          if(util.isNotBlank(detail.leftQty)){
-            tempLeftQty += detail.leftQty;
+          if(util.isNotBlank(index.leftQty)){
+            tempLeftQty += index.leftQty;
           }
         }
         this.totalApplyQty = tempApplyQty;

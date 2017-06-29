@@ -93,16 +93,14 @@
              return;
          }
          let tempList=[];
-          for(let index in this.inputForm.productAdForms){
-            let detail=this.inputForm.productAdForms[index];
-            if(util.isNotBlank(detail.applyQty)){
-              tempList.push(detail);
+          for(let index of this.inputForm.productAdForms){
+            if(util.isNotBlank(index.applyQty)){
+              tempList.push(index);
              }
           }
-         for(let index in this.inputForm.productAdForms){
-           let detail=this.inputForm.productAdForms[index];
-           if(util.contains(detail.name,val)&&util.isBlank(detail.applyQty)){
-             tempList.push(detail);
+         for(let index of this.inputForm.productAdForms){
+           if(util.contains(index.name,val)&&util.isBlank(index.applyQty)){
+             tempList.push(index);
            }
          }
          this.filterProduct = tempList;
