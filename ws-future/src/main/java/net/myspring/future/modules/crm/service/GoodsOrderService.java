@@ -6,6 +6,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -66,6 +67,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -299,7 +301,8 @@ public class GoodsOrderService {
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
                 allotFormStockCode=allotFromStock.getOutCode();
                 allotToStockCode=allotToStock.getOutCode();
-                stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFormStockCode, allotToStockCode);
+                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
@@ -307,9 +310,13 @@ public class GoodsOrderService {
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
             allotFormStockCode=allotFromStock.getOutCode();
             allotToStockCode=allotToStock.getOutCode();
-            stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+            goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
         } else {
-            salOutStockManager.synForGoodsOrder(goodsOrder);
+            List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salOutStockManager.synForGoodsOrder(goodsOrder);
+            if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
+                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
+            }
         }
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
