@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
+import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,11 +22,13 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class BdCustomerService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
 
     public Page<BdCustomer> findPageIncludeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
+        bdCustomerQuery.setSort("t1.FCUSTID");
          Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncludeForbid(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }

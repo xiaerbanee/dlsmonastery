@@ -16,6 +16,7 @@ import net.myspring.cloud.modules.kingdee.repository.*;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class ApPayBillService {
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
@@ -59,6 +62,9 @@ public class ApPayBillService {
                 kingdeeBook) {
             };
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("付款单失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

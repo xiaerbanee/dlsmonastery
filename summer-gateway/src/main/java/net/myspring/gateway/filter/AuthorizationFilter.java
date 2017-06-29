@@ -11,6 +11,7 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -30,6 +31,8 @@ public class AuthorizationFilter extends ZuulFilter {
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Value("${setting.adminIdList}")
+    private String adminIdList;
 
     private static Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 
@@ -48,7 +51,8 @@ public class AuthorizationFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-//        if(!"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())){
+//        if(!"anonymousUser".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal())&&
+//                !"/user".startsWith(ctx.getRequest().getRequestURI())){
 //            return true;
 //        }
         return false;
@@ -63,19 +67,23 @@ public class AuthorizationFilter extends ZuulFilter {
             principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
         }
         String accountId = (String) principal.get("accountId");
-        String companyName = (String) principal.get("companyName");
-        String key = "authorityCache:" + companyName+accountId;
-        Map<String,String> map = (Map<String, String>) redisTemplate.opsForValue().get(key);
-        String permissionKey=ctx.getRequest().getRequestURI()+ctx.getRequest().getMethod();
-        if(map.containsKey(permissionKey)){
-            ctx.setSendZuulResponse(true);
-            ctx.setResponseStatusCode(200);
-            return null;
-        }else{
-            ctx.setSendZuulResponse(false);
-            ctx.setResponseStatusCode(401);
-            ctx.setResponseBody("{\"result\":\"没权限!\"}");
-            return null;
+        if(!adminIdList.contains(accountId)){
+            String companyName = (String) principal.get("companyName");
+            String key = "authorityCache:" + companyName+accountId;
+            Map<String,String> map = (Map<String, String>) redisTemplate.opsForValue().get(key);
+            String permissionKey=ctx.getRequest().getRequestURI()+ctx.getRequest().getMethod();
+            if(map.containsKey(permissionKey)){
+                ctx.setSendZuulResponse(true);
+                ctx.setResponseStatusCode(200);
+            }else{
+                ctx.setSendZuulResponse(false);
+                try {
+                    ctx.getResponse().sendError(401,"无权限");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        return null;
     }
 }

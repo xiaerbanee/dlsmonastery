@@ -13,11 +13,15 @@
           <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('adApplyGoods.save')}}</el-button>
         </el-form-item>
       </el-form>
-      <el-table :data="inputForm.depotAdApplyForms"  stripe border>
-        <el-table-column prop="name" :label="$t('adApplyGoods.shopName')"></el-table-column>
-        <el-table-column prop="applyQty" :label="$t('adApplyGoods.applyQty')">
+      <el-row :gutter="20" style="margin-bottom:20px;float:right">
+        <span>{{$t('adApplyGoods.search')}}</span>
+        <el-input v-model="depotName" @change="searchDetail" :placeholder="$t('adApplyGoods.inputKey')" style="width:200px;margin-right:10px"></el-input>
+      </el-row>
+      <el-table :data="filterShop"  stripe border>
+        <el-table-column prop="name" sortable :label="$t('adApplyGoods.shopName')"></el-table-column>
+        <el-table-column prop="applyQty" :label="$t('adApplyGoods.applyQty')+'('+totalApplyQty+')'">
           <template scope="scope">
-            <el-input v-model="scope.row.applyQty"></el-input>
+            <el-input v-model.number="scope.row.applyQty" @input = "getTotalApplyQty()"></el-input>
           </template>
         </el-table-column>
       </el-table>
@@ -37,6 +41,8 @@
         getData(){
           return{
             submitDisabled:false,
+            depotName:'',
+            filterShop:[],
             products:{},
             inputForm:{
                 extra:{}
@@ -44,19 +50,26 @@
             rules: {
               productId: [{ required: true, message: this.$t('adApplyGoods.prerequisiteMessage')}]
             },
-            remoteLoading:false
+            remoteLoading:false,
+            totalApplyQty:0,
           }
         },
       formSubmit(){
+
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         this.submitDisabled = true;
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let tempList = new Array();
-            for(let index in this.inputForm.depotAdApplyForms){
-              let detail = this.inputForm.depotAdApplyForms[index];
-              if(util.isNotBlank(detail.applyQty)){
-                tempList.push(detail)
+            for(let index of this.filterShop){
+              if(util.isNotBlank(index.applyQty)){
+                tempList.push(index)
                }
             }
            let submitData = util.deleteExtra(this.inputForm);
@@ -74,10 +87,54 @@
             this.submitDisabled = false;
           }
         })
+      },customValidate(){
+        let totalQty = 0;
+        for(let index of this.filterShop){
+          if(util.isBlank(index.applyQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(index.applyQty) || index.applyQty < 0){
+            return '门店：'+index.name+'的订货数不是一个大于等于0的整数';
+          }
+
+          totalQty += index.applyQty;
+        }
+        if(totalQty<=0){
+          return "总订货数要大于0";
+        }
+        return null;
+      },searchDetail(){
+          let val = this.depotName;
+          if(!val){
+              this.filterShop = this.inputForm.depotAdApplyForms;
+              return;
+          }
+          let tempList=[];
+          for(let index of this.inputForm.depotAdApplyForms){
+            if(util.isNotBlank(index.applyQty)){
+              tempList.push(index);
+            }
+          }
+          for(let index of this.inputForm.depotAdApplyForms){
+            if(util.contains(index.name,val)&&util.isBlank(index.applyQty)){
+              tempList.push(index);
+            }
+          }
+          this.filterShop = tempList;
+      },getTotalApplyQty(){
+          let tempTotalApplyQty = 0;
+          for(let index of this.filterShop){
+              if(util.isNotBlank(index.applyQty)&&Number.isInteger(index.applyQty)){
+                  tempTotalApplyQty += index.applyQty;
+              }
+          }
+          this.totalApplyQty = tempTotalApplyQty;
       },initPage(){
         this.pageHeight = window.outerHeight -320;
         axios.get('api/ws/future/layout/adApply/getAdApplyGoodsList').then((response) =>{
           this.inputForm = response.data;
+          this.searchDetail();
         });
       }
     },created () {

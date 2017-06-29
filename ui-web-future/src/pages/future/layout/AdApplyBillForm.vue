@@ -26,7 +26,7 @@
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
         <span>{{$t('adApplyBillForm.search')}}</span>
-       <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
+       <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
      </el-row>
       <el-table :data="filterAdApplyList"  stripe border>
         <el-table-column prop="shopName" :label="$t('adApplyBillForm.shopName')" ></el-table-column>
@@ -36,9 +36,9 @@
         <el-table-column prop="applyQty" :label="$t('adApplyBillForm.applyQty')+'('+totalApplyQty+')'" ></el-table-column>
         <el-table-column prop="confirmQty" sortable :label="$t('adApplyBillForm.confirmQty')+'('+totalConfirmQty+')'" ></el-table-column>
         <el-table-column prop="leftQty" :label="$t('adApplyBillForm.leftQty')+'('+totalLeftQty+')'" ></el-table-column>
-        <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')" >
+        <el-table-column prop="nowBilledQty" :label="$t('adApplyBillForm.billQty')+'('+totalNowBilledQty+')'" >
           <template scope="scope">
-            <el-input v-model="scope.row.nowBilledQty"></el-input>
+            <el-input v-model.number="scope.row.nowBilledQty" @input="getTotalNowBilledQty()"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="storeQty" sortable :label="$t('adApplyBillForm.financeQty')" ></el-table-column>
@@ -71,12 +71,19 @@
             expressCompanyId: [{required: true, message: this.$t('adApplyBillForm.prerequisiteMessage')}],
           },
           remoteLoading: false,
-          totalApplyQty:"0",
-          totalConfirmQty:"0",
-          totalLeftQty:"0"
+          totalApplyQty:0,
+          totalConfirmQty:0,
+          totalLeftQty:0,
+          totalNowBilledQty:0,
         };
       },
       formSubmit(){
+        let validateMsg = this.customValidate();
+        if(util.isNotBlank(validateMsg)){
+          this.$alert(validateMsg);
+          return;
+        }
+
         let that = this;
         that.submitDisabled = true;
         let form = that.$refs["inputForm"];
@@ -102,13 +109,37 @@
         this.searchDetail();
       },getProductForSubmit(){
           let tempList=new Array();
-          for(let index in this.adApplyList){
-            let detail=this.adApplyList[index];
-            if(util.isNotBlank(detail.nowBilledQty)){
-              tempList.push(detail);
+          for(let index of this.adApplyList){
+            if(util.isNotBlank(index.nowBilledQty)){
+              tempList.push(index);
             }
           }
           return tempList;
+      },customValidate(){
+        let totalQty = 0;
+        for(let index of this.filterAdApplyList){
+          if(util.isBlank(index.nowBilledQty)){
+            continue;
+          }
+
+          if(!Number.isInteger(index.nowBilledQty) || index.nowBilledQty < 0){
+            return '门店：'+index.shopName+'的订货数不是一个大于等于0的整数';
+          }
+
+          totalQty += index.nowBilledQty;
+        }
+        if(totalQty<=0){
+          return "总订货数要大于0";
+        }
+        return null;
+      },getTotalNowBilledQty(){
+        let tempTotalNowBilledQty = 0;
+        for(let index of this.filterAdApplyList){
+          if(util.isNotBlank(index.nowBilledQty)&&Number.isInteger(index.nowBilledQty)){
+            tempTotalNowBilledQty += index.nowBilledQty;
+          }
+        }
+        this.totalNowBilledQty = tempTotalNowBilledQty;
       },
       searchDetail(){
         var val=this.productOrShopName;
@@ -118,16 +149,14 @@
           return;
         }
         var tempList=new Array();
-        for(var index in this.adApplyList){
-          var detail=this.adApplyList[index];
-          if(util.isNotBlank(detail.nowBilledQty)){
-            tempList.push(detail)
+        for(var index of this.adApplyList){
+          if(util.isNotBlank(index.nowBilledQty)){
+            tempList.push(index)
           }
         }
-        for(var index in this.adApplyList){
-          var detail=this.adApplyList[index];
-          if((util.contains(detail.shopName,val)||util.contains(detail.productName,val))&&util.isBlank(detail.nowBilledQty)){
-            tempList.push(detail)
+        for(var index of this.adApplyList){
+          if((util.contains(index.shopName,val)||util.contains(index.productName,val))&&util.isBlank(index.nowBilledQty)){
+            tempList.push(index)
           }
         }
         this.filterAdApplyList = tempList;
@@ -139,16 +168,15 @@
         let tempApplyQty = 0;
         let tempConfirmQty = 0;
         let tempLeftQty = 0;
-        for(let index in content){
-          let detail=content[index];
-          if(util.isNotBlank(detail.applyQty)){
-            tempApplyQty += detail.applyQty;
+        for(let index of content){
+          if(util.isNotBlank(index.applyQty)){
+            tempApplyQty += index.applyQty;
           }
-          if(util.isNotBlank(detail.confirmQty)){
-            tempConfirmQty += detail.confirmQty;
+          if(util.isNotBlank(index.confirmQty)){
+            tempConfirmQty += index.confirmQty;
           }
-          if(util.isNotBlank(detail.leftQty)){
-            tempLeftQty += detail.leftQty;
+          if(util.isNotBlank(index.leftQty)){
+            tempLeftQty += index.leftQty;
           }
         }
         this.totalApplyQty = tempApplyQty;

@@ -8,9 +8,11 @@ import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class StkTransferDirectService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -31,6 +34,9 @@ public class StkTransferDirectService {
                 stkTransferDirectDto.getJson(),
                 kingdeeBook);
         kingdeeManager.save(kingdeeSynDto);
+        if (!kingdeeSynDto.getSuccess()){
+            throw new ServiceException("直接调拨单失败："+kingdeeSynDto.getResult());
+        }
         return kingdeeSynDto;
     }
 

@@ -95,5 +95,8 @@ public interface CloudClient {
     //直接调拨单
     @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForStoreAllot")
     KingdeeSynReturnDto synStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
+    //
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/kingdeeSyn/findByExtendIdAndExtendType")
+    List<KingdeeSynReturnDto> findByExtendIdAndExtendType(@RequestParam(value = "extendId")String extendId, @RequestParam(value = "extendType")String extendType);
 
 }

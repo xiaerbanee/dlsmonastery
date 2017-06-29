@@ -219,6 +219,8 @@
           for(let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList){
             if(response.data[adGoodsOrderDetail.productOutId] !== undefined) {
               adGoodsOrderDetail.cloudQty = response.data[adGoodsOrderDetail.productOutId];
+            }else{
+              adGoodsOrderDetail.cloudQty = null;
             }
           }
         });

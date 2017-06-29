@@ -338,23 +338,29 @@ public class GoodsOrderShipService {
         }
         goodsOrder.setAmount(amount);
         goodsOrderRepository.save(goodsOrder);
+        List<KingdeeSynReturnDto> kingdeeSynReturnDtos = synSalReturnStock(goodsOrder);
+        if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
+            KingdeeSynReturnDto kingdeeSynReturnDto=kingdeeSynReturnDtos.get(0);
+            goodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
+            goodsOrderRepository.save(goodsOrder);
+        }
         return goodsOrder;
     }
 
-    private List<KingdeeSynReturnDto> synSalReturnStock(GoodsOrderDto goodsOrderDto){
-        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderDto.getId());
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderDto.getStoreId());
-        ClientDto clientDto = clientRepository.findByDepotId(goodsOrderDto.getShopId());
+    private List<KingdeeSynReturnDto> synSalReturnStock(GoodsOrder goodsOrder){
+        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
+        ClientDto clientDto = clientRepository.findByDepotId(goodsOrder.getShopId());
         List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
         Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
 
         List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
         SalReturnStockDto returnStockDto = new SalReturnStockDto();
-        returnStockDto.setExtendId(goodsOrderDto.getId());
+        returnStockDto.setExtendId(goodsOrder.getId());
         returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
-        returnStockDto.setDate(goodsOrderDto.getBillDate());
+        returnStockDto.setDate(goodsOrder.getBillDate());
         returnStockDto.setCustomerNumber(clientDto.getOutCode());
-        returnStockDto.setNote(goodsOrderDto.getRemarks());
+        returnStockDto.setNote(goodsOrder.getRemarks());
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
 
         for (GoodsOrderDetail detail : goodsOrderDetailList){
@@ -362,7 +368,7 @@ public class GoodsOrderShipService {
             entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
             entityDto.setQty(detail.getReturnQty());
             entityDto.setPrice(detail.getPrice());
-            entityDto.setEntryNote(goodsOrderDto.getRemarks());
+            entityDto.setEntryNote(goodsOrder.getRemarks());
             entityDto.setStockNumber(depotStore.getOutCode());
             entityDtoList.add(entityDto);
         }

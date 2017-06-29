@@ -6,6 +6,7 @@ import net.myspring.cloud.modules.kingdee.repository.BdAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class BdAccountService {
     @Autowired
     private BdAccountRepository bdAccountRepository;
