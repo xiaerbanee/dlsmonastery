@@ -27,7 +27,6 @@ public class FolderService {
     @Autowired
     private FolderRepository folderRepository;
 
-    @Transactional(readOnly = true)
     public FolderDto findOne(FolderDto folderDto) {
         if (!folderDto.isCreate()) {
             Folder folder = folderRepository.findOne(folderDto.getId());
@@ -73,7 +72,6 @@ public class FolderService {
         return folder;
     }
 
-    @Transactional(readOnly = true)
     public List<FolderDto> findAll(String accountId) {
         List<FolderDto> folderDtoList = Lists.newArrayList();
         Folder parent = getRoot(accountId);

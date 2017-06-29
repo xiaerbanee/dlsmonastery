@@ -67,7 +67,6 @@ public class ProcessTypeService {
         processTypeRepository.save(processType);
     }
 
-    @Transactional
     public void save(ProcessTypeForm processTypeForm){
         for (int i = processTypeForm.getProcessFlowList().size() - 1; i >= 0; i--) {
             ProcessFlowDto processFlowDto= processTypeForm.getProcessFlowList().get(i);

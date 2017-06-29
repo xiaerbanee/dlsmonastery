@@ -55,7 +55,6 @@ public class BackendModuleService {
         return backendModuleIds;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         backendModuleRepository.logicDelete(id);
     }

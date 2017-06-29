@@ -38,13 +38,11 @@ public class ImooService {
     private RedisTemplate redisTemplate;
 
     @FactoryDataSource
-    @Transactional(readOnly = true)
     public List<ImooPlantBasicProduct> imooPlantBasicProducts() {
         return imooRepository.plantBasicProducts();
     }
 
     @FactoryDataSource
-    @Transactional(readOnly = true)
     public List<ImooPrdocutImeiDeliver> plantPrdocutImeiDeliverByDate(LocalDate date) {
         String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         LocalDate dateStart = date.minusDays(2);
@@ -96,7 +94,6 @@ public class ImooService {
         return "发货串码同步成功，共同步" + list.size() + "条数据";
     }
 
-    @Transactional
     public  List<ImooPrdocutImeiDeliver>  synIme(String date) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         LocalDate dateStart = nowDate.minusDays(1);

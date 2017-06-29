@@ -47,7 +47,6 @@ public class FolderFileService {
     @Autowired
     private CacheUtils cacheUtils;
 
-    @Transactional
     public List<FolderFileDto> save(String folderId, Map<String, MultipartFile> fileMap) {
         List<FolderFileDto> list = Lists.newArrayList();
         try {
@@ -83,14 +82,12 @@ public class FolderFileService {
         return list;
     }
 
-    @Transactional(readOnly = true)
     public FolderFile findOne(String id) {
         FolderFile folderFile =  folderFileRepository.findOne(id);
         return folderFile;
     }
 
 
-    @Transactional(readOnly = true)
     public List<FolderFileDto> findByIds(List<String> ids) {
         if(CollectionUtil.isEmpty(ids)) {
             return Lists.newArrayList();
@@ -107,7 +104,6 @@ public class FolderFileService {
         return uploadRootPath + RequestUtils.getCompanyName() + "\\convert\\" + folderFile.getPhysicalName().substring(0, folderFile.getPhysicalName().lastIndexOf(".")) + ".png";
     }
 
-    @Transactional(readOnly = true)
     public Page<FolderFileDto> findPage(Pageable pageable, FolderFileQuery folderFileQuery) {
         Page<FolderFileDto> folderFilePage= folderFileRepository.findPage(pageable,folderFileQuery);
         cacheUtils.initCacheInput(folderFilePage.getContent());

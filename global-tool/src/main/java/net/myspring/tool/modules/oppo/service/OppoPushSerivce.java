@@ -33,6 +33,7 @@ import java.util.*;
  */
 @Service
 @LocalDataSource
+@Transactional
 public class OppoPushSerivce {
 
     @Autowired
@@ -64,7 +65,6 @@ public class OppoPushSerivce {
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
-    @Transactional
     public List<OppoCustomer> getOppoCustomers(String agentCode) {
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
         initAreaDepotMap();
@@ -144,7 +144,6 @@ public class OppoPushSerivce {
 
     //上抛运营商属性
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerOperatortype> getOppoCustomerOperatortype() {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
         initAreaDepotMap();
@@ -219,7 +218,6 @@ public class OppoPushSerivce {
 
     //上抛一代二代库存数据,不包括门店数据
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerStock> getOppoCustomerStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -249,7 +247,6 @@ public class OppoPushSerivce {
 
     //获取渠道串码收货数据
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -268,7 +265,6 @@ public class OppoPushSerivce {
 
     //获取店核销总数据
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerSale> getOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -278,7 +274,6 @@ public class OppoPushSerivce {
 
     //	门店销售明细数据抛转
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -297,7 +292,6 @@ public class OppoPushSerivce {
 
     //门店销售数据汇总
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -314,7 +308,6 @@ public class OppoPushSerivce {
 
     //门店售后退货汇总
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
@@ -329,7 +322,6 @@ public class OppoPushSerivce {
 
     //门店演示机汇总数据
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();

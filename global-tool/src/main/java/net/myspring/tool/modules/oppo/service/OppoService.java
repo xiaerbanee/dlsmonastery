@@ -25,6 +25,7 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
+@Transactional
 public class OppoService {
     @Autowired
     private OppoPlantProductSelRepository oppoPlantProductSelRepository;
@@ -59,7 +60,6 @@ public class OppoService {
 
     //获取颜色编码
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
             oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
@@ -92,7 +92,6 @@ public class OppoService {
 
     //获取物料编码
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
@@ -116,7 +115,6 @@ public class OppoService {
 
     //获取发货串码信息
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantSendImeiPpsels(List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels, String agentCode) {
         List<OppoPlantSendImeiPpsel> list = Lists.newArrayList();
         List<String> imeis = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
@@ -166,7 +164,6 @@ public class OppoService {
 
 
 
-    @Transactional
     public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
@@ -176,7 +173,6 @@ public class OppoService {
         return oppoPlantSendImeiPpselDtos;
     }
 
-    @Transactional
     public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
