@@ -48,7 +48,7 @@ public class StkTransferDirectManager {
             transferDirectDto.setExtendId(goodsOrder.getId());
             transferDirectDto.setExtendType(ExtendTypeEnum.货品订货.name());
             transferDirectDto.setNote(goodsOrder.getRemarks());
-            transferDirectDto.setDate(LocalDate.now());
+            transferDirectDto.setDate(goodsOrder.getBillDate());
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
             Map<String, String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product::getCode));
