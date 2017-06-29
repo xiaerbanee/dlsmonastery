@@ -16,6 +16,7 @@ import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class CustomerReceiveService {
     @Autowired
     private CustomerReceiveRepository customerReceiveRepository;
@@ -39,7 +41,7 @@ public class CustomerReceiveService {
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
         if (customerIdList.size() > 0 && dateStart != null && dateEnd != null) {
             List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
-            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd, customerIdList);
+            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd.plusDays(1), customerIdList);
             //期初结余
             Map<String, BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             //期末结余
@@ -91,8 +93,10 @@ public class CustomerReceiveService {
         List<CustomerReceiveDetailDto> detailDtoList = Lists.newArrayList();
         List<String> customerIdList = customerReceiveDetailQuery.getCustomerIdList();
         Map<String,List<CustomerReceiveDetailDto>> map = findCustomerReceiveDetailDtoMap(customerReceiveDetailQuery);
-        for (String customerId : customerIdList){
-            detailDtoList.addAll(map.get(customerId));
+        if (map.size() > 0){
+            for (String customerId : customerIdList){
+                detailDtoList.addAll(map.get(customerId));
+            }
         }
         return detailDtoList;
     }
@@ -103,7 +107,7 @@ public class CustomerReceiveService {
         //期初应收
         List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
-        //主单据列表(其他应收,销售出库 销售退货，收款，退款)
+        //主单据列表(其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
         //设置主单备注
         List<NameValueDto> remarksList = customerReceiveRepository.findRemarks(customerReceiveDetailQuery);
