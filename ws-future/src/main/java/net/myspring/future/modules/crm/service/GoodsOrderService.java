@@ -201,6 +201,7 @@ public class GoodsOrderService {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderDetailForm,GoodsOrderDetail.class);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
+                    goodsOrderDetail.setShippedQty(0);
                     PricesystemDetail pricesystemDetail = pricesystemDetailMap.get(goodsOrderDetail.getProductId());
                     goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
@@ -251,6 +252,7 @@ public class GoodsOrderService {
                 if (goodsOrderBillDetailForm.getBillQty() > 0) {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderBillDetailForm,GoodsOrderDetail.class);
                     goodsOrderDetail.setQty(0);
+                    goodsOrderDetail.setShippedQty(0);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
