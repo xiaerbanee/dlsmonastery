@@ -1012,3 +1012,13 @@ update crm_depot_shop set door_head=0 where door_head is null;
 update crm_depot_shop set speciality_store=0 where speciality_store is null;
 
 update crm_depot set pop_shop=ad_shop where ad_shop=1
+
+# 更新分店client_id
+UPDATE crm_depot t1,
+  crm_depot t2
+SET t1.client_id = t2.client_id
+WHERE
+  t1.parent_id = t2.id
+  AND t1.depot_shop_id IS NOT NULL
+  and t1.client_id is null
+  AND t2.client_id IS NOT NULL;

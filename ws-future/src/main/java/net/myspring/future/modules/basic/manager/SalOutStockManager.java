@@ -56,7 +56,7 @@ public class SalOutStockManager {
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(goodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
-            salOutStockDto.setDate(LocalDate.now());
+            salOutStockDto.setDate(goodsOrder.getBillDate());
             salOutStockDto.setCustomerNumber(clientDto.getOutCode());
             salOutStockDto.setNote(goodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
