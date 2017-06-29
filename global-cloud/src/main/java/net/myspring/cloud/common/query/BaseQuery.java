@@ -1,5 +1,6 @@
 package net.myspring.cloud.common.query;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.util.collection.CollectionUtil;
@@ -11,6 +12,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
+    @JsonIgnore
     private String companyId= RequestUtils.getCompanyId();
 
     private  Integer page = 0;
