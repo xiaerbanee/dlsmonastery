@@ -16,6 +16,7 @@ import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +36,13 @@ public class BankInController {
     private BankInService bankInService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public Page<BankInDto> list(Pageable pageable, BankInQuery bankInQuery){
         return bankInService.findPage(pageable, bankInQuery);
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public BankInQuery getQuery(BankInQuery bankInQuery){
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
@@ -48,6 +51,7 @@ public class BankInController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:edit')")
     public RestResponse save(BankInForm bankInForm) {
         if(bankInForm.getAmount() == null || bankInForm.getAmount().compareTo(BigDecimal.ZERO) <= 0){
             throw new ServiceException("到账金额必须大于0");
@@ -57,12 +61,14 @@ public class BankInController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:delte')")
     public RestResponse delete(String id) {
         bankInService.logicDelete(id);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "audit")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:audit')")
     public RestResponse audit(BankInAuditForm bankInAuditForm) {
 
         if(bankInAuditForm.getPass()== null || bankInAuditForm.getSyn() == null || bankInAuditForm.getBillDate() == null){
@@ -74,6 +80,7 @@ public class BankInController {
     }
 
     @RequestMapping(value = "batchAudit")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:audit')")
     public RestResponse batchAudit(@RequestParam(value = "ids[]") String[] ids, boolean pass){
 
         if(ids == null || ids.length == 0){
@@ -97,18 +104,21 @@ public class BankInController {
     }
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public BankInForm getForm(BankInForm bankInForm ){
         bankInForm.getExtra().put("typeList",BankInTypeEnum.getList());
         return bankInForm;
     }
 
     @RequestMapping(value = "getAuditForm")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public BankInAuditForm getAuditForm(BankInAuditForm bankInAuditForm ){
         bankInAuditForm.getExtra().put("defaultBillDate", LocalDate.now());
         return bankInAuditForm;
     }
 
     @RequestMapping(value = "findDto")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public BankInDto findDto(String id ){
         if(StringUtils.isBlank(id)){
             return new BankInDto();
@@ -117,6 +127,7 @@ public class BankInController {
     }
 
     @RequestMapping(value="export")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public ModelAndView export(BankInQuery bankInQuery) {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", bankInService.export(bankInQuery));
     }
