@@ -64,7 +64,7 @@ Page({
       },
       data: $util.deleteExtra(that.data.formData),
       success: function (res) {
-        let content = res.data.content;
+        var content = res.data.content;
         for (var item in content) {
           var actionList = new Array();
           actionList.push("详细");
