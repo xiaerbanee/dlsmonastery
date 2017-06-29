@@ -7,11 +7,11 @@
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加业务属性</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
-        <search-tag  :submitData="formData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+          <el-form-item label="名称" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -24,7 +24,7 @@
           <el-form-item label="门店名称" :label-width="formLabelWidth">
             <el-input v-model="synData.depotName" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item label="门店名称" :label-width="formLabelWidth">
+          <el-form-item label="办事处" :label-width="formLabelWidth">
             <el-select v-model="synData.areaId" clearable filterable>
               <el-option v-for="item in areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
             </el-select>
@@ -65,18 +65,16 @@
   export default {
     data() {
       return {
+        searchText:"",
         page:{},
         formData:{
-          page:0,
-          size:25,
-          name:"",
-        },formLabel:{
-          name:{label:"名称"},
+          extra:{}
         },
         synData:{
           depotName:"",
           areaId:""
         },
+        initPromise:{},
         formProperty:{},
         areaList:[],
         formLabelWidth: '120px',
@@ -87,12 +85,17 @@
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        util.setQuery("depotShopList",this.formData);
-        console.log(this.formData)
-        axios.get('/api/ws/future/basic/depotShop',{params:this.formData}).then((response) => {
-          console.log(response.data)
+        this.setSearchText();
+        let submitData = util.deleteExtra(this.formData);
+        util.setQuery("depotShopList",submitData);
+        axios.get('/api/ws/future/basic/depotShop',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -101,7 +104,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -133,12 +136,17 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/basic/sys/office/findByOfficeRuleName').then((response) =>{
+      this.initPromise =axios.get('/api/basic/sys/office/findByOfficeRuleName').then((response) =>{
         this.areaList=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      })
     }
+
+
   };
 </script>
 

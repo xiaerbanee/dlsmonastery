@@ -82,7 +82,6 @@
         this.formData = response.data;
         util.copyValue(this.$route.query,this.formData);
       })
-
     },activated() {
       this.initPromise.then(() => {
         this.pageRequest();
