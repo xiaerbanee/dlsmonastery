@@ -16,6 +16,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,12 +33,14 @@ public class GoodsOrderShipController {
 
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
         Page<GoodsOrderDto> page = goodsOrderShipService.findAll(pageable, goodsOrderQuery);
         return page;
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
@@ -46,11 +49,13 @@ public class GoodsOrderShipController {
     }
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public GoodsOrderShipForm getForm(GoodsOrderShipForm goodsOrderShipForm) {
         return goodsOrderShipForm;
     }
 
     @RequestMapping(value = "shipCheck")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public  Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
         Map<String,Object> map= Maps.newHashMap();
         if(StringUtils.isNotBlank(goodsOrderShipForm.getBoxImeStr())||StringUtils.isNotBlank(goodsOrderShipForm.getImeStr())){
@@ -61,18 +66,21 @@ public class GoodsOrderShipController {
 
 
     @RequestMapping(value = "ship")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:ship')")
     public RestResponse ship(GoodsOrderShipForm goodsOrderShipForm) {
          goodsOrderShipService.ship(goodsOrderShipForm);
          return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "sign")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
     public RestResponse sign(String goodsOrderId) {
         goodsOrderShipService.sign(goodsOrderId);
         return new RestResponse("签收成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "shipBack")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:shipBack')")
     public RestResponse shipBack(String goodsOrderId) {
         goodsOrderShipService.shipBack(goodsOrderId);
         return new RestResponse("重发成功",ResponseCodeEnum.saved.name());
@@ -80,27 +88,32 @@ public class GoodsOrderShipController {
 
 
     @RequestMapping(value = "sreturn")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:bill')")
     public RestResponse sreturn(GoodsOrderForm goodsOrderForm) {
         goodsOrderShipService.sreturn(goodsOrderForm);
         return new RestResponse("销售退货成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getSreturn")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public GoodsOrderDto getSreturn(String id) {
         return goodsOrderShipService.getSreturn(id);
     }
 
     @RequestMapping(value = "getShip")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public GoodsOrderDto getShip(String id) {
         return goodsOrderShipService.getShip(id);
     }
 
     @RequestMapping(value = "print")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:print')")
     public GoodsOrderPrintDto print(String goodsOrderId) {
         return goodsOrderShipService.print(goodsOrderId);
     }
 
     @RequestMapping(value = "shipPrint")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:print')")
     public GoodsOrderPrintDto shipPrint(String goodsOrderId) {
         return goodsOrderShipService.shipPrint(goodsOrderId);
     }
