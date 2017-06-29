@@ -26,7 +26,7 @@
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
         <span>{{$t('adApplyBillForm.search')}}</span>
-       <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
+       <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
      </el-row>
       <el-table :data="filterAdApplyList"  stripe border>
         <el-table-column prop="shopName" :label="$t('adApplyBillForm.shopName')" ></el-table-column>

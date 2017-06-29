@@ -76,6 +76,7 @@ export default {
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
     search: "搜索",
+    inputKey: "请输入关键字",
     inputTowKey: "至少二位关键字",
   },
   adApplyGoods: {

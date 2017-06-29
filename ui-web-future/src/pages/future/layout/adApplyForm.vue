@@ -21,7 +21,7 @@
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
         <span>{{$t('adApplyForm.search')}}</span>
-        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
+        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
       </el-row>
       <el-table :data="filterProduct"  stripe border>
         <el-table-column prop="code" :label="$t('adApplyForm.productCode')"></el-table-column>

@@ -15,13 +15,13 @@
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
         <span>{{$t('adApplyGoods.search')}}</span>
-        <el-input v-model="depotName" @change="searchDetail" :placeholder="$t('adApplyGoods.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
+        <el-input v-model="depotName" @change="searchDetail" :placeholder="$t('adApplyGoods.inputKey')" style="width:200px;margin-right:10px"></el-input>
       </el-row>
       <el-table :data="filterShop"  stripe border>
-        <el-table-column prop="name" :label="$t('adApplyGoods.shopName')"></el-table-column>
+        <el-table-column prop="name" sortable :label="$t('adApplyGoods.shopName')"></el-table-column>
         <el-table-column prop="applyQty" :label="$t('adApplyGoods.applyQty')+'('+totalApplyQty+')'">
           <template scope="scope">
-            <el-input v-model.number="scope.row.applyQty" @blur = "getTotalApplyQty()"></el-input>
+            <el-input v-model.number="scope.row.applyQty" @input = "getTotalApplyQty()"></el-input>
           </template>
         </el-table-column>
       </el-table>
