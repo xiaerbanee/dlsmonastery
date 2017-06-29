@@ -12,6 +12,7 @@ import java.util.*
 
 
 interface StoreAllotDetailRepository : BaseRepository<StoreAllotDetail, String> ,StoreAllotDetailRepositoryCustom{
+    fun findByStoreAllotIdIn(storeAllotIdList: MutableList<String>):MutableList<StoreAllotDetail>
 }
 
 

@@ -12,6 +12,8 @@ interface GoodsOrderDetailRepository : BaseRepository<GoodsOrderDetail, String> 
 
     fun findByGoodsOrderId(goodsOrderId: String): MutableList<GoodsOrderDetail>
 
+    fun findByGoodsOrderIdIn(goodsOrderIds:MutableList<String>):MutableList<GoodsOrderDetail>
+
     @Query("""
         select
             t1

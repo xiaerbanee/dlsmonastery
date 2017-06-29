@@ -115,6 +115,8 @@
         util.copyValue(that.$route.query,that.formData);
 
       });
+      axios.get('/api/ws/future/basic/print/orderList?r=.7055475&orderType=大库调拨&qty=1&storeNames=（联信）好机库&pickUpType=全部&printDate=2017-06-22&configType=出库单&version=1.2').then((response) =>{
+      });
     },activated(){
         this.initPromise.then(()=>{
           this.pageRequest();

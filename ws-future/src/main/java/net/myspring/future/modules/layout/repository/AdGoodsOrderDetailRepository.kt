@@ -24,6 +24,8 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
 
     fun findByAdGoodsOrderId(adGoodsOrderId :String): MutableList<AdGoodsOrderDetail>
 
+    fun findByAdGoodsOrderIdIn(adGoodsOrderIdList: MutableList<String>): MutableList<AdGoodsOrderDetail>
+
 }
 
 interface AdGoodsOrderDetailRepositoryCustom{

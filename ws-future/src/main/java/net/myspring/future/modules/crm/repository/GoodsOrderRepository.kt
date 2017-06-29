@@ -24,6 +24,8 @@ import java.util.*
 
 
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
+
+    fun findByBusinessIdIn(businessIdList: List<String>):MutableList<GoodsOrder>
 }
 
 interface GoodsOrderRepositoryCustom {
@@ -32,6 +34,7 @@ interface GoodsOrderRepositoryCustom {
     fun findNextBusinessId(companyId:String,date: LocalDate): String
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
+
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
