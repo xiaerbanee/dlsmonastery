@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_product")
-@Where(clause = "enabled=1")
 public class Product extends CompanyEntity<Product> {
     private String name;
     private String code;
