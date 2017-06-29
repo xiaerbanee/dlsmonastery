@@ -15,7 +15,7 @@ public class AdApplyQuery extends BaseQuery {
     private String shopId;
     private String productCode;
     private String createdBy;
-    private String createdDate;
+    private String createdDate = LocalDate.now().plusMonths(-1)+CharConstant.DATE_RANGE_SPLITTER+LocalDate.now();
     private String productName;
     private Boolean isBilled;
 

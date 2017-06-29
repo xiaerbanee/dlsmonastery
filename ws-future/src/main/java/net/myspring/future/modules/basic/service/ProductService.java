@@ -279,5 +279,16 @@ public class ProductService {
         return CollectionUtil.extractToList(productRepository.findByEnabledIsTrueAndCompanyId(companyId), "name");
     }
 
+    public String findAdProductCodeAndAllowOrder(){
+        List<String> outIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue()
+                    +CharConstant.COMMA+CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+        List<Product> productList = productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outIds);
+        List<String> productCodes = CollectionUtil.extractToList(productList,"code");
+        if(productCodes!=null&&productCodes.size()>0){
+            return productCodes.toString();
+        }else{
+            return "";
+        }
+    }
 
 }
