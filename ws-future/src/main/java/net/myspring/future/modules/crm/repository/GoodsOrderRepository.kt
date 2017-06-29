@@ -62,9 +62,11 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         var sb = StringBuilder("""
             SELECT
               t2.express_codes as expressOrderExpressCodes,
+              shop.client_id clientId,
               t1.*
             FROM crm_goods_order t1
                       LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+                      LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
             where  t1.enabled = 1
         """)
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.statusList)) {
@@ -89,7 +91,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.ship_type = :shipType ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.areaId)) {
-            sb.append(" and t1.shop_id in(select id from crm_depot where area_id = :areaId) ")
+            sb.append(" and shop.area_id = :areaId ")
         }
         if (goodsOrderQuery.shipDateStart != null) {
             sb.append(" and t1.ship_date > :shipDateStart")
@@ -101,7 +103,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.shop_id = :shopId ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.shopName)) {
-            sb.append(" and t1.shop_id in(select id from crm_depot where name like concat('%',:shopName,'%') )");
+            sb.append(" and shop.name like concat('%',:shopName,'%')  ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.storeId)) {
             sb.append(" and t1.store_id = :storeId ")
