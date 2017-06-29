@@ -34,6 +34,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @LocalDataSource
+@Transactional
 public class VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;

@@ -63,7 +63,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <pageable :page="customerPage" v-on:pageChange="pageChange"></pageable>
+      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
   </div>
 </template>
@@ -88,19 +88,17 @@
   export default {
     data() {
       return {
-        customerPage:{},
+        page:{},
         customers:{},
         summary: [],
         detail: [],
         formData: {
           extra:{},
+          customerGroup:'',
           customerIdList:[],
         },
         searchText:"",
         initPromise:{},
-        submitDetail: {
-          customerId: '',
-        },
         formLabelWidth: '120px',
         remoteLoading:false,
         formVisible: false,
@@ -119,7 +117,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        let submitData = util.deleteExtra(this.formData);
+        var submitData = util.deleteExtra(this.formData);
         util.setQuery("customerReceive", submitData);
           axios.get('/api/global/cloud/kingdee/bdCustomer?'+ qs.stringify(submitData)).then((response) => {
             let customerIdList = new Array();
@@ -127,15 +125,13 @@
             for (let item in customers) {
               customerIdList.push(customers[item].fcustId);
             }
-            this.formData.customerIdList = customerIdList;
-            if (this.formData.customerIdList.length !== 0) {
-              let submitData = util.deleteExtra(this.formData);
-              axios.get('/api/global/cloud/report/customerReceive/page?' + qs.stringify(submitData)).then((response) => {
-                this.summary = response.data;
+            submitData.customerIdList = customerIdList;
+            if (submitData.customerIdList.length !== 0) {
+              axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(submitData)).then((response) => {
                 this.summary = response.data;
               });
             }
-            this.customerPage = response.data;
+            this.page = response.data;
             this.pageLoading = false;
           })
       },pageChange(pageNumber,pageSize) {
@@ -152,9 +148,11 @@
       },detailAction:function(customerId){
         this.detailLoading = true;
         if(customerId !== null) {
-          util.copyValue(this.formData,this.submitDetail);
-          this.submitDetail.customerId = customerId;
-          axios.get('/api/global/cloud/report/customerReceive/detail',{params:this.submitDetail}).then((response) =>{
+          let submitDetail = Object();
+          submitDetail.customerIdList = customerId;
+          submitDetail.dateStart = this.formData.dateStart;
+          submitDetail.dateEnd = this.formData.dateEnd;
+          axios.get('/api/global/cloud/report/customerReceive/detail',{params:submitDetail}).then((response) =>{
             this.detail = response.data;
             this.detailLoading = false;
             this.detailVisible = true;
@@ -177,7 +175,6 @@
           this.remoteLoading = true;
           axios.get('/api/global/cloud/kingdee/bdCustomer/findByNameLike',{params:{name:query}}).then((response)=>{
             this.customers = response.data;
-            console.log(this.customers);
             this.remoteLoading = false;
           })
         } else {

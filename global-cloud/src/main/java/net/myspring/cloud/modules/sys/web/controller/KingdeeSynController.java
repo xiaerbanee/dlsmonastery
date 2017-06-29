@@ -4,16 +4,20 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 金蝶同步
@@ -54,6 +58,12 @@ public class KingdeeSynController {
             restResponse = new RestResponse("同步失败", null,false);
         }
         return restResponse;
+    }
+
+    @RequestMapping(value = "findByExtendIdAndExtendType",method = RequestMethod.GET)
+    public List<KingdeeSynReturnDto> findByExtendIdAndExtendType(String extendId, String extendType){
+        List<KingdeeSyn> kingdeeSynList = kingdeeSynService.findByExtendIdAndExtendType(extendId,extendType);
+        return BeanUtil.map(kingdeeSynList,KingdeeSynReturnDto.class);
     }
 
     @RequestMapping(value = "delete")

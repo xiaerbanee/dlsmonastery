@@ -15,6 +15,7 @@ import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
@@ -44,20 +45,20 @@ public class SalOutStockManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public List<KingdeeSynReturnDto> synForGoodsOrder(GoodsOrderForm goodsOrderForm){
-        if (StringUtils.isNotBlank(goodsOrderForm.getId())){
-            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderForm.getId());
-            DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
-            ClientDto clientDto = clientRepository.findByDepotId(goodsOrderForm.getShopId());
+    public List<KingdeeSynReturnDto> synForGoodsOrder(GoodsOrder goodsOrder){
+        if (StringUtils.isNotBlank(goodsOrder.getId())){
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+            DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
+            ClientDto clientDto = clientRepository.findByDepotId(goodsOrder.getShopId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
             Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product->Product));
             List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
             SalOutStockDto salOutStockDto = new SalOutStockDto();
-            salOutStockDto.setExtendId(goodsOrderForm.getId());
+            salOutStockDto.setExtendId(goodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
             salOutStockDto.setDate(LocalDate.now());
             salOutStockDto.setCustomerNumber(clientDto.getOutCode());
-            salOutStockDto.setNote(goodsOrderForm.getRemarks());
+            salOutStockDto.setNote(goodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             for (GoodsOrderDetail detail : goodsOrderDetailList) {
                 if (detail.getBillQty() != null && detail.getBillQty() > 0) {
@@ -71,7 +72,7 @@ public class SalOutStockManager {
                     }
                     entityDto.setQty(detail.getBillQty());
                     entityDto.setPrice(detail.getPrice());
-                    entityDto.setEntryNote(goodsOrderForm.getRemarks());
+                    entityDto.setEntryNote(goodsOrder.getRemarks());
                     entityDtoList.add(entityDto);
                     salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
                     salOutStockDtoList.add(salOutStockDto);

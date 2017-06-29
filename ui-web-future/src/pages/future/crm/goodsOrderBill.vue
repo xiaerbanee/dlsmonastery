@@ -210,7 +210,9 @@
             for(let goodsOrderDetail of this.inputForm.goodsOrderDetailList){
               if(response.data[goodsOrderDetail.productOutId] !== undefined) {
                   goodsOrderDetail.storeQty = response.data[goodsOrderDetail.productOutId];
-                }
+                }else{
+                  goodsOrderDetail.storeQty = null;
+              }
             }
           });
       }

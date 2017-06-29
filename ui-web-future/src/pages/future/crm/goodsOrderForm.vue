@@ -170,7 +170,9 @@
         this.refreshDetailList();
       },
       netTypeChange(){
-        this.inputForm.lxMallOrder = null;
+          if(this.inputForm.netType!=='联信'){
+            this.inputForm.lxMallOrder = null;
+          }
         this.refreshDetailList();
       }
       ,refreshDetailList(){

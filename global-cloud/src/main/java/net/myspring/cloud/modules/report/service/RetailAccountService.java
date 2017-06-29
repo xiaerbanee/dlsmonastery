@@ -17,6 +17,7 @@ import net.myspring.common.constant.CharConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.YearMonth;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import static net.myspring.cloud.common.constant.KingdeeConstant.TOTAL_DEPARTMEN
  */
 @Service
 @KingdeeDataSource
+@Transactional
 public class RetailAccountService {
     @Autowired
     private GlcxViewRepository glcxViewRepository;

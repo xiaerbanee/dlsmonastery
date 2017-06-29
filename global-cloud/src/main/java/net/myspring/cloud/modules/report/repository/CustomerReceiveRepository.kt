@@ -19,7 +19,7 @@ import java.util.*
 @Component
 class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findEndShouldGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto> {
+    fun findEndShouldGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateEnd", dateEnd.toString())
         paramMap.put("customerIdList", customerIdList)
@@ -78,7 +78,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                  SELECT
                     t2.FCONTACTUNIT AS customerId,
                     t1.FREALREFUNDAMOUNTFOR AS endShouldGet
-                FROM
+                 FROM
                     T_AR_REFUNDBILLENTRY t1
                     JOIN T_AR_REFUNDBILL t2 ON t2.FID = t1.FID
                  WHERE
@@ -90,8 +90,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
         """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDto::class.java))
     }
 
-    fun findMainList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
-        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
+    fun findMainList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto>? {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
+        paramMap.put("dateEnd",customerReceiveDetailQuery.dateEnd.toString())
+        paramMap.put("customerIdList",customerReceiveDetailQuery.customerIdList)
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t.id,
@@ -99,7 +102,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 t.billType,
                 t.billNo,
                 t.date as billDate,
-                isnull(t.totalAmount,0),
+                isnull(t.totalAmount,0) as totalAmount,
                 t.STATUS as billStatus
             FROM (
                 SELECT
@@ -118,7 +121,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     AND t01.FCONTACTUNIT IN (:customerIdList)
 
                     AND t01.FDATE >=:dateStart
-                    AND t01.FDATE <:dateEnd
+                    AND t01.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -139,7 +142,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     AND t12.FNAME = '标准销售退货单'
                     AND t11.FRETCUSTID IN (:customerIdList)
                     AND t11.FDATE >=:dateStart
-                    AND t11.FDATE <:dateEnd
+                    AND t11.FDATE <=:dateEnd
                 GROUP BY t11.FID,
                     t11.FRETCUSTID,
                     t12.FNAME,
@@ -163,7 +166,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     t21.FBILLTYPEID = t22.FBILLTYPEID
                     AND t21.FCONTACTUNIT IN (:customerIdList)
                     AND t21.FDATE >=:dateStart
-                    AND t21.FDATE <:dateEnd
+                    AND t21.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -181,7 +184,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     t31.FBILLTYPEID = t32.FBILLTYPEID
                     AND t31.FCONTACTUNIT IN (:customerIdList)
                     AND t31.FDATE >=:dateStart
-                    AND t31.FDATE <:dateEnd
+                    AND t31.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -202,7 +205,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     AND t42.FNAME = '标准销售出库单'
                     AND t41.FCUSTOMERID IN (:customerIdList)
                     AND t41.FDATE >=:dateStart
-                    AND t41.FDATE <:dateEnd
+                    AND t41.FDATE <=:dateEnd
                 GROUP BY  t41.FID,
                     t41.FCUSTOMERID,
                     t42.FNAME,
@@ -228,7 +231,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     AND t52.FNAME = '现销退货单'
                     AND t51.FRETCUSTID IN (:customerIdList)
                     AND t51.FDATE >=:dateStart
-                    AND t51.FDATE <:dateEnd
+                    AND t51.FDATE <=:dateEnd
                 GROUP BY t51.FID,
                     t51.FRETCUSTID,
                     t52.FNAME,
@@ -254,7 +257,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     AND t62.FNAME = '现销出库单'
                     AND t61.FCUSTOMERID IN (:customerIdList)
                     AND t61.FDATE >=:dateStart
-                    AND t61.FDATE <:dateEnd
+                    AND t61.FDATE <=:dateEnd
                 GROUP BY  t61.FID,
                     t61.FCUSTOMERID,
                     t62.FNAME,
@@ -271,7 +274,10 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
-        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
+        paramMap.put("dateEnd",customerReceiveDetailQuery.dateEnd.toString())
+        paramMap.put("customerIdList",customerReceiveDetailQuery.customerIdList)
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t11.FID AS id,
@@ -321,7 +327,10 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto> {
-        var paramMap = BeanPropertySqlParameterSource(customerReceiveDetailQuery)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
+        paramMap.put("dateEnd",customerReceiveDetailQuery.dateEnd.toString())
+        paramMap.put("customerIdList",customerReceiveDetailQuery.customerIdList)
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FBILLNO AS name,
