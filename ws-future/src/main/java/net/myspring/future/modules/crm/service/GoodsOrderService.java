@@ -282,17 +282,16 @@ public class GoodsOrderService {
         expressOrder.setMobileQty(mobileBillQty);
         expressOrderRepository.save(expressOrder);
         if (goodsOrderBillForm.getSyn()) {
-            syn(goodsOrder);
+            syn(goodsOrder, expressOrder);
         }
         return goodsOrder;
     }
 
-    private GoodsOrder syn(GoodsOrder goodsOrder){
+    private GoodsOrder syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
         CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
-        String allotFormStockCode=null;
-        String allotToStockCode=null;
+
         if (companyConfig!=null&&StringUtils.isNotBlank(companyConfig.getValue())) {
             String mergeStoreIds =companyConfig.getValue();
             List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
@@ -301,26 +300,28 @@ public class GoodsOrderService {
             if (goodsOrder.getStoreId().equals(toStockId)) {
                 DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
-                allotFormStockCode=allotFromStock.getOutCode();
-                allotToStockCode=allotToStock.getOutCode();
-                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFormStockCode, allotToStockCode);
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFromStock.getOutCode(), allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
             DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
-            allotFormStockCode=allotFromStock.getOutCode();
-            allotToStockCode=allotToStock.getOutCode();
-            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
             goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
+
         } else {
-            List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salOutStockManager.synForGoodsOrder(goodsOrder);
-            if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
-                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
+            KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForGoodsOrder(goodsOrder).get(0);
+            String outCode = StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA);
+            if("AR_receivable".equals(kingdeeSynReturnDto.getNextFormId()) && StringUtils.isNotBlank(kingdeeSynReturnDto.getNextBillNo())){
+                outCode = StringUtils.appendString(outCode,"应收单:"+kingdeeSynReturnDto.getNextBillNo(),CharConstant.COMMA);
             }
+            goodsOrder.setOutCode(outCode);
         }
         goodsOrderRepository.save(goodsOrder);
+        expressOrder.setOutCode(goodsOrder.getOutCode()==null ? null : goodsOrder.getOutCode().replaceAll(CharConstant.COMMA, "<br/>"));
+        expressOrderRepository.save(expressOrder);
+
         return goodsOrder;
     }
 

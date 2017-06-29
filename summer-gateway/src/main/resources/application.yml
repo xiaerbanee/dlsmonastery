@@ -67,3 +67,6 @@ security:
 
 setting:
     adminIdList:  1
+
+logging:
+  file: summer-gateway.log

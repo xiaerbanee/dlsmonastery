@@ -3,7 +3,7 @@
     <head-tab active="adApplyList"></head-tab>
     <div>
       <el-row>
-        <su-alert  type="success" :text="productCode"> </su-alert>
+        <su-alert type="success" :text="productCode"> </su-alert>
       </el-row>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyForm')}}</el-button>
@@ -162,7 +162,7 @@
       }
     },created () {
         let that = this;
-      that.pageHeight = window.outerHeight -320;
+      that.pageHeight = window.outerHeight -350;
       this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);

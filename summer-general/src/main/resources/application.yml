@@ -47,3 +47,6 @@ upload:
   preview-size: 290
 setting:
     adminIdList:  1
+
+logging:
+  file: summer-general.log
