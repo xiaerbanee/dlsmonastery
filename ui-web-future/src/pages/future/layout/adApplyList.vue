@@ -3,6 +3,9 @@
     <head-tab active="adApplyList"></head-tab>
     <div>
       <el-row>
+        <su-alert  type="success" :text="productCode"> </su-alert>
+      </el-row>
+      <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyForm')}}</el-button>
         <el-button type="primary" @click="itemBillAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyBillForm')}}</el-button>
         <el-button type="primary" @click="grain" icon="plus" v-permit="'crm:adApply:goods'">{{$t('adApplyList.adApplyGoods')}}</el-button>
@@ -61,9 +64,10 @@
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
+  import suAlert from 'components/common/su-alert';
   export default {
     components:{
-      accountSelect,depotSelect,boolSelect
+      accountSelect,depotSelect,boolSelect,suAlert
     },
     data() {
       return {
@@ -81,7 +85,8 @@
         totalApplyQty:"0",
         totalConfirmQty:"0",
         totalBilledQty:"0",
-        totalLeftQty:"0"
+        totalLeftQty:"0",
+        productCode:''
       };
     },
     methods: {
@@ -122,6 +127,11 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/layout/adApply/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
+      },getAllowOrderProductCode(){
+          this.productCode = "当前开放的物料编码为:";
+          axios.get('api/ws/future/basic/product/findAdProductCodeAndAllowOrder').then((response) =>{
+            this.productCode += response.data;
+          });
       },getTotalQty(content){
           if(content == null){
               return;
@@ -156,6 +166,7 @@
       this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
+        that.getAllowOrderProductCode();
       });
     },activated(){
       this.initPromise.then(()=>{

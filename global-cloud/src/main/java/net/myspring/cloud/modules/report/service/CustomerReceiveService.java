@@ -111,7 +111,10 @@ public class CustomerReceiveService {
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
         //设置主单备注
         List<NameValueDto> remarksList = customerReceiveRepository.findRemarks(customerReceiveDetailQuery);
-        Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
+        Map<String,String> remarksMap = Maps.newHashMap();
+        for (NameValueDto remark : remarksList){
+            remarksMap.put(remark.getName(),remark.getValue());
+        }
         for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
             if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
                 customerReceiveDetailDto.setRemarks(remarksMap.get(customerReceiveDetailDto.getBillNo()));
@@ -147,11 +150,13 @@ public class CustomerReceiveService {
                 if(!result.containsKey(customerId)) {
                     result.put(customerId,Lists.newArrayList());
                 }
-                int index = 0;
                 List<CustomerReceiveDetailDto> list = result.get(customerId);
                 BigDecimal endShouldGet = custIdToBeginAccountMap.get(customerId);
+                if (endShouldGet == null){
+                    endShouldGet = BigDecimal.ZERO;
+                }
                 List<CustomerReceiveDetailDto> mainList = mainMap.get(customerId);
-
+                int index = 0;
                 CustomerReceiveDetailDto customerReceiveDetailDto= new CustomerReceiveDetailDto();
                 customerReceiveDetailDto.setBillType(bdCustomerMap.get(customerId).getFName());
                 customerReceiveDetailDto.setBillNo("客户编码：" + customerId);
@@ -166,7 +171,6 @@ public class CustomerReceiveService {
 
                 BigDecimal totalShouldGet = BigDecimal.ZERO;
                 for (int i = 0; i < mainList.size(); i++) {
-                    customerReceiveDetailDto.setIndex(index++);
                     CustomerReceiveDetailDto main = mainList.get(i);
                     customerReceiveDetailDto = new CustomerReceiveDetailDto();
                     customerReceiveDetailDto.setBillStatus(main.getBillStatus());
@@ -174,7 +178,7 @@ public class CustomerReceiveService {
                     customerReceiveDetailDto.setBillDate(main.getBillDate());
                     customerReceiveDetailDto.setBillNo(main.getBillNo());
                     customerReceiveDetailDto.setRemarks(main.getRemarks());
-
+                    customerReceiveDetailDto.setIndex(index++);
                     if (main.getBillType().contains("收款单")) {
                         main.setRealGet(main.getTotalAmount());
                         endShouldGet = endShouldGet.subtract(main.getRealGet());
@@ -200,7 +204,7 @@ public class CustomerReceiveService {
                     }
                     if (detailMap.containsKey(main.getBillNo())) {
                         for (CustomerReceiveDetailDto detail : detailMap.get(main.getBillNo())) {
-                            detail.setIndex(index);
+                            detail.setIndex(index-1);
                             detail.setMain(false);
                             if(main.getBillType().contains("销售退货")){
                                 detail.setQty(0L-detail.getQty());
@@ -216,6 +220,7 @@ public class CustomerReceiveService {
                 customerReceiveDetailDto.setShouldGet(totalShouldGet);
                 customerReceiveDetailDto.setBillType("期末应收");
                 customerReceiveDetailDto.setEndShouldGet(endShouldGet);
+                customerReceiveDetailDto.setIndex(index++);
                 list.add(customerReceiveDetailDto);
             }
         }

@@ -1,5 +1,6 @@
 package net.myspring.uaa.manager;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.uaa.dto.PermissionDto;
@@ -42,16 +43,10 @@ public class PermissionManager {
                 permissionList=permissionRepository.findByRoleId(roleId);
             }
         }
-        Map<String,String> map= Maps.newHashMap();
-        for(PermissionDto permissionDto:permissionList){
-            List<String> uslList= StringUtils.getSplitList(permissionDto.getUrl(),CharConstant.COMMA);
-            for(String url:uslList){
-                String permissionKey=url+permissionDto.getMethod();
-                if(!map.containsKey(permissionKey)){
-                    map.put(permissionKey,permissionDto.getPermission());
-                }
-            }
+        List<String> permissionStrList= Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(permissionList)){
+            permissionStrList=CollectionUtil.extractToList(permissionList,"permission");
         }
-        redisTemplate.opsForValue().set(key,map);
+        redisTemplate.opsForValue().set(key,permissionStrList);
     }
 }

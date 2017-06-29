@@ -14,9 +14,6 @@ public class Permission extends DataEntity<Permission> {
     private Integer version = 0;
     private String menuId;
 
-    private String url;
-    private String method;
-
     public String getName() {
         return name;
     }
@@ -47,21 +44,5 @@ public class Permission extends DataEntity<Permission> {
 
     public void setMenuId(String menuId) {
         this.menuId = menuId;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 }

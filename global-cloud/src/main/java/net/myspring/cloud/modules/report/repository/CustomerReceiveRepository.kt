@@ -287,7 +287,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 isnull(t12.FREALQTY,0) AS qty,
                 isnull(t14.FPRICE,0) AS price,
                 isnull(t14.FALLAMOUNT,0) AS totalAmount,
-                t12.FNOTE AS remarks
+                t12.FNOTE AS remarks,
+                t11.FDOCUMENTSTATUS as billStatus
             FROM
                 T_SAL_OUTSTOCK t11,
                 T_SAL_OUTSTOCKENTRY t12,
@@ -310,7 +311,8 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 isnull(t22.FREALQTY,0) AS qty,
                 isnull(t24.FPRICE,0) AS price,
                 isnull(t24.FAMOUNT,0) AS totalAmount,
-                t22.FNOTE AS remarks
+                t22.FNOTE AS remarks,
+                t21.FDOCUMENTSTATUS as billStatus
             FROM
                 T_SAL_RETURNSTOCK t21,
                 T_SAL_RETURNSTOCKENTRY t22,

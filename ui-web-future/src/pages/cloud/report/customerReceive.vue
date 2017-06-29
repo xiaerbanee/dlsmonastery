@@ -41,15 +41,15 @@
         <el-table :data="detail" :row-class-name="tableRowClassName" v-loading="detailLoading" element-loading-text="拼命加载中....." border>
           <el-table-column prop="billType" label="业务类型"></el-table-column>
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
-          <el-table-column prop="date" label="单据日期"></el-table-column>
+          <el-table-column prop="billDate" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
           <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="shouldGet" label="金额"></el-table-column>
+          <el-table-column prop="totalAmount" label="金额"></el-table-column>
           <el-table-column prop="shouldGet" label="应收"></el-table-column>
           <el-table-column prop="realGet" label="实收"></el-table-column>
           <el-table-column prop="endShouldGet" label="期末"></el-table-column>
-          <el-table-column prop="note" label="摘要"></el-table-column>
+          <el-table-column prop="remarks" label="摘要"></el-table-column>
         </el-table>
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
@@ -159,16 +159,16 @@
           })
         }
       },tableRowClassName(row, index) {
-        if (row.index === -2) { //head
+         if (row.index === 0) { //head
           return "detail-item2";
-        } else if (row.index === -3) { //error
+        } else if (row.billStatus !== "C" && row.billType !== "期初应收" && row.billType !== "期末应收") { //error
           return "detail-error";
-        } else if (row.index === -1) {
+        } else if (row.billType === "期初应收" || row.billType === "期末应收") {
           return "detail-title";
-        } else if (row.index / 2 === 0) {
-          return "detail-item1";
-        } else if (row.index / 2 !== 0) {
+        } else if (row.index % 2 === 0)  {
           return "detail-item2";
+        } else if (row.index % 2 !== 0) {
+          return "detail-item1";
         }
       },remoteCustomer(query) {
         if (query !== '') {
