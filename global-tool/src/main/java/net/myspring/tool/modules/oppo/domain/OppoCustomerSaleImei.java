@@ -1,14 +1,17 @@
 package net.myspring.tool.modules.oppo.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name="oppo_push_customer_sale_imei")
 public class OppoCustomerSaleImei {
+    @JsonIgnore
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private String imei;
     private LocalDateTime saletime;
     private String custname;
@@ -21,6 +24,16 @@ public class OppoCustomerSaleImei {
     private String agentname;
     private String province;
     private String city;
+    @JsonIgnore
+    private LocalDateTime createdDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAgentcode() {
         return agentcode;
@@ -116,5 +129,13 @@ public class OppoCustomerSaleImei {
 
     public void setShopname(String shopname) {
         this.shopname = shopname;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 }

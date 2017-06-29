@@ -6,6 +6,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
+import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
@@ -66,6 +67,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -199,6 +201,7 @@ public class GoodsOrderService {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderDetailForm,GoodsOrderDetail.class);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
+                    goodsOrderDetail.setShippedQty(0);
                     PricesystemDetail pricesystemDetail = pricesystemDetailMap.get(goodsOrderDetail.getProductId());
                     goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
@@ -249,6 +252,7 @@ public class GoodsOrderService {
                 if (goodsOrderBillDetailForm.getBillQty() > 0) {
                     GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderBillDetailForm,GoodsOrderDetail.class);
                     goodsOrderDetail.setQty(0);
+                    goodsOrderDetail.setShippedQty(0);
                     goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
                     goodsOrderDetailRepository.save(goodsOrderDetail);
                     amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
@@ -278,67 +282,44 @@ public class GoodsOrderService {
         expressOrder.setMobileQty(mobileBillQty);
         expressOrderRepository.save(expressOrder);
         if (goodsOrderBillForm.getSyn()) {
-            syn(BeanUtil.map(goodsOrder,GoodsOrderForm.class));
+            syn(goodsOrder);
         }
         return goodsOrder;
     }
 
-    private GoodsOrder syn(GoodsOrderForm goodsOrderForm){
-        Depot shop=depotRepository.findOne(goodsOrderForm.getShopId());
+    private GoodsOrder syn(GoodsOrder goodsOrder){
+        Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
         CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        String allotFormStockCode=null;
+        String allotToStockCode=null;
         if (companyConfig!=null&&StringUtils.isNotBlank(companyConfig.getValue())) {
             String mergeStoreIds =companyConfig.getValue();
             List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
             String fromStockId = storeIds.get(0);
             String toStockId = storeIds.get(1);
-            if (goodsOrderForm.getStoreId().equals(toStockId)) {
+            if (goodsOrder.getStoreId().equals(toStockId)) {
                 DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
-                goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
-                goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-                stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
+                allotFormStockCode=allotFromStock.getOutCode();
+                allotToStockCode=allotToStock.getOutCode();
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFormStockCode, allotToStockCode);
+                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
-            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrderForm.getStoreId());
+            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
-            goodsOrderForm.setAllotFromStockCode(allotFromStock.getOutCode());
-            goodsOrderForm.setAllotFromStockCode(allotToStock.getOutCode());
-            stkTransferDirectManager.synForGoodsOrder(goodsOrderForm);
+            allotFormStockCode=allotFromStock.getOutCode();
+            allotToStockCode=allotToStock.getOutCode();
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+            goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
         } else {
-            salOutStockManager.synForGoodsOrder(goodsOrderForm);
-        }
-        //如果有定金则收取定金
-        String isNotDepotStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.IS_NOT_DEPOSIT_STORE.name()).getValue();
-        Boolean isNotDepotStore = false;
-        if (goodsOrderForm.getStoreId() != null && StringUtils.isNotBlank(isNotDepotStoreId)) {
-            List<String> storeIds = IdUtils.getIdList(isNotDepotStoreId);
-            if (storeIds.contains(goodsOrderForm.getStoreId())) {
-                isNotDepotStore = true;
+            List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salOutStockManager.synForGoodsOrder(goodsOrder);
+            if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
+                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
             }
         }
-        if (!isNotDepotStore && goodsOrderForm.getGoodsDeposit() != null && goodsOrderForm.getGoodsDeposit().compareTo(BigDecimal.ZERO) > 0) {
-            ShopGoodsDeposit last = shopGoodsDepositRepository.findByShopId(goodsOrderForm.getShopId(), "已通过").get(0);
-            ShopGoodsDeposit item = new ShopGoodsDeposit();
-            item.setShopId(shop.getId());
-            item.setBankId(last.getBankId());
-            item.setShopId(goodsOrderForm.getShopId());
-            item.setBankId(last.getBankId());
-            item.setDepartMent(last.getDepartMent());
-            item.setAmount(BigDecimal.ZERO.subtract(goodsOrderForm.getGoodsDeposit()));
-            item.setBillDate(LocalDateTime.of(goodsOrderForm.getBillDate(),LocalTime.MIN));
-            item.setRemarks(goodsOrderForm.getBusinessId());
-            //定金转应收
-            KingdeeSynReturnDto kingdeeSynReturnDto = otherRecAbleManager.synForGoodOrder(item);
-            item.setCloudSynId(kingdeeSynReturnDto.getId());
-            item.setStatus("已通过");
-            item.setLocked(true);
-            shopGoodsDepositRepository.save(item);
-        }
-        GoodsOrder goodsOrder=goodsOrderRepository.findOne(goodsOrderForm.getId()) ;
-        ReflectionUtil.copyProperties(goodsOrderForm,goodsOrder);
-
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
     }

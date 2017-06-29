@@ -34,6 +34,11 @@ eureka:
 feign:
   hystrix:
     enabled: false
+
+ribbon:
+  ReadTimeout: 600000
+  ConnectTimeout: 600000
+
 security:
   oauth2:
     client:
