@@ -92,7 +92,7 @@
         if(column.prop=="parentName"){
            column.sort="parentId"
         }
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {

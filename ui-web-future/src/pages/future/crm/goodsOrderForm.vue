@@ -1,12 +1,9 @@
 <template>
   <div>
     <head-tab active="goodsOrderForm"></head-tab>
-    <el-row v-if="alertError">
-      <el-col :span="24">
-        <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>
-      </el-col>
-    </el-row>
+
     <div>
+      <su-alert  :text="warnMsg"  type="warning"></su-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row>
           <el-col :span="12">
@@ -96,8 +93,8 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           pageLoading:false,
-          alertError:false,
           filterValue:'',
+          warnMsg:'',
           goodsOrder:{},
           filterDetailList:[],
           goodsOrderDetailList:[],
@@ -164,6 +161,19 @@
         }
         this.filterDetailList = tempList;
       },shopChange(){
+          if(this.isCreate && util.isNotBlank(this.inputForm.shopId)){
+            axios.get('/api/ws/future/crm/goodsOrder/validateShop',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
+              let tmpMsg = '';
+              for(let each of response.data.errors) {
+                tmpMsg = tmpMsg + each.message + "<br/>";
+              }
+
+              this.warnMsg = tmpMsg;
+            });
+          }else{
+            this.warnMsg='';
+          }
+
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });
