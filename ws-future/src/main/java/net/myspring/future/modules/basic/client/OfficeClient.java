@@ -33,6 +33,6 @@ public interface OfficeClient {
     @RequestMapping(method = RequestMethod.GET, value = "/sys/office/getLastRuleMapByOfficeId")
     Map<String,List<String>> getLastRuleMapByOfficeId(@RequestParam(value = "officeId") String officeId);
 
-    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findById")
-    List<OfficeDto> findById(@RequestParam(value = "id")String id);
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findAll")
+    List<OfficeDto> findAll();
 }

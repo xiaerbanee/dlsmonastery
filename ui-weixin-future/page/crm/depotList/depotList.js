@@ -52,13 +52,11 @@ Page({
             method: 'GET',
             data: $util.deleteExtra(that.data.formData),
             success: function (res) {
-                var edit = wx.getStorageSync("authorityList").indexOf("crm:depotShop:edit");
-                if (edit != -1) {
-                    for (var item in res.data.content) {
-                        var actionList = new Array();
-                        actionList.push("修改");
-                        res.data.content[item].actionList = actionList;
-                    }
+                var edit = wx.getStorageSync("authorityList").includes("crm:depotShop:edit");
+                for (var item in res.data.content) {
+                    var actionList = new Array();
+                    if (edit) { actionList.push("修改"); }
+                    res.data.content[item].actionList = actionList;
                 }
                 that.setData({ page: res.data });
                 wx.hideToast();
