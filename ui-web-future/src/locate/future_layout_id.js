@@ -22,6 +22,7 @@ export default {
     inputLegalValue: "silahkan masukkan angka yang valid",
     search: "搜索",
     inputTowKey: "至少二位关键字",
+    inputKey: "silahkan masukkan kata kunci",
   },
   adApplyForm: {
     adApplyForm: "formulir bahan",

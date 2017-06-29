@@ -146,6 +146,7 @@ update sys_permission set url='/api/ws/future/crm/shopAllot/save',method='POST' 
 update sys_permission set url='/api/ws/future/crm/shopAllot',method='GET' where permission='crm:shopAllot:view';
 
 update sys_menu set enabled=false where name='国际化设置';
+update sys_menu set enabled=false where code='goodsOrderShip';
 update sys_menu set enabled=false where name='报表监控';
 update sys_menu set enabled=false where name='公司管理';
 update sys_menu set enabled=false where name='问答列表';
@@ -255,6 +256,62 @@ update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.nam
 DELETE FROM sys_role where id=7;
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='管理员') where (t1.name="信息部专员");
 
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:depotShop:view','crm:depotShop:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'208','/api/ws/future/basic/depotShop','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:depotShop:businessEdit','crm:depotShop:businessEdit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'208','/api/ws/future/basic/depotShop/saveDepot','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:depotShop:delete','crm:depotShop:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'208','/api/ws/future/basic/depotShop/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:depotShop:basicEdit','crm:depotShop:basicEdit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'208','/api/ws/future/basic/depotShop/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:goodsOrderShip:view','crm:goodsOrderShip:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169','/api/ws/future/crm/goodsOrderShip','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:goodsOrderShip:edit','crm:goodsOrderShip:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169','/api/ws/future/crm/goodsOrderShip/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:goodsOrderShip:delete','crm:goodsOrderShip:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169','/api/ws/future/crm/goodsOrderShip/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleArea:view','crm:afterSaleArea:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'206','/api/ws/future/crm/afterSaleArea','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleArea:edit','crm:afterSaleArea:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'206','/api/ws/future/crm/afterSaleArea/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleArea:delete','crm:afterSaleArea:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'206','/api/ws/future/crm/afterSaleArea/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleHead:view','crm:afterSaleHead:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'207','/api/ws/future/crm/afterSaleHead','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleHead:edit','crm:afterSaleHead:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'207','/api/ws/future/crm/afterSaleHead/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleHead:delete','crm:afterSaleHead:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'207','/api/ws/future/crm/afterSaleHead/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleCompany:view','crm:afterSaleCompany:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'218','/api/ws/future/crm/afterSaleCompany','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleCompany:edit','crm:afterSaleCompany:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'218','/api/ws/future/crm/afterSaleCompany/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:afterSaleCompany:delete','crm:afterSaleCompany:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'218','/api/ws/future/crm/afterSaleCompany/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('crm:storeInventoryReport:view','crm:storeInventoryReport:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'219','/api/ws/future/basic/depotStore/storeReport','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backendModule:view','sys:backendModule:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'176','/api/basic/sys/backendModule','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backendModule:edit','sys:backendModule:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'176','/api/basic/sys/backendModule/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backendModule:delete','sys:backendModule:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'176','/api/basic/sys/backendModule/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:role:view','sys:role:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'183','/api/basic/sys/role','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:role:edit','sys:role:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'183','/api/basic/sys/role/save','PSOT');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:rolw:delete','sys:rolw:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'183','/api/basic/sys/role/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backend:view','sys:backend:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'177','/api/basic/sys/backend','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backend:edit','sys:backend:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'177','/api/basic/sys/backend/save','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:backend:delete','sys:backend:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'177','/api/basic/sys/backend/delete','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:officeRule:view','sys:officeRule:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'178','/api/basic/sys/officeRule','GET');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:officeRule:edit','sys:officeRule:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'178','/api/basic/sys/officeRule/delete','POST');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id,url,method)VALUES('sys:officeRule:delete','sys:officeRule:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'178','/api/basic/sys/officeRule/save','GET');
+
+INSERT INTO `sys_role_module` VALUES ('1', '25', '3', '1', '2017-06-29 10:56:31', '1', '2017-06-29 10:56:31', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('2', '25', '4', '1', '2017-06-29 10:56:31', '1', '2017-06-29 10:56:31', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('3', '24', '3', '1', '2017-06-29 10:56:52', '1', '2017-06-29 10:56:52', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('4', '24', '4', '1', '2017-06-29 10:56:52', '1', '2017-06-29 10:56:52', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('5', '21', '4', '1', '2017-06-29 10:57:00', '1', '2017-06-29 10:57:00', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('6', '20', '4', '1', '2017-06-29 10:57:07', '1', '2017-06-29 10:57:07', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('7', '19', '3', '1', '2017-06-29 10:57:18', '1', '2017-06-29 10:57:18', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('8', '19', '4', '1', '2017-06-29 10:57:18', '1', '2017-06-29 10:57:18', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('9', '18', '3', '1', '2017-06-29 10:57:29', '1', '2017-06-29 10:57:29', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('10', '18', '4', '1', '2017-06-29 10:57:29', '1', '2017-06-29 10:57:29', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('11', '1', '1', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('12', '1', '2', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('13', '1', '3', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('14', '1', '4', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '0');
+INSERT INTO `sys_role_module` VALUES ('15', '1', '5', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('16', '1', '6', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('17', '1', '7', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('18', '1', '8', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('19', '1', '9', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('20', '1', '10', '1', '2017-06-29 10:57:34', '1', '2017-06-29 10:57:34', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('21', '25', '7', '1', '2017-06-29 10:57:44', '1', '2017-06-29 10:57:44', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('22', '25', '9', '1', '2017-06-29 10:57:44', '1', '2017-06-29 10:57:44', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('23', '25', '10', '1', '2017-06-29 10:57:44', '1', '2017-06-29 10:57:44', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('24', '24', '7', '1', '2017-06-29 10:57:52', '1', '2017-06-29 10:57:52', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('25', '24', '9', '1', '2017-06-29 10:57:52', '1', '2017-06-29 10:57:52', '', '0', '0', '1');
+INSERT INTO `sys_role_module` VALUES ('26', '24', '10', '1', '2017-06-29 10:57:52', '1', '2017-06-29 10:57:52', '', '0', '0', '1');
 
 
 
