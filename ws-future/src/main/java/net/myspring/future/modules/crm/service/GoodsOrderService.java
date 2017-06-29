@@ -6,15 +6,12 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -48,12 +45,10 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
-import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,8 +62,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -147,11 +144,11 @@ public class GoodsOrderService {
     }
 
     //检测门店
-    private String validateShop(String shopId) {
+    public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
-
+        RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
         if(StringUtils.isBlank(shop.getPricesystemId())) {
-            return "门店没有价格体系";
+            restResponse.getErrors().add(new RestErrorField("没有价格体系","no_pricesystem","shopId"));
         }
         //检查当前客户是否有未处理订单
         GoodsOrderQuery goodsOrderQuery = new GoodsOrderQuery();
@@ -159,20 +156,14 @@ public class GoodsOrderService {
         goodsOrderQuery.setStatus(GoodsOrderStatusEnum.待开单.name());
         List<GoodsOrderDto> goodsOrderDtoList = goodsOrderRepository.findAll(new PageRequest(0, 1), goodsOrderQuery).getContent();
         if (CollectionUtil.isNotEmpty(goodsOrderDtoList)) {
-            return "门店有未处理的单据";
+            restResponse.getErrors().add(new RestErrorField("门店有未处理的单据","exist_order_for_bill","shopId"));
         }
-        return null;
+        return restResponse;
     }
 
     //保存及修改订单
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
-        if(isCreate){
-            String validateMsg = validateShop(goodsOrderForm.getShopId());
-            if(StringUtils.isNotBlank(validateMsg)){
-                throw new ServiceException(validateMsg);
-            }
-        }
         GoodsOrder goodsOrder;
         //保存订单
         if(isCreate) {
