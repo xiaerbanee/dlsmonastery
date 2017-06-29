@@ -73,7 +73,6 @@ public class OfficeRuleService {
         return officeRule;
     }
 
-    @Transactional
     public void logicDelete(OfficeRuleForm officeRuleForm) {
         officeRuleRepository.logicDelete(officeRuleForm.getId());
     }
