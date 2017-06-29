@@ -62,11 +62,6 @@ public class CnJournalForBankController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
-        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList){
-            if (!kingdeeSynDto.getSuccess()){
-                throw new ServiceException("銀行存取款日记账失败："+kingdeeSynDto.getResult());
-            }
-        }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 
@@ -75,11 +70,6 @@ public class CnJournalForBankController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
-        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList){
-            if (!kingdeeSynDto.getSuccess()){
-                throw new ServiceException("銀行存取款日记账失败："+kingdeeSynDto.getResult());
-            }
-        }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 }
