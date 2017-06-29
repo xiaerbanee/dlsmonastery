@@ -111,7 +111,10 @@ public class CustomerReceiveService {
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
         //设置主单备注
         List<NameValueDto> remarksList = customerReceiveRepository.findRemarks(customerReceiveDetailQuery);
-        Map<String,String> remarksMap = remarksList.stream().collect(Collectors.toMap(NameValueDto::getName,NameValueDto::getValue));
+        Map<String,String> remarksMap = Maps.newHashMap();
+        for (NameValueDto remark : remarksList){
+            remarksMap.put(remark.getName(),remark.getValue());
+        }
         for (CustomerReceiveDetailDto customerReceiveDetailDto: customerReceiveDetailDtoMainList) {
             if (remarksMap.containsKey(customerReceiveDetailDto.getBillNo())) {
                 customerReceiveDetailDto.setRemarks(remarksMap.get(customerReceiveDetailDto.getBillNo()));
