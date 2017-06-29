@@ -335,7 +335,8 @@ public class GoodsOrderService {
             item.setLocked(true);
             shopGoodsDepositRepository.save(item);
         }
-        GoodsOrder goodsOrder= BeanUtil.map(goodsOrderForm,GoodsOrder.class);
+        GoodsOrder goodsOrder=goodsOrderRepository.findOne(goodsOrderForm.getId()) ;
+        ReflectionUtil.copyProperties(goodsOrderForm,goodsOrder);
         goodsOrderRepository.save(goodsOrder);
         return goodsOrder;
     }
