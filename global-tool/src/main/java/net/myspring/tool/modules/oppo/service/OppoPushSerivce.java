@@ -184,7 +184,6 @@ public class OppoPushSerivce {
 
     //发货退货调拨数据上抛
     @LocalDataSource
-    @Transactional
     public List<OppoCustomerAllot>  getOppoCustomerAllot(LocalDate dateStart, LocalDate dateEnd){
         initAreaDepotMap();
         String companyId="1";

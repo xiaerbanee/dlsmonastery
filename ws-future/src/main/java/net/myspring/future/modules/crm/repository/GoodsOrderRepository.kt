@@ -97,7 +97,10 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (goodsOrderQuery.shipDateEnd != null) {
             sb.append(" and t1.ship_date < :shipDateEnd")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.shopName)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.shopId)) {
+            sb.append(" and t1.shop_id = :shopId ")
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.shopName)) {
             sb.append(" and t1.shop_id in(select id from crm_depot where name like concat('%',:shopName,'%') )");
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.storeId)) {
@@ -121,13 +124,13 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             )
          """)
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.businessIds)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.businessIds)) {
             sb.append(" and t1.business_id in (:businessIdList)")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.remarks)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.remarks)) {
             sb.append(" and t1.remarks like concat('%',:remarks,'%')")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.expressCode)) {
             sb.append(" and t1.express_order_id in(select express.express_order_id from crm_express express where express.code like concat('%',:expressCode,'%'))")
         }
         if (goodsOrderQuery.lxMallOrder != null && goodsOrderQuery.lxMallOrder) {

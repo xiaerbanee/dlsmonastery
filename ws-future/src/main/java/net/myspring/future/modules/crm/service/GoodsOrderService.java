@@ -143,7 +143,6 @@ public class GoodsOrderService {
         return page;
     }
 
-    //检测门店
     public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
