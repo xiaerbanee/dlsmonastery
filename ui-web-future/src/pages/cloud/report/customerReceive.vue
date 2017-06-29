@@ -45,7 +45,7 @@
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
           <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
-          <el-table-column prop="shouldGet" label="金额"></el-table-column>
+          <el-table-column prop="totalAmount" label="金额"></el-table-column>
           <el-table-column prop="shouldGet" label="应收"></el-table-column>
           <el-table-column prop="realGet" label="实收"></el-table-column>
           <el-table-column prop="endShouldGet" label="期末"></el-table-column>
