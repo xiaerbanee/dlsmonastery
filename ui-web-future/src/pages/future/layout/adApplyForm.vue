@@ -21,7 +21,7 @@
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
         <span>{{$t('adApplyForm.search')}}</span>
-        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputTowKey')" style="width:200px;margin-right:10px"></el-input>
+        <el-input v-model="productName" @change="searchDetail" :placeholder="$t('adApplyForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
       </el-row>
       <el-table :data="filterProduct"  stripe border>
         <el-table-column prop="code" :label="$t('adApplyForm.productCode')"></el-table-column>
@@ -93,16 +93,14 @@
              return;
          }
          let tempList=[];
-          for(let index in this.inputForm.productAdForms){
-            let detail=this.inputForm.productAdForms[index];
-            if(util.isNotBlank(detail.applyQty)){
-              tempList.push(detail);
+          for(let index of this.inputForm.productAdForms){
+            if(util.isNotBlank(index.applyQty)){
+              tempList.push(index);
              }
           }
-         for(let index in this.inputForm.productAdForms){
-           let detail=this.inputForm.productAdForms[index];
-           if(util.contains(detail.name,val)&&util.isBlank(detail.applyQty)){
-             tempList.push(detail);
+         for(let index of this.inputForm.productAdForms){
+           if(util.contains(index.name,val)&&util.isBlank(index.applyQty)){
+             tempList.push(index);
            }
          }
          this.filterProduct = tempList;

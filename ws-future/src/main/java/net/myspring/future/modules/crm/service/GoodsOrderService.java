@@ -172,6 +172,7 @@ public class GoodsOrderService {
             goodsOrder = BeanUtil.map(goodsOrderForm,GoodsOrder.class);
             goodsOrder.setStoreId(getDefaultStoreId(goodsOrder));
             goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
+            goodsOrder.setUseTicket(false);
             goodsOrderRepository.save(goodsOrder);
         } else {
             goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
@@ -490,6 +491,7 @@ public class GoodsOrderService {
             goodsOrderDetailDto.setProductName(product.getName());
             goodsOrderDetailDto.setAllowBill(product.getAllowOrder() && product.getAllowBill());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
+            goodsOrderDetailDto.setProductOutId(product.getOutId());
         }
         //价格体系
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
@@ -498,6 +500,7 @@ public class GoodsOrderService {
             if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
+                goodsOrderDetailDto.setProductOutId(product.getOutId());
                 goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
 
                 goodsOrderDetailDto.setProductName(product.getName());
