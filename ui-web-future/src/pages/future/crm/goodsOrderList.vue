@@ -101,8 +101,8 @@
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
-            <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
-            <div class="action"  ><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
           </template>
 
         </el-table-column>
@@ -183,7 +183,7 @@
           this.$message(response.data.message);
           this.pageRequest();
       })
-      })
+      }).catch(()=>{});
       }else if(action=="ship"){
         var newWindow=window.open('/#/future/crm/goodsOrderPrint?id=' + id);
       }else if(action=="expressPrint"){

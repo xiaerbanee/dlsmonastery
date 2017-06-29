@@ -36,9 +36,6 @@ public class StkTransferDirectController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         KingdeeSynDto kingdeeSynDto = stkTransferDirectService.saveForWS(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);
-        if(!kingdeeSynDto.getSuccess()){
-            throw new ServiceException("直接调拨单开单失败："+kingdeeSynDto.getResult());
-        }
         return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
     }
 }

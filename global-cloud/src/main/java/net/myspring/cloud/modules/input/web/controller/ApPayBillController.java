@@ -46,8 +46,6 @@ public class ApPayBillController {
         for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
             if (kingdeeSynDto.getSuccess()) {
                 restResponse = new RestResponse("付款单成功：" + kingdeeSynDto.getBillNo(), null, true);
-            }else {
-                throw new ServiceException("付款单失败："+kingdeeSynDto.getResult());
             }
         }
         return restResponse;

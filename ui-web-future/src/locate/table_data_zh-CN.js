@@ -56,6 +56,7 @@ export default {
     },
     menu:{
       roleList:"角色管理",
+      storeInventoryReport:"仓库报表",
       depotShopList:"门店管理",
       depotStoreList:"仓库管理",
       roleForm:"角色编辑",

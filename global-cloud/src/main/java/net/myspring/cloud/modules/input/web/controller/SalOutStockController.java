@@ -62,11 +62,6 @@ public class SalOutStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList){
-            if (!kingdeeSynExtendDto.getSuccess()){
-                throw new ServiceException("入库开单失败："+kingdeeSynExtendDto.getResult());
-            }
-        }
         return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
     }
 }

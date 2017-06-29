@@ -50,8 +50,6 @@ public class ArOtherRecAbleController {
         for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
             if (kingdeeSynDto.getSuccess()) {
                 restResponse = new RestResponse("其他应收单成功：" + kingdeeSynDto.getBillNo(), null, true);
-            }else {
-                throw new ServiceException("其他应收单失败："+kingdeeSynDto.getResult());
             }
         }
         return restResponse;
@@ -62,9 +60,6 @@ public class ArOtherRecAbleController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
-        if (!kingdeeSynDto.getSuccess()) {
-            throw new ServiceException("其他应收单失败："+kingdeeSynDto.getResult());
-        }
         return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
     }
 
