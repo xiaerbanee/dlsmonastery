@@ -198,4 +198,65 @@ update sys_menu_category set enabled=false where name='报表中心';
 update sys_menu set mobile=FALSE;
 update sys_menu set mobile=TRUE where name in ("每日排名","仓库管理","广告申请","串码核销","请假申请","签到列表","加班申请","调休申请","免打考勤","出差申请");
 
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('内销部文员',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'内销部文员');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('内销部主管',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'内销部主管');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('仓储部文员',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'仓储部文员');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('仓储部主管',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'仓储部主管');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('导购',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'导购');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('业务',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'业务');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('财务部文员',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'财务部文员');
+INSERT into sys_role(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,permission)VALUES('财务部主管',1,'2017-06-30 12:22:34',1,'2017-06-30 12:22:34','',0,0,1,'财务部主管');
+
+
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='市县导购';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='流动导购';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='乡镇导购';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='返聘导购';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='体专店员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='体专店长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='代理店长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='体专专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='体专主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='导购') where t1.name='体专终端';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='产品经理';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='阿米巴巴长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='联电经理';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='市县业务主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='乡镇业务主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='培训主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='终端主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='推广主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='市县督导';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='培训专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='终端专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='助理培训师';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='推广专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='乡镇业务';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='乡镇组长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='乡镇培训专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='乡镇督导';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='别动队员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='O2O专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='运营商专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where t1.name='办事处司机';
+
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='内销部文员') where t1.name='内销部专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='内销部主管') where t1.name='内销部主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='内销部主管') where t1.name='内销部部长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='仓储部文员') where t1.name='仓储部专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='仓储部主管') where t1.name='仓储部主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部文员') where t1.name='办事处财务';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部文员') where t1.name='财务部专员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部文员') where t1.name='省公司财务出纳';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部主管') where t1.name='财务部主管';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部主管') where t1.name='财务部部长';
+
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where (t1.role_id is NULL OR t1.role_id=1);
+DELETE FROM sys_role where id=7;
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='管理员') where (t1.name="信息部专员");
+
+
+
+
+
 
