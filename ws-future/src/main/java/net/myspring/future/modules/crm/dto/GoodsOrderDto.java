@@ -57,10 +57,19 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String contator;
     private String mobilePhone;
     private String expressOrderExpressCodes;
+    private Boolean lxMallOrder;
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public String getClientOutId() {
         return clientOutId;
