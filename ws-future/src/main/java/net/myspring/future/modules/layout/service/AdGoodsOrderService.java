@@ -48,6 +48,7 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -656,7 +657,7 @@ public class AdGoodsOrderService {
 
     }
 
-    public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
+    public SimpleExcelBook export(AdGoodsOrderQuery adGoodsOrderQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -721,11 +722,8 @@ public class AdGoodsOrderService {
         cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("订单明细", adGoodsOrderDetailExportDtoList, adGoodsOrderDetailColumnList));
 
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "物料订货数据" + LocalDate.now() + ".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"物料订货数据"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheetList);
     }
 
     public Map<String, Object> getYsyfMap(String adGoodsOrderId) {

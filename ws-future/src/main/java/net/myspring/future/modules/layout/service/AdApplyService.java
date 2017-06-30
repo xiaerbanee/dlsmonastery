@@ -11,7 +11,6 @@ import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
@@ -54,18 +53,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -354,7 +351,7 @@ public class AdApplyService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<AdApplyDto> adApplyDtos = adApplyRepository.findByFilter(adApplyQuery);
+        List<AdApplyDto> adApplyDtos = findPage(new PageRequest(0,10000),adApplyQuery).getContent();
         cacheUtils.initCacheInput(adApplyDtos);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
