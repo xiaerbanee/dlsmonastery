@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,7 +165,7 @@ public class ShopBuildService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "最后修改人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "最后修改时间"));
 
-        List<ShopBuildDto> shopBuildList = shopBuildRepository.findByFilter(shopBuildQuery);
+        List<ShopBuildDto> shopBuildList = findPage(new PageRequest(0,10000),shopBuildQuery).getContent();
         cacheUtils.initCacheInput(shopBuildList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
