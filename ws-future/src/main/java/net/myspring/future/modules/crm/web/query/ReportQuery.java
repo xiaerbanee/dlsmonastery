@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.web.query;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -31,7 +32,7 @@ public class ReportQuery extends BaseQuery{
     //乡镇类型
     private String townType;
     //打分型号：是，否
-    private boolean scoreType;
+    private Boolean scoreType;
     //货品
     private String officeId;
     private String depotId;
@@ -143,11 +144,11 @@ public class ReportQuery extends BaseQuery{
         this.townType = townType;
     }
 
-    public boolean getScoreType() {
+    public Boolean getScoreType() {
         return scoreType;
     }
 
-    public void setScoreType(boolean scoreType) {
+    public void setScoreType(Boolean scoreType) {
         this.scoreType = scoreType;
     }
 
