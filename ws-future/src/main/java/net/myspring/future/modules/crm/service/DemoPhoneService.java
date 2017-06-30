@@ -14,14 +14,18 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -67,7 +71,8 @@ public class DemoPhoneService {
         return null;
     }
 
-    public String findSimpleExcelSheets(Workbook workbook, DemoPhoneQuery demoPhoneQuery) {
+    public SimpleExcelBook export(DemoPhoneQuery demoPhoneQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请日期"));
@@ -77,12 +82,11 @@ public class DemoPhoneService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "IMEI码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<DemoPhoneDto> demoPhoneDtos=demoPhoneRepository.findByFilter(demoPhoneQuery);
+        List<DemoPhoneDto> demoPhoneDtos=findPage(new PageRequest(0,10000),demoPhoneQuery).getContent();
         cacheUtils.initCacheInput(demoPhoneDtos);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("演示用机", demoPhoneDtos, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"演示用机"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"演示用机列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 
 }

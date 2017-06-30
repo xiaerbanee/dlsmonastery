@@ -3,14 +3,14 @@ package net.myspring.future.modules.crm.dto;
 import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class ExpressOrderPrintDto {
-
+    private String id;
     private String fromDepotName;
     private LocalDate billDate;
     private String toDepotName;
@@ -31,6 +31,14 @@ public class ExpressOrderPrintDto {
     private String remarks;
     private String employeeId;
     private List<ExpressOrderPrintDetailDto> expressOrderPrintDetailDtoList = Lists.newArrayList();
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getEmployeeId() {
         return employeeId;
@@ -153,21 +161,21 @@ public class ExpressOrderPrintDto {
     }
 
     public String getFormatId() {
-        if(StringUtils.isBlank(formatId)) {
-            if(StringUtils.isNotBlank(extendType) && businessId != null) {
-                if(ExpressOrderTypeEnum.手机订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "XK");
-                } else if (ExpressOrderTypeEnum.大库调拨.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "CA");
-                } else if(ExpressOrderTypeEnum.物料订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "AK");
-                }
-            }
-        }
         return formatId;
     }
 
     public void setFormatId(String formatId) {
+        if(StringUtils.isNotBlank(formatId)) {
+            if(StringUtils.isNotBlank(extendType) && formatId != null) {
+                if(ExpressOrderTypeEnum.手机订单.name().equals(extendType)) {
+                    formatId = IdUtils.getFormatId(formatId, "XK");
+                } else if (ExpressOrderTypeEnum.大库调拨.name().equals(extendType)) {
+                    formatId = IdUtils.getFormatId(formatId, "CA");
+                } else if(ExpressOrderTypeEnum.物料订单.name().equals(extendType)) {
+                    formatId = IdUtils.getFormatId(formatId, "AK");
+                }
+            }
+        }
         this.formatId = formatId;
     }
 

@@ -160,7 +160,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND t1.created_date < :date
             """)
         }
-        if (productImeReportQuery.scoreType) {
+        if (productImeReportQuery.scoreType!=null) {
             sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -215,7 +215,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     t1.enabled = 1
                     and t6.depot_shop_id=t7.id
     """)
-        if(productImeReportQuery.scoreType){
+        if(productImeReportQuery.scoreType!=null){
             sb.append("""  and t5.score_type =:scoreType """)
         }
         if(productImeReportQuery.date!=null){
@@ -292,7 +292,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(productImeReportQuery.dateEnd!=null){
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType) {
+        if (productImeReportQuery.scoreType!=null) {
             sb.append(""" and t5.score_type=:scoreType""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -350,7 +350,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if(productImeReportQuery.dateEnd!=null){
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType) {
+        if (productImeReportQuery.scoreType!=null) {
             sb.append(""" and t4.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {

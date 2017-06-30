@@ -63,6 +63,10 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
 
+    public String getFormatId(){
+        return IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
+    }
+
     public Boolean getLxMallOrder() {
         return lxMallOrder;
     }
