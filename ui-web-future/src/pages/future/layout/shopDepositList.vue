@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">{{$t('shopDepositList.add')}}</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">批量添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
         <el-button type="primary" @click="exportLatest"  v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.exportLatest')}}</el-button>
         <span v-html="searchText"></span>
@@ -61,7 +62,12 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-
+        <el-table-column fixed="right" :label="$t('shopDepositList.operation')" >
+          <template scope="scope">
+            <div class="action" v-permit="'crm:productType:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopDepositList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:productType:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopDepositList.delete')}}</el-button></div>
+          </template>
+        </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
@@ -99,7 +105,7 @@
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopDepositList",submitData);
 
-        axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(submitData)).then((response) => {
+        axios.get('/api/ws/future/layout/shopDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         });
@@ -117,9 +123,22 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopDepositForm'});
+      },itemBatchAdd(){
+      this.$router.push({ name: 'shopDepositBatchForm'})
+    },itemAction:function(id,action){
+        if(action==="edit") {
+          this.$router.push({ name: 'shopDepositForm', query: { id: id }})
+        } else if(action==="delete") {
+          util.confirmBeforeDelRecord(this).then(() => {
+            axios.get('/api/ws/future/layout/shopDeposit/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
+        }
       },exportLatest(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/shopDeposit/exportLatest').then((response)=> {
+          axios.get('/api/ws/future/layout/shopDeposit/exportLatest').then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
@@ -127,7 +146,7 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      this.initPromise = axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/layout/shopDeposit/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
       });

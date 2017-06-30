@@ -25,6 +25,7 @@ const shopBuildForm  = r => require.ensure([], () => r(require('pages/future/lay
 const shopBuildDetail  = r => require.ensure([], () => r(require('pages/future/layout/shopBuildDetail.vue')));
 const shopDepositList= r => require.ensure([], () => r(require('pages/future/layout/shopDepositList.vue')));
 const shopDepositForm= r => require.ensure([], () => r(require('pages/future/layout/shopDepositForm.vue')));
+const shopDepositBatchForm= r => require.ensure([], () => r(require('pages/future/layout/shopDepositBatchForm.vue')));
 const shopGoodsDepositList = r => require.ensure([], () => r(require('pages/future/layout/shopGoodsDepositList.vue')));
 const shopGoodsDepositForm = r => require.ensure([], () => r(require('pages/future/layout/shopGoodsDepositForm.vue')));
 const shopImageList= r => require.ensure([], () => r(require('pages/future/layout/shopImageList.vue')));
@@ -70,6 +71,7 @@ let routes = [
   {path:'/future/layout/shopBuildDetail',component:shopBuildDetail,name:'shopBuildDetail',meta: {menu:"shopBuildList"}},
   {path:'/future/layout/shopDepositList',component:shopDepositList,name:'shopDepositList'},
   {path:'/future/layout/shopDepositForm',component:shopDepositForm,name:'shopDepositForm',meta: {menu:"shopDepositList",keepAlive:true}},
+  {path:'/future/layout/shopDepositBatchForm',component:shopDepositBatchForm,name:'shopDepositBatchForm',meta: {menu:"shopDepositList",keepAlive:true}},
   {path:'/future/layout/shopGoodsDepositList',component:shopGoodsDepositList,name:'shopGoodsDepositList'},
   {path:'/future/layout/shopGoodsDepositForm',component:shopGoodsDepositForm,name:'shopGoodsDepositForm',meta: {menu:"shopGoodsDepositList",keepAlive:true}},
   {path:'/future/layout/shopImageList',component:shopImageList,name:'shopImageList'},
