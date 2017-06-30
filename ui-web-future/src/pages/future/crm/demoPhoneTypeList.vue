@@ -32,12 +32,12 @@
         <el-table-column prop="remarks" :label="$t('demoPhoneTypeList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('demoPhoneTypeList.locked')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
+            <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="enabled" :label="$t('demoPhoneTypeList.enabled')" width="120">
           <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'danger' : 'primary'">{{scope.row.enabled | bool2str}}</el-tag>
+            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" :label="$t('demoPhoneTypeList.operation')" width="140">

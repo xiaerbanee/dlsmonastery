@@ -229,6 +229,7 @@ function toUpper() {
     return 0;
 }
 
+
 module.exports = {
     getCheckboxItems: getCheckboxItems,
     trim: trim,
