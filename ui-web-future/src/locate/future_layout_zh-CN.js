@@ -604,6 +604,7 @@ export default {
     applyAccount: "业务对接人",
     content: "建设内容",
     scenePhoto: "现场照片",
+    confirmPhoto:"终端投放协议",
     clickUpload: "点击上传",
     uploadImageSizeFor5000KB: "只能上传图片文件，且不超过500kb",
     inputKey: "请输入关键字",
