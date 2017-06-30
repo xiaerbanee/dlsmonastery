@@ -87,12 +87,12 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "getAdApplyGoodsList")
-    @PreAuthorize("hasPermission(null,'layout:adApply:view')")
+    @PreAuthorize("hasPermission(null,'layout:adApply:goods')")
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
         return adApplyService.getAdApplyGoodsList(adApplyGoodsForm);
     }
     @RequestMapping(value = "goodsSave")
-    @PreAuthorize("hasPermission(null,'layout:adApply:edit')")
+    @PreAuthorize("hasPermission(null,'layout:adApply:goods')")
     public RestResponse  goodsSave(AdApplyGoodsForm adApplyGoodsForm){
         adApplyService.goodsSave(adApplyGoodsForm);
         return new RestResponse("分货成功", ResponseCodeEnum.saved.name());
