@@ -10,6 +10,7 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -22,6 +23,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ClientDto;
+import net.myspring.future.modules.basic.manager.SalReturnStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -91,6 +93,8 @@ public class GoodsOrderShipService {
     private ClientRepository clientRepository;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
+    @Autowired
+    private SalReturnStockManager salReturnStockManager;
 
     /**
      * 查找货品发货表格所有数据（待发货，带签收，已完成）
@@ -362,7 +366,7 @@ public class GoodsOrderShipService {
                 KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             } else {
-                List<KingdeeSynReturnDto> kingdeeSynReturnDtos = synSalReturnStock(goodsOrder);
+                List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salReturnStockManager.synForGoodsOrderShip(goodsOrder);
                 if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
                     goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
                 }
@@ -372,35 +376,7 @@ public class GoodsOrderShipService {
         return goodsOrder;
     }
 
-    private List<KingdeeSynReturnDto> synSalReturnStock(GoodsOrder goodsOrder){
-        List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
-        ClientDto clientDto = clientRepository.findByDepotId(goodsOrder.getShopId());
-        List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-        Map<String,String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product::getCode));
 
-        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
-        SalReturnStockDto returnStockDto = new SalReturnStockDto();
-        returnStockDto.setExtendId(goodsOrder.getId());
-        returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
-        returnStockDto.setDate(goodsOrder.getBillDate());
-        returnStockDto.setCustomerNumber(clientDto.getOutCode());
-        returnStockDto.setNote(goodsOrder.getRemarks());
-        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
-
-        for (GoodsOrderDetail detail : goodsOrderDetailList){
-            SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
-            entityDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
-            entityDto.setQty(detail.getReturnQty());
-            entityDto.setPrice(detail.getPrice());
-            entityDto.setEntryNote(goodsOrder.getRemarks());
-            entityDto.setStockNumber(depotStore.getOutCode());
-            entityDtoList.add(entityDto);
-        }
-        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
-        salReturnStockDtoList.add(returnStockDto);
-        return cloudClient.synSalReturnStock(salReturnStockDtoList);
-    }
 
     public void sign(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);

@@ -12,6 +12,7 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -190,6 +191,9 @@ public class GoodsOrderService {
             GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailFormList().get(i);
             if(goodsOrderDetailForm.getQty()==null) {
                 goodsOrderDetailForm.setQty(0);
+            }
+            if(goodsOrderDetailForm.getQty()<0) {
+                throw new ServiceException("订货明细里的数量不能小于0");
             }
             if(goodsOrderDetailForm.isCreate()) {
                 if (goodsOrderDetailForm.getQty() > 0) {

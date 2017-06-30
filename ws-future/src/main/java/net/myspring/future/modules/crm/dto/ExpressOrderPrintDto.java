@@ -1,8 +1,10 @@
 package net.myspring.future.modules.crm.dto;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.math.BigDecimal;
@@ -156,11 +158,11 @@ public class ExpressOrderPrintDto {
         if(StringUtils.isBlank(formatId)) {
             if(StringUtils.isNotBlank(extendType) && businessId != null) {
                 if(ExpressOrderTypeEnum.手机订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "XK");
+                    formatId = IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
                 } else if (ExpressOrderTypeEnum.大库调拨.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "CA");
+                    formatId = IdUtils.getFormatId(businessId, FormatterConstant.STORE_ALLOT);
                 } else if(ExpressOrderTypeEnum.物料订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(businessId, "AK");
+                    formatId = IdUtils.getFormatId(businessId, FormatterConstant.AD_GOODS_ORDER);
                 }
             }
         }

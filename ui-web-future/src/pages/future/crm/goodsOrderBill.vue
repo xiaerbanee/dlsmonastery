@@ -72,7 +72,7 @@
         </el-row>
       </el-form>
       <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
+      <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
         <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
@@ -84,12 +84,12 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @change="initSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.billQty" @input="initSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.price" @change="initSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.price" @input="initSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="hasIme" :label="$t('goodsOrderBill.hasIme')" >

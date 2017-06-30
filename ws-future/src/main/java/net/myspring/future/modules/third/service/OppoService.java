@@ -48,12 +48,12 @@ public class OppoService {
     private OppoCustomerAllotRepository oppoCustomerAllotRepository;
     @Autowired
     private OppoCustomerStockRepository oppoCustomerStockRepository;
-//    @Autowired
-//    private OppoCustomerImeiStockRepository oppoCustomerImeiStockRepository;
-//    @Autowired
-//    private OppoCustomerSaleRepository oppoCustomerSaleRepository;
-//    @Autowired
-//    OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
+    @Autowired
+    private OppoCustomerImeiStockRepository oppoCustomerImeiStockRepository;
+    @Autowired
+    private OppoCustomerSaleRepository oppoCustomerSaleRepository;
+    @Autowired
+    OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
 //    @Autowired
 //    private OppoCustomerSaleCountRepository oppoCustomerSaleCountRepository;
 //    @Autowired
@@ -193,22 +193,18 @@ public class OppoService {
     }
 
     public List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerImeiStock> oppoCustomerStocks=oppoCustomerImeiStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerStocks;'
-        return null;
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerImeiStocks;
     }
 
     public List<OppoCustomerSale> findOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerSales;
-        return null;
+        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerSales;
     }
 
     public List<OppoCustomerSaleImei> findOppoCustomerSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        cacheUtils.initCacheInput(oppoCustomerSaleImeis);
-//        return oppoCustomerSaleImeis;
-        return null;
+        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerSaleImeis;
     }
 
     public List<OppoCustomerSaleCount>  findOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd, String companyId){

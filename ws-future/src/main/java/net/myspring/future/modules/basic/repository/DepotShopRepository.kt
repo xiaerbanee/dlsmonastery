@@ -85,7 +85,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     t1.enabled = 1
                     and  t6.depot_shop_id=t7.id
         """)
-        if(reportQuery.scoreType){
+        if(reportQuery.scoreType!=null){
             sb.append("""  and t5.score_type =:scoreType """)
         }
         if(reportQuery.date!=null){
@@ -158,7 +158,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     t1.enabled = 1
                     and t6.depot_shop_id=t7.id
         """)
-        if(reportQuery.scoreType){
+        if(reportQuery.scoreType!=null){
             sb.append("""  and t5.score_type =:scoreType """)
         }
         if(reportQuery.date!=null){
@@ -235,7 +235,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             sb.append(""" LEFT JOIN crm_product_ime_sale t6 on t1.product_ime_sale_id=t6.id """)
         }
         sb.append(""" ,crm_depot_shop t5   WHERE t1.enabled = 1 and t4.depot_shop_id=t5.id """)
-        if(reportQuery.scoreType){
+        if(reportQuery.scoreType!=null){
             sb.append("""  and t3.score_type =:scoreType """)
         }
         if(reportQuery.dateStart!=null){
@@ -301,7 +301,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                     t1.enabled = 1
                     and t5.depot_shop_id=t6.id
         """)
-        if(reportQuery.scoreType){
+        if(reportQuery.scoreType!=null){
             sb.append("""  and t4.score_type =:scoreType """)
         }
         if(reportQuery.dateStart!=null){

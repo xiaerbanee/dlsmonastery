@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.manager;
 
+import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
@@ -51,14 +53,21 @@ public class StkTransferDirectManager {
             transferDirectDto.setDate(goodsOrder.getBillDate());
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
-            Map<String, String> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product::getCode));
+            Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
             for (GoodsOrderDetail detail : goodsOrderDetailList) {
-                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-                entryDto.setQty(detail.getBillQty());
-                entryDto.setMaterialNumber(productIdToOutCodeMap.get(detail.getProductId()));
-                entryDto.setSrcStockNumber(allotFormStockCode);
-                entryDto.setDestStockNumber(allotToStokeCode);
-                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+                if (detail.getBillQty() != null && detail.getBillQty() >0) {
+                    StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                    entryDto.setQty(detail.getBillQty());
+                    Product product = productIdToOutCodeMap.get(detail.getProductId());
+                    if (product.getCode() != null) {
+                        entryDto.setMaterialNumber(product.getCode());
+                    } else {
+                        throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                    }
+                    entryDto.setSrcStockNumber(allotFormStockCode);
+                    entryDto.setDestStockNumber(allotToStokeCode);
+                    transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+                }
             }
             return cloudClient.synStkTransferDirect(transferDirectDto);
         }
@@ -84,12 +93,19 @@ public class StkTransferDirectManager {
         transferDirectDto.setNote(storeAllot.getRemarks());
         transferDirectDto.setDate(storeAllot.getBillDate());
         for (StoreAllotDetail detail : detailList){
-            StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-            entryDto.setQty(detail.getQty());
-            entryDto.setMaterialNumber(productMap.get(detail.getProductId()).getCode());
-            entryDto.setSrcStockNumber(fromDepotStore.getOutCode());
-            entryDto.setDestStockNumber(toDepotStore.getOutCode());
-            transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            if (detail.getBillQty() != null && detail.getBillQty() >0) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(detail.getQty());
+                Product product = productMap.get(detail.getProductId());
+                if (product.getCode() != null) {
+                    entryDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
+                entryDto.setSrcStockNumber(fromDepotStore.getOutCode());
+                entryDto.setDestStockNumber(toDepotStore.getOutCode());
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            }
         }
         return cloudClient.synStkTransferDirect(transferDirectDto);
 

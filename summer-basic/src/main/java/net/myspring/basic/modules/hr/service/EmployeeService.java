@@ -38,6 +38,12 @@ public class EmployeeService {
         return employeeDto;
     }
 
+    public List<EmployeeDto> findAll(){
+        List<Employee> employeeList = employeeRepository.findAll();
+        List<EmployeeDto> employeeDtos = BeanUtil.map(employeeList,EmployeeDto.class);
+        return employeeDtos;
+    }
+
     public EmployeeDto findOne(EmployeeDto employeeDto){
         if(!employeeDto.isCreate()){
             Employee employee=employeeRepository.findOne(employeeDto.getId());

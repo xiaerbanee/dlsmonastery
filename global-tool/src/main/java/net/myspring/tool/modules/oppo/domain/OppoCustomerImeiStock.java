@@ -17,7 +17,7 @@ public class OppoCustomerImeiStock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String customerid;
-    private LocalDate date;
+    private LocalDateTime date;
     private String imei;
     private String productcode;
     private String transType;
@@ -40,11 +40,11 @@ public class OppoCustomerImeiStock {
         this.customerid = customerid;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
