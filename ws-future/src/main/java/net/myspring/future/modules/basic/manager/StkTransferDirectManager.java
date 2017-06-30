@@ -55,17 +55,19 @@ public class StkTransferDirectManager {
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
             Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
             for (GoodsOrderDetail detail : goodsOrderDetailList) {
-                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-                entryDto.setQty(detail.getBillQty());
-                Product product = productIdToOutCodeMap.get(detail.getProductId());
-                if (product.getCode() != null){
-                    entryDto.setMaterialNumber(product.getCode());
-                }else{
-                    throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
+                if (detail.getBillQty() != null && detail.getBillQty() >0) {
+                    StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                    entryDto.setQty(detail.getBillQty());
+                    Product product = productIdToOutCodeMap.get(detail.getProductId());
+                    if (product.getCode() != null) {
+                        entryDto.setMaterialNumber(product.getCode());
+                    } else {
+                        throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                    }
+                    entryDto.setSrcStockNumber(allotFormStockCode);
+                    entryDto.setDestStockNumber(allotToStokeCode);
+                    transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
                 }
-                entryDto.setSrcStockNumber(allotFormStockCode);
-                entryDto.setDestStockNumber(allotToStokeCode);
-                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
             }
             return cloudClient.synStkTransferDirect(transferDirectDto);
         }
@@ -91,17 +93,19 @@ public class StkTransferDirectManager {
         transferDirectDto.setNote(storeAllot.getRemarks());
         transferDirectDto.setDate(storeAllot.getBillDate());
         for (StoreAllotDetail detail : detailList){
-            StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-            entryDto.setQty(detail.getQty());
-            Product product = productMap.get(detail.getProductId());
-            if (product.getCode() != null){
-                entryDto.setMaterialNumber(product.getCode());
-            }else{
-                throw new ServiceException(product.getName()+" 该货品没有编码，不能开单");
+            if (detail.getBillQty() != null && detail.getBillQty() >0) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(detail.getQty());
+                Product product = productMap.get(detail.getProductId());
+                if (product.getCode() != null) {
+                    entryDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
+                entryDto.setSrcStockNumber(fromDepotStore.getOutCode());
+                entryDto.setDestStockNumber(toDepotStore.getOutCode());
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
             }
-            entryDto.setSrcStockNumber(fromDepotStore.getOutCode());
-            entryDto.setDestStockNumber(toDepotStore.getOutCode());
-            transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
         }
         return cloudClient.synStkTransferDirect(transferDirectDto);
 
