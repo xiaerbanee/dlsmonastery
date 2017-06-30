@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.manager;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
@@ -16,8 +17,11 @@ import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.domain.StoreAllot;
 import net.myspring.future.modules.crm.domain.StoreAllotDetail;
+import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.layout.domain.ShopAllotDetail;
+import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.elasticsearch.xpack.monitoring.collector.Collector;
@@ -110,4 +114,42 @@ public class StkTransferDirectManager {
         return cloudClient.synStkTransferDirect(transferDirectDto);
 
     }
+
+    //直接调拨单成功示例
+    public KingdeeSynReturnDto synStkTransferDirectTest(StoreAllotDto storeAllotDto){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId("2");
+        transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
+        transferDirectDto.setNote("模拟测试");
+        transferDirectDto.setDate(LocalDate.now());
+        StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+        entryDto.setQty(1);
+        entryDto.setMaterialNumber("O4805804");//product.outCode
+        entryDto.setSrcStockNumber("G001"); //调出仓库
+        entryDto.setDestStockNumber("G020");//调入仓库
+        transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+        return cloudClient.synStkTransferDirect(transferDirectDto);
+    }
+
+    public KingdeeSynReturnDto synForShopAllot(ShopAllotDto shopAllotDto){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId(shopAllotDto.getId());
+        transferDirectDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        transferDirectDto.setNote("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+        transferDirectDto.setDate(LocalDate.now());
+        List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();//开单关联的详细
+        for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
+            if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(shopAllotDetail.getQty());
+                entryDto.setMaterialNumber("");
+                entryDto.setSrcStockNumber(""); //调出仓库
+                entryDto.setDestStockNumber("");//调入仓库
+                entryDto.setNoteEntry("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            }
+        }
+        return cloudClient.synStkTransferDirect(transferDirectDto);
+    }
+
 }

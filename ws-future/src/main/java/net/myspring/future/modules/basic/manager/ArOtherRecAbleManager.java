@@ -23,7 +23,7 @@ import java.util.List;
  * Created by lihx on 2017/6/26.
  */
 @Component
-public class OtherRecAbleManager {
+public class ArOtherRecAbleManager {
     @Autowired
     private CloudClient cloudClient;
     @Autowired

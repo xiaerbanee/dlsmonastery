@@ -52,7 +52,7 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         WHERE
             t1.enabled=1
             and t1.print_date=:printDate
-            and t1.out_print_date is not null
+            and t1.out_print_date is null
             and t1.locked=0
             and t1.out_code is not null
         """)

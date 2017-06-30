@@ -16,14 +16,18 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 标准销售退货单
  * Created by lihx on 2017/6/30.
  */
 @Component
@@ -69,6 +73,49 @@ public class SalReturnStockManager {
                 entityDtoList.add(entityDto);
             }
         }
+        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
+        salReturnStockDtoList.add(returnStockDto);
+        return cloudClient.synSalReturnStock(salReturnStockDtoList);
+    }
+
+    //销售退货单成功示例
+    private List<KingdeeSynReturnDto> synSalReturnStockTest(ShopAllotDto shopAllotDto){
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        SalReturnStockDto returnStockDto = new SalReturnStockDto();
+        returnStockDto.setExtendId("1");
+        returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        returnStockDto.setDate(LocalDate.now());
+        returnStockDto.setCustomerNumber("00001");
+        returnStockDto.setNote("模拟测试");
+        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
+        entityDto.setQty(1);
+        entityDto.setPrice(BigDecimal.TEN);
+        entityDto.setEntryNote("模拟测试");
+        entityDto.setStockNumber("CK002");
+        entityDtoList.add(entityDto);
+        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
+        salReturnStockDtoList.add(returnStockDto);
+        return cloudClient.synSalReturnStock(salReturnStockDtoList);
+    }
+
+    private List<KingdeeSynReturnDto> synForShopAllot(ShopAllotDto shopAllotDto){
+        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        SalReturnStockDto returnStockDto = new SalReturnStockDto();
+        returnStockDto.setExtendId(shopAllotDto.getId());
+        returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
+        returnStockDto.setDate(LocalDate.now());
+        returnStockDto.setCustomerNumber("");//shopAllotDto.getFromShop().getRealCode()
+        returnStockDto.setNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
+        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
+        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+        entityDto.setMaterialNumber("");// shopAllotDetail.getProduct().getCode()
+        entityDto.setQty(1);//shopAllotDetail.getQty()
+        entityDto.setPrice(null);//shopAllotDetail.getReturnPrice()
+        entityDto.setEntryNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
+        entityDto.setStockNumber("");//getToShop().getDelegateDepot()==null?getStore().getRealCode():getToShop().getDelegateDepot().getRealCode()
+        entityDtoList.add(entityDto);
         returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
         salReturnStockDtoList.add(returnStockDto);
         return cloudClient.synSalReturnStock(salReturnStockDtoList);

@@ -115,6 +115,7 @@ public class PrintService {
         expressOrder.setOutPrintDate(LocalDateTime.now());
         expressOrder.setLastModifiedBy(RequestUtils.getAccountId());
         expressOrderRepository.save(expressOrder);
+        expressOrderRepository.flush();
     }
 
 
@@ -152,7 +153,7 @@ public class PrintService {
 
     private List<ExpressOrderPrintDto> setPrintOutDetail(PrintConfigQuery printConfigQuery,List<ExpressOrder> expressOrders) {
         List<ExpressOrderPrintDto> expressOrderPrintList=Lists.newArrayList();
-        if(CollectionUtil.isEmpty(expressOrders) || !"出库单".equals(printConfigQuery.getConfigType())) {
+        if(CollectionUtil.isEmpty(expressOrders)) {
             return expressOrderPrintList;
         }
         String expressProductId = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
@@ -179,6 +180,8 @@ public class PrintService {
             for(ExpressOrder expressOrder:expressOrders) {
                 if(map.containsKey(expressOrder.getExtendBusinessId())) {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
+                    expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
+                    expressOrderPrintDto.setId(expressOrder.getId());
                     Integer totalQty = 0;
                     for(GoodsOrderDetail goodsOrderDetail:map.get(expressOrder.getExtendBusinessId())) {
                         GoodsOrder goodsOrder=goodsOrderMap.get(goodsOrderDetail.getGoodsOrderId());
@@ -203,6 +206,7 @@ public class PrintService {
                         expressOrderPrintDto.setToDepotName(depotMap.get(expressOrder.getToDepotId()).getName());
                         expressOrderPrintDto.setBillDate(goodsOrder.getBillDate());
                         expressOrderPrintDto.setFormatId(goodsOrder.getBusinessId());
+
                         expressOrderPrintDto.setPrintId(goodsOrder.getId());
                         expressOrderPrintDto.setContator(expressOrder.getContator());
                         expressOrderPrintDto.setMobilePhone(expressOrder.getMobilePhone());
@@ -234,6 +238,8 @@ public class PrintService {
             for(ExpressOrder expressOrder:expressOrders) {
                 if(map.containsKey(expressOrder.getExtendBusinessId())) {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
+                    expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
+                    expressOrderPrintDto.setId(expressOrder.getId());
                     Integer totalQty = 0;
                     BigDecimal amount=BigDecimal.ZERO;
                     for(AdGoodsOrderDetail adGoodsOrderDetail:map.get(expressOrder.getExtendBusinessId())) {
@@ -291,6 +297,8 @@ public class PrintService {
             for(ExpressOrder expressOrder:expressOrders) {
                 if(map.containsKey(expressOrder.getExtendBusinessId())) {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
+                    expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
+                    expressOrderPrintDto.setId(expressOrder.getId());
                     Integer totalQty = 0;
                     for(StoreAllotDetail storeAllotDetail:map.get(expressOrder.getExtendBusinessId())) {
                         ExpressOrderPrintDetailDto printOutDetail = new ExpressOrderPrintDetailDto();

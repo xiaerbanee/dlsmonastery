@@ -10,7 +10,7 @@ import java.util.List;
 
 
 public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
-
+    private String shopId;
     private String imeStr;
     private String buyer;
     private Integer buyerAge;
@@ -73,4 +73,11 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
         this.buyerPhone = buyerPhone;
     }
 
+    public String getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(String shopId) {
+        this.shopId = shopId;
+    }
 }
