@@ -13,15 +13,15 @@
           <el-row :gutter="8">
             <el-col :span="12">
               <el-form-item :label="$t('物料描述')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.name" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input v-model="inputForm.itemDesc" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('物料编号')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="inputForm.code" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input type="textarea" v-model="inputForm.itemNumberStr" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('型号')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.code" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input v-model="inputForm.productName" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -41,6 +41,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
   import ElCol from "element-ui/packages/col/src/col";
+  import util from "../../../utils/util";
   var table = null;
   export default {
     components: {ElCol},
@@ -67,69 +68,30 @@
             autoColumnSize: true,
             stretchH: 'all',
             height: 650,
-            minSpareRows: 500,
-            startRows: 500,
-            maxRows: 5000,
             startCols: 5,
             colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品', 'LX对应货品', '统计型号'],
-            columns: [{
-              data:'id',
-              strict: true,
-              readOnly: true,
-              width: 200
-            }, {
-              data:'',
-              strict: true,
-              readOnly: true,
-              width: 200
-            }, {
-              data:'',
-              strict: true,
-              readOnly: true,
-              width: 200
-            }, {
-              data:'',
-              strict: true,
-              readOnly: true,
-              width: 200
-            }, {
-              data:'',
-              strict: true,
-              readOnly: true,
-              width: 100
-            }, {
-              strict: true,
-              readOnly: true,
-              width: 100
-            }, {
-              data:'',
-              type: "autocomplete",
-              allowEmpty: true,
-              strict: true,
-              width: 100
-            }, {
-              data:'productId',
-              type: "autocomplete",
-              allowEmpty: true,
-              strict: true,
-              source:function () {
-
+            columns: [
+              {data:'id',strict: true,readOnly: true,width: 100},
+              {data:'colorId',strict: true,readOnly: true,width: 100},
+              {data:'colorName',strict: true,readOnly: true,width: 100},
+              {data:'brandType',strict: true,readOnly: true,width: 100},
+              {data:'itemDesc',strict: true,readOnly: true,width: 200},
+              {data:'itemNumber',strict: true,readOnly: true,width: 100},
+              {data:'productName',type: "autocomplete",allowEmpty: true,
+                productNames:[],source:this.productNames,
+                width: 200
               },
-              width: 100
-            }, {
-              data:'lxProductId',
-              readOnly: true,
-              strict: true,
-              source:function () {
-
+              {data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,
+                productNames:[],source:this.productNames,
+                width: 200
               },
-              width: 100
-            }],
+              {data:'typeName',strict: true,readOnly: true,width: 100}
+            ],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
           }, rules: {},
           submitDisabled: false,
           formLabelWidth: '120px',
-          formVisible: false
+          formVisible: false,
         };
       },formSubmit(){
         this.submitDisabled = true;
@@ -149,7 +111,6 @@
               }
             }
             this.inputForm.dataList = tableData;
-
             axios.post('', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               this.submitDisabled = false;
@@ -164,25 +125,31 @@
             this.submitDisabled = false;
           }
         })
+      },getTableData(){
+        let submitData = util.deleteExtra(this.inputForm);
+        util.setQuery("oppoPlantAgentProductSelList",submitData);
+        axios.post('/api/global/tool/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
+          this.settings.data = response.data;
+          console.log(response.data.length);
+          table.loadData(this.settings.data);
+        });
       },search() {
         this.formVisible = false;
         this.setSearchText();
-        let submitData = util.deleteExtra(this.inputForm);
-        util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.get('',{params:submitData}).then((response) => {
-          this.settings.data  = null;
-          table.loadData(this.settings.data);
-        });
+        this.getTableData();
       },synData(){
 
       },initPage(){
-        axios.get('').then((response)=>{
+        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response) => {
           this.inputForm = response.data;
-          table = new Handsontable(this.$refs["handsontable"], this.settings);
+          this.settings.columns[6].source = response.data.productNameList;
+          this.settings.columns[7].source = response.data.productNameList;
+          console.log("---------6"+this.settings.columns[6].source);
+          console.log("---------7"+this.settings.columns[7].source);
+          this.getTableData();
         });
       }
-    },
-    mounted() {
+    },created() {
       this.initPage();
     },
   }

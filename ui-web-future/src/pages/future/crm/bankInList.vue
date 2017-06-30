@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:bankIn:edit'">{{$t('bankInList.add')}}</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:bankIn:edit'">批量添加</el-button>
         <el-button type="primary" :disabled="submitDisabled"  @click="batchPass" icon="check" v-permit="'crm:bankIn:audit'">{{$t('bankInList.batchPass')}}</el-button>
         <el-button   type="primary" @click="exportData" v-permit="'crm:bankIn:view'">{{$t('bankInList.export')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
@@ -135,6 +136,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'bankInForm'})
+      },itemBatchAdd(){
+        this.$router.push({ name: 'bankInBatchForm'})
       },itemAction:function(id, action){
         if(action==="edit") {
           this.$router.push({ name: 'bankInForm', query: { id: id }})

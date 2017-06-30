@@ -39,6 +39,12 @@
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+                <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
+                <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
+              </el-upload>
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">{{$t('shopBuildForm.save')}}</el-button>
             </el-form-item>
@@ -80,6 +86,8 @@
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            scenePhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            confirmPhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
         }

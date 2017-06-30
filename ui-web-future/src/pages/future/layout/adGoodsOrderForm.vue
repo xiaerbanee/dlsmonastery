@@ -159,7 +159,8 @@
           }
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-          if (response.data.jointType === '代理') {
+              console.log(response.data);
+          if (response.data[0].jointType === '代理') {
             this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
