@@ -26,7 +26,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.*;
@@ -100,7 +100,7 @@ public class GoodsOrderService {
     @Autowired
     private SalOutStockManager salOutStockManager;
     @Autowired
-    private OtherRecAbleManager otherRecAbleManager;
+    private ArOtherRecAbleManager arOtherRecAbleManager;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired

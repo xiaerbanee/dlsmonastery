@@ -18,6 +18,7 @@ import net.myspring.future.modules.basic.client.AccountClient;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.EmployeePhoneDepositDto;
+import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.basic.web.form.EmployeePhoneDepositForm;
@@ -73,7 +74,7 @@ public class EmployeePhoneDepositService {
     @Autowired
     private BankRepository bankRepository;
     @Autowired
-    private DepotShopRepository depotShopRepository;
+    private CnJournalBankManager cnJournalBankManager;
 
     public EmployeePhoneDepositDto findOne(EmployeePhoneDepositDto employeePhoneDepositDto) {
         if(!employeePhoneDepositDto.isCreate()){
@@ -154,30 +155,8 @@ public class EmployeePhoneDepositService {
                     }
                 }
             }
-            batchSynForCloud(employeePhoneDepositList);
+            cnJournalBankManager.synEmployeePhoneDeposit(employeePhoneDepositList);
         }
-    }
-
-    private List<KingdeeSynReturnDto> batchSynForCloud(List<EmployeePhoneDeposit> employeePhoneDepositList){
-        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
-        for (EmployeePhoneDeposit employeePhoneDeposit : employeePhoneDepositList) {
-            Bank bank = bankRepository.findOne(employeePhoneDeposit.getBankId());
-            Depot depot = depotRepository.findOne(employeePhoneDeposit.getDepotId());
-            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-            cnJournalForBankDto.setExtendId(employeePhoneDeposit.getId());
-            cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
-            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-            entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
-            entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
-            entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-            entityForBankDto.setBankAccountNumber(bank.getCode());
-            entityForBankDto.setComment(depot.getName());
-            cnJournalEntityForBankDtoList.add(entityForBankDto);
-            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-            cnJournalForBankDtoList.add(cnJournalForBankDto);
-        }
-        return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
     }
 
     public RestResponse batchSave(String data) {

@@ -1,16 +1,13 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
-import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.manager.OtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.CnJournalBankManager;
+import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto;
@@ -42,11 +39,11 @@ public class ShopDepositService {
     @Autowired
     private ShopDepositRepository shopDepositRepository;
     @Autowired
-    private CloudClient cloudClient;
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private OtherRecAbleManager otherRecAbleManager;
+    private ArOtherRecAbleManager arOtherRecAbleManager;
+    @Autowired
+    private CnJournalBankManager cnJournalBankManager;
 
     public Page<ShopDepositDto> findPage(Pageable pageable, ShopDepositQuery shopDepositQuery) {
         Page<ShopDepositDto> page = shopDepositRepository.findPage(pageable, shopDepositQuery);
@@ -96,34 +93,12 @@ public class ShopDepositService {
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
 //TODO 同步金蝶 需要测试验证
                 if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
-                    KingdeeSynReturnDto returnDtoList = otherRecAbleManager.synForShopDeposit(shopDeposit);
+                    KingdeeSynReturnDto returnDtoList = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
                 } else {
-                    KingdeeSynReturnDto returnDto = synForJournalBank(shopDeposit);
+                    KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit);
                 }
         }
 
-    }
-
-    private KingdeeSynReturnDto synForJournalBank(ShopDeposit shopDeposit){
-        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
-
-            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-            cnJournalForBankDto.setExtendId(shopDeposit.getId());//单据ID值
-            cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
-            cnJournalForBankDto.setDate(null);
-            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-
-            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-            entityForBankDto.setDebitAmount(shopDeposit.getAmount());
-            entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-            entityForBankDto.setDepartmentNumber("");
-            entityForBankDto.setBankAccountNumber("");
-            entityForBankDto.setComment("");
-            cnJournalEntityForBankDtoList.add(entityForBankDto);
-            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-            cnJournalForBankDtoList.add(cnJournalForBankDto);
-
-        return cloudClient.synJournalBankForShopDeposit(cnJournalForBankDtoList).get(0);
     }
 
     public ShopDepositDto findDto(String id) {
