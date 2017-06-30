@@ -107,4 +107,10 @@ public class EmployeeController {
         return employeeDtoList;
     }
 
+    @RequestMapping(value = "findAll")
+    public List<EmployeeDto> findAll() {
+        List<EmployeeDto> employeeDtoList = employeeService.findAll();
+        return employeeDtoList;
+    }
+
 }

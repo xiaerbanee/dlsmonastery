@@ -20,8 +20,6 @@ public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei> {
     private String agentname;
     private String province;
     private String city;
-    private String accountId;
-    private String districtId;
 
     public String getAgentcode() {
         return agentcode;
@@ -119,19 +117,4 @@ public class OppoCustomerSaleImei extends IdEntity<OppoCustomerSaleImei> {
         this.shopname = shopname;
     }
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getDistrictId() {
-        return districtId;
-    }
-
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
-    }
 }
