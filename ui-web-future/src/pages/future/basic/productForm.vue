@@ -7,8 +7,7 @@
           <el-col :span="8">
             <el-form-item :label="$t('productForm.name')">{{inputForm.name}}
             </el-form-item>
-            <el-form-item :label="$t('productForm.code')" prop="code">
-              <el-input v-model="inputForm.code"></el-input>
+            <el-form-item :label="$t('productForm.code')" prop="code">{{inputForm.code}}
             </el-form-item>
             <el-form-item :label="$t('productForm.outGroupName')" prop="outGroupName">{{inputForm.outGroupName}}
             </el-form-item>
