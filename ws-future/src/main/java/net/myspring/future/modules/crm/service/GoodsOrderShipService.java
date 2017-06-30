@@ -14,6 +14,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -56,10 +57,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -301,7 +299,7 @@ public class GoodsOrderShipService {
                         goodsOrderIme.setGoodsOrderId(goodsOrder.getId());
                         goodsOrderIme.setProductImeId(productIme.getId());
                         goodsOrderIme.setProductId(productIme.getProductId());
-                        goodsOrderIme.setRemarks(goodsOrderShipForm.getRemarks());
+                        goodsOrderIme.setRemarks(goodsOrderShipForm.getShipRemarks());
                         goodsOrderImeRepository.save(goodsOrderIme);
                         //串码调拨
                         productIme.setDepotId(goodsOrder.getShopId());
@@ -452,5 +450,14 @@ public class GoodsOrderShipService {
         List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
         goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getEndShouldGet());
         return goodsOrderDto;
+    }
+
+    public GoodsOrderDto getShipByFormatId(String formatId) {
+        String businessId = formatId.replaceAll(FormatterConstant.GOODS_ORDER, "");
+        List<GoodsOrder> goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList(businessId));
+        if(CollectionUtil.isEmpty(goodsOrderList)){
+            return new GoodsOrderDto();
+        }
+        return getShip(goodsOrderList.get(0).getId());
     }
 }

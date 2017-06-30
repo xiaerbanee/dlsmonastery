@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.google.common.collect.Lists;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -10,32 +11,24 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
-import net.myspring.future.modules.crm.service.GoodsOrderImeService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
@@ -76,7 +69,7 @@ public class GoodsOrderController {
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
-        goodsOrderForm.getExtra().put("netTypeList",NetTypeEnum.getList());
+        goodsOrderForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
     }
@@ -101,7 +94,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){
         //设置仓库
         GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());

@@ -106,6 +106,15 @@ public class GoodsOrderShipController {
         return goodsOrderShipService.getShip(id);
     }
 
+    @RequestMapping(value = "getShipByFormatId")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
+    public GoodsOrderDto getShipByFormatId(String formatId) {
+        if(StringUtils.isBlank(formatId)){
+            return new GoodsOrderDto();
+        }
+        return goodsOrderShipService.getShipByFormatId(formatId);
+    }
+
     @RequestMapping(value = "print")
     @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:print')")
     public GoodsOrderPrintDto print(String goodsOrderId) {

@@ -81,7 +81,7 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
         <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
@@ -111,7 +111,11 @@
     </div>
   </div>
 </template>
-
+<style>
+  .el-table .danger-row {
+    background: #FF8888 !important;
+  }
+</style>
 <script>
   import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
@@ -142,6 +146,13 @@
       this.$nextTick(function () {
         this.searchText = util.getSearchText(this.$refs.searchDialog);
       })
+    },
+    tableRowClassName(row, index) {
+      if (row.shopShouldGetAfterBill<= 0 && row.status==='待开单' && _.trim(row.shopCode) !== '') {
+        return "danger-row";
+      }else{
+        return "";
+      }
     },
     pageRequest() {
       this.pageLoading = true;
