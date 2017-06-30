@@ -55,3 +55,6 @@ ribbon:
 
 logging:
   file: global-tool.log
+
+setting:
+  adminIdList:  1

@@ -23,7 +23,7 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
 
         return namedParameterJdbcTemplate.query("""
          select
-                go.shop_id as customerid,im.ime as imei,goi.product_id as productcode,0 as transType
+                go.shop_id as customerid,im.ime as imei,goi.product_id as productcode,0 as transType,go.ship_date as date
             from
                 crm_goods_order_ime goi,
                 crm_goods_order go,
@@ -35,10 +35,10 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and go.ship_date<=:dateEnd
                 and go.company_id=:companyId
                 and go.enabled=1
-                and go.shop_id in (select id from crm_depot_shop)
+                and go.shop_id in (select depot_id from crm_depot_shop)
             union
             select
-                al.from_depot_id as customerid,im.ime as imei,pro.id as productcode,1 as transType
+                al.from_depot_id as customerid,im.ime as imei,pro.id as productcode,1 as transType,al.created_date as date
             from
                 crm_ime_allot al,
                 crm_product pro,
@@ -50,10 +50,10 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and al.created_date<=:dateEnd
                 and al.company_id=:companyId
                 and al.enabled=1
-                and al.from_depot_id in (select id from crm_depot_shop)
+                and al.from_depot_id in (select depot_id from crm_depot_shop)
             union
             select
-                al.to_depot_id as customerid,im.ime as imei,pro.id as productcode,0 as transType
+                al.to_depot_id as customerid,im.ime as imei,pro.id as productcode,0 as transType,al.created_date as date
             from
                 crm_ime_allot al,
                 crm_product pro,
@@ -65,10 +65,10 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and al.created_date<=:dateEnd
                 and al.company_id=:companyId
                 and al.enabled=1
-                and al.to_depot_id in (select id from crm_depot_shop)
+                and al.to_depot_id in (select depot_id from crm_depot_shop)
             union
             select
-                af.from_depot_id as customerid,im.ime as imei, pro.id as productcode,1 as transType
+                af.from_depot_id as customerid,im.ime as imei, pro.id as productcode,1 as transType,af.created_date as date
             from
                 crm_after_sale_ime_allot af,
                 crm_product_ime im,
@@ -80,10 +80,10 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and af.created_date<=:dateEnd
                 and af.company_id=:companyId
                 and af.enabled=1
-                and af.from_depot_id in (select id from crm_depot_shop)
+                and af.from_depot_id in (select depot_id from crm_depot_shop)
             union
             select
-                af.to_depot_id as customerid,im.ime as imei, pro.id as productcode,0 as transType
+                af.to_depot_id as customerid,im.ime as imei, pro.id as productcode,0 as transType,af.created_date as date
             from
                 crm_after_sale_ime_allot af,
                 crm_product_ime im,
@@ -95,7 +95,7 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and af.created_date<=:dateEnd
                 and af.company_id=:companyId
                 and af.enabled=1
-                and af.to_depot_id in (select id from crm_depot_shop)
+                and af.to_depot_id in (select depot_id from crm_depot_shop)
             """,paramMap, BeanPropertyRowMapper(OppoCustomerImeiStock::class.java));
     }
 }

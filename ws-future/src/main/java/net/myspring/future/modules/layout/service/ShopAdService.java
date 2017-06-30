@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -177,7 +178,7 @@ public class ShopAdService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialArea", "是否专区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "内容说明"));
 
-        List<ShopAdDto> shopAdDtoList = shopAdRepository.findByFilter(shopAdQuery);
+        List<ShopAdDto> shopAdDtoList = findPage(new PageRequest(0,10000),shopAdQuery).getContent();
         cacheUtils.initCacheInput(shopAdDtoList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("广告申请", shopAdDtoList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);

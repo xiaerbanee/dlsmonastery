@@ -74,7 +74,7 @@ public class GoodsOrderController {
 
 
     @RequestMapping(value = "getForm")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
         goodsOrderForm.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
@@ -88,7 +88,6 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "validateShop")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public RestResponse validateShop(String shopId) {
         return goodsOrderService.validateShop(shopId);
     }
@@ -101,7 +100,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){
         //设置仓库
         GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());
@@ -113,7 +112,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBill")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public GoodsOrderDto getBill(String id) {
         return goodsOrderService.getBill(id);
     }

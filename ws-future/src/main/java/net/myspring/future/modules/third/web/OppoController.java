@@ -26,54 +26,51 @@ public class OppoController {
     @RequestMapping(value="findOppoCustomerAllots")
     public List<OppoCustomerAllot> findOppoCustomerAllots(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerAllot> oppoCustomerAllots=oppoService.findOppoCustomerAllots(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        for(OppoCustomerAllot oppoCustomerAllot:oppoCustomerAllots){
-            System.err.println("oppoCustomerAllot=="+oppoCustomerAllot.getFromCustomerid()+"\t"+oppoCustomerAllot.getToCustomerid()+"\t"+oppoCustomerAllot.getProductcode()+"\t"+oppoCustomerAllot.getDate()+"\t"+oppoCustomerAllot.getQty());
-        }
         return oppoCustomerAllots;
     }
 
     @RequestMapping(value="findOppoCustomerStocks")
-    public  String findOppoCustomerStocks(String dateStart,String dateEnd,String companyId){
-
+    public  List<OppoCustomerStock> findOppoCustomerStocks(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerStock> oppoCustomerStocks=oppoService.findOppoCustomerStocks(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerStocks);
+        return oppoCustomerStocks;
     }
 
 
     @RequestMapping(value="findOppoCustomerImeiStocks")
-    public  String findOppoCustomerImeiStocks(String dateStart,String dateEnd,String companyId){
-        List<OppoCustomerImeiStock> oppoCustomerStocks=oppoService.findOppoCustomerImeiStocks(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerStocks);
+    public  List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(String dateStart,String dateEnd,String companyId){
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoService.findOppoCustomerImeiStocks(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
+        System.err.println("oppoCustomerImeiStocks==="+oppoCustomerImeiStocks.toString());
+        return oppoCustomerImeiStocks;
     }
 
     @RequestMapping(value="findOppoCustomerSales")
-    public  String findOppoCustomerSales(String dateStart,String dateEnd,String companyId){
+    public  List<OppoCustomerSale> findOppoCustomerSales(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerSale> oppoCustomerSales=oppoService.findOppoCustomerSales(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerSales);
+        return oppoCustomerSales;
     }
 
     @RequestMapping(value="findOppoCustomerSaleImes")
-    public  String findOppoCustomerSaleImes(String dateStart,String dateEnd,String companyId){
+    public  List<OppoCustomerSaleImei> findOppoCustomerSaleImes(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoService.findOppoCustomerSaleImeis(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes);
+        return oppoCustomerSaleImes;
     }
 
     @RequestMapping(value="findOppoCustomerSaleCounts")
-    public  String findOppoCustomerSaleCounts(String dateStart,String dateEnd,String companyId){
+    public  List<OppoCustomerSaleCount> findOppoCustomerSaleCounts(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoService.findOppoCustomerSaleCounts(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts);
+        return oppoCustomerSaleCounts;
     }
 
     @RequestMapping(value="findOppoCustomerAfterSaleImeis")
-    public  String findOppoCustomerAfterSaleImeis(String dateStart,String dateEnd,String companyId){
+    public  List<OppoCustomerAfterSaleImei> findOppoCustomerAfterSaleImeis(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoService.findOppoCustomerAfterSaleImeis(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis);
+        return oppoCustomerAfterSaleImeis;
     }
 
     @RequestMapping(value="findOppoCustomerDemoPhones")
-    public  String findOppoCustomerDemoPhones(String dateStart,String dateEnd,String companyId){
+    public  List<OppoCustomerDemoPhone> findOppoCustomerDemoPhones(String dateStart,String dateEnd,String companyId){
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoService.findOppoCustomerDemoPhones(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd),companyId);
-        return ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones);
+        return oppoCustomerDemoPhones;
     }
 
 }

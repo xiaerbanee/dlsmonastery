@@ -150,23 +150,4 @@ public class ShopGoodsDepositService {
         shopGoodsDepositRepository.save(shopGoodsDeposit);
     }
 
-    private List<KingdeeSynReturnDto> batchSynForCloud(){
-        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
-            CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
-            cnJournalForBankDto.setExtendId("2");
-            cnJournalForBankDto.setExtendType(ExtendTypeEnum.导购用机.name());
-            List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
-
-            CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-            entityForBankDto.setDebitAmount(BigDecimal.ZERO);
-            entityForBankDto.setCreditAmount(BigDecimal.TEN.multiply(new BigDecimal(-1)));
-            entityForBankDto.setDepartmentNumber("4000");
-            entityForBankDto.setBankAccountNumber("1002.00011");
-            entityForBankDto.setComment("模拟测试");
-            cnJournalEntityForBankDtoList.add(entityForBankDto);
-            cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
-            cnJournalForBankDtoList.add(cnJournalForBankDto);
-        return cloudClient.synJournalBankForEmployeePhoneDeposit(cnJournalForBankDtoList);
-    }
-
 }

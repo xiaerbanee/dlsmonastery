@@ -24,7 +24,8 @@ class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJ
              select
                   de.id as customerid,
                   pro.id as productcode ,
-                  count(*) as qty
+                  count(*) as qty,
+                 :dateEnd as date
               from
                 crm_product_ime im left join crm_product_ime_upload up on im.product_ime_upload_id = up.id,crm_depot de,crm_product pro
                 where

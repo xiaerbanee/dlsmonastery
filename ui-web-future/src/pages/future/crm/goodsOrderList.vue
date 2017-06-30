@@ -81,8 +81,8 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="businessId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
+        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
@@ -97,7 +97,7 @@
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
-            <div class="action"><el-button size="small"v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
+            <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
