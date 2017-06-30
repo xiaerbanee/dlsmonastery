@@ -24,6 +24,8 @@ import java.util.*
 
 
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
+
+    fun findByBusinessIdIn(businessIdList: List<String>):MutableList<GoodsOrder>
 }
 
 interface GoodsOrderRepositoryCustom {
@@ -32,6 +34,7 @@ interface GoodsOrderRepositoryCustom {
     fun findNextBusinessId(companyId:String,date: LocalDate): String
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
+
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
@@ -59,7 +62,16 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
-        var sb = StringBuilder("select t1.*,t2.express_codes as expressOrderExpressCodes from crm_goods_order t1,crm_express_order t2 where t1.express_order_id=t2.id")
+        var sb = StringBuilder("""
+            SELECT
+              t2.express_codes as expressOrderExpressCodes,
+              shop.client_id clientId,
+              t1.*
+            FROM crm_goods_order t1
+                      LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+                      LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+            where  t1.enabled = 1
+        """)
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.statusList)) {
             sb.append(" and t1.status in (:statusList)")
         }
@@ -82,7 +94,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.ship_type = :shipType ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.areaId)) {
-            sb.append(" and t1.shop_id in(select id from crm_depot where area_id = :areaId) ")
+            sb.append(" and shop.area_id = :areaId ")
         }
         if (goodsOrderQuery.shipDateStart != null) {
             sb.append(" and t1.ship_date > :shipDateStart")
@@ -90,8 +102,11 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (goodsOrderQuery.shipDateEnd != null) {
             sb.append(" and t1.ship_date < :shipDateEnd")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.shopName)) {
-            sb.append(" and t1.shop_id in(select id from crm_depot where name like concat('%',:shopName,'%') )");
+        if (StringUtils.isNotBlank(goodsOrderQuery.shopId)) {
+            sb.append(" and t1.shop_id = :shopId ")
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.shopName)) {
+            sb.append(" and shop.name like concat('%',:shopName,'%')  ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.storeId)) {
             sb.append(" and t1.store_id = :storeId ")
@@ -109,25 +124,25 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.created_date <:createdDateEnd")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.expressCodes)) {
-            sb.append(""" and express_order_id in (
-            select express_order_id from crm_express where code in (:expresscodeList)
+            sb.append("""   and t1.express_order_id in (
+            select express.express_order_id from crm_express express where express.code in (:expresscodeList)
             )
          """)
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.businessIds)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.businessIds)) {
             sb.append(" and t1.business_id in (:businessIdList)")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.remarks)) {
+        if (StringUtils.isNotBlank(goodsOrderQuery.remarks)) {
             sb.append(" and t1.remarks like concat('%',:remarks,'%')")
         }
-        if (StringUtils.isNoneBlank(goodsOrderQuery.expressCode)) {
-            sb.append(" and t1.express_order_id in(select express_order_id from crm_express where code like concat('%',:expressCode,'%'))")
+        if (StringUtils.isNotBlank(goodsOrderQuery.expressCode)) {
+            sb.append(" and t1.express_order_id in(select express.express_order_id from crm_express express where express.code like concat('%',:expressCode,'%'))")
         }
         if (goodsOrderQuery.lxMallOrder != null && goodsOrderQuery.lxMallOrder) {
-            sb.append(" and lx_mall_order = 1  ")
+            sb.append(" and t1.lx_mall_order = 1  ")
         }
         if (goodsOrderQuery.lxMallOrder != null && !goodsOrderQuery.lxMallOrder) {
-            sb.append(" and lx_mall_order = 0  ")
+            sb.append(" and t1.lx_mall_order = 0  ")
         }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
             sb.append(" and t1.shop_id in (select shop.id from crm_depot shop where shop.office_id in (:officeIdList))")

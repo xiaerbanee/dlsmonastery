@@ -6,14 +6,13 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -47,12 +46,10 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
-import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,8 +63,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -109,7 +108,6 @@ public class GoodsOrderService {
     @Autowired
     private CloudClient cloudClient;
 
-    @Transactional(readOnly = true)
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
             goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
@@ -146,8 +144,6 @@ public class GoodsOrderService {
         return page;
     }
 
-    //检测门店
-    @Transactional(readOnly = true)
     public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
@@ -195,6 +191,9 @@ public class GoodsOrderService {
             GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailFormList().get(i);
             if(goodsOrderDetailForm.getQty()==null) {
                 goodsOrderDetailForm.setQty(0);
+            }
+            if(goodsOrderDetailForm.getQty()<0) {
+                throw new ServiceException("订货明细里的数量不能小于0");
             }
             if(goodsOrderDetailForm.isCreate()) {
                 if (goodsOrderDetailForm.getQty() > 0) {
@@ -282,17 +281,16 @@ public class GoodsOrderService {
         expressOrder.setMobileQty(mobileBillQty);
         expressOrderRepository.save(expressOrder);
         if (goodsOrderBillForm.getSyn()) {
-            syn(goodsOrder);
+            syn(goodsOrder, expressOrder);
         }
         return goodsOrder;
     }
 
-    private GoodsOrder syn(GoodsOrder goodsOrder){
+    private GoodsOrder syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
         CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
-        String allotFormStockCode=null;
-        String allotToStockCode=null;
+
         if (companyConfig!=null&&StringUtils.isNotBlank(companyConfig.getValue())) {
             String mergeStoreIds =companyConfig.getValue();
             List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
@@ -301,26 +299,28 @@ public class GoodsOrderService {
             if (goodsOrder.getStoreId().equals(toStockId)) {
                 DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(fromStockId);
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(toStockId);
-                allotFormStockCode=allotFromStock.getOutCode();
-                allotToStockCode=allotToStock.getOutCode();
-                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFormStockCode, allotToStockCode);
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder, allotFromStock.getOutCode(), allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
             DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
             DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
-            allotFormStockCode=allotFromStock.getOutCode();
-            allotToStockCode=allotToStock.getOutCode();
-            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
             goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
+
         } else {
-            List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salOutStockManager.synForGoodsOrder(goodsOrder);
-            if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
-                goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
+            KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForGoodsOrder(goodsOrder).get(0);
+            String outCode = StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA);
+            if("AR_receivable".equals(kingdeeSynReturnDto.getNextFormId()) && StringUtils.isNotBlank(kingdeeSynReturnDto.getNextBillNo())){
+                outCode = StringUtils.appendString(outCode,"应收单:"+kingdeeSynReturnDto.getNextBillNo(),CharConstant.COMMA);
             }
+            goodsOrder.setOutCode(outCode);
         }
         goodsOrderRepository.save(goodsOrder);
+        expressOrder.setOutCode(goodsOrder.getOutCode()==null ? null : goodsOrder.getOutCode().replaceAll(CharConstant.COMMA, "<br/>"));
+        expressOrderRepository.save(expressOrder);
+
         return goodsOrder;
     }
 
@@ -428,7 +428,6 @@ public class GoodsOrderService {
                     GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
                     goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
                     goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailDto.setAllowOrder(allowOrder);
                     goodsOrderDetailDtoList.add(goodsOrderDetailDto);
                 }
             }
@@ -448,6 +447,7 @@ public class GoodsOrderService {
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
             Product product= productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setProductName(product.getName());
+            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder() && product.getAllowBill());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setAreaQty(areaDetailMap.get(product.getId()));
         }

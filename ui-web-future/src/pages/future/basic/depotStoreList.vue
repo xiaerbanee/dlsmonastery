@@ -9,7 +9,7 @@
       </el-row>
       <search-dialog title="过滤" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-form-item :label="formLabel.name.label" :label-width="formLabelWidth">
+          <el-form-item label="名称" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off"></el-input>
           </el-form-item>
         </el-form>
@@ -52,8 +52,6 @@
         page:{},
         formData:{
           extra:{}
-        },formLabel:{
-          name:{label:"名称"},
         },
         initPromise:{},
         formLabelWidth: '120px',
@@ -82,7 +80,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -111,7 +109,7 @@
     },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();
-      })
+      });
     }
   };
 </script>

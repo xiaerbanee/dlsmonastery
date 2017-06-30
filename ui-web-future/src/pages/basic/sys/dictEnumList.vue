@@ -115,6 +115,7 @@
         util.copyValue(that.$route.query,that.formData);
 
       });
+
     },activated(){
         this.initPromise.then(()=>{
           this.pageRequest();

@@ -1,6 +1,8 @@
 package net.myspring.basic.common.query;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.util.collection.CollectionUtil;
@@ -13,9 +15,12 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery{
+    @JsonIgnore
     private String companyId= RequestUtils.getCompanyId();
 
-    private List<String> officeIdList;
+    @JsonIgnore
+    private List<String> officeIdList= Lists.newArrayList();
+
 
     private  Integer page = 0;
 
@@ -75,4 +80,6 @@ public class BaseQuery{
     public void setExtra(Map<String, Object> extra) {
         this.extra = extra;
     }
+
+
 }

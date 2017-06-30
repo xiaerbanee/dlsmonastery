@@ -19,14 +19,12 @@ public class DistrictService {
     @Autowired
     private DistrictRepository districtRepository;
 
-    @Transactional(readOnly = true)
     public List<DistrictDto> findByNameLike(String name){
         List<District> districts = districtRepository.findByNameLike(name);
         List<DistrictDto> districtDtos= BeanUtil.map(districts, DistrictDto.class);
         return districtDtos;
     }
 
-    @Transactional(readOnly = true)
     public DistrictDto findOne(String id){
         District district = districtRepository.findOne(id);
         DistrictDto districtDto= BeanUtil.map(district,DistrictDto.class);

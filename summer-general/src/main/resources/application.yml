@@ -25,6 +25,9 @@ eureka:
 feign:
   hystrix:
     enabled: false
+  httpclient:
+    enabled: true
+
 
 ribbon:
   ReadTimeout: 600000
@@ -47,3 +50,6 @@ upload:
   preview-size: 290
 setting:
     adminIdList:  1
+
+logging:
+  file: summer-general.log

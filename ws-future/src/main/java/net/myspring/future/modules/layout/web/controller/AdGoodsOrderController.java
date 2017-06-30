@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,11 +54,13 @@ public class  AdGoodsOrderController {
     private RedisTemplate redisTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public Page<AdGoodsOrderDto> list(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         return adGoodsOrderService.findPage(pageable,adGoodsOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
         adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
@@ -65,12 +68,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "audit")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:audit')")
     public RestResponse audit(AdGoodsOrderAuditForm adGoodsOrderAuditForm) {
         adGoodsOrderService.audit(adGoodsOrderAuditForm);
         return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "outShopChange", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public String outShopChange(AdGoodsOrder adGoodsOrder) {
         Map<String, Object> map = Maps.newHashMap();
 
@@ -79,12 +84,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findDto")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public AdGoodsOrderDto findDto(String id){
         return adGoodsOrderService.findDto(id);
     }
 
 
     @RequestMapping(value = "getForm", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm) {
 //        adGoodsOrderForm.setE
 //        adGoodsOrderForm = adGoodsOrderService.getForm(adGoodsOrderForm);
@@ -93,11 +100,13 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getShipForm")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public AdGoodsOrderShipForm getShipForm(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         return adGoodsOrderShipForm;
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:edit')")
     public RestResponse save(AdGoodsOrderForm adGoodsOrderForm) {
         if(CollectionUtil.isEmpty(adGoodsOrderForm.getAdGoodsOrderDetailList())){
             throw new ServiceException("请录入柜台订货明细");
@@ -108,6 +117,7 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public String getBillFormProperty(AdGoodsOrder adGoodsOrder) {
         Map<String, Object> map = Maps.newHashMap();
         map.put("type", "标准出库单");
@@ -115,6 +125,7 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public AdGoodsOrderBillForm getBillForm(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         adGoodsOrderBillForm.getExtra().put("adStoreList",depotService.findAdStoreDtoList() );
@@ -129,12 +140,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "bill")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:bill')")
     public RestResponse bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
         adGoodsOrderService.bill(adGoodsOrderBillForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getYsyfMap")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public Map<String, Object> getYsyfMap(String adGoodsOrderId) {
         if(StringUtils.isBlank(adGoodsOrderId)){
             return null;
@@ -144,44 +157,52 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "ship")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:ship')")
     public RestResponse ship(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         adGoodsOrderService.ship(adGoodsOrderShipForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "sign")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:sign')")
     public RestResponse sign(String id) {
         adGoodsOrderService.sign(id);
         return new RestResponse("签收成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "print")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:print')")
     public AdGoodsOrderDto print(String id) {
         return adGoodsOrderService.print(id);
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:delete')")
     public RestResponse delete(AdGoodsOrderForm adGoodsOrderForm) {
         adGoodsOrderService.logicDelete(adGoodsOrderForm.getId());
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:edit')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
     }
 
     @RequestMapping(value = "findDetailListForBill")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:bill')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
     }
 
     @RequestMapping(value = "findDetailListByAdGoodsOrderId")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListByAdGoodsOrderId(adGoodsOrderId);
     }
 
     @RequestMapping(value="export")
+    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
     public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
         return adGoodsOrderService.export(adGoodsOrderQuery);
     }

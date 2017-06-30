@@ -78,7 +78,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -92,7 +92,9 @@
         util.copyValue(this.$route.query,this.formData);
       });
     },activated() {
-      this.pageRequest();
+        this.initPromise.then(()=>{
+          this.pageRequest();
+        })
     }
   };
 </script>

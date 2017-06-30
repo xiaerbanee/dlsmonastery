@@ -22,9 +22,6 @@ public class PermissionDto extends DataDto<Permission> {
     private String menuName;
 
     private String locked;
-    private String remarks;
-    private String url;
-    private String method;
     private List<Position> positionList = Lists.newArrayList();
     private List<String> positionIdList = Lists.newArrayList();
     private List<String> roleIdList=Lists.newArrayList();
@@ -39,22 +36,6 @@ public class PermissionDto extends DataDto<Permission> {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
     }
 
     public List<String> getRoleIdList() {
@@ -87,16 +68,6 @@ public class PermissionDto extends DataDto<Permission> {
 
     public void setLocked(String locked) {
         this.locked = locked;
-    }
-
-    @Override
-    public String getRemarks() {
-        return remarks;
-    }
-
-    @Override
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
     }
 
     public String getName() {

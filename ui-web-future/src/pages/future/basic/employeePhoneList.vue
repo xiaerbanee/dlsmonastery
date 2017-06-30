@@ -59,6 +59,7 @@
         formData:{
           extra:{}
         },
+        initPromise:{},
         searchText:"",
         formLabelWidth: '120px',
         formVisible: false,
@@ -85,7 +86,7 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        this.formData.order=util.getOrder(column);
+        this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
       },search() {
@@ -106,9 +107,12 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      axios.get('/api/ws/future/basic/employeePhone/getQuery').then((response) =>{
+      this.initPromise=axios.get('/api/ws/future/basic/employeePhone/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
         this.pageRequest();
       });
     }

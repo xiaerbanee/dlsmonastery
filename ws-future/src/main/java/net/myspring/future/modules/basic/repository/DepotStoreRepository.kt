@@ -80,6 +80,7 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         sb.append("""
                     FROM
                     crm_product_ime t1
+                    LEFT JOIN crm_product_ime_upload t6 ON t1.product_ime_upload_id = t6.id
                     LEFT JOIN crm_product t2 on t1.product_id=t2.id
                     LEFT JOIN crm_product_type t3 on t2.product_type_id=t3.id
                     LEFT JOIN crm_depot t4 on t1.depot_id=t4.id,
@@ -88,7 +89,20 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     t1.enabled = 1
                     and  t4.depot_store_id=t5.id
         """)
-        if(reportQuery.scoreType){
+        if(reportQuery.date!=null){
+            sb.append("""
+                AND (
+                    t1.retail_date IS NULL
+                    OR t1.retail_date >:date
+                )
+                AND (
+                    t6.id IS NULL
+                    OR t6.created_date > :date
+                )
+                AND t1.created_date < :date
+            """)
+        }
+        if(reportQuery.scoreType!=null){
             sb.append("""  and t3.score_type =:scoreType """)
         }
         if (CollectionUtil.isNotEmpty(reportQuery.productTypeIdList)) {

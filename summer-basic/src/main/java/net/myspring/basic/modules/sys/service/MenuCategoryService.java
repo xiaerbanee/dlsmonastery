@@ -40,7 +40,6 @@ public class MenuCategoryService {
         return menuCategoryDtoPage;
     }
 
-    @Transactional
     public void logicDelete(String id) {
         menuCategoryRepository.logicDelete(id);
     }

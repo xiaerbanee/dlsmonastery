@@ -64,7 +64,6 @@ public class CompanyConfigService {
         return "";
     }
 
-    @Transactional
     public void logicDelete(String id) {
         companyConfigRepository.logicDelete(id);
     }

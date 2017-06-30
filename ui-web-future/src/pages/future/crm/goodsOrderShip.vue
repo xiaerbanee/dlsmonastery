@@ -91,8 +91,8 @@
     methods:{
       getData() {
         return{
-          mediaNotify: null,
-          mediaSuccess: null,
+          mediaNotify: mediaNotify,
+          mediaSuccess: mediaSuccess,
           continueShip:false,
           submitDisabled:false,
           inputForm:{},
@@ -129,7 +129,8 @@
             alert("请填入发货串码或箱号");
             this.submitDisabled = false;
           }
-          return
+          this.shipResult.errorMsg ="";
+          return;
         }
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
           this.shipResult = response.data;

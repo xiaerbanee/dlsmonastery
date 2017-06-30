@@ -1,11 +1,9 @@
 package net.myspring.cloud.modules.kingdee.service;
 
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
-import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,5 +44,12 @@ public class BdCustomerService {
 
     public List<BdCustomer> findByMaxModifyDate(LocalDateTime modifyDate){
         return bdCustomerRepository.findByMaxModifyDate(modifyDate);
+    }
+
+    public BdCustomerQuery getQuery(){
+        BdCustomerQuery bdCustomerQuery = new BdCustomerQuery();
+        bdCustomerQuery.setSort("t1.fcustid,DESC");
+        bdCustomerQuery.getExtra().put("customerGroupList",bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName());
+        return bdCustomerQuery;
     }
 }

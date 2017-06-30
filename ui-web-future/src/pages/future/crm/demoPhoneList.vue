@@ -4,7 +4,8 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('demoPhoneList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filterOrExport')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.filter')}}</el-button>
+        <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.export')}}</el-button>
         <el-button type="primary" @click="itemCollect" icon="document" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.collect')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -28,7 +29,6 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="exportData" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('demoPhoneList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -127,10 +127,9 @@
         }).catch(()=>{});
         }
       },exportData(){
-        util.copyValue(this.formData,this.submitData);
-        axios.get('/api/ws/future/crm/demoPhone/export?'+qs.stringify(this.submitData)).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/crm/demoPhone/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

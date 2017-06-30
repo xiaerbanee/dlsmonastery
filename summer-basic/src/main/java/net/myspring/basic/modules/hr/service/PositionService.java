@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class PositionService {
     
     @Autowired
@@ -73,7 +74,6 @@ public class PositionService {
         return position;
     }
 
-    @Transactional
     public void delete(String id){
         positionRepository.logicDelete(id);
     }

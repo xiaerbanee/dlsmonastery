@@ -13,6 +13,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,23 +29,27 @@ public class ExpressOrderController {
     private ExpressOrderService expressOrderService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public Page<ExpressOrderDto> list(Pageable pageable, ExpressOrderQuery expressOrderQuery){
         return expressOrderService.findPage(pageable, expressOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public ExpressOrderQuery getQuery(ExpressOrderQuery expressOrderQuery) {
         expressOrderQuery.getExtra().put("extendTypeList",ExpressOrderTypeEnum.getList());
         return expressOrderQuery;
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:edit')")
     public RestResponse save(ExpressOrderForm expressOrderForm){
         expressOrderService.save(expressOrderForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "resetPrintStatus")
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:edit')")
     public RestResponse resetPrintStatus(String id) {
 
         expressOrderService.resetPrintStatus(id);
@@ -53,16 +58,19 @@ public class ExpressOrderController {
     }
 
     @RequestMapping(value = "exportEMS", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public ModelAndView exportEMS(ExpressOrderQuery expressOrderQuery) throws IOException {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", expressOrderService.exportEMS(expressOrderQuery));
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public ModelAndView export(ExpressOrderQuery expressOrderQuery) throws IOException {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", expressOrderService.export(expressOrderQuery));
     }
 
     @RequestMapping(value = "findDto")
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public ExpressOrderDto findDto(String id) throws IOException {
         if(StringUtils.isBlank(id)){
             return new ExpressOrderDto();
@@ -73,6 +81,7 @@ public class ExpressOrderController {
     }
 
     @RequestMapping(value = "findByGoodsOrderId")
+    @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
     public ExpressOrderDto findByGoodsOrderId(String goodsOrderId) throws IOException {
         if(StringUtils.isBlank(goodsOrderId)){
             return new ExpressOrderDto();

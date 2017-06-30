@@ -40,7 +40,7 @@ class ReportScoreAreaRepositoryImpl @Autowired constructor(val namedParameterJdb
         if(reportScoreAreaQuery.scoreDate!=null)
             sb.append("""  and t1.score_date  =:scoreDate """)
         if(CollectionUtil.isNotEmpty(reportScoreAreaQuery.officeIdList))
-            sb.append("""  and t1.office_Id in (:officeIdList) """)
+            sb.append("""  and t1.office_id in (:officeIdList) """)
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(reportScoreAreaQuery), BeanPropertyRowMapper(ReportScoreAreaDto::class.java))

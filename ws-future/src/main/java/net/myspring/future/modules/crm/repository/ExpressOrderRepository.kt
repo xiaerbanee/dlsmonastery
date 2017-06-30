@@ -2,15 +2,19 @@ package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.basic.web.form.PrintConfigForm
+import net.myspring.future.modules.basic.web.query.PrintConfigQuery
 import net.myspring.future.modules.crm.domain.ExpressOrder
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -21,15 +25,50 @@ interface ExpressOrderRepository : BaseRepository<ExpressOrder, String>, Express
 
     fun findByExtendIdAndExtendType(extendId: String, extendType: String): ExpressOrder
 
+    @Query("select t from #{#entityName} t where t.extendType=?1 and t.extendId in (?2) and t.enabled=1")
+    fun findByTypeAndExtendIds(extendType: String, extendIds: List<String>): List<ExpressOrder>
+
+
+    @Query("select t from #{#entityName} t where t.extendType=?1 and t.extendBusinessId in (?2) and t.enabled=1")
+    fun findByTypeAndBusinessIds(extendType: String, extendBusinessIds: List<String>): List<ExpressOrder>
 }
 
 interface ExpressOrderRepositoryCustom{
     fun findPage(pageable : Pageable, expressOrderQuery : ExpressOrderQuery): Page<ExpressOrderDto>
 
     fun findDto(id: String): ExpressOrderDto
+
+    fun findPrint(printConfigQuery: PrintConfigQuery):MutableList<ExpressOrder>
 }
 
 class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ExpressOrderRepositoryCustom {
+    override fun findPrint(printConfigQuery: PrintConfigQuery): MutableList<ExpressOrder> {
+        val sb = StringBuilder()
+        sb.append("""
+        SELECT
+            t1.*
+        FROM
+            crm_express_order t1
+        WHERE
+            t1.enabled=1
+            and t1.print_date=:printDate
+            and t1.out_print_date is not null
+            and t1.locked=0
+            and t1.out_code is not null
+        """)
+        if(CollectionUtil.isNotEmpty(printConfigQuery.shipTypeList)){
+            sb.append("and t1.ship_type in (:shipTypeList)")
+        }
+        if(CollectionUtil.isNotEmpty(printConfigQuery.depotIdList)){
+            sb.append("and t1.from_depot_id  in (:depotIdList)")
+        }
+        if(StringUtils.isNotBlank(printConfigQuery.orderType)){
+            sb.append("and t1.extend_type  in (:orderType)")
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(printConfigQuery), BeanPropertyRowMapper(ExpressOrder::class.java));
+    }
+
     override fun findDto(id: String): ExpressOrderDto {
 
         return namedParameterJdbcTemplate.queryForObject("""
