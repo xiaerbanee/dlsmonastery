@@ -177,6 +177,7 @@ export default {
       recruitBatchForm:"招聘信息批量编辑",
       recruitForm: "formulir perekrutan",
       recruitList: "daftar perekrutan",
+      adApplyEditForm:"POP确认数修改",
       adApplyBillForm: "formulir nota",
       adApplyForm: "formulir bahan",
       adApplyGoods: "POP分货",

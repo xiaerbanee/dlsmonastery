@@ -53,6 +53,7 @@ export default {
     loading: "拼命加载中",
     lastModifiedBy: "最后修改人",
     lastModifiedDate: "最后修改时间",
+    operation:"操作"
   },
   adApplyBillForm: {
     adApplyBillForm: "POP开单申请",
@@ -78,6 +79,15 @@ export default {
     search: "搜索",
     inputKey: "请输入关键字",
     inputTowKey: "至少二位关键字",
+  },
+  adApplyEditForm:{
+    shopName:"门店",
+    applyQty:"申请开单数",
+    confirmQty:"确认数",
+    billedQty:"已开单数",
+    leftQty:"待开单数",
+    remarks:"备注",
+    save:"保存"
   },
   adApplyGoods: {
     adApplyGoods: "POP分货",

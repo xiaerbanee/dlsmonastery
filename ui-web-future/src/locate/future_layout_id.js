@@ -47,6 +47,15 @@ export default {
     prerequisiteMessage: "informasi yang harus diisi",
     inputLegalValue: "silahkan masukkan angka yang valid"
   },
+  adApplyEditForm:{
+    shopName:"门店",
+    applyQty:"申请开单数",
+    confirmQty:"确认数",
+    billedQty:"已开单数",
+    leftQty:"待开单数",
+    remarks:"备注",
+    save:"保存"
+  },
   adApplyGoods: {
     adApplyGoods: "POP分货",
     productName: "pop货品",
@@ -96,6 +105,7 @@ export default {
     loading: "拼命加载中",
     lastModifiedBy: "最后修改人",
     lastModifiedDate: "最后修改时间",
+    operation:"操作"
   },
   adGoodsOrderBill: {
     adGoodsOrderBill: "buka nota bahan",

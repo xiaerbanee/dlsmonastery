@@ -3,7 +3,6 @@ package net.myspring.future.modules.layout.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
-import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.service.AdPricesystemChangeService;
 import net.myspring.future.modules.layout.web.form.AdPricesystemChangeForm;
