@@ -33,8 +33,7 @@ Page({
     var that = this;
     wx.scanCode({
       success: function (res) {
-        var ime = $util.trim(that.data.formData.imeStr + '\n' + res.result);
-        that.setData({ "formData.imeStr": ime });
+        that.setData({ "formData.imeStr": res.result });
         that.imeSearch();
       }
     })
