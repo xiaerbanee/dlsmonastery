@@ -154,7 +154,6 @@
                 this.shopDisabled = false;
               }
               if (this.inputForm.activityImage1 != null) {
-                console.log(this.fileList1);
                 axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.activityImage1}}).then((response) => {
                   this.fileList1 = response.data;
                 });
