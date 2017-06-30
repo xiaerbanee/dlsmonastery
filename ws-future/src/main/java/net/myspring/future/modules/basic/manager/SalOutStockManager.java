@@ -62,7 +62,7 @@ public class SalOutStockManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public List<KingdeeSynReturnDto> synForGoodsOrder(GoodsOrder goodsOrder){
+    public KingdeeSynReturnDto synForGoodsOrder(GoodsOrder goodsOrder){
         if (StringUtils.isNotBlank(goodsOrder.getId())){
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
@@ -95,7 +95,7 @@ public class SalOutStockManager {
                     salOutStockDtoList.add(salOutStockDto);
                 }
             }
-            return cloudClient.synSalOutStock(salOutStockDtoList);
+            return cloudClient.synSalOutStock(salOutStockDtoList).get(0);
         }
         return null;
     }
