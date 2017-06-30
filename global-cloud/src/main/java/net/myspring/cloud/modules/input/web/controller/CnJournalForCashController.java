@@ -37,14 +37,16 @@ public class CnJournalForCashController {
 
     @RequestMapping(value = "save")
     public RestResponse save(CnJournalForCashForm cnJournalForCashForm) {
-        RestResponse restResponse;
+        RestResponse restResponse = new RestResponse();
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = cnJournalForCashService.save(cnJournalForCashForm,kingdeeBook,accountKingdeeBook);
-        if (kingdeeSynDto.getSuccess()){
-            restResponse = new RestResponse("现金日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
+        if (accountKingdeeBook != null) {
+            KingdeeSynDto kingdeeSynDto = cnJournalForCashService.save(cnJournalForCashForm, kingdeeBook, accountKingdeeBook);
+            if (kingdeeSynDto.getSuccess()) {
+                restResponse = new RestResponse("现金日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+            }
         }else {
-            throw new ServiceException("现金日记账失败："+kingdeeSynDto.getResult());
+            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
         }
         return restResponse;
     }

@@ -54,12 +54,12 @@ public class OppoService {
     private OppoCustomerSaleRepository oppoCustomerSaleRepository;
     @Autowired
     OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
-//    @Autowired
-//    private OppoCustomerSaleCountRepository oppoCustomerSaleCountRepository;
-//    @Autowired
-//    private OppoCustomerAfterSaleImeiRepository oppoCustomerAfterSaleImeiRepository;
-//    @Autowired
-//    private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
+    @Autowired
+    private OppoCustomerSaleCountRepository oppoCustomerSaleCountRepository;
+    @Autowired
+    private OppoCustomerAfterSaleImeiRepository oppoCustomerAfterSaleImeiRepository;
+    @Autowired
+    private OppoCustomerDemoPhoneRepository oppoCustomerDemoPhoneRepository;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -208,21 +208,18 @@ public class OppoService {
     }
 
     public List<OppoCustomerSaleCount>  findOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerSaleCounts;
-        return null;
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerSaleCounts;
     }
 
     public List<OppoCustomerAfterSaleImei> findOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerAfterSaleImeis;
-        return null;
+        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerAfterSaleImeis;
     }
 
     public List<OppoCustomerDemoPhone> findOppoCustomerDemoPhones(LocalDate dateStart, LocalDate dateEnd, String companyId){
-//        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
-//        return oppoCustomerDemoPhones;
-        return null;
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        return oppoCustomerDemoPhones;
     }
 
 }

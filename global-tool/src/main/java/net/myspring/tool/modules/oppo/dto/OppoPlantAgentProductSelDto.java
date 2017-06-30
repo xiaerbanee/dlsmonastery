@@ -1,5 +1,7 @@
 package net.myspring.tool.modules.oppo.dto;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 public class OppoPlantAgentProductSelDto {
     private String id;
     private String brandId;
@@ -19,6 +21,14 @@ public class OppoPlantAgentProductSelDto {
 
     public String getBrandId() {
         return brandId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setBrandId(String brandId) {

@@ -55,6 +55,11 @@
         <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')+'('+totalLeftQty+')'" sortable></el-table-column>
         <el-table-column prop="orderId" :label="$t('adApplyList.orderId')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
+        <el-table-column fixed="right" :label="$t('adApplyList.operation')">
+          <template scope="scope">
+            <div class="action" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
+          </template>
+        </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
@@ -132,6 +137,10 @@
           axios.get('api/ws/future/basic/product/findAdProductCodeAndAllowOrder').then((response) =>{
             this.productCode += response.data;
           });
+      },itemAction:function(id,action){
+        if(action=="edit") {
+          this.$router.push({ name: 'adApplyEditForm', query: { id: id }})
+        }
       },getTotalQty(content){
           if(content == null){
               return;
@@ -166,9 +175,9 @@
       this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
-        that.getAllowOrderProductCode();
       });
     },activated(){
+        this.getAllowOrderProductCode();
       this.initPromise.then(()=>{
         this.pageRequest();
       });

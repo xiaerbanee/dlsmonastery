@@ -6,6 +6,7 @@ import net.myspring.future.modules.layout.dto.ShopAllotDto
 import net.myspring.future.modules.layout.dto.ShopBuildDto
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery
 import net.myspring.future.modules.layout.web.query.ShopBuildQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,6 +50,9 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.fixtureType)) {
             sb.append("""  and t1.fixture_type = :fixtureType """)
         }
+        if(CollectionUtil.isNotEmpty(shopBuildQuery.idLists)){
+            sb.append("""  and t1.id in (:idLists) """)
+        }
         if (StringUtils.isNotEmpty(shopBuildQuery.shopId)) {
             sb.append("""  and t1.shop_id = :shopId """)
         }
@@ -61,6 +65,9 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
+        if (StringUtils.isNotEmpty(shopBuildQuery.lastModifiedBy)) {
+            sb.append("""  and t1.last_modified_by = :lastModifiedBy """)
+        }
         if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
             sb.append("""  and depot.office_id = :officeId """)
         }
@@ -69,6 +76,12 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         if (shopBuildQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date < :createdDateEnd """)
+        }
+        if (shopBuildQuery.lastModifiedDateStart != null) {
+            sb.append("""  and t1.last_modified_date >= :lastModifiedDateStart """)
+        }
+        if (shopBuildQuery.lastModifiedDateEnd != null) {
+            sb.append("""  and t1.last_modified_date < :lastModifiedDateEnd """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())

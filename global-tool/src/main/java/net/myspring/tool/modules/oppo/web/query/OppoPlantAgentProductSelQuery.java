@@ -8,38 +8,18 @@ import java.util.List;
  * Created by lihx on 2017/4/19.
  */
 public class OppoPlantAgentProductSelQuery {
-    private String id;
-    private String colorId;
-    private String colorName;
     private String itemDesc;
-    private Boolean itemNumber;
     private String productName;
-    private String lxProductName;
+    private String itemNumberStr;
+    private List<String> itemNumberList = Lists.newArrayList();
+    private List<String> productNameList = Lists.newArrayList();
 
-    private List<String> ids= Lists.newArrayList();
-
-    public String getId() {
-        return id;
+    public List<String> getProductNameList() {
+        return productNameList;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getColorId() {
-        return colorId;
-    }
-
-    public void setColorId(String colorId) {
-        this.colorId = colorId;
-    }
-
-    public String getColorName() {
-        return colorName;
-    }
-
-    public void setColorName(String colorName) {
-        this.colorName = colorName;
+    public void setProductNameList(List<String> productNameList) {
+        this.productNameList = productNameList;
     }
 
     public String getItemDesc() {
@@ -50,14 +30,6 @@ public class OppoPlantAgentProductSelQuery {
         this.itemDesc = itemDesc;
     }
 
-    public Boolean getItemNumber() {
-        return itemNumber;
-    }
-
-    public void setItemNumber(Boolean itemNumber) {
-        this.itemNumber = itemNumber;
-    }
-
     public String getProductName() {
         return productName;
     }
@@ -66,19 +38,19 @@ public class OppoPlantAgentProductSelQuery {
         this.productName = productName;
     }
 
-    public String getLxProductName() {
-        return lxProductName;
+    public String getItemNumberStr() {
+        return itemNumberStr;
     }
 
-    public void setLxProductName(String lxProductName) {
-        this.lxProductName = lxProductName;
+    public void setItemNumberStr(String itemNumberStr) {
+        this.itemNumberStr = itemNumberStr;
     }
 
-    public List<String> getIds() {
-        return ids;
+    public List<String> getItemNumberList() {
+        return itemNumberList;
     }
 
-    public void setIds(List<String> ids) {
-        this.ids = ids;
+    public void setItemNumberList(List<String> itemNumberList) {
+        this.itemNumberList = itemNumberList;
     }
 }

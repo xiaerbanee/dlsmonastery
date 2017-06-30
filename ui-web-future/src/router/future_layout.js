@@ -2,6 +2,7 @@ const adApplyList = r => require.ensure([], () => r(require('pages/future/layout
 const adApplyForm = r => require.ensure([], () => r(require('pages/future/layout/adApplyForm.vue')));
 const adApplyGoods = r => require.ensure([], () => r(require('pages/future/layout/adApplyGoods.vue')));
 const adApplyBillForm = r => require.ensure([], () => r(require('pages/future/layout/adApplyBillForm.vue')));
+const adApplyEditForm = r => require.ensure([], () => r(require('pages/future/layout/adApplyEditForm.vue')));
 const adGoodsOrderList = r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderList.vue')));
 const adGoodsOrderDetailList = r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderDetailList.vue')));
 const adGoodsOrderForm= r => require.ensure([], () => r(require('pages/future/layout/adGoodsOrderForm.vue')));
@@ -47,6 +48,7 @@ let routes = [
   {path:'/future/layout/adApplyForm',component:adApplyForm,name:'adApplyForm',meta: {menu:"adApplyList",keepAlive:true}},
   {path:'/future/layout/adApplyGoods',component:adApplyGoods,name:'adApplyGoods',meta: {menu:"adApplyList"}},
   {path:'/future/layout/adApplyBillForm',component:adApplyBillForm,name:'adApplyBillForm',meta: {menu:"adApplyList",keepAlive:true}},
+  {path:'/future/layout/adApplyEditForm',component:adApplyEditForm,name:'adApplyEditForm',meta: {menu:"adApplyList",keepAlive:true}},
   {path:'/future/layout/adGoodsOrderList',component:adGoodsOrderList,name:'adGoodsOrderList'},
   {path:'/future/layout/adGoodsOrderDetailList',component:adGoodsOrderDetailList,name:'adGoodsOrderDetailList'},
   {path:'/future/layout/adGoodsOrderForm',component:adGoodsOrderForm,name:'adGoodsOrderForm',meta: {menu:"adGoodsOrderList",keepAlive:true}},

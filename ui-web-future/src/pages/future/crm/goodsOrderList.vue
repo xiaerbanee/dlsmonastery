@@ -81,7 +81,7 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" :row-class-name="tableRowClassName" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
         <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
@@ -111,7 +111,11 @@
     </div>
   </div>
 </template>
-
+<style>
+  .el-table .danger-row {
+    background: #FF8888 !important;
+  }
+</style>
 <script>
   import officeSelect from 'components/basic/office-select'
   import depotSelect from 'components/future/depot-select'
@@ -138,15 +142,17 @@
     };
   },
   methods: {
-    tableRowClassName(row,index){
-      if(row.shopShouldGetAfterBill<0){
-        return "info-row";
-      }
-    },
     setSearchText() {
       this.$nextTick(function () {
         this.searchText = util.getSearchText(this.$refs.searchDialog);
       })
+    },
+    tableRowClassName(row, index) {
+      if (row.shopShouldGetAfterBill<= 0 && row.status==='待开单' && _.trim(row.shopCode) !== '') {
+        return "danger-row";
+      }else{
+        return "";
+      }
     },
     pageRequest() {
       this.pageLoading = true;
@@ -155,7 +161,6 @@
       util.setQuery("goodsOrderList",submitData);
       axios.get('/api/ws/future/crm/goodsOrder?'+qs.stringify(submitData)).then((response) => {
         this.page = response.data;
-        console.log(response.data)
         this.pageLoading = false;
       })
     },pageChange(pageNumber,pageSize) {
@@ -163,6 +168,7 @@
       this.formData.size = pageSize;
       this.pageRequest();
     },sortChange(column) {
+      console.log(column);
       this.formData.sort=util.getSort(column);
       this.formData.page=0;
       this.pageRequest();
@@ -209,9 +215,4 @@
     }
 };
 </script>
-<style>
-  .el-table .info-row {
-    background: #DB7093;
-  }
-</style>
 

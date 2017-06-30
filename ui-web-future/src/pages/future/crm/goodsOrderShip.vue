@@ -9,60 +9,67 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderShip.businessId')" prop="businessId">
-              <el-input v-model="inputForm.formatId"></el-input>
+            <el-form-item :label="$t('goodsOrderShip.businessId')">
+              <el-input v-model="formatId" @blur="formatIdChanged(formatId)"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.storeName')" prop="storeId">
-              {{goodsOrder.storeName}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
-              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner">
+            <div v-if="goodsOrder.id">
+              <el-form-item :label="$t('goodsOrderShip.storeName')">
+                {{goodsOrder.storeName}}
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
+              <textarea  v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner" >
               </textarea>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
-              <el-input type="textarea" v-model="inputForm.expressCodes" ></el-input>
-            </el-form-item>
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
+                <el-input type="textarea" v-model="inputForm.expressCodes" ></el-input>
+              </el-form-item>
+            </div>
+
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderShip.shopName')" prop="shopId">
-              {{goodsOrder.shopName}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.remarks')" prop="remarks">
-              {{inputForm.remarks}}
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.continueShip')" prop="continueShip">
-              <bool-radio-group v-model="continueShip"></bool-radio-group>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
-              <textarea v-model="inputForm.imeStr"  :rows="5" class="el-textarea__inner">
-              </textarea>
-            </el-form-item>
-            <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
-              <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="summary(true)">{{$t('goodsOrderShip.save')}}</el-button>
-            </el-form-item>
+            <div v-if="goodsOrder.id">
+              <el-form-item :label="$t('goodsOrderShip.shopName')">
+                {{goodsOrder.shopName}}
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.remarks')">
+                {{goodsOrder.remarks}}
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.continueShip')" prop="continueShip">
+                <bool-radio-group v-model="continueShip"></bool-radio-group>
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
+                <textarea v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner" >
+                </textarea>
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
+                <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" :disabled="submitDisabled" @click="summary(true)">{{$t('goodsOrderShip.save')}}</el-button>
+              </el-form-item>
+            </div>
           </el-col>
         </el-row>
-        <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" border  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
-          <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
-          <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
-            <template scope="scope">
-              <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="billQty"  :label="$t('goodsOrderShip.billQty')"></el-table-column>
-          <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
-          <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
-          <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
-          <el-table-column prop="leftQty" :label="$t('goodsOrderShip.leftQty')"></el-table-column>
-          <el-table-column prop="finish" :label="$t('goodsOrderShip.finish')" >
-            <template scope="scope">
-              <el-tag :type="scope.row.leftQty==0 ? 'primary' : 'danger'">{{scope.row.leftQty==0 | bool2str}}</el-tag>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div v-if="goodsOrder.id">
+          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;"  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+            <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
+            <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
+              <template scope="scope">
+                <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="billQty"  :label="$t('goodsOrderShip.billQty')"></el-table-column>
+            <el-table-column prop="returnQty" :label="$t('goodsOrderShip.returnQty')"></el-table-column>
+            <el-table-column prop="shippedQty" :label="$t('goodsOrderShip.shippedQty')"></el-table-column>
+            <el-table-column prop="shipQty" :label="$t('goodsOrderShip.shipQty')" ></el-table-column>
+            <el-table-column prop="leftQty" :label="$t('goodsOrderShip.leftQty')"></el-table-column>
+            <el-table-column prop="finish" :label="$t('goodsOrderShip.finish')" >
+              <template scope="scope">
+                <el-tag :type="scope.row.leftQty==0 ? 'primary' : 'danger'">{{scope.row.leftQty==0 | bool2str}}</el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-form>
     </div>
   </div>
@@ -93,27 +100,26 @@
         return{
           mediaNotify: mediaNotify,
           mediaSuccess: mediaSuccess,
-          continueShip:false,
+          continueShip:true,
           submitDisabled:false,
           inputForm:{},
+          formatId:'',
           goodsOrder:{},
           shipResult:{},
           rules: {}
         }
       },
       formSubmit() {
-        var that = this;
         axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
           this.$message(response.data.message);
-          if(!this.continueShip){
+          if(this.continueShip){
             Object.assign(this.$data, this.getData());
-            this.continueShip = true;
+            this.initPage("");
           } else {
-            Object.assign(this.$data, this.getData());
-            this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip"), params:{_closeFrom:true}})
+            this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}});
           }
         }).catch(()=> {
-          that.submitDisabled = false;
+          this.submitDisabled = false;
         });
       },
       summary(isSubmit){
@@ -178,15 +184,23 @@
             }
           }
         });
+      },initPage(formatId){
+        this.formatId = formatId;
+        axios.get('/api/ws/future/crm/goodsOrderShip/getForm').then((response)=>{
+          this.inputForm = response.data;
+          if(util.isNotBlank(formatId)){
+            axios.get('/api/ws/future/crm/goodsOrderShip/getShipByFormatId',{params: {formatId:formatId}}).then((response)=>{
+              util.copyValue(response.data,this.inputForm);
+              this.goodsOrder = response.data;
+            });
+          }
+        });
+      },formatIdChanged(formatId){
+        Object.assign(this.$data, this.getData());
+        this.initPage(formatId);
       }
     },created(){
-      axios.get('/api/ws/future/crm/goodsOrderShip/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/goodsOrderShip/getShip',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-          this.goodsOrder = response.data;
-        });
-      });
+      this.initPage(this.$route.query.formatId);
     }
   }
 </script>

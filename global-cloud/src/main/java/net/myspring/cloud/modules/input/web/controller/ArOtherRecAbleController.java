@@ -43,14 +43,18 @@ public class ArOtherRecAbleController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ArOtherRecAbleForm arOtherRecAbleForm) {
-        RestResponse restResponse = new RestResponse("", null, false);
+        RestResponse restResponse = new RestResponse();
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arOtherRecAbleService.save(arOtherRecAbleForm,kingdeeBook,accountKingdeeBook);
-        for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
-            if (kingdeeSynDto.getSuccess()) {
-                restResponse = new RestResponse("其他应收单成功：" + kingdeeSynDto.getBillNo(), null, true);
+        if (accountKingdeeBook != null) {
+            List<KingdeeSynDto> kingdeeSynDtoList = arOtherRecAbleService.save(arOtherRecAbleForm,kingdeeBook,accountKingdeeBook);
+            for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+                if (kingdeeSynDto.getSuccess()) {
+                    restResponse = new RestResponse("其他应收单成功：" + kingdeeSynDto.getBillNo(), null, true);
+                }
             }
+        }else{
+            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
         }
         return restResponse;
     }
@@ -59,8 +63,12 @@ public class ArOtherRecAbleController {
     public KingdeeSynReturnDto saveForShopDeposit(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto,kingdeeBook,accountKingdeeBook);
-        return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
+        if(accountKingdeeBook != null) {
+            KingdeeSynDto kingdeeSynDto = arOtherRecAbleService.saveForWS(arOtherRecAbleDto, kingdeeBook, accountKingdeeBook);
+            return BeanUtil.map(kingdeeSynDto, KingdeeSynReturnDto.class);
+        }else{
+            throw new ServiceException("您没有金蝶账号，不能开单");
+        }
     }
 
 }
