@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="shopDepositBatchForm"></head-tab>
+    <head-tab active="shopGoodsDepositBatchForm"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
@@ -40,7 +40,7 @@
             minSpareRows: 100,
             startRows: 100,
             startCols: 6,
-            colHeaders: [ '门店', '开单类型', '银行',  '部门','开单时间','市场保证金','形象保证金','演示机押金','备注'],
+            colHeaders: [ '门店', '银行',  '收款金额','部门','单据类型','备注'],
             columns: [{
               data:"depotName",
               type: 'autocomplete',
@@ -72,17 +72,10 @@
                 }
               },
               width:150
-            }, {
-              data:"billType",
-              type: "autocomplete",
-              allowEmpty: false,
-              strict: true,
-              width:200
             },{
               data:"bank",
               type: "autocomplete",
               allowEmpty: false,
-              strict: true,
               tempBankNames:[],
               source:function (query, process) {
                 var that = this;
@@ -110,34 +103,23 @@
               },
               width:200
             },{
+              data:'amount',
+              type:'text',
+              allowEmpty:false,
+              width:200
+            },{
               data:'departMent',
               type: 'autocomplete',
               strict: true,
               allowEmpty:true,
               width:200
-            }, {
-              data:'billDate',
-              type:'date',
-              dateFormat:'YYYY-MM-DD',
-              correctFormat: true,
-              allowEmpty:false,
-              width:150
-            }, {
-              data:"marketAmount",
-              type:'text',
-              allowEmpty:true,
-              width:120
-            }, {
-              data:'imageAmount',
-              type:'text',
-              allowEmpty:true,
-              width:120
-            }, {
-              data:'demoPhoneAmount',
-              type:'text',
-              allowEmpty:true,
-              width:120
             },{
+              data:'billType',
+              type: 'autocomplete',
+              strict: true,
+              allowEmpty:false,
+              width:200
+            }, {
               data:"remarks",
               type:"text",
               width: 120
@@ -173,14 +155,13 @@
           }
         })
       },initPage(){
-        axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
+        axios.get('/api/ws/future/crm/shopGoodsDeposit/getForm').then((response)=>{
           this.inputForm = response.data;
           var departmentList=new Array();
           for(let i in response.data.extra.departMentList){
             departmentList.push(response.data.extra.departMentList[i].ffullName)
           }
-            this.settings.columns[1].source=response.data.extra.outBillTypeList;
-            this.settings.columns[3].source=departmentList;
+          this.settings.columns[3].source=departmentList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }
