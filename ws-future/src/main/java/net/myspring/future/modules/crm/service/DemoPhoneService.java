@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,7 +82,7 @@ public class DemoPhoneService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "IMEI码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<DemoPhoneDto> demoPhoneDtos=demoPhoneRepository.findByFilter(demoPhoneQuery);
+        List<DemoPhoneDto> demoPhoneDtos=findPage(new PageRequest(0,10000),demoPhoneQuery).getContent();
         cacheUtils.initCacheInput(demoPhoneDtos);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("演示用机", demoPhoneDtos, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
