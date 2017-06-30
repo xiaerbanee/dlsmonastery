@@ -90,6 +90,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
         """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDto::class.java))
     }
 
+    //其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单
     fun findMainList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
@@ -273,6 +274,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
 
     }
 
+    //
     fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
@@ -328,6 +330,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
         """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
     }
 
+    //其他应收+收款单+收款退款单
     fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
