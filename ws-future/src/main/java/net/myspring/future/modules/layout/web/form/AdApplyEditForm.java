@@ -9,6 +9,7 @@ import net.myspring.future.modules.layout.domain.AdApply;
 public class AdApplyEditForm extends BaseForm<AdApply> {
 
     private String shopName;
+    private String productName;
     private Integer applyQty;
     private Integer confirmQty;
     private Integer billedQty;
@@ -20,6 +21,14 @@ public class AdApplyEditForm extends BaseForm<AdApply> {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public Integer getApplyQty() {

@@ -7,10 +7,12 @@
           <el-col :span="6">
             <el-form-item :label="$t('adApplyEditForm.shopName')">{{inputForm.shopName}}
             </el-form-item>
+            <el-form-item :label="$t('adApplyEditForm.productName')">{{inputForm.productName}}
+            </el-form-item>
             <el-form-item :label="$t('adApplyEditForm.applyQty')">{{inputForm.applyQty}}
             </el-form-item>
             <el-form-item :label="$t('adApplyEditForm.confirmQty')" prop="confirmQty">
-              <el-input v-model="inputForm.confirmQty" ></el-input>
+              <el-input v-model.number="inputForm.confirmQty" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('adApplyEditForm.billedQty')">{{inputForm.billedQty}}
             </el-form-item>
@@ -43,7 +45,7 @@
             extra:{}
           },
           rules: {
-            confirmQty: [{ required: true, message: this.$t('shopPrintForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
+            confirmQty: [{ required: true, message: this.$t('adApplyEditForm.prerequisiteMessage')},{type:"number",message:this.$t('adApplyEditForm.inputLegalValue')}],
           },
         }
       },

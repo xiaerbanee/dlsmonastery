@@ -82,12 +82,15 @@ export default {
   },
   adApplyEditForm:{
     shopName:"门店",
+    productName:"货品名称",
     applyQty:"申请开单数",
     confirmQty:"确认数",
     billedQty:"已开单数",
     leftQty:"待开单数",
     remarks:"备注",
-    save:"保存"
+    save:"保存",
+    prerequisiteMessage: "必填信息",
+    inputLegalValue: "请输入合法的数值",
   },
   adApplyGoods: {
     adApplyGoods: "POP分货",
@@ -636,6 +639,7 @@ export default {
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
+    idStrByComma:"输入单号,以逗号隔开",
     sure: "确定",
     loading: "拼命加载中",
     unicode: "编码",
@@ -651,6 +655,7 @@ export default {
     edit: "修改",
     delete: "删除",
     audit: "审核",
+    idStr:"单号",
   },
   shopDepositForm: {
     shopDepositForm: "押金列表编辑",
