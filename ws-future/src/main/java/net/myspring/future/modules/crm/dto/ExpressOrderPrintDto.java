@@ -3,8 +3,8 @@ package net.myspring.future.modules.crm.dto;
 import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -168,11 +168,11 @@ public class ExpressOrderPrintDto {
         if(StringUtils.isNotBlank(formatId)) {
             if(StringUtils.isNotBlank(extendType) && formatId != null) {
                 if(ExpressOrderTypeEnum.手机订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(formatId, "XK");
+                    formatId = IdUtils.getFormatId(formatId, "XK");
                 } else if (ExpressOrderTypeEnum.大库调拨.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(formatId, "CA");
+                    formatId = IdUtils.getFormatId(formatId, "CA");
                 } else if(ExpressOrderTypeEnum.物料订单.name().equals(extendType)) {
-                    formatId = StringUtils.getFormatId(formatId, "AK");
+                    formatId = IdUtils.getFormatId(formatId, "AK");
                 }
             }
         }
