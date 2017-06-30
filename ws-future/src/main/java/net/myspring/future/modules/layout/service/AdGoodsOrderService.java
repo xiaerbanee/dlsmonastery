@@ -397,7 +397,7 @@ public class AdGoodsOrderService {
         }
 
         if (Boolean.TRUE.equals(adGoodsOrderBillForm.getSyn())) {
-            synWhenBill(adGoodsOrder, expressOrder, detailList, productMap);
+            synWhenBill(adGoodsOrder,expressOrder);
         }
     }
 
@@ -516,8 +516,8 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(newAdGoodsOrder);
     }
 
-    private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder, List<AdGoodsOrderDetail> detailList, Map<String, Product> productMap) {
-        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder,expressOrder,detailList,productMap).get(0);
+    private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
+        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
         adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());

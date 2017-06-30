@@ -17,32 +17,23 @@
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input" wx:if="{{formProperty.shops.length > 1}}" bindtap="showError" data-key="shopId">
+      <view class="weui-cell weui-cell_input" wx:if="{{shops.length!=0}}" bindtap="showError" data-key="shopId">
         <view class="weui-cell__hd">
           <view class="weui-label">核销门店</view>
         </view>
-        <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="shopId" value="{{formData.shop.id}}" />
-          <picker value="{{formData.shop.id}}" bindtap="bindSaleShop">
-            <view class="weui-input">{{formData.shop.name}}
-              <image class="right_icon" src="/image/icons/right.png" />
-            </view>
+        <view class="weui-cell__bd">
+          <picker name="shopId" value="{{formData.id}}" range="{{shops}}" range-key="name" bindtap="bindSaleShop">
+            <view class="weui-input">{{formData.name}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
-          <icon type="warn" class="warn"></icon>
-        </view>
       </view>
-      <view class="weui-cell weui-cell_input" wx:elif="{{formProperty.shops.length == 1}}" bindtap="showError" data-key="shopId">
+      <view class="weui-cell weui-cell_input" wx:if="{{shops.length==0}}" bindtap="showError" data-key="shopId">
         <view class="weui-cell__hd">
           <view class="weui-label">核销门店</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="shopId" value="{{formProperty.shops[0].id}}" />
-          <view value="{{formProperty.shops[0].id}}" class="weui-input">{{formProperty.shops[0].name}}</view>
-        </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
-          <icon type="warn" class="warn"></icon>
+          <input class="hidden" name="shopId" value="{{productImeSearchResult[0].depotId}}" />
+          <view class="weui-input">{{productImeSearchResult[0].depotName}}</view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -53,41 +44,53 @@
           <input name="remarks" class="weui-input" value="{{formData.remarks}}" />
         </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="buyer">
         <view class="weui-cell__hd">
           <view class="weui-label">用户姓名</view>
         </view>
         <view class="weui-cell__bd">
           <input name="buyer" class="weui-input" />
         </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.buyer}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="buyerAge">
         <view class="weui-cell__hd">
           <view class="weui-label">年龄</view>
         </view>
         <view class="weui-cell__bd">
           <input name="buyerAge" class="weui-input" value="{{formData.buyerAge}}" />
         </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.buyerAge}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="buyerSex">
         <view class="weui-cell__hd">
           <view class="weui-label">性别</view>
         </view>
         <view class="weui-cell__bd">
-        <radio-group name="buyerSex" class="radio-group" >
-          <label class="weui-input">
-            <radio value="男"/>男
-            <radio value="女"/>女
-          </label>
+          <radio-group name="buyerSex" class="radio-group">
+            <label class="weui-input">
+              <radio value="男" />男
+              <radio value="女" />女
+            </label>
           </radio-group>
         </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.buyerSex}}">
+          <icon type="warn" class="warn"></icon>
+        </view>
       </view>
-      <view class="weui-cell weui-cell_input">
+      <view class="weui-cell weui-cell_input" bindtap="showError" data-key="buyerPhone">
         <view class="weui-cell__hd">
           <view class="weui-label">电话</view>
         </view>
         <view class="weui-cell__bd">
           <input name="buyerPhone" class="weui-input" value="{{formData.buyerPhone}}" />
+        </view>
+        <view class="weui-cell__ft" wx:if="{{response.data.buyerPhone}}">
+          <icon type="warn" class="warn"></icon>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">

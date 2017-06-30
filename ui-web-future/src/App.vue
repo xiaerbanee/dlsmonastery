@@ -36,7 +36,7 @@
             <template v-for="menuCategory in menuCategoryList" ：key="category.id">
               <el-submenu :index="menuCategory.id">
                 <template slot="title">{{$t('menus.menuCategory.' + menuCategory.code)}}</template>
-                <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu">
+                <el-menu-item :index="menu.code" v-for="(menu, index) in menuCategory.menuList"  :key="index" :route="menu" >
                   {{$t('menus.menu.' + menu.code)}}
                 </el-menu-item>
               </el-submenu>

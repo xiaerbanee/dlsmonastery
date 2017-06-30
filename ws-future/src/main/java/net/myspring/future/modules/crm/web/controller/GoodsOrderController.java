@@ -67,7 +67,7 @@ public class GoodsOrderController {
 
 
     @RequestMapping(value = "getForm")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
         goodsOrderForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
@@ -81,7 +81,6 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "validateShop")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public RestResponse validateShop(String shopId) {
         return goodsOrderService.validateShop(shopId);
     }
@@ -106,7 +105,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "getBill")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public GoodsOrderDto getBill(String id) {
         return goodsOrderService.getBill(id);
     }
