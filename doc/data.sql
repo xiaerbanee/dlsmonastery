@@ -251,6 +251,9 @@ update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.nam
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部文员') where t1.name='省公司财务出纳';
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部主管') where t1.name='财务部主管';
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='财务部主管') where t1.name='财务部部长';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='文员') where t1.name='办事处文员';
+update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='文员') where t1.name='直营部文员';
+
 
 update hr_position t1 set t1.role_id=(select t2.id from sys_role t2 where t2.name='业务') where (t1.role_id is NULL OR t1.role_id=1);
 DELETE FROM sys_role where id=7;
@@ -748,5 +751,11 @@ INSERT INTO `sys_role_permission` VALUES ('602', '25', '864', '1', '2017-06-29 1
 INSERT INTO `sys_role_permission` VALUES ('603', '25', '865', '1', '2017-06-29 15:50:35', '1', '2017-06-29 15:50:35', '', '0', '0', '1');
 INSERT INTO `sys_role_permission` VALUES ('604', '25', '866', '1', '2017-06-29 15:50:35', '1', '2017-06-29 15:50:35', '', '0', '0', '1');
 
-INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_idjoint_level)VALUES('总公司内销部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
-INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_idjoint_level)VALUES('总公司财务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level)VALUES('总公司内销部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level)VALUES('总公司财务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level)VALUES('总公司仓储部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
+
+update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司内销部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("内销部文员","内销部主管","内销部部长"));
+update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司财务部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("财务部主管","财务部专员","财务部部长","省公司财务出纳"));
+update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司仓储部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("仓储部专员","仓储部主管"));
+
