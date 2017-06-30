@@ -6,7 +6,7 @@
         <su-alert type="success" :text="productCode"> </su-alert>
       </el-row>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adApply:edit'">{{$t('adApplyList.adApplyForm')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adApply:bill'">{{$t('adApplyList.adApplyForm')}}</el-button>
         <el-button type="primary" @click="itemBillAdd" icon="plus" v-permit="'crm:adApply:bill'">{{$t('adApplyList.adApplyBillForm')}}</el-button>
         <el-button type="primary" @click="grain" icon="plus" v-permit="'crm:adApply:goods'">{{$t('adApplyList.adApplyGoods')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adApply:view'">{{$t('adApplyList.filter')}}</el-button>

@@ -57,13 +57,13 @@ public class  AdGoodsOrderController {
     private RedisTemplate redisTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public Page<AdGoodsOrderDto> list(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         return adGoodsOrderService.findPage(pageable,adGoodsOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
         adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
@@ -71,14 +71,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "audit")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:audit')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:edit')")
     public RestResponse audit(AdGoodsOrderAuditForm adGoodsOrderAuditForm) {
         adGoodsOrderService.audit(adGoodsOrderAuditForm);
         return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "outShopChange", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public String outShopChange(AdGoodsOrder adGoodsOrder) {
         Map<String, Object> map = Maps.newHashMap();
 
@@ -87,14 +87,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findDto")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public AdGoodsOrderDto findDto(String id){
         return adGoodsOrderService.findDto(id);
     }
 
 
     @RequestMapping(value = "getForm", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public AdGoodsOrderForm getForm(AdGoodsOrderForm adGoodsOrderForm) {
 //        adGoodsOrderForm.setE
 //        adGoodsOrderForm = adGoodsOrderService.getForm(adGoodsOrderForm);
@@ -103,13 +103,13 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getShipForm")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public AdGoodsOrderShipForm getShipForm(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         return adGoodsOrderShipForm;
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:edit')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:edit')")
     public RestResponse save(AdGoodsOrderForm adGoodsOrderForm) {
         if(CollectionUtil.isEmpty(adGoodsOrderForm.getAdGoodsOrderDetailList())){
             throw new ServiceException("请录入柜台订货明细");
@@ -120,7 +120,7 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getBillFormProperty", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public String getBillFormProperty(AdGoodsOrder adGoodsOrder) {
         Map<String, Object> map = Maps.newHashMap();
         map.put("type", "标准出库单");
@@ -128,7 +128,7 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "getBillForm")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public AdGoodsOrderBillForm getBillForm(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         adGoodsOrderBillForm.getExtra().put("adStoreList",depotService.findAdStoreDtoList() );
@@ -143,14 +143,14 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "bill")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:bill')")
     public RestResponse bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
         adGoodsOrderService.bill(adGoodsOrderBillForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getYsyfMap")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public Map<String, Object> getYsyfMap(String adGoodsOrderId) {
         if(StringUtils.isBlank(adGoodsOrderId)){
             return null;
@@ -160,52 +160,52 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "ship")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:ship')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:ship')")
     public RestResponse ship(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         adGoodsOrderService.ship(adGoodsOrderShipForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "sign")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:sign')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:sign')")
     public RestResponse sign(String id) {
         adGoodsOrderService.sign(id);
         return new RestResponse("签收成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "print")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:print')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:print')")
     public AdGoodsOrderDto print(String id) {
         return adGoodsOrderService.print(id);
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:delete')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:delete')")
     public RestResponse delete(AdGoodsOrderForm adGoodsOrderForm) {
         adGoodsOrderService.logicDelete(adGoodsOrderForm.getId());
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:edit')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:edit')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
     }
 
     @RequestMapping(value = "findDetailListForBill")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:bill')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
     }
 
     @RequestMapping(value = "findDetailListByAdGoodsOrderId")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListByAdGoodsOrderId(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListByAdGoodsOrderId(adGoodsOrderId);
     }
 
     @RequestMapping(value="export")
-    @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public ModelAndView export(AdGoodsOrderQuery adGoodsOrderQuery) throws IOException{
         return new ModelAndView(new ExcelView(),"simpleExcelBook",adGoodsOrderService.export(adGoodsOrderQuery));
     }
