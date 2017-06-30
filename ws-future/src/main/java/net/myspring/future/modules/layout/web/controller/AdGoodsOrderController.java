@@ -22,6 +22,7 @@ import net.myspring.future.modules.layout.web.form.AdGoodsOrderForm;
 import net.myspring.future.modules.layout.web.form.AdGoodsOrderShipForm;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.elasticsearch.xpack.notification.email.Account;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -203,8 +206,8 @@ public class  AdGoodsOrderController {
 
     @RequestMapping(value="export")
     @PreAuthorize("hasPermission(null,'layout:adGoodsOrder:view')")
-    public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
-        return adGoodsOrderService.export(adGoodsOrderQuery);
+    public ModelAndView export(AdGoodsOrderQuery adGoodsOrderQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",adGoodsOrderService.export(adGoodsOrderQuery));
     }
 
 

@@ -22,6 +22,7 @@ import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
@@ -47,6 +48,7 @@ import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +101,8 @@ public class AdGoodsOrderService {
     private CloudClient cloudClient;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private SalOutStockManager salOutStockManager;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         Page<AdGoodsOrderDto> page = adGoodsOrderRepository.findPage(pageable, adGoodsOrderQuery);
@@ -513,35 +517,7 @@ public class AdGoodsOrderService {
     }
 
     private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder, List<AdGoodsOrderDetail> detailList, Map<String, Product> productMap) {
-
-        Depot depot = depotRepository.findOne(adGoodsOrder.getOutShopId());
-        Client client = clientRepository.findOne(depot.getId());
-        DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
-
-        SalOutStockDto salOutStockDto = new SalOutStockDto();
-        salOutStockDto.setExtendId(adGoodsOrder.getId());
-        salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
-        salOutStockDto.setDate(adGoodsOrder.getBillDate());
-        salOutStockDto.setCustomerNumber(client.getOutCode());
-        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+expressOrder.getContator()+CharConstant.COMMA+expressOrder.getMobilePhone()+CharConstant.COMMA+expressOrder.getAddress());
-
-        List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-        for(AdGoodsOrderDetail adGoodsOrderDetail:detailList){
-            SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-            entityDto.setStockNumber(depotStore.getOutCode());
-            entityDto.setMaterialNumber(productMap.get(adGoodsOrderDetail.getProductId()).getCode());
-            entityDto.setQty(adGoodsOrderDetail.getBillQty());
-            // 是否赠品 赠品，电教，imoo 广告办事处的以原价出库
-            if(BillTypeEnum.配件赠品.name().equals(adGoodsOrder.getBillType())){//或者是电教公司,而且的depot必须是金蝶里有的
-                entityDto.setPrice(productMap.get(adGoodsOrderDetail.getProductId()).getPrice2());//产品价格
-            }else{
-                entityDto.setPrice(BigDecimal.ZERO);
-            }
-            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+expressOrder.getContator()+CharConstant.COMMA+expressOrder.getMobilePhone()+CharConstant.COMMA+expressOrder.getAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
-            entityDtoList.add(entityDto);
-        }
-        salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-        KingdeeSynReturnDto kingdeeSynReturnDto = cloudClient.synSalOutStock(Collections.singletonList(salOutStockDto)).get(0);
+        KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder,expressOrder,detailList,productMap).get(0);
 
         adGoodsOrder.setCloudSynId(kingdeeSynReturnDto.getId());
         adGoodsOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
@@ -552,37 +528,6 @@ public class AdGoodsOrderService {
 
     }
 
-    //销售出库单成功示例
-    private List<KingdeeSynReturnDto> batchSynToCloudTest(){
-        List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
-        SalOutStockDto salOutStockDto = new SalOutStockDto();
-        salOutStockDto.setExtendId("1");
-        salOutStockDto.setExtendType(ExtendTypeEnum.POP征订.name());
-        salOutStockDto.setDate(LocalDate.now());
-        salOutStockDto.setCustomerNumber("00001");
-        salOutStockDto.setNote("模拟测试");
-
-        List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-        SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-        entityDto.setStockNumber("G00201");
-        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
-        entityDto.setQty(1);
-        entityDto.setPrice(BigDecimal.TEN);
-        entityDto.setEntryNote("模拟测试");
-        entityDtoList.add(entityDto);
-        salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-        salOutStockDtoList.add(salOutStockDto);
-        return cloudClient.synSalOutStock(salOutStockDtoList);
-
-    }
-
-
-    private String getFormatId(AdGoodsOrder adGoodsOrder) {
-        if(StringUtils.isBlank(adGoodsOrder.getParentId()) || adGoodsOrder.getParentId().equals(adGoodsOrder.getId())){
-            return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getId());
-        }
-        return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
-    }
 
     private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
@@ -712,7 +657,7 @@ public class AdGoodsOrderService {
 
     }
 
-    public String export(AdGoodsOrderQuery adGoodsOrderQuery) {
+    public SimpleExcelBook export(AdGoodsOrderQuery adGoodsOrderQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -777,11 +722,8 @@ public class AdGoodsOrderService {
         cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("订单明细", adGoodsOrderDetailExportDtoList, adGoodsOrderDetailColumnList));
 
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "物料订货数据" + LocalDate.now() + ".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"物料订货数据"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheetList);
     }
 
     public Map<String, Object> getYsyfMap(String adGoodsOrderId) {
