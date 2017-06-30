@@ -1,12 +1,9 @@
 <template>
   <div>
     <head-tab active="goodsOrderForm"></head-tab>
-    <el-row v-if="alertError">
-      <el-col :span="24">
-        <el-alert v-html="error" title="" type="error" :closable="true"></el-alert>
-      </el-col>
-    </el-row>
+
     <div>
+      <su-alert  :text="warnMsg"  type="warning"></su-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row>
           <el-col :span="12">
@@ -96,8 +93,8 @@
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
           pageLoading:false,
-          alertError:false,
           filterValue:'',
+          warnMsg:'',
           goodsOrder:{},
           filterDetailList:[],
           goodsOrderDetailList:[],
@@ -115,35 +112,26 @@
         }
       },
       formSubmit(){
-        var that = this;
         this.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            var  goodsOrderDetailFormList = new Array();
-            for(var index in this.filterDetailList) {
-              var filterDetail = this.filterDetailList[index];
-              if(util.isNotBlank(filterDetail.id) || util.isNotBlank(filterDetail.qty)) {
-                goodsOrderDetailFormList.push(filterDetail);
-              }
-            }
-            var submitData= util.deleteExtra(this.inputForm);
-            submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
+            let submitData= util.deleteExtra(this.inputForm);
+            submitData.goodsOrderDetailFormList = this.getDetailListForSubmit();
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            if(that.isCreate){
-              Object.assign(this.$data, this.getData());
-              this.initPage();
-            }else{
-              this.submitDisabled = false;
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
-            }
-          }).catch(()=> {
-              that.submitDisabled = false;
+              if(this.isCreate){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              }else{
+                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
+              }
+            }).catch(()=> {
+                this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
-      }
+          }
       })
       },filterProducts(){
         if(!this.goodsOrderDetailList){
@@ -164,10 +152,32 @@
         }
         this.filterDetailList = tempList;
       },shopChange(){
+          if(this.isCreate && util.isNotBlank(this.inputForm.shopId)){
+            axios.get('/api/ws/future/crm/goodsOrder/validateShop',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
+              let tmpMsg = '';
+              for(let each of response.data.errors) {
+                tmpMsg = tmpMsg + each.message + "<br/>";
+              }
+
+              this.warnMsg = tmpMsg;
+            });
+          }else{
+            this.warnMsg='';
+          }
+
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
           this.shop = response.data;
         });
         this.refreshDetailList();
+      },
+      getDetailListForSubmit(){
+        let  tmpList = [];
+        for(let detail of this.goodsOrderDetailList) {
+          if(util.isNotBlank(detail.id) || util.isNotBlank(detail.qty)) {
+            tmpList.push(detail);
+          }
+        }
+        return tmpList;
       },
       netTypeChange(){
           if(this.inputForm.netType!=='联信'){

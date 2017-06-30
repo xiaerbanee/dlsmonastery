@@ -28,6 +28,8 @@ interface AdGoodsOrderRepository : BaseRepository<AdGoodsOrder,String>,AdGoodsOr
         t1.billDate = ?1
     """)
     fun findMaxBusinessId(billDate: LocalDate): String
+
+    fun findByBusinessIdIn(businessIdList:MutableList<String>):MutableList<AdGoodsOrder>
 }
 
 interface AdGoodsOrderRepositoryCustom{

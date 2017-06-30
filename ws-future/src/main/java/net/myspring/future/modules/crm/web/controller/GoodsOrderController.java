@@ -87,6 +87,12 @@ public class GoodsOrderController {
         return goodsOrderService.findDetailList(id,shopId,netType,shipType);
     }
 
+    @RequestMapping(value = "validateShop")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    public RestResponse validateShop(String shopId) {
+        return goodsOrderService.validateShop(shopId);
+    }
+
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
@@ -118,10 +124,20 @@ public class GoodsOrderController {
         if(CollectionUtil.isEmpty(goodsOrderBillForm.getGoodsOrderBillDetailFormList())){
             throw new ServiceException("开单明细不能为空");
         }
+        Integer totalBillQty = 0;
         for(GoodsOrderBillDetailForm goodsOrderBillDetailForm : goodsOrderBillForm.getGoodsOrderBillDetailFormList()){
             if(goodsOrderBillDetailForm.getPrice()==null || goodsOrderBillDetailForm.getPrice().compareTo(BigDecimal.ZERO)<0){
-                throw new ServiceException("开单明细的单价必须大于等于0");
+                throw new ServiceException("开单明细里的单价必填且不能小于0");
             }
+            if(goodsOrderBillDetailForm.getBillQty()!=null && goodsOrderBillDetailForm.getBillQty()<0){
+                throw new ServiceException("开单明细里的数量不能小于0");
+            }
+            if(goodsOrderBillDetailForm.getBillQty() !=null){
+                totalBillQty = totalBillQty + goodsOrderBillDetailForm.getBillQty();
+            }
+        }
+        if(totalBillQty == 0){
+            throw new ServiceException("总开单数量必须大于0");
         }
         goodsOrderService.bill(goodsOrderBillForm);
         return new RestResponse("开单成功", ResponseCodeEnum.saved.name());

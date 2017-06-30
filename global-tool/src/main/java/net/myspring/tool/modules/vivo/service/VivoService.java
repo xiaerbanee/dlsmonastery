@@ -134,7 +134,6 @@ public class VivoService {
 
     //查询电子保卡
     @LocalDataSource
-    @Transactional(readOnly = false)
     public String pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
         List<VivoPlantElectronicsn> list = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {

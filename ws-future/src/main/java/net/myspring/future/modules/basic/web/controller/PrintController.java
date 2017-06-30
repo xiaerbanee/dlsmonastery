@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Maps;
 import net.myspring.future.modules.basic.service.PrintService;
 import net.myspring.future.modules.basic.web.form.PrintConfigForm;
+import net.myspring.future.modules.basic.web.query.PrintConfigQuery;
 import net.myspring.future.modules.crm.dto.ExpressOrderPrintDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,8 @@ public class PrintController {
     }
 
     @RequestMapping(value = "orderList")
-    public List<ExpressOrderPrintDto> orderList(PrintConfigForm printConfigForm) {
-        return printService.findOrderList(printConfigForm);
+    public List<ExpressOrderPrintDto> orderList(PrintConfigQuery printConfigQuery) {
+        return printService.findOrderList(printConfigQuery);
     }
 
     //快递打印

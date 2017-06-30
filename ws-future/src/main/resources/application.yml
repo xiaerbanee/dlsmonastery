@@ -25,6 +25,10 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:1000/eureka/
 
+feign:
+  httpclient:
+    enabled: true
+
 security:
   oauth2:
     client:

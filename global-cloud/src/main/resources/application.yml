@@ -34,6 +34,9 @@ security:
       scope: server
     resource:
       user-info-uri: http://localhost:1100/uaa/user
+feign:
+  httpclient:
+    enabled: true
 
 
 ribbon:

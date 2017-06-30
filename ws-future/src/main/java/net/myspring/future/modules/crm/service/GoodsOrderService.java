@@ -6,11 +6,9 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.kingdee.domain.StkInventory;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.enums.JointLevelEnum;
@@ -47,12 +45,10 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
-import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -66,8 +62,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -145,7 +143,6 @@ public class GoodsOrderService {
         return page;
     }
 
-    //检测门店
     public RestResponse validateShop(String shopId) {
         Depot shop = depotRepository.findOne(shopId);
         RestResponse restResponse = new RestResponse("有效门店", ResponseCodeEnum.valid.name(),true);
@@ -427,7 +424,6 @@ public class GoodsOrderService {
                     GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
                     goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
                     goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailDto.setAllowOrder(allowOrder);
                     goodsOrderDetailDtoList.add(goodsOrderDetailDto);
                 }
             }
@@ -447,6 +443,7 @@ public class GoodsOrderService {
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
             Product product= productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setProductName(product.getName());
+            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder() && product.getAllowBill());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setAreaQty(areaDetailMap.get(product.getId()));
         }
