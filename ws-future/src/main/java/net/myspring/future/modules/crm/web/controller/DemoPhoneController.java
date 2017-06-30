@@ -3,23 +3,14 @@ package net.myspring.future.modules.crm.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.basic.domain.DemoPhoneType;
-import net.myspring.future.modules.basic.dto.DemoPhoneTypeDto;
-import net.myspring.future.modules.basic.service.DemoPhoneTypeService;
 import net.myspring.future.modules.crm.domain.DemoPhone;
-import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.DemoPhoneDto;
-import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.service.DemoPhoneService;
-import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.DemoPhoneForm;
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.StringUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import net.myspring.util.excel.ExcelView;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/demoPhone")
@@ -37,9 +26,6 @@ public class DemoPhoneController {
 
     @Autowired
     private DemoPhoneService demoPhoneService;
-
-    @Autowired
-    private DemoPhoneTypeService demoPhoneTypeService;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -81,11 +67,7 @@ public class DemoPhoneController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(DemoPhoneQuery demoPhoneQuery) throws IOException{
-        Workbook workbook = new SXSSFWorkbook(10000);
-        return demoPhoneService.findSimpleExcelSheets(workbook,demoPhoneQuery);
-    }
-    private List<String> getActionList(DemoPhone demoPhone) {
-        return null;
+    public ModelAndView export(DemoPhoneQuery demoPhoneQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",demoPhoneService.export(demoPhoneQuery));
     }
 }
