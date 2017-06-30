@@ -51,3 +51,6 @@ ribbon:
 
 logging:
   file: ws-future.log
+
+setting:
+    adminIdList:  1
