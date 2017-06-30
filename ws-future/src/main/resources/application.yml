@@ -53,4 +53,4 @@ logging:
   file: ws-future.log
 
 setting:
-    adminIdList:  1
+  adminIdList:  1
