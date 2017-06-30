@@ -37,4 +37,10 @@ public class PrintController {
         map.put("success",true);
         return map;
     }
+
+    @RequestMapping(value = "loginInfo")
+    public Map<String,Object> loginInfo() {
+        Map<String,Object> map = Maps.newHashMap();
+        return map;
+    }
 }
