@@ -72,7 +72,7 @@
         </el-row>
       </el-form>
       <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
-      <el-table :data="filterDetailList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
+      <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
         <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
@@ -84,12 +84,12 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @change="initSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.billQty" @input="initSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.price" @change="initSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.price" @input="initSummary()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="hasIme" :label="$t('goodsOrderBill.hasIme')" >
@@ -134,29 +134,20 @@
     },
     methods:{
       formSubmit(){
-        var that=this;
-        that.submitDisabled = true;
-        var form = this.$refs["inputForm"];
+        this.submitDisabled = true;
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            var submitData = util.deleteExtra(this.inputForm);
-            var  goodsOrderBillDetailFormList = new Array();
-            for(var index in this.filterDetailList) {
-              var filterDetail = this.filterDetailList[index];
-              if(util.isNotBlank(filterDetail.id) || util.isNotBlank(filterDetail.billQty)) {
-                goodsOrderBillDetailFormList.push(filterDetail);
-              }
-            }
-            submitData.goodsOrderBillDetailFormList = goodsOrderBillDetailFormList;
+            let submitData = util.deleteExtra(this.inputForm);
+            submitData.goodsOrderBillDetailFormList = this.getDetailListForSubmit();
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false;
               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch( () => {
+              this.submitDisabled = false;
             });
           }else{
-            that.submitDisabled = false;
+            this.submitDisabled = false;
           }
         })
 
@@ -215,6 +206,15 @@
               }
             }
           });
+      },
+      getDetailListForSubmit(){
+        let  tmpList = [];
+        for(let detail of this.inputForm.goodsOrderDetailList) {
+          if(util.isNotBlank(detail.id) || util.isNotBlank(detail.billQty)) {
+            tmpList.push(detail);
+          }
+        }
+        return tmpList;
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{

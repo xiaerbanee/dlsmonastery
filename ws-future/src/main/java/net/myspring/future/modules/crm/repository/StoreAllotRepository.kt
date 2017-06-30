@@ -33,6 +33,8 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
         """)
     fun findMaxBusinessId(createdDate: LocalDateTime): String
 
+    fun findByBusinessIdIn(businessIdList:MutableList<String>):MutableList<StoreAllot>
+
 
 }
 

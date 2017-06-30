@@ -91,8 +91,8 @@
     methods:{
       getData() {
         return{
-          mediaNotify: null,
-          mediaSuccess: null,
+          mediaNotify: mediaNotify,
+          mediaSuccess: mediaSuccess,
           continueShip:false,
           submitDisabled:false,
           inputForm:{},

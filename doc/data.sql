@@ -51,8 +51,8 @@ WHERE
 
 	update hr_position t1,db_oppo_test.hr_position t2 set t1.role_id=t2.role_id where t1.`name`=t2.`name`;
 
-  delete FROM  sys_company_config where code in ("COMPANY_NAME","DEFAULT_PROVINCE_ID","EXPRESS_PRINT_QTY");
-	INSERT into sys_company_config SELECT t1.* FROM db_oppo_test.sys_company_config t1 where t1.code in ("COMPANY_NAME","DEFAULT_PROVINCE_ID","EXPRESS_PRINT_QTY");
+  delete FROM  sys_company_config where code in ("COMPANY_NAME","DEFAULT_PROVINCE_ID","EXPRESS_PRINT_QTY","MERGE_STORE_IDS","PRODUCT_NAME");
+	INSERT into sys_company_config SELECT t1.* FROM db_oppo_test.sys_company_config t1 where t1.code in ("COMPANY_NAME","DEFAULT_PROVINCE_ID","EXPRESS_PRINT_QTY","MERGE_STORE_IDS","PRODUCT_NAME");
 
 	INSERT INTO sys_menu (
 	id,
@@ -747,3 +747,6 @@ INSERT INTO `sys_role_permission` VALUES ('601', '25', '863', '1', '2017-06-29 1
 INSERT INTO `sys_role_permission` VALUES ('602', '25', '864', '1', '2017-06-29 15:50:35', '1', '2017-06-29 15:50:35', '', '0', '0', '1');
 INSERT INTO `sys_role_permission` VALUES ('603', '25', '865', '1', '2017-06-29 15:50:35', '1', '2017-06-29 15:50:35', '', '0', '0', '1');
 INSERT INTO `sys_role_permission` VALUES ('604', '25', '866', '1', '2017-06-29 15:50:35', '1', '2017-06-29 15:50:35', '', '0', '0', '1');
+
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_idjoint_level)VALUES('总公司内销部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_idjoint_level)VALUES('总公司财务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级');

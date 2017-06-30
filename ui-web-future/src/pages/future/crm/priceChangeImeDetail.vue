@@ -76,7 +76,6 @@
             if (valid) {
                 this.inputForm.image = util.getFolderFileIdStr(this.fileList)
                 util.copyValue(this.inputForm,this.submitData);
-                console.log(this.submitData);
               this.inputForm.image = util.getFolderFileIdStr(this.fileList);
               if(this.action==='upload'){
                 this.url = '/api/ws/future/crm/priceChangeIme/imageUpload';
