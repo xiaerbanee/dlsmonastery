@@ -103,7 +103,6 @@ public class OppoController {
 
     //运营商属性上抛
     @RequestMapping(value = "pullCustomerOperatortype", method = RequestMethod.GET)
-    @ResponseBody
     public String pullOppoCustomerOperatortype(String key, String createdDate, HttpServletResponse response, Model model) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
@@ -122,7 +121,6 @@ public class OppoController {
 
     //发货退货调拨数据上抛
     @RequestMapping(value ="pullCustomerAllot", method = RequestMethod.GET)
-    @ResponseBody
     public String pullOppoCustomersAllot(String key, String dateStart, String dateEnd, HttpServletResponse response, Model model) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
@@ -143,7 +141,6 @@ public class OppoController {
 
     //库存数据上抛
     @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerStock(String key,String createdDate,HttpServletResponse response, Model model)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
@@ -166,9 +163,9 @@ public class OppoController {
 
     //门店条码调拨明细上抛
     @RequestMapping(value ="pullCustomerImeStock", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerImeStock(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
-        String factoryAgentName="M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){
@@ -186,9 +183,9 @@ public class OppoController {
 
     //店总数据上抛
     @RequestMapping(value ="pullCustomerSale", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerSale(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model) {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage = new OppoResponseMessage();
         if (!localKey.equals(key)) {
@@ -206,9 +203,9 @@ public class OppoController {
 
     //门店销售明细
     @RequestMapping(value ="pullCustomerSaleIme", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerSaleIme(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){
@@ -226,9 +223,9 @@ public class OppoController {
 
     //门店销售数据汇总
     @RequestMapping(value ="pullCustomerSaleCount", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerSaleCount(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){
@@ -246,9 +243,9 @@ public class OppoController {
 
     //门店售后零售退货条码数据
     @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){
@@ -266,9 +263,9 @@ public class OppoController {
 
     //演示机条码数据
     @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
-    @ResponseBody
     public String pullCustomerDemoPhone(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
-        String factoryAgentName = "M13AMB";
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
         OppoResponseMessage responseMessage=new OppoResponseMessage();
         if(!localKey.equals(key)){

@@ -28,10 +28,10 @@ class OppoCustomerSaleImeiRepositoryImpl @Autowired constructor(val namedParamet
                     sa.buyer as custname,
                     sa.buyer_phone as custmobile,
                     sa.buyer_sex as custsex,
-                    sa.created_by as accountId,
+                    sa.employee_id as salepromoter ,
                     de.id as shopcode,
                     de.name as shopname,
-                    de.district_id as districtId
+                    de.district_id as province
             from
                     crm_product_ime_sale sa,
                     crm_product_ime im,
@@ -44,6 +44,7 @@ class OppoCustomerSaleImeiRepositoryImpl @Autowired constructor(val namedParamet
                     and sa.is_back = 0
                     and sa.enabled = 1
                     and sa.company_id = :companyId
+             order by sa.shop_id asc
                 """, paramMap, BeanPropertyRowMapper(OppoCustomerSaleImei::class.java));
     }
 }

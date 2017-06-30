@@ -14,7 +14,7 @@ public class OppoCustomerSale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String customerid;
-    private LocalDate date;
+    private LocalDateTime date;
     private Long totalSaleQty;
     @JsonIgnore
     private LocalDateTime createdDate;
@@ -35,11 +35,11 @@ public class OppoCustomerSale {
         this.customerid = customerid;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

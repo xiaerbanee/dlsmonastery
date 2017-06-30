@@ -3,12 +3,12 @@ package net.myspring.tool.modules.oppo.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.tool.common.client.OfficeClient;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.tool.common.client.*;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.DistrictEntity;
+import net.myspring.tool.common.domain.EmployeeEntity;
 import net.myspring.tool.common.domain.OfficeEntity;
-import net.myspring.tool.common.client.CustomerClient;
-import net.myspring.tool.common.client.DistrictClient;
 import net.myspring.tool.modules.oppo.client.OppoClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.common.dto.CustomerDto;
@@ -46,6 +46,10 @@ public class OppoPushSerivce {
     @Autowired
     private OfficeClient officeClient;
     @Autowired
+    private EmployeeClient employeeClient;
+    @Autowired
+    private CompanyConfigClient companyConfigClient;
+    @Autowired
     private OppoPlantAgentProductSelRepository oppoPlantAgentProductSelRepository;
     @Autowired
     private OppoCustomerRepository oppoCustomerRepository;
@@ -55,6 +59,13 @@ public class OppoPushSerivce {
     private OppoCustomerAllotRepository oppoCustomerAllotRepository;
     @Autowired
     private OppoCustomerStockRepository oppoCustomerStockRepository;
+    @Autowired
+    private OppoCustomerImeiStockRepository oppoCustomerImeiStockRepository;
+    @Autowired
+    private OppoCustomerSaleRepository oppoCustomerSaleRepository;
+    @Autowired
+    private OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
+
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -234,9 +245,10 @@ public class OppoPushSerivce {
                 if(!oppoCustomerStockHashMap.containsKey(key)){
                     OppoCustomerStock customerStock = new OppoCustomerStock();
                     customerStock.setCustomerid(customerId);
-                    customerStock.setDate(dateStart);
+                    customerStock.setDate(oppoCustomerStock.getDate());
                     customerStock.setProductcode(productColorMap.get(oppoCustomerStock.getProductcode()));
                     customerStock.setQty(0);
+                    customerStock.setCreatedDate(LocalDateTime.now());
                     oppoCustomerStockHashMap.put(key, customerStock);
                 }
                 oppoCustomerStockHashMap.get(key).setQty(oppoCustomerStockHashMap.get(key).getQty() + oppoCustomerStock.getQty());
@@ -253,17 +265,20 @@ public class OppoPushSerivce {
     public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
-        List<OppoCustomerImeiStock> oppoCustomerImeiStocks = Lists.newArrayList();
         Map<String, String> productColorMap = getProductColorMap();
+       logger.info("dateStart==="+dateStart+"\tdateEnd=="+dateEnd);
         List<OppoCustomerImeiStock> oppoCustomerImeiStockList=oppoClient.findOppoCustomerImeiStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        logger.info("oppoCustomerImeiStockList==="+oppoCustomerImeiStockList.toString());
         for(OppoCustomerImeiStock oppoCustomerImeiStock:oppoCustomerImeiStockList){
             oppoCustomerImeiStock.setCustomerid(oppoCustomerImeiStock.getCustomerid());
             oppoCustomerImeiStock.setProductcode(productColorMap.get(oppoCustomerImeiStock.getProductcode()));
             oppoCustomerImeiStock.setImei(oppoCustomerImeiStock.getImei());
-            oppoCustomerImeiStock.setDate(dateStart);
+            oppoCustomerImeiStock.setDate(oppoCustomerImeiStock.getDate());
             oppoCustomerImeiStock.setTransType(oppoCustomerImeiStock.getTransType());
+            oppoCustomerImeiStock.setCreatedDate(LocalDateTime.now());
         }
-        return oppoCustomerImeiStocks;
+        oppoCustomerImeiStockRepository.save(oppoCustomerImeiStockList);
+        return oppoCustomerImeiStockList;
     }
 
     //获取店核销总数据
@@ -273,6 +288,10 @@ public class OppoPushSerivce {
         String companyId=("1");
         initAreaDepotMap();
         List<OppoCustomerSale> oppoCustomerSales=oppoClient.findOppoCustomerSales(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        for(OppoCustomerSale oppoCustomerSale:oppoCustomerSales){
+            oppoCustomerSale.setCreatedDate(LocalDateTime.now());
+        }
+        oppoCustomerSaleRepository.save(oppoCustomerSales);
         return oppoCustomerSales;
     }
 
@@ -287,11 +306,41 @@ public class OppoPushSerivce {
         for(DistrictEntity districtEntity:districtList){
             districtMap.put(districtEntity.getId(),districtEntity);
         }
+        Map<String,EmployeeEntity>  employeeMap=Maps.newHashMap();
+        List<EmployeeEntity> employeeList=employeeClient.findAll();
+        for(EmployeeEntity employeeEntity:employeeList){
+            employeeMap.put(employeeEntity.getId(),employeeEntity);
+        }
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
+        String agentName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         List<OppoCustomerSaleImei>    oppoCustomerSaleImes=oppoClient.findOppoCustomerSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         for(OppoCustomerSaleImei oppoCustomerSaleIme:oppoCustomerSaleImes){
-            oppoCustomerSaleIme.setAgentcode("M13AMB");
-            oppoCustomerSaleIme.setAgentname("JXOPPO");
+            if(StringUtils.isNotBlank(oppoCustomerSaleIme.getSalepromoter())&&employeeMap.get(oppoCustomerSaleIme.getSalepromoter())!=null){
+                oppoCustomerSaleIme.setSalepromoter(employeeMap.get(oppoCustomerSaleIme.getSalepromoter()).getName());
+            }
+            if(StringUtils.isBlank(oppoCustomerSaleIme.getCustname())){
+                oppoCustomerSaleIme.setCustname("");
+            }
+            if(StringUtils.isBlank(oppoCustomerSaleIme.getCustmobile())){
+                oppoCustomerSaleIme.setCustmobile("");
+            }
+            if(StringUtils.isBlank(oppoCustomerSaleIme.getCustsex())){
+                oppoCustomerSaleIme.setCustsex("");
+            }
+            oppoCustomerSaleIme.setAgentcode(agentCode);
+            oppoCustomerSaleIme.setAgentname(agentName);
+            String districtId=oppoCustomerSaleIme.getProvince();
+            String province="";
+            String city="";
+            if(StringUtils.isNotBlank(districtId)){
+                province=districtMap.get(districtId).getProvince();
+                city=districtMap.get(districtId).getCity();
+            }
+            oppoCustomerSaleIme.setProvince(province);
+            oppoCustomerSaleIme.setCity(city);
+            oppoCustomerSaleIme.setCreatedDate(LocalDateTime.now());
         }
+        oppoCustomerSaleImeiRepository.save(oppoCustomerSaleImes);
         return oppoCustomerSaleImes;
     }
 
