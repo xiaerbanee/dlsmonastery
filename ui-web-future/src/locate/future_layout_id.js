@@ -171,6 +171,7 @@ export default {
   adGoodsOrderForm: {
     adGoodsOrderForm: "orderan etalase",
     outShopId: "nama toko",
+    shopId:"地区代理门店",
     employeeName: "nama karyawan",
     expressCompany: "perusahaan jasa pengiriman",
     address: "最终目的地(填写：发xx市或发xx县)",
@@ -634,7 +635,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     noSelectionFound:"没有选择任何记录",
     likeSearch: "模糊搜索",
-    idStrByComma:"输入单号,以逗号隔开",
+    idStrByComma:"输入单号,以逗号、空格或回车隔开",
     sure: "yakin",
     loading: "memuat",
     unicode: "kode",

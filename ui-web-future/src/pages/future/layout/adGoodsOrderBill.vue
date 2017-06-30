@@ -156,11 +156,12 @@
          let tempList = [];
          for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
            if (util.isNotBlank(adGoodsOrderDetail.billQty)) {
-             tempList.push(adGoodsOrderDetail)
+             tempList.push(adGoodsOrderDetail);
+             adGoodsOrderDetail.billQty = adGoodsOrderDetail.confirmQty;
            }
          }
          for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-           if (util.contains(adGoodsOrderDetail.productName, val) && util.isBlank(adGoodsOrderDetail.billQty)) {
+           if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.billQty)) {
              tempList.push(adGoodsOrderDetail)
            }
          }
@@ -168,6 +169,11 @@
 
        },setAdGoodsOrderDetailList(list){
         this.inputForm.adGoodsOrderDetailList = list;
+        for(let adGoodsOrder of this.inputForm.adGoodsOrderDetailList){
+            if(util.isNotBlank(adGoodsOrder.billQty)){
+                adGoodsOrder.billQty = adGoodsOrder.confirmQty;
+            }
+        }
         this.searchDetail();
         this.refreshSummary();
        }, refreshSummary(){
