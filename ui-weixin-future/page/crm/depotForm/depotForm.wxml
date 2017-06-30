@@ -39,7 +39,7 @@
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">区域类型：</view>
+          <view class="weui-label">地区属性：</view>
         </view>
         <view class="weui-cell__bd">
           <picker name="areaType" value="{{formData.areaType}}" range="{{formProperty.extra.areaList}}" range-key="name" bindchange="bindAreaTypeChange">
@@ -95,7 +95,7 @@
       </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">门店属性：</view>
+          <view class="weui-label">门店类型：</view>
         </view>
         <view class="weui-cell__bd">
           <picker name="salePointType" bindchange="bindSalePointTypeChange" value="{{formData.salePointType}}" range="{{formProperty.extra.salePointList}}" range-key="name">
@@ -107,12 +107,12 @@
       </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">连锁类型：</view>
+          <view class="weui-label">营业额分类：</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindChainTypeChange" value="{{formData.chainType}}" range="{{formProperty.extra.chainList}}" range-key="name" name="chainType">
+          <picker bindchange="bindTurnoverTypeChange" value="{{formData.turnoverType}}" range="{{formProperty.extra.turnoverList}}" range-key="name" name="turnoverType">
             <view class="weui-input">
-              {{formData.chainType?formData.chainType:""}}
+              {{formData.turnoverType?formData.turnoverType:""}}
             </view>
           </picker>
         </view>
@@ -131,16 +131,6 @@
       </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">有门头：</view>
-        </view>
-        <view class="weui-cell__bd">
-          <view class="weui-input">
-            <switch checked="{{formData.doorHead}}" name="doorHead" />
-          </view>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-        <view class="weui-cell__hd">
           <view class="weui-label">店面尺寸：</view>
         </view>
         <view class="weui-cell__bd">
@@ -149,6 +139,16 @@
               {{formData.shopArea?formData.shopArea:""}}
             </view>
           </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">有门头：</view>
+        </view>
+        <view class="weui-cell__bd">
+          <view class="weui-input">
+            <switch checked="{{formData.doorHead}}" name="doorHead" />
+          </view>
         </view>
       </view>
       <view class="weui-cell weui-cell_input">

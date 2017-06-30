@@ -260,7 +260,7 @@
           axios.get('/api/basic/hr/employee/findOne',{params: {id:this.adGoodsOrder.employeeId}}).then((response)=>{
             this.employee = response.data;
           });
-          axios.get('/api/ws/future/crm/shopDeposit/findLeftAmount',{params: {type:'形象保证金', depotId:this.adGoodsOrder.shopId}}).then((response)=>{
+          axios.get('/api/ws/future/layout/shopDeposit/findLeftAmount',{params: {type:'形象保证金', depotId:this.adGoodsOrder.shopId}}).then((response)=>{
             this.imageDeposit = response.data;
           });
         });

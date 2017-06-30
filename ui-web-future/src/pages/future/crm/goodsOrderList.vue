@@ -81,15 +81,15 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
+      <el-table :data="page.content" :height="pageHeight" :row-class-name="tableRowClassName" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
         <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
         <el-table-column prop="shopName" :label="$t('goodsOrderList.shop')" ></el-table-column>
         <el-table-column prop="shipType" :label="$t('goodsOrderList.shipType')"></el-table-column>
-        <el-table-column prop="amount" :label="$t('goodsOrderList.amount')" ></el-table-column>
-        <el-table-column prop="shopShouldGetAfterBill" :label="$t('goodsOrderList.shopShouldGet')" ></el-table-column>
+        <el-table-column prop="amount" sortable :label="$t('goodsOrderList.amount')" ></el-table-column>
+        <el-table-column prop="shopShouldGetAfterBill" sortable :label="$t('goodsOrderList.shopShouldGet')"  width="130"></el-table-column>
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderList.netType')" ></el-table-column>
@@ -138,6 +138,11 @@
     };
   },
   methods: {
+    tableRowClassName(row,index){
+      if(row.shopShouldGetAfterBill<0){
+        return "info-row";
+      }
+    },
     setSearchText() {
       this.$nextTick(function () {
         this.searchText = util.getSearchText(this.$refs.searchDialog);
@@ -150,6 +155,7 @@
       util.setQuery("goodsOrderList",submitData);
       axios.get('/api/ws/future/crm/goodsOrder?'+qs.stringify(submitData)).then((response) => {
         this.page = response.data;
+        console.log(response.data)
         this.pageLoading = false;
       })
     },pageChange(pageNumber,pageSize) {
@@ -157,7 +163,6 @@
       this.formData.size = pageSize;
       this.pageRequest();
     },sortChange(column) {
-      console.log(column);
       this.formData.sort=util.getSort(column);
       this.formData.page=0;
       this.pageRequest();
@@ -204,4 +209,9 @@
     }
 };
 </script>
+<style>
+  .el-table .info-row {
+    background: #DB7093;
+  }
+</style>
 
