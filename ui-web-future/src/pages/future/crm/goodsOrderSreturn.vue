@@ -18,7 +18,7 @@
               {{formProperty.isUseTicket | bool2str}}
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="formSubmit()">{{$t('goodsOrderSreturn.returnProduct')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderSreturn.returnProduct')}}</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -39,7 +39,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="formProperty.goodsOrderDetailDtoList" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderSreturn.loading')" stripe border >
+        <el-table :data="formProperty.goodsOrderDetailDtoList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderSreturn.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('goodsOrderSreturn.productName')"></el-table-column>
           <el-table-column  prop="qty" :label="$t('goodsOrderSreturn.qty')"></el-table-column>
           <el-table-column  prop="billQty" :label="$t('goodsOrderSreturn.billQty')"></el-table-column>
@@ -77,17 +77,17 @@
     },
     methods:{
        formSubmit(){
-         var that=this;
-         that.submitDisabled = true;
-         var form = this.$refs["inputForm"];
+         this.submitDisabled = true;
+         let form = this.$refs["inputForm"];
          form.validate((valid) => {
            if (valid) {
-             var submitData = util.deleteExtra(this.inputForm);
-             var  goodsOrderDetailFormList = new Array();
+             let submitData = util.deleteExtra(this.inputForm);
+             let  goodsOrderDetailFormList = [];
              for(var index in this.formProperty.goodsOrderDetailDtoList) {
                var detail = this.formProperty.goodsOrderDetailDtoList[index];
                if(detail.billQty-detail.shippedQty<detail.returnQty){
                  alert("退货数必须小于开单数");
+                 this.submitDisabled = false;
                  return;
                }
                goodsOrderDetailFormList.push(detail);
@@ -96,11 +96,11 @@
              axios.post('/api/ws/future/crm/goodsOrderShip/sreturn',qs.stringify(submitData, {allowDots:true})).then((response)=> {
                this.$message(response.data.message);
                this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip"), params:{_closeFrom:true}})
-             }).catch(function () {
-               that.submitDisabled = false;
+             }).catch(() => {
+               this.submitDisabled = false;
              });
            }else{
-             that.submitDisabled = false;
+             this.submitDisabled = false;
            }
          })
       }, checkReturnQty(item){

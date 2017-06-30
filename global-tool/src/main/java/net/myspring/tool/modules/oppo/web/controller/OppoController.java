@@ -232,11 +232,13 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
+            logger.info("门店销售数据汇总上抛开始");
             LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
             LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
             List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCounts(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts));
             responseMessage.setResult("success");
+            logger.info("门店销售数据汇总上抛结束");
         }
         return ObjectMapperUtils.writeValueAsString(responseMessage);
     }
@@ -252,11 +254,13 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
+            logger.info("门店店售后退货条码数据上抛开始");
             LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
             LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
             List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeis(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis));
             responseMessage.setResult("success");
+            logger.info("门店店售后退货条码数据上抛结束");
         }
         return ObjectMapperUtils.writeValueAsString(responseMessage);
     }

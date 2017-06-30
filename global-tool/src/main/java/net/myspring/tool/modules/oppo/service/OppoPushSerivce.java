@@ -66,6 +66,8 @@ public class OppoPushSerivce {
     private OppoCustomerSaleRepository oppoCustomerSaleRepository;
     @Autowired
     private OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
+    @Autowired
+    private OppoCustomerSaleCountRepository oppoCustomerSaleCountRepository;
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -343,13 +345,17 @@ public class OppoPushSerivce {
     public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd) {
         String companyId=("1");
         initAreaDepotMap();
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         Map<String, String> productColorMap = getProductColorMap();
         List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoClient.findOppoCustomerSaleCounts(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
         for(OppoCustomerSaleCount oppoCustomerSaleCount:oppoCustomerSaleCounts) {
             String colorId=productColorMap.get(oppoCustomerSaleCount.getProductCode());
+            oppoCustomerSaleCount.setAgentCode(agentCode);
+            oppoCustomerSaleCount.setSaleTime(oppoCustomerSaleCount.getSaleTime());
             oppoCustomerSaleCount.setProductCode(colorId);
-            oppoCustomerSaleCount.setAgentCode("M13AMB");
+            oppoCustomerSaleCount.setCreatedDate(LocalDateTime.now());
         }
+        oppoCustomerSaleCountRepository.save(oppoCustomerSaleCounts);
         return oppoCustomerSaleCounts;
     }
 
@@ -364,7 +370,9 @@ public class OppoPushSerivce {
         for(OppoCustomerAfterSaleImei oppoCustomerAfterSaleImei:oppoCustomerAfterSaleImeis){
             oppoCustomerAfterSaleImei.setProductCode(productColorMap.get(oppoCustomerAfterSaleImei.getProductCode()));
             oppoCustomerAfterSaleImei.setDate(oppoCustomerAfterSaleImei.getDate());
+            oppoCustomerAfterSaleImei.setCreatedDate(LocalDateTime.now());
         }
+
         return oppoCustomerAfterSaleImeis;
     }
 

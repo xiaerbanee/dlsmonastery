@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 
 import java.util.List;
@@ -68,7 +67,4 @@ public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
         return StringUtils.getSplitList(expressStr, CharConstant.ENTER);
     }
 
-    public String getFormatId() {
-        return IdUtils.getFormatId(getId(),"XK");
-    }
 }

@@ -28,6 +28,9 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String shopId;
     @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
+    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "code")
+    private String shopCode;
+
     private String storeId;
     @CacheInput(inputKey = "depots",inputInstance = "storeId",outputInstance = "name")
     private String storeName;
@@ -62,6 +65,14 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public String getShopCode() {
+        return shopCode;
+    }
+
+    public void setShopCode(String shopCode) {
+        this.shopCode = shopCode;
+    }
 
     public String getFormatId(){
         return IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
