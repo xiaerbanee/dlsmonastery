@@ -10,12 +10,15 @@ import net.myspring.future.modules.crm.service.PriceChangeImeService;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -74,7 +77,8 @@ public class PriceChangeImeController {
         return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
     }
 
-    private List<String> getActionList(PriceChangeIme priceChangeIme){
-        return null;
+    @RequestMapping(value = "export",method = RequestMethod.GET)
+    private ModelAndView export(PriceChangeImeQuery priceChangeImeQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",priceChangeImeService.export(priceChangeImeQuery));
     }
 }

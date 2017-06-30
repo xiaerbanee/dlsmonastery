@@ -599,6 +599,7 @@ export default {
     applyAccount: "sales",
     content: "konten",
     scenePhoto: "gambar",
+    confirmPhoto:"终端投放协议",
     clickUpload: "pilih unggah",
     uploadImageSizeFor5000KB: "unggah foto dibawah 500kb",
     inputKey: "silahkan masukkan kata kunci",
