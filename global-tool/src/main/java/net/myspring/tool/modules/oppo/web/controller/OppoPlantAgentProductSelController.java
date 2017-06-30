@@ -17,7 +17,13 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "filter")
     public List<OppoPlantAgentProductSelDto> filter(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-//        List<ProductDto> productList = productService.findFilter(productQuery);
-        return null;
+        List<OppoPlantAgentProductSelDto> oppoPlantAgentProductSelDtoList = oppoPlantAgentProductSelService.findFilter(oppoPlantAgentProductSelQuery);
+        return oppoPlantAgentProductSelDtoList;
+    }
+
+    @RequestMapping(value = "getQuery")
+    public OppoPlantAgentProductSelQuery getQuery(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
+        oppoPlantAgentProductSelQuery.setProductNameList(oppoPlantAgentProductSelService.findHasImeProduct());
+        return oppoPlantAgentProductSelQuery;
     }
 }

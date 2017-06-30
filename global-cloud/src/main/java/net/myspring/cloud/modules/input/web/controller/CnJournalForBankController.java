@@ -45,14 +45,16 @@ public class CnJournalForBankController {
 
     @RequestMapping(value = "save")
     public RestResponse save(CnJournalForBankForm cnJournalForBankForm) {
-        RestResponse restResponse;
+        RestResponse restResponse = new RestResponse();
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm,kingdeeBook,accountKingdeeBook);
-        if (kingdeeSynDto.getSuccess()){
-            restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(),null,true);
-        } else {
-            throw new ServiceException("銀行存取款日记账失败："+kingdeeSynDto.getResult());
+        if (accountKingdeeBook != null) {
+            KingdeeSynDto kingdeeSynDto = cnJournalForBankService.save(cnJournalForBankForm, kingdeeBook, accountKingdeeBook);
+            if (kingdeeSynDto.getSuccess()) {
+                restResponse = new RestResponse("銀行存取款日记账成功：" + kingdeeSynDto.getBillNo(), null, true);
+            }
+        }else {
+            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
         }
         return restResponse;
     }
@@ -61,7 +63,12 @@ public class CnJournalForBankController {
     public List<KingdeeSynReturnDto>  saveForEmployeePhoneDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynDto> kingdeeSynDtoList;
+        if (accountKingdeeBook != null) {
+            kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList, kingdeeBook, accountKingdeeBook);
+        }else {
+            throw new ServiceException("您没有金蝶账号，不能开单");
+        }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 
@@ -69,7 +76,12 @@ public class CnJournalForBankController {
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynDto> kingdeeSynDtoList;
+        if (accountKingdeeBook != null) {
+            kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+        }else {
+            throw new ServiceException("您没有金蝶账号，不能开单");
+        }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
 }
