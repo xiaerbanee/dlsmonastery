@@ -59,8 +59,7 @@
         },
         initPromise:{},
         formLabelWidth: '120px',
-        formVisible: false,
-        loading:false
+        formVisible: false
       };
     },
     methods: {

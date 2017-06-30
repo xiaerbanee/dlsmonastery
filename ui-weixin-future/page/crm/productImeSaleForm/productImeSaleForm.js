@@ -7,6 +7,7 @@ Page({
     formData: { imeStr: '' },
     formProperty: {},
     response: {},
+    shops: [],
     submitDisabled: false
   },
   onLoad: function (option) {
@@ -67,14 +68,17 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
+          that.setData({ shops: res.data[0].accessChainDepotList })
           that.setData({ productImeSearchResult: res.data });
         }
       })
     }
   },
   bindSaleShop: function (e) {
-    wx.navigateTo({
-      url: '/page/crm/depotSearch/depotSearch'
+    var that = this;
+    that.setData({
+      'formData.id': that.data.shops[e.detail.value].id,
+      'formData.name': that.data.shops[e.detail.value].name
     })
   },
   formSubmit: function (e) {
@@ -91,7 +95,7 @@ Page({
           that.setData({ "response.data": res.data });
           wx.navigateBack();
         } else {
-          that.setData({"response.error":res.data.message})
+          that.setData({ "response.error": res.data.message })
           that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
         }
       }
