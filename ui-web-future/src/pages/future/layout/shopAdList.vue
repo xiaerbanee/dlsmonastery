@@ -18,7 +18,7 @@
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.adCode')" :label-width="formLabelWidth">
-                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('shopAdList.inputNotZeroPart')"></el-input>
+                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('shopAdList.inputNotZeroPart')" type="textarea"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.shopName')" :label-width="formLabelWidth">
                 <depot-select v-model="formData.shopId" category="adShop"></depot-select>
@@ -49,7 +49,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')"  @selection-change="handleSelectionChange" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
-        <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.code')" sortable width=120></el-table-column>
+        <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.adCode')" sortable width=120></el-table-column>
         <el-table-column column-key="officeId" prop="officeName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
