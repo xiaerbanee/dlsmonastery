@@ -45,7 +45,7 @@ public class CnJournalForBankController {
 
     @RequestMapping(value = "save")
     public RestResponse save(CnJournalForBankForm cnJournalForBankForm) {
-        RestResponse restResponse = new RestResponse();
+        RestResponse restResponse = new RestResponse("开单失败",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {

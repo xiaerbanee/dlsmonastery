@@ -4,13 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
-import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -23,7 +20,6 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.SalReturnStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
@@ -46,8 +42,6 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +52,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -94,19 +87,13 @@ public class GoodsOrderShipService {
     @Autowired
     private SalReturnStockManager salReturnStockManager;
 
-    /**
-     * 查找货品发货表格所有数据（待发货，带签收，已完成）
-     * @param pageable
-     * @param goodsOrderQuery
-     * @return
-     */
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.setStatusList(Arrays.asList("待发货", "待签收", "已完成"));
         if (goodsOrderQuery.getExpressCodes() != null) {
-            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("[\n,]")));
         }
         if (goodsOrderQuery.getBusinessIds() != null) {
-            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("[\n,]")));
         }
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable,  goodsOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
@@ -271,7 +258,7 @@ public class GoodsOrderShipService {
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getId());
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
-            if (goodsOrderDetail.getRealBillQty() > 0 && goodsOrderDetail.getRealBillQty() != goodsOrderDetail.getShippedQty()) {
+            if (goodsOrderDetail.getRealBillQty() > 0 && !goodsOrderDetail.getRealBillQty().equals( goodsOrderDetail.getShippedQty())) {
                 goodsOrderDetailMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail);
             }
             //对没有串码的货品全部发货
@@ -309,9 +296,8 @@ public class GoodsOrderShipService {
                 }
             }
         }
-        for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
-            goodsOrderDetailRepository.save(goodsOrderDetail);
-        }
+        goodsOrderDetailRepository.save(goodsOrderDetailMap.values());
+
         //如果所有发货完成，修改订单状态
         boolean isAllShipped = true;
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailMap.values()) {
@@ -334,7 +320,7 @@ public class GoodsOrderShipService {
     }
 
 
-    public GoodsOrder sreturn(GoodsOrderForm goodsOrderForm) {
+    public void sreturn(GoodsOrderForm goodsOrderForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
         if(StringUtils.isEmpty(goodsOrder.getOutCode())){
             String outCode = stkTransferDirectManager.getOutCode(goodsOrder.getId(), ExtendTypeEnum.货品订货.name());
@@ -354,14 +340,12 @@ public class GoodsOrderShipService {
         goodsOrderRepository.save(goodsOrder);
         if(goodsOrderForm.getSyn()){
             Depot depot=depotRepository.findOne(goodsOrder.getShopId());
-            String allotFormStockCode=null;
-            String allotToStockCode=null;
+
             if (StringUtils.isNotBlank(depot.getDelegateDepotId())) {
                 DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
                 DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(depot.getDelegateDepotId());
-                allotFormStockCode=allotFromStock.getOutCode();
-                allotToStockCode=allotToStock.getOutCode();
-                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFormStockCode,allotToStockCode);
+
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
             } else {
                 List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salReturnStockManager.synForGoodsOrderShip(goodsOrder);
@@ -371,10 +355,8 @@ public class GoodsOrderShipService {
             }
 
         }
-        return goodsOrder;
+
     }
-
-
 
     public void sign(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
@@ -384,10 +366,9 @@ public class GoodsOrderShipService {
         }
     }
 
-
     public void shipBack(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
-        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByGoodsOrderId(goodsOrderId);
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndGoodsOrderId(goodsOrderId);
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
         Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
         //串码调拨
@@ -411,7 +392,6 @@ public class GoodsOrderShipService {
         expressRepository.deleteByExpressOrderId(goodsOrder.getExpressOrderId());
         goodsOrderRepository.save(goodsOrder);
     }
-
 
     public GoodsOrderDto getShip(String id) {
         GoodsOrder goodsOrder = null;

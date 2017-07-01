@@ -11,6 +11,7 @@ const afterSaleCompanyList = r => require.ensure([], () => r(require('pages/futu
 
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
+const bankInBatchForm = r => require.ensure([], () => r(require('pages/future/crm/bankInBatchForm.vue')));
 const bankInDetail = r => require.ensure([], () => r(require('pages/future/crm/bankInDetail.vue')));
 const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
 const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
@@ -30,6 +31,7 @@ const expressOrderForm = r => require.ensure([], () => r(require('pages/future/c
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
 const goodsOrderShipList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderShipList.vue')));
 const goodsOrderForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderForm.vue')));
+const goodsOrderBatchAdd = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderBatchAdd.vue')));
 const goodsOrderMallForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderMallForm.vue')));
 const goodsOrderDetail = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderDetail.vue')));
 const goodsOrderBill= r => require.ensure([], () => r(require('pages/future/crm/goodsOrderBill.vue')));
@@ -47,6 +49,7 @@ const priceChangeList  = r => require.ensure([], () => r(require('pages/future/c
 const priceChangeForm  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeForm.vue')));
 const priceChangeDetail  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeDetail.vue')));
 const priceChangeImeList  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeImeList.vue')));
+const priceChangeImeImageUpload  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeImeImageUpload.vue')));
 const priceChangeImeForm  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeImeForm.vue')));
 const priceChangeImeDetail  = r => require.ensure([], () => r(require('pages/future/crm/priceChangeImeDetail.vue')));
 const pricesystemChangeList= r => require.ensure([], () => r(require('pages/future/crm/pricesystemChangeList.vue')));
@@ -83,6 +86,8 @@ const storeAllotShipPrint= r => require.ensure([], () => r(require('pages/future
 const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/crm/storeAllotDetail.vue')));
 const storeInventoryReport = r => require.ensure([], () => r(require('pages/future/crm/storeInventoryReport.vue')));
 
+const carrierOrderList= r => require.ensure([], () => r(require('pages/future/api/carrierOrderList.vue')));
+
 
 
 let routes = [
@@ -98,6 +103,7 @@ let routes = [
 
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},
+  {path:'/future/crm/bankInBatchForm',component:bankInBatchForm,name:'bankInBatchForm',meta: {menu:"bankInList",keepAlive:true}},
   {path:'/future/crm/bankInDetail',component:bankInDetail,name:'bankInDetail',meta: {menu:"bankInList"}},
   {path:'/future/crm/depotDetailList',component:depotDetailList,name:'depotDetailList'},
   {path:'/future/crm/depotInventoryReport',component:depotInventoryReport,name:'depotInventoryReport'},
@@ -118,6 +124,7 @@ let routes = [
   {path: '/future/crm/goodsOrderList',component: goodsOrderList,name:"goodsOrderList"},
   {path: '/future/crm/goodsOrderShipList',component: goodsOrderShipList,name:"goodsOrderShipList"},
   {path:'/future/crm/goodsOrderForm',component:goodsOrderForm,name:'goodsOrderForm',meta: {menu:"goodsOrderList",keepAlive:true}},
+  {path:'/future/crm/goodsOrderBatchAdd',component:goodsOrderBatchAdd,name:'goodsOrderBatchAdd',meta: {menu:"goodsOrderList",keepAlive:true}},
   {path:'/future/crm/goodsOrderMallForm',component:goodsOrderMallForm,name:'goodsOrderMallForm',meta: {menu:"goodsOrderList",keepAlive:true}},
   {path:'/future/crm/goodsOrderDetail',component:goodsOrderDetail,name:'goodsOrderDetail',meta: {menu:"goodsOrderList"}},
   {path:'/future/crm/goodsOrderBill',component:goodsOrderBill,name:'goodsOrderBill',meta: {menu:"goodsOrderList"}},
@@ -135,6 +142,7 @@ let routes = [
   {path:'/future/crm/priceChangeForm',component:priceChangeForm,name:'priceChangeForm',meta: {menu:"priceChangeList",keepAlive:true}},
   {path:'/future/crm/priceChangeDetail',component:priceChangeDetail,name:'priceChangeDetail',meta: {menu:"priceChangeList"}},
   {path:'/future/crm/priceChangeImeList',component:priceChangeImeList,name:'priceChangeImeList'},
+  {path:'/future/crm/priceChangeImeImageUpload',component:priceChangeImeImageUpload,name:'priceChangeImeImageUpload',meta: {menu:"priceChangeImeList"}},
   {path:'/future/crm/priceChangeImeForm',component:priceChangeImeForm,name:'priceChangeImeForm',meta: {menu:"priceChangeImeList",keepAlive:true}},
   {path:'/future/crm/priceChangeImeDetail',component:priceChangeImeDetail,name:'priceChangeImeDetail',meta: {menu:"priceChangeImeList"}},
   {path:'/future/crm/pricesystemChangeList',component:pricesystemChangeList,name:'pricesystemChangeList'},
@@ -170,6 +178,9 @@ let routes = [
   {path:'/future/crm/storeAllotShipPrint',component:storeAllotShipPrint,name:'storeAllotShipPrint',meta: {hidden: true}},
   {path:'/future/crm/storeAllotDetail',component:storeAllotDetail,name:'storeAllotDetail',meta: {menu:"storeAllotList"}},
   {path:'/future/crm/storeInventoryReport',component:storeInventoryReport,name:'storeInventoryReport'},
+
+  {path:'/future/api/carrierOrderList',component:carrierOrderList,name:'carrierOrderList'},
+
 
 ];
 

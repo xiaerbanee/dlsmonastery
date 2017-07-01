@@ -2,12 +2,17 @@ package net.myspring.future.modules.crm.web.controller;
 
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.dto.DepotAccountDto;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -19,9 +24,12 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,18 +44,17 @@ public class GoodsOrderController {
 
     @Autowired
     private GoodsOrderService goodsOrderService;
-
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private ExpressCompanyService expressCompanyService;
     @Autowired
     private DepotService depotService;
 
-
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
-        Page<GoodsOrderDto> page = goodsOrderService.findAll(pageable, goodsOrderQuery);
-        return page;
+        return goodsOrderService.findAll(pageable, goodsOrderQuery);
     }
 
     @RequestMapping(value = "detail")
@@ -101,7 +108,18 @@ public class GoodsOrderController {
         depotQuery.setShipType(goodsOrderDto.getShipType());
         goodsOrderBillForm.getExtra().put("storeList",depotService.findStoreList(depotQuery));
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
+        goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
+        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
         return goodsOrderBillForm;
+    }
+
+    @RequestMapping(value = "findShopAccountByGoodsOrderId")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
+    public DepotAccountDto findShopAccountByGoodsOrderId(String goodsOrderId){
+        if(StringUtils.isBlank(goodsOrderId)){
+            return new DepotAccountDto();
+        }
+        return goodsOrderService.findShopAccountByGoodsOrderId(goodsOrderId);
     }
 
     @RequestMapping(value = "getBill")
@@ -145,7 +163,6 @@ public class GoodsOrderController {
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:delete')")
     public RestResponse delete(String id) {
         goodsOrderService.delete(id);
-        RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
-        return restResponse;
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 }

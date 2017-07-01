@@ -6,6 +6,7 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping(value = "crm/shopDeposit")
+@RequestMapping(value = "layout/shopDeposit")
 public class ShopDepositController {
 
     @Autowired
@@ -50,18 +51,22 @@ public class ShopDepositController {
 
     @RequestMapping(value = "findDto")
     public ShopDepositDto findDto(String id) {
-
         if(StringUtils.isBlank(id)){
             return new ShopDepositDto();
         }
         return shopDepositService.findDto(id);
-
     }
 
     @RequestMapping(value = "save")
     public RestResponse save(ShopDepositForm shopDepositForm) {
         shopDepositService.save(shopDepositForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id) {
+        shopDepositService.logicDelete(id);
+        return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "findLeftAmount")

@@ -2,17 +2,13 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.GoodsOrderIme;
-import net.myspring.util.cahe.annotation.CacheInput;
 
 public class GoodsOrderImeDto extends DataDto<GoodsOrderIme> {
 
-
     private String productId;
-    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
     private String productImeIme;
     private String productImeMeid;
-
 
     public String getProductId() {
         return productId;

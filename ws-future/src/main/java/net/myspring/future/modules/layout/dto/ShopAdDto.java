@@ -19,10 +19,15 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
     private String officeName;
+    private String areaId;
+    @CacheInput(inputKey = "offices", inputInstance = "areaId", outputInstance = "name")
+    private String areaName;
     private Boolean specialArea;
     private String shopAdTypeId;
     @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "name")
     private String shopAdTypeName;
+    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "price")
+    private BigDecimal shopAdTypePrice;
     private BigDecimal length;
     private BigDecimal width;
     private Integer qty;
@@ -33,6 +38,31 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String processPositionId;
     private String processInstanceId;
     private Boolean locked;
+
+
+    public BigDecimal getShopAdTypePrice() {
+        return shopAdTypePrice;
+    }
+
+    public void setShopAdTypePrice(BigDecimal shopAdTypePrice) {
+        this.shopAdTypePrice = shopAdTypePrice;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     public Boolean getLocked() {
         return locked;
@@ -207,6 +237,18 @@ public class ShopAdDto extends DataDto<ShopAd>{
             return true;
         }else {
             return false;
+        }
+    }
+
+    public String getSpecialAreaToString(){
+        if(this.specialArea!=null){
+            if(this.specialArea){
+                return "是";
+            }else{
+                return "否";
+            }
+        }else{
+            return "";
         }
     }
 }

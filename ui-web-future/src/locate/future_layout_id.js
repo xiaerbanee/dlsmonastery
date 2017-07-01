@@ -171,6 +171,7 @@ export default {
   adGoodsOrderForm: {
     adGoodsOrderForm: "orderan etalase",
     outShopId: "nama toko",
+    shopId:"地区代理门店",
     employeeName: "nama karyawan",
     expressCompany: "perusahaan jasa pengiriman",
     address: "最终目的地(填写：发xx市或发xx县)",
@@ -423,7 +424,9 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    transverseDimensions:"横向尺寸,默认单位:米",
+    longitudinalDimension:"纵向尺寸,默认单位:米",
   },
   shopAdList: {
     shopAdList: "formulir iklan",
@@ -598,6 +601,7 @@ export default {
     applyAccount: "sales",
     content: "konten",
     scenePhoto: "gambar",
+    confirmPhoto:"终端投放协议",
     clickUpload: "pilih unggah",
     uploadImageSizeFor5000KB: "unggah foto dibawah 500kb",
     inputKey: "silahkan masukkan kata kunci",
@@ -634,7 +638,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     noSelectionFound:"没有选择任何记录",
     likeSearch: "模糊搜索",
-    idStrByComma:"输入单号,以逗号隔开",
+    idStrByComma:"输入单号,以逗号、空格或回车隔开",
     sure: "yakin",
     loading: "memuat",
     unicode: "kode",

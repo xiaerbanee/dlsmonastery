@@ -1,18 +1,23 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
 import net.myspring.future.modules.crm.service.ExpressOrderService;
 import net.myspring.future.modules.crm.web.form.ExpressOrderForm;
 import net.myspring.future.modules.crm.web.query.ExpressOrderQuery;
 import net.myspring.util.excel.ExcelView;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/expressOrder")
@@ -27,6 +35,8 @@ public class ExpressOrderController {
 
     @Autowired
     private ExpressOrderService expressOrderService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:expressOrder:view')")
@@ -91,6 +101,14 @@ public class ExpressOrderController {
             expressOrderDto = new ExpressOrderDto();
         }
         return expressOrderDto;
+    }
+
+    @RequestMapping(value = "getExpressConfig")
+    public Map<String, Object> getExpressConfig() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
+        result.put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
+        return result;
     }
 
 

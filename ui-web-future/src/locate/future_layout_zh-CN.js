@@ -271,6 +271,7 @@ export default {
   adGoodsOrderForm: {
     adGoodsOrderForm: "物料订单编辑",
     outShopId: "财务门店",
+    shopId:"地区代理门店",
     employeeName: "联系业务",
     expressCompany: "快递公司",
     address: "最终目的地(填写：发xx市或发xx县)",
@@ -428,6 +429,8 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    transverseDimensions:"横向尺寸,默认单位:米",
+    longitudinalDimension:"纵向尺寸,默认单位:米",
   },
   shopAdList: {
     shopAdList: "广告申请",
@@ -603,6 +606,7 @@ export default {
     applyAccount: "业务对接人",
     content: "建设内容",
     scenePhoto: "现场照片",
+    confirmPhoto:"终端投放协议",
     clickUpload: "点击上传",
     uploadImageSizeFor5000KB: "只能上传图片文件，且不超过500kb",
     inputKey: "请输入关键字",
@@ -639,7 +643,7 @@ export default {
     inputKey: "请输入关键字",
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
-    idStrByComma:"输入单号,以逗号隔开",
+    idStrByComma:"输入单号,以逗号、空格或回车隔开",
     sure: "确定",
     loading: "拼命加载中",
     unicode: "编码",

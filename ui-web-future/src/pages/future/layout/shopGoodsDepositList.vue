@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopGoodsDeposit:edit'">{{$t('shopGoodsDepositList.add')}}</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:shopGoodsDeposit:edit'">批量添加</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopGoodsDeposit:audit'">{{$t('shopGoodsDepositList.batchPass')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:shopGoodsDeposit:view'">{{$t('shopGoodsDepositList.export')}}</el-button>
@@ -45,9 +46,9 @@
           <el-button type="primary" @click="search()">{{$t('shopGoodsDepositList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column prop="formatId" column-key="id"  :label="$t('shopGoodsDepositList.code')" width="160" sortable></el-table-column>
+        <el-table-column prop="formatId" column-key="id"  :label="$t('shopGoodsDepositList.code')" sortable></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopGoodsDepositList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopAreaName"  :label="$t('shopGoodsDepositList.areaName')"  ></el-table-column>
         <el-table-column prop="departMent" column-key="departMent" :label="$t('shopGoodsDepositList.department')" sortable></el-table-column>
@@ -87,7 +88,6 @@
         initPromise:{},
         searchText:'',
         pageLoading: false,
-        pageHeight:600,
         page:{},
         formData:{
           extra:{},
@@ -126,6 +126,8 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopGoodsDepositForm'});
+      },itemBatchAdd(){
+        this.$router.push({ name: 'shopGoodsDepositBatchForm'})
       },itemAction:function(id,action){
         if(action==="edit") {
           this.$router.push({ name: 'shopGoodsDepositForm', query: { id: id}});
@@ -173,7 +175,6 @@
       }
 
     },created () {
-      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

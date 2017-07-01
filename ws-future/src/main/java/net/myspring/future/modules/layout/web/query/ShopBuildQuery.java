@@ -149,7 +149,7 @@ public class ShopBuildQuery extends BaseQuery {
 
     public List<String> getIdLists(){
         if(StringUtils.isNotBlank(idStr)){
-            return Arrays.asList(idStr.split(CharConstant.COMMA));
+            return Arrays.asList(idStr.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
         }else{
             return null;
         }

@@ -3,7 +3,7 @@
     <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :page-sizes="[10, 25, 50, 100]"
+        :page-sizes="[10, 25, 50, 100, 200, 500]"
         :page-size="page.size"
         :current-page="page.number+1"
         :layout="innerLayout"
