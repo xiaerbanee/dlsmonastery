@@ -49,7 +49,7 @@ class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedPar
             FROM oppo_plant_agent_product_sel t1
             LEFT JOIN crm_product t2 ON t1.product_id = t2.id
             LEFT JOIN crm_product t3 ON t1.lx_product_id = t3.id
-            WHERE t1.enabled=1
+            WHERE 1=1
         """);
         if(CollectionUtils.isNotEmpty(oppoPlantAgentProductSelQuery.itemNumberList)){
             sb.append(""" AND item_number IN (:itemNumberList)""")
