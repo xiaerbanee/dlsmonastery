@@ -424,7 +424,9 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    transverseDimensions:"横向尺寸,默认单位:米",
+    longitudinalDimension:"纵向尺寸,默认单位:米",
   },
   shopAdList: {
     shopAdList: "formulir iklan",
