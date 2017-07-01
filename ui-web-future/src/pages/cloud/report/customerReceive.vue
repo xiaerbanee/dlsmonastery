@@ -64,18 +64,18 @@
   </div>
 </template>
 <style>
-  .el-table .detail-item1 {
+  .el-table .info-row {
     background: #c9e5f5;
   }
 
-  .el-table .detail-error {
+  .el-table .danger-row  {
     background: #FF8888;
   }
 
-  .el-table .detail-title {
+  .el-table .warning-row {
     background: #FFEE99;
   }
-  .el-table .detail-item2{
+  .el-table .default-row{
     background:#FFFFFF;
   }
 
@@ -113,21 +113,21 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("customerReceive", submitData);
-          axios.get('/api/global/cloud/kingdee/bdCustomer?'+ qs.stringify(submitData)).then((response) => {
-            let customerIdList = new Array();
-            let customers = response.data.content;
-            for (let item in customers) {
-              customerIdList.push(customers[item].fcustId);
-            }
-            submitData.customerIdList = customerIdList;
-            if (submitData.customerIdList.length !== 0) {
-              axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(submitData)).then((response) => {
-                this.summary = response.data;
-              });
-            }
-            this.page = response.data;
-            this.pageLoading = false;
-          })
+        axios.get('/api/global/cloud/kingdee/bdCustomer?'+ qs.stringify(submitData)).then((response) => {
+          let customerIdList = new Array();
+          let customers = response.data.content;
+          for (let item in customers) {
+            customerIdList.push(customers[item].fcustId);
+          }
+          submitData.customerIdList = customerIdList;
+          if (submitData.customerIdList.length !== 0) {
+            axios.get('/api/global/cloud/report/customerReceive/list?' + qs.stringify(submitData)).then((response) => {
+              this.summary = response.data;
+            });
+          }
+          this.page = response.data;
+          this.pageLoading = false;
+        })
       },pageChange(pageNumber,pageSize) {
         this.formData.page = pageNumber;
         this.formData.size = pageSize;
@@ -153,16 +153,16 @@
           })
         }
       },tableRowClassName(row, index) {
-         if (row.index === 0) { //head
-          return "detail-item2";
+         if (row.index === 0) {
+          return "default-row";
         } else if (row.billStatus !== "C" && row.billType !== "期初应收" && row.billType !== "期末应收") { //error
-          return "detail-error";
+          return "danger-row ";
         } else if (row.billType === "期初应收" || row.billType === "期末应收") {
-          return "detail-title";
+          return "warning-row";
         } else if (row.index % 2 === 0)  {
-          return "detail-item2";
+          return "default-row";
         } else if (row.index % 2 !== 0) {
-          return "detail-item1";
+          return "info-row";
         }
       },remoteCustomer(query) {
         if (query !== '') {
@@ -182,7 +182,7 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      that.initPromise = axios.get('/api/global/cloud/kingdee/bdCustomer/getQuery').then((response) =>{
+      that.initPromise = axios.get('/api/global/cloud/kingdee/bdCustomer/getQueryForCustomerReceive').then((response) =>{
         this.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
       });
