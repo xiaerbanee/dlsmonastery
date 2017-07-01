@@ -67,6 +67,8 @@ interface DepotRepositoryCustom{
 
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>
 
+    fun findDepotAccount(depotId: String): DepotAccountDto
+
     fun findByAccountId(accountId: String): MutableList<Depot>
 
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
@@ -76,10 +78,45 @@ interface DepotRepositoryCustom{
     fun findChainIds(depotQuery: DepotQuery):MutableList<String>
 
     fun findOppoCustomers():MutableList<CustomerDto>
+
+    fun findDto(id: String): DepotDto
+
+
 }
 
-@Suppress("UNCHECKED_CAST")
 class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+    override fun findDepotAccount(depotId: String): DepotAccountDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+          select
+            t2.area_type depotShopAreaType,
+            scbzjDeposit.left_amount scbzj,
+            xxbzjDeposit.left_amount xxbzj,
+            ysjyjDeposit.left_amount ysjyj,
+            t1.*
+          from
+            crm_depot t1
+            LEFT JOIN crm_depot_shop t2 ON t1.depot_shop_id = t2.id
+            LEFT JOIN crm_shop_deposit scbzjDeposit ON scbzjDeposit.shop_id = t1.id AND scbzjDeposit.type='市场保证金' AND scbzjDeposit.locked = 0 AND scbzjDeposit.enabled = 1
+            LEFT JOIN crm_shop_deposit xxbzjDeposit ON xxbzjDeposit.shop_id = t1.id AND xxbzjDeposit.type='形象保证金' AND xxbzjDeposit.locked = 0 AND xxbzjDeposit.enabled = 1
+            LEFT JOIN crm_shop_deposit ysjyjDeposit ON ysjyjDeposit.shop_id = t1.id AND ysjyjDeposit.type='演示机押金' AND ysjyjDeposit.locked = 0 AND ysjyjDeposit.enabled = 1
+          where
+            t1.id = :depotId
+          """, Collections.singletonMap("depotId", depotId), BeanPropertyRowMapper(DepotAccountDto::class.java))
+    }
+
+    override fun findDto(id: String): DepotDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT
+            t2.area_type areaType,
+            t1.*
+        FROM
+            crm_depot t1
+            LEFT JOIN crm_depot_shop t2 ON t1.depot_shop_id = t2.id
+        WHERE
+            t1.id = :id
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(DepotDto::class.java))
+    }
+
     override fun findChainIds(depotQuery: DepotQuery): MutableList<String> {
         val sb = StringBuffer("""
             select
