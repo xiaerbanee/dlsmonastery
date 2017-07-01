@@ -1,20 +1,21 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.cloud.modules.sys.domain.KingdeeBook;
-import net.myspring.common.dto.DataDto;
+import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 
 /**
+ * 记录凭证审核状态
  * Created by lihx on 2017/4/5.
  */
 public class VoucherDto extends DataDto<Voucher> {
+    //业务日期
     private String FDate;
     private String createdName;
     private String companyId;
     private String status;
+    //同步到金蝶后返回值
     private String outCode;
     private String kingdeeBookId;
-    private KingdeeBook kingdeeBook;
 
     private Boolean deletable = false;
     private Boolean editable = false;
@@ -81,13 +82,5 @@ public class VoucherDto extends DataDto<Voucher> {
 
     public void setEditable(Boolean editable) {
         this.editable = editable;
-    }
-
-    public KingdeeBook getKingdeeBook() {
-        return kingdeeBook;
-    }
-
-    public void setKingdeeBook(KingdeeBook kingdeeBook) {
-        this.kingdeeBook = kingdeeBook;
     }
 }

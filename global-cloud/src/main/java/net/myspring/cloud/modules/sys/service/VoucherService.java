@@ -79,6 +79,7 @@ public class VoucherService {
                 voucher.setFDate(date);
                 voucher.setCompanyId(RequestUtils.getCompanyId());
                 AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+                voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
                 if (accountKingdeeBook != null){
                     voucher.setCreatedName(accountKingdeeBook.getUsername());
                     voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
@@ -86,7 +87,6 @@ public class VoucherService {
                     voucher.setCreatedName(RequestUtils.getAccountId());
                     voucher.setStatus(VoucherStatusEnum.地区财务审核.name());
                 }
-                voucherRepository.save(voucher);
             }else{
                 voucher = voucherRepository.findOne(voucherForm.getId());
                 voucher.setFDate(date);
@@ -101,8 +101,8 @@ public class VoucherService {
                     }
                     voucherEntryRepository.deleteInBatch(voucherEntryList);
                 }
-                voucherRepository.save(voucher);
             }
+            voucherRepository.save(voucher);
             List<String> headers = getHeaders(voucherModel.getBdFlexItemGroupList());
             //核算维度分组
             List<BdFlexItemProperty> bdFlexItemPropertyList = voucherModel.getBdFlexItemPropertyList();
@@ -131,8 +131,8 @@ public class VoucherService {
                         String name = "FDetailID__"+bdFlexItemPropertyNameMap.get(header).getFFlexNumber();
                         VoucherEntryFlow voucherEntryFlow = new VoucherEntryFlow();
                         voucherEntryFlow.setName(name);
-                        voucherEntryFlow.setValue(value);
-                        voucherEntryFlow.setCode("");//number
+                        voucherEntryFlow.setValue(value.split(CharConstant.SLASH_LINE)[1]);//科目名称
+                        voucherEntryFlow.setCode(value.split(CharConstant.SLASH_LINE)[1]);//科目编码
                         voucherEntryFlow.setGlVoucherEntryId(voucherEntry.getId());
                         voucherEntryFlowList.add(voucherEntryFlow);
                         voucherEntryFlowRepository.save(voucherEntryFlow);
@@ -227,7 +227,7 @@ public class VoucherService {
                 List<String> list = Lists.newArrayList();
                 list.add(voucherEntry.getFExplanation());//摘要
                 BdAccount bdAccount = accountNumberMap.get(voucherEntry.getFAccountid());
-                list.add(bdAccount.getFNumber() + CharConstant.SLASH_LINE + bdAccount.getFName());//科目
+                list.add(bdAccount.getFNumber() + CharConstant.SLASH_LINE + bdAccount.getFName());//科目编码/科目名称
                 Map<String, VoucherEntryFlow> voucherEntryFlowNameMap = Maps.newHashMap();
                 List<VoucherEntryFlow> voucherEntryFlowList = voucherEntryFlowRepository.findByVoucherEntryId(voucherEntry.getId());
                 if (CollectionUtil.isNotEmpty(voucherEntryFlowList)) {

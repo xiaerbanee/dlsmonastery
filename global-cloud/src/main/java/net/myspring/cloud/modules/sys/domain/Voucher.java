@@ -6,7 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
-
+/**
+ * 记录凭证审核状态
+ * Created by lihx on 2017/4/5.
+ */
 @Entity
 @Table(name="sys_gl_voucher")
 public class Voucher extends CompanyEntity<Voucher> {
@@ -15,7 +18,7 @@ public class Voucher extends CompanyEntity<Voucher> {
     private String createdName;
     private Integer version = 0;
     private String status;
-    //返回的单号
+    //同步到金蝶后返回单号
     private String outCode;
     private String kingdeeBookId;
 

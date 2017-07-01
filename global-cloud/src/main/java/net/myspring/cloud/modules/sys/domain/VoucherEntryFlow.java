@@ -7,15 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-
+/**
+ * 含核算维度的信息
+ * Created by lihx on 2017/4/5.
+ */
 @Entity
 @Table(name="sys_gl_voucher_entry_flow")
 public class VoucherEntryFlow extends IdEntity<VoucherEntryFlow> {
-    //Json 名称 例如：FDetailID__XXX
+    //Json 名称 例如：FDetailID__XXX（编码）
     private String name;
-    //核算维度名称
+    //科目名称
     private String value;
-    //核算维度值
+    //科目编码
     private String code;
 
     private String glVoucherEntryId;

@@ -1,22 +1,24 @@
 package net.myspring.cloud.modules.sys.dto;
 
-import net.myspring.common.dto.DataDto;
+import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
 
 
 /**
+ * 含核算维度的信息
  * Created by lihx on 2017/4/5.
  */
 public class VoucherEntryFlowDto extends DataDto<VoucherEntryFlow> {
+    //Json 名称 例如：FDetailID__XXX（编码）
     private String name;
     //核算维度名称
     private String flexName;
-    //核算维度名称
+    //科目名称
     private String value;
-    //核算维度值
+    //科目编码
     private String code;
 
-    private VoucherEntryDto voucherEntryDto;
+    private String glVoucherEntryId;
 
     public String getName() {
         return name;
@@ -54,11 +56,11 @@ public class VoucherEntryFlowDto extends DataDto<VoucherEntryFlow> {
         this.code = code;
     }
 
-    public VoucherEntryDto getVoucherEntryDto() {
-        return voucherEntryDto;
+    public String getGlVoucherEntryId() {
+        return glVoucherEntryId;
     }
 
-    public void setVoucherEntryDto(VoucherEntryDto voucherEntryDto) {
-        this.voucherEntryDto = voucherEntryDto;
+    public void setGlVoucherEntryId(String glVoucherEntryId) {
+        this.glVoucherEntryId = glVoucherEntryId;
     }
 }
