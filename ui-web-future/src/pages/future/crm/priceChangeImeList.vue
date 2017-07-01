@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
+        <el-button type="primary" icon="upload" @click="pictureAdd">{{$t('priceChangeImeList.uploadPicture')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('priceChangeImeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -129,7 +130,10 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'priceChangeImeForm'})
-      },itemAction:function(id,action){
+      },pictureAdd(){
+        this.$router.push({ name: 'priceChangeImeImageUpload'})
+      }
+    ,itemAction:function(id,action){
           this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
       }
     },created () {

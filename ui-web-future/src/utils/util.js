@@ -370,5 +370,11 @@ util.deleteExtra= function (json) {
   delete newJson.extra;
   return newJson;
 }
-
+util.getImgListSize = function(imgList){
+  let size = 0;
+  imgList.forEach(function(item){
+    size += Number.parseInt(item.size/1024);
+  })
+  return size;
+}
 export default util;
