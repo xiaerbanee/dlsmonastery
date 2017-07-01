@@ -429,6 +429,8 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    transverseDimensions:"横向尺寸,默认单位:米",
+    longitudinalDimension:"纵向尺寸,默认单位:米",
   },
   shopAdList: {
     shopAdList: "广告申请",
