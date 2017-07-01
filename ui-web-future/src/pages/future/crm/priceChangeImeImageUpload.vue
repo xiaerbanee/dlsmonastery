@@ -87,7 +87,7 @@
   .el-upload-dragger{
     padding-top: 60px;
     width: 100%;
-    height: 270px;
+    height: 250px;
     border:none;
     border-bottom: 2px solid #ddd;
     border-radius: 0;
@@ -102,7 +102,7 @@
     margin-left: 10px;
   }
   .el-upload-list--picture{
-    max-height: 400px;
+    max-height: 420px;
     overflow: auto;
     padding: 5px 10px;
   }
