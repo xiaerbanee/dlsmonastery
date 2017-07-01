@@ -5,6 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
+        <el-button type="primary" icon="picture" @click="pictureAdd" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.uploadPicture')}}</el-button>
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -136,6 +137,8 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/crm/priceChangeIme/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
+      },pictureAdd(){
+        this.$router.push({ name: 'priceChangeImeImageUpload'})
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

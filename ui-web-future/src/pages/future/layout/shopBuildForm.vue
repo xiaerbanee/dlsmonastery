@@ -96,24 +96,24 @@
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
+        this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
+        this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList2);
         form.validate((valid) => {
-          this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
-          this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList2);
           if (valid) {
-              axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
-                this.$message(response.data.message);
-                if(response.data.success) {
-                  if (this.isCreate) {
-                    Object.assign(this.$data,this.getData());
-                    this.initPage();
-                  }
-                  else{
-                    this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList"), params:{_closeFrom:true}})
-                  }
+            axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+              this.$message(response.data.message);
+              if(response.data.success) {
+                if (this.isCreate) {
+                  Object.assign(this.$data,this.getData());
+                  this.initPage();
                 }
-              }).catch(() => {
-                this.submitDisabled = false;
-              });
+                else{
+                  this.$router.push({name: 'shopBuildList', query: util.getQuery("shopBuildList"), params:{_closeFrom:true}})
+                }
+              }
+            }).catch(() => {
+              this.submitDisabled = false;
+            });
           }else{
             this.submitDisabled = false;
           }

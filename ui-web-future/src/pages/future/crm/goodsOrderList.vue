@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
         <el-button type="primary" @click="itemMallAdd" icon="plus">商城订单</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus">{{ $t('goodsOrderList.batchAdd') }}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
@@ -178,7 +179,10 @@
       this.pageRequest();
     },itemAdd(){
       this.$router.push({ name: 'goodsOrderForm'})
-    },itemMallAdd(){
+    },itemBatchAdd(){
+      this.$router.push({ name: 'goodsOrderBatchAdd'})
+    },
+    itemMallAdd(){
       this.$router.push({ name: 'goodsOrderMallForm'})
     },itemAction:function(id,action){
       if(action=="edit") {

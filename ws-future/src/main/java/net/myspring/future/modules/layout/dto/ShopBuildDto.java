@@ -35,11 +35,20 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String oldContents;
     private String newContents;
     private String scenePhoto;
+    private String confirmPhoto;
 
     private String processStatus;
     private String processInstanceId;
     private String processPositionId;
     private Boolean locked;
+
+    public String getConfirmPhoto() {
+        return confirmPhoto;
+    }
+
+    public void setConfirmPhoto(String confirmPhoto) {
+        this.confirmPhoto = confirmPhoto;
+    }
 
     public Boolean getLocked() {
         return locked;
