@@ -33,7 +33,7 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
     override fun findPage(pageable: Pageable,shopAdQuery: ShopAdQuery): Page<ShopAdDto>{
         val sb = StringBuilder("""
             SELECT
-                depot.office_id officeId,t1.*
+                depot.office_id officeId,depot.area_id areaId,t1.*
             FROM
                 crm_shop_ad t1,crm_depot depot
             WHERE

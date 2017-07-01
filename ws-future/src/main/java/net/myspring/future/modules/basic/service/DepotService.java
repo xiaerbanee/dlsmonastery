@@ -21,6 +21,7 @@ import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
@@ -55,6 +56,8 @@ import java.util.*;
 public class DepotService {
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotShopRepository depotShopRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -104,6 +107,9 @@ public class DepotService {
             Depot depot = depotRepository.findOne(id);
             depotDto = BeanUtil.map(depot,DepotDto.class);
             cacheUtils.initCacheInput(depotDto);
+            if(StringUtils.isNotBlank(depot.getDepotShopId())){
+                depotDto.setAreaType(depotShopRepository.findOne(depot.getDepotShopId()).getAreaType());
+            }
         }
         return depotDto;
     }

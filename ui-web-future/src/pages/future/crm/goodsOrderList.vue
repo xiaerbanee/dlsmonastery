@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
         <el-button type="primary" @click="itemMallAdd" icon="plus">商城订单</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus">{{ $t('goodsOrderList.batchAdd') }}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
@@ -82,7 +83,7 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable width="150"></el-table-column>
+        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
@@ -95,7 +96,7 @@
         <el-table-column prop="netType" :label="$t('goodsOrderList.netType')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
-        <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="160">
+        <el-table-column :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
@@ -135,6 +136,7 @@
           extra:{}
       },
       initPromise:{},
+      pageHeight:600,
       searchText:"",
       formLabelWidth: '120px',
       formVisible: false,
@@ -177,7 +179,10 @@
       this.pageRequest();
     },itemAdd(){
       this.$router.push({ name: 'goodsOrderForm'})
-    },itemMallAdd(){
+    },itemBatchAdd(){
+      this.$router.push({ name: 'goodsOrderBatchAdd'})
+    },
+    itemMallAdd(){
       this.$router.push({ name: 'goodsOrderMallForm'})
     },itemAction:function(id,action){
       if(action=="edit") {

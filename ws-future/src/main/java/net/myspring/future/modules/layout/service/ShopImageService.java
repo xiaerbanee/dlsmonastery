@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.service;
 
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -57,7 +58,7 @@ public class ShopImageService {
     }
 
     public ShopImageForm getForm(ShopImageForm shopImageForm){
-        List<String> imageTypeList= Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(","));
+        List<String> imageTypeList= Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(CharConstant.COMMA));
         shopImageForm.getExtra().put("imageTypeList",imageTypeList);
         return shopImageForm;
     }
