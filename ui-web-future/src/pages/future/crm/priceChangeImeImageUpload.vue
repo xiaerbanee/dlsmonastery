@@ -106,6 +106,11 @@
     overflow: auto;
     padding: 5px 10px;
   }
+  .el-upload-list--picture .el-upload-list__item{
+    width: 45%;
+    display: inline-block;
+    margin-left: 30px;
+  }
   .trigger{
     margin-top: 5px;
   }
