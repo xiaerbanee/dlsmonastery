@@ -194,7 +194,7 @@
           });
         }).catch(()=>{});
       },carrierShip(){
-
+        this.$router.push({ name: 'carrierOrderShip'})
       },
       handleCommand(command) {
         this.command=command;
