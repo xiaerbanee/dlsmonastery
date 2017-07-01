@@ -45,6 +45,8 @@ public class RestResponse {
         this.success = success;
     }
 
+    public RestResponse(){}
+
 
     public Boolean getSuccess() {
         if((bindingResult!=null&&bindingResult.hasFieldErrors()||CollectionUtil.isNotEmpty(errors))) {
