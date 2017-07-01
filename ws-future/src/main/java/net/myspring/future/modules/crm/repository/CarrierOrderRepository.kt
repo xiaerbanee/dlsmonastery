@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.crm.domain.AfterSale
 import net.myspring.future.modules.crm.domain.CarrierOrder
 import net.myspring.future.modules.crm.dto.CarrierOrderDto
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 
 interface CarrierOrderRepository : BaseRepository<CarrierOrder, String>, CarrierOrderRepositoryCustom {
@@ -23,6 +25,7 @@ interface CarrierOrderRepository : BaseRepository<CarrierOrder, String>, Carrier
     fun findByGoodsOrderId(goodsOrderId:String):MutableList<CarrierOrder>
 
     fun findByCodeIn(codeList:MutableList<String>):MutableList<CarrierOrder>
+
 }
 
 
@@ -30,9 +33,30 @@ interface CarrierOrderRepositoryCustom {
     fun findPage(pageable: Pageable, carrierOrderQuery: CarrierOrderQuery): Page<CarrierOrderDto>
 
     fun findFilter(carrierOrderQuery: CarrierOrderQuery): MutableList<CarrierOrderDto>
+
+    fun findDto(id: String): CarrierOrderDto
+
 }
 
 class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : CarrierOrderRepositoryCustom {
+    override fun findDto(id: String): CarrierOrderDto {
+        return namedParameterJdbcTemplate.queryForObject("""
+        SELECT
+                t1.*,t2.*
+            FROM
+                api_carrier_order t1
+            LEFT JOIN crm_goods_order t2 ON t2.id = t1.goods_order_id
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.id = :id
+            GROUP BY
+                t1.id
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(CarrierOrderDto::class.java))
+
+    }
+
+
     override fun findFilter(carrierOrderQuery: CarrierOrderQuery): MutableList<CarrierOrderDto> {
         val sb = StringBuffer()
         sb.append("""
@@ -84,7 +108,7 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             sb.append("""  and t3.ship_date >=:shipDateStart  """)
         }
         if (carrierOrderQuery.shipDateEnd!=null) {
-            sb.append("""  and t1.ship_date <=:shipDateEnd  """)
+            sb.append("""  and t3.ship_date <=:shipDateEnd  """)
         }
         if (CollectionUtil.isNotEmpty(carrierOrderQuery.depotIdList)) {
             sb.append("""  and t2.id in (:depotIdList)  """)
@@ -110,7 +134,7 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             AND t3.status in (:goodsOrderStatusList)
         """)
         if (StringUtils.isNotBlank(carrierOrderQuery.businessId)) {
-            sb.append("""  and t3.business_id=:businessId  """)
+            sb.append("""  and t3.business_id LIKE CONCAT('%',:businessId,'%')   """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.carrierOrderStatus)) {
             sb.append("""  and t1.status=:carrierOrderStatus  """)
@@ -119,16 +143,16 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             sb.append("""  and t3.status=:goodsOrderStatus  """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.goodsOrderRemarks)) {
-            sb.append("""  and t3.remarks=:goodsOrderRemarks  """)
+            sb.append("""  and t3.remarks LIKE CONCAT('%',:goodsOrderRemarks,'%')  """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.remarks)) {
-            sb.append("""  and t1.remarks=:remarks  """)
+            sb.append("""  and t1.remarks LIKE CONCAT('%',:remarks,'%')  """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.code)) {
-            sb.append("""  and t1.code=:code  """)
+            sb.append("""  and t1.code LIKE CONCAT('%',:code,'%')   """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.depotName)) {
-            sb.append("""  and t2.name=:depotName  """)
+            sb.append("""  and t2.name LIKE CONCAT('%',:depotName,'%') """)
         }
         if (carrierOrderQuery.createdDateStart!=null) {
             sb.append("""  and t1.created_date >=:createdDateStart  """)
@@ -140,7 +164,7 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             sb.append("""  and t3.ship_date >=:shipDateStart  """)
         }
         if (carrierOrderQuery.shipDateEnd!=null) {
-            sb.append("""  and t1.ship_date <=:shipDateEnd  """)
+            sb.append("""  and t3.ship_date <=:shipDateEnd  """)
         }
         if (CollectionUtil.isNotEmpty(carrierOrderQuery.depotIdList)) {
             sb.append("""  and t2.id in (:depotIdList)  """)

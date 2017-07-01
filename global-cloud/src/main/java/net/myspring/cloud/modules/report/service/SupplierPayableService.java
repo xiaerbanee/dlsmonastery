@@ -118,8 +118,8 @@ public class SupplierPayableService {
                     Map<String,List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
                     supplierPayable.setSupplierPayableDetailDtoList(supplierPayableDetailDtoMap.get(key));
                 }
-                return supplierPayableDtoList;
             }
+            return supplierPayableDtoList;
         }
         return null;
     }
@@ -183,7 +183,10 @@ public class SupplierPayableService {
         }
         Map<String,BdSupplier> bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         Map<String,BdDepartment> bdDepartmentIdMap = bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
-        Map<String,BdMaterial> materialIdMap = bdMaterialRepository.findByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
+        Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
+        if (materialIdList.size()>0){
+            materialIdMap = bdMaterialRepository.findByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
+        }
         Map<String,List<SupplierPayableDetailDto>> result = Maps.newHashMap();
         if (keyToMainBillMap.size()>0) {
             for (String key : keyToMainBillMap.keySet()) {
@@ -196,81 +199,83 @@ public class SupplierPayableService {
                     beginAmount = BigDecimal.ZERO;
                 }
                 int index = 0;
-                SupplierPayableDetailDto head = new SupplierPayableDetailDto();
-                head.setBillType(bdSupplierIdMap.get(key.split(CharConstant.COMMA)[0]).getFName());
-                head.setBillNo(bdDepartmentIdMap.get(key.split(CharConstant.COMMA)[1]).getFFullName());
-                head.setIndex(index++);
-                list.add(head);
-                
-                SupplierPayableDetailDto beginDto = new SupplierPayableDetailDto();
-                beginDto.setBillType("期初应付");
-                beginDto.setEndAmount(beginAmount);
-                beginDto.setIndex(index++);
-                list.add(beginDto);
+                SupplierPayableDetailDto supplierPayableDetailDto = new SupplierPayableDetailDto();
+                supplierPayableDetailDto.setBillType(bdSupplierIdMap.get(key.split(CharConstant.COMMA)[0]).getFName());
+                supplierPayableDetailDto.setBillNo(bdDepartmentIdMap.get(key.split(CharConstant.COMMA)[1]).getFFullName());
+                supplierPayableDetailDto.setIndex(index++);
+                list.add(supplierPayableDetailDto);
+
+                supplierPayableDetailDto = new SupplierPayableDetailDto();
+                supplierPayableDetailDto.setBillType("期初应付");
+                supplierPayableDetailDto.setEndAmount(beginAmount);
+                supplierPayableDetailDto.setIndex(index++);
+                list.add(supplierPayableDetailDto);
                 for (int i = 0; i < detailForBillList.size(); i++) {
                     SupplierPayableDetailDto main = detailForBillList.get(i);
-                    SupplierPayableDetailDto payableDetail = new SupplierPayableDetailDto();
-                    payableDetail.setBillType(main.getBillType());
-                    payableDetail.setDate(main.getDate());
-                    payableDetail.setBillNo(main.getBillNo());
-                    payableDetail.setNote(main.getNote());
-                    payableDetail.setIndex(index++);
+                    supplierPayableDetailDto = new SupplierPayableDetailDto();
+                    supplierPayableDetailDto.setBillType(main.getBillType());
+                    supplierPayableDetailDto.setDate(main.getDate());
+                    supplierPayableDetailDto.setBillNo(main.getBillNo());
+                    supplierPayableDetailDto.setNote(main.getNote());
+                    supplierPayableDetailDto.setDocumentStatus(main.getDocumentStatus());
+                    supplierPayableDetailDto.setIndex(index++);
                     //应付
                     if (main.getBillType().equals(BillTypeEnum.标准采购入库.name())) {
-                        payableDetail.setPayableAmount(main.getAmount());
-                        beginAmount = beginAmount.add(payableDetail.getPayableAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setPayableAmount(main.getAmount());
+                        beginAmount = beginAmount.add(supplierPayableDetailDto.getPayableAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     } else if (main.getBillType().equals(BillTypeEnum.标准退料单.name())) {
-                        payableDetail.setPayableAmount(BigDecimal.ZERO.subtract(main.getAmount()));
-                        beginAmount = beginAmount.add(payableDetail.getPayableAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setPayableAmount(BigDecimal.ZERO.subtract(main.getAmount()));
+                        beginAmount = beginAmount.add(supplierPayableDetailDto.getPayableAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     } else if (main.getBillType().equals(BillTypeEnum.标准应付单.name())) {
-                        payableDetail.setPayableAmount(main.getAmount());
-                        beginAmount = beginAmount.add(payableDetail.getPayableAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setPayableAmount(main.getAmount());
+                        beginAmount = beginAmount.add(supplierPayableDetailDto.getPayableAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     } else if (main.getBillType().equals(BillTypeEnum.其他应付单.name())) {
-                        payableDetail.setMaterialName(main.getMaterialId());//费用名称
-                        payableDetail.setQty(main.getQty());//费用编码
-                        payableDetail.setPayableAmount(main.getAmount());
-                        beginAmount = beginAmount.add(payableDetail.getPayableAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setMaterialName(main.getMaterialId());//费用名称
+                        supplierPayableDetailDto.setQty(main.getQty());//费用编码
+                        supplierPayableDetailDto.setPayableAmount(main.getAmount());
+                        beginAmount = beginAmount.add(supplierPayableDetailDto.getPayableAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     //实付
                     } else if (main.getBillType().equals(BillTypeEnum.采购业务付款单.name())) {
-                        payableDetail.setActualPayAmount(main.getAmount());
-                        beginAmount = beginAmount.subtract(payableDetail.getActualPayAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setActualPayAmount(main.getAmount());
+                        beginAmount = beginAmount.subtract(supplierPayableDetailDto.getActualPayAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     } else if (main.getBillType().equals(BillTypeEnum.采购业务退款单.name())) {
-                        payableDetail.setActualPayAmount(BigDecimal.ZERO.subtract(main.getAmount()));
-                        beginAmount = beginAmount.subtract(payableDetail.getActualPayAmount());
-                        payableDetail.setEndAmount(beginAmount);
-                        list.add(payableDetail);
+                        supplierPayableDetailDto.setActualPayAmount(BigDecimal.ZERO.subtract(main.getAmount()));
+                        beginAmount = beginAmount.subtract(supplierPayableDetailDto.getActualPayAmount());
+                        supplierPayableDetailDto.setEndAmount(beginAmount);
+                        list.add(supplierPayableDetailDto);
                     }
                     if (billNoToDetailBillMap.containsKey(main.getBillNo())) {
                         for (SupplierPayableDetailDto detailMaterial : billNoToDetailBillMap.get(main.getBillNo())) {
-                            SupplierPayableDetailDto payableDetailForMaterial = new SupplierPayableDetailDto();
-                            payableDetailForMaterial.setBillNo(detailMaterial.getBillNo());
-                            payableDetailForMaterial.setMaterialName(materialIdMap.get(detailMaterial.getMaterialId()).getFName());
+                            supplierPayableDetailDto = new SupplierPayableDetailDto();
+                            supplierPayableDetailDto.setBillNo(detailMaterial.getBillNo());
+                            supplierPayableDetailDto.setMaterialName(materialIdMap.get(detailMaterial.getMaterialId()).getFName());
                             if (detailMaterial.getQty() != null && detailMaterial.getQty().intValue() != 0) {
-                                payableDetailForMaterial.setPrice(detailMaterial.getAmount().divide(detailMaterial.getQty(), 2, BigDecimal.ROUND_HALF_UP));
-                                payableDetailForMaterial.setQty(detailMaterial.getQty());
+                                supplierPayableDetailDto.setPrice(detailMaterial.getAmount().divide(detailMaterial.getQty(), 2, BigDecimal.ROUND_HALF_UP));
+                                supplierPayableDetailDto.setQty(detailMaterial.getQty());
                             }
-                            payableDetailForMaterial.setAmount(detailMaterial.getAmount());
-                            payableDetailForMaterial.setNote(detailMaterial.getNote());
-                            payableDetailForMaterial.setIndex(index);
-                            list.add(payableDetailForMaterial);
+                            supplierPayableDetailDto.setAmount(detailMaterial.getAmount());
+                            supplierPayableDetailDto.setNote(detailMaterial.getNote());
+                            supplierPayableDetailDto.setDocumentStatus(detailMaterial.getDocumentStatus());
+                            supplierPayableDetailDto.setIndex(index);
+                            list.add(supplierPayableDetailDto);
                         }
                     }
                 }
-                SupplierPayableDetailDto endAmount = new SupplierPayableDetailDto();
-                endAmount.setBillType("期末应付");
-                endAmount.setEndAmount(beginAmount);
-                endAmount.setIndex(index++);
-                list.add(endAmount);
+                supplierPayableDetailDto = new SupplierPayableDetailDto();
+                supplierPayableDetailDto.setBillType("期末应付");
+                supplierPayableDetailDto.setEndAmount(beginAmount);
+                supplierPayableDetailDto.setIndex(index++);
+                list.add(supplierPayableDetailDto);
             }
         }
         return result;

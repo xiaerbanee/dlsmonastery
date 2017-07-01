@@ -453,7 +453,7 @@ export default {
     inputKey: "silahkan masukkan kata kunci",
     inputWord: "silahkan masukkan kata kunci",
     likeSearch: "pencarian fuzzy",
-    inputNotZeroPart:"masukkan bagian bebas-0",
+    inputNotZeroPart:"输入非零部分，逗号、空格或换行隔开",
     sure: "yakin",
     loading: "memuat",
     unicode: "kode",

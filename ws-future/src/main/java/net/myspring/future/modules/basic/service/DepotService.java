@@ -24,7 +24,9 @@ import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -99,18 +101,9 @@ public class DepotService {
         return depotDtoList;
     }
 
-    public DepotDto findOne(String id) {
-        DepotDto depotDto;
-        if(StringUtils.isBlank(id)) {
-            depotDto = new DepotDto();
-        } else {
-            Depot depot = depotRepository.findOne(id);
-            depotDto = BeanUtil.map(depot,DepotDto.class);
-            cacheUtils.initCacheInput(depotDto);
-            if(StringUtils.isNotBlank(depot.getDepotShopId())){
-                depotDto.setAreaType(depotShopRepository.findOne(depot.getDepotShopId()).getAreaType());
-            }
-        }
+    public DepotDto findDto(String id) {
+        DepotDto depotDto = depotRepository.findDto(id);
+        cacheUtils.initCacheInput(depotDto);
         return depotDto;
     }
 

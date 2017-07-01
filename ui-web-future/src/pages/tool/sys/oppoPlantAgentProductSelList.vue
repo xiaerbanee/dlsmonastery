@@ -9,19 +9,19 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
-        <el-form :model="inputForm"  ref="inputForm" >
+        <el-form :model="formData"  ref="inputForm" >
           <el-row :gutter="8">
             <el-col :span="12">
               <el-form-item :label="$t('物料描述')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.itemDesc" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input v-model="formData.itemDesc" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('物料编号')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="inputForm.itemNumberStr" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input type="textarea" v-model="formData.itemNumberStr" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('型号')" :label-width="formLabelWidth">
-                <el-input v-model="inputForm.productName" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
+                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -48,10 +48,24 @@
     data(){
       return this.getData()
     },mounted() {
-      //Handsontable初始化操作
-      this.search();
-      table = new Handsontable(this.$refs["handsontable"], this.settings);
-
+      axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/form').then((response) => {
+        this.inputForm = response.data;
+        if(!this.inputForm.lx){
+          this.settings.colHeaders.push("LX对应货品");
+          this.settings.columns.push({data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,productNames:[],source:this.productNames})
+          this.settings.colHeaders.push("货品型号");
+          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
+          this.settings.columns[6].source = this.inputForm.extra.productNames;
+          this.settings.columns[7].source = this.inputForm.extra.productNames;
+        }else{
+          this.settings.colHeaders.push("货品型号");
+          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
+          this.settings.columns[6].source = this.inputForm.extra.productNames;
+        }
+        //Handsontable初始化操作
+        this.search();
+        table = new Handsontable(this.$refs["handsontable"], this.settings);
+      });
     },methods: {
       setSearchText() {
         this.$nextTick(function () {
@@ -59,36 +73,32 @@
         })
       },getData() {
         return {
-          inputForm: {
-            extra:{},
+          formData:{
+          },
+          inputForm:{
+            extra:{}
           },
           searchText:'',
+          productNames:[],
           settings: {
             rowHeaders: true,
             autoColumnSize: true,
             stretchH: 'all',
             height: 650,
             startCols: 5,
-            colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品', 'LX对应货品', '统计型号'],
+            colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品'],
             columns: [
-              {data:'id',strict: true,readOnly: true,width: 100},
-              {data:'colorId',strict: true,readOnly: true,width: 100},
-              {data:'colorName',strict: true,readOnly: true,width: 100},
-              {data:'brandType',strict: true,readOnly: true,width: 100},
-              {data:'itemDesc',strict: true,readOnly: true,width: 200},
-              {data:'itemNumber',strict: true,readOnly: true,width: 100},
-              {data:'productName',type: "autocomplete",allowEmpty: true,
-                productNames:[],source:this.productNames,
-                width: 200
-              },
-              {data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,
-                productNames:[],source:this.productNames,
-                width: 200
-              },
-              {data:'typeName',strict: true,readOnly: true,width: 100}
+              {data:'id',strict: true,readOnly: true},
+              {data:'colorId',strict: true,readOnly: true},
+              {data:'colorName',strict: true,readOnly: true},
+              {data:'brandType',strict: true,readOnly: true},
+              {data:'itemDesc',strict: true,readOnly: true},
+              {data:'itemNumber',strict: true,readOnly: true},
+              {data:'productName',type: "autocomplete",allowEmpty: true,productNames:[],source:this.productNames}
             ],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
-          }, rules: {},
+          },
+          rules: {},
           submitDisabled: false,
           formLabelWidth: '120px',
           formVisible: false,
@@ -98,20 +108,27 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
+            this.inputForm.dataList = new Array();
             let tableData = [];
             let list = table.getData();
             for (let item in list) {
               if (!table.isEmptyRow(item)) {
                 let row = list[item];
                 let createForm = {};
-                createForm.id = row[0];
-                createForm.productId = row[6];
-                createForm.lxProductId = row[7];
+                if(this.inputForm.lx){
+                  createForm.id = row[0];
+                  createForm.productName = row[6];
+                  createForm.lxProductName = row[7];
+                }else{
+                  createForm.id = row[0];
+                  createForm.productName = row[6];
+                }
                 tableData.push(createForm);
               }
             }
-            this.inputForm.dataList = tableData;
-            axios.post('', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            console.log(tableData.length);
+            this.inputForm.dataList = JSON.stringify(tableData);
+            axios.post('/api/global/tool/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
@@ -126,9 +143,9 @@
           }
         })
       },getTableData(){
-        let submitData = util.deleteExtra(this.inputForm);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.post('/api/global/tool/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
+        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
           this.settings.data = response.data;
           console.log(response.data.length);
           table.loadData(this.settings.data);
@@ -140,17 +157,12 @@
       },synData(){
 
       },initPage(){
-        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response) => {
-          this.inputForm = response.data;
-          this.settings.columns[6].source = response.data.productNameList;
-          this.settings.columns[7].source = response.data.productNameList;
-          console.log("---------6"+this.settings.columns[6].source);
-          console.log("---------7"+this.settings.columns[7].source);
-          this.getTableData();
-        });
+        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
+          this.formData = response.data;
+        })
       }
-    },created() {
+    },created(){
       this.initPage();
-    },
+    }
   }
 </script>

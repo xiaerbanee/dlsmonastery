@@ -1,25 +1,29 @@
 package net.myspring.tool.modules.oppo.web.query;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import net.myspring.tool.common.query.BaseQuery;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lihx on 2017/4/19.
  */
-public class OppoPlantAgentProductSelQuery {
+public class OppoPlantAgentProductSelQuery extends BaseQuery {
     private String itemDesc;
     private String productName;
     private String itemNumberStr;
     private List<String> itemNumberList = Lists.newArrayList();
-    private List<String> productNameList = Lists.newArrayList();
+    private Boolean lx;
 
-    public List<String> getProductNameList() {
-        return productNameList;
+    public Boolean getLx() {
+        return lx;
     }
 
-    public void setProductNameList(List<String> productNameList) {
-        this.productNameList = productNameList;
+    public void setLx(Boolean lx) {
+        this.lx = lx;
     }
 
     public String getItemDesc() {

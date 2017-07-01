@@ -45,8 +45,9 @@ public class BdCustomerController {
         return bdCustomerService.findByMaxModifyDate(maxModifyDate);
     }
 
-    @RequestMapping(value = "getQuery")
-    public BdCustomerQuery getQuery(){
-        return bdCustomerService.getQuery();
+    //应收报表
+    @RequestMapping(value = "getQueryForCustomerReceive")
+    public BdCustomerQuery getQueryForCustomerReceive(){
+        return bdCustomerService.getQueryForCustomerReceive();
     }
 }

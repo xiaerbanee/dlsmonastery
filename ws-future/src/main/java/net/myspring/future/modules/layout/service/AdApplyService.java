@@ -41,14 +41,12 @@ import net.myspring.future.modules.layout.repository.AdGoodsOrderRepository;
 import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.ExcelUtils;
-import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.excel.SimpleExcelColumn;
-import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.excel.*;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -347,6 +346,76 @@ public class AdApplyService {
     public SimpleExcelBook export(AdApplyQuery adApplyQuery){
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+
+        List<AdApplyDto> adApplyDtos = findPage(new PageRequest(0,10000),adApplyQuery).getContent();
+        cacheUtils.initCacheInput(adApplyDtos);
+
+        List<String> depotNameList = Lists.newArrayList();
+        Map<String,Map<String,Integer>> productShopLeftQtyMap = Maps.newLinkedHashMap();
+        //循环遍历要导出数据，拼接成由办事处和货品的Map
+        for(AdApplyDto adApplyDto:adApplyDtos){
+            if(adApplyDto.getLeftQty()>0){
+                if(!depotNameList.contains(adApplyDto.getShopName())){
+                    depotNameList.add(adApplyDto.getShopName());
+                }
+            }
+            if(!productShopLeftQtyMap.containsKey(adApplyDto.getProductId())){
+                productShopLeftQtyMap.put(adApplyDto.getProductId(),new LinkedHashMap<>());
+            }
+            if(!productShopLeftQtyMap.get(adApplyDto.getProductId()).containsKey(adApplyDto.getShopName())){
+                productShopLeftQtyMap.get(adApplyDto.getProductId()).put(adApplyDto.getShopName(),0);
+            }
+            Integer leftQty = productShopLeftQtyMap.get(adApplyDto.getProductId()).get(adApplyDto.getShopName());
+            productShopLeftQtyMap.get(adApplyDto.getProductId()).put(adApplyDto.getShopName(),leftQty+adApplyDto.getLeftQty());
+        }
+        for(String productId:productShopLeftQtyMap.keySet()){
+            Long totalQty = 0l;
+            for(String shopName:productShopLeftQtyMap.get(productId).keySet()){
+                totalQty += productShopLeftQtyMap.get(productId).get(shopName);
+            }
+            productShopLeftQtyMap.get(productId).put("合计",totalQty.intValue());
+        }
+
+        //要导出的数据
+        List<List<SimpleExcelColumn>> datas = Lists.newArrayList();
+        Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+        //列名
+        List<SimpleExcelColumn> headers = Lists.newArrayList();
+        headers.add(new SimpleExcelColumn(headCellStyle,"序号"));
+        headers.add(new SimpleExcelColumn(headCellStyle,"物料编码"));
+        headers.add(new SimpleExcelColumn(headCellStyle,"物料名称"));
+        for(String depotName:depotNameList){
+            headers.add(new SimpleExcelColumn(headCellStyle,depotName));
+        }
+        headers.add(new SimpleExcelColumn(headCellStyle,"合计"));
+        datas.add(headers);
+        //内容
+        Integer index = 1;
+        Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
+        for(String productId:productShopLeftQtyMap.keySet()){
+            List<SimpleExcelColumn> list = Lists.newArrayList();
+            Integer amountQty = productShopLeftQtyMap.get(productId).get("合计");
+            if(amountQty > 0){
+                list.add(new SimpleExcelColumn(dataCellStyle,index.toString()));
+                list.add(new SimpleExcelColumn(dataCellStyle,productMap.get(productId).getCode()));
+                list.add(new SimpleExcelColumn(dataCellStyle,productMap.get(productId).getName()));
+                for(String depotName:depotNameList){
+                    if(productShopLeftQtyMap.get(productId).get(depotName)!=null && productShopLeftQtyMap.get(productId).get(depotName)!=0){
+                        list.add(new SimpleExcelColumn(dataCellStyle,productShopLeftQtyMap.get(productId).get(depotName).toString()));
+                    }else{
+                        list.add(new SimpleExcelColumn(dataCellStyle,""));
+                    }
+
+                }
+                list.add(new SimpleExcelColumn(dataCellStyle,productShopLeftQtyMap.get(productId).get("合计").toString()));
+                datas.add(list);
+                index++;
+            }
+        }
+        simpleExcelSheetList.add(new SimpleExcelSheet("办事处统计",datas));
 
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "id", "编码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
@@ -360,10 +429,9 @@ public class AdApplyService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "expiryDateRemarks", "截止日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-        List<AdApplyDto> adApplyDtos = findPage(new PageRequest(0,10000),adApplyQuery).getContent();
-        cacheUtils.initCacheInput(adApplyDtos);
-        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList);
-        ExcelUtils.doWrite(workbook, simpleExcelSheet);
-        return new SimpleExcelBook(workbook,"POP征订列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
+
+        simpleExcelSheetList.add(new SimpleExcelSheet("POP征订", adApplyDtos, simpleExcelColumnList));
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"物料征订明细"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheetList);
     }
 }
