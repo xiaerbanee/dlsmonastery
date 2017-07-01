@@ -39,7 +39,7 @@ public class ApPayBillController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ApPayBillForm apPayBillForm) {
-        RestResponse restResponse = new RestResponse();
+        RestResponse restResponse = new RestResponse("开单成功",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {

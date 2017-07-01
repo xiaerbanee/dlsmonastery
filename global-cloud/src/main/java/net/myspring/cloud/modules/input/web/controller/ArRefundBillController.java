@@ -37,7 +37,7 @@ public class ArRefundBillController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ArRefundBillForm apPayBillForm) {
-        RestResponse restResponse = new RestResponse();
+        RestResponse restResponse = new RestResponse("开单成功",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList = arRefundBillService.save(apPayBillForm,kingdeeBook,accountKingdeeBook);

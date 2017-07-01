@@ -43,7 +43,7 @@ public class ArOtherRecAbleController {
 
     @RequestMapping(value = "save")
     public RestResponse save(ArOtherRecAbleForm arOtherRecAbleForm) {
-        RestResponse restResponse = new RestResponse();
+        RestResponse restResponse = new RestResponse("开单成功",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {

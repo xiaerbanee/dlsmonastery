@@ -37,7 +37,7 @@ public class CnJournalForCashController {
 
     @RequestMapping(value = "save")
     public RestResponse save(CnJournalForCashForm cnJournalForCashForm) {
-        RestResponse restResponse = new RestResponse();
+        RestResponse restResponse = new RestResponse("开单成功",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
