@@ -3,10 +3,14 @@
     <head-tab active="oppoPlantAgentProductSelList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-        <el-button type="primary" @click="synData" icon="plus">同步</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-        <el-button type="primary" @click="factorySyn" icon="plus">工厂同步</el-button>
+        <div style="float:left">
+          <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
+        </div>
+        <div style="float: left;margin-left: 10px">
+          <date-picker v-model="date"></date-picker>
+        </div>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
@@ -99,6 +103,7 @@
             ],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
           },
+          date:"",
           rules: {},
           submitDisabled: false,
           formLabelWidth: '120px',
@@ -156,8 +161,6 @@
         this.setSearchText();
         this.getTableData();
       },synData(){
-
-      },factorySyn(){
 
       },initPage(){
         axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
