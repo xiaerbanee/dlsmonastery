@@ -690,6 +690,7 @@ export default {
     waitShip: "待发货",
     waitBill: "待开单",
     add: "添加",
+    batchAdd: "批量订货",
     filter: "过滤",
     export: "导出",
     filterOrExport: "过滤OR导出",
@@ -840,6 +841,20 @@ export default {
     price: "单价",
     hasIme: "包含串码",
     prerequisiteMessage: "必填信息",
+  },
+  goodsOrderBatchAdd:{
+    shopName: "门店",
+    carrierCodes: "商城单号",
+    receiveAddress:"收货地址",
+    receiver:"收货人",
+    tel:"电话",
+    remarks:"备注",
+    netType:"网络格式",
+    type:"型号",
+    num:"数量",
+    price:"单价",
+    shipType:"发货类型",
+    save:"保存"
   },
   goodsOrderShipList: {
     goodsOrderShipList: "货品发货",
@@ -1192,6 +1207,7 @@ export default {
     delete: "删除",
     audit: "审核",
     upload:"上传",
+    uploadPicture:"图片上传"
   },
   priceChangeImeDetail: {
     priceChangeImeDetail: "调价串码编辑",
