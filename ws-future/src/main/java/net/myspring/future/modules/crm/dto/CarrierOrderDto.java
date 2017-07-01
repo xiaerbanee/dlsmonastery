@@ -15,7 +15,7 @@ public class CarrierOrderDto extends DataDto<CarrierOrder>{
     private String businessId;
     private String areaId;
     private String depotName;
-    private String carrieShopName;
+    private String carrierShopName;
     private LocalDateTime shipDate;
     private String code;
     private String status;
@@ -77,12 +77,12 @@ public class CarrierOrderDto extends DataDto<CarrierOrder>{
         this.depotName = depotName;
     }
 
-    public String getCarrieShopName() {
-        return carrieShopName;
+    public String getCarrierShopName() {
+        return carrierShopName;
     }
 
-    public void setCarrieShopName(String carrieShopName) {
-        this.carrieShopName = carrieShopName;
+    public void setCarrierShopName(String carrieShopName) {
+        this.carrierShopName = carrierShopName;
     }
 
     public LocalDateTime getShipDate() {
