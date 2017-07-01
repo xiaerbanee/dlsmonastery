@@ -159,7 +159,7 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            let submitData = this.inputForm;
+            let submitData =JSON.parse(JSON.stringify(this.inputForm));
             submitData.goodsOrderBillDetailFormList = this.getDetailListForSubmit();
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
