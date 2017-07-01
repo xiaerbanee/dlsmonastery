@@ -46,7 +46,7 @@
             <el-form-item :label="$t('goodsOrderBill.shopName')" >
               {{shopAccount.name}} <div style="color:red;font-size:16px">{{shopAccount.depotShopAreaType}}</div>
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.parentName')"  >
+            <el-form-item :label="$t('goodsOrderBill.clientName')"  >
               {{shopAccount.clientName}}
             </el-form-item>
           </el-col>
