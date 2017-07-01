@@ -3,8 +3,6 @@ package net.myspring.future.modules.crm.repository
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.GoodsOrder
 import net.myspring.future.modules.crm.dto.GoodsOrderDto
-import net.myspring.future.modules.crm.dto.ImeAllotDto
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -14,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -31,7 +27,7 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
 }
 
 interface GoodsOrderRepositoryCustom {
-    fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>?
+    fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>
 
     fun findNextBusinessId(companyId:String,date: LocalDate): String
 
@@ -63,8 +59,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return (maxBusinessId + 1).toString();
     }
 
-    override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>? {
-        var sb = StringBuilder("""
+    override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {
+        val sb = StringBuilder("""
             SELECT
               t2.express_codes as expressOrderExpressCodes,
               shop.client_id clientId,
@@ -147,16 +143,14 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.lx_mall_order = 0  ")
         }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.officeIdList)) {
-            sb.append(" and t1.shop_id in (select shop.id from crm_depot shop where shop.office_id in (:officeIdList))")
+            sb.append(" and shop.office_id in (:officeIdList)")
         }
         if (CollectionUtil.isNotEmpty(goodsOrderQuery.depotIdList)) {
             sb.append(" and t1.shop_id in (:depotIdList)")
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
-        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(goodsOrderQuery), BeanPropertyRowMapper(GoodsOrderDto::class.java));
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(goodsOrderQuery),Long::class.java);
-        return PageImpl(list,pageable,count);
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(goodsOrderQuery), BeanPropertyRowMapper(GoodsOrderDto::class.java))
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
 }

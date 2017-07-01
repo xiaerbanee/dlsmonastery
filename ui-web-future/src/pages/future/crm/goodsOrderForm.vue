@@ -28,7 +28,7 @@
                 </el-form-item>
               </div>
               <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
-                <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
+                <el-select :disabled="!isCreate" v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
                   <el-option v-for="item in inputForm.extra.shipTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -214,19 +214,19 @@
       },initPage(){
         axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
-          util.copyValue(response.data,this.inputForm);
-        if(!this.isCreate) {
-          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-            this.shop = response.data;
+          axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+            util.copyValue(response.data,this.inputForm);
+            if(!this.isCreate) {
+              axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
+                this.shop = response.data;
+              });
+            }
+          });
         });
-        }
-      });
-      });
         if(!this.isCreate){
           axios.get('/api/ws/future/crm/goodsOrder/findDetailList',{params: {id:this.$route.query.id}}).then((response)=>{
             this.setGoodsOrderDetailList(response.data);
-          this.initSummary();
+            this.initSummary();
         });
         }
       }

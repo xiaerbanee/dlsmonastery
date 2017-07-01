@@ -7,18 +7,47 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by zhangyf on 2017/5/6.
  */
 public class ShopBuildQuery extends BaseQuery {
     private String officeId;
+    private String idStr;
     private String auditType;
     private String shopId;
     private String processStatus;
     private String fixtureType;
     private String createdBy;
     private String createdDate;
+    private String lastModifiedBy;
+    private String lastModifiedDate;
+
+    public String getIdStr() {
+        return idStr;
+    }
+
+    public void setIdStr(String idStr) {
+        this.idStr = idStr;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
     public String getProcessStatus() {
         return processStatus;
@@ -98,6 +127,30 @@ public class ShopBuildQuery extends BaseQuery {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else {
+            return null;
+        }
+    }
+
+    public LocalDate getLastModifiedDateStart() {
+        if(StringUtils.isNotBlank(lastModifiedDate)) {
+            return LocalDateUtils.parse(lastModifiedDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getLastModifiedDateEnd() {
+        if(StringUtils.isNotBlank(lastModifiedDate)) {
+            return LocalDateUtils.parse(lastModifiedDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
+    }
+
+    public List<String> getIdLists(){
+        if(StringUtils.isNotBlank(idStr)){
+            return Arrays.asList(idStr.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
+        }else{
             return null;
         }
     }

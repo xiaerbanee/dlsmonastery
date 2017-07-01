@@ -11,7 +11,6 @@ import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import net.myspring.util.excel.ExcelView;
-import net.myspring.util.excel.SimpleExcelBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -76,5 +75,10 @@ public class PriceChangeImeController {
     public RestResponse audit(PriceChangeImeForm priceChangeImeForm){
         priceChangeImeService.audit(priceChangeImeForm);
         return new RestResponse("审核成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "export",method = RequestMethod.GET)
+    private ModelAndView export(PriceChangeImeQuery priceChangeImeQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",priceChangeImeService.export(priceChangeImeQuery));
     }
 }

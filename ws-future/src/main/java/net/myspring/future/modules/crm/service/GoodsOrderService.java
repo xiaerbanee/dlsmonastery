@@ -25,8 +25,8 @@ import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.*;
@@ -417,7 +417,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netType.equals(product.getNetType())) {
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netTypeMatch(netType, product.getNetType())) {
                 //是否允许下单
                 Boolean showNotAllow = true;
                 //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
@@ -475,16 +475,15 @@ public class GoodsOrderService {
         Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
         if(StringUtils.isNotBlank(shop.getClientId())) {
             Client client = clientRepository.findOne(shop.getClientId());
-            goodsOrderDto.setSyn(client != null);
-            if(client!=null){
-                CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-                customerReceiveQuery.setDateStart(LocalDate.now());
-                customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
-                customerReceiveQuery.setCustomerIdList(Lists.newArrayList(client.getOutId()));
-                List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-                if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
-                    goodsOrderDto.setShopShouldGet(customerReceiveDtoList.get(0).getEndShouldGet());
-                }
+            goodsOrderDto.setSyn(true);
+
+            CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+            customerReceiveQuery.setDateStart(LocalDate.now());
+            customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+            customerReceiveQuery.setCustomerIdList(Lists.newArrayList(client.getOutId()));
+            List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+            if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
+                goodsOrderDto.setShopShouldGet(customerReceiveDtoList.get(0).getEndShouldGet());
             }
         }
         goodsOrderDto.setShipType(expressOrder.getShipType());
@@ -510,7 +509,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && product.getNetType().equals(goodsOrderDto.getNetType())) {
+            if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && netTypeMatch(goodsOrderDto.getNetType(), product.getNetType())) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setProductOutId(product.getOutId());
@@ -534,6 +533,10 @@ public class GoodsOrderService {
 
 
         return goodsOrderDto;
+    }
+
+    private boolean netTypeMatch(String netType1, String netType2) {
+        return netType1.equals(netType2) || NetTypeEnum.全网通.name().equals(netType1) || NetTypeEnum.全网通.name().equals(netType2);
     }
 
     private Map<String,Integer> getAreaBillQtyMap(String areaId, String exceptGoodsOrderId) {

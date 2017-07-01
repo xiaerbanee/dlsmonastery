@@ -14,13 +14,13 @@
               <depot-select v-model="inputForm.shopId" category="adShop" :disabled="!isCreate"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
-              <el-input v-model="inputForm.length"></el-input>
+              <el-input v-model.number="inputForm.length" auto-complete="off" :placeholder="$t('shopAdForm.transverseDimensions')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.width')" prop="width">
-              <el-input v-model="inputForm.width" ></el-input>
+              <el-input v-model.number="inputForm.width" auto-complete="off" :placeholder="$t('shopAdForm.longitudinalDimension')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.qty')" prop="qty">
-              <el-input v-model="inputForm.qty" ></el-input>
+              <el-input v-model.number="inputForm.qty" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.content')" prop="content">
               <el-input v-model="inputForm.content" type="textarea"></el-input>
@@ -69,9 +69,10 @@
           rules: {
             shopAdTypeId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
             shopId: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-            length: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-            width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
-            qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
+            length: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
+            width: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
+            qty: [{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')},{type:"number",message:this.$t('shopPrintForm.inputLegalValue')}],
+            content:[{ required: true, message: this.$t('shopAdForm.prerequisiteMessage')}],
           },
         }
       },

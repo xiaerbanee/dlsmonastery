@@ -55,6 +55,7 @@
       methods:{
         getData(){
           return{
+            isCreate:this.$route.query.id==null,
             submitDisabled:false,
             inputForm:{
               extra:{}
@@ -77,7 +78,7 @@
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/crm/shopDeposit/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+              axios.post('/api/ws/future/layout/shopDeposit/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
                 if(response.data.success) {
@@ -100,8 +101,13 @@
             });
         },initPage(){
           //押金列表只能增加，不能修改
-          axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
+          axios.get('/api/ws/future/layout/shopDeposit/getForm').then((response)=>{
             this.inputForm = response.data;
+            if(!this.isCreate){
+              axios.get('/api/ws/future/layout/shopDeposit/findDto', {params: {id:this.$route.query.id}}).then((response)=>{
+                util.copyValue(response.data, this.inputForm);
+              });
+            }
           });
         }
       },created () {

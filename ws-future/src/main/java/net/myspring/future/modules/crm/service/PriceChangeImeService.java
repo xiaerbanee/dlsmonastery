@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.service;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
@@ -16,14 +17,23 @@ import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,5 +172,31 @@ public class PriceChangeImeService {
             return "保存成功";
         }
 
+    }
+
+    public SimpleExcelBook export(PriceChangeImeQuery priceChangeImeQuery) {
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "priceChangeName", "调价项目"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "货品型号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "saleDate", "销售日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "auditDate", "审批时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "status", "状态"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "最后修改人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "最后修改时间"));
+
+        List<PriceChangeImeDto> priceChangeImeDtoList = findPage(new PageRequest(0,10000),priceChangeImeQuery).getContent();
+        cacheUtils.initCacheInput(priceChangeImeDtoList);
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("调价串码", priceChangeImeDtoList, simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"调价串码列表"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheet);
     }
 }

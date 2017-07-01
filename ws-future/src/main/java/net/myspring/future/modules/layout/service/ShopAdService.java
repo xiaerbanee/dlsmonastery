@@ -170,13 +170,23 @@ public class ShopAdService {
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
 
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "广告编号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopAdTypeName", "广告品种"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "length", "长度"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "width", "宽度"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "width", "高度"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "area", "总面积"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialArea", "是否专区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopAdTypePrice", "单价"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "price", "总价"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "specialAreaToString", "是否专区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "内容说明"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "申请人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
 
         List<ShopAdDto> shopAdDtoList = findPage(new PageRequest(0,10000),shopAdQuery).getContent();
         cacheUtils.initCacheInput(shopAdDtoList);

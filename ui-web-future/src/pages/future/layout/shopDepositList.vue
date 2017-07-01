@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">{{$t('shopDepositList.add')}}</el-button>
+        <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">批量添加</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
         <el-button type="primary" @click="exportLatest"  v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.exportLatest')}}</el-button>
         <span v-html="searchText"></span>
@@ -36,9 +37,8 @@
           <el-button type="primary" @click="search()">{{$t('shopDepositList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
-
-        <el-table-column fixed prop="id" :label="$t('shopDepositList.billCode')" sortable width="100"></el-table-column>
+      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
+        <el-table-column prop="id" :label="$t('shopDepositList.billCode')" sortable></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopDepositList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopAreaName" :label="$t('shopDepositList.areaName')" ></el-table-column>
         <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')" ></el-table-column>
@@ -50,18 +50,17 @@
         <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')" sortable></el-table-column>
         <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('shopDepositList.lastModifiedBy')" sortable></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('shopDepositList.lastModifiedDate')" sortable></el-table-column>
-        <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')" sortable></el-table-column>
-        <el-table-column prop="locked" :label="$t('shopDepositList.locked')" width="100">
+        <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')" sortable width="200"></el-table-column>
+        <el-table-column prop="locked" :label="$t('shopDepositList.locked')" width="70">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('shopDepositList.enabled')" width="100">
+        <el-table-column prop="enabled" :label="$t('shopDepositList.enabled')" width="70">
           <template scope="scope">
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
@@ -84,7 +83,6 @@
         initPromise:{},
         searchText:"",
         formVisible: false,
-        pageHeight: 600,
       };
     },
     methods: {
@@ -99,7 +97,7 @@
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("shopDepositList",submitData);
 
-        axios.get('/api/ws/future/crm/shopDeposit?'+qs.stringify(submitData)).then((response) => {
+        axios.get('/api/ws/future/layout/shopDeposit?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         });
@@ -117,17 +115,17 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'shopDepositForm'});
+      },itemBatchAdd(){
+        this.$router.push({ name: 'shopDepositBatchForm'})
       },exportLatest(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/shopDeposit/exportLatest').then((response)=> {
+          axios.get('/api/ws/future/layout/shopDeposit/exportLatest').then((response)=> {
             window.location.href="/api/general/sys/folderFile/download?id="+response.data;
           });
         }).catch(()=>{});
-
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
-      this.initPromise = axios.get('/api/ws/future/crm/shopDeposit/getQuery').then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/layout/shopDeposit/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
       });

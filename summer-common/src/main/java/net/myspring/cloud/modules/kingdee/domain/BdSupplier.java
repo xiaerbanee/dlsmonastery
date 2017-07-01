@@ -8,7 +8,7 @@ public class BdSupplier{
     private String FSupplierId;
     //对应业务系统的outCode
     private String FNumber;
-    //
+    //名称
     private String FName;
     //审核状态
     private String FDocumentStatus;

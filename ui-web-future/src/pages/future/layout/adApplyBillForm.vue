@@ -25,8 +25,10 @@
         </el-form-item>
       </el-form>
       <el-row :gutter="20" style="margin-bottom:20px;float:right">
+        <span>{{$t('adApplyBillForm.billQty')}}</span>
+        <el-input v-model.number="billGoodsSortQty" @change="billGoodsSort" style="width:200px;margin-right:10px"></el-input>
         <span>{{$t('adApplyBillForm.search')}}</span>
-       <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
+        <el-input v-model="productOrShopName" @change="searchDetail" :placeholder="$t('adApplyBillForm.inputKey')" style="width:200px;margin-right:10px"></el-input>
      </el-row>
       <el-table :data="filterAdApplyList"  stripe border>
         <el-table-column prop="shopName" :label="$t('adApplyBillForm.shopName')" ></el-table-column>
@@ -75,6 +77,7 @@
           totalConfirmQty:0,
           totalLeftQty:0,
           totalNowBilledQty:0,
+          billGoodsSortQty:"",
         };
       },
       formSubmit(){
@@ -140,6 +143,29 @@
           }
         }
         this.totalNowBilledQty = tempTotalNowBilledQty;
+      },billGoodsSort(){
+          let val = this.billGoodsSortQty;
+          if(!val){
+              for(let index of this.filterAdApplyList){
+                  index.nowBilledQty = "";
+              }
+          }
+          let tempVal = val;
+          for(let index of this.filterAdApplyList){
+              if(tempVal >0){
+                if(index.leftQty<tempVal){
+                  index.nowBilledQty = index.leftQty;
+                  tempVal = tempVal - index.leftQty;
+                }else{
+                  index.nowBilledQty = tempVal;
+                  tempVal = 0;
+                }
+              }else{
+                  index.nowBilledQty = "";
+              }
+
+          }
+          this.getTotalNowBilledQty();
       },
       searchDetail(){
         var val=this.productOrShopName;
@@ -155,7 +181,7 @@
           }
         }
         for(var index of this.adApplyList){
-          if((util.contains(index.shopName,val)||util.contains(index.productName,val))&&util.isBlank(index.nowBilledQty)){
+          if((util.contains(index.shopName,val)||util.contains(index.productName,val)||util.contains(index.productCode,val))&&util.isBlank(index.nowBilledQty)){
             tempList.push(index)
           }
         }

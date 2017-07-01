@@ -23,7 +23,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 客户应收报表
+ * 客户-应收
  * Created by liuj on 2017/5/11.
  */
 @Service
@@ -40,11 +40,11 @@ public class CustomerReceiveService {
         LocalDate dateEnd =  customerReceiveQuery.getDateEnd();
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
         if (customerIdList.size() > 0 && dateStart != null && dateEnd != null) {
-            List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
-            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd.plusDays(1), customerIdList);
             //期初结余
+            List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
             Map<String, BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             //期末结余
+            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd.plusDays(1), customerIdList);
             Map<String, BigDecimal> custIdToEndAccountMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             List<BdCustomer> customerList = bdCustomerRepository.findByIdList(customerIdList);
             List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
@@ -106,7 +106,7 @@ public class CustomerReceiveService {
         LocalDate dateStart =  customerReceiveDetailQuery.getDateStart();
         //期初应收
         List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
-        Map<String,BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+        Map<String,BigDecimal> custIdToBeginAmountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
         //设置主单备注
@@ -151,7 +151,7 @@ public class CustomerReceiveService {
                     result.put(customerId,Lists.newArrayList());
                 }
                 List<CustomerReceiveDetailDto> list = result.get(customerId);
-                BigDecimal endShouldGet = custIdToBeginAccountMap.get(customerId);
+                BigDecimal endShouldGet = custIdToBeginAmountMap.get(customerId);
                 if (endShouldGet == null){
                     endShouldGet = BigDecimal.ZERO;
                 }

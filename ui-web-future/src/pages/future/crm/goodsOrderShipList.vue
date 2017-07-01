@@ -76,8 +76,8 @@
         </div>
       </search-dialog>
 
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" border v-loading="pageLoading" :element-loading-text="$t('goodsOrderShipList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="businessId" :label="$t('goodsOrderShipList.businessId')" sortable width="150"></el-table-column>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderShipList.loading')" @sort-change="sortChange" stripe border >
+        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderShipList.businessId')" sortable width="150"></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderShipList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderShipList.status')"></el-table-column>
         <el-table-column prop="shopName" :label="$t('goodsOrderShipList.shop')" ></el-table-column>
@@ -91,7 +91,7 @@
         <el-table-column fixed="right" :label="$t('goodsOrderShipList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">{{$t('goodsOrderShipList.ship')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'"><el-button size="small" @click.native="itemShip(scope.row.formatId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderShipList.sign')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
@@ -160,8 +160,7 @@
     },itemAction:function(id,action){
       if(action=="detail") {
         this.$router.push({ name: 'goodsOrderDetail', query: { id: id }})
-      }else if(action =="ship"){
-        this.$router.push({name:'goodsOrderShip',query:{id:id}})
+
       }else if(action=="sign"){
         util.confirmBefore(this).then(() => {
           axios.get('/api/ws/future/crm/goodsOrderShip/sign',{params:{goodsOrderId:id}}).then((response) =>{
@@ -192,6 +191,8 @@
       }else if(action=="expressPrint"){
         window.open("/#/future/crm/goodsOrderExpressPrint?id="+id,",");
       }
+    },itemShip(formatId){
+      this.$router.push({name:'goodsOrderShip',query:{formatId:formatId}});
     }
  },created () {
     var that = this;

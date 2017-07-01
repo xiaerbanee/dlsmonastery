@@ -38,16 +38,18 @@ public class StkMisDeliveryController {
 
     @RequestMapping(value = "save")
     public RestResponse save(StkMisDeliveryForm stkMisDeliveryForm) {
-        RestResponse restResponse = new RestResponse("",null,true);
+        RestResponse restResponse = new RestResponse("开单失败",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = stkMisDeliveryService.save(stkMisDeliveryForm,kingdeeBook,accountKingdeeBook);
-        for(KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList){
-            if (kingdeeSynDto.getSuccess()){
-                 restResponse = new RestResponse("其他出库单开单成功：" + kingdeeSynDto.getBillNo(),null,true);
-            }else {
-                throw new ServiceException("其他出库单开单失败："+kingdeeSynDto.getResult());
+        if (accountKingdeeBook != null) {
+            List<KingdeeSynDto> kingdeeSynDtoList = stkMisDeliveryService.save(stkMisDeliveryForm, kingdeeBook, accountKingdeeBook);
+            for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+                if (kingdeeSynDto.getSuccess()) {
+                    restResponse = new RestResponse("其他出库单开单成功：" + kingdeeSynDto.getBillNo(), null, true);
+                }
             }
+        }else {
+            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
         }
         return restResponse;
     }
