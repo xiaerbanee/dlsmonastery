@@ -108,6 +108,10 @@ public class GoodsOrderService {
     @Autowired
     private CloudClient cloudClient;
 
+    public GoodsOrder findByBusinessId(String businessId){
+        return goodsOrderRepository.findByBusinessId(businessId);
+    }
+
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
             goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
