@@ -6,13 +6,11 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.util.text.StringUtils;
@@ -20,14 +18,17 @@ import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Created by liuj on 2017/5/15.
- */
+
 @RestController
 @RequestMapping(value = "basic/depot")
 public class DepotController {
@@ -35,11 +36,7 @@ public class DepotController {
     @Autowired
     private DepotService depotService;
     @Autowired
-    private OfficeClient officeClient;
-    @Autowired
     private CloudClient cloudClient;
-    @Autowired
-    private DepotShopService depotShopService;
 
     //直营门店查询(POP申请开单类型为配件赠品用这个)
     @RequestMapping(value = "directShop")
@@ -146,7 +143,10 @@ public class DepotController {
 
     @RequestMapping(value = "findOne")
     public DepotDto findOne(String id) {
-        return depotService.findOne(id);
+        if(StringUtils.isBlank(id)){
+            return new DepotDto();
+        }
+        return depotService.findDto(id);
     }
 
     @RequestMapping(value = "scheduleSynArea")
