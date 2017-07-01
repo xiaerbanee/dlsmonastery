@@ -1013,6 +1013,16 @@ export default {
     saleCreatedDate: "核销时间",
 
   },
+  carrierOrderForm:{
+    orderCode:"订单编号",
+    shopDetail:"商城详情",
+    prerequisiteMessage:"必填信息",
+    save:"保存"
+  },
+  carrierOrderShip:{
+    billCode:"商城单号",
+    shipCode:"发货串码"
+  },
   imeAllotBatchForm: {
     imeAllotBatchForm: "串码批量调拨编辑",
     formInvalid:'页面存在错误，请先修正错误',

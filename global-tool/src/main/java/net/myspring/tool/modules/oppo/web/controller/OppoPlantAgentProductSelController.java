@@ -6,6 +6,7 @@ import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,9 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "save")
     public RestResponse save(String data){
-        oppoPlantAgentProductSelService.save(data);
+        if(StringUtils.isNotBlank(data)){
+            oppoPlantAgentProductSelService.save(data);
+        }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 

@@ -50,9 +50,7 @@
     },mounted() {
       axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/form').then((response) => {
         this.inputForm = response.data;
-        this.lx = this.inputForm.lx;
-        console.log(this.lx)
-        if(this.lx){
+        if(!this.inputForm.lx){
           this.settings.colHeaders.push("LX对应货品");
           this.settings.columns.push({data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,productNames:[],source:this.productNames})
           this.settings.colHeaders.push("货品型号");
@@ -62,7 +60,7 @@
         }else{
           this.settings.colHeaders.push("货品型号");
           this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = extra.empInfoNameList;
+          this.settings.columns[6].source = this.inputForm.extra.productNames;
         }
         //Handsontable初始化操作
         this.search();
@@ -75,7 +73,8 @@
         })
       },getData() {
         return {
-          formData:{},
+          formData:{
+          },
           inputForm:{
             extra:{}
           },
