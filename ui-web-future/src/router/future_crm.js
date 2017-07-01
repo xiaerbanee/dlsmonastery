@@ -86,6 +86,8 @@ const storeAllotShipPrint= r => require.ensure([], () => r(require('pages/future
 const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/crm/storeAllotDetail.vue')));
 const storeInventoryReport = r => require.ensure([], () => r(require('pages/future/crm/storeInventoryReport.vue')));
 
+const carrierOrderList= r => require.ensure([], () => r(require('pages/future/api/carrierOrderList.vue')));
+
 
 
 let routes = [
@@ -176,6 +178,9 @@ let routes = [
   {path:'/future/crm/storeAllotShipPrint',component:storeAllotShipPrint,name:'storeAllotShipPrint',meta: {hidden: true}},
   {path:'/future/crm/storeAllotDetail',component:storeAllotDetail,name:'storeAllotDetail',meta: {menu:"storeAllotList"}},
   {path:'/future/crm/storeInventoryReport',component:storeInventoryReport,name:'storeInventoryReport'},
+
+  {path:'/future/api/carrierOrderList',component:carrierOrderList,name:'carrierOrderList'},
+
 
 ];
 
