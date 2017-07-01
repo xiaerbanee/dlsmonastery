@@ -1,7 +1,10 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestResponse;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.service.OppoPlantAgentProductSelService;
+import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
 import net.myspring.tool.modules.oppo.web.query.OppoPlantAgentProductSelQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +26,18 @@ public class OppoPlantAgentProductSelController {
 
     @RequestMapping(value = "getQuery")
     public OppoPlantAgentProductSelQuery getQuery(OppoPlantAgentProductSelQuery oppoPlantAgentProductSelQuery){
-        oppoPlantAgentProductSelQuery.setProductNameList(oppoPlantAgentProductSelService.findHasImeProduct());
         return oppoPlantAgentProductSelQuery;
     }
+
+    @RequestMapping(value = "form")
+    public OppoPlantAgentProductSqlForm form(OppoPlantAgentProductSqlForm oppoPlantAgentProductSqlForm){
+        return oppoPlantAgentProductSelService.form(oppoPlantAgentProductSqlForm);
+    }
+
+    @RequestMapping(value = "save")
+    public RestResponse save(String data){
+        oppoPlantAgentProductSelService.save(data);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
 }

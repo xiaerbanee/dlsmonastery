@@ -117,7 +117,8 @@ public class ShopAdQuery extends BaseQuery{
 
     public List<String> getIds(){
         if(StringUtils.isNotBlank(id)){
-           return Arrays.asList(id.split(",| "));
+           return Arrays.asList(id.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.SPACE
+                   +CharConstant.VERTICAL_LINE+CharConstant.ENTER));
         }else{
             return null;
         }
