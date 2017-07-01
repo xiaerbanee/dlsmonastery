@@ -1,9 +1,13 @@
 package net.myspring.tool.modules.oppo.dto;
 
+import net.myspring.common.dto.DataDto;
+import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.util.cahe.annotation.CacheInput;
 
-public class OppoPlantAgentProductSelDto {
-    private String id;
+import java.util.List;
+
+
+public class OppoPlantAgentProductSelDto extends DataDto<OppoPlantAgentProductSel> {
     private String brandId;
     private String brandName;
     private String typeId;
@@ -21,14 +25,6 @@ public class OppoPlantAgentProductSelDto {
 
     public String getBrandId() {
         return brandId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setBrandId(String brandId) {

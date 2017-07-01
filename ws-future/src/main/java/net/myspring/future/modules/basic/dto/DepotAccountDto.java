@@ -20,12 +20,30 @@ public class DepotAccountDto extends DataDto<Depot> {
     private String clientName;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "outId")
     private String clientOutId;
+    private String depotShopAreaType;
+    private BigDecimal credit;
 
     private BigDecimal qcys; //期初应收
     private BigDecimal qmys; //期末应收
     private BigDecimal scbzj; //市场保证金
     private BigDecimal xxbzj; //形象保证金
     private BigDecimal ysjyj; //演示机押金
+
+    public String getDepotShopAreaType() {
+        return depotShopAreaType;
+    }
+
+    public void setDepotShopAreaType(String depotShopAreaType) {
+        this.depotShopAreaType = depotShopAreaType;
+    }
+
+    public BigDecimal getCredit() {
+        return credit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
+    }
 
     public String getAreaId() {
         return areaId;

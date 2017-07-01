@@ -25,7 +25,8 @@ import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.*;
-import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
+import net.myspring.future.modules.basic.dto.DepotAccountDto;
+import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
@@ -33,7 +34,6 @@ import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
-import net.myspring.future.modules.crm.domain.GoodsOrderIme;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
@@ -46,7 +46,6 @@ import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
-import net.myspring.future.modules.layout.repository.ShopGoodsDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
@@ -96,11 +95,7 @@ public class GoodsOrderService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private ShopGoodsDepositRepository shopGoodsDepositRepository;
-    @Autowired
     private SalOutStockManager salOutStockManager;
-    @Autowired
-    private ArOtherRecAbleManager arOtherRecAbleManager;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired
@@ -108,12 +103,16 @@ public class GoodsOrderService {
     @Autowired
     private CloudClient cloudClient;
 
+    public GoodsOrder findByBusinessId(String businessId){
+        return goodsOrderRepository.findByBusinessId(businessId);
+    }
+
     public Page<GoodsOrderDto> findAll(Pageable pageable, GoodsOrderQuery goodsOrderQuery) {
         if (goodsOrderQuery.getExpressCodes() != null) {
-            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("\n|,")));
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("[\n,]")));
         }
         if (goodsOrderQuery.getBusinessIds() != null) {
-            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("\n|,")));
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("[\n,]")));
         }
         goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<GoodsOrderDto> page = goodsOrderRepository.findAll(pageable, goodsOrderQuery);
@@ -227,7 +226,7 @@ public class GoodsOrderService {
     }
 
     //开单
-    public  GoodsOrder bill(GoodsOrderBillForm goodsOrderBillForm) {
+    public  void bill(GoodsOrderBillForm goodsOrderBillForm) {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
@@ -283,10 +282,10 @@ public class GoodsOrderService {
         if (goodsOrderBillForm.getSyn()) {
             syn(goodsOrder, expressOrder);
         }
-        return goodsOrder;
+
     }
 
-    private GoodsOrder syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
+    private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
         CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
@@ -321,7 +320,6 @@ public class GoodsOrderService {
         expressOrder.setOutCode(goodsOrder.getOutCode()==null ? null : goodsOrder.getOutCode().replaceAll(CharConstant.COMMA, "<br/>"));
         expressOrderRepository.save(expressOrder);
 
-        return goodsOrder;
     }
 
     private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
@@ -470,17 +468,7 @@ public class GoodsOrderService {
         goodsOrderDto.setSyn(false);
         Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
         if(StringUtils.isNotBlank(shop.getClientId())) {
-            Client client = clientRepository.findOne(shop.getClientId());
             goodsOrderDto.setSyn(true);
-
-            CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-            customerReceiveQuery.setDateStart(LocalDate.now());
-            customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
-            customerReceiveQuery.setCustomerIdList(Lists.newArrayList(client.getOutId()));
-            List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-            if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
-                goodsOrderDto.setShopShouldGet(customerReceiveDtoList.get(0).getEndShouldGet());
-            }
         }
         goodsOrderDto.setShipType(expressOrder.getShipType());
         goodsOrderDto.setAddress(expressOrder.getAddress());
@@ -518,15 +506,12 @@ public class GoodsOrderService {
             }
         }
 
-        // 设置areaQty及stockQty
-        Map<String, Integer> cloudQtyMap = depotManager.getCloudQtyMap( goodsOrderDto.getStoreId());
+        // 设置areaQty
         Map<String, Integer> areaBillQtyMap = getAreaBillQtyMap( shop.getAreaId(), id);
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
             goodsOrderDetailDto.setAreaQty(areaBillQtyMap.get(goodsOrderDetailDto.getProductId()));
-            goodsOrderDetailDto.setStoreQty(cloudQtyMap.get(goodsOrderDetailDto.getProductOutId()));
         }
         goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
-
 
         return goodsOrderDto;
     }
@@ -556,8 +541,7 @@ public class GoodsOrderService {
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
         List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
         cacheUtils.initCacheInput(goodsOrderDetailDtoList);
-        List<GoodsOrderIme> goodsOrderImeList  = goodsOrderImeRepository.findByGoodsOrderId(id);
-        List<GoodsOrderImeDto> goodsOrderImeDtoList= BeanUtil.map(goodsOrderImeList,GoodsOrderImeDto.class);
+        List<GoodsOrderImeDto> goodsOrderImeDtoList  = goodsOrderImeRepository.findDtoListByGoodsOrderId(id);
         cacheUtils.initCacheInput(goodsOrderImeDtoList);
         goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
         goodsOrderDto.setGoodsOrderImeDtoList(goodsOrderImeDtoList);
@@ -566,5 +550,29 @@ public class GoodsOrderService {
 
     public void delete(String id) {
         goodsOrderRepository.logicDelete(id);
+    }
+
+    public DepotAccountDto findShopAccountByGoodsOrderId(String goodsOrderId) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
+        if(StringUtils.isBlank(goodsOrder.getShopId())){
+            return new DepotAccountDto();
+        }
+
+        DepotAccountDto result = depotRepository.findDepotAccount(goodsOrder.getShopId());
+        cacheUtils.initCacheInput(result);
+
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setDateStart(LocalDate.now());
+        customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+        customerReceiveQuery.setCustomerIdList(Lists.newArrayList(result.getClientOutId()));
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
+            result.setQcys(customerReceiveDtoList.get(0).getBeginShouldGet());
+            result.setQmys(customerReceiveDtoList.get(0).getEndShouldGet());
+        }else {
+            result.setQcys(BigDecimal.ZERO);
+            result.setQmys(BigDecimal.ZERO);
+        }
+        return result;
     }
 }

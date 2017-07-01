@@ -22,6 +22,8 @@ import java.util.*
 interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderRepositoryCustom {
 
     fun findByBusinessIdIn(businessIdList: List<String>):MutableList<GoodsOrder>
+
+    fun findByBusinessId(businessId: String):GoodsOrder
 }
 
 interface GoodsOrderRepositoryCustom {

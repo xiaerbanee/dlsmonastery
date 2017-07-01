@@ -6,8 +6,8 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="inputForm.storeId" clearable filterable @change="storeChange">
-                <el-option v-for="item in inputForm.extra.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              <el-select v-model="inputForm.storeId" clearable filterable @change="refreshStoreQty">
+                <el-option v-for="item in formProperty.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.expressCompany')" prop="expressCompanyId">
               <el-select v-model="inputForm.expressCompanyId" clearable  >
-                <el-option v-for="item in inputForm.extra.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                <el-option v-for="item in formProperty.expressCompanyList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.synToCloud')" prop="syn">
@@ -42,28 +42,28 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.areaName')" >
-              {{shop.areaName}}
+              {{shopAccount.areaName}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shopName')" >
-              {{shop.name}} <div style="color:red;font-size:16px">{{shop.areaType}}</div>
+              {{shopAccount.name}} <div style="color:red;font-size:16px">{{shopAccount.depotShopAreaType}}</div>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.parentName')"  >
-              {{shop.clientName}}
+              {{shopAccount.clientName}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shopCredit')" prop="title">
-              {{shop.credit}}
+            <el-form-item :label="$t('goodsOrderBill.shopCredit')">
+              {{shopAccount.credit}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shouldGet')" prop="remarks" >
-              {{goodsOrder.shopShouldGet}}
+            <el-form-item :label="$t('goodsOrderBill.shouldGet')">
+              {{shopAccount.qmys}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.shopRemarks')" prop="remarks">
-              {{shop.remarks}}
+            <el-form-item :label="$t('goodsOrderBill.shopRemarks')">
+              {{shopAccount.remarks}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.credit')" prop="title">
-              {{shop.credit}}
+            <el-form-item :label="$t('goodsOrderBill.credit')">
+              {{shopAccount.credit}}
             </el-form-item>
-            <el-form-item :label="$t('goodsOrderBill.summary')" prop="summary">
-                {{summary}}
+            <el-form-item :label="$t('goodsOrderBill.summary')" >
+              总开单数{{summaryInfo.totalBillQty }}, 总开单金额{{summaryInfo.totalBillAmount.toFixed(2)}}, 总货品数{{summaryInfo.totalProductBillQty }}, 总货品金额{{summaryInfo.totalProductBillAmount.toFixed(2)}}
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBill.save')}}</el-button>
@@ -84,12 +84,12 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @input="billQtyChanged()" class="el-input__inner"/>
+            <el-input v-model.number="scope.row.billQty" @input="billQtyChanged(scope.row)" ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
           <template scope="scope">
-            <input type="text" v-model="scope.row.price" @input="initSummary()" class="el-input__inner"/>
+            <el-input v-model.number="scope.row.price" @input="initSummary(scope.row)" ></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="hasIme" :label="$t('goodsOrderBill.hasIme')" >
@@ -113,14 +113,33 @@
         submitDisabled:false,
         filterValue:"",
         filterDetailList:[],
-        inputForm:{
-          extra:{}
+        formProperty:{
+          expressProductId:null,
+          expressRuleList:[],
+          storeList:[],
+          expressCompanyList:[],
         },
-        shop:{},
+        shopAccount:{},
+        inputForm:{
+          id:null,
+          storeId:null,
+          billDate:null,
+          expressCompanyId:null,
+          syn:null,
+          remarks:null,
+          contator:null,
+          address:null,
+          mobilePhone:null,
+          goodsOrderBillDetailFormList:[],
+        },
         goodsOrder:{},
-        expressConfig:{},
         shouldGet:null,
-        summary:"",
+        summaryInfo:{
+          totalBillQty:0,
+          totalBillAmount:0,
+          totalProductBillQty:0,
+          totalProductBillAmount:0,
+        },
         rules: {
           storeId: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
           billDate: [{ required: true, message: this.$t('goodsOrderBill.prerequisiteMessage')}],
@@ -139,7 +158,7 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            let submitData = util.deleteExtra(this.inputForm);
+            let submitData = this.inputForm;
             submitData.goodsOrderBillDetailFormList = this.getDetailListForSubmit();
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
@@ -155,111 +174,128 @@
       },filterProducts(){
         let val=this.filterValue;
         if(util.isBlank(val)) {
-          this.filterDetailList = this.inputForm.goodsOrderDetailList;
+          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
           return;
         }
         let tempList=[];
-        for(let detail of this.inputForm.goodsOrderDetailList){
+        let tempPostList=[];
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty)){
             tempList.push(detail);
+          }else if(util.contains(detail.productName, val) || detail.productId === this.formProperty.expressProductId){
+            tempPostList.push(detail);
           }
         }
-        for(let detail of this.inputForm.goodsOrderDetailList){
-          if((util.contains(detail.productName, val) || detail.productId === this.expressConfig.expressProductId) && util.isBlank(detail.billQty)){
-            tempList.push(detail);
+        this.filterDetailList = tempList.concat(tempPostList);
+      }
+      ,initSummary(row){
+        let tmpTotalBillQty = 0;
+        let tmpTotalBillAmount = 0;
+        let tmpTotalProductBillQty = 0;
+        let tmpTotalProductBillAmount = 0;
+
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList) {
+
+          if(util.isNotBlank(detail.billQty)) {
+            tmpTotalBillQty  = tmpTotalBillQty + detail.billQty*1;
+            tmpTotalBillAmount = tmpTotalBillAmount + (detail.billQty*1)*(detail.price*1);
+            if(detail.hasIme){
+              tmpTotalProductBillQty  = tmpTotalProductBillQty + detail.billQty*1;
+              tmpTotalProductBillAmount = tmpTotalProductBillAmount + (detail.billQty*1)*(detail.price*1);
+            }
           }
         }
-        this.filterDetailList = tempList;
-      },initSummary(){
-        var totalQty = 0;
-        var totalBillQty = 0;
-        var totalAmount = 0;
-        var totalBillAmount = 0;
-        for(var index in this.filterDetailList) {
-          var filterDetail = this.filterDetailList[index];
-          if(util.isNotBlank(filterDetail.qty)) {
-            totalQty  = totalQty + filterDetail.qty*1;
-            totalAmount = totalAmount + (filterDetail.qty*1)*(filterDetail.price*1);
-          }
-          if(util.isNotBlank(filterDetail.billQty)) {
-            totalBillQty  = totalBillQty + filterDetail.billQty*1;
-            totalBillAmount = totalBillAmount + (filterDetail.billQty*1)*(filterDetail.price*1);
-          }
-        }
-        this.summary = "总开单数为：" + totalBillQty + "，总开单金额为：" + totalBillAmount + ",总订货数为：" + totalQty + ",总订货金额为：" + totalAmount;
-      },storeChange(){
-          if(!this.inputForm.goodsOrderDetailList){
+        this.summaryInfo.totalProductBillQty = tmpTotalProductBillQty;
+        this.summaryInfo.totalBillQty = tmpTotalBillQty;
+        this.summaryInfo.totalProductBillAmount = tmpTotalProductBillAmount;
+        this.summaryInfo.totalBillAmount = tmpTotalBillAmount;
+
+      },refreshStoreQty(){
+          if(!this.inputForm.goodsOrderBillDetailFormList){
               return;
           }
           //设置库存
           if(util.isBlank(this.inputForm.storeId)){
-            for(let goodsOrderDetail of this.inputForm.goodsOrderDetailList){
-              goodsOrderDetail.storeQty = null;
+            for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+              detail.storeQty = null;
             }
             return;
           }
           axios.get('/api/ws/future/basic/depot/getCloudQtyMap', {params: {storeId: this.inputForm.storeId}}).then((response) => {
-            for(let goodsOrderDetail of this.inputForm.goodsOrderDetailList){
-              if(response.data[goodsOrderDetail.productOutId] !== undefined) {
-                  goodsOrderDetail.storeQty = response.data[goodsOrderDetail.productOutId];
+            for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+              if(response.data[detail.productOutId] !== undefined) {
+                detail.storeQty = response.data[detail.productOutId];
                 }else{
-                  goodsOrderDetail.storeQty = null;
+                detail.storeQty = null;
               }
             }
           });
       },
       getDetailListForSubmit(){
         let  tmpList = [];
-        for(let detail of this.inputForm.goodsOrderDetailList) {
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList) {
           if(util.isNotBlank(detail.id) || util.isNotBlank(detail.billQty)) {
             tmpList.push(detail);
           }
         }
         return tmpList;
-      },refreshExpressShouldGet(){
-          if(util.isBlank(this.expressConfig.expressProductId) || !this.expressConfig.expressRuleList){
-              return ;
-          }
-        let totalHasImeBillQty = 50;
+      },refreshExpressShouldGet(row){
+
+        //当无运费计算规则，或者发货类型为总部自提时，或者修改的是代收运费这一行，不会触发运费计算
+        if(util.isBlank(this.formProperty.expressProductId) || !this.formProperty.expressRuleList || this.goodsOrder.shipType==="总部自提" || (row && row.productId === this.formProperty.expressProductId)){
+          return ;
+        }
+
         let expressShouldGetQty = 0;
         let expressShouldGetPrice = 0;
 
-        for(let eachRule of this.expressConfig.expressRuleList) {
-          if(totalHasImeBillQty>=eachRule.min && totalHasImeBillQty<=eachRule.max && eachRule.areatype === this.shop.areaType ) {
+        for(let eachRule of this.formProperty.expressRuleList) {
+          if(this.summaryInfo.totalProductBillQty>=eachRule.min && this.summaryInfo.totalProductBillQty<=eachRule.max && eachRule.areatype === this.shopAccount.depotShopAreaType ) {
             expressShouldGetQty = 1;
             expressShouldGetPrice = eachRule.price;
             break;
           }
         }
 
-        for(let detail of this.inputForm.goodsOrderDetailList){
-          if(detail.productId === this.expressConfig.expressProductId){
+        for(let detail of this.inputForm.goodsOrderBillDetailFormList){
+          if(detail.productId === this.formProperty.expressProductId){
             detail.billQty = expressShouldGetQty;
             detail.price = expressShouldGetPrice;
-            break;
+            return;
           }
         }
-
-      },billQtyChanged(){
-        this.refreshExpressShouldGet();
-        this.initSummary();
+      },billQtyChanged(row){
+        this.initSummary(row);
+        this.refreshExpressShouldGet(row);
       }
     },created(){
-      axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
-        this.inputForm = response.data;
-        axios.get('/api/ws/future/crm/goodsOrder/getBill',{params: {id:this.$route.query.id}}).then((response)=>{
-          this.goodsOrder = response.data;
-          util.copyValue(response.data,this.inputForm);
-          this.inputForm.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
-          this.filterProducts();
-          this.initSummary();
-          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:response.data.shopId}}).then((response)=>{
-            this.shop = response.data;
-          });
-        });
+      let formPropertyPromise = axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.formProperty = response.data.extra;
       });
-      axios.get('/api/ws/future/crm/expressOrder/getExpressConfig').then((response)=>{
-        this.expressConfig = response.data;
+      let billPromise = axios.get('/api/ws/future/crm/goodsOrder/getBill',{params: {id:this.$route.query.id}}).then((response)=>{
+        this.goodsOrder = response.data;
+
+        this.inputForm.id = response.data.id;
+        this.inputForm.storeId = response.data.storeId;
+        this.inputForm.billDate = response.data.billDate;
+        this.inputForm.expressCompanyId = response.data.expressCompanyId;
+        this.inputForm.syn = response.data.syn;
+        this.inputForm.remarks = response.data.remarks;
+        this.inputForm.contator = response.data.contator;
+        this.inputForm.address = response.data.address;
+        this.inputForm.mobilePhone = response.data.mobilePhone;
+        this.inputForm.goodsOrderBillDetailFormList = response.data.goodsOrderDetailDtoList;
+
+        this.filterProducts();
+        this.initSummary(null);
+        this.refreshStoreQty();
+      });
+      axios.get('/api/ws/future/crm/goodsOrder/findShopAccountByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+        this.shopAccount = response.data;
+      });
+
+      Promise.all([formPropertyPromise, billPromise]).then( () => {
+          this.refreshExpressShouldGet(null);
       });
     }
   }

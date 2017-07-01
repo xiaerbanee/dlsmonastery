@@ -77,14 +77,14 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderShipList.loading')" @sort-change="sortChange" stripe border >
-        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderShipList.businessId')" sortable width="150"></el-table-column>
+        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderShipList.businessId')" sortable></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderShipList.createdDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderShipList.status')"></el-table-column>
-        <el-table-column prop="shopName" :label="$t('goodsOrderShipList.shop')" ></el-table-column>
+        <el-table-column prop="shopName" :label="$t('goodsOrderShipList.shop')" width="160"></el-table-column>
         <el-table-column prop="shipType" :label="$t('goodsOrderShipList.shipType')"></el-table-column>
         <el-table-column prop="amount" :label="$t('goodsOrderShipList.amount')" ></el-table-column>
         <el-table-column prop="storeName" :label="$t('goodsOrderShipList.store')" ></el-table-column>
-        <el-table-column prop="remarks" :label="$t('goodsOrderShipList.remarks')" ></el-table-column>
+        <el-table-column prop="remarks" :label="$t('goodsOrderShipList.remarks')" width="200"></el-table-column>
         <el-table-column prop="netType" :label="$t('goodsOrderShipList.netType')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderShipList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderShipList.pullStatus')" ></el-table-column>
