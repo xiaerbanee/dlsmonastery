@@ -47,6 +47,18 @@ export default {
     prerequisiteMessage: "informasi yang harus diisi",
     inputLegalValue: "silahkan masukkan angka yang valid"
   },
+  adApplyEditForm:{
+    shopName:"门店",
+    productName:"货品名称",
+    applyQty:"申请开单数",
+    confirmQty:"确认数",
+    billedQty:"已开单数",
+    leftQty:"待开单数",
+    remarks:"备注",
+    save:"保存",
+    prerequisiteMessage: "必填信息",
+    inputLegalValue: "请输入合法的数值",
+  },
   adApplyGoods: {
     adApplyGoods: "POP分货",
     productName: "pop货品",
@@ -96,6 +108,7 @@ export default {
     loading: "拼命加载中",
     lastModifiedBy: "最后修改人",
     lastModifiedDate: "最后修改时间",
+    operation:"操作"
   },
   adGoodsOrderBill: {
     adGoodsOrderBill: "buka nota bahan",
@@ -158,6 +171,7 @@ export default {
   adGoodsOrderForm: {
     adGoodsOrderForm: "orderan etalase",
     outShopId: "nama toko",
+    shopId:"地区代理门店",
     employeeName: "nama karyawan",
     expressCompany: "perusahaan jasa pengiriman",
     address: "最终目的地(填写：发xx市或发xx县)",
@@ -585,6 +599,7 @@ export default {
     applyAccount: "sales",
     content: "konten",
     scenePhoto: "gambar",
+    confirmPhoto:"终端投放协议",
     clickUpload: "pilih unggah",
     uploadImageSizeFor5000KB: "unggah foto dibawah 500kb",
     inputKey: "silahkan masukkan kata kunci",
@@ -621,6 +636,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     noSelectionFound:"没有选择任何记录",
     likeSearch: "模糊搜索",
+    idStrByComma:"输入单号,以逗号、空格或回车隔开",
     sure: "yakin",
     loading: "memuat",
     unicode: "kode",
@@ -635,7 +651,8 @@ export default {
     detail: "perincian",
     edit: "ubah",
     delete: "hapus",
-    audit: "ubah"
+    audit: "ubah",
+    idStr:"单号"
   },
   shopDepositForm: {
     shopDepositForm: "daftar deposit",

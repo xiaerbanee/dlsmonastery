@@ -11,6 +11,7 @@ const afterSaleCompanyList = r => require.ensure([], () => r(require('pages/futu
 
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
+const bankInBatchForm = r => require.ensure([], () => r(require('pages/future/crm/bankInBatchForm.vue')));
 const bankInDetail = r => require.ensure([], () => r(require('pages/future/crm/bankInDetail.vue')));
 const depotAccountList = r => require.ensure([], () => r(require('pages/future/crm/depotAccountList.vue')));
 const depotAccountDetail = r => require.ensure([], () => r(require('pages/future/crm/depotAccountDetail.vue')));
@@ -100,6 +101,7 @@ let routes = [
 
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},
+  {path:'/future/crm/bankInBatchForm',component:bankInBatchForm,name:'bankInBatchForm',meta: {menu:"bankInList",keepAlive:true}},
   {path:'/future/crm/bankInDetail',component:bankInDetail,name:'bankInDetail',meta: {menu:"bankInList"}},
   {path:'/future/crm/depotDetailList',component:depotDetailList,name:'depotDetailList'},
   {path:'/future/crm/depotInventoryReport',component:depotInventoryReport,name:'depotInventoryReport'},

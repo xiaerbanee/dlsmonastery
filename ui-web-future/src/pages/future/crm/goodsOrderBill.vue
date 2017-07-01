@@ -84,7 +84,7 @@
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>
         <el-table-column prop="billQty" :label="$t('goodsOrderBill.billQty')" >
           <template scope="scope">
-            <input type="text" v-model="scope.row.billQty" @input="initSummary()" class="el-input__inner"/>
+            <input type="text" v-model="scope.row.billQty" @input="billQtyChanged()" class="el-input__inner"/>
           </template>
         </el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderBill.price')">
@@ -118,6 +118,7 @@
         },
         shop:{},
         goodsOrder:{},
+        expressConfig:{},
         shouldGet:null,
         summary:"",
         rules: {
@@ -164,7 +165,7 @@
           }
         }
         for(let detail of this.inputForm.goodsOrderDetailList){
-          if(util.contains(detail.productName, val) && util.isBlank(detail.billQty)){
+          if((util.contains(detail.productName, val) || detail.productId === this.expressConfig.expressProductId) && util.isBlank(detail.billQty)){
             tempList.push(detail);
           }
         }
@@ -215,6 +216,33 @@
           }
         }
         return tmpList;
+      },refreshExpressShouldGet(){
+          if(util.isBlank(this.expressConfig.expressProductId) || !this.expressConfig.expressRuleList){
+              return ;
+          }
+        let totalHasImeBillQty = 50;
+        let expressShouldGetQty = 0;
+        let expressShouldGetPrice = 0;
+
+        for(let eachRule of this.expressConfig.expressRuleList) {
+          if(totalHasImeBillQty>=eachRule.min && totalHasImeBillQty<=eachRule.max && eachRule.areatype === this.shop.areaType ) {
+            expressShouldGetQty = 1;
+            expressShouldGetPrice = eachRule.price;
+            break;
+          }
+        }
+
+        for(let detail of this.inputForm.goodsOrderDetailList){
+          if(detail.productId === this.expressConfig.expressProductId){
+            detail.billQty = expressShouldGetQty;
+            detail.price = expressShouldGetPrice;
+            break;
+          }
+        }
+
+      },billQtyChanged(){
+        this.refreshExpressShouldGet();
+        this.initSummary();
       }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/getBillForm',{params: {id:this.$route.query.id}}).then((response)=>{
@@ -229,6 +257,9 @@
             this.shop = response.data;
           });
         });
+      });
+      axios.get('/api/ws/future/crm/expressOrder/getExpressConfig').then((response)=>{
+        this.expressConfig = response.data;
       });
     }
   }

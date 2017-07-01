@@ -14,7 +14,7 @@ import java.util.*
 @Component
 class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    fun findByNameLike(name: String): MutableList<BdSupplier> {
+    fun findByNameLike(name: String): MutableList<BdSupplier>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSUPPLIERID,
@@ -33,7 +33,7 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, Collections.singletonMap("name",name), BeanPropertyRowMapper(BdSupplier::class.java))
     }
 
-    fun findByNameList(nameList: List<String>): MutableList<BdSupplier> {
+    fun findByNameList(nameList: List<String>): MutableList<BdSupplier>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSUPPLIERID,
@@ -52,7 +52,7 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(BdSupplier::class.java))
     }
 
-    fun findAll(): MutableList<BdSupplier> {
+    fun findAll(): MutableList<BdSupplier>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSUPPLIERID,
@@ -68,6 +68,25 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
                 AND t1.FDOCUMENTSTATUS = 'C'
                 AND t1.FFORBIDSTATUS = 'A'
         """, BeanPropertyRowMapper(BdSupplier::class.java))
+    }
+
+    fun findBySupplierIdList(supplierIdList: List<String>): MutableList<BdSupplier>? {
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t1.FSUPPLIERID,
+                t1.FNUMBER,
+                t2.FNAME,
+                t1.FDOCUMENTSTATUS,
+                t1.FFORBIDSTATUS
+            FROM
+                T_BD_SUPPLIER t1,
+                T_BD_SUPPLIER_L t2
+            WHERE
+                t1.FSUPPLIERID = t2.FSUPPLIERID
+                AND t1.FDOCUMENTSTATUS = 'C'
+                AND t1.FFORBIDSTATUS = 'A'
+                and t1.FSUPPLIERID in (:supplierIdList)
+        """,Collections.singletonMap("supplierIdList",supplierIdList), BeanPropertyRowMapper(BdSupplier::class.java))
     }
 
 }

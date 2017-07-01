@@ -10,12 +10,15 @@
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-col :span="24">
+            <el-col :span="12">
               <el-form-item :label="$t('shopBuildList.officeName')" :label-width="formLabelWidth">
                 <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+              </el-form-item>
+              <el-form-item :label="$t('shopBuildList.idStr')" :label-width="formLabelWidth">
+                <el-input v-model="formData.idStr" auto-complete="off" :placeholder="$t('shopBuildList.idStrByComma')" type="textarea"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
@@ -28,6 +31,8 @@
               <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="ShopBuild" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
               <el-form-item :label="$t('shopBuildList.fixtureType')" :label-width="formLabelWidth">
                 <dict-enum-select v-model="formData.fixtureType" category="装修类别"></dict-enum-select>
               </el-form-item>
@@ -36,6 +41,12 @@
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
+              </el-form-item>
+              <el-form-item :label="$t('shopBuildList.lastModifiedBy')" :label-width="formLabelWidth">
+                <account-select v-model="formData.lastModifiedBy" @afterInit="setSearchText"></account-select>
+              </el-form-item>
+              <el-form-item :label="$t('shopBuildList.lastModifiedDate')" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.lastModifiedDate"></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -83,7 +94,8 @@
   import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select';
   export default {
-    components:{officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
+    components:{
+      officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
     data() {
       return {
         searchText:"",

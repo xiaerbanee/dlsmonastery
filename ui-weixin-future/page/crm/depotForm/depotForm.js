@@ -74,9 +74,9 @@ Page({
         var that = this;
         that.setData({ "formData.specialityStoreType": that.data.formProperty.extra.specialityStoreList[e.detail.value] });
     },
-    bindChainTypeChange: function (e) {
+    bindTurnoverTypeChange: function (e) {
         var that = this;
-        that.setData({ "formData.chainType": that.data.formProperty.extra.chainList[e.detail.value].name });
+        that.setData({ "formData.turnoverType": that.data.formProperty.extra.turnoverList[e.detail.value].name });
     },
     bindCarrierTypeChange: function (e) {
         var that = this;

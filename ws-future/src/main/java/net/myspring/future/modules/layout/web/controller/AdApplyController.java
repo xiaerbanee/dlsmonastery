@@ -5,10 +5,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.modules.layout.dto.AdApplyDto;
 import net.myspring.future.modules.layout.service.AdApplyService;
-import net.myspring.future.modules.layout.web.form.AdApplyBillForm;
-import net.myspring.future.modules.layout.web.form.AdApplyBillTypeChangeForm;
-import net.myspring.future.modules.layout.web.form.AdApplyForm;
-import net.myspring.future.modules.layout.web.form.AdApplyGoodsForm;
+import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
@@ -50,6 +47,12 @@ public class AdApplyController {
         return adApplyService.getForm(adApplyForm);
     }
 
+    @RequestMapping(value = "getEditForm",method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:adApply:edit')")
+    public AdApplyEditForm getEditForm(AdApplyEditForm adApplyEditForm){
+        return adApplyEditForm;
+    }
+
     @RequestMapping(value = "findOne")
     @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyDto findOne(String id){
@@ -61,6 +64,13 @@ public class AdApplyController {
     public RestResponse save(AdApplyForm adApplyForm){
         adApplyService.save(adApplyForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value = "saveConfirmQty")
+    @PreAuthorize("hasPermission(null,'crm:adApply:edit')")
+    public RestResponse saveConfirmQty(AdApplyEditForm adApplyEditForm){
+        adApplyService.saveConfirmQty(adApplyEditForm);
+        return  new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "billSave")

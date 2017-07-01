@@ -185,6 +185,15 @@ public class AdApplyService {
         adApplyRepository.save(adApplyList);
     }
 
+    public void saveConfirmQty(AdApplyEditForm adApplyEditForm){
+        if(!adApplyEditForm.isCreate()){
+            AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
+            adApply.setConfirmQty(adApplyEditForm.getConfirmQty());
+            adApply.setRemarks(adApplyEditForm.getRemarks());
+            adApplyRepository.save(adApply);
+        }
+    }
+
     public void goodsSave(AdApplyGoodsForm adApplyGoodsForm){
         if(adApplyGoodsForm.getDepotAdApplyForms() == null){
             return;

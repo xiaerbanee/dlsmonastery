@@ -35,14 +35,16 @@ public class PurMrbController {
 
     @RequestMapping(value = "save")
     public RestResponse save(PurMrbForm cnJournalForCashForm) {
-        RestResponse restResponse;
+        RestResponse restResponse = new RestResponse("开单失败",null);
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        KingdeeSynDto kingdeeSynDto = purMrbService.save(cnJournalForCashForm,kingdeeBook,accountKingdeeBook);
-        if (kingdeeSynDto.getSuccess()){
-            restResponse = new RestResponse("采购退料成功：" + kingdeeSynDto.getBillNo(),null,true);
+        if (accountKingdeeBook != null) {
+            KingdeeSynDto kingdeeSynDto = purMrbService.save(cnJournalForCashForm, kingdeeBook, accountKingdeeBook);
+            if (kingdeeSynDto.getSuccess()) {
+                restResponse = new RestResponse("采购退料成功：" + kingdeeSynDto.getBillNo(), null, true);
+            }
         }else {
-            throw new ServiceException("采购退料失败："+kingdeeSynDto.getResult());
+            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
         }
         return restResponse;
     }

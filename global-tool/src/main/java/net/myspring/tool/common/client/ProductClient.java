@@ -12,7 +12,7 @@ import java.util.List;
  * Created by guolm on 2017/6/11.
  */
 
-@FeignClient("summer-basic")
+@FeignClient("ws-future")
 public interface ProductClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "basic/product/findHasImeProduct")

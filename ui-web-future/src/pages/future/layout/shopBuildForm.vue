@@ -34,7 +34,13 @@
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange1" :on-remove="handleRemove1" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+                <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
+                <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
+              </el-upload>
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -68,7 +74,8 @@
           isCreate:this.$route.query.id==null,
           submitDisabled: false,
           shopDisabled:false,
-          fileList: [],
+          fileList1: [],
+          fileList2:[],
           fixtureContent:'',
           inputForm: {
             extra:{}
@@ -80,6 +87,8 @@
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            scenePhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            confirmPhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
         }
@@ -88,7 +97,8 @@
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
-          this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList);
+          this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
+          this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList2);
           if (valid) {
               axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
                 this.$message(response.data.message);
@@ -113,12 +123,18 @@
           this.fixtureContent=response.data;
         })
       },
-      handlePreview(file) {
+      handlePreview1(file) {
         window.open(file.url);
-      },handleChange(file, fileList) {
-        this.fileList = fileList;
-      },handleRemove(file, fileList) {
-        this.fileList = fileList;
+      },handleChange1(file, fileList) {
+        this.fileList1 = fileList;
+      },handleRemove1(file, fileList) {
+        this.fileList1 = fileList;
+      }, handlePreview2(file) {
+        window.open(file.url);
+      },handleChange2(file, fileList) {
+        this.fileList2 = fileList;
+      },handleRemove2(file, fileList) {
+        this.fileList2= fileList;
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/getForm').then((response)=>{
           this.inputForm = response.data;
@@ -133,7 +149,12 @@
               }
               if (this.inputForm.scenePhoto != null) {
                 axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.scenePhoto}}).then((response) => {
-                  this.fileList = response.data;
+                  this.fileList1 = response.data;
+                });
+              }
+              if (this.inputForm.confirmPhoto != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.confirmPhoto}}).then((response) => {
+                  this.fileList2 = response.data;
                 });
               }
             });
