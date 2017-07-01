@@ -111,7 +111,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        var submitData = new Object(util.deleteExtra(this.formData));
         util.setQuery("customerReceive", submitData);
         axios.get('/api/global/cloud/kingdee/bdCustomer?'+ qs.stringify(submitData)).then((response) => {
           let customerIdList = new Array();
