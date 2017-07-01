@@ -6,9 +6,7 @@
         <el-row >
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <el-select v-model="inputForm.storeId" clearable filterable @change="refreshStoreQty">
-                <el-option v-for="item in formProperty.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+              <depot-select v-model="inputForm.storeId" category="store" @input="refreshStoreQty"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
               <date-picker v-model="inputForm.billDate"  ></date-picker>
@@ -103,9 +101,11 @@
 </template>
 <script>
   import boolRadioGroup from 'components/common/bool-radio-group'
+  import depotSelect from 'components/future/depot-select'
   export default{
     components:{
-      boolRadioGroup
+      boolRadioGroup,
+      depotSelect,
     },
     data(){
       return{
@@ -116,7 +116,6 @@
         formProperty:{
           expressProductId:null,
           expressRuleList:[],
-          storeList:[],
           expressCompanyList:[],
         },
         shopAccount:{},
