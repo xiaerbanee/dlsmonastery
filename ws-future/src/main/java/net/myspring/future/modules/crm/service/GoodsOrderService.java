@@ -230,6 +230,11 @@ public class GoodsOrderService {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
+        Depot shop=depotRepository.findOne(goodsOrder.getShopId());
+        if(goodsOrderBillForm.getSyn() && StringUtils.isBlank(shop.getClientId())){
+            throw new ServiceException("门店没有对应的财务记录，不能同步财务");
+        }
+
         ReflectionUtil.copyProperties(goodsOrderBillForm,goodsOrder);
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
@@ -287,6 +292,7 @@ public class GoodsOrderService {
 
     private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
+
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
         CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
 

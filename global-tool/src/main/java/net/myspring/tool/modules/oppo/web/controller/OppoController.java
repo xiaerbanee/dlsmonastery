@@ -13,11 +13,9 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +29,6 @@ public class OppoController {
     @Autowired
     private OppoService oppoService;
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
     private CompanyConfigClient companyConfigClient;
@@ -41,11 +37,11 @@ public class OppoController {
 
     @RequestMapping(value = "syn")
     public String synFactoryOppo(String date) {
+        logger.info("工厂同步开始，同步日期=="+date);
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
         String[] passWords=passWord.split(CharConstant.COMMA);
-        LocalDate localDate = LocalDateUtils.parse(date);
         List<OppoPlantProductSel> oppoPlantProductSels=oppoService.plantProductSel(agentCodes[0], passWords[0], "");
         //同步颜色编码
         logger.info("开始同步颜色编码");
@@ -63,7 +59,7 @@ public class OppoController {
             }
         }
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], localDate);
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], date);
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         return "OPPO同步成功";
     }

@@ -19,7 +19,7 @@
             <el-form-item :label="$t('adApplyEditForm.leftQty')">{{inputForm.leftQty}}
             </el-form-item>
             <el-form-item :label="$t('adApplyEditForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks" ></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">{{$t('adApplyEditForm.save')}}</el-button>

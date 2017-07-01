@@ -8,6 +8,8 @@ import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.ProductClient;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.client.CustomerClient;
+import net.myspring.tool.common.domain.ProductEntity;
+import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.tool.modules.oppo.dto.OppoPlantAgentProductSelDto;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.tool.modules.oppo.web.form.OppoPlantAgentProductSqlForm;
@@ -46,7 +48,7 @@ public class OppoPlantAgentProductSelService {
     }
 
     public OppoPlantAgentProductSqlForm form(OppoPlantAgentProductSqlForm oppoPlantAgentProductSqlForm){
-        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name());
+        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
         if(StringUtils.isNotBlank(isLx)){
             oppoPlantAgentProductSqlForm.setLx(true);
         }else{
@@ -57,14 +59,35 @@ public class OppoPlantAgentProductSelService {
     }
 
     public void save(String data){
-        String isLx = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name());
-        List<OppoPlantAgentProductSelDto> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
-        if(StringUtils.isNotBlank(isLx)){
-
-        }else{
-
+        String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
+        List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
+        List<ProductEntity> productEntityList=productClient.findHasImeProduct();
+        Map<String,ProductEntity> productMap=Maps.newHashMap();
+        for(ProductEntity productEntity:productEntityList){
+            productMap.put(productEntity.getName(),productEntity);
         }
-
+        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoPlantAgentProductSelRepository.findAll();
+        Map<String,OppoPlantAgentProductSel> oppoPlantAgentProductSelMap=Maps.newHashMap();
+        for(OppoPlantAgentProductSel oppoPlantAgentProductSel:oppoPlantAgentProductSels){
+            oppoPlantAgentProductSelMap.put(oppoPlantAgentProductSel.getId(),oppoPlantAgentProductSel);
+        }
+        for(Map<String,String> map:list){
+            OppoPlantAgentProductSel agentProductSel=oppoPlantAgentProductSelMap.get(map.get("id"));
+            ProductEntity defaultProduct=productMap.get(map.get("productName"));
+            ProductEntity lxProduct=productMap.get(map.get("lxProductName"));
+            if(defaultProduct==null){
+                agentProductSel.setProductId(null);
+            }else{
+                agentProductSel.setProductId(defaultProduct.getId());
+            }
+            if(StringUtils.isNotBlank(lxAgentCode)){
+                if(lxProduct==null){
+                    agentProductSel.setLxProductId(null);
+                }else{
+                    agentProductSel.setLxProductId(lxProduct.getId());
+                }
+            }
+            oppoPlantAgentProductSelRepository.save(agentProductSel);
+        }
     }
-
 }

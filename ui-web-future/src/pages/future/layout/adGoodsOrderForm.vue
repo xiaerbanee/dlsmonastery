@@ -274,7 +274,7 @@
 
               this.refreshRecentMonthSaleAmount();
               axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-                this.isDelegateShop = (response.data.jointType === '代理');
+                this.isDelegateShop = (response.data[0].jointType === '代理');
               });
 
             });
