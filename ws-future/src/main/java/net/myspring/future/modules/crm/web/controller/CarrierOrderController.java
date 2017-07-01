@@ -1,14 +1,8 @@
 package net.myspring.future.modules.crm.web.controller;
 
-import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.crm.domain.CarrierOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.CarrierOrderDto;
 import net.myspring.future.modules.crm.service.CarrierOrderService;
@@ -25,13 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.ServletRequest;
@@ -75,6 +66,15 @@ public class CarrierOrderController {
             carrierOrderDto.setGoodsOrderId(goodsOrder.getId());
         }
         return restResponse;
+    }
+
+    @RequestMapping(value="findDto")
+    public CarrierOrderDto findDto(String id){
+        if(StringUtils.isBlank(id)){
+            return new CarrierOrderDto();
+        }
+        return carrierOrderService.findDto(id);
+
     }
 
     @RequestMapping(value = "save")

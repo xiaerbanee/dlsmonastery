@@ -3,9 +3,14 @@
     <head-tab active="oppoPlantAgentProductSelList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-        <el-button type="primary" @click="synData" icon="plus">同步</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <div style="float:left">
+          <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
+          <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
+        </div>
+        <div style="float: left;margin-left: 10px">
+          <date-picker v-model="date"></date-picker>
+        </div>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
@@ -50,9 +55,7 @@
     },mounted() {
       axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/form').then((response) => {
         this.inputForm = response.data;
-        this.lx = this.inputForm.lx;
-        console.log(this.lx)
-        if(this.lx){
+        if(this.inputForm.lx){
           this.settings.colHeaders.push("LX对应货品");
           this.settings.columns.push({data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,productNames:[],source:this.productNames})
           this.settings.colHeaders.push("货品型号");
@@ -62,7 +65,7 @@
         }else{
           this.settings.colHeaders.push("货品型号");
           this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = extra.empInfoNameList;
+          this.settings.columns[6].source = this.inputForm.extra.productNames;
         }
         //Handsontable初始化操作
         this.search();
@@ -75,7 +78,8 @@
         })
       },getData() {
         return {
-          formData:{},
+          formData:{
+          },
           inputForm:{
             extra:{}
           },
@@ -99,6 +103,7 @@
             ],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
           },
+          date:"",
           rules: {},
           submitDisabled: false,
           formLabelWidth: '120px',

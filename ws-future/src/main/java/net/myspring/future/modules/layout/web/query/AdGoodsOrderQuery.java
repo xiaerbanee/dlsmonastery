@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -15,7 +16,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
     private String shopAreaId;
     private String storeId;
     private String shopId;
-    private String billType;
+    private String billType = BillTypeEnum.柜台.name();
     private String parentId;
     private String processStatus;
     private String remarks;

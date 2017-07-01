@@ -258,9 +258,9 @@ public class AdApplyService {
                 adGoodsOrder.setBillRemarks(adApplyBillForm.getRemarks());
                 adGoodsOrderMap.put(adApply.getShopId(), adGoodsOrder);
                 adGoodsOrderRepository.save(adGoodsOrder);
+                adGoodsOrders.add(adGoodsOrder);
             }
             AdGoodsOrder adGoodsOrder = adGoodsOrderMap.get(adApply.getShopId());
-            adGoodsOrders.add(adGoodsOrder);
             Product product = productMap.get(adApply.getProductId());
             AdGoodsOrderDetail adGoodsOrderDetail = new AdGoodsOrderDetail();
             adGoodsOrderDetail.setAdGoodsOrderId(adGoodsOrder.getId());
