@@ -151,7 +151,7 @@
             }
             this.formData.json = JSON.stringify(this.formData.json);
             this.formData.billDate = util.formatLocalDate(this.formData.billDate);
-            axios.post('/api/global/cloud/input/stkInStock/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            axios.post('/api/global/cloud/sys/voucher/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             }).catch(function () {
               this.submitDisabled = false;
