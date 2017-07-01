@@ -54,8 +54,8 @@ public class OppoService {
     }
 
     @FactoryDataSource
-    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, LocalDate systemDate) {
-        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, LocalDateUtils.format(systemDate));
+    public List<OppoPlantProductItemelectronSel> plantProductItemelectronSel(String companyId, String password, String date) {
+        return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(companyId, password, date);
     }
 
     //获取颜色编码
