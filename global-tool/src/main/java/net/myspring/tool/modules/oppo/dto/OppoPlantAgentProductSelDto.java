@@ -4,10 +4,15 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.List;
 
 
-public class OppoPlantAgentProductSelDto extends DataDto<OppoPlantAgentProductSel> {
+public class OppoPlantAgentProductSelDto {
+    @Id
+    private String id;
     private String brandId;
     private String brandName;
     private String typeId;
@@ -22,6 +27,14 @@ public class OppoPlantAgentProductSelDto extends DataDto<OppoPlantAgentProductSe
     private String productId;
     private String productName;
     private String lxProductName;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBrandId() {
         return brandId;
