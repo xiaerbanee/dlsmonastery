@@ -133,7 +133,6 @@
           goodsOrderBillDetailFormList:[],
         },
         goodsOrder:{},
-        shouldGet:null,
         summaryInfo:{
           totalBillQty:0,
           totalBillAmount:0,
