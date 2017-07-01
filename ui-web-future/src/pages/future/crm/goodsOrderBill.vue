@@ -4,7 +4,7 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px" class="form input-form">
         <el-row >
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
               <depot-select v-model="inputForm.storeId" category="store" @input="refreshStoreQty"></depot-select>
             </el-form-item>
@@ -28,6 +28,9 @@
             <el-form-item :label="$t('goodsOrderBill.goodsOrderRemarks')" prop="remarks">
               <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
+          </el-col>
+          <el-col :span="8">
+
             <el-form-item :label="$t('goodsOrderBill.contact')" prop="contator">
               <el-input v-model="inputForm.contator"></el-input>
             </el-form-item>
@@ -37,8 +40,6 @@
             <el-form-item :label="$t('goodsOrderBill.mobilePhone')" prop="mobilePhone">
               <el-input v-model="inputForm.mobilePhone"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item :label="$t('goodsOrderBill.areaName')" >
               {{shopAccount.areaName}}
             </el-form-item>
@@ -48,6 +49,8 @@
             <el-form-item :label="$t('goodsOrderBill.parentName')"  >
               {{shopAccount.clientName}}
             </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item :label="$t('goodsOrderBill.shopCredit')">
               {{shopAccount.credit}}
             </el-form-item>
