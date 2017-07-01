@@ -125,7 +125,7 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'productTypeForm'})
+        this.$router.push({ name: 'carrierOrderForm'})
       },itemAction:function(id,action){
         if(action==="edit") {
           this.$router.push({ name: 'productTypeForm', query: { id: id }})
@@ -144,7 +144,7 @@
           });
         }).catch(()=>{});
       },carrierShip(){
-
+        this.$router.push({ name: 'carrierOrderShip'})
       },
       handleCommand(command) {
         this.command=command;
