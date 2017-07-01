@@ -26,7 +26,7 @@ public class BdCustomerService {
     private BdCustomerRepository bdCustomerRepository;
 
     public Page<BdCustomer> findPageIncludeForbid(Pageable pageable, BdCustomerQuery bdCustomerQuery) {
-        bdCustomerQuery.setSort("t1.FCUSTID");
+        bdCustomerQuery.setSort("t1.fcustid,DESC");
          Page<BdCustomer> bdCustomerPage= bdCustomerRepository.findPageIncludeForbid(pageable,bdCustomerQuery);
         return bdCustomerPage;
     }
@@ -46,7 +46,8 @@ public class BdCustomerService {
         return bdCustomerRepository.findByMaxModifyDate(modifyDate);
     }
 
-    public BdCustomerQuery getQuery(){
+    //应收报表
+    public BdCustomerQuery getQueryForCustomerReceive(){
         BdCustomerQuery bdCustomerQuery = new BdCustomerQuery();
         bdCustomerQuery.setSort("t1.fcustid,DESC");
         bdCustomerQuery.getExtra().put("customerGroupList",bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName());

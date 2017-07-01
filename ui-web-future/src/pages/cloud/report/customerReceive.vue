@@ -183,7 +183,7 @@
       let that = this;
       that.pageHeight = window.outerHeight -320;
       that.initPromise = axios.get('/api/global/cloud/kingdee/bdCustomer/getQueryForCustomerReceive').then((response) =>{
-        this.formData = response.data;
+        that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
       });
     }
