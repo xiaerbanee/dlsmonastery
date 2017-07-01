@@ -32,5 +32,5 @@ call gradle build
 
 
 cd..
-cd
+cd summer-webapp
 call gradle build

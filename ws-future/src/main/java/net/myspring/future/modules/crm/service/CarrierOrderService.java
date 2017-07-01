@@ -70,6 +70,12 @@ public class CarrierOrderService {
         return page;
     }
 
+    public CarrierOrderDto findDto(String id) {
+        CarrierOrderDto result = carrierOrderRepository.findDto(id);
+        cacheUtils.initCacheInput(result);
+        return result;
+    }
+
     public Map<String, Object> checkDetailJsons(CarrierOrderFrom carrierOrderFrom) {
         GoodsOrder goodsOrder = goodsOrderRepository.findByBusinessId(carrierOrderFrom.getBusinessId());
         Boolean checkColor = false;
