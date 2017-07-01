@@ -35,6 +35,7 @@
   export default{
     data(){
       return {
+        searchText:"",
         formData: {
           imeStr: '',
           type:'售后机',
@@ -44,14 +45,14 @@
           data: ''
         },
         rules: {},
+        shipResult:"",
         type: '售后机',
         options: ['售后机', '窜货机'],
         formLabelWidth: '120px',
         formVisible: false,
-        shipResult:"",
         submitDisabled: false,
         settings: {
-          colHeaders: ['坏机串码', '坏机型号', '坏机门店', '退机类型', '包装', '内存', '坏机来源', '坏机所在库', '替换机串码', '替换机型号', '返还金额','备注'],
+          colHeaders: ['坏机串码', '坏机型号', '核销门店', '替换串码', '替换机型','地区','包装', '退机类型', '内存', '退机备注'],
           rowHeaders: true,
           autoColumnSize: true,
           allowInsertRow: false,
@@ -60,8 +61,8 @@
             data: "badProductIme",
             width: 100
           }, {
-            data: "badProductName",
             type: "autocomplete",
+            data: "badProductName",
             allowEmpty:false ,
             strict: true,
             badProductNames: [],
@@ -91,7 +92,7 @@
             },
             width: 100
           }, {
-            data: "badDepotName",
+            data: "saleShopName",
             type: "autocomplete",
             allowEmpty: false,
             strict: true,
@@ -121,87 +122,7 @@
               }
             },
             width: 120
-          }, {
-            data: "badType",
-            type: "autocomplete",
-            allowEmpty: false,
-            strict: true,
-            width: 100
-          }, {
-            data: "packageStatus",
-            type: "autocomplete",
-            allowEmpty: false,
-            strict: true,
-            width: 100
-          }, {
-            data: "memory",
-            type: "autocomplete",
-            allowEmpty: false,
-            strict: true,
-            width: 100
-          }, {
-            data: "fromDepotName",
-            type: "autocomplete",
-            allowEmpty: false,
-            strict: true,
-            fromDepotNames: [],
-            source: function (query, process) {
-              var that = this;
-              if (that.fromDepotNames.indexOf(query) >= 0) {
-                process(that.fromDepotNames);
-              } else {
-                var productNames = new Array();
-                if (query.length >= 2) {
-                  axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
-                    if (response.data.length > 0) {
-                      for (var index in response.data) {
-                        var productName = response.data[index].name;
-                        productNames.push(productName);
-                        if (that.fromDepotNames.indexOf(productName) < 0) {
-                          that.fromDepotNames.push(productName);
-                        }
-                      }
-                    }
-                    process(productNames);
-                  });
-                } else {
-                  process(productNames);
-                }
-              }
-            },
-            width: 120
-          }, {
-            data: "toDepotName",
-            type: "autocomplete",
-            allowEmpty: false,
-            strict: true,
-            toDepotNames: [],
-            source: function (query, process) {
-              var that = this;
-              if (that.toDepotNames.indexOf(query) >= 0) {
-                process(that.toDepotNames);
-              } else {
-                var productNames = new Array();
-                if (query.length >= 2) {
-                  axios.get('/api/ws/future/basic/depot/store?name=' + query).then((response) => {
-                    if (response.data.length > 0) {
-                      for (var index in response.data) {
-                        var productName = response.data[index].name;
-                        productNames.push(productName);
-                        if (that.toDepotNames.indexOf(productName) < 0) {
-                          that.toDepotNames.push(productName);
-                        }
-                      }
-                    }
-                    process(productNames);
-                  });
-                } else {
-                  process(productNames);
-                }
-              }
-            },
-            width: 120
-          }, {
+          },  {
             data: "replaceProductIme",
             width: 100
           }, {
@@ -236,7 +157,53 @@
             },
             width: 100
           }, {
-            data: "replaceAmount",
+            data: "areaDepot",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            badDepotNames: [],
+            source: function (query, process) {
+              var that = this;
+              if (that.badDepotNames.indexOf(query) >= 0) {
+                process(that.badDepotNames);
+              } else {
+                var productNames = new Array();
+                if (query.length >= 2) {
+                  axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                    if (response.data.length > 0) {
+                      for (var index in response.data) {
+                        var productName = response.data[index].name;
+                        productNames.push(productName);
+                        if (that.badDepotNames.indexOf(productName) < 0) {
+                          that.badDepotNames.push(productName);
+                        }
+                      }
+                    }
+                    process(productNames);
+                  });
+                } else {
+                  process(productNames);
+                }
+              }
+            },
+            width: 120
+          }, {
+            data: "packageStatus",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            width: 100
+          },{
+            data: "badType",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
+            width: 100
+          }, {
+            data: "memory",
+            type: "autocomplete",
+            allowEmpty: false,
+            strict: true,
             width: 100
           }, {
             data: "remarks",
@@ -292,9 +259,9 @@
           categoryList.push("内存")
           categoryList.push("包装")
           axios.get('/api/basic/sys/dictEnum/findByCategoryList',{params:{categoryList:categoryList}}).then((response)=> {
-            this.settings.columns[4].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
-            this.settings.columns[3].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
-            this.settings.columns[5].source=util.getLabelList(response.data.MEMORY,'value');
+            this.settings.columns[6].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
+            this.settings.columns[7].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
+            this.settings.columns[8].source=util.getLabelList(response.data.MEMORY,'value');
             this.table = new Handsontable(this.$refs["handsontable"], this.settings)
           })
         }
