@@ -802,6 +802,7 @@ export default {
     price: "harga",
     hasIme: "string kode",
     prerequisiteMessage: "必填信息",
+    clientName: "客户",
   },
   goodsOrderDetail: {
     goodsOrderDetail: "货品订货详细",
