@@ -13,7 +13,12 @@ public class DepotStoreQuery extends BaseQuery {
     private Boolean ScoreType;
     private String sumType;
     private String officeId;
+    private String areaId;
     private String jointLevel;
+    private String contator;
+    private String mobilePhone;
+
+
 
     public String getJointLevel() {
         return jointLevel;
@@ -69,5 +74,30 @@ public class DepotStoreQuery extends BaseQuery {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+
+    public String getContator() {
+        return contator;
+    }
+
+    public void setContator(String contator) {
+        this.contator = contator;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaId() {
+        return areaId;
     }
 }

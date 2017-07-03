@@ -4,19 +4,13 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.DepotStoreTypeEnum;
-import net.myspring.future.common.enums.OutTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
-import net.myspring.future.common.enums.ReportTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
-import net.myspring.future.modules.basic.service.AdPricesystemService;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.DepotStoreService;
-import net.myspring.future.modules.basic.service.PricesystemService;
+import net.myspring.future.modules.basic.service.*;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
@@ -54,6 +48,8 @@ public class DepotStoreController {
     private PricesystemService pricesystemService;
     @Autowired
     private AdPricesystemService adPricesystemService;
+    @Autowired
+    private ChainService chainService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotStoreDto> list(Pageable pageable, DepotStoreQuery depotStoreQuery){
@@ -129,9 +125,7 @@ public class DepotStoreController {
 
     @RequestMapping(value = "getQuery")
     public DepotStoreQuery getQuery(DepotStoreQuery depotStoreQuery){
-        depotStoreQuery.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));
-        depotStoreQuery.getExtra().put("pricesystemList",pricesystemService.findAllEnabled());
-        depotStoreQuery.getExtra().put("adPricesystemList",adPricesystemService.findAllEnabled());
+        depotStoreQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return depotStoreQuery;
     }
 

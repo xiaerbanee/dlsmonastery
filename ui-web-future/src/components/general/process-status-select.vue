@@ -10,7 +10,7 @@
     props: ['value','type','multiple','disabled'],
     data() {
       return {
-        status : this.value,
+        status : null,
         itemList : [],
       };
     } ,methods:{
@@ -18,15 +18,35 @@
        if(newVal !== this.value) {
          this.$emit('input', newVal);
        }
-     }
-    },created () {
+     },
+      setValue(val){
+        if(this.status===val){
+          return;
+        }
+       if(val){
+         this.status=val;
+       }
+      else {
+          if(this.multiple){
+            this.innerId = [];
+          }else{
+            this.innerId = val
+          }
+        }
+        this.$nextTick(() => {
+          this.$emit('afterInit');
+        });
+      }
+  },created () {
+      this.setValue(this.value);
       axios.get('/api/general/sys/processFlow/findByProcessTypeName',{params:{processTypeName:this.type}}).then((response)=>{
         this.itemList=response.data;
+        console.log(response.data)
       });
     },watch: {
-      value :function (newVal) {
-          this.status = newVal;
-      }
+//      value :function (newVal) {
+//          this.status = newVal;
+//      }
     }
   };
 </script>

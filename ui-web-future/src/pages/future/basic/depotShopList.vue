@@ -9,11 +9,65 @@
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-form-item label="名称" :label-width="formLabelWidth">
-            <el-input v-model="formData.name" auto-complete="off"></el-input>
-          </el-form-item>
+      <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData" :label-width="formLabelWidth">
+          <el-row :gutter="4">
+            <el-col :span="12">
+              <el-form-item label="门店名称" >
+                <el-input v-model="formData.name" auto-complete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="区域类型"  >
+                <dict-map-select  v-model="formData.areaType" category="门店_地区属性"></dict-map-select>
+              </el-form-item>
+              <el-form-item label="价格体系" >
+                <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                  <el-option v-for="pricesystem in formData.extra.pricesystemList" :key="pricesystem.id" :label="pricesystem.name" :value="pricesystem.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="负责人">
+                <el-input v-model="formData.contator" auto-complete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="手机" >
+                <el-input v-model="formData.mobilePhone" auto-complete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="是否体验店">
+                <bool-select v-model="formData.specialityStore"></bool-select>
+              </el-form-item>
+              <el-form-item label="专卖店类型">
+                <dict-map-select  v-model="formData.specialityStoreType" category="门店_体验店类型"></dict-map-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="机构" >
+                <office-select v-model="formData.officeId"></office-select>
+              </el-form-item>
+              <el-form-item label="连锁体系">
+                <el-select v-model="formData.chainId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                  <el-option v-for="chain in formData.extra.chainList" :key="chain.id" :label="chain.name" :value="chain.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="物料运费">
+                <el-select v-model="formData.adPricesystemId" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
+                  <el-option v-for="adPricesystem in formData.extra.adPricesystemList" :key="adPricesystem.id" :label="adPricesystem.name" :value="adPricesystem.id"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="快递公司">
+                <express-company-select v-model="formData.expressCompanyId"></express-company-select>
+              </el-form-item>
+              <el-form-item label="行政区域" >
+                <district-select v-model="formData.districtId" ></district-select>
+              </el-form-item>
+              <el-form-item label="是否广告办事处">
+                <bool-select v-model="formData.adShopBsc"></bool-select>
+              </el-form-item>
+              <el-form-item label="是否广告门店" >
+                <bool-select v-model="formData.adShop"></bool-select>
+              </el-form-item>
+              <el-form-item label="是否隐藏">
+                <bool-select v-model="formData.hidden"></bool-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">过滤</el-button>
@@ -62,7 +116,19 @@
   </div>
 </template>
 <script>
+  import boolSelect from 'components/common/bool-select';
+  import officeSelect from 'components/basic/office-select';
+  import dictMapSelect from 'components/basic/dict-map-select';
+  import districtSelect from 'components/general/district-select';
+  import expressCompanySelect from 'components/future/express-company-select';
   export default {
+    components:{
+      boolSelect,
+      officeSelect,
+      dictMapSelect,
+      districtSelect,
+      expressCompanySelect
+    },
     data() {
       return {
         searchText:"",
@@ -136,9 +202,12 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
+      this.initPromise = axios.get('/api/ws/future/basic/depotShop/getQuery').then((response) =>{
+        this.formData = response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
       this.initPromise =axios.get('/api/basic/sys/office/findByOfficeRuleName').then((response) =>{
         this.areaList=response.data;
-        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

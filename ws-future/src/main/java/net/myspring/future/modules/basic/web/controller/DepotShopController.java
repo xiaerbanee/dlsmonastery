@@ -22,6 +22,7 @@ import net.myspring.future.modules.basic.service.PricesystemService;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
@@ -61,7 +62,7 @@ public class DepotShopController {
     private DictMapClient dictMapClient;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<DepotShopDto> list(Pageable pageable, DepotQuery depotShopQuery){
+    public Page<DepotShopDto> list(Pageable pageable, DepotShopQuery depotShopQuery){
         Page<DepotShopDto> page = depotShopService.findPage(pageable,depotShopQuery);
         for(DepotShopDto depotShopDto:page.getContent()){
             setOperationStatus(depotShopDto);
@@ -69,7 +70,10 @@ public class DepotShopController {
         return page;
     }
     @RequestMapping(value = "getQuery")
-    public DepotQuery getQuery(DepotQuery depotShopQuery) {
+    public DepotShopQuery getQuery(DepotShopQuery depotShopQuery) {
+        depotShopQuery.getExtra().put("chainList",chainService.findAllEnabled());
+        depotShopQuery.getExtra().put("pricesystemList",pricesystemService.findAllEnabled());
+        depotShopQuery.getExtra().put("adPricesystemList",adPricesystemService.findAllEnabled());
         return depotShopQuery;
     }
 

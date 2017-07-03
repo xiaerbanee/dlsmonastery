@@ -2,6 +2,7 @@ import store from '../store/'
 
 var util = {};
 
+util.MAX_DETAIL_ROW = 100;
 util.pickerDateOption = {
   shortcuts: [{
     text: '今天',

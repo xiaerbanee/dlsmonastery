@@ -150,6 +150,19 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
+        if (StringUtils.isNotEmpty(depotStoreQuery.contator)) {
+            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.mobilePhone)) {
+            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.officeId)) {
+            sb.append("""  and t1.office_id =:officeId """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.areaId)) {
+            sb.append("""  and t1.area_id =:areaId """)
+        }
+
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(depotStoreQuery)
