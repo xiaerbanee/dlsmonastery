@@ -871,6 +871,7 @@ export default {
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
     remarks: "备注",
+    remarksPlaceholder:"请输入对稿人、联系方式等",
     sure: "确定",
     save: "保存",
     filter: "过滤",

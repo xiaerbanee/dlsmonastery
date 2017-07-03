@@ -97,7 +97,7 @@
           if(!value){
             return callback(new Error('必填信息'));
           }else if(value.length != 11){
-            return callback(new Error('请输入11位手机号！'));
+            return callback(new Error('请输入11位手机号(不包含空格或-)！'));
           }else if(/[^\d]/.test(value)){
             return callback(new Error('请输入纯数字手机号!'));
           }else{
@@ -125,7 +125,6 @@
             expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderContator: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-            expressOrderMobilePhone: [{required: true, len: 11,message: this.$t('adGoodsOrderForm.inputLegalValue')}],
             expressOrderMobilePhone: [{required: true,validator:phoneFormatter}],
           },
           totalQty: 0,

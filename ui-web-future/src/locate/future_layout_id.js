@@ -866,6 +866,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     likeSearch: "pencarian",
     remarks: "keterangan / komen",
+    remarksPlaceholder:"请输入对稿人、联系方式等",
     sure: "yakin",
     save: "simpan",
     filter: "saring",
