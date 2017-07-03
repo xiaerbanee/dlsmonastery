@@ -23,6 +23,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
     private String createdBy;
     private String createdDateRange;
     private String billDateRange;
+    private Boolean hasDeposit;
 
     public List<String> getIdList(){
         if(idStr == null){
@@ -30,6 +31,14 @@ public class AdGoodsOrderQuery extends BaseQuery {
         }
 
         return StringUtils.getSplitList(idStr, CharConstant.COMMA);
+    }
+
+    public Boolean getHasDeposit() {
+        return hasDeposit;
+    }
+
+    public void setHasDeposit(Boolean hasDeposit) {
+        this.hasDeposit = hasDeposit;
     }
 
     public List<String> getShopAreaId() {

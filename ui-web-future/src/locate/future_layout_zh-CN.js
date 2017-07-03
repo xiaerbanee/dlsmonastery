@@ -211,6 +211,7 @@ export default {
     print:"打印",
     export:"导出",
     itemDetailList:"详细",
+    hasDeposit:"有无押金",
   },
   adGoodsOrderDetailList: {
     adGoodsOrderDetailList: "订货详细",

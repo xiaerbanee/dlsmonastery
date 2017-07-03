@@ -30,6 +30,9 @@
               <el-form-item :label="$t('adGoodsOrderList.parentId')">
                 <el-input v-model="formData.parentId" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('adGoodsOrderList.hasDeposit')">
+                <bool-select v-model="formData.hasDeposit"></bool-select>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('adGoodsOrderList.areaName')">
@@ -97,13 +100,14 @@
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select'
-
+  import boolSelect from 'components/common/bool-select'
   export default {
     components:{
       officeSelect,
       accountSelect,
       depotSelect,
       processStatusSelect,
+      boolSelect
     },
     data() {
       return {
