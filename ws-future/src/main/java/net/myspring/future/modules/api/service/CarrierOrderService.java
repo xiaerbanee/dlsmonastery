@@ -82,17 +82,20 @@ public class CarrierOrderService {
     }
 
     public Map<String, Object> checkDetailJsons(CarrierOrderFrom carrierOrderFrom) {
-        GoodsOrder goodsOrder = goodsOrderRepository.findByBusinessId(carrierOrderFrom.getBusinessId());
-        Boolean checkColor = false;
-        //判断昌东仓库，昌东仓库需要校验颜色
-        CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
-        if (companyConfig != null && StringUtils.isNotBlank(companyConfig.getValue())) {
-            String mergeStoreIds = companyConfig.getValue();
-            if (StringUtils.isNotBlank(mergeStoreIds)) {
-                List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
-                String storeId = storeIds.get(1);
-                if (goodsOrder.getStoreId().equals(storeId)) {
-                    checkColor = true;
+        Boolean checkColor = carrierOrderFrom.getCheckColor();
+        GoodsOrder goodsOrder=null;
+        if(StringUtils.isNotBlank(carrierOrderFrom.getBusinessId())){
+            //判断昌东仓库，昌东仓库需要校验颜色
+            goodsOrder = goodsOrderRepository.findByBusinessId(carrierOrderFrom.getBusinessId());
+            CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+            if (companyConfig != null && StringUtils.isNotBlank(companyConfig.getValue())) {
+                String mergeStoreIds = companyConfig.getValue();
+                if (StringUtils.isNotBlank(mergeStoreIds)) {
+                    List<String> storeIds = StringUtils.getSplitList(mergeStoreIds, CharConstant.COMMA);
+                    String storeId = storeIds.get(1);
+                    if (goodsOrder.getStoreId().equals(storeId)) {
+                        checkColor = true;
+                    }
                 }
             }
         }
@@ -123,23 +126,29 @@ public class CarrierOrderService {
                     }
                     carrierMap.put("detail", details);
                     String jsonStr = ObjectMapperUtils.writeValueAsString(carrierMap);
-                    if (md5 == null || !md5.equals(MD5Utils.encode(jsonStr))) {
-                        sb.append("商城信息：" + detailJson + "格式不正确,加密后字符串" + MD5Utils.encode(jsonStr) + "与原字符串不匹配");
-                    } else {
-                        carrierOrderMains.add(carrierOrderMain);
-                    }
+                    carrierOrderMains.add(carrierOrderMain);
+//                    if (md5 == null || !md5.equals(MD5Utils.encode(jsonStr))) {
+//                        sb.append("商城信息：" + detailJson + "格式不正确,加密后字符串" + MD5Utils.encode(jsonStr) + "与原字符串不匹配");
+//                    } else {
+//                        carrierOrderMains.add(carrierOrderMain);
+//                    }
                 }
             }
         }
         //货品数量;
         String carrierCodes = "";
+        Map<String,CarrierOrder> carrierOrderMap=Maps.newHashMap();
+        Map<String,GoodsOrder> goodsOrderMap=Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(carrierOrderMains)) {
+            List<CarrierOrder> carrierOrders=carrierOrderRepository.findByCodeIn(CollectionUtil.extractToList(carrierOrderMains,"id"));
+            carrierOrderMap=CollectionUtil.extractToMap(carrierOrders,"code");
+            goodsOrderMap=goodsOrderRepository.findMap(CollectionUtil.extractToList(carrierOrders,"goodsOrderId"));
             for (CarrierOrderMainDto carrierOrderMain : carrierOrderMains) {
                 carrierCodes = carrierCodes + CharConstant.ENTER + carrierOrderMain.getId();
-                CarrierOrder carrierOrder = carrierOrderRepository.findByCode(carrierOrderMain.getId());
-                if (carrierOrder != null && goodsOrder.getEnabled()) {
-                    if (!goodsOrder.getId().equals(carrierOrder.getGoodsOrderId())) {
-                        sb.append("商城单号：" + carrierOrderMain.getId() + "在系统中已存在，订单号为：" + goodsOrder.getBusinessId());
+                CarrierOrder carrierOrder = carrierOrderMap.get(carrierOrderMain.getId());
+                if (carrierOrder != null && goodsOrderMap.get(carrierOrder.getGoodsOrderId()).getEnabled()) {
+                    if ((goodsOrder == null) || (goodsOrder != null && !goodsOrder.getId().equals(carrierOrder.getGoodsOrderId()))) {
+                        sb.append("商城单号：" + carrierOrderMain.getId() + "在系统中已存在，订单号为：" + goodsOrderMap.get(carrierOrder.getGoodsOrderId()).getBusinessId());
                     }
                 }
             }
@@ -151,9 +160,9 @@ public class CarrierOrderService {
             if (CollectionUtil.isNotEmpty(carrierOrderMains)) {
                 for (CarrierOrderMainDto carrierOrderMain : carrierOrderMains) {
                     for (CarrierOrderDetailDto carrierOrderDetail : carrierOrderMain.getDetail()) {
-                        CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProductName());
+                        CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProduct());
                         if (carrierProduct == null || carrierProduct.getProductId() == null) {
-                            sb.append("货品：" + carrierOrderDetail.getProductName() + "在系统中没有找到匹配项");
+                            sb.append("货品：" + carrierOrderDetail.getProduct() + "在系统中没有找到匹配项");
                         } else {
                             String productId = carrierProduct.getProductId();
                             if (!productQtyMap.containsKey(productId)) {
@@ -194,9 +203,9 @@ public class CarrierOrderService {
                 if (CollectionUtil.isNotEmpty(carrierOrderMains)) {
                     for (CarrierOrderMainDto carrierOrderMain : carrierOrderMains) {
                         for (CarrierOrderDetailDto carrierOrderDetail : carrierOrderMain.getDetail()) {
-                            CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProductName());
+                            CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProduct());
                             if (carrierProduct == null || carrierProduct.getProductId() == null) {
-                                sb.append("货品：" + carrierOrderDetail.getProductName() + "在系统中没有找到匹配项");
+                                sb.append("货品：" + carrierOrderDetail.getProduct() + "在系统中没有找到匹配项");
                             } else {
                                 String key = carrierProduct.getMallProductTypeName();
                                 if (!productNameQtyMap.containsKey(key)) {
@@ -327,7 +336,7 @@ public class CarrierOrderService {
         Map<String, GoodsOrder> orderMap = goodsOrderRepository.findMap(CollectionUtil.extractToList(carrierOrderList, "goodsOrderId"));
         for (String code : codeMap.keySet()) {
             if (!carrierOrderMap.containsKey(code)) {
-                message.append("商城单号" + code + "在系统中不存在<br/>");
+                message.append("商城单号" + code + "在系统中不存在");
             } else {
                 codeGoodsOrderMap.put(code, orderMap.get(carrierOrderMap.get(code).getGoodsOrderId()));
             }
@@ -405,6 +414,17 @@ public class CarrierOrderService {
         }
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "商城订单" + UUID.randomUUID() + ".xlsx", simpleExcelSheetList);
         return simpleExcelBook;
+    }
+
+    public void updateStatus(CarrierOrderQuery carrierOrderQuery){
+        List<GoodsOrder> goodsOrderList=goodsOrderRepository.findByBusinessIdIn(carrierOrderQuery.getBusinessIdList());
+        if(CollectionUtil.isNotEmpty(goodsOrderList)){
+            List<CarrierOrder> carrierOrderList=carrierOrderRepository.findByGoodsOrderIdIn(CollectionUtil.extractToList(goodsOrderList,"id"));
+            for(CarrierOrder carrierOrder:carrierOrderList){
+                carrierOrder.setStatus(carrierOrderQuery.getStatus());
+                carrierOrderRepository.save(carrierOrder);
+            }
+        }
     }
 
     public void delete(String id) {
