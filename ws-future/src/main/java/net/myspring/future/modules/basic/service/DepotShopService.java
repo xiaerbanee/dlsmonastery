@@ -19,6 +19,7 @@ import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -52,12 +53,12 @@ public class DepotShopService {
     @Autowired
     private TownClient townClient;
 
-    public Page<DepotShopDto> findPage(Pageable pageable, DepotQuery depotQuery) {
-        depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        if (StringUtils.isNotBlank(depotQuery.getOfficeId())) {
-            depotQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotQuery.getOfficeId()));
+    public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery) {
+        depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
+        if (StringUtils.isNotBlank(depotShopQuery.getOfficeId())) {
+            depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));
         }
-        Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotQuery);
+        Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotShopQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

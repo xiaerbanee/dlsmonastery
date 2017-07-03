@@ -13,10 +13,7 @@ import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotStoreDto;
-import net.myspring.future.modules.basic.service.AdPricesystemService;
-import net.myspring.future.modules.basic.service.DepotService;
-import net.myspring.future.modules.basic.service.DepotStoreService;
-import net.myspring.future.modules.basic.service.PricesystemService;
+import net.myspring.future.modules.basic.service.*;
 import net.myspring.future.modules.basic.web.form.DepotStoreForm;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
@@ -54,6 +51,8 @@ public class DepotStoreController {
     private PricesystemService pricesystemService;
     @Autowired
     private AdPricesystemService adPricesystemService;
+    @Autowired
+    private ChainService chainService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DepotStoreDto> list(Pageable pageable, DepotStoreQuery depotStoreQuery){
@@ -129,9 +128,6 @@ public class DepotStoreController {
 
     @RequestMapping(value = "getQuery")
     public DepotStoreQuery getQuery(DepotStoreQuery depotStoreQuery){
-        depotStoreQuery.getExtra().put("chainList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_连锁属性.name())));
-        depotStoreQuery.getExtra().put("pricesystemList",pricesystemService.findAllEnabled());
-        depotStoreQuery.getExtra().put("adPricesystemList",adPricesystemService.findAllEnabled());
         return depotStoreQuery;
     }
 
