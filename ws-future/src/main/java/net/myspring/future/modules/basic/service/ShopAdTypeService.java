@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopAdTypeService {
 
     @Autowired
@@ -48,6 +48,7 @@ public class ShopAdTypeService {
         return page;
     }
 
+    @Transactional
     public ShopAdType save(ShopAdTypeForm shopAdTypeForm) {
         ShopAdType shopAdType;
         if (shopAdTypeForm.isCreate()) {
@@ -61,6 +62,7 @@ public class ShopAdTypeService {
         return shopAdType;
     }
 
+    @Transactional
     public void delete(ShopAdTypeForm shopAdTypeForm) {
         shopAdTypeRepository.logicDelete(shopAdTypeForm.getId());
     }

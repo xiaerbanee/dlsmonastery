@@ -116,7 +116,7 @@ axios.interceptors.response.use((resp) => {
         window.location.assign('/');
         break;
       case 404:
-        if(error.response.request.responseURL.indexOf("login")){
+        if(error.response.request.responseURL.indexOf("login")>=0){
           store.dispatch('clearGlobal');
           window.location.assign('/');
           break;

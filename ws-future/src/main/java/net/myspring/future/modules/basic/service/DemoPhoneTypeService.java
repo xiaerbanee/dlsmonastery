@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DemoPhoneTypeService {
 
     @Autowired
@@ -97,10 +97,12 @@ public class DemoPhoneTypeService {
         return page;
     }
 
+    @Transactional
     public void delete(DemoPhoneTypeForm demoPhoneTypeForm) {
         demoPhoneTypeRepository.logicDelete(demoPhoneTypeForm.getId());
     }
 
+    @Transactional
     public DemoPhoneType save(DemoPhoneTypeForm demoPhoneTypeForm) {
         DemoPhoneType demoPhoneType;
         if (demoPhoneTypeForm.isCreate()) {

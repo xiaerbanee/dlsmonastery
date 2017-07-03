@@ -23,7 +23,7 @@ import java.util.List;
  * Created by liuj on 2017/4/22.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class CacheService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired

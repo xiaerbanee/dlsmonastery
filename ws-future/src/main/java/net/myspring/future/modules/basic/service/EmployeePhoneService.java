@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class EmployeePhoneService {
 
     @Autowired
@@ -50,6 +50,7 @@ public class EmployeePhoneService {
         return employeePhoneDto;
     }
 
+    @Transactional
     public EmployeePhone save(EmployeePhoneForm employeePhoneForm) {
         EmployeePhone oldEmployeePhone = employeePhoneRepository.findOne(employeePhoneForm.getId());
         if (oldEmployeePhone.getProductId() == null || StringUtils.isEmpty(oldEmployeePhone.getImeStr())) {
@@ -66,6 +67,7 @@ public class EmployeePhoneService {
         return oldEmployeePhone;
     }
 
+    @Transactional
     public void logicDeleteOne(EmployeePhoneForm employeePhoneForm) {
         employeePhoneRepository.logicDelete(employeePhoneForm.getId());
     }

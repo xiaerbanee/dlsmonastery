@@ -47,7 +47,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PrintService {
     @Value("${app.print.version}")
     private String version;
@@ -110,6 +110,7 @@ public class PrintService {
         return map;
     }
 
+    @Transactional
     public void print(String expressOrderId) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(expressOrderId);
         expressOrder.setOutPrintDate(LocalDateTime.now());

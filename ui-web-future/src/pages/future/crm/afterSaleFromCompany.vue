@@ -1,6 +1,6 @@
 <template>
     <div>
-      <head-tab :active="$t('afterSaleFromCompany.afterSaleFromCompany') "></head-tab>
+      <head-tab active="afterSaleFromCompany"></head-tab>
       <el-row>
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleFromCompany.save')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>
@@ -51,6 +51,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   import ProductTypeSelect from "components/future/product-type-select"
+  var table=null;
   export default{
        components:{
          ProductTypeSelect
@@ -58,9 +59,7 @@
         data(){
           return{
             searchText:"",
-            formData:{
-              extra:{}
-            },
+            formData:{},
             inputForm:{
               fromCompanyDate:util.currentDate(),
               data:""
@@ -70,7 +69,6 @@
             formVisible: false,
             remoteLoading:false,
 
-            table:null,
             settings: {
               colHeaders: [this.$t('afterSaleFromCompany.badProductName'),this.$t('afterSaleFromCompany.toAreaProductType'),this.$t('afterSaleFromCompany.toCompanyDate'),this.$t('afterSaleFromCompany.badProductIme'),this.$t('afterSaleFromCompany.areaDepot'),this.$t('afterSaleFromCompany.packageStatus'),this.$t('afterSaleFromCompany.toStoreType'),this.$t('afterSaleFromCompany.memory'),this.$t('afterSaleFromCompany.remarks')],
               rowHeaders:true,
@@ -137,7 +135,7 @@
 
         },
       mounted () {
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+        table = new Handsontable(this.$refs["handsontable"], this.settings)
       },
       methods:{
         setSearchText() {
@@ -151,15 +149,15 @@
           form.validate((valid) => {
             if (valid) {
               this.inputForm.data =new Array();
-              let list=this.table.getData();
+              let list=table.getData();
               for(var item in list){
-                if(!this.table.isEmptyRow(item)){
+                if(!table.isEmptyRow(item)){
                   this.inputForm.data.push(list[item]);
                 }
               }
               this.inputForm.fromCompanyDate=util.formatLocalDate(this.inputForm.fromCompanyDate)
               this.inputForm.data = JSON.stringify(this.inputForm.data);
-              axios.post('/api/crm/afterSale/fromCompany',qs.stringify(this.inputForm)).then((response)=> {
+              axios.post('/api/ws/future/crm/afterSale/fromCompany',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
                 this.submitDisabled = false;
               });
@@ -169,10 +167,9 @@
           })
         },search() {
           this.formVisible = false;
-          var submitData = util.deleteExtra(this.formData);
-          axios.get('/api/crm/afterSale/getFromCompanyData',{params:submitData}).then((response)=>{
+          axios.get('/api/ws/future/crm/afterSale/getFromCompanyData',{params:this.formData}).then((response)=>{
               this.settings.data=response.data;
-              this.table.loadData(this.settings.data);
+              table.loadData(this.settings.data);
           })
         }
       }

@@ -38,7 +38,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/12.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DepotShopService {
     @Autowired
     private DepotShopRepository depotShopRepository;
@@ -96,6 +96,7 @@ public class DepotShopService {
         return depotDto;
     }
 
+    @Transactional
     public DepotShop save(DepotShopForm depotShopForm) {
         DepotShop depotShop;
         if(StringUtils.isNotBlank(depotShopForm.getTownId())){
@@ -111,6 +112,7 @@ public class DepotShopService {
         return depotShop;
     }
 
+    @Transactional
     public Depot saveDepot(DepotForm depotForm) {
         Depot depot;
         depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
@@ -130,7 +132,7 @@ public class DepotShopService {
         return depot;
     }
 
-
+    @Transactional
     public void logicDelete(String id) {
         depotShopRepository.logicDelete(id);
     }

@@ -26,7 +26,7 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item label="订货单号">
-                <el-input v-model="formData.businessId" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+                <el-input v-model="formData.businessIdStr" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item label="状态">
                 <el-select v-model="formData.carrierOrderStatus" filterable clearable :placeholder="$t('dictEnumList.inputKey')">
@@ -174,7 +174,14 @@
         this.$router.push({ name: 'carrierOrderShip'})
       },
       handleCommand(command) {
-        this.command=command;
+          if(!this.formData.businessIdStr){
+            this.$message.error('没有输入订货单号，无法进行状态修改');
+          }else {
+            axios.get('/api/ws/future/api/carrierOrder/batchStatus',{params:{businessIdStr:this.formData.businessIdStr,status:command}}).then((response)=> {
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

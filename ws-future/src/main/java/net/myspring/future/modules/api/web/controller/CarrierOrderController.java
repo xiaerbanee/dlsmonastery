@@ -11,6 +11,7 @@ import net.myspring.future.modules.crm.service.GoodsOrderShipService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
 import net.myspring.future.modules.api.web.query.CarrierOrderQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -98,6 +99,7 @@ public class CarrierOrderController {
         return new RestResponse("删除成功",null);
     }
 
+    @RequestMapping(value = "ship")
     @PreAuthorize("hasPermission(null,'api:carrierOrder:ship')")
     public RestResponse carrierShip(String data){
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);
@@ -109,8 +111,8 @@ public class CarrierOrderController {
             StringBuilder sb=new StringBuilder();
             for(GoodsOrderShipForm goodsOrderShipForm:goodsOrderShipForms) {
                 Map<String,Object> shipCheckMap = goodsOrderShipService.shipCheck(goodsOrderShipForm);
-                if(StringUtils.isNotBlank(shipCheckMap.get("errMsg").toString())) {
-                    sb.append(shipCheckMap.get("errMsg").toString());
+                if(CollectionUtil.isNotEmpty(((RestResponse)shipCheckMap.get("restResponse")).getErrors())) {
+                    sb.append(((RestResponse)shipCheckMap.get("restResponse")).getErrors().get(0).getMessage());
                 }
             }
             if(StringUtils.isNotBlank(sb.toString())) {
@@ -123,10 +125,29 @@ public class CarrierOrderController {
         }
     }
 
+    @RequestMapping(value="checkDetailJsons",method = RequestMethod.GET)
+    public RestResponse checkDetailJsons(CarrierOrderFrom carrierOrderFrom){
+        RestResponse restResponse=new RestResponse("保存成功",null);
+        Map<String, Object> map =carrierOrderService.checkDetailJsons(carrierOrderFrom);
+        if (StringUtils.isNotBlank(map.get("message").toString())) {
+            String message = map.get("message").toString();
+            restResponse=new RestResponse(message,null,false);
+        }else {
+            restResponse.setExtra(map);
+        }
+        return restResponse;
+    }
+
     @RequestMapping(value="export",method = RequestMethod.GET)
     public ModelAndView export(CarrierOrderQuery carrierOrderQuery){
         SimpleExcelBook simpleExcelSheet = carrierOrderService.findSimpleExcelSheet(carrierOrderQuery);
         ExcelView excelView = new ExcelView();
         return new ModelAndView(excelView, "simpleExcelBook", simpleExcelSheet);
+    }
+
+    @RequestMapping(value = "batchStatus")
+    public RestResponse batchStatus(CarrierOrderQuery carrierOrderQuery){
+        carrierOrderService.updateStatus(carrierOrderQuery);
+        return new RestResponse("保存成功",null);
     }
 }
