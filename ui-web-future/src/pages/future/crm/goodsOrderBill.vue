@@ -173,17 +173,12 @@
         })
 
       },filterProducts(){
-        let val=this.filterValue;
-        if(util.isBlank(val)) {
-          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
-          return;
-        }
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty)){
             tempList.push(detail);
-          }else if(util.contains(detail.productName, val) || detail.productId === this.formProperty.expressProductId){
+          }else if(util.contains(detail.productName, this.filterValue) || detail.productId === this.formProperty.expressProductId){
             tempPostList.push(detail);
           }
         }
