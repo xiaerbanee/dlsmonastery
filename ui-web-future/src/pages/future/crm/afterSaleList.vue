@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleList.afterSaleList') "></head-tab>
+    <head-tab active="afterSaleList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.add')}}</el-button>
@@ -88,9 +88,11 @@
   export default {
     data() {
       return {
+        searchText:"",
         page:{},
         initPromise:{},
         formData:{extra:{}},
+        formLabelWidth:"120px",
         formVisible: false,
         pageLoading: false,
       };
@@ -106,7 +108,7 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("afterSaleList",submitData);
-        axios.get('/api/crm/afterSale',{params:submitData}).then((response) => {
+        axios.get('/api/ws/future/crm/afterSale',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
@@ -148,8 +150,8 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

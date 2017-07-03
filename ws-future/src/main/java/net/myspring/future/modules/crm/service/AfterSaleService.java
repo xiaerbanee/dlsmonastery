@@ -86,7 +86,7 @@ public class AfterSaleService {
         for (List<String> row : datas) {
             listAddTrim(imeList, row.get(0));
             listAddTrim(imeList, row.get(3));
-            listAddTrim(depotNameList, row.get(4));
+            listAddTrim(depotNameList, row.get(5));
         }
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
         List<Depot> depotList = depotRepository.findByNameList(depotNameList);
@@ -97,7 +97,7 @@ public class AfterSaleService {
                 AfterSale afterSale = new AfterSale();
                 ProductIme badProductIme = productImeMap.get(row.get(0).trim());
                 ProductIme toAreaProductIme = productImeMap.get(row.get(3).trim());
-                Depot toAreaDepot = depotMap.get(row.get(4).trim());
+                Depot toAreaDepot = depotMap.get(row.get(5).trim());
                 for (int i = 0; i < row.size(); i++) {
                     String value = StringUtils.toString(row.get(i)).trim();
                     switch (i) {
@@ -114,22 +114,22 @@ public class AfterSaleService {
                                 afterSale.setToAreaProductImeId(toAreaProductIme.getId());
                             }
                             break;
-                        case 4:
+                        case 5:
                             if (StringUtils.isNotBlank(value)) {
                                 afterSale.setAreaDepotId(toAreaDepot.getId());
                                 afterSale.setAreaDepotId(toAreaDepot.getId());
                             }
                             break;
-                        case 5:
+                        case 6:
                             afterSale.setPackageStatus(value);
                             break;
-                        case 6:
+                        case 7:
                             afterSale.setToStoreType(value);
                             break;
-                        case 7:
+                        case 8:
                             afterSale.setMemory(value);
                             break;
-                        case 8:
+                        case 9:
                             afterSale.setToStoreRemarks(value);
                             break;
                         default:

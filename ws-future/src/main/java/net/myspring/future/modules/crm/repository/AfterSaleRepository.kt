@@ -31,13 +31,6 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
         """)
     fun findByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSale>
 
-    @Query("""
-    SELECT MAX(t1.businessId)
-    FROM #{#entityName} t1
-    WHERE t1.createdDate >= ?1
-        """)
-    fun findMaxBusinessId(dateStart: LocalDate): String
-
     fun findByBadProductImeIdIn(badProductImeId:MutableList<String>):MutableList<AfterSale>
 
 }
@@ -53,9 +46,28 @@ interface AfterSaleRepositoryCustom{
 
     fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto>
 
+    @Query("""
+    SELECT MAX(t1.businessId)
+    FROM #{#entityName} t1
+    WHERE t1.createdDate >= ?1
+        """)
+    fun findMaxBusinessId(dateStart: LocalDate): String
+
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryCustom {
+    override fun findMaxBusinessId(dateStart: LocalDate): String {
+        val sb = StringBuilder()
+        sb.append("""
+            SELECT MAX(t1.business_id)
+            FROM crm_after_sale  t1
+            WHERE t1.created_date >= :dateStart
+        """)
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart);
+        return namedParameterJdbcTemplate.queryForObject(sb.toString(), paramMap, String::class.java)
+    }
+
     override fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto> {
         val sb = StringBuilder()
         sb.append("""
