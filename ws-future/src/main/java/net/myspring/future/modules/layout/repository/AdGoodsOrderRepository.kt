@@ -117,8 +117,8 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(adGoodsOrderQuery.parentId)) {
             sb.append("""  and t1.parent_id = :parentId """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.shopAreaId)) {
-            sb.append("""  and shop.area_id = :shopAreaId """)
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.shopAreaId)) {
+            sb.append("""  and shop.area_id in (:shopAreaId) """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderQuery.storeId)) {
             sb.append("""  and t1.store_id = :storeId """)

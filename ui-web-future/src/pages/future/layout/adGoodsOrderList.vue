@@ -13,7 +13,6 @@
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="12">
             <el-col :span="12">
-
               <el-form-item :label="$t('adGoodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
@@ -34,7 +33,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('adGoodsOrderList.areaName')">
-                <el-select v-model="formData.shopAreaId" clearable>
+                <el-select v-model="formData.shopAreaId" multiple filterable >
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
