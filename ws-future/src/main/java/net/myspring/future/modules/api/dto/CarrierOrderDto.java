@@ -1,8 +1,7 @@
-package net.myspring.future.modules.crm.dto;
+package net.myspring.future.modules.api.dto;
 
-import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.crm.domain.CarrierOrder;
+import net.myspring.future.modules.api.domain.CarrierOrder;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
@@ -24,7 +23,7 @@ public class CarrierOrderDto extends DataDto<CarrierOrder>{
     private String areaName;
 
     public String getFormatId() {
-        if(StringUtils.isNotBlank(businessId)){
+        if(StringUtils.isBlank(formatId)&&StringUtils.isNotBlank(businessId)){
             this.formatId= IdUtils.getFormatId(businessId,"XK");
         }
         return formatId;
@@ -51,8 +50,8 @@ public class CarrierOrderDto extends DataDto<CarrierOrder>{
     }
 
     public String getBusinessId() {
-        if(StringUtils.isNotBlank(businessId)){
-            return businessId.replace(businessId, "XK");
+        if(StringUtils.isBlank(businessId)&&StringUtils.isNotBlank(formatId)){
+            return formatId.replace("XK","" );
         }
         return businessId;
     }

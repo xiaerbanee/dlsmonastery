@@ -1,4 +1,4 @@
-package net.myspring.future.modules.crm.service;
+package net.myspring.future.modules.api.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -10,17 +10,22 @@ import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.api.domain.CarrierOrder;
+import net.myspring.future.modules.api.domain.CarrierProduct;
+import net.myspring.future.modules.api.repository.CarrierOrderRepository;
+import net.myspring.future.modules.api.repository.CarrierProductRepository;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
-import net.myspring.future.modules.crm.dto.CarrierOrderDetailDto;
-import net.myspring.future.modules.crm.dto.CarrierOrderDto;
-import net.myspring.future.modules.crm.dto.CarrierOrderExportDetailDto;
-import net.myspring.future.modules.crm.dto.CarrierOrderMainDto;
+import net.myspring.future.modules.api.dto.CarrierOrderDetailDto;
+import net.myspring.future.modules.api.dto.CarrierOrderDto;
+import net.myspring.future.modules.api.dto.CarrierOrderExportDetailDto;
+import net.myspring.future.modules.api.dto.CarrierOrderMainDto;
 import net.myspring.future.modules.crm.repository.*;
-import net.myspring.future.modules.crm.web.form.CarrierOrderFrom;
+import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
-import net.myspring.future.modules.crm.web.query.CarrierOrderQuery;
+import net.myspring.future.modules.api.web.query.CarrierOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -33,7 +38,6 @@ import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -62,9 +66,10 @@ public class CarrierOrderService {
     private GoodsOrderImeRepository goodsOrderImeRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<CarrierOrderDto> findPage(Pageable pageable, CarrierOrderQuery carrierOrderQuery) {
-        carrierOrderQuery.setGoodsOrderStatusList(Lists.newArrayList(GoodsOrderStatusEnum.待签收.name(), GoodsOrderStatusEnum.已完成.name()));
         Page<CarrierOrderDto> page = carrierOrderRepository.findPage(pageable, carrierOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -159,18 +164,25 @@ public class CarrierOrderService {
                     }
                 }
             }
-        }
-        //如果已开单，添加运费货品数量，检测货品型号和数量
-        if (goodsOrder != null) {
-            String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
-            Map<String, Integer> productMap = Maps.newHashMap();
-            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-            for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
-                productMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail.getQty());
-            }
-            if (!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())) {
-                for (String productId : productMap.keySet()) {
-                    if (expressProductId == null || !expressProductId.equals(productId)) {
+            //如果已开单，添加运费货品数量，检测货品型号和数量
+            if (goodsOrder != null) {
+                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
+                Map<String, Integer> productMap = Maps.newHashMap();
+                List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+                for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
+                    productMap.put(goodsOrderDetail.getProductId(), goodsOrderDetail.getQty());
+                }
+                if (!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())) {
+                    for (String productId : productMap.keySet()) {
+                        if (expressProductId == null || !expressProductId.equals(productId)) {
+                            Integer qty = productQtyMap.get(productId) == null ? 0 : productQtyMap.get(productId);
+                            Integer productQty = productMap.get(productId) == null ? 0 : productMap.get(productId);
+                            if (!qty.equals(productQty)) {
+                                isSame = false;
+                            }
+                        }
+                    }
+                    for (String productId : productQtyMap.keySet()) {
                         Integer qty = productQtyMap.get(productId) == null ? 0 : productQtyMap.get(productId);
                         Integer productQty = productMap.get(productId) == null ? 0 : productMap.get(productId);
                         if (!qty.equals(productQty)) {
@@ -178,67 +190,60 @@ public class CarrierOrderService {
                         }
                     }
                 }
-                for (String productId : productQtyMap.keySet()) {
-                    Integer qty = productQtyMap.get(productId) == null ? 0 : productQtyMap.get(productId);
-                    Integer productQty = productMap.get(productId) == null ? 0 : productMap.get(productId);
-                    if (!qty.equals(productQty)) {
-                        isSame = false;
-                    }
-                }
-            }
-        } else {
-            if (CollectionUtil.isNotEmpty(carrierOrderMains)) {
-                for (CarrierOrderMainDto carrierOrderMain : carrierOrderMains) {
-                    for (CarrierOrderDetailDto carrierOrderDetail : carrierOrderMain.getDetail()) {
-                        CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProductName());
-                        if (carrierProduct == null || carrierProduct.getProductId() == null) {
-                            sb.append("货品：" + carrierOrderDetail.getProductName() + "在系统中没有找到匹配项");
-                        } else {
-                            String key = carrierProduct.getMallProductTypeName();
-                            if (!productNameQtyMap.containsKey(key)) {
-                                productNameQtyMap.put(key, 0);
+            } else {
+                if (CollectionUtil.isNotEmpty(carrierOrderMains)) {
+                    for (CarrierOrderMainDto carrierOrderMain : carrierOrderMains) {
+                        for (CarrierOrderDetailDto carrierOrderDetail : carrierOrderMain.getDetail()) {
+                            CarrierProduct carrierProduct = carrierProductRepository.findByName(carrierOrderDetail.getProductName());
+                            if (carrierProduct == null || carrierProduct.getProductId() == null) {
+                                sb.append("货品：" + carrierOrderDetail.getProductName() + "在系统中没有找到匹配项");
+                            } else {
+                                String key = carrierProduct.getMallProductTypeName();
+                                if (!productNameQtyMap.containsKey(key)) {
+                                    productNameQtyMap.put(key, 0);
+                                }
+                                productNameQtyMap.put(key, productNameQtyMap.get(key) + carrierOrderDetail.getQty().intValue());
                             }
-                            productNameQtyMap.put(key, productNameQtyMap.get(key) + carrierOrderDetail.getQty().intValue());
                         }
                     }
                 }
-            }
-            if (goodsOrder != null) {
-                List<CarrierProduct> carrierProducts = carrierProductRepository.findAll();
-                Map<String, String> carrierProductMap = Maps.newHashMap();
-                for (CarrierProduct carrierProduct : carrierProducts) {
-                    carrierProductMap.put(carrierProduct.getProductId(), carrierProduct.getMallProductTypeName());
-                }
-                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
-                String expressProductName = productRepository.findOne(expressProductId).getName();
-                Map<String, Integer> productMap = Maps.newHashMap();
-                List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-                for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
-                    String mallProductType = carrierProductMap.get(goodsOrderDetail.getProductId());
-                    if (carrierProductMap.get(goodsOrderDetail.getProductId()) == null) {
-                        isSame = false;
-                    } else {
-                        if (!productMap.containsKey(mallProductType)) {
-                            productMap.put(mallProductType, 0);
-                        }
-                        productMap.put(mallProductType, productMap.get(mallProductType) + goodsOrderDetail.getQty());
+                if (goodsOrder != null) {
+                    List<CarrierProduct> carrierProducts = carrierProductRepository.findAll();
+                    Map<String, String> carrierProductMap = Maps.newHashMap();
+                    for (CarrierProduct carrierProduct : carrierProducts) {
+                        carrierProductMap.put(carrierProduct.getProductId(), carrierProduct.getMallProductTypeName());
                     }
-                }
-                if (!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())) {
-                    for (String productName : productMap.keySet()) {
-                        if (expressProductId == null || !expressProductName.equals(productName)) {
+                    String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
+                    String expressProductName = productRepository.findOne(expressProductId).getName();
+                    Map<String, Integer> productMap = Maps.newHashMap();
+                    List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+                    for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
+                        String mallProductType = carrierProductMap.get(goodsOrderDetail.getProductId());
+                        if (carrierProductMap.get(goodsOrderDetail.getProductId()) == null) {
+                            isSame = false;
+                        } else {
+                            if (!productMap.containsKey(mallProductType)) {
+                                productMap.put(mallProductType, 0);
+                            }
+                            productMap.put(mallProductType, productMap.get(mallProductType) + goodsOrderDetail.getQty());
+                        }
+                    }
+                    if (!GoodsOrderStatusEnum.待开单.name().equals(goodsOrder.getStatus())) {
+                        for (String productName : productMap.keySet()) {
+                            if (expressProductId == null || !expressProductName.equals(productName)) {
+                                Integer qty = productNameQtyMap.get(productName) == null ? 0 : productNameQtyMap.get(productName);
+                                Integer productQty = productMap.get(productName) == null ? 0 : productMap.get(productName);
+                                if (!qty.equals(productQty)) {
+                                    isSame = false;
+                                }
+                            }
+                        }
+                        for (String productName : productNameQtyMap.keySet()) {
                             Integer qty = productNameQtyMap.get(productName) == null ? 0 : productNameQtyMap.get(productName);
                             Integer productQty = productMap.get(productName) == null ? 0 : productMap.get(productName);
                             if (!qty.equals(productQty)) {
                                 isSame = false;
                             }
-                        }
-                    }
-                    for (String productName : productNameQtyMap.keySet()) {
-                        Integer qty = productNameQtyMap.get(productName) == null ? 0 : productNameQtyMap.get(productName);
-                        Integer productQty = productMap.get(productName) == null ? 0 : productMap.get(productName);
-                        if (!qty.equals(productQty)) {
-                            isSame = false;
                         }
                     }
                 }
@@ -352,52 +357,53 @@ public class CarrierOrderService {
         return map;
     }
 
-    public SimpleExcelBook findSimpleExcelSheet(CarrierOrderQuery carrierOrderQuery){
+    public SimpleExcelBook findSimpleExcelSheet(CarrierOrderQuery carrierOrderQuery) {
+        carrierOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Workbook workbook = new SXSSFWorkbook(10000);
-        List<SimpleExcelSheet> simpleExcelSheetList=Lists.newArrayList();
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
 
-        String storeId=CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
-        carrierOrderQuery.setNotEqualStoreId(storeId);
-        carrierOrderQuery.setNotEqualStatus(CarrierOrderStatusEnum.已导入.name());
-        List<CarrierOrderDto> carrierOrderList=carrierOrderRepository.findFilter(carrierOrderQuery);
+        String storeId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+        carrierOrderQuery.setNotEqualStoreIdList(Lists.newArrayList(storeId));
+        carrierOrderQuery.setNotEqualStatusList(Lists.newArrayList(CarrierOrderStatusEnum.已导入.name(), CarrierOrderStatusEnum.问题单号.name(), CarrierOrderStatusEnum.坏单.name()));
+        List<CarrierOrderDto> carrierOrderList = carrierOrderRepository.findFilter(carrierOrderQuery);
 
-        if(CollectionUtil.isNotEmpty(carrierOrderList)){
+        if (CollectionUtil.isNotEmpty(carrierOrderList)) {
             cacheUtils.initCacheInput(carrierOrderList);
-            List<CarrierOrderExportDetailDto> detailList=Lists.newArrayList();
-            List<SimpleExcelColumn> goodsOrderColumnList=Lists.newArrayList();
-            List<String> goodsOrderIdList=CollectionUtil.extractToList(carrierOrderList,"goodsOrderId");
-            List<GoodsOrderIme> goodsOrderImeList=goodsOrderImeRepository.findByGoodsOrderIdIn(goodsOrderIdList);
-            Map<String,CarrierOrder> carrierOrderMap=CollectionUtil.extractToMap(carrierOrderList,"goodsOrderId");
-            Map<String,Product> productMap=productRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productId"));
-            Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
-            for(GoodsOrderIme goodsOrderIme:goodsOrderImeList){
-                CarrierOrder carrierOrder=carrierOrderMap.get(goodsOrderIme.getGoodsOrderId());
-                CarrierOrderExportDetailDto carrierOrderExportDetailDto= BeanUtil.map(carrierOrder,CarrierOrderExportDetailDto.class);
+            List<CarrierOrderExportDetailDto> detailList = Lists.newArrayList();
+            List<SimpleExcelColumn> goodsOrderColumnList = Lists.newArrayList();
+            List<String> goodsOrderIdList = CollectionUtil.extractToList(carrierOrderList, "goodsOrderId");
+            List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByGoodsOrderIdIn(goodsOrderIdList);
+            Map<String, CarrierOrderDto> carrierOrderMap = CollectionUtil.extractToMap(carrierOrderList, "goodsOrderId");
+            Map<String, Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList, "productId"));
+            Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList, "productImeId"));
+            for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
+                CarrierOrderDto carrierOrder = carrierOrderMap.get(goodsOrderIme.getGoodsOrderId());
+                CarrierOrderExportDetailDto carrierOrderExportDetailDto = BeanUtil.map(carrierOrder, CarrierOrderExportDetailDto.class);
                 carrierOrderExportDetailDto.setProductName(productMap.get(goodsOrderIme.getProductId()).getName());
                 carrierOrderExportDetailDto.setIme(productImeMap.get(goodsOrderIme.getProductImeId()).getIme());
                 detailList.add(carrierOrderExportDetailDto);
             }
             cacheUtils.initCacheInput(detailList);
-            goodsOrderColumnList.add(new SimpleExcelColumn(workbook,"formatId","订单编号"));
-            goodsOrderColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
-            goodsOrderColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店"));
-            goodsOrderColumnList.add(new SimpleExcelColumn(workbook,"productName","产品名称"));
-            goodsOrderColumnList.add(new SimpleExcelColumn(workbook,"ime","串码"));
-            SimpleExcelSheet goodsOrderSheet = new SimpleExcelSheet("订货单",detailList,goodsOrderColumnList);
+            goodsOrderColumnList.add(new SimpleExcelColumn(workbook, "formatId", "订单编号"));
+            goodsOrderColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
+            goodsOrderColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店"));
+            goodsOrderColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
+            goodsOrderColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+            SimpleExcelSheet goodsOrderSheet = new SimpleExcelSheet("订货单", detailList, goodsOrderColumnList);
             simpleExcelSheetList.add(goodsOrderSheet);
-            List<SimpleExcelColumn>carrierOrderColumnList=Lists.newArrayList();
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"formatId","订单号"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"depotName","门店"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"shipDate","发货时间"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"code","商城单号"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"status","商城状态"));
-            carrierOrderColumnList.add(new SimpleExcelColumn(workbook,"remarks","商城备注"));
-            SimpleExcelSheet carrierOrderSheet = new SimpleExcelSheet("商城单号",carrierOrderList,carrierOrderColumnList);
+            List<SimpleExcelColumn> carrierOrderColumnList = Lists.newArrayList();
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "formatId", "订单号"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "shipDate", "发货时间"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "code", "商城单号"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "status", "商城状态"));
+            carrierOrderColumnList.add(new SimpleExcelColumn(workbook, "remarks", "商城备注"));
+            SimpleExcelSheet carrierOrderSheet = new SimpleExcelSheet("商城单号", carrierOrderList, carrierOrderColumnList);
             simpleExcelSheetList.add(carrierOrderSheet);
-            ExcelUtils.doWrite(workbook,simpleExcelSheetList);
+            ExcelUtils.doWrite(workbook, simpleExcelSheetList);
         }
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"商城订单"+ UUID.randomUUID()+".xlsx",simpleExcelSheetList);
+        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "商城订单" + UUID.randomUUID() + ".xlsx", simpleExcelSheetList);
         return simpleExcelBook;
     }
 
