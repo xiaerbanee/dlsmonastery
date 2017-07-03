@@ -37,7 +37,6 @@ public class OppoController {
 
     @RequestMapping(value = "syn")
     public String synFactoryOppo(String date) {
-        logger.info("工厂同步开始，同步日期=="+date);
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String[] agentCodes=agentCode.split(CharConstant.COMMA);
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");

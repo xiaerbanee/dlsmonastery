@@ -103,7 +103,7 @@
             ],
             contextMenu: ['row_above', 'row_below', 'remove_row'],
           },
-          date:"",
+          date:util.currentDate(),
           rules: {},
           submitDisabled: false,
           formLabelWidth: '120px',
@@ -161,7 +161,15 @@
         this.setSearchText();
         this.getTableData();
       },synData(){
-
+        if(this.date){
+          axios.get('/api/global/tool/oppo/syn?date='+this.date).then((response)=>{
+            this.$message(response.data);
+          }).catch(function () {
+            this.$message({message:"同步失败",type:'error'});
+          });
+        }else{
+          this.$message({message:"请选择同步日期",type:'warning'});
+        }
       },initPage(){
         axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
           this.formData = response.data;
