@@ -173,17 +173,12 @@
         })
 
       },filterProducts(){
-        let val=this.filterValue;
-        if(util.isBlank(val)) {
-          this.filterDetailList = this.inputForm.goodsOrderBillDetailFormList;
-          return;
-        }
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty)){
             tempList.push(detail);
-          }else if(util.contains(detail.productName, val) || detail.productId === this.formProperty.expressProductId){
+          }else if(util.contains(detail.productName, this.filterValue) || detail.productId === this.formProperty.expressProductId){
             tempPostList.push(detail);
           }
         }
@@ -241,7 +236,6 @@
         }
         return tmpList;
       },refreshExpressShouldGet(row){
-
         //当无运费计算规则，或者发货类型为总部自提时，或者修改的是代收运费这一行，不会触发运费计算
         if(util.isBlank(this.formProperty.expressProductId) || !this.formProperty.expressRuleList || this.goodsOrder.shipType==="总部自提" || (row && row.productId === this.formProperty.expressProductId)){
           return ;
@@ -260,8 +254,15 @@
 
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(detail.productId === this.formProperty.expressProductId){
+            let expressShouldGetQtyChange = expressShouldGetQty- (util.isNotBlank(detail.billQty) ? detail.billQty*1 : 0);
+            let expressShouldGetAmountChange = expressShouldGetQty*expressShouldGetPrice - (util.isNotBlank(detail.billQty) ? detail.billQty*1 : 0) *  (util.isNotBlank(detail.price) ? detail.price*1 : 0);
+
             detail.billQty = expressShouldGetQty;
             detail.price = expressShouldGetPrice;
+
+            this.summaryInfo.totalBillQty+=expressShouldGetQtyChange;
+            this.summaryInfo.totalBillAmount += expressShouldGetAmountChange ;
+
             return;
           }
         }
