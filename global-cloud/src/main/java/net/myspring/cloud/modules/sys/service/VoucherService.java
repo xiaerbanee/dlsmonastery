@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly =true)
+@Transactional
 public class VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
@@ -205,8 +205,7 @@ public class VoucherService {
         }
     }
 
-    //将headers和data赋值
-
+    @Transactional(readOnly =true)
     public List<List<String>>  initData(VoucherDto voucherDto, VoucherModel voucherModel) {
         if (voucherDto.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
