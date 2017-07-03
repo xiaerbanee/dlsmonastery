@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -43,11 +44,7 @@ public class ShopPrintService {
     }
 
     public ShopPrintForm getForm(ShopPrintForm  shopPrintForm){
-        if(!shopPrintForm.isCreate()){
-            ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
-            shopPrintForm = BeanUtil.map(shopPrint,ShopPrintForm.class);
-            cacheUtils.initCacheInput(shopPrintForm);
-        }
+        shopPrintForm.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return shopPrintForm;
     }
 

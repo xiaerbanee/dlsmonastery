@@ -6,7 +6,9 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeId">
-              <office-select v-model="inputForm.officeId" :disabled="officeDisabled"></office-select>
+              <el-select v-model="inputForm.officeId" filterable clearable >
+                <el-option v-for="item in inputForm.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.printType')" prop="printType">
               <dict-map-select v-model="inputForm.printType" category="门店_广告印刷" @input="typeChange"></dict-map-select>

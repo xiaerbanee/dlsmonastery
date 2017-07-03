@@ -44,7 +44,7 @@ public class ShopPrintController {
 
     @RequestMapping(value="getForm",method = RequestMethod.GET)
     public ShopPrintForm getForm(ShopPrintForm shopPrintForm) {
-        return shopPrintForm;
+        return shopPrintService.getForm(shopPrintForm);
     }
 
     @RequestMapping(value = "getAuditForm")

@@ -855,7 +855,7 @@ export default {
   },
   shopPrintForm: {
     shopPrintForm: "formulir cetak periklanan",
-    officeName: "alamat",
+    officeName: "办事处",
     officeId: "ID",
     printType: "jenis printer",
     printTypeContent:"percetakan spesifikasi",
