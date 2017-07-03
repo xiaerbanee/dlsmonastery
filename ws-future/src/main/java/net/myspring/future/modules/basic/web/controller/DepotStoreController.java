@@ -4,10 +4,7 @@ import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.DepotStoreTypeEnum;
-import net.myspring.future.common.enums.OutTypeEnum;
-import net.myspring.future.common.enums.ProductImeStockReportOutTypeEnum;
-import net.myspring.future.common.enums.ReportTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.client.DictMapClient;
@@ -128,6 +125,7 @@ public class DepotStoreController {
 
     @RequestMapping(value = "getQuery")
     public DepotStoreQuery getQuery(DepotStoreQuery depotStoreQuery){
+        depotStoreQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return depotStoreQuery;
     }
 

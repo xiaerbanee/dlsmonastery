@@ -404,8 +404,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (depotShopQuery.adShop !=null) {
             sb.append("""  and t1.ad_shop =:adShop""")
         }
-        if (depotShopQuery.isHidden !=null) {
-            sb.append("""  and t1.isHidden =:isHidden """)
+        if (depotShopQuery.hidden !=null) {
+            sb.append("""  and t1.is_hidden =:hidden """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

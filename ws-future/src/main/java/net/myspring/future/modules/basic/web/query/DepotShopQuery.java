@@ -178,11 +178,11 @@ public class DepotShopQuery extends BaseQuery {
         this.adShop = adShop;
     }
 
-    public Boolean getIsHidden() {
+    public Boolean getHidden() {
         return isHidden;
     }
 
-    public void setIsHidden(Boolean isHidden) {
-        isHidden = isHidden;
+    public void setHidden(Boolean hidden) {
+        isHidden = hidden;
     }
 }

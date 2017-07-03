@@ -64,7 +64,7 @@
                 <bool-select v-model="formData.adShop"></bool-select>
               </el-form-item>
               <el-form-item label="是否隐藏">
-                <bool-select v-model="formData.isHidden"></bool-select>
+                <bool-select v-model="formData.hidden"></bool-select>
               </el-form-item>
             </el-col>
           </el-row>

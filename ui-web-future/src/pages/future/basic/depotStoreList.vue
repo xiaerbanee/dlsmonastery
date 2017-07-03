@@ -12,16 +12,21 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item label="门店名称" >
-                <el-input v-model="formData.name" auto-complete="off"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item label="负责人">
-                <el-input v-model="formData.contator" auto-complete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="手机" >
-                <el-input v-model="formData.mobilePhone" auto-complete="off"></el-input>
+              <el-form-item label="办事处" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaId" clearable filterable>
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item label="机构" >
                 <office-select v-model="formData.officeId"></office-select>
+              </el-form-item>
+              <el-form-item label="负责人">
+                <el-input v-model="formData.contator" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
+              </el-form-item>
+              <el-form-item label="手机" >
+                <el-input v-model="formData.mobilePhone" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -58,18 +63,10 @@
   </div>
 </template>
 <script>
-  import boolSelect from 'components/common/bool-select';
   import officeSelect from 'components/basic/office-select';
-  import dictMapSelect from 'components/basic/dict-map-select';
-  import districtSelect from 'components/general/district-select';
-  import expressCompanySelect from 'components/future/express-company-select';
   export default {
     components:{
-      boolSelect,
-      officeSelect,
-      dictMapSelect,
-      districtSelect,
-      expressCompanySelect
+      officeSelect
     },
     data() {
       return {
