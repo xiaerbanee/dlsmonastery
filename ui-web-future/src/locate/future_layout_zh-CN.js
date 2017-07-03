@@ -619,6 +619,8 @@ export default {
     filter: "过滤",
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
+    monthSaleQty: "门店近三个月销量",
+    investInCause:"投入理由",
   },
   shopBuildList: {
     shopBuildList: "门店建设",
@@ -871,6 +873,7 @@ export default {
     inputWord: "请输入关键词",
     likeSearch: "模糊搜索",
     remarks: "备注",
+    remarksPlaceholder:"请输入对稿人、联系方式等",
     sure: "确定",
     save: "保存",
     filter: "过滤",

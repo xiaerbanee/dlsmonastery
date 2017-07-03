@@ -2,11 +2,17 @@
   <div>
     <head-tab active="shopBuildForm"></head-tab>
     <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="140px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" @input="refreshRecentMonthSaleAmount()" :disabled="shopDisabled"></depot-select>
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.monthSaleQty')" prop="recentSaleDescription">
+              {{recentSaleDescription}}
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.investInCause')" prop="investInCause">
+              <el-input v-model="inputForm.investInCause" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
@@ -80,8 +86,10 @@
           inputForm: {
             extra:{}
           },
+          recentSaleDescription:'',
           rules: {
             shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            investInCause: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             fixtureType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
@@ -122,6 +130,23 @@
         axios.get('/api/basic/sys/dictEnum/findByValue',{params: {value:this.inputForm.fixtureType,category:'装修类别'}}).then((response)=>{
           this.fixtureContent=response.data;
         })
+      },refreshRecentMonthSaleAmount(){
+        if(util.isBlank(this.inputForm.shopId)){
+          this.recentSaleDescription='';
+          return;
+        }
+
+        axios.get('/api/ws/future/basic/depot/getRecentMonthSaleAmount' , {params: {depotId: this.inputForm.shopId, monthQty:3}}).then((response) => {
+          if(response.data){
+            let tmp = '';
+            for(let key in response.data){
+              tmp = tmp + key +"销量："+  response.data[key] +"台；";
+            }
+            this.recentSaleDescription=tmp;
+          }else{
+            this.recentSaleDescription='';
+          }
+        });
       },
       handlePreview1(file) {
         window.open(file.url);

@@ -29,12 +29,11 @@
             <el-input v-model="inputForm.mobilePhone" ></el-input>
           </el-form-item>
             <el-form-item :label="$t('shopPrintForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea" :placeholder="$t('shopPrintForm.remarksPlaceholder')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.attachment')" prop="attachment">
-                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="text">
                     <el-button size="small" type="primary">{{$t('shopPrintForm.clickUpload')}}</el-button>
-                    <div slot="tip" class="el-upload__tip">{{$t('shopPrintForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
             </el-form-item>
             <el-form-item>

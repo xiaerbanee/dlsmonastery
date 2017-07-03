@@ -613,7 +613,9 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    monthSaleQty: "门店近三个月销量",
+    investInCause:"投入理由",
   },
   shopBuildList: {
     shopBuildList: "konstruksi toko",
@@ -866,6 +868,7 @@ export default {
     inputWord: "silahkan masukkan kata kunci",
     likeSearch: "pencarian",
     remarks: "keterangan / komen",
+    remarksPlaceholder:"请输入对稿人、联系方式等",
     sure: "yakin",
     save: "simpan",
     filter: "saring",
