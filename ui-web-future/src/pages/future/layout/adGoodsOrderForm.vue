@@ -125,6 +125,7 @@
             expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderContator: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            expressOrderMobilePhone: [{required: true, len: 11,message: this.$t('adGoodsOrderForm.inputLegalValue')}],
             expressOrderMobilePhone: [{required: true,validator:phoneFormatter}],
           },
           totalQty: 0,
@@ -232,7 +233,7 @@
           }
         }
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if (util.contains(adGoodsOrderDetail.productName, val) && util.isBlank(adGoodsOrderDetail.qty)) {
+          if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.qty)) {
             tempList.push(adGoodsOrderDetail)
           }
         }
