@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class EmployeeService {
     
     @Autowired
@@ -67,6 +67,7 @@ public class EmployeeService {
         return employeeDtoList;
     }
 
+    @Transactional
     public Employee save(EmployeeForm employeeForm) {
         Employee employee;
         if(employeeForm.isCreate()) {
@@ -80,6 +81,7 @@ public class EmployeeService {
         return employee;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         employeeRepository.logicDelete(id);
     }

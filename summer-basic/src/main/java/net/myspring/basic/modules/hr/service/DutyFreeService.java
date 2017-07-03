@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyFreeService {
 
     @Autowired
@@ -33,6 +33,7 @@ public class DutyFreeService {
         return page;
     }
 
+    @Transactional
     public DutyFree save(DutyFreeForm dutyFreeForm) {
         dutyFreeForm.setEmployeeId(RequestUtils.getEmployeeId());
         dutyFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
@@ -55,6 +56,7 @@ public class DutyFreeService {
         return dutyFreeForm;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dutyFreeRepository.logicDelete(id);
     }

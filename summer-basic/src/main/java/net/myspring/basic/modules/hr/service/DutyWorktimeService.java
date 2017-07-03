@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyWorktimeService {
     @Autowired
     private DutyWorktimeRepository dutyWorktimeRepository;
@@ -321,6 +321,7 @@ public class DutyWorktimeService {
         return Lists.newArrayList(dutyWorktimeMap.values());
     }
 
+    @Transactional
     public void save(DutyWorktimeForm dutyWorktimeForm) {
         Map<String, DutyWorktime> dutyWorktimeMap = Maps.newLinkedHashMap();
 //        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
