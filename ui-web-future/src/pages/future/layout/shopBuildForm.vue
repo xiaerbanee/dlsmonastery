@@ -166,9 +166,8 @@
           if(!this.isCreate) {
             axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
               util.copyValue(response.data, this.inputForm);
-              if (this.inputForm.id != null) {
-                this.shopDisabled = true;
-              }
+              this.shopDisabled = true;
+              this.refreshRecentMonthSaleAmount();
               if (this.inputForm.fixtureType != null) {
                 this.shopChange();
               }
