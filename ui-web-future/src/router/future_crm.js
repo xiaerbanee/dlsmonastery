@@ -1,13 +1,13 @@
-const afterSaleAreaInput= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaInput.vue')));
-const afterSaleAreaFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaFleeInput.vue')));
-const afterSaleHeadInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadInput.vue')));
-const afterSaleHeadFleeInput = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadFleeInput.vue')));
-const afterSaleToCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleToCompany.vue')));
+const afterSaleAreaEdit= r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaEdit.vue')));
+const afterSaleEditForm = r => require.ensure([], () => r(require('pages/future/crm/afterSaleEditForm.vue')));
+const afterSaleForm = r => require.ensure([], () => r(require('pages/future/crm/afterSaleForm.vue')));
 const afterSaleFromCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleFromCompany.vue')));
-const afterSaleAreaList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleAreaList.vue')));
+const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleImeAllotList.vue')));
+const afterSaleList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleList.vue')));
+const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
 
-const afterSaleHeadList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleHeadList.vue')));
-const afterSaleCompanyList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleCompanyList.vue')));
+const afterSaleStoreAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleStoreAllotList.vue')));
+const afterSaleToCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleToCompany.vue')));
 
 const bankInList = r => require.ensure([], () => r(require('pages/future/crm/bankInList.vue')));
 const bankInForm = r => require.ensure([], () => r(require('pages/future/crm/bankInForm.vue')));
@@ -92,15 +92,15 @@ const carrierOrderShip= r => require.ensure([], () => r(require('pages/future/ap
 
 
 let routes = [
-  {path:'/future/crm/afterSaleAreaInput',component:afterSaleAreaInput,name:'afterSaleAreaInput'},
-  {path:'/future/crm/afterSaleAreaFleeInput',component:afterSaleAreaFleeInput,name:'afterSaleAreaFleeInput'},
-  {path:'/future/crm/afterSaleHeadInput',component:afterSaleHeadInput,name:'afterSaleHeadInput'},
-  {path:'/future/crm/afterSaleHeadFleeInput',component:afterSaleHeadFleeInput,name:'afterSaleHeadFleeInput'},
-  {path:'/future/crm/afterSaleToCompany',component:afterSaleToCompany,name:'afterSaleToCompany'},
+  {path:'/future/crm/afterSaleAreaEdit',component:afterSaleAreaEdit,name:'afterSaleAreaEdit'},
+  {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm'},
+  {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm'},
   {path:'/future/crm/afterSaleFromCompany',component:afterSaleFromCompany,name:'afterSaleFromCompany'},
-  {path:'/future/crm/afterSaleAreaList',component:afterSaleAreaList,name:'afterSaleAreaList'},
-  {path:'/future/crm/afterSaleHeadList',component:afterSaleHeadList,name:'afterSaleHeadList'},
-  {path:'/future/crm/afterSaleCompanyList',component:afterSaleCompanyList,name:'afterSaleCompanyList'},
+  {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
+  {path:'/future/crm/afterSaleList',component:afterSaleList,name:'afterSaleList'},
+  {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
+  {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},
+  {path:'/future/crm/afterSaleToCompany',component:afterSaleToCompany,name:'afterSaleToCompany'},
 
   {path:'/future/crm/bankInList',component:bankInList,name:'bankInList'},
   {path:'/future/crm/bankInForm',component:bankInForm,name:'bankInForm',meta: {menu:"bankInList",keepAlive:true}},

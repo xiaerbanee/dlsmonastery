@@ -24,6 +24,7 @@ public class Depot extends CompanyEntity<Depot> {
     private String namePinyin;
     //区域/办事处
     private String areaId;
+    private String areaType;
     // 部门
     private String officeId;
     // 负责人【货品收货人】
@@ -61,6 +62,14 @@ public class Depot extends CompanyEntity<Depot> {
     private Boolean popShop = false;
     //公司分组（imoo，电玩，oppo不写）
     private String companyGroup;
+
+    public String getAreaType() {
+        return areaType;
+    }
+
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
 
     public String getClientId() {
         return clientId;
