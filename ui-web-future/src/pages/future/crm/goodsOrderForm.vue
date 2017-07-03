@@ -201,13 +201,12 @@
         this.goodsOrderDetailList = list;
         this.filterProducts();
       },initSummary() {
-        var totalQty = 0;
-        var totalAmount = 0;
-        for(var index in this.filterDetailList) {
-          var filterDetail = this.filterDetailList[index];
-          if(util.isNotBlank(filterDetail.qty)) {
-            totalQty  = totalQty + filterDetail.qty*1;
-            totalAmount = totalAmount + (filterDetail.qty*1)*(filterDetail.price*1);
+        let totalQty = 0;
+        let totalAmount = 0;
+        for(let detail of this.goodsOrderDetailList) {
+          if(util.isNotBlank(detail.qty)) {
+            totalQty  = totalQty + detail.qty*1;
+            totalAmount = totalAmount + (detail.qty*1)*(detail.price*1);
           }
         }
         this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
