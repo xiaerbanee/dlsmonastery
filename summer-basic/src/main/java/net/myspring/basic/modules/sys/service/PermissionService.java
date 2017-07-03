@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PermissionService {
 
     @Autowired
@@ -90,6 +90,7 @@ public class PermissionService {
         return permissionDtoPage;
     }
 
+    @Transactional
     public Permission save(PermissionForm permissionForm) {
         Permission permission;
         if (permissionForm.isCreate()) {
@@ -192,6 +193,7 @@ public class PermissionService {
         return accountPermissionList;
     }
 
+    @Transactional
     public void logicDelete(PermissionForm permissionForm) {
         Permission permission = permissionRepository.findOne(permissionForm.getId());
         permission.setEnabled(false);

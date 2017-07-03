@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AccountChangeService {
 
     @Autowired
@@ -79,7 +79,7 @@ public class AccountChangeService {
         }
         return accountChangeForm;
     }
-
+    @Transactional
     public void audit(String id,boolean pass,String comment) {
         AccountChange accountChange = accountChangeRepository.findOne(id);
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(accountChange.getProcessInstanceId(), accountChange.getProcessTypeId(), comment, pass));
@@ -116,7 +116,7 @@ public class AccountChangeService {
             employeeRepository.save(employee);
         }
     }
-
+    @Transactional
     public AccountChange save(AccountChangeForm accountChangeForm) {
         Account account=accountRepository.findOne(accountChangeForm.getAccountId());
         Employee employee=employeeRepository.findOne(account.getEmployeeId());
@@ -204,13 +204,14 @@ public class AccountChangeService {
         return page;
     }
 
+    @Transactional
     public void batchPass(String[] ids, boolean pass){
         List<String> idList= Arrays.asList(ids);
         for(String id:idList){
             audit(id,pass,"批量审核");
         }
     }
-
+    @Transactional
     public void logicDelete(String id){
         accountChangeRepository.logicDelete(id);
     }

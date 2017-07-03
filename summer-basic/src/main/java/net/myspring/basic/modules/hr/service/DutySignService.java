@@ -32,7 +32,7 @@ import java.util.UUID;
  * Created by liuj on 2016/11/18.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutySignService {
 
     @Autowired
@@ -41,6 +41,7 @@ public class DutySignService {
     private CacheUtils cacheUtils;
 
 
+    @Transactional
     public DutySign save(DutySignForm dutySignForm) {
         dutySignForm.setDutyDate(LocalDate.now());
         dutySignForm.setDutyTime(LocalTime.now());
@@ -63,6 +64,7 @@ public class DutySignService {
         return  dutySignList;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dutySignRepository.logicDelete(id);
     }

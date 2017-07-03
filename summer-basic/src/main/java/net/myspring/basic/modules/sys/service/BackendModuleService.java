@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly =true)
 public class BackendModuleService {
 
     @Autowired
@@ -36,6 +36,7 @@ public class BackendModuleService {
         return backendModuleDto;
     }
 
+    @Transactional
     public BackendModule save(BackendModuleForm backendModuleForm) {
         BackendModule backendModule;
         if(backendModuleForm.isCreate()) {
@@ -55,6 +56,7 @@ public class BackendModuleService {
         return backendModuleIds;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         backendModuleRepository.logicDelete(id);
     }

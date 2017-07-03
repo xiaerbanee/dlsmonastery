@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyOvertimeService {
 
     @Autowired
@@ -38,6 +38,7 @@ public class DutyOvertimeService {
         return page;
     }
 
+    @Transactional
     public DutyOvertime save(DutyOvertimeForm dutyOvertimeForm) {
         dutyOvertimeForm.setLeftHour(dutyOvertimeForm.getHour());
         dutyOvertimeForm.setStatus(AuditTypeEnum.APPLY.getValue());
@@ -56,7 +57,7 @@ public class DutyOvertimeService {
         List<DutyOvertime> dutyOvertimes = dutyOvertimeRepository.findByDutyDateAndStatus(employeeId, dutyDateStart, dutyDateEnd, status);
         return dutyOvertimes;
     }
-
+    @Transactional
     public void logicDelete(String id) {
         dutyOvertimeRepository.logicDelete(id);
     }

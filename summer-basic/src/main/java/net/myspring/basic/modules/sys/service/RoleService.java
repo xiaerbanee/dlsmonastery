@@ -26,7 +26,7 @@ import java.util.List;
  * Created by wangzm on 2017/5/2.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class RoleService {
 
     @Autowired
@@ -48,6 +48,7 @@ public class RoleService {
         return roleDto;
     }
 
+    @Transactional
     public Role save(RoleForm roleForm) {
         Role role;
         if (roleForm.isCreate()) {
@@ -80,6 +81,7 @@ public class RoleService {
         return role;
     }
 
+    @Transactional
     public void saveRoleAndPermission(RoleForm roleForm) {
         List<RolePermission> rolePermissionList = rolePermissionRepository.findAllByRoleId(roleForm.getId());
         if (CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())) {
@@ -102,6 +104,7 @@ public class RoleService {
         }
     }
 
+    @Transactional
     public void logicDelete(String id) {
         roleRepository.logicDelete(id);
     }

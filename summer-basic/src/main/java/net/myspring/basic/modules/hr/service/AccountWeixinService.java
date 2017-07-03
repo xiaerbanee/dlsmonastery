@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AccountWeixinService {
 
     @Autowired
@@ -28,6 +28,7 @@ public class AccountWeixinService {
         return BeanUtil.map(accountWeixinList,AccountWeixinDto.class);
     }
 
+    @Transactional
     public AccountWeixin save(AccountWeixin accountWeixin){
         accountWeixinRepository.save(accountWeixin);
         return accountWeixin;

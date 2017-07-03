@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyPublicFreeService {
 
     @Autowired
@@ -25,7 +25,7 @@ public class DutyPublicFreeService {
     private CacheUtils cacheUtils;
 
 
-
+    @Transactional
     public DutyPublicFree save(DutyPublicFreeForm dutyPublicFreeForm) {
         dutyPublicFreeForm.setEmployeeId(RequestUtils.getEmployeeId());
         dutyPublicFreeForm.setStatus(AuditTypeEnum.APPLY.getValue());
@@ -40,6 +40,7 @@ public class DutyPublicFreeService {
         return page;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dutyPublicFreeRepository.logicDelete(id);
     }

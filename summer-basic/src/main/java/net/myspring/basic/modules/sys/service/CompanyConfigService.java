@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by zhucc on 2017/4/17.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class CompanyConfigService {
 
     @Autowired
@@ -35,6 +35,7 @@ public class CompanyConfigService {
         return companyConfigDtoPage;
     }
 
+    @Transactional
     public CompanyConfigForm save(CompanyConfigForm companyConfigForm) {
         if (companyConfigForm.isCreate()) {
             CompanyConfig companyConfig = BeanUtil.map(companyConfigForm, CompanyConfig.class);
@@ -64,6 +65,7 @@ public class CompanyConfigService {
         return "";
     }
 
+    @Transactional
     public void logicDelete(String id) {
         companyConfigRepository.logicDelete(id);
     }
