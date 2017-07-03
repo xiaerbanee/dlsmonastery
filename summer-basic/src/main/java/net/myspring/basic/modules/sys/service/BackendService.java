@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BackendService {
 
     @Autowired
@@ -40,6 +40,7 @@ public class BackendService {
         return backendDtoList;
     }
 
+    @Transactional
     public Backend save(BackendForm backendForm) {
         Backend backend;
         if(backendForm.isCreate()) {
@@ -65,6 +66,7 @@ public class BackendService {
         return backendDtoList;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         backendRepository.logicDelete(id);
     }

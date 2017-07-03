@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class MenuCategoryService {
 
     @Autowired
@@ -40,10 +40,12 @@ public class MenuCategoryService {
         return menuCategoryDtoPage;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         menuCategoryRepository.logicDelete(id);
     }
 
+    @Transactional
     public MenuCategory save(MenuCategoryForm menuCategoryForm){
         MenuCategory menuCategory;
         if(menuCategoryForm.isCreate()) {
