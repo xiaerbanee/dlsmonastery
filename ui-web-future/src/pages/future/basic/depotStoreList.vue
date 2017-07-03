@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item label="门店名称" >
-                <el-input v-model="formData.name" auto-complete="off"></el-input>
+                <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item label="办事处" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" clearable filterable>
@@ -23,10 +23,10 @@
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
               <el-form-item label="负责人">
-                <el-input v-model="formData.contator" auto-complete="off"></el-input>
+                <el-input v-model="formData.contator" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item label="手机" >
-                <el-input v-model="formData.mobilePhone" auto-complete="off"></el-input>
+                <el-input v-model="formData.mobilePhone" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
