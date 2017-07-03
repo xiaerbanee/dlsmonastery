@@ -138,7 +138,7 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productTypeList",submitData);
+        util.setQuery("carrierOrderList",submitData);
         axios.get('/api/ws/future/api/carrierOrder?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
