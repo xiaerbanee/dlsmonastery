@@ -179,9 +179,7 @@
         axios.get("/api/ws/future/crm/afterSale/formData", {params: {imeStr: imeStr}}).then((response) => {
           this.settings.data = response.data.list;
           table.loadData(this.settings.data);
-          if (response.data.message != "") {
-            this.message = response.data.message
-          }
+          this.message = response.data.message
         })
       }
     }
