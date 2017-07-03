@@ -593,6 +593,8 @@ export default {
     passRemarks:"审批意见",
     inputRemarks:'请输入审批备注',
     save:"保存",
+    investInCause:"投入理由",
+    shopAgreement:"终端投放协议",
   },
   shopBuildForm: {
     shopBuildForm: "门店建设编辑",
@@ -607,7 +609,7 @@ export default {
     applyAccount: "业务对接人",
     content: "建设内容",
     scenePhoto: "现场照片",
-    confirmPhoto:"终端投放协议",
+    confirmPhoto:"装修后照片",
     clickUpload: "点击上传",
     uploadImageSizeFor5000KB: "只能上传图片文件，且不超过500kb",
     inputKey: "请输入关键字",
@@ -621,6 +623,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
     monthSaleQty: "门店近三个月销量",
     investInCause:"投入理由",
+    shopAgreement:"终端投放协议",
   },
   shopBuildList: {
     shopBuildList: "门店建设",

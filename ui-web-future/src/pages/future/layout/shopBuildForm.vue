@@ -39,14 +39,14 @@
             <el-form-item :label="$t('shopBuildForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange1" :on-remove="handleRemove1" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+            <el-form-item :label="$t('shopBuildForm.shopAgreement')" prop="shopAgreement">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
+            <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange1" :on-remove="handleRemove1" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -96,7 +96,7 @@
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             scenePhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-            confirmPhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            shopAgreement: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
         }
@@ -105,7 +105,7 @@
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
-        this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList2);
+        this.inputForm.shopAgreement = util.getFolderFileIdStr(this.fileList2);
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
@@ -166,9 +166,8 @@
           if(!this.isCreate) {
             axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
               util.copyValue(response.data, this.inputForm);
-              if (this.inputForm.id != null) {
-                this.shopDisabled = true;
-              }
+              this.shopDisabled = true;
+              this.refreshRecentMonthSaleAmount();
               if (this.inputForm.fixtureType != null) {
                 this.shopChange();
               }
@@ -177,8 +176,8 @@
                   this.fileList1 = response.data;
                 });
               }
-              if (this.inputForm.confirmPhoto != null) {
-                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.confirmPhoto}}).then((response) => {
+              if (this.inputForm.shopAgreement != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.shopAgreement}}).then((response) => {
                   this.fileList2 = response.data;
                 });
               }

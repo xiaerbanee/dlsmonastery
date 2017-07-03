@@ -16,6 +16,7 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String ime2;
     private String meid;
     private LocalDateTime retailDate;
+    private String retailDepotName;
     private String companyId;
     @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
     private String companyName;
@@ -73,6 +74,14 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String productImeUploadEmployeeName;
     private LocalDateTime productImeUploadCreatedDate;
     private String productImeUploadId;
+
+    public String getRetailDepotName() {
+        return retailDepotName;
+    }
+
+    public void setRetailDepotName(String retailDepotName) {
+        this.retailDepotName = retailDepotName;
+    }
 
     public String getCompanyId() {
         return companyId;
