@@ -15,7 +15,6 @@ public class VoucherModel {
     private List<BdAccount> bdAccountList;
     private List<BdFlexItemGroup> bdFlexItemGroupList;
     private List<BdFlexItemProperty> bdFlexItemPropertyList;
-    private Map<String,Map<String,String>> result;
 
     public List<BdAccount> getBdAccountList() {
         return bdAccountList;
@@ -39,13 +38,5 @@ public class VoucherModel {
 
     public void setBdFlexItemPropertyList(List<BdFlexItemProperty> bdFlexItemPropertyList) {
         this.bdFlexItemPropertyList = bdFlexItemPropertyList;
-    }
-
-    public Map<String, Map<String, String>> getResult() {
-        return result;
-    }
-
-    public void setResult(Map<String, Map<String, String>> result) {
-        this.result = result;
     }
 }

@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -218,7 +219,7 @@ public class ShopAdDto extends DataDto<ShopAd>{
 
     public String getFormatId(){
         if(getId()!=null){
-            return IdUtils.getFormatId(getId(),"AD");
+            return IdUtils.getFormatId(getId(), FormatterConstant.SHOP_AD);
         }else {
             return null;
         }

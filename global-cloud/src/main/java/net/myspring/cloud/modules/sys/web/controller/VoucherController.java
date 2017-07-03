@@ -11,6 +11,7 @@ import net.myspring.cloud.modules.sys.dto.VoucherModel;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,32 +70,63 @@ public class VoucherController {
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
         VoucherModel voucherModel = getVoucherModel();
-        map.put("headerList", voucherService.getHeaders(voucherModel.getBdFlexItemGroupList()));
-        map.put("accountNameToFlexGroupNamesMap",voucherService.accountNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList()));
-        map.put("accountNameList",bdAccountService.findAll().stream().map(BdAccount::getFName).collect(Collectors.toList()));
+        List<String> flexItemNameList = voucherService.getHeaders(voucherModel.getBdFlexItemGroupList());
+        map.put("headerList", flexItemNameList);
+        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList()));
+        List<String> accountNumberNameList = Lists.newArrayList();
+        for (BdAccount bdAccount :  bdAccountService.findAll()){
+            accountNumberNameList.add(bdAccount.getFNumber()+CharConstant.SLASH_LINE+bdAccount.getFName());
+        }
+        map.put("accountNumberNameList",accountNumberNameList);
         if (voucherForm.getId() != null){
             VoucherDto voucherDto = BeanUtil.map(voucherForm,VoucherDto.class);
-
             map.put("data",voucherService.initData(voucherDto,voucherModel));
         }else {
             map.put("data", Lists.newArrayList());
         }
-        Map<String, Map<String, String>> result = voucherModel.getResult();
-        for (Map<String, String> list : result.values()) {
-            if (result.get(VoucherFlexEnum.供应商.name()).equals(list)){
-                map.put("supplierNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.部门.name()).equals(list)){
-                map.put("departmentNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.客户.name()).equals(list)){
-                map.put("customerNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.其他类.name()).equals(list)){
-                map.put("otherTypeNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.费用类.name()).equals(list)){
-                map.put("expenseTypeNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.员工.name()).equals(list)){
-                map.put("empInfoNameList",list.keySet());
-            }else if(result.get(VoucherFlexEnum.银行账号.name()).equals(list)){
-                map.put("bankAcntNameList",list.keySet());
+        for (String flexItemName : flexItemNameList) {
+            if (VoucherFlexEnum.供应商.name().equals(flexItemName)){
+                List<String> supplierNumberNameList = Lists.newArrayList();
+                for (BdSupplier bdSupplier :  bdSupplierService.findAll()){
+                    supplierNumberNameList.add(bdSupplier.getFNumber()+CharConstant.SLASH_LINE+bdSupplier.getFName());
+                }
+                map.put("supplierNumberNameList",supplierNumberNameList);
+            }else if(VoucherFlexEnum.部门.name().equals(flexItemName)){
+                List<String> departmentNumberNameList = Lists.newArrayList();
+                for (BdDepartment bdDepartment :  bdDepartmentService.findAll()){
+                    departmentNumberNameList.add(bdDepartment.getFNumber()+CharConstant.SLASH_LINE+bdDepartment.getFFullName());
+                }
+                map.put("departmentNumberNameList",departmentNumberNameList);
+            }else if(VoucherFlexEnum.客户.name().equals(flexItemName)){
+                List<String> customerNumberNameList = Lists.newArrayList();
+                for (BdCustomer bdCustomer :  bdCustomerService.findAll()){
+                    customerNumberNameList.add(bdCustomer.getFNumber()+CharConstant.SLASH_LINE+bdCustomer.getFName());
+                }
+                map.put("customerNumberNameList",customerNumberNameList);
+            }else if(VoucherFlexEnum.其他类.name().equals(flexItemName)){
+                List<String> otherTypeNumberNameList = Lists.newArrayList();
+                for (BasAssistant basAssistant :  basAssistantService.findByType("其他类")){
+                    otherTypeNumberNameList.add(basAssistant.getFNumber()+CharConstant.SLASH_LINE+basAssistant.getFDataValue());
+                }
+                map.put("otherTypeNumberNameList",otherTypeNumberNameList);
+            }else if(VoucherFlexEnum.费用类.name().equals(flexItemName)){
+                List<String> expenseTypeNumberNameList = Lists.newArrayList();
+                for (BasAssistant basAssistant :  basAssistantService.findByType("费用类")){
+                    expenseTypeNumberNameList.add(basAssistant.getFNumber()+CharConstant.SLASH_LINE+basAssistant.getFDataValue());
+                }
+                map.put("expenseTypeNumberNameList",expenseTypeNumberNameList);
+            }else if(VoucherFlexEnum.员工.name().equals(flexItemName)){
+                List<String> empInfoNumberNameList = Lists.newArrayList();
+                for (HrEmpInfo hrEmpInfo :  hrEmpInfoService.findAll()){
+                    empInfoNumberNameList.add(hrEmpInfo.getFNumber()+CharConstant.SLASH_LINE+hrEmpInfo.getFName());
+                }
+                map.put("empInfoNumberNameList",empInfoNumberNameList);
+            }else if(VoucherFlexEnum.银行账号.name().equals(flexItemName)){
+                List<String> bankAcntNumberNameList = Lists.newArrayList();
+                for (CnBankAcnt cnBankAcnt :  cnBankAcntService.findAll()){
+                    bankAcntNumberNameList.add(cnBankAcnt.getFNumber()+CharConstant.SLASH_LINE+cnBankAcnt.getFName());
+                }
+                map.put("bankAcntNumberNameList",bankAcntNumberNameList);
             }
         }
         voucherForm.setExtra(map);
@@ -107,20 +139,16 @@ public class VoucherController {
         return voucherService.save(voucherForm,voucherModel);
     }
 
+    @RequestMapping(value="findOne")
+    public  VoucherDto findOne(String id){
+        return voucherService.findOne(id);
+    }
+
     public VoucherModel getVoucherModel(){
         VoucherModel model = new VoucherModel();
         model.setBdAccountList(bdAccountService.findAll());
         model.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
         model.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
-        Map<String, Map<String, String>> result=Maps.newHashMap();
-        result.put(VoucherFlexEnum.供应商.name(), bdSupplierService.findAll().stream().collect(Collectors.toMap(BdSupplier::getFName,BdSupplier::getFNumber)));
-        result.put(VoucherFlexEnum.部门.name(), bdDepartmentService.findAll().stream().collect(Collectors.toMap(BdDepartment::getFFullName,BdDepartment::getFNumber)));
-        result.put(VoucherFlexEnum.客户.name(), bdCustomerService.findAll().stream().collect(Collectors.toMap(BdCustomer::getFName,BdCustomer::getFNumber)));
-        result.put(VoucherFlexEnum.其他类.name(), basAssistantService.findByType("其他类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
-        result.put(VoucherFlexEnum.费用类.name(), basAssistantService.findByType("费用类").stream().collect(Collectors.toMap(BasAssistant::getFDataValue,BasAssistant::getFNumber)));
-        result.put(VoucherFlexEnum.员工.name(), hrEmpInfoService.findAll().stream().collect(Collectors.toMap(HrEmpInfo::getFName,HrEmpInfo::getFNumber)));
-        result.put(VoucherFlexEnum.银行账号.name(), cnBankAcntService.findAll().stream().collect(Collectors.toMap(CnBankAcnt::getFName,CnBankAcnt::getFNumber)));
-        model.setResult(result);
         return model;
     }
 }
