@@ -41,12 +41,11 @@
       this.setValue(this.value);
       axios.get('/api/general/sys/processFlow/findByProcessTypeName',{params:{processTypeName:this.type}}).then((response)=>{
         this.itemList=response.data;
-        console.log(response.data)
       });
     },watch: {
-//      value :function (newVal) {
-//          this.status = newVal;
-//      }
+      value :function (newVal) {
+          this.status = newVal;
+      }
     }
   };
 </script>

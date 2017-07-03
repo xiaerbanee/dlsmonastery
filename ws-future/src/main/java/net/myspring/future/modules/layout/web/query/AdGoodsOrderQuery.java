@@ -18,7 +18,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
     private String shopId;
     private String billType = BillTypeEnum.柜台.name();
     private String parentId;
-    private String processStatus;
+    private List<String> processStatus=new ArrayList<>();
     private String remarks;
     private String createdBy;
     private String createdDateRange;
@@ -80,11 +80,11 @@ public class AdGoodsOrderQuery extends BaseQuery {
         this.billType = billType;
     }
 
-    public String getProcessStatus() {
+    public List<String> getProcessStatus() {
         return processStatus;
     }
 
-    public void setProcessStatus(String processStatus) {
+    public void setProcessStatus(List<String> processStatus) {
         this.processStatus = processStatus;
     }
 

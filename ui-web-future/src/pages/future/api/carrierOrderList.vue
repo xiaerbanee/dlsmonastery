@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="apiCarrierOrder"></head-tab>
+    <head-tab active="carrierOrderList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('productTypeList.add')}}</el-button>
@@ -138,7 +138,7 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productTypeList",submitData);
+        util.setQuery("carrierOrderList",submitData);
         axios.get('/api/ws/future/api/carrierOrder?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;

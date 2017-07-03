@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildDetail.shopBuildCode')" prop="id">
-             {{inputForm.id}}
+             {{inputForm.formatId}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.office')" prop="depotDto">
               {{inputForm.officeName}}
@@ -16,6 +16,9 @@
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.monthSaleQty')" prop="recentSaleDescription">
               {{recentSaleDescription}}
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.investInCause')" prop="investInCause">
+              {{inputForm.investInCause}}
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopType')" prop="shopType">
               {{inputForm.shopType}}
@@ -52,19 +55,17 @@
             <el-form-item :label="$t('shopBuildDetail.processStatus')" prop="processStatus">
               {{inputForm.processStatus}}
             </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.shopAgreement')" prop="shopAgreement">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview3" :file-list="fileList3" list-type="picture">
+              </el-upload>
+            </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.scenePhoto')" prop="scenePhoto">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
               </el-upload>
-              <el-dialog v-model="dialogVisible" size="tiny">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.confirmPhoto')" prop="confirmPhoto">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
               </el-upload>
-              <el-dialog v-model="dialogVisible" size="tiny">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
             </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.pass')"  v-if="action=='audit'">
               <bool-radio-group v-model="formData.pass"></bool-radio-group>
@@ -104,8 +105,7 @@
             recentSaleDescription:'',
             fileList1:[],
             fileList2:[],
-            dialogImageUrl:'',
-            dialogVisible:false
+            fileList3:[],
           }
         },
       passSubmit(){
@@ -143,11 +143,11 @@
           }
         });
       }, handlePreview1(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
+        window.open(file.url);
       },handlePreview2(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
+        window.open(file.url);
+      },handlePreview3(file) {
+        window.open(file.url);
       },initPage(){
         axios.get('/api/ws/future/layout/shopBuild/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm=response.data;
@@ -160,6 +160,11 @@
           if(this.inputForm.confirmPhoto !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.confirmPhoto}}).then((response)=>{
               this.fileList2= response.data;
+            });
+          }
+          if(this.inputForm.shopAgreement !=null) {
+            axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.shopAgreement}}).then((response)=>{
+              this.fileList3= response.data;
             });
           }
         });
