@@ -588,6 +588,8 @@ export default {
     passRemarks:"persetujuan memo",
     inputRemarks:'masukkan catatan persetujuan',
     save:"simpan",
+    investInCause:"投入理由",
+    shopAgreement:"终端投放协议",
   },
   shopBuildForm: {
     shopBuildForm: "Mengedit konstruksi toko",
@@ -602,7 +604,7 @@ export default {
     applyAccount: "sales",
     content: "konten",
     scenePhoto: "gambar",
-    confirmPhoto:"终端投放协议",
+    confirmPhoto:"装修后照片",
     clickUpload: "pilih unggah",
     uploadImageSizeFor5000KB: "unggah foto dibawah 500kb",
     inputKey: "silahkan masukkan kata kunci",
@@ -616,6 +618,7 @@ export default {
     inputLegalValue: "silahkan masukkan angka yang valid",
     monthSaleQty: "门店近三个月销量",
     investInCause:"投入理由",
+    shopAgreement:"终端投放协议",
   },
   shopBuildList: {
     shopBuildList: "konstruksi toko",

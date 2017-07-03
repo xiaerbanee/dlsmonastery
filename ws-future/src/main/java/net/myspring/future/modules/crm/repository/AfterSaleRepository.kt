@@ -79,50 +79,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             val sb = StringBuilder()
             sb.append("""
              SELECT
-                 t1.*,t8.ime,t8.flee_shop_name,t8.contact,t8.mobile_phone,t8.address,t8.buy_amount,t2.ime as 'badProductIme',t3.name as 'badProductName',
-                 t4.name as 'badDepotName',t7.name as 'toDepotName',t6.name as 'fromDepotName',t5.remarks as 'detailRemarks',
-                 t5.replace_amount,t5.input_date,t5.replace_date,t5.id as 'detailId'
+                 t1.*
              FROM
-                crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
-                left join crm_product t3 on t1.bad_product_id=t3.id
-                left join crm_depot t4 on t1.bad_depot_id=t4.id
-                left join crm_after_sale_flee t8 on t8.after_sale_id=t1.id,
-                crm_after_sale_detail t5
-                left join crm_depot t6 on t5.from_depot_id=t6.id
-                left join crm_depot t7 on t5.to_depot_id=t7.id
-                left join crm_product_ime t9 on t5.replace_product_ime_id=t9.id
+                crm_after_sale  t1
              WHERE
                  t1.enabled=1
-                and t5.enabled=1
-                and t5.after_sale_id=t1.id
             """)
-            if(CollectionUtil.isNotEmpty(afterSaleQuery.imeList)){
-                sb.append(""" and( t2.ime in (:imeList)  or t8.ime in(:imeList))""")
-            }
-            if(CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)){
-                sb.append("""and t4.id in (:depotIdList)""")
-            }
-            if(CollectionUtil.isNotEmpty(afterSaleQuery.officeIdList)){
-                sb.append(""" and t4.office_id in (:officeIdList)""")
-            }
-            if(afterSaleQuery.inputDateStart!=null){
-                sb.append(""" and t5.input_date>=:inputDateStart""")
-            }
-            if(afterSaleQuery.inputDateEnd!=null){
-                sb.append(""" and t5.input_date<=:inputDateEnd""")
-            }
-            if(StringUtils.isNotBlank(afterSaleQuery.type)){
-                sb.append(""" and t5.type=:type""")
-            }
-            if(StringUtils.isNotBlank(afterSaleQuery.badDepotName)){
-                sb.append(""" and t4.name LIKE CONCAT('%',:badDepotName,'%')""")
-            }
-            if(StringUtils.isNotBlank(afterSaleQuery.detailRemarks)){
-                sb.append(""" and t5.remarks LIKE CONCAT('%',:detailRemarks,'%')""")
-            }
-            if(CollectionUtil.isNotEmpty(afterSaleQuery.replaceProductImeList)){
-                sb.append(""" and t9.ime in(:replaceProductImeList)""")
-            }
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
             var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));

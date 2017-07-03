@@ -47,8 +47,6 @@
     data() {
       return {
         searchText:"",
-        pageLoading: false,
-        pageHeight:600,
         page:{},
         formData:{
           extra:{}
@@ -56,7 +54,7 @@
         initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,
-        loading:false
+        pageLoading: false,
       };
     },
     methods: {

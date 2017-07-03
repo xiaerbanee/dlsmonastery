@@ -19,8 +19,17 @@ public class ShopBuildForm extends BaseForm<ShopBuild> {
 
     private String content;
     private String scenePhoto;
+    private String shopAgreement;
     private String confirmPhoto;
     private String investInCause;
+
+    public String getShopAgreement() {
+        return shopAgreement;
+    }
+
+    public void setShopAgreement(String shopAgreement) {
+        this.shopAgreement = shopAgreement;
+    }
 
     public String getInvestInCause() {
         return investInCause;

@@ -408,4 +408,9 @@ public class ProductImeService {
         return result;
     }
 
+    public List<ProductIme> findByIds(List<String> ids){
+        List<ProductIme> productImeList=productImeRepository.findAll(ids);
+        return productImeList;
+    }
+
 }

@@ -38,12 +38,21 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String newContents;
     private String scenePhoto;
     private String confirmPhoto;
+    private String shopAgreement;
     private String investInCause;
 
     private String processStatus;
     private String processInstanceId;
     private String processPositionId;
     private Boolean locked;
+
+    public String getShopAgreement() {
+        return shopAgreement;
+    }
+
+    public void setShopAgreement(String shopAgreement) {
+        this.shopAgreement = shopAgreement;
+    }
 
     public String getAreaType() {
         return areaType;

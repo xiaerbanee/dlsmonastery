@@ -28,6 +28,7 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
     private String mainSaleBrand;
     private String scenePhoto;
     private String confirmPhoto;
+    private String shopAgreement;
     private String content;
     private Integer version = 0;
     private String processInstanceId;
@@ -42,6 +43,14 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
     private String processFlowId;
 
     private String processPositionId;
+
+    public String getShopAgreement() {
+        return shopAgreement;
+    }
+
+    public void setShopAgreement(String shopAgreement) {
+        this.shopAgreement = shopAgreement;
+    }
 
     public String getInvestInCause() {
         return investInCause;
