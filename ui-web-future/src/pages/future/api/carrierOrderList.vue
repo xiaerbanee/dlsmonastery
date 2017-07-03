@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="apiCarrierOrder"></head-tab>
+    <head-tab active="carrierOrderList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('productTypeList.add')}}</el-button>
