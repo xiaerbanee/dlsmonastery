@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ExpressCompanyService {
 
     @Autowired
@@ -64,10 +64,12 @@ public class ExpressCompanyService {
         return page;
     }
 
+    @Transactional
     public void delete(String id) {
         expressCompanyRepository.logicDelete(id);
     }
 
+    @Transactional
     public ExpressCompany save(ExpressCompanyForm expressCompanyForm){
         ExpressCompany expressCompany;
         if(expressCompanyForm.isCreate()){

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BankService {
 
     @Autowired
@@ -48,10 +48,12 @@ public class BankService {
         return page;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         bankRepository.logicDelete(id);
     }
 
+    @Transactional
     public void save(BankForm bankForm){
         Bank bank = bankRepository.findOne(bankForm.getId());
         bank.setName(bankForm.getName());
@@ -63,7 +65,7 @@ public class BankService {
         }
     }
 
-
+    @Transactional
     public void syn(){
         List<CnBankAcnt> cnBankAcnts = cloudClient.getAllBank();
         List<Bank> banks = bankRepository.findAllEnabled();

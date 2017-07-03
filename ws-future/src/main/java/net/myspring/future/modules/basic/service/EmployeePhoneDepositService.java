@@ -52,7 +52,7 @@ import java.util.Map;
  * Created by admin on 2017/2/17.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class EmployeePhoneDepositService {
 
     @Autowired
@@ -92,6 +92,7 @@ public class EmployeePhoneDepositService {
         return employeePhoneDepositDtoList;
     }
 
+    @Transactional
     public EmployeePhoneDeposit save(EmployeePhoneDepositForm employeePhoneDepositForm) {
         EmployeePhoneDeposit employeePhoneDeposit;
         if (employeePhoneDepositForm.isCreate()) {
@@ -113,6 +114,7 @@ public class EmployeePhoneDepositService {
         return employeePhoneDeposit;
     }
 
+    @Transactional
     public void logicDeleteOne(EmployeePhoneDepositForm employeePhoneDepositForm) {
         employeePhoneDepositRepository.logicDelete(employeePhoneDepositForm.getId());
     }
@@ -123,6 +125,7 @@ public class EmployeePhoneDepositService {
         return page;
     }
 
+    @Transactional
     public void batchAudit(List<String> ids, boolean pass) {
         List<EmployeePhoneDeposit> employeePhoneDepositList=employeePhoneDepositRepository.findAll(ids);
         if (!pass) {
@@ -159,6 +162,7 @@ public class EmployeePhoneDepositService {
         }
     }
 
+    @Transactional
     public RestResponse batchSave(String data) {
         if (StringUtils.isBlank(data)) {
             return new RestResponse("保存失败，没有任何数据",null);

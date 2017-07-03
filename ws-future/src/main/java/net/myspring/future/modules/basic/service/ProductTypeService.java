@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductTypeService {
 
     @Autowired
@@ -43,6 +43,7 @@ public class ProductTypeService {
     @Autowired
     private CacheUtils cacheUtils;
 
+    @Transactional
     public ProductType save(ProductTypeForm productTypeForm) {
 
         ProductType productType;
@@ -86,6 +87,7 @@ public class ProductTypeService {
         return productType;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         productTypeRepository.logicDelete(id);
     }
