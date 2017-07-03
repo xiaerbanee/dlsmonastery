@@ -122,6 +122,7 @@
     return {
       page:{},
       searchText:"",
+      initPromise:{},
       formData:{
           extra:{}
       },
@@ -195,14 +196,16 @@
       this.$router.push({name:'goodsOrderShip',query:{formatId:formatId}});
     }
  },created () {
-    var that = this;
-    that.pageHeight = window.outerHeight -320;
-    axios.get('/api/ws/future/crm/goodsOrderShip/getQuery').then((response) =>{
-      that.formData=response.data;
-      util.copyValue(that.$route.query,that.formData);
-      that.pageRequest();
+    this.pageHeight = window.outerHeight -320;
+    this.initPromise=axios.get('/api/ws/future/crm/goodsOrderShip/getQuery').then((response) =>{
+      this.formData=response.data;
+      util.copyValue(this.$route.query,this.formData);
     });
-  }
+ },activated(){
+    this.initPromise.then(()=>{
+      this.pageRequest();
+    });
+ }
 };
 </script>
 
