@@ -5,7 +5,7 @@
       <div class="header">
         <h1>商城发货</h1>
       </div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm"  label-width="120px" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="24">
             <div ref="handsontable" style="width:800px;height:603px;overflow:hidden;"></div>
@@ -28,7 +28,8 @@
   export default {
     data(){
       return {
-        inputForm:"",
+        inputForm:{},
+        submitDisabled:false,
           settings:{
             colHeaders:[this.$t('carrierOrderShip.billCode'),this.$t('carrierOrderShip.shipCode')],
             rowHeaders: true,
