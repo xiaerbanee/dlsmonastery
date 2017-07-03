@@ -48,7 +48,7 @@
                 <date-range-picker v-model="formData.billDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
-                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple  @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
                 <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
