@@ -42,7 +42,7 @@ import java.util.UUID;
  * Created by liuj on 2017/3/19.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AccountService {
 
     @Autowired
@@ -97,7 +97,7 @@ public class AccountService {
         cacheUtils.initCacheInput(accountList);
         return accountDtoList;
     }
-
+    @Transactional
     public Account save(AccountForm accountForm) {
         Account account;
         if (accountForm.isCreate()) {
@@ -124,7 +124,7 @@ public class AccountService {
         }
         return account;
     }
-
+    @Transactional
     public void logicDelete(String id) {
         accountRepository.logicDelete(id);
     }
@@ -182,7 +182,7 @@ public class AccountService {
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"账户信息模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         return simpleExcelBook;
     }
-
+    @Transactional
     public void saveAccountAndPermission(AccountForm accountForm){
         accountPermissionRepository.setEnabledByAccountId(true, accountForm.getId());
         List<String> permissionIdList=accountPermissionRepository.findPermissionIdByAccountId(accountForm.getId());

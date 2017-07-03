@@ -27,7 +27,7 @@ import java.util.Map;
  * Created by admin on 2016/12/23.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyService {
 
     @Autowired
@@ -102,12 +102,15 @@ public class DutyService {
         cacheUtils.initCacheInput(item);
         return item;
     }
+
+    @Transactional
     public void audit(Map<String,String> map){
         for(Map.Entry<String,String> entry:map.entrySet()){
             audit(entry.getKey(),entry.getValue(),true,null);
         }
     }
 
+    @Transactional
     public void audit(String id, String dutyType, Boolean pass, String auditRemarks) {
         String auditBy = RequestUtils.getAccountId();
         if (DutyTypeEnum.请假.toString().equals(dutyType)) {
@@ -187,6 +190,7 @@ public class DutyService {
         }
     }
 
+    @Transactional
     private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
         if (pass) {
             Double restHour = 0.0;

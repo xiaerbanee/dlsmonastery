@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleToCompany.afterSaleToCompany') "></head-tab>
+    <head-tab active="afterSaleToCompany"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
@@ -9,7 +9,7 @@
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('afterSaleToCompany.inputIme')" @change="onchange"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="onchange()">{{$t('afterSaleToCompany.search')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="onchange(inputForm.imeStr)">{{$t('afterSaleToCompany.search')}}</el-button>
             </el-form-item>
           </el-col>
           <el-col :span="16" v-if="inputForm.imeStr !==''">
@@ -66,7 +66,7 @@
         },
         searchData:[],
         message:'',
-        product:[]
+        product:[],
       }
     },
     methods:{
@@ -81,20 +81,14 @@
         form.validate((valid) => {
           if (valid) {
             this.inputForm.toCompanyDate=util.formatLocalDate(this.inputForm.toCompanyDate)
-            axios.post('/api/crm/afterSale/toCompany',qs.stringify(this.inputForm)).then((response)=> {
+            axios.post('/api/ws/future/crm/afterSale/toCompany',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              if(this.isCreate){
-                form.resetFields();
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name:'imeAllotList',query:util.getQuery("imeAllotList")})
-              }
+              this.$router.push({name:'imeAllotList',query:util.getQuery("imeAllotList"),params:{_closeFrom:true}})
             });
           }
         })
-      },onchange(){
-        this.message = '';
-        axios.get('/api/crm/afterSale/toCompanyForm',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+      },onchange(imeStr){
+        axios.get('/api/ws/future/crm/afterSale/toCompanyForm',{params:{imeStr:imeStr}}).then((response)=>{
           this.searchData=response.data.list;
           var product=new Array();
           for(let i in response.data.qtyMap){

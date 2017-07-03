@@ -152,6 +152,10 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (CollectionUtil.isNotEmpty(carrierOrderQuery.officeIdList)) {
             sb.append("""  and t2.office_id in (:officeIdList)  """)
         }
+        if (CollectionUtil.isNotEmpty(carrierOrderQuery.businessIdList)) {
+            sb.append("""  and t3.business_id in (:businessIdList)  """)
+        }
+        print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(carrierOrderQuery), BeanPropertyRowMapper(CarrierOrderDto::class.java));
     }
 
@@ -208,6 +212,10 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (CollectionUtil.isNotEmpty(carrierOrderQuery.officeIdList)) {
             sb.append("""  and t2.office_id in (:officeIdList)  """)
         }
+        if (CollectionUtil.isNotEmpty(carrierOrderQuery.businessIdList)) {
+            sb.append("""  and t3.business_id in (:businessIdList)  """)
+        }
+        print(sb.toString())
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(carrierOrderQuery)

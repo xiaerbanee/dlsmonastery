@@ -1,6 +1,7 @@
 package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.util.time.LocalDateUtils;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -44,26 +45,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 	public static String reverse(String str) {
 		return str == null?null:(new StringBuilder(str)).reverse().toString();
-	}
-
-	public static String getReplaced(String str) {
-		List<String> beforeList = Lists.newArrayList();
-		beforeList.add("，");
-		beforeList.add(" ");
-		beforeList.add("　");
-		beforeList.add("\n");
-		beforeList.add("	");
-		return getReplaced(str, beforeList, ",");
-	}
-
-	public static String getReplaced(String str, List<String> beforeList, String after) {
-		String result = trim(str);
-		if (StringUtils.isNotBlank(result)) {
-			for (String before : beforeList) {
-				result = StringUtils.replace(result, before, after);
-			}
-		}
-		return result;
 	}
 
 	public static String getEncryptPassword(String plainPassword) {
@@ -154,5 +135,34 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return s + "整";
 		}
 		return "";
+	}
+
+	public static List<String> getFilterList(String filterValue) {
+		List<String> filterList = Lists.newArrayList();
+		if (isNotBlank(filterValue)) {
+			filterValue = getReplaced(filterValue);
+			filterList = getSplitList(filterValue, CharConstant.COMMA);
+		}
+		return filterList;
+	}
+
+	public static String getReplaced(String str) {
+		List<String> beforeList = Lists.newArrayList();
+		beforeList.add(CharConstant.COMMA_FULL);
+		beforeList.add(CharConstant.SPACE);
+		beforeList.add(CharConstant.SPACE_FULL);
+		beforeList.add(CharConstant.ENTER);
+		beforeList.add(CharConstant.TAB);
+		return getReplaced(str, beforeList, CharConstant.COMMA);
+	}
+
+	public static String getReplaced(String str, List<String> beforeList, String after) {
+		String result = trim(str);
+		if (StringUtils.isNotBlank(result)) {
+			for (String before : beforeList) {
+				result = StringUtils.replace(result, before, after);
+			}
+		}
+		return result;
 	}
 }

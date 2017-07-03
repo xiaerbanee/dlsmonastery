@@ -289,7 +289,6 @@ util.getComponentValueLabel = function (component){
 util.getSearchText = function (root){
   let formItems = [];
   util.getFormItems(root, formItems);
-  console.log('formItems:',formItems);
   let tmp = [];
   for(let item of formItems){
     let eachValueLabel = util.getComponentValueLabel(item);

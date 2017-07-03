@@ -22,9 +22,43 @@ public class CarrierOrderQuery extends BaseQuery{
     private String shipDate;
     private String createdDate;
     private String remarks;
+    private String businessIdStr;
+    private String status;
+    private List<String> businessIdList=Lists.newArrayList();
     private List<String> notEqualStatusList=Lists.newArrayList();
     private List<String> notEqualStoreIdList=Lists.newArrayList();
     private List<String> goodsOrderStatusList=Lists.newArrayList();
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<String> getBusinessIdList() {
+        if(StringUtils.isNotBlank(businessIdStr)){
+            List<String> formatIdList=StringUtils.getFilterList(businessIdStr);
+            businessIdList=Lists.newArrayList();
+            for(String formatId:formatIdList){
+                businessIdList.add(formatId.replace("XK",""));
+            }
+        }
+        return businessIdList;
+    }
+
+    public void setBusinessIdList(List<String> businessIdList) {
+        this.businessIdList = businessIdList;
+    }
+
+    public String getBusinessIdStr() {
+        return businessIdStr;
+    }
+
+    public void setBusinessIdStr(String businessIdStr) {
+        this.businessIdStr = businessIdStr;
+    }
 
     public List<String> getNotEqualStatusList() {
         return notEqualStatusList;

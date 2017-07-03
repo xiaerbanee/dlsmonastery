@@ -1,5 +1,5 @@
 function getUrl(url) {
-    var baseUrl = "http://localhost:1200/api/";
+    var baseUrl = "https://localhost/api/";
     var result = baseUrl + url;
     if (url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";

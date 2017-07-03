@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AuditFileService {
 
     @Autowired
@@ -65,6 +65,7 @@ public class AuditFileService {
         return auditFileDto;
     }
 
+    @Transactional
     public AuditFile save(AuditFileForm auditFileForm) {
         AuditFile auditFile;
         if (auditFileForm.isCreate()) {
@@ -82,7 +83,7 @@ public class AuditFileService {
         }
         return null;
     }
-
+    @Transactional
     public void audit(String id, boolean pass, String comment) {
         AuditFile auditFile = auditFileRepository.findOne(id);
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(auditFile.getProcessInstanceId(), auditFile.getProcessTypeId(), comment, pass));
@@ -95,7 +96,7 @@ public class AuditFileService {
         auditFileRepository.save(auditFile);
 
     }
-
+    @Transactional
     public void logicDelete(String id) {
         auditFileRepository.logicDelete(id);
     }

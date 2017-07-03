@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyLeaveService {
 
     @Autowired
@@ -37,7 +37,7 @@ public class DutyLeaveService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
-
+    @Transactional
     public List<DutyLeave> save(DutyLeaveForm dutyLeaveForm) {
         List<DutyLeave> dutyLeaveList= Lists.newArrayList();
         if (dutyLeaveForm.getDutyDateStart().equals(dutyLeaveForm.getDutyDateEnd())) {
@@ -69,7 +69,7 @@ public class DutyLeaveService {
         }
         return dutyLeaveList;
     }
-
+    @Transactional
     public void logicDelete(String id) {
         dutyLeaveRepository.logicDelete(id);
     }
