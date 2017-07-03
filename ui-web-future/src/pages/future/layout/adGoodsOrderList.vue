@@ -33,7 +33,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('adGoodsOrderList.areaName')">
-                <el-select v-model="formData.shopAreaId" multiple filterable >
+                <el-select v-model="formData.shopAreaId" multiple filterable clearable >
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -47,7 +47,7 @@
                 <date-range-picker v-model="formData.billDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
-                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple @afterInit="setSearchText"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple="multiple" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
                 <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
