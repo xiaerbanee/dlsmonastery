@@ -841,6 +841,7 @@ export default {
     price: "单价",
     hasIme: "包含串码",
     prerequisiteMessage: "必填信息",
+    clientName: "客户",
   },
   goodsOrderBatchAdd:{
     shopName: "门店",

@@ -1,13 +1,14 @@
 package net.myspring.cloud.modules.sys.dto;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.dto.DataDto;
+import net.myspring.cloud.common.dto.DataDto;
 import net.myspring.cloud.modules.sys.domain.VoucherEntry;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
+ * 记录凭证信息(不包含核算维度的信息)
  * Created by lihx on 2017/4/5.
  */
 public class VoucherEntryDto extends DataDto<VoucherEntry> {
@@ -19,7 +20,10 @@ public class VoucherEntryDto extends DataDto<VoucherEntry> {
     private BigDecimal fDebit;
     //贷方金额
     private BigDecimal fCredit;
-    private VoucherDto voucherDto;
+    //外键
+    private String glVoucherId;
+
+    //audit
     private List<VoucherEntryFlowDto> voucherEntryFlowDtoList = Lists.newArrayList();
     private List<String> voucherEntryFlowIdList = Lists.newArrayList();
 
@@ -55,12 +59,12 @@ public class VoucherEntryDto extends DataDto<VoucherEntry> {
         this.fCredit = fCredit;
     }
 
-    public VoucherDto getVoucherDto() {
-        return voucherDto;
+    public String getGlVoucherId() {
+        return glVoucherId;
     }
 
-    public void setVoucherDto(VoucherDto voucherDto) {
-        this.voucherDto = voucherDto;
+    public void setGlVoucherId(String glVoucherId) {
+        this.glVoucherId = glVoucherId;
     }
 
     public List<VoucherEntryFlowDto> getVoucherEntryFlowDtoList() {

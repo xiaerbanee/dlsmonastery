@@ -7,7 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 
-
+/**
+ * 记录凭证信息(不包含核算维度的信息)
+ * Created by lihx on 2017/4/5.
+ */
 @Entity
 @Table(name="sys_gl_voucher_entry")
 public class VoucherEntry extends IdEntity<VoucherEntry> {
