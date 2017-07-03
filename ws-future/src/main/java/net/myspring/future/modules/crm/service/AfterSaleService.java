@@ -2,40 +2,34 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
-import net.myspring.future.common.enums.AfterSaleTypeEnum;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.AfterSaleDetail;
-import net.myspring.future.modules.crm.domain.AfterSaleFlee;
+import net.myspring.future.modules.crm.domain.AfterSaleImeAllot;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.*;
-import net.myspring.future.modules.crm.repository.AfterSaleDetailRepository;
-import net.myspring.future.modules.crm.repository.AfterSaleFleeRepository;
+import net.myspring.future.modules.crm.dto.AfterSaleDto;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.repository.AfterSaleImeAllotRepository;
 import net.myspring.future.modules.crm.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
-import net.myspring.future.modules.crm.web.form.AfterSaleToCompanyForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
+import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
-import org.aspectj.lang.annotation.After;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.misc.Request;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -51,483 +45,272 @@ public class AfterSaleService {
     @Autowired
     private ProductImeRepository productImeRepository;
     @Autowired
-    private AfterSaleDetailRepository afterSaleDetailRepository;
-    @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private AfterSaleFleeRepository afterSaleFleeRepository;
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private AfterSaleImeAllotRepository afterSaleImeAllotRepository;
     @Autowired
     private CacheUtils cacheUtils;
-    @Autowired
-    private DepotManager depotManager;
-    @Autowired
-    private OfficeClient officeClient;
 
-    public List<AfterSale> findByBadProductImeIdList(List<String> badProductImeIdList){
-        return afterSaleRepository.findByBadProductImeIdIn(badProductImeIdList);
+    public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
+        Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
+        cacheUtils.initCacheInput(afterSaleDtoPage.getContent());
+        return afterSaleDtoPage;
     }
 
-    public List<AfterSaleDto> findDtoByImeListAndType(List<String> imeList, String type) {
-        List<AfterSaleDto> afterSaleDtoList=Lists.newArrayList();
-        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByBadProductImeInAndType(imeList, type);
-        if (CollectionUtil.isNotEmpty(afterSales)) {
-            List<AfterSaleDetailDto>afterSaleDetailList  = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSales, "id"), AfterSaleDetailTypeEnum.总部录入.name());
-            Map<String, AfterSaleDto> afterSaleMap = CollectionUtil.extractToMap(afterSales, "id");
-            for (AfterSaleDetailDto detail : afterSaleDetailList) {
-                AfterSaleDto afterSale = afterSaleMap.get(detail.getAfterSaleId());
-                ReflectionUtil.copyProperties(detail,afterSale);
-                afterSaleDtoList.add(afterSale);
+
+    public List<ProductImeDto> findFormData(List<String> imeList) {
+        List<ProductImeDto> productImeList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        return productImeList;
+    }
+
+    public Map<String, AfterSale> findAfterSale(List<String> imeList) {
+        Map<String, AfterSale> map = Maps.newHashMap();
+        List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
+        if(CollectionUtil.isNotEmpty(afterSales)){
+            Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(afterSales,"badProductImeId"));
+            for (AfterSale afterSale : afterSales) {
+                map.put(productImeMap.get(afterSale.getBadProductImeId()).getIme(), afterSale);
             }
         }
-        return afterSales;
+        return map;
     }
 
-    public List<AfterSaleInputDto> inputUpdateData(List<String> imeList, String type, String inputType) {
-        List<AfterSaleInputDto> afterSaleInputList = Lists.newArrayList();
-        Map<String, AfterSaleFlee> afterSaleFleeMap = Maps.newHashMap();
-        List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeInAndType(imeList, type);
-        if (CollectionUtil.isNotEmpty(afterSaleList)) {
-            List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), inputType);
-            Map<String, AfterSaleDto> afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "id");
-            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                List<AfterSaleFlee> afterSaleFleeList = afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
-                afterSaleFleeMap = CollectionUtil.extractToMap(afterSaleFleeList, "afterSaleId");
-            }
-            for (AfterSaleDetailDto detail : afterSaleDetailList) {
-                AfterSaleInputDto afterSaleInputDto = new AfterSaleInputDto();
-                AfterSaleDto afterSale = afterSaleMap.get(detail.getAfterSaleId());
-                ReflectionUtil.copyProperties(afterSale, afterSaleInputDto);
-                if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                    AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(afterSale.getId());
-                    ReflectionUtil.copyProperties(afterSaleFlee, afterSaleInputDto);
-                    afterSaleInputDto.setBadProductIme(afterSaleFlee.getIme());
-                }
-                ReflectionUtil.copyProperties(detail, afterSaleInputDto);
-                afterSaleInputList.add(afterSaleInputDto);
-            }
-        }
-        return afterSaleInputList;
-    }
-
-    public List<AfterSaleCompanyDto> getFromCompanyData(AfterSaleQuery afterSaleQuery) {
-        List<AfterSaleCompanyDto> afterSaleCompanyList = Lists.newArrayList();
-        afterSaleQuery.setInputType(AfterSaleDetailTypeEnum.工厂录入.name());
-        List<AfterSaleDto> afterSaleList = afterSaleRepository.findFilter(afterSaleQuery);
-        List<AfterSaleDetailDto> afterSaleDetailList = afterSaleDetailRepository.findDtoByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.工厂录入.name());
-        Map<String, AfterSaleDetailDto> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
-        for (AfterSaleDto afterSale : afterSaleList) {
-            AfterSaleCompanyDto afterSaleCompanyDto = BeanUtil.map(afterSale, AfterSaleCompanyDto.class);
-            AfterSaleDetailDto afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
-            ReflectionUtil.copyProperties(afterSaleDetail,afterSaleCompanyDto);
-            if(AfterSaleTypeEnum.窜货机.name().equals(afterSaleQuery.getType())){
-                afterSaleCompanyDto.setBadProductIme(afterSale.getIme());
-            }
-            afterSaleCompanyList.add(afterSaleCompanyDto);
-        }
-        return afterSaleCompanyList;
-    }
-
-    //地区录入
-    public void save(List<List<String>> datas, String type, String action) {
+    //单据录入
+    public void save(List<List<String>> datas, LocalDate toStoreDate) {
+        String companyId = RequestUtils.getCompanyId();
+        Depot badStore = depotRepository.findOne(CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.BAD_STORE_ID.name()).getValue());
         List<String> imeList = Lists.newArrayList();
-        List<String> productNameList = Lists.newArrayList();
         List<String> depotNameList = Lists.newArrayList();
         for (List<String> row : datas) {
-            listAddTrim(imeList, StringUtils.toString(row.get(0)).trim());
-            listAddTrim(imeList, StringUtils.toString(row.get(8)).trim());
-            listAddTrim(productNameList, StringUtils.toString(row.get(1)).trim());
-            listAddTrim(productNameList, StringUtils.toString(row.get(9)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(2)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(6)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(7)).trim());
+            listAddTrim(imeList, row.get(0));
+            listAddTrim(imeList, row.get(3));
+            listAddTrim(depotNameList, row.get(4));
         }
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-        List<Product> productList = productRepository.findByNameIn(productNameList);
-        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
+        List<Depot> depotList = depotRepository.findByNameList(depotNameList);
         Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
-        Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");
         Map<String, Depot> depotMap = CollectionUtil.extractToMap(depotList, "name");
-        Map<String, AfterSale> afterSaleMap = Maps.newHashMap();
-        Map<String, AfterSaleFlee> afterSaleFleeMap = Maps.newHashMap();
-        Map<String, AfterSaleDetail> afterSaleDetailMap = Maps.newHashMap();
-        if ("update".equals(action)) {
-            List<AfterSale> afterSaleList = Lists.newArrayList();
-            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                List<AfterSaleFlee> afterSaleFleeList = afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
-                afterSaleFleeMap = CollectionUtil.extractToMap(afterSaleFleeList, "ime");
-                afterSaleList = afterSaleRepository.findAll(CollectionUtil.extractToList(afterSaleFleeList, "afterSaleId"));
-                afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "id");
-            } else {
-                afterSaleList = afterSaleRepository.findByBadProductImeIn(imeList);
-                afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "badProductImeId");
-            }
-            List<AfterSaleDetail> afterSaleDetailList = afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.地区录入.name());
-            afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
-        }
         for (List<String> row : datas) {
-            AfterSale afterSale = new AfterSale();
-            AfterSaleFlee afterSaleFlee = new AfterSaleFlee();
-            AfterSaleDetail afterSaleDetail = new AfterSaleDetail();
-            if ("update".equals(action)) {
-                if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                    afterSaleFlee = afterSaleFleeMap.get(StringUtils.toString(row.get(0)).trim());
-                    afterSale = afterSaleMap.get(afterSaleFlee.getAfterSaleId());
-                } else {
-                    ProductIme productIme = productImeMap.get(StringUtils.toString(row.get(0)).trim());
-                    afterSale = afterSaleMap.get(productIme.getId());
-                }
-                afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
-            }
-            afterSale.setType(type);
-            afterSaleDetail.setInputDate(LocalDate.now());
-            afterSaleDetail.setType(AfterSaleDetailTypeEnum.地区录入.name());
-            String remarks = StringUtils.toString(row.get(row.size() - 1)).trim();
-            afterSaleDetail.setRemarks(remarks);
-            for (int i = 0; i < row.size()-1; i++) {
-                String value = StringUtils.toString(row.get(i)).trim();
-                switch (i) {
-                    case 0:
-                        if (StringUtils.isNotBlank(value)) {
-                            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                                afterSaleFlee.setIme(value);
-                            } else {
-                                ProductIme productIme = productImeMap.get(StringUtils.toString(row.get(0)).trim());
-                                afterSale.setBadProductImeId(productIme.getId());
-                                afterSale.setBadProductId(productIme.getProductId());
-                                afterSale.setBadDepotId(productIme.getDepotId());
+            if (CollectionUtil.isNotEmpty(row)) {
+                AfterSale afterSale = new AfterSale();
+                ProductIme badProductIme = productImeMap.get(row.get(0).trim());
+                ProductIme toAreaProductIme = productImeMap.get(row.get(3).trim());
+                Depot toAreaDepot = depotMap.get(row.get(4).trim());
+                for (int i = 0; i < row.size(); i++) {
+                    String value = StringUtils.toString(row.get(i)).trim();
+                    switch (i) {
+                        case 0:
+                            if (badProductIme != null) {
+                                afterSale.setBadProductImeId(badProductIme.getId());
+                                afterSale.setBadProductImeId(badProductIme.getId());
+                                afterSale.setBadDepotId(badProductIme.getDepotId());
                             }
-                        }
-                        break;
-                    case 1:
-                        if (StringUtils.isNotBlank(value)) {
-                            Product product = productMap.get(value);
-                            afterSale.setBadProductId(product.getId());
-                        }
-                        break;
-                    case 2:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot badDepot = depotMap.get(value);
-                            afterSale.setBadDepotId(badDepot.getId());
-                            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                                afterSaleFlee.setFleeShopName(badDepot.getName());
+                            break;
+                        case 3:
+                            if (StringUtils.isNotBlank(value)) {
+                                afterSale.setToAreaProductImeId(toAreaProductIme.getId());
+                                afterSale.setToAreaProductImeId(toAreaProductIme.getId());
                             }
-                        }
-                        break;
-                    case 3:
-                        afterSale.setBadType(value);
-                        break;
-                    case 4:
-                        afterSale.setPackageStatus(value);
-                        break;
-                    case 5:
-                        afterSale.setMemory(value);
-                        break;
-                    case 6:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot fromDepot = depotMap.get(value);
-                            afterSaleDetail.setFromDepotId(fromDepot.getId());
-                        }
-                        break;
-                    case 7:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot toDepot = depotMap.get(value);
-                            afterSaleDetail.setToDepotId(toDepot.getId());
-                        }
-                        break;
-                    case 8:
-                        if (StringUtils.isNotBlank(value)) {
-                            ProductIme replaceProductIme = productImeMap.get(value);
-                            afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
-                            afterSaleDetail.setReplaceProductId(replaceProductIme.getProductId());
-                        }
-                        break;
-                    case 9:
-                        if (StringUtils.isNotBlank(value)) {
-                            Product product = productMap.get(value);
-                            afterSaleDetail.setReplaceProductId(product.getId());
-                        }
-                        break;
-                    case 10:
-                        if (StringUtils.isNotBlank(value)) {
-                            afterSaleDetail.setReplaceAmount(new BigDecimal(value));
-                        }
-                        break;
-                    case 11:
-                        afterSaleFlee.setContact(value);
-                        break;
-                    case 12:
-                        afterSaleFlee.setMobilePhone(value);
-                        break;
-                    case 13:
-                        afterSaleFlee.setAddress(value);
-                        break;
-                    case 14:
-                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
-                        break;
-                    default:
-                        break;
+                            break;
+                        case 4:
+                            if (StringUtils.isNotBlank(value)) {
+                                afterSale.setAreaDepotId(toAreaDepot.getId());
+                                afterSale.setAreaDepotId(toAreaDepot.getId());
+                            }
+                            break;
+                        case 5:
+                            afterSale.setPackageStatus(value);
+                            break;
+                        case 6:
+                            afterSale.setToStoreType(value);
+                            break;
+                        case 7:
+                            afterSale.setMemory(value);
+                            break;
+                        case 8:
+                            afterSale.setToStoreRemarks(value);
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            afterSaleRepository.save(afterSale);
-            afterSaleDetail.setAfterSaleId(afterSale.getId());
-            afterSaleDetailRepository.save(afterSaleDetail);
-            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                afterSaleFlee.setAfterSaleId(afterSale.getId());
-                afterSaleFleeRepository.save(afterSaleFlee);
+                String maxBusinessId = afterSaleRepository.findMaxBusinessId(LocalDate.now());
+                afterSale.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+                afterSale.setToStoreDate(toStoreDate);
+                afterSaleRepository.save(afterSale);
+                AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), badProductIme.getId(), badProductIme.getDepotId(), badStore.getId(), "坏机录入");
+                afterSaleImeAllotRepository.save(afterSaleImeAllot);
+                //调拨到坏机库
+                badProductIme.setDepotId(badStore.getId());
+                productImeRepository.save(badProductIme);
+
+                if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
+                    afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), toAreaProductIme.getId(), toAreaProductIme.getDepotId(), toAreaDepot.getId(), "替换机录入");
+                    afterSaleImeAllotRepository.save(afterSaleImeAllot);
+                    toAreaProductIme.setDepotId(afterSale.getAreaDepotId());
+                    productImeRepository.save(toAreaProductIme);
+                }
             }
         }
     }
 
-    //总部录入
-    public void saveHead(List<List<String>> datas, String type, String action) {
+
+    //单据修改
+    @Transactional
+    public void update(List<List<String>> datas) {
+        String companyId = RequestUtils.getCompanyId();
+
+        List<String> badImeList = Lists.newArrayList();
         List<String> imeList = Lists.newArrayList();
-        List<String> productNameList = Lists.newArrayList();
         List<String> depotNameList = Lists.newArrayList();
+        List<String> productNameList = Lists.newArrayList();
         for (List<String> row : datas) {
-            listAddTrim(imeList, StringUtils.toString(row.get(0)).trim());
-            listAddTrim(imeList, StringUtils.toString(row.get(8)).trim());
-            listAddTrim(productNameList, StringUtils.toString(row.get(1)).trim());
-            listAddTrim(productNameList, StringUtils.toString(row.get(9)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(2)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(6)).trim());
-            listAddTrim(depotNameList, StringUtils.toString(row.get(7)).trim());
+            listAddTrim(badImeList, row.get(0).trim());
+            listAddTrim(imeList, row.get(3).trim());
+            listAddTrim(depotNameList, row.get(4).trim());
+            listAddTrim(productNameList, row.get(4).trim());
         }
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-        List<Product> productList = productRepository.findByNameIn(productNameList);
-        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
-        Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
-        Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");
-        Map<String, Depot> depotMap = CollectionUtil.extractToMap(depotList, "name");
-        Map<String, AfterSale> afterSaleMap = Maps.newHashMap();
-        Map<String, AfterSaleFlee> afterSaleFleeMap = Maps.newHashMap();
-        Map<String, AfterSaleDetail> afterSaleDetailMap = Maps.newHashMap();
-        List<AfterSale> afterSaleList = Lists.newArrayList();
-        if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-            List<AfterSaleFlee> afterSaleFleeList = afterSaleFleeRepository.findByEnabledIsTrueAndImeIn(imeList);
-            afterSaleFleeMap = CollectionUtil.extractToMap(afterSaleFleeList, "ime");
-            afterSaleList = afterSaleRepository.findAll(CollectionUtil.extractToList(afterSaleFleeList, "afterSaleId"));
-            afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "id");
-        } else {
-            afterSaleList = afterSaleRepository.findByBadProductImeIn(imeList);
-            afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "badProductImeId");
-        }
-        if ("update".equals(action)) {
-            List<AfterSaleDetail> afterSaleDetailList = afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), AfterSaleDetailTypeEnum.总部录入.name());
-            afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
-        }
-        for (List<String> row : datas) {
-            AfterSaleFlee afterSaleFlee = afterSaleFleeMap.get(StringUtils.toString(row.get(0)).trim());
-            AfterSale afterSale;
-            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                if (afterSaleFlee != null) {
-                    afterSale = afterSaleMap.get(afterSaleFlee.getAfterSaleId());
-                }else {
-                    afterSale=new AfterSale();
-                    afterSaleFlee=new AfterSaleFlee();
-                }
-            } else {
-                ProductIme productIme = productImeMap.get(StringUtils.toString(row.get(0)).trim());
-                afterSale = afterSaleMap.get(productIme.getId());
-                if (afterSale == null) {
-                    afterSale = new AfterSale();
-                }
-            }
-            AfterSaleDetail afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
-            if (afterSaleDetail == null) {
-                afterSaleDetail = new AfterSaleDetail();
-            }
-            afterSale.setType(type);
-            afterSaleDetail.setInputDate(LocalDate.now());
-            afterSaleDetail.setType(AfterSaleDetailTypeEnum.总部录入.name());
-            String remarks = StringUtils.toString(row.get(row.size() - 1)).trim();
-            afterSaleDetail.setRemarks(remarks);
-            for (int i = 0; i < row.size()-1; i++) {
-                String value = StringUtils.toString(row.get(i)).trim();
-                switch (i) {
-                    case 0:
-                        if (StringUtils.isNotBlank(value)) {
-                            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                                afterSaleFlee.setIme(value);
-                            } else {
-                                ProductIme productIme = productImeMap.get(StringUtils.toString(row.get(0)).trim());
-                                afterSale.setBadProductImeId(productIme.getId());
-                                afterSale.setBadProductId(productIme.getProductId());
-                                afterSale.setBadDepotId(productIme.getDepotId());
+        Map<String, AfterSale> afterSaleMap = findAfterSale(badImeList);
+        if (afterSaleMap.size() > 0) {
+            String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
+            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
+            List<Depot> depotList = depotRepository.findByNameList(depotNameList);
+            List<Product> productList = productRepository.findByNameIn(productNameList);
+            Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");
+            Map<String, Depot> depotMap = CollectionUtil.extractToMap(depotList, "name");
+            Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
+            Map<String, ProductIme> toAreaProductImeMap = productImeRepository.findMap(CollectionUtil.extractToList(afterSaleMap.values(), "toAreaProductImeId"));
+            for (List<String> row : datas) {
+                String badIme = StringUtils.toString(row.get(0)).trim();
+                AfterSale afterSale = afterSaleMap.get(badIme);
+                for (int i = 0; i < row.size(); i++) {
+                    String value = StringUtils.toString(row.get(i)).trim();
+                    switch (i) {
+                        case 3:
+                            //更改替换机
+                            if (afterSale.getToAreaToFinance() == null || !afterSale.getToAreaToFinance()) {
+                                ProductIme toAreaProductIme = productImeMap.get(value);
+                                boolean isUpdate = false;
+                                if (toAreaProductIme == null && StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
+                                    if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
+                                        isUpdate = true;
+                                    }
+                                } else {
+                                    if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId()) || !afterSale.getToAreaProductImeId().equals(toAreaProductIme.getId())) {
+                                        isUpdate = true;
+                                    }
+                                }
+                                if (isUpdate) {
+                                    if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
+                                        AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), afterSale.getToAreaProductImeId(), toAreaProductImeMap.get(afterSale.getToAreaProductImeId()).getDepotId(), goodStoreId, "替换机退回");
+                                        afterSaleImeAllotRepository.save(afterSaleImeAllot);
+                                        toAreaProductIme.setDepotId(goodStoreId);
+                                        productImeRepository.save(toAreaProductIme);
+                                    }
+                                    if (toAreaProductIme != null) {
+                                        AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), toAreaProductIme.getId(), toAreaProductIme.getDepotId(), afterSale.getAreaDepotId(), "替换机录入");
+                                        afterSaleImeAllotRepository.save(afterSaleImeAllot);
+                                        toAreaProductIme.setDepotId(afterSale.getAreaDepotId());
+                                        productImeRepository.save(toAreaProductIme);
+                                    }
+                                    afterSale.setToAreaProductImeId(toAreaProductIme.getId());
+                                }
                             }
-                        }
-                        break;
-                    case 1:
-                        if (StringUtils.isNotBlank(value)) {
-                            Product product = productMap.get(value);
-                            afterSale.setBadProductId(product.getId());
-                        }
-                        break;
-                    case 2:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot badDepot = depotMap.get(value);
-                            afterSale.setBadDepotId(badDepot.getId());
-                            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                                afterSaleFlee.setFleeShopName(badDepot.getName());
+                            break;
+                        case 4:
+                            Depot areaDepot = depotMap.get(value);
+                            afterSale.setAreaDepotId(areaDepot.getId());
+                            break;
+                        case 5:
+                            afterSale.setPackageStatus(value);
+                            break;
+                        case 6:
+                            afterSale.setToStoreType(value);
+                            break;
+                        case 7:
+                            afterSale.setMemory(value);
+                            break;
+                        case 8:
+                            //更改工厂返回
+                            if (afterSale.getToAreaToFinance() == null || !afterSale.getFromCompanyToFinance() && StringUtils.isNotBlank(afterSale.getFromCompanyProductId())) {
+                                Product fromCompanyProduct = productMap.get(value);
+                                afterSale.setFromCompanyProductId(fromCompanyProduct.getId());
                             }
-                        }
-                        break;
-                    case 3:
-                        afterSale.setBadType(value);
-                        break;
-                    case 4:
-                        afterSale.setPackageStatus(value);
-                        break;
-                    case 5:
-                        afterSale.setMemory(value);
-                        break;
-                    case 6:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot fromDepot = depotMap.get(value);
-                            afterSaleDetail.setFromDepotId(fromDepot.getId());
-                        }
-                        break;
-                    case 7:
-                        if (StringUtils.isNotBlank(value)) {
-                            Depot toDepot = depotMap.get(value);
-                            afterSaleDetail.setToDepotId(toDepot.getId());
-                        }
-                        break;
-                    case 8:
-                        if (StringUtils.isNotBlank(value)) {
-                            ProductIme replaceProductIme = productImeMap.get(value);
-                            afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
-                            afterSaleDetail.setReplaceProductId(replaceProductIme.getProductId());
-                        }
-                        break;
-                    case 9:
-                        if (StringUtils.isNotBlank(value)) {
-                            Product product = productMap.get(value);
-                            afterSaleDetail.setReplaceProductId(product.getId());
-                        }
-                        break;
-                    case 10:
-                        if (StringUtils.isNotBlank(value)) {
-                            afterSaleDetail.setReplaceAmount(new BigDecimal(value));
-                        }
-                        break;
-                    case 11:
-                        afterSaleFlee.setContact(value);
-                        break;
-                    case 12:
-                        afterSaleFlee.setMobilePhone(value);
-                        break;
-                    case 13:
-                        afterSaleFlee.setAddress(value);
-                        break;
-                    case 14:
-                        afterSaleFlee.setBuyAmount(new BigDecimal(value));
-                        break;
-                    default:
-                        break;
+                            break;
+                        case 9:
+                            afterSale.setToStoreRemarks(value);
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            afterSaleRepository.save(afterSale);
-            afterSaleDetail.setAfterSaleId(afterSale.getId());
-            afterSaleDetailRepository.save(afterSaleDetail);
-            if (AfterSaleTypeEnum.窜货机.name().equals(type)) {
-                afterSaleFlee.setAfterSaleId(afterSale.getId());
-                afterSaleFleeRepository.save(afterSaleFlee);
+                afterSaleRepository.save(afterSale);
             }
         }
     }
 
 
     //坏机返厂
-    public void toCompany(AfterSaleToCompanyForm afterSaleToCompanyForm) {
-        List<AfterSaleDto> afterSaleList = afterSaleRepository.findDtoByBadProductImeInAndType(afterSaleToCompanyForm.getImeList(),afterSaleToCompanyForm.getType());
-        List<AfterSaleDetail> afterSaleDetails = afterSaleDetailRepository.findByAfterSaleIdIn(CollectionUtil.extractToList(afterSaleList, "id"));
-        Map<String,AfterSaleDetail> afterSaleDetailMap=CollectionUtil.extractToMap(afterSaleDetails,"afterSaleId");
-        List<AfterSaleDetail> afterSaleDetailList = Lists.newArrayList();
-        for (AfterSaleDto afterSale : afterSaleList) {
-            AfterSaleDetail detail = afterSaleDetailMap.get(afterSale.getId());
-            AfterSaleDetail afterSaleDetail = BeanUtil.map(detail, AfterSaleDetail.class);
-            afterSaleDetail.setType(AfterSaleDetailTypeEnum.工厂录入.name());
-            afterSaleDetail.setInputDate(afterSaleToCompanyForm.getToCompanyDate());
-            afterSaleDetail.setRemarks(afterSaleToCompanyForm.getToCompanyRemarks());
-            afterSaleDetail.setId(null);
-            afterSaleDetailList.add(afterSaleDetail);
-        }
-        if (CollectionUtil.isNotEmpty(afterSaleDetailList)) {
-            afterSaleDetailRepository.save(afterSaleDetailList);
+    @Transactional
+    public void toCompany(List<String> badImes, LocalDate toCompanyDate, String toCompanyRemarks) {
+        Map<String, AfterSale> afterSaleMap = findAfterSale(badImes);
+        for (int i = 0; i < badImes.size(); i++) {
+            String badIme = badImes.get(i);
+            AfterSale afterSale = afterSaleMap.get(badIme);
+            //坏机已录单，并且没有同步到金蝶
+            if (afterSale != null && !afterSale.getToCompanyToFinance()) {
+                afterSale.setToCompanyDate(toCompanyDate);
+                afterSale.setToCompanyRemarks(toCompanyRemarks);
+                afterSaleRepository.save(afterSale);
+            }
         }
     }
 
 
     //工厂返回
+    @Transactional
     public void fromCompany(List<List<String>> datas, LocalDate fromCompanyDate) {
-        List<String> imeList = Lists.newArrayList();
-        List<String> productNameList = Lists.newArrayList();
+        List<String> badImes = Lists.newArrayList();
+        List<String> productNames = Lists.newArrayList();
         for (List<String> row : datas) {
-            listAddTrim(imeList, row.get(5));
-            listAddTrim(imeList, row.get(2));
-            listAddTrim(productNameList, row.get(1));
+            badImes.add(row.get(0));
+            productNames.add(row.get(1));
         }
-        List<AfterSale> afterSaleList = afterSaleRepository.findByBadProductImeIn(imeList);
-        List<ProductIme> productImeList = productImeRepository.findByImeList(imeList);
-        List<AfterSaleDetail> afterSaleDetailList = afterSaleDetailRepository.findByAfterSaleIdInAndType(CollectionUtil.extractToList(afterSaleList, "id"), "工厂录入");
-        List<Product> productList = productRepository.findByNameIn(productNameList);
-        Map<String, AfterSale> afterSaleMap = CollectionUtil.extractToMap(afterSaleList, "badProductImeId");
-        Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
-        Map<String, AfterSaleDetail> afterSaleDetailMap = CollectionUtil.extractToMap(afterSaleDetailList, "afterSaleId");
+        List<Product> productList = productRepository.findByNameIn(productNames);
         Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");
-        for (List<String> row : datas) {
-            ProductIme productIme = productImeMap.get(StringUtils.toString(row.get(5)).trim());
-            AfterSale afterSale = afterSaleMap.get(productIme.getId());
-            AfterSaleDetail afterSaleDetail = afterSaleDetailMap.get(afterSale.getId());
-            afterSaleDetail.setReplaceDate(fromCompanyDate);
-            for (int i = 0; i < row.size(); i++) {
-                String value = StringUtils.toString(row.get(i)).trim();
-                switch (i) {
-                    case 1:
-                        if (StringUtils.isNotBlank(value)) {
-                            Product product = productMap.get(value);
-                            afterSaleDetail.setReplaceProductId(product.getId());
-                        }
-                        break;
-                    case 2:
-                        if (StringUtils.isNotBlank(value)) {
-                            ProductIme replaceProductIme = productImeMap.get(value);
-                            afterSaleDetail.setReplaceProductImeId(replaceProductIme.getId());
-                        }
-                        break;
-                    case 3:
-                        if (StringUtils.isNotBlank(value)) {
-                            afterSaleDetail.setReplaceAmount(new BigDecimal(value));
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                afterSaleDetailRepository.save(afterSaleDetail);
+        Map<String, AfterSale> afterSaleMap = findAfterSale(badImes);
+        for (int i = 0; i < badImes.size(); i++) {
+            String badIme = badImes.get(i);
+            AfterSale afterSale = afterSaleMap.get(badIme);
+            //坏机已录单，并且没有同步到速达
+            if (afterSale != null && !afterSale.getFromCompanyToFinance() && StringUtils.isNotBlank(productNames.get(i))) {
+                Product fromCompanyProduct = productMap.get(productNames.get(i));
+                afterSale.setFromCompanyProductId(fromCompanyProduct.getId());
+                afterSale.setFromCompanyDate(fromCompanyDate);
+                afterSaleRepository.save(afterSale);
             }
         }
     }
 
-    public Page findPage(Pageable pageable, AfterSaleQuery afterSaleQuery) {
-        afterSaleQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-        Page<AfterSaleDto> page = afterSaleRepository.findPage(pageable, afterSaleQuery);
-        return page;
-    }
 
-    public void delete(String detailId){
-        AfterSaleDetail afterSaleDetail=afterSaleDetailRepository.getOne(detailId);
-        afterSaleDetail.setEnabled(false);
-        afterSaleDetailRepository.save(afterSaleDetail);
-        List<AfterSaleDetail> afterSaleDetailList=afterSaleDetailRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
-        if(CollectionUtil.isEmpty(afterSaleDetailList)){
-            AfterSale afterSale=afterSaleRepository.getOne(afterSaleDetail.getAfterSaleId());
-            afterSale.setEnabled(false);
-            afterSaleRepository.save(afterSale);
-            AfterSaleFlee afterSaleFlee=afterSaleFleeRepository.findByEnabledIsTrueAndAfterSaleId(afterSaleDetail.getAfterSaleId());
-            if(afterSaleFlee!=null){
-                afterSaleFlee.setEnabled(false);
-                afterSaleFleeRepository.save(afterSaleFlee);
+    public void delete(String id) {
+        AfterSale afterSale = afterSaleRepository.findOne(id);
+        if (!(afterSale.getFromAreaToFinance() || afterSale.getToAreaToFinance() || afterSale.getFromCompanyToFinance() || afterSale.getToCompanyToFinance())) {
+            List<AfterSaleImeAllot> afterSaleImeAllots = afterSaleImeAllotRepository.findByAfterSaleId(afterSale.getId());
+            if (CollectionUtil.isNotEmpty(afterSaleImeAllots)) {
+                Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(afterSaleImeAllots, "productImeId"));
+                for (AfterSaleImeAllot afterSaleImeAllot : afterSaleImeAllots) {
+                    ProductIme productIme = productImeMap.get(afterSaleImeAllot.getProductImeId());
+                    if (productIme.getDepotId().equals(afterSaleImeAllot.getToDepotId())) {
+                        productIme.setDepotId(afterSaleImeAllot.getFromDepotId());
+                        productImeRepository.save(productIme);
+                    }
+                    afterSaleImeAllotRepository.logicDelete(afterSaleImeAllot.getId());
+                }
             }
+            afterSaleRepository.logicDelete(afterSale.getId());
         }
     }
 

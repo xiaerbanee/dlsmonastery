@@ -57,7 +57,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column fixed prop="id" :label="$t('shopBuildList.code')" sortable></el-table-column>
+        <el-table-column fixed column-key="id" prop="formatId" :label="$t('shopBuildList.code')" sortable></el-table-column>
         <el-table-column column-key="officeId" prop="officeName" :label="$t('shopBuildList.officeName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('shopBuildList.shopName')" sortable></el-table-column>
         <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" sortable></el-table-column>

@@ -1,11 +1,11 @@
-package net.myspring.future.modules.crm.repository
+package net.myspring.future.modules.api.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.dto.ProductTypeDto
 import net.myspring.future.modules.crm.domain.AfterSale
-import net.myspring.future.modules.crm.domain.CarrierOrder
-import net.myspring.future.modules.crm.dto.CarrierOrderDto
-import net.myspring.future.modules.crm.web.query.CarrierOrderQuery
+import net.myspring.future.modules.api.domain.CarrierOrder
+import net.myspring.future.modules.api.dto.CarrierOrderDto
+import net.myspring.future.modules.api.web.query.CarrierOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -20,11 +22,47 @@ import java.util.*
 
 
 interface CarrierOrderRepository : BaseRepository<CarrierOrder, String>, CarrierOrderRepositoryCustom {
-    fun findByCode(code:String):CarrierOrder
+    fun findByCode(code:String): CarrierOrder
 
     fun findByGoodsOrderId(goodsOrderId:String):MutableList<CarrierOrder>
 
+    fun findByGoodsOrderIdIn(goodsOrderIdList:MutableList<String>):MutableList<CarrierOrder>
+
     fun findByCodeIn(codeList:MutableList<String>):MutableList<CarrierOrder>
+
+    @Query("""
+        select t from  #{#entityName} t where t.goodsOrderId in (?1) and t.imes is null
+     """)
+    fun findByGoodsOrderIdsAndImesIsNull(goodsOrderId:MutableList<String>):MutableList<CarrierOrder>
+
+    @Query("""
+        select t from  #{#entityName} t where t.goodsOrderId in (?1) and t.imes is not null
+     """)
+    fun findByGoodsOrderIdsAndImesNotNull(goodsOrderId:MutableList<String>):MutableList<CarrierOrder>
+
+    @Query("""
+        update  #{#entityName} t set t.locked=?1 where t.code=?2
+     """)
+    @Modifying
+    fun setLockedByCode(locked:Boolean,code:String):Int
+
+    @Query("""
+        update  #{#entityName} t set t.imes=?1 where t.code=?2
+     """)
+    @Modifying
+    fun updateImesByCode(imes:String,code:String):Int
+
+    @Query("""
+        update  #{#entityName} t set t.status=?1 where t.locked=?2
+     """)
+    @Modifying
+    fun setStatusByLocked(status:String,locked:Boolean):Int
+
+    @Query("""
+        update  #{#entityName} t set  t.locked=?1
+     """)
+    @Modifying
+    fun setLocked(locked:Boolean):Int
 
 }
 
@@ -56,7 +94,6 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
 
     }
 
-
     override fun findFilter(carrierOrderQuery: CarrierOrderQuery): MutableList<CarrierOrderDto> {
         val sb = StringBuffer()
         sb.append("""
@@ -69,7 +106,6 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             t1.enabled = 1
             and t1.goods_order_id=t3.id
             and t3.shop_id =t2.id
-            AND t3.status in (:goodsOrderStatusList)
         """)
         if (StringUtils.isNotBlank(carrierOrderQuery.businessId)) {
             sb.append("""  and t3.business_id=:businessId  """)
@@ -89,11 +125,11 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(carrierOrderQuery.code)) {
             sb.append("""  and t1.code=:code  """)
         }
-        if (StringUtils.isNotBlank(carrierOrderQuery.notEqualStatus)) {
-            sb.append("""  and t1.status!=:notEqualStatus  """)
+        if (CollectionUtil.isNotEmpty(carrierOrderQuery.notEqualStatusList)) {
+            sb.append("""  and t1.status not in (:notEqualStatusList)  """)
         }
-        if (StringUtils.isNotBlank(carrierOrderQuery.notEqualStoreId)) {
-            sb.append("""  and t3.store_id!=:notEqualStoreId  """)
+        if (CollectionUtil.isNotEmpty(carrierOrderQuery.notEqualStoreIdList)) {
+            sb.append("""  and t3.store_id not in (:notEqualStoreIdList) """)
         }
         if (StringUtils.isNotBlank(carrierOrderQuery.depotName)) {
             sb.append("""  and t2.name=:depotName  """)

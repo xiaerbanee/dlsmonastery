@@ -1,49 +1,49 @@
 <template>
   <div>
-    <head-tab active="afterSaleList"></head-tab>
+    <head-tab :active="$t('afterSaleList.afterSaleList') "></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.add')}}</el-button>
         <el-button type="primary" @click="itemEdit" icon="edit" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.edit')}}</el-button>
         <el-button type="primary" @click="itemSyn" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.syn')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleList.filter')}}</el-button>
-        <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
+        <span v-html="searchText"></span>
       </el-row>
       <el-dialog :title="$t('afterSaleList.filter')" v-model="formVisible" size="large" class="search-form">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="formLabel.id.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.bill')" >
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.shopName.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.areaDepot')" >
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.toAreaProductIme.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.toAreaProductIme')" >
                 <el-input v-model="formData.toAreaProductIme" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.badProductIme.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.badProductIme')" >
                 <el-input type="textarea" v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.remarks.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.remarks')">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="formLabel.createdBy.label" :label-width="formLabelWidth">
+              <el-form-item :label="$t('afterSaleList.createdBy')">
                 <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="formLabel.createdDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.createdDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="$t('afterSaleList.createdDate')">
+                <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.toCompanyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.toCompanyDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="$t('afterSaleList.toCompanyDate')">
+                <date-range-picker v-model="formData.toCompanyDate" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.fromCompanyDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.fromCompanyDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="$t('afterSaleList.fromCompanyDate')" >
+                <date-range-picker v-model="formData.fromCompanyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="formLabel.toStoreDateBTW.label" :label-width="formLabelWidth">
-                <el-date-picker v-model="formData.toStoreDate" type="daterange" align="right" :placeholder="$t('afterSaleList.selectDateRange')" :picker-options="pickerDateOption"></el-date-picker>
+              <el-form-item :label="$t('afterSaleList.toStoreDate')">
+                <date-range-picker v-model="formData.toStoreDate" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
@@ -88,63 +88,35 @@
   export default {
     data() {
       return {
-        pageLoading: false,
-        pageHeight:600,
         page:{},
-        formData:{
-          page:0,
-          size:25,
-          id:'',
-          shopName:'',
-          badProductIme:'',
-          toAreaProductIme:'',
-          remarks:'',
-          createdBy:'',
-          createdDateBTW:'',
-          createdDate:'',
-          toCompanyDateBTW:'',
-          toCompanyDate:'',
-          fromCompanyDateBTW:'',
-          fromCompanyDate:'',
-          toStoreDateBTW:'',
-          toStoreDate:'',
-        },formLabel:{
-          id:{label:this.$t('afterSaleList.bill')},
-          shopName:{label:this.$t('afterSaleList.areaDepot')},
-          toAreaProductIme:{label:this.$t('afterSaleList.toAreaProductIme')},
-          badProductIme:{label:this.$t('afterSaleList.badProductIme')},
-          remarks:{label:this.$t('afterSaleList.remarks')},
-          createdBy:{label:this.$t('afterSaleList.createdBy')},
-          createdDateBTW:{label:this.$t('afterSaleList.createdDate')},
-          toCompanyDateBTW:{label:this.$t('afterSaleList.toCompanyDate')},
-          fromCompanyDateBTW:{label:this.$t('afterSaleList.fromCompanyDate')},
-          toStoreDateBTW:{label:this.$t('afterSaleList.toStoreDate')}
-        },
-        pickerDateOption:util.pickerDateOption,
-        formLabelWidth: '120px',
+        initPromise:{},
+        formData:{extra:{}},
         formVisible: false,
+        pageLoading: false,
       };
     },
     methods: {
+      setSearchText() {
+        this.$nextTick(function () {
+          this.searchText = util.getSearchText(this.$refs.searchDialog);
+        })
+      },
       pageRequest() {
         this.pageLoading = true;
-        this.formData.createdDateBTW = util.formatDateRange(this.formData.createdDate);
-        this.formData.toCompanyDateBTW = util.formatDateRange(this.formData.toCompanyDate);
-        this.formData.fromCompanyDateBTW = util.formatDateRange(this.formData.fromCompanyDate);
-        this.formData.toStoreDateBTW = util.formatDateRange(this.formData.toStoreDate);
-
-        util.setQuery("afterSaleList",this.formData);
-        axios.get('/api/ws/future/crm/afterSale',{params:this.formData}).then((response) => {
+        this.setSearchText();
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("afterSaleList",submitData);
+        axios.get('/api/crm/afterSale',{params:submitData}).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         })
       },pageChange(pageNumber,pageSize) {
-        this.formData.page = pageNumber;
-        this.formData.size = pageSize;
+        this.formData.pageNumber = pageNumber;
+        this.formData.pageSize = pageSize;
         this.pageRequest();
       },sortChange(column) {
         this.formData.order=util.getSort(column);
-        this.formData.page=0;
+        this.formData.pageNumber=0;
         this.pageRequest();
       },search() {
         this.formVisible = false;
@@ -154,7 +126,7 @@
       },itemEdit(){
         this.$router.push({ name: 'afterSaleEditForm'})
       },itemSyn(){
-        axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
+        axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
@@ -162,12 +134,10 @@
         if(action=="修改") {
           this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
         }else if(action=="刪除"){
-          util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
-          });
-        }).catch(()=>{});
+          })
         }else if(action=="同步"){
           axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
             this.$message(response.data.message);
@@ -177,8 +147,14 @@
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
-      util.copyValue(this.$route.query,this.formData);
-      this.pageRequest();
+      this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
+        that.formData=response.data;
+        util.copyValue(that.$route.query,that.formData);
+      });
+    },activated(){
+      this.initPromise.then(()=>{
+        this.pageRequest();
+      });
     }
   };
 </script>

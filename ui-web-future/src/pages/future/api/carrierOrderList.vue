@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="apiCarrierOrder"></head-tab>
+    <head-tab active="carrierOrderList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('productTypeList.add')}}</el-button>
@@ -85,27 +85,6 @@
             </el-col>
           </el-row>
         </el-form>
-        <!--<div style="width:100%;height:50px;text-align:center;font-size:20px">开单详情</div>-->
-        <!--<el-table :data="" style="margin-top:5px;" border stripe border>-->
-          <!--<el-table-column  prop="productName" :label="$t('goodsOrderDetail.productName')"  width="200"></el-table-column>-->
-          <!--<el-table-column prop="qty"  :label="$t('goodsOrderDetail.qty')"></el-table-column>-->
-          <!--<el-table-column prop="billQty" :label="$t('goodsOrderDetail.billQty')"></el-table-column>-->
-          <!--<el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>-->
-          <!--<el-table-column :label="$t('goodsOrderDetail.operate')" :render-header="renderAction" >-->
-            <!--<template scope="scope">-->
-              <!--<el-button size="small" type="success" :text="imeMap[scope.row.productId]">{{$t('goodsOrderDetail.ime')}}</el-button>-->
-              <!--<el-button size="small" type="success" :text="meidMap[scope.row.productId]">{{$t('goodsOrderDetail.meid')}}</el-button>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
-        <!--<div style="width:100%;height:50px;text-align:center;font-size:20px">发货详情</div>-->
-        <!--<el-table :data="" style="margin-top:5px;" border stripe border>-->
-          <!--<el-table-column  prop="productName" :label="$t('goodsOrderDetail.productName')"    width="200"></el-table-column>-->
-          <!--<el-table-column prop="productImeIme"  :label="$t('goodsOrderDetail.productIme')"  ></el-table-column>-->
-          <!--<el-table-column prop="productImeMeid" :label="$t('goodsOrderDetail.meid')"  ></el-table-column>-->
-          <!--<el-table-column prop="createdByName" :label="$t('goodsOrderDetail.createdByName')"  ></el-table-column>-->
-          <!--<el-table-column prop="createdDate":label="$t('goodsOrderDetail.shipDate')"  ></el-table-column>-->
-        <!--</el-table>-->
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="detailVisible=false">确定</el-button>
         </div>
@@ -159,7 +138,7 @@
         this.pageLoading = true;
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
-        util.setQuery("productTypeList",submitData);
+        util.setQuery("carrierOrderList",submitData);
         axios.get('/api/ws/future/api/carrierOrder?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -189,9 +168,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/api/carrierOrder/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+            window.location.href='/api/ws/future/api/carrierOrder/export?'+qs.stringify(util.deleteExtra(this.formData))
         }).catch(()=>{});
       },carrierShip(){
         this.$router.push({ name: 'carrierOrderShip'})

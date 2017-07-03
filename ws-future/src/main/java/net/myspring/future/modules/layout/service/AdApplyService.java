@@ -119,6 +119,7 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
+        adApplyBillForm.setExpressCompanyId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_AD_EXPRESS_COMPANY_ID.name()).getValue());
         return adApplyBillForm;
     }
 

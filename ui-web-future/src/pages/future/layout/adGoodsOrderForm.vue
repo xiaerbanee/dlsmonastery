@@ -97,7 +97,7 @@
           if(!value){
             return callback(new Error('必填信息'));
           }else if(value.length != 11){
-            return callback(new Error('请输入11位手机号！'));
+            return callback(new Error('请输入11位手机号(不包含空格或-)！'));
           }else if(/[^\d]/.test(value)){
             return callback(new Error('请输入纯数字手机号!'));
           }else{
@@ -232,7 +232,7 @@
           }
         }
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if (util.contains(adGoodsOrderDetail.productName, val) && util.isBlank(adGoodsOrderDetail.qty)) {
+          if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.qty)) {
             tempList.push(adGoodsOrderDetail)
           }
         }

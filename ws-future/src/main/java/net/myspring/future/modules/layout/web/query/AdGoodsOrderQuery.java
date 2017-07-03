@@ -13,12 +13,12 @@ import java.util.List;
 
 public class AdGoodsOrderQuery extends BaseQuery {
     private String idStr;
-    private String shopAreaId;
+    private List<String> shopAreaId = new ArrayList<>();
     private String storeId;
     private String shopId;
     private String billType = BillTypeEnum.柜台.name();
     private String parentId;
-    private String processStatus;
+    private List<String> processStatus=new ArrayList<>();
     private String remarks;
     private String createdBy;
     private String createdDateRange;
@@ -32,11 +32,11 @@ public class AdGoodsOrderQuery extends BaseQuery {
         return StringUtils.getSplitList(idStr, CharConstant.COMMA);
     }
 
-    public String getShopAreaId() {
+    public List<String> getShopAreaId() {
         return shopAreaId;
     }
 
-    public void setShopAreaId(String shopAreaId) {
+    public void setShopAreaId(List<String> shopAreaId) {
         this.shopAreaId = shopAreaId;
     }
 
@@ -80,11 +80,11 @@ public class AdGoodsOrderQuery extends BaseQuery {
         this.billType = billType;
     }
 
-    public String getProcessStatus() {
+    public List<String> getProcessStatus() {
         return processStatus;
     }
 
-    public void setProcessStatus(String processStatus) {
+    public void setProcessStatus(List<String> processStatus) {
         this.processStatus = processStatus;
     }
 

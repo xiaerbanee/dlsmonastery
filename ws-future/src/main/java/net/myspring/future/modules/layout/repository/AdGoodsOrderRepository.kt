@@ -117,8 +117,8 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(adGoodsOrderQuery.parentId)) {
             sb.append("""  and t1.parent_id = :parentId """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.shopAreaId)) {
-            sb.append("""  and shop.area_id = :shopAreaId """)
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.shopAreaId)) {
+            sb.append("""  and shop.area_id in (:shopAreaId) """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderQuery.storeId)) {
             sb.append("""  and t1.store_id = :storeId """)
@@ -132,8 +132,8 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (adGoodsOrderQuery.billDateEnd != null) {
             sb.append("""  and t1.bill_date < :billDateEnd """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.processStatus)) {
-            sb.append("""  and t1.process_status = :processStatus """)
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.processStatus)) {
+            sb.append("""  and t1.process_status in (:processStatus) """)
         }
         if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList)  """)

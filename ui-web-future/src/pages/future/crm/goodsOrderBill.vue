@@ -74,7 +74,7 @@
       </el-form>
       <el-input v-model="filterValue" @change="filterProducts" :placeholder="$t('goodsOrderBill.selectTowKey')" style="width:200px;"></el-input>
       <el-table :data="filterDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderBill.loading')" stripe border>
-        <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="200"></el-table-column>
+        <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="300"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
         <el-table-column prop="allowBill" :label="$t('goodsOrderBill.allowBill')">
@@ -173,16 +173,18 @@
         })
 
       },filterProducts(){
+
+        let filterVal = _.trim(this.filterValue);
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
-          if(util.isNotBlank(detail.billQty)){
+          if(util.isNotBlank(detail.billQty) || detail.productId === this.formProperty.expressProductId){
             tempList.push(detail);
-          }else if(util.contains(detail.productName, this.filterValue) || detail.productId === this.formProperty.expressProductId){
+          }else if(util.isNotBlank(filterVal) && util.contains(detail.productName, filterVal) ){
             tempPostList.push(detail);
           }
         }
-        this.filterDetailList = tempList.concat(tempPostList);
+        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
       }
       ,initSummary(row){
         let tmpTotalBillQty = 0;

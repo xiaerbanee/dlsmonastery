@@ -373,7 +373,7 @@ public class AdGoodsOrderService {
         adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate())));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
-        adGoodsOrder.setBillAddress(StringUtils.isBlank(adGoodsOrderBillForm.getBillAddress()) ? adGoodsOrderBillForm.getExpressOrderAddress() : adGoodsOrderBillForm.getBillAddress());
+        adGoodsOrder.setBillAddress(adGoodsOrderBillForm.getBillAddress());
         if (StringUtils.isBlank(adGoodsOrder.getParentId())) {
             adGoodsOrder.setParentId(adGoodsOrder.getId());
         }

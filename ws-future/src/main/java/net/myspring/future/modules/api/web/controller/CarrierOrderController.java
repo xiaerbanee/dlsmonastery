@@ -1,16 +1,16 @@
-package net.myspring.future.modules.crm.web.controller;
+package net.myspring.future.modules.api.web.controller;
 
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.dto.CarrierOrderDto;
-import net.myspring.future.modules.crm.service.CarrierOrderService;
+import net.myspring.future.modules.api.dto.CarrierOrderDto;
+import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.service.GoodsOrderShipService;
-import net.myspring.future.modules.crm.web.form.CarrierOrderFrom;
+import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.crm.web.form.GoodsOrderShipForm;
-import net.myspring.future.modules.crm.web.query.CarrierOrderQuery;
+import net.myspring.future.modules.api.web.query.CarrierOrderQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -21,11 +21,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.servlet.ServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +61,11 @@ public class CarrierOrderController {
             GoodsOrder goodsOrder = goodsOrderService.findByBusinessId(carrierOrderDto.getBusinessId());
             if(goodsOrder==null){
                 restResponse=new RestResponse("不存在该订单",null,false);
-                return restResponse;
+            }else {
+                restResponse.getExtra().put("goodsOrderId",goodsOrder.getId());
             }
-            carrierOrderDto.setGoodsOrderId(goodsOrder.getId());
+        }else {
+            restResponse=new RestResponse("必填信息",null,false);
         }
         return restResponse;
     }
@@ -81,9 +83,9 @@ public class CarrierOrderController {
     public RestResponse save(CarrierOrderFrom carrierOrderFrom) {
         RestResponse restResponse=new RestResponse("保存成功",null);
         Map<String, Object> map =carrierOrderService.checkDetailJsons(carrierOrderFrom);
-        if (!map.isEmpty() && map.get("message") != null && StringUtils.isNotBlank(map.get("message").toString())) {
+        if (StringUtils.isNotBlank(map.get("message").toString())) {
             String message = map.get("message").toString();
-            restResponse=new RestResponse(message,null);
+            restResponse=new RestResponse(message,null,false);
         } else {
             carrierOrderService.save(carrierOrderFrom);
         }
@@ -96,7 +98,6 @@ public class CarrierOrderController {
         return new RestResponse("删除成功",null);
     }
 
-    @SuppressWarnings("unchecked")
     @PreAuthorize("hasPermission(null,'api:carrierOrder:ship')")
     public RestResponse carrierShip(String data){
         List<List<String>> datas = ObjectMapperUtils.readValue(HtmlUtils.htmlUnescape(data), ArrayList.class);

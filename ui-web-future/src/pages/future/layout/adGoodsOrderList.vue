@@ -13,7 +13,6 @@
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="12">
             <el-col :span="12">
-
               <el-form-item :label="$t('adGoodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
@@ -34,7 +33,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('adGoodsOrderList.areaName')">
-                <el-select v-model="formData.shopAreaId" clearable>
+                <el-select v-model="formData.shopAreaId" multiple filterable >
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
@@ -48,7 +47,7 @@
                 <date-range-picker v-model="formData.billDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.processStatus')">
-                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" @afterInit="setSearchText"></process-status-select>
+                <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
                 <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
@@ -130,7 +129,7 @@
         this.setSearchText();
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("adGoodsOrderList",submitData);
-        axios.get('/api/ws/future/layout/adGoodsOrder', {params:submitData}).then((response) => {
+        axios.get('/api/ws/future/layout/adGoodsOrder?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
         });

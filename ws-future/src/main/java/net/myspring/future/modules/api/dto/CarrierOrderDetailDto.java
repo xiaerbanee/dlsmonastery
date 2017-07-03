@@ -1,4 +1,4 @@
-package net.myspring.future.modules.crm.dto;
+package net.myspring.future.modules.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
