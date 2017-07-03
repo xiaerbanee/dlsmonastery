@@ -28,6 +28,7 @@
   export default {
     data(){
       return {
+        inputForm:"",
           settings:{
             colHeaders:[this.$t('carrierOrderShip.billCode'),this.$t('carrierOrderShip.shipCode')],
             rowHeaders: true,

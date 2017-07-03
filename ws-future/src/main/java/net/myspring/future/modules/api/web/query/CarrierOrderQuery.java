@@ -1,8 +1,10 @@
-package net.myspring.future.modules.crm.web.query;
+package net.myspring.future.modules.api.web.query;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -20,24 +22,24 @@ public class CarrierOrderQuery extends BaseQuery{
     private String shipDate;
     private String createdDate;
     private String remarks;
-    private String notEqualStatus;
-    private String notEqualStoreId;
+    private List<String> notEqualStatusList=Lists.newArrayList();
+    private List<String> notEqualStoreIdList=Lists.newArrayList();
     private List<String> goodsOrderStatusList=Lists.newArrayList();
 
-    public String getNotEqualStatus() {
-        return notEqualStatus;
+    public List<String> getNotEqualStatusList() {
+        return notEqualStatusList;
     }
 
-    public void setNotEqualStatus(String notEqualStatus) {
-        this.notEqualStatus = notEqualStatus;
+    public void setNotEqualStatusList(List<String> notEqualStatusList) {
+        this.notEqualStatusList = notEqualStatusList;
     }
 
-    public String getNotEqualStoreId() {
-        return notEqualStoreId;
+    public List<String> getNotEqualStoreIdList() {
+        return notEqualStoreIdList;
     }
 
-    public void setNotEqualStoreId(String notEqualStoreId) {
-        this.notEqualStoreId = notEqualStoreId;
+    public void setNotEqualStoreIdList(List<String> notEqualStoreIdList) {
+        this.notEqualStoreIdList = notEqualStoreIdList;
     }
 
     public String getRemarks() {
@@ -113,6 +115,9 @@ public class CarrierOrderQuery extends BaseQuery{
     }
 
     public List<String> getGoodsOrderStatusList() {
+        if(CollectionUtil.isEmpty(goodsOrderStatusList)){
+            goodsOrderStatusList=Lists.newArrayList((Lists.newArrayList(GoodsOrderStatusEnum.待签收.name(), GoodsOrderStatusEnum.已完成.name())));
+        }
         return goodsOrderStatusList;
     }
 

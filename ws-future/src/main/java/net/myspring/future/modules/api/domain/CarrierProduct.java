@@ -1,4 +1,4 @@
-package net.myspring.future.modules.crm.domain;
+package net.myspring.future.modules.api.domain;
 
 import net.myspring.future.common.domain.CompanyEntity;
 

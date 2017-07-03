@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.api.web.query.B2b2Query
 import net.myspring.future.modules.crm.domain.GoodsOrder
 import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,6 +27,14 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
     fun findByBusinessIdIn(businessIdList: List<String>):MutableList<GoodsOrder>
 
     fun findByBusinessId(businessId: String):GoodsOrder
+
+    fun findByIdInAndEnabledIsTrue(ids:MutableList<String>):MutableList<GoodsOrder>
+
+    @Query("""
+        update  #{#entityName} t set t.status=?1 where t.id in (?2)
+     """)
+    @Modifying
+    fun updateStatusByIdIn( status:String,ids: MutableList<String>):Int
 }
 
 interface GoodsOrderRepositoryCustom {
@@ -33,11 +44,51 @@ interface GoodsOrderRepositoryCustom {
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
 
+    fun findB2bTask(pageable: Pageable,b2b2Query: B2b2Query):Page<GoodsOrder>
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
-    override fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String> {
 
+    override fun findB2bTask(pageable: Pageable,b2b2Query: B2b2Query): Page<GoodsOrder> {
+        val sb = StringBuilder("""
+          SELECT
+        DISTINCT t2.*
+        FROM
+        api_carrier_order t1,
+        crm_goods_order t2,
+        crm_depot t3,
+        WHERE
+        t2.shop_id = t3.id
+        AND t1.goods_order_id = t2.id
+        and t1.code like CONCAT('%', 'DD', '%')
+        AND t1.enabled = 1
+        AND t2.enabled = 1
+        """)
+        if(StringUtils.isNotBlank(b2b2Query.storeId)||CollectionUtil.isNotEmpty(b2b2Query.proxyAreaIdList)){
+            sb.append(" and (")
+            if(StringUtils.isNotBlank(b2b2Query.storeId)){
+                sb.append("t2.store_id !=:storeId")
+            }
+            if(CollectionUtil.isNotEmpty(b2b2Query.proxyAreaIdList)){
+                sb.append("OR  t3.area_id in (:proxyAreaIdList)")
+            }
+            sb.append(")");
+        }
+        if(StringUtils.isNotBlank(b2b2Query.status)){
+            sb.append(" and (t1.status =:status or t1.status is null)");
+        }
+        if(b2b2Query.shipDateStart!=null){
+            sb.append(" AND t2.ship_date >=:shipDateStart");
+        }
+        if(b2b2Query.shipDateEnd!=null){
+            sb.append(" AND t2.ship_date <=:shipDateEnd");
+        }
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(b2b2Query), BeanPropertyRowMapper(GoodsOrder::class.java))
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+    }
+
+    override fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String> {
         if(CollectionUtil.isEmpty(businessIdList)){
             return ArrayList()
         }

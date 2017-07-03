@@ -1,16 +1,22 @@
-package net.myspring.future.modules.crm.dto;
+package net.myspring.future.modules.api.dto;
+
+import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDateTime;
 
 public class CarrierOrderExportDetailDto {
     private String formatId;
     private String businessId;
-    private String areaId;
-    private String shopName;
+    private String depotName;
     private String productName;
     private String ime;
+    private String areaName;
 
     public String getFormatId() {
+        if(StringUtils.isBlank(formatId)&&StringUtils.isNotBlank(businessId)){
+            this.formatId= IdUtils.getFormatId(businessId,"XK");
+        }
         return formatId;
     }
 
@@ -26,20 +32,20 @@ public class CarrierOrderExportDetailDto {
         this.businessId = businessId;
     }
 
-    public String getAreaId() {
-        return areaId;
+    public String getAreaName() {
+        return areaName;
     }
 
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getDepotName() {
+        return depotName;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setDepotName(String depotName) {
+        this.depotName = depotName;
     }
 
     public String getProductName() {
