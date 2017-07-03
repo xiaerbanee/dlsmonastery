@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CarrierOrderDetailDto {
-	private String productName;
+	private String product;
 	private Long qty;
 
-	public String getProductName() {
-		return productName;
+	public String getProduct() {
+		return product;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
 	public Long getQty() {

@@ -10,6 +10,15 @@ public class CarrierOrderFrom extends BaseForm<CarrierOrder>{
     private String detailJson;
     private String businessId;
     private String formatId;
+    private boolean checkColor=false;
+
+    public boolean getCheckColor() {
+        return checkColor;
+    }
+
+    public void setCheckColor(boolean checkColor) {
+        this.checkColor = checkColor;
+    }
 
     public String getFormatId() {
         if(StringUtils.isBlank(formatId)&&StringUtils.isNotBlank(businessId)){

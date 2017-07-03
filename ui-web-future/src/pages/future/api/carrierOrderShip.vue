@@ -27,9 +27,43 @@
   var table = null;
   export default {
     data(){
-      return {
-        inputForm:{},
-        submitDisabled:false,
+      return this.getData()
+    },mounted () {
+      table = new Handsontable(this.$refs["handsontable"], this.settings);
+    },
+    methods:{
+      formSubmit(){
+        var that=this;
+        this.inputForm.data =new Array();
+        let list=table.getData();
+        for(var item in list){
+          if(!table.isEmptyRow(item)){
+            this.inputForm.data.push(list[item]);
+          }
+        }
+        this.inputForm.data = JSON.stringify(this.inputForm.data);
+        axios.post('/api/ws/future/api/carrierOrder/ship',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+          if(response.data.success){
+            this.$message(response.data.message);
+            if (this.isCreate) {
+              Object.assign(this.$data,this.getData());
+              this.initPage();
+            }else {
+              this.$router.push({name: 'carrierOrderList', query: util.getQuery("carrierOrderList"),params:{_closeFrom:true}})
+            }
+          }else {
+            that.submitDisabled = false;
+            this.$message({
+              showClose: true,
+              message: response.data.message,
+              type: 'error'
+            });
+          }
+        });
+      },getData(){
+        return {
+          inputForm:{},
+          submitDisabled:false,
           settings:{
             colHeaders:[this.$t('carrierOrderShip.billCode'),this.$t('carrierOrderShip.shipCode')],
             rowHeaders: true,
@@ -43,12 +77,8 @@
               }
             ]
           }
+        }
       }
-    },mounted () {
-      table = new Handsontable(this.$refs["handsontable"], this.settings);
-    },
-    methods:{
-
     }
   }
 </script>
