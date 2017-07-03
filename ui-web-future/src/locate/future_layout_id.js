@@ -613,7 +613,9 @@ export default {
     save: "simpan",
     filter: "saring",
     prerequisiteMessage: "Informasi yang diperlukan",
-    inputLegalValue: "silahkan masukkan angka yang valid"
+    inputLegalValue: "silahkan masukkan angka yang valid",
+    monthSaleQty: "门店近三个月销量",
+    investInCause:"投入理由",
   },
   shopBuildList: {
     shopBuildList: "konstruksi toko",
