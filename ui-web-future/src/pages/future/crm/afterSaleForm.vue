@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleForm.afterSaleForm') "></head-tab>
+    <head-tab active="afterSaleForm"></head-tab>
     <div class="form input-form ">
       <el-row class="button">
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleForm.save')}}</el-button>
@@ -22,51 +22,54 @@
         </div>
       </el-dialog>
       <el-alert :title="$t('afterSaleForm.alertSearchAfterSaleIme')" type="error"  :closable="false" v-if="formData.imeStr =='' "></el-alert>
+      <el-alert :title="message" type="error"  :closable="false" v-if="message !==''"></el-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px">
+        <el-row>
+          <el-col :span="24">
         <el-form-item></el-form-item>
         <el-form-item :label="$t('afterSaleForm.toStoreDate')" prop="toStoreDate">
-          <el-date-picker v-model="inputForm.toStoreDate" type="date" :placeholder="$t('afterSaleForm.selectDateRange')" ></el-date-picker>
+          <date-picker v-model="inputForm.toStoreDate"></date-picker>
         </el-form-item>
-        <el-row :gutter="24">
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
-            <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+            <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
           </el-col>
         </el-row>
       </el-form>
-
     </div>
   </div>
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-
+  var table = null;
   export default{
     data(){
       return{
         searchText:"",
+        message:"",
         submitDisabled:false,
         formData:{ imeStr:''},
         inputForm:{
-          data:"",
-          toStoreDate:util.currentDate()
+          data:null,
+          toStoreDate:"",
         },
         formLabelWidth: '120px',
         formVisible: false,
         rules:{},
         autosize: { minRows: 5},
 
-        table:null,
         settings: {
           data:{},
-          colHeaders: [this.$t('afterSaleForm.badProductIme'),this.$t('afterSaleForm.badProductName'),this.$t('afterSaleForm.saleShopName'),this.$t('afterSaleForm.toAreaProductIme'),this.$t('afterSaleForm.areaDepot'),this.$t('afterSaleForm.packageStatus'),this.$t('afterSaleForm.toStoreType'),this.$t('afterSaleForm.memory'),this.$t('afterSaleForm.toStoreTypeRemarks')],
+          colHeaders: ["坏机串码","坏机型号","核销门店","替换串码","替换机型","地区","包装","退机类型","内存","退机备注"],
           rowHeaders:true,
           maxRows:1000,
           columns: [
             {data: "ime",strict:true, readOnly: true,width:120},
-            {data: "product.name",strict:true, readOnly: true,width:120},
-            {data: "retailShop.name",strict:true, readOnly: true,width:120},
-            {type: "autocomplete",strict:true, allowEmpty:true,
-              goodStoreId:[],
+            {data: "productName",strict:true, readOnly: true,width:120},
+            {data: "retailShopName",strict:true, readOnly: true,width:120},
+            {data:"toAreaProductIme",type: "autocomplete",strict:true, allowEmpty:true,
               imes:[],
               source:function (query, process) {
                 var that = this;
@@ -74,8 +77,9 @@
                   process(that.imes);
                 } else {
                   var imeList = new Array();
-                  if(query.length>=2) {
-                    axios.get('/api/crm/productIme/searchByStore?depotId='+that.goodStoreId+'&ime='+query).then((response)=>{
+                  if(query.length>=6) {
+                    axios.get('/api/ws/future/crm/productIme/search?productIme='+query).then((response)=>{
+                      console.log(response.data)
                       if(response.data.length>0) {
                       for(var index in response.data) {
                         var ime = response.data[index].ime;
@@ -91,84 +95,93 @@
                     process(imeList);
                   }
                 }
-              } ,width:150},
-            {type: "autocomplete",strict:true,
-              tempShopNames:[],
-              source:function (query, process) {
+              } , width:150},
+            {data:"toAreaProductName",strict:true, width:150},
+            {data:"areaDepot",type: "autocomplete",strict:true,
+              tempShopNames: [],
+              source: function (query, process) {
                 var that = this;
-                if(that.tempShopNames.indexOf(query)>=0) {
+                if (that.tempShopNames.indexOf(query) >= 0) {
                   process(that.tempShopNames);
                 } else {
                   var shopNames = new Array();
-                  if(query.length>=2) {
-                    axios.get('/api/crm/depot/shop?name='+query).then((response)=>{
-                      if(response.data.length>0) {
-                      for(var index in response.data) {
-                        var shopName = response.data[index].name;
-                        shopNames.push(shopName);
-                        if(that.tempShopNames.indexOf(shopName)<0) {
-                          that.tempShopNames.push(shopName);
+                  if (query.length >= 1) {
+                    axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                      if (response.data.length > 0) {
+                        for (var index in response.data) {
+                          var shopName = response.data[index].name;
+                          shopNames.push(shopName);
+                          if (that.tempShopNames.indexOf(shopName) < 0) {
+                            that.tempShopNames.push(shopName);
+                          }
                         }
                       }
-                    }
-                    process(shopNames);
-                  });
+                      process(shopNames);
+                    });
                   } else {
                     process(shopNames);
                   }
                 }
-              },width:150
-            },
-            {type: "autocomplete",strict:true,width:150},
-            {type: "autocomplete",strict:true,width:150},
-            {type: "autocomplete",strict:true,width:100},
+              },width:150},
+            {data:"packageStatus",type: "autocomplete",strict:true,width:150},
+            {data:"toStoreType",type: "autocomplete",strict:true,width:100},
+            {data:"memory",type: "autocomplete",strict:true,width:100},
             {data: "remarks",width:150}
           ]
         },
       }
     }, mounted () {
-      axios.get("/api/crm/afterSale/getFormProperty").then((response)=>{
-        this.settings.columns[5].source=response.data.packageStatus;
-        this.settings.columns[6].source=response.data.toStoreType
-        this.settings.columns[7].source=response.data.memory;
-        this.settings.columns[3].goodStoreId=response.data.goodStoreId;
-        this.inputForm.toStoreDate=response.data.toStoreDate;
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      let categoryList=new Array();
+      categoryList.push("退机类型")
+      categoryList.push("内存")
+      categoryList.push("包装")
+      axios.get('/api/basic/sys/dictEnum/findByCategoryList',{params:{categoryList:categoryList}}).then((response)=> {
+        this.settings.columns[6].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
+        this.settings.columns[7].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
+        this.settings.columns[8].source=util.getLabelList(response.data.MEMORY,'value');
+        this.inputForm.toStoreDate=util.currentDate();
+        table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },
-    methods:{
-      formSubmit(){
+    methods: {
+      formSubmit() {
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.data =new Array();
-            let list=this.table.getData();
-            for(var item in list){
-              if(!this.table.isEmptyRow(item)){
+            this.inputForm.data = new Array();
+            let list = table.getData();
+            for (var item in list) {
+              if (!table.isEmptyRow(item)) {
                 this.inputForm.data.push(list[item]);
               }
             }
             this.inputForm.data = JSON.stringify(this.inputForm.data);
-            this.inputForm.toStoreDate=util.formatLocalDate(this.inputForm.toStoreDate)
-            axios.post('/api/crm/afterSale/save',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+            console.log(this.inputForm.data)
+            axios.post('/api/ws/future/crm/afterSale/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-            if(this.isCreate){
-              this.table.loadData(null);
+              if (response.data.success) {
+                Object.assign(this.$data, this.getData());
+              }
               this.submitDisabled = false;
-            } else {
-               this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
-            }
-          });
-          }else{
+              if (this.isCreate) {
+                this.submitDisabled = false;
+              } else {
+                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+              }
+            });
+          } else {
             this.submitDisabled = false;
-      }
-      })
-      },getImeStr(imeStr){
+          }
+        })
+      }, getImeStr(imeStr) {
         this.formVisible = false;
-        axios.get("/api/crm/afterSale/formData",{params:{imeStr:imeStr}}).then((response)=>{
-          this.settings.data=response.data.list;
-          this.table.loadData(this.settings.data);
+        axios.get("/api/ws/future/crm/afterSale/formData", {params: {imeStr: imeStr}}).then((response) => {
+          this.settings.data = response.data.list;
+          table.loadData(this.settings.data);
+          if (response.data.message != "") {
+            this.message = response.data.message
+          }
         })
       }
     }

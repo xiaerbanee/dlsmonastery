@@ -264,7 +264,15 @@ util.getComponentValueLabel = function (component){
   }
   let value = null;
   if(component.$options.componentName === "ElSelect") {
-    value = component.selectedLabel;
+
+    if(component.multiple){
+      value="";
+      component.selected.forEach(function(item){
+        value += `${item.label} `;
+      })
+    }else{
+      value = component.selectedLabel;
+    }
   }else if(component.$options.componentName === "ElDatePicker"){
     value = component.value;
   }else if(component.$options.componentName === "ElInput"){
@@ -281,6 +289,7 @@ util.getComponentValueLabel = function (component){
 util.getSearchText = function (root){
   let formItems = [];
   util.getFormItems(root, formItems);
+  console.log('formItems:',formItems);
   let tmp = [];
   for(let item of formItems){
     let eachValueLabel = util.getComponentValueLabel(item);

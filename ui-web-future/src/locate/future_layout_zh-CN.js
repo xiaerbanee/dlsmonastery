@@ -211,6 +211,7 @@ export default {
     print:"打印",
     export:"导出",
     itemDetailList:"详细",
+    hasDeposit:"有无押金",
   },
   adGoodsOrderDetailList: {
     adGoodsOrderDetailList: "订货详细",
@@ -859,7 +860,7 @@ export default {
   },
   shopPrintForm: {
     shopPrintForm: "广告印刷编辑",
-    officeName: "所属机构",
+    officeName: "办事处",
     officeId: "所属机构",
     printType: "印刷类型",
     printTypeContent:"印刷规格说明",
