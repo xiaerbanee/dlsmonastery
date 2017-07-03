@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.util.*
 
 
-interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,AfterSaleRepositoryDetailCustom {
+interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,AfterSaleDetailRepositoryCustom {
 
     fun findByAfterSaleIdInAndType(afterSaleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetail>
 
@@ -25,13 +25,13 @@ interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,Af
     fun findByEnabledIsTrueAndAfterSaleId(afterSaleId: String): MutableList<AfterSaleDetail>
 }
 
-interface AfterSaleRepositoryDetailCustom{
+interface AfterSaleDetailRepositoryCustom{
 
     fun findDtoByAfterSaleIdInAndType(saleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetailDto>
 
 }
 
-class AfterSaleDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryDetailCustom {
+class AfterSaleDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleDetailRepositoryCustom {
     override fun findDtoByAfterSaleIdInAndType(afterSaleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetailDto> {
         val sb = StringBuilder()
         sb.append("""
