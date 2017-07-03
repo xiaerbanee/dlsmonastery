@@ -154,18 +154,21 @@ public class ShopBuildService {
         Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "地区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "店名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "fixtureType", "装修类别"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "装修规格说明"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "oldContents", "原始尺寸"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "newContents", "最新尺寸"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "最后修改人"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "最后修改时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "accountNameAndAccountPhone", "项目对接人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
 
         List<ShopBuildDto> shopBuildList = findPage(new PageRequest(0,10000),shopBuildQuery).getContent();
+        cacheUtils.initCacheInput(shopBuildList);
         cacheUtils.initCacheInput(shopBuildList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);

@@ -35,12 +35,21 @@ public class ShopBuild extends CompanyEntity<ShopBuild> {
     private String oldContents;
     private String newContents;
     private Boolean isUrgent;
+    private String investInCause;
 
     private String expressCompanyId;
     private String processTypeId;
     private String processFlowId;
 
     private String processPositionId;
+
+    public String getInvestInCause() {
+        return investInCause;
+    }
+
+    public void setInvestInCause(String investInCause) {
+        this.investInCause = investInCause;
+    }
 
     public String getProcessPositionId() {
         return processPositionId;
