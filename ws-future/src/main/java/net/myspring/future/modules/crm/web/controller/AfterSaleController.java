@@ -3,12 +3,16 @@ package net.myspring.future.modules.crm.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
+import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
@@ -20,6 +24,7 @@ import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.service.AfterSaleService;
 import net.myspring.future.modules.crm.service.ProductImeService;
+import net.myspring.future.modules.crm.web.form.AfterSaleForm;
 import net.myspring.future.modules.crm.web.form.AfterSaleToCompanyForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -51,6 +56,8 @@ public class AfterSaleController {
     private ProductService productService;
     @Autowired
     private ProductImeService productImeService;
+    @Autowired
+    private DictEnumClient dictEnumClient;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AfterSaleDto> list(Pageable pageable,AfterSaleQuery afterSaleQuery) {
@@ -58,8 +65,18 @@ public class AfterSaleController {
         return page;
     }
 
+    @RequestMapping(value="getQuery")
+    public  AfterSaleQuery getQuery(AfterSaleQuery afterSaleQuery){
+        return afterSaleQuery;
+    }
+
+    @RequestMapping(value="getForm")
+    public AfterSaleForm getForm(AfterSaleForm afterSaleForm){
+        return afterSaleForm;
+    }
+
     @RequestMapping(value = "formData", method = RequestMethod.GET)
-    public String formData(String imeStr) {
+    public Map<String, Object> formData(String imeStr) {
         List<ProductIme> list = Lists.newArrayList();
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
@@ -80,11 +97,11 @@ public class AfterSaleController {
         Map<String,Object> map=Maps.newHashMap();
         map.put("list",list);
         map.put("message",stringBuilder);
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value = "editFormData", method = RequestMethod.GET)
-    public String editFormData(String imeStr) {
+    public Map<String, Object> editFormData(String imeStr) {
         List<AfterSale> list = Lists.newArrayList();
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
@@ -105,7 +122,7 @@ public class AfterSaleController {
         Map<String,Object> map=Maps.newHashMap();
         map.put("list",list);
         map.put("message",stringBuilder);
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
     @RequestMapping(value="searchImeMap" ,method=RequestMethod.GET)

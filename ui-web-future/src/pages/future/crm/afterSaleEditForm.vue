@@ -1,61 +1,66 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleEditForm.afterSaleEditForm')"></head-tab>
-    <div>
+    <head-tab active="afterSaleEditForm"></head-tab>
+    <div class="form input-form ">
       <el-row class="button">
-        <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleEditForm.save')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleEditForm.filter')}}</el-button>
+        <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleForm.save')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleForm.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleEditForm.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <el-dialog :title="$t('afterSaleForm.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="this.$t('afterSaleEditForm.ime')" >
+              <el-form-item :label="this.$t('afterSaleForm.ime')" >
                 <el-input type="textarea" v-model="formData.imeStr" :autosize="autosize" auto-complete="off" ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="getImeStr(formData.imeStr)">{{$t('afterSaleEditForm.sure')}}</el-button>
+          <el-button type="primary" @click="getImeStr(formData.imeStr)">{{$t('afterSaleForm.sure')}}</el-button>
         </div>
       </el-dialog>
-      <el-alert :title="$t('afterSaleEditForm.alertSearchAfterSaleIme')" type="error"  :closable="false" v-if="formData.imeStr =='' "></el-alert>
-      <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
+      <el-alert :title="$t('afterSaleForm.alertSearchAfterSaleIme')" type="error"  :closable="false" v-if="formData.imeStr =='' "></el-alert>
+      <el-alert :title="message" type="error"  :closable="false" v-if="message !==''"></el-alert>
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px">
+        <el-row>
+          <el-col :span="24">
+            <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
+          </el-col>
+        </el-row>
+      </el-form>
     </div>
   </div>
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-
+  var table = null;
   export default{
     data(){
       return{
         searchText:"",
+        message:"",
         submitDisabled:false,
-        formData:{
-          imeStr:''
-        },
+        formData:{ imeStr:''},
         inputForm:{
-          data:"",
+          data:null,
         },
         formLabelWidth: '120px',
         formVisible: false,
         rules:{},
         autosize: { minRows: 5},
-        table:null,
+
         settings: {
           data:{},
-          colHeaders: [this.$t('afterSaleEditForm.badProductIme'),this.$t('afterSaleEditForm.badProductName'),this.$t('afterSaleEditForm.saleShopName'),this.$t('afterSaleEditForm.toAreaProductIme'),this.$t('afterSaleEditForm.areaDepot'),this.$t('afterSaleEditForm.packageStatus'),this.$t('afterSaleEditForm.toStoreType'),this.$t('afterSaleEditForm.memory'),this.$t('afterSaleEditForm.fromCompanyProduct'),this.$t('afterSaleEditForm.toStoreTypeRemarks')],
+          colHeaders: ["坏机串码","坏机型号","核销门店","替换串码","替换机型","地区","包装","退机类型","内存","工厂返回","退机备注"],
           rowHeaders:true,
           maxRows:1000,
           columns: [
-            {data: "badProductIme.ime",strict:true, readOnly: true,width:120},
-            {data: "badProductIme.product.name",strict:true, readOnly: true,width:120},
-            {data: "badProductIme.retailShop.name",strict:true, readOnly: true,width:120},
-            {data: "toAreaProductIme.ime",type: "autocomplete",strict:true, allowEmpty:true,
-              goodStoreId:[],
+            {data: "ime",strict:true, readOnly: true,width:120},
+            {data: "productName",strict:true, readOnly: true,width:120},
+            {data: "retailShopName",strict:true, readOnly: true,width:120},
+            {data:"toAreaProductIme",type: "autocomplete",strict:true, allowEmpty:true,
               imes:[],
               source:function (query, process) {
                 var that = this;
@@ -63,121 +68,144 @@
                   process(that.imes);
                 } else {
                   var imeList = new Array();
-                  if(query.length>=2) {
-                    axios.get('/api/crm/productIme/searchByStore?depotId='+that.goodStoreId+'&ime='+query).then((response)=>{
+                  if(query.length>=6) {
+                    axios.get('/api/ws/future/crm/productIme/search?productIme='+query).then((response)=>{
+                      console.log(response.data)
                       if(response.data.length>0) {
-                      for(var index in response.data) {
-                        var ime = response.data[index].ime;
-                        imeList.push(ime);
-                        if(that.imes.indexOf(ime)<0) {
-                          that.imes.push(ime);
+                        for(var index in response.data) {
+                          var ime = response.data[index].ime;
+                          imeList.push(ime);
+                          if(that.imes.indexOf(ime)<0) {
+                            that.imes.push(ime);
+                          }
                         }
                       }
-                    }
-                    process(imeList);
-                  });
+                      process(imeList);
+                    });
                   } else {
                     process(imeList);
                   }
                 }
-              } ,width:150},
-            {data: "areaDepot.name",type: "autocomplete",strict:true,
-              tempShopNames:[],
-              source:function (query, process) {
+              } , width:150},
+            {data:"toAreaProductName",strict:true, width:150},
+            {data:"areaDepot",type: "autocomplete",strict:true,
+              tempShopNames: [],
+              source: function (query, process) {
                 var that = this;
-                if(that.tempShopNames.indexOf(query)>=0) {
+                if (that.tempShopNames.indexOf(query) >= 0) {
                   process(that.tempShopNames);
                 } else {
                   var shopNames = new Array();
-                  if(query.length>=2) {
-                    axios.get('/api/crm/depot/shop?name='+query).then((response)=>{
-                      if(response.data.length>0) {
-                      for(var index in response.data) {
-                        var shopName = response.data[index].name;
-                        shopNames.push(shopName);
-                        if(that.tempShopNames.indexOf(shopName)<0) {
-                          that.tempShopNames.push(shopName);
+                  if (query.length >= 1) {
+                    axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
+                      if (response.data.length > 0) {
+                        for (var index in response.data) {
+                          var shopName = response.data[index].name;
+                          shopNames.push(shopName);
+                          if (that.tempShopNames.indexOf(shopName) < 0) {
+                            that.tempShopNames.push(shopName);
+                          }
                         }
                       }
-                    }
-                    process(shopNames);
-                  });
+                      process(shopNames);
+                    });
                   } else {
                     process(shopNames);
                   }
                 }
-              },width:150
-            },
-            {data: "packageStatus",type: "autocomplete",strict:true,width:150},
-            {data: "toStoreType",type: "autocomplete",strict:true,width:150},
-            {data: "memory",type: "autocomplete",strict:true,width:100},
-            {data: "fromCompanyProduct.name",type: "autocomplete",strict:true,
-            productNames:[],
-            source:function (query, process) {
-              var that = this;
-              if(that.productNames.indexOf(query)>=0) {
-                process(that.productNames);
-              } else {
-                var names = new Array();
-                if(query.length>=2) {
-                  axios.get('/api/crm/product/search?name='+query).then((response)=>{
-                    if(response.data.length>0) {
-                    for(var index in response.data) {
-                      var name = response.data[index].name;
-                      names.push(name);
-                      if(that.productNames.indexOf(name)<0) {
-                        that.productNames.push(name);
-                      }
-                    }
-                  }
-                  process(names);
-                });
+              },width:150},
+            {data:"packageStatus",type: "autocomplete",strict:true,width:150},
+            {data:"toStoreType",type: "autocomplete",strict:true,width:100},
+            {data:"memory",type: "autocomplete",strict:true,width:100},
+            {
+              data: "fromCompanyProductName",
+              type: "autocomplete",
+              tempProductNames:[],
+              source:function (query, process) {
+                var that = this;
+                if(that.tempProductNames.indexOf(query)>=0) {
+                  process(that.tempProductNames);
                 } else {
-                  process(names);
+                  var productNames = new Array();
+                  if(query.length>=2) {
+                    axios.get('/api/ws/future/basic/product/filter?ids='+ids).then((response)=>{
+                      if(response.data.length>0) {
+                        for(var index in response.data) {
+                          var productName = response.data[index].name;
+                          productNames.push(productName);
+                          if(that.tempProductNames.indexOf(productName)<0) {
+                            that.tempProductNames.push(productName);
+                          }
+                        }
+                      }
+                      process(productNames);
+                    });
+                  } else {
+                    process(productNames);
+                  }
                 }
-              }
-            },width:150},
-            {data: "remarks",strict:true,width:100},
+              },
+              width:150
+            },
+            {data: "remarks",width:150}
           ]
         },
       }
     }, mounted () {
-      axios.get("/api/crm/afterSale/getFormProperty").then((response)=>{
-        this.settings.columns[5].source=response.data.packageStatus;
-        this.settings.columns[6].source=response.data.toStoreType
-        this.settings.columns[7].source=response.data.memory;
-        this.settings.columns[3].goodStoreId=response.data.goodStoreId;
-        this.inputForm.toStoreDate=response.data.toStoreDate;
-        this.table = new Handsontable(this.$refs["handsontable"], this.settings)
+      let categoryList=new Array();
+      categoryList.push("退机类型")
+      categoryList.push("内存")
+      categoryList.push("包装")
+      axios.get('/api/basic/sys/dictEnum/findByCategoryList',{params:{categoryList:categoryList}}).then((response)=> {
+        this.settings.columns[6].source=util.getLabelList(response.data.PACKAGES_STATUS,'value');
+        this.settings.columns[7].source=util.getLabelList(response.data.TOS_TORE_TYPE,'value');
+        this.settings.columns[8].source=util.getLabelList(response.data.MEMORY,'value');
+        table = new Handsontable(this.$refs["handsontable"], this.settings)
       })
     },
-    methods:{
-      formSubmit(){
-          this.inputForm.data =new Array();
-          let list=this.table.getData();
-          for(var item in list){
-            if(!this.table.isEmptyRow(item)){
-              this.inputForm.data.push(list[item]);
+    methods: {
+      formSubmit() {
+        this.submitDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.inputForm.data = new Array();
+            let list = table.getData();
+            for (var item in list) {
+              if (!table.isEmptyRow(item)) {
+                this.inputForm.data.push(list[item]);
+              }
             }
-          }
-          this.inputForm.data = JSON.stringify(this.inputForm.data);
-          axios.post('/api/crm/afterSale/update',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
-            this.$message(response.data.message);
-          if(this.isCreate){
-            this.table.loadData(null);
-            this.submitDisabled = false;
+            this.inputForm.data = JSON.stringify(this.inputForm.data);
+            console.log(this.inputForm.data)
+            axios.post('/api/ws/future/crm/afterSale/update', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
+              this.$message(response.data.message);
+              if (response.data.success) {
+                Object.assign(this.$data, this.getData());
+              }
+              this.submitDisabled = false;
+              if (this.isCreate) {
+                this.submitDisabled = false;
+              } else {
+                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+              }
+            });
           } else {
-             this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList")})
+            this.submitDisabled = false;
           }
-        });
-      },getImeStr(imeStr){
+        })
+      }, getImeStr(imeStr) {
         this.formVisible = false;
-        axios.get("/api/crm/afterSale/editFormData",{params:{imeStr:imeStr}}).then((response)=>{
-          this.settings.data=response.data.list;
-          this.table.loadData(this.settings.data);
+        axios.get("/api/ws/future/crm/afterSale/editFormData", {params: {imeStr: imeStr}}).then((response) => {
+          console.log(response.data);
+          this.settings.data = response.data.list;
+          table.loadData(this.settings.data);
+          if (response.data.message != "") {
+            this.message = response.data.message
+          }
         })
       }
-    },
+    }
   }
 </script>
 <style>

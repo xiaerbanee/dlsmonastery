@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 import static net.myspring.util.excel.ExcelUtils.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyAnnualService {
 
     @Autowired
@@ -81,7 +81,7 @@ public class DutyAnnualService {
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"年假导入模版"+ UUID.randomUUID()+".xlsx",simpleExcelSheet);
         return simpleExcelBook;
     }
-
+    @Transactional
     public void save(String folderFileId, String annualYear, String remarks){
         FolderFileFeignDto folderFileFeignDto=folderFileClient.findById(folderFileId);
         Workbook workbook= ExcelUtils.getWorkbook(new File(folderFileFeignDto.getUploadPath(RequestUtils.getCompanyName())));

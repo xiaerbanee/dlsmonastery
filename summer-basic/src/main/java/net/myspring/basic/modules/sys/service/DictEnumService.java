@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DictEnumService {
     @Autowired
     private DictEnumRepository dictEnumRepository;
@@ -67,6 +67,7 @@ public class DictEnumService {
         }
     }
 
+    @Transactional
     public DictEnum save(DictEnumForm dictEnumForm) {
         DictEnum dictEnum;
         if(dictEnumForm.isCreate()) {
@@ -80,6 +81,7 @@ public class DictEnumService {
         return dictEnum;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dictEnumRepository.logicDelete(id);
     }

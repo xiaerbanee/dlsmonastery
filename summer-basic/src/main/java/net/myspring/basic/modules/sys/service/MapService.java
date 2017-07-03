@@ -21,7 +21,7 @@ import java.util.List;
  * Created by liuj on 2017-03-02.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class MapService {
 
     @Value("${weixin.app.name}")

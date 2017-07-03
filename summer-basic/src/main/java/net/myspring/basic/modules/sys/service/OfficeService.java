@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class OfficeService {
 
     @Autowired
@@ -223,6 +223,7 @@ public class OfficeService {
         return new RestResponse("验证成功", null);
     }
 
+    @Transactional
     public Office save(OfficeForm officeForm) {
         Office office;
         if(StringUtils.isNotBlank(officeForm.getParentId())&&OfficeTypeEnum.业务部门.name().equals(officeForm.getType())){
@@ -293,6 +294,7 @@ public class OfficeService {
         return office;
     }
 
+    @Transactional
     public void logicDelete(OfficeForm officeForm) {
         Office office=officeRepository.findOne(officeForm.getId());
         office.setName(office.getName()+"废弃"+ LocalDate.now());

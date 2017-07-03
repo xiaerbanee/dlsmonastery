@@ -7,4 +7,4 @@ summer-*/build/
 /classes/
 .gradle/
 /summer.iml
-*.log
+/**/*.log

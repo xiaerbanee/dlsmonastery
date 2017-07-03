@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DictMapService {
 
     @Autowired
@@ -46,6 +46,7 @@ public class DictMapService {
         return dictMapDtoPage;
     }
 
+    @Transactional
     public DictMap save(DictMapForm dictMapForm) {
         DictMap dictMap;
         if (StringUtils.isBlank(dictMapForm.getId())) {
@@ -68,6 +69,7 @@ public class DictMapService {
         return map;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dictMapRepository.logicDelete(id);
     }

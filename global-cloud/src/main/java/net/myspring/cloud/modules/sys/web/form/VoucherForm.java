@@ -13,16 +13,16 @@ import java.util.List;
  * Created by lihx on 2017/4/12.
  */
 public class VoucherForm extends BaseForm<Voucher> {
-    private LocalDate billDate;
+    private LocalDate FDate;
     private String json;
 
 
-    public LocalDate getBillDate() {
-        return billDate;
+    public LocalDate getFDate() {
+        return FDate;
     }
 
-    public void setBillDate(LocalDate billDate) {
-        this.billDate = billDate;
+    public void setFDate(LocalDate FDate) {
+        this.FDate = FDate;
     }
 
     public String getJson() {
