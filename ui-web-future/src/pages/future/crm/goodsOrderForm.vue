@@ -49,10 +49,10 @@
           </el-col>
         </el-row>
       </el-form>
-      <div v-show="inputForm.shopId">
+      <div v-show="inputForm.shopId && inputForm.netType && inputForm.shipType">
         <el-input v-model="filterValue" @input="filterProducts" :placeholder="$t('shopAllotForm.selectTowKey')" style="width:200px;"></el-input>
         <el-table :data="filterDetailList" border stripe v-loading="pageLoading" style="margin-top:10px;">
-          <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" ></el-table-column>
+          <el-table-column  prop = "productName" :label="$t('goodsOrderForm.productName')" width="300"></el-table-column>
           <el-table-column prop="hasIme" :label="$t('goodsOrderForm.hasIme')" width="70">
             <template scope="scope">
               <el-tag   :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
@@ -138,19 +138,19 @@
           this.filterDetailList = [];
           return;
         }
-        let val=this.filterValue;
+
+        let filterVal = _.trim(this.filterValue);
         let tempList=[];
+        let tempPostList=[];
         for(let goodsOrderDetail of this.goodsOrderDetailList){
           if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
+          }else if(util.isNotBlank(filterVal) && util.contains(goodsOrderDetail.productName, filterVal)){
+            tempPostList.push(goodsOrderDetail);
           }
         }
-        for(let goodsOrderDetail of this.goodsOrderDetailList){
-          if(util.contains(goodsOrderDetail.productName, val) && util.isBlank(goodsOrderDetail.qty)){
-            tempList.push(goodsOrderDetail);
-          }
-        }
-        this.filterDetailList = tempList;
+        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
+
       },shopChange(){
           if(this.isCreate && util.isNotBlank(this.inputForm.shopId)){
             axios.get('/api/ws/future/crm/goodsOrder/validateShop',{params: {shopId:this.inputForm.shopId}}).then((response)=>{
