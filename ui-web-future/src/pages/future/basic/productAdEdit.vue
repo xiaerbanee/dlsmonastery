@@ -53,7 +53,6 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   import boolSelect from 'components/common/bool-select'
   import productTypeSelect from 'components/future/product-type-select'
   var table = null;
@@ -148,7 +147,4 @@
   };
 </script>
 
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 

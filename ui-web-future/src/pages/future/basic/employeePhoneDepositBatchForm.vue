@@ -16,7 +16,6 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table=null
     export default{
       data(){
@@ -174,6 +173,3 @@
     }
   }
 </script>
-<style>
-  @import "../../../../node_modules/handsontable/dist/handsontable.full.css";
-</style>

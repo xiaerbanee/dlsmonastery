@@ -39,12 +39,7 @@
     </div>
   </div>
 </template>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-
-</style>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   import ElCol from "element-ui/packages/col/src/col";
   import util from "../../../utils/util";
   var table = null;

@@ -23,8 +23,7 @@
     </div>
   </div>
 </template>
-<script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js';
+<script>;
   import suAlert from 'components/common/su-alert'
   let table = null;
   export default {
@@ -182,9 +181,6 @@
     }
   }
 </script>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 <style>
   .outer{
     width: 90%;

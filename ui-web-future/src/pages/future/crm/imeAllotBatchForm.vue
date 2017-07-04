@@ -41,11 +41,7 @@
     </div>
   </div>
 </template>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   import suAlert from 'components/common/su-alert'
   var table = null;
   export default{
