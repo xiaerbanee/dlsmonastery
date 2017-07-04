@@ -14,7 +14,8 @@ import java.util.*
 @Component
 class SalOutStockRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findByPeriodForTotalDepartment(year:Integer, month:Integer): MutableList<RetailAccountDto>?{
+    fun findByPeriodForTotalDepartment(year:Int, month:Int): MutableList<RetailAccountDto>?{
+
         return namedParameterJdbcTemplate.query("""
         SELECT
             year(b.FDATE) AS YEAR,
@@ -40,7 +41,7 @@ class SalOutStockRepository @Autowired constructor(val namedParameterJdbcTemplat
         """,Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findBySumPeriodForTotalDepartment(dateStart:Integer, dateEnd:Integer): MutableList<RetailAccountDto>?{
+    fun findBySumPeriodForTotalDepartment(dateStart:Int, dateEnd:Int): MutableList<RetailAccountDto>?{
         return namedParameterJdbcTemplate.query("""
         SELECT
             '销售出库单' AS fyName,
@@ -60,7 +61,7 @@ class SalOutStockRepository @Autowired constructor(val namedParameterJdbcTemplat
         """,Collections.singletonMap("dateStart",dateStart),BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findByPeriod(year:Integer, month:Integer): MutableList<RetailAccountDto>?{
+    fun findByPeriod(year:Int, month:Int): MutableList<RetailAccountDto>?{
         return namedParameterJdbcTemplate.query("""
         SELECT
             year(b.FDATE) AS YEAR,
@@ -97,7 +98,7 @@ class SalOutStockRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findBySumPeriod(dateStart:Integer, dateEnd:Integer): MutableList<RetailAccountDto>?{
+    fun findBySumPeriod(dateStart:Int, dateEnd:Int): MutableList<RetailAccountDto>?{
         return namedParameterJdbcTemplate.query("""
         SELECT
             '销售出库单' AS fyName,

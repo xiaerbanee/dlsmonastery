@@ -27,7 +27,7 @@ interface AfterSaleDetailRepository : BaseRepository<AfterSaleDetail, String>,Af
 
 interface AfterSaleDetailRepositoryCustom{
 
-    fun findDtoByAfterSaleIdInAndType(saleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetailDto>
+    fun findDtoByAfterSaleIdInAndType(afterSaleIdList: MutableList<String>,type:String): MutableList<AfterSaleDetailDto>
 
 }
 
