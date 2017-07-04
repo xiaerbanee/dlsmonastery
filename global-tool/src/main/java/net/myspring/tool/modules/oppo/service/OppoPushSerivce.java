@@ -33,7 +33,7 @@ import java.util.*;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = false)
 public class OppoPushSerivce {
 
     @Autowired
