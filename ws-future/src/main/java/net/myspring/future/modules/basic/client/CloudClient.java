@@ -75,11 +75,8 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.POST, value = "/report/customerReceive/list")
     List<CustomerReceiveDto> getCustomerReceiveList(CustomerReceiveQuery customerReceiveQuery);
     //银行存款日记账
-    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForEmployeePhoneDeposit")
-    List<KingdeeSynReturnDto> synJournalBankForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
-    //银行存款日记账
-    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForShopDeposit")
-    List<KingdeeSynReturnDto> synJournalBankForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList);
+    @RequestMapping(method = RequestMethod.POST, value = "/input/cnJournalForBank/saveForWS")
+    List<KingdeeSynReturnDto> synJournalBank(List<CnJournalForBankDto> cnJournalForBankDtoList);
     //其他应收单
     @RequestMapping(method = RequestMethod.POST, value = "/input/arOtherRecAble/saveForWS")
     KingdeeSynReturnDto synOtherRecAble(ArOtherRecAbleDto arOtherRecAbleDto);
