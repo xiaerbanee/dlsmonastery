@@ -70,7 +70,7 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column  :label="$t('shopGoodsDepositList.operation')" >
+        <el-table-column  fixed="right" :label="$t('shopGoodsDepositList.operation')" >
           <template scope="scope">
             <div class="action" v-if="scope.row.editable" v-permit="'crm:shopGoodsDeposit:edit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopGoodsDepositList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopGoodsDeposit:delete'"><el-button size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('shopGoodsDepositList.delete')}}</el-button></div>
