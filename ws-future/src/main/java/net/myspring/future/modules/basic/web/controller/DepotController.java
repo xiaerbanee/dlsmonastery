@@ -173,6 +173,9 @@ public class DepotController {
             return null;
         }
         BdDepartment bdDepartment=depotService.getDefaultDepartment(depotId);
+        if(bdDepartment == null){
+            return null;
+        }
         return bdDepartment.getFNumber();
     }
 

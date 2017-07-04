@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="productManager"></head-tab>
+    <head-tab active="materialPriceManager"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :inline="true">
         <el-button type="primary" @click="syn" icon="check">同步</el-button>

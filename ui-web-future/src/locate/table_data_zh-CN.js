@@ -127,7 +127,7 @@ export default {
       kingdeeBookForm:"账套编辑",
       accountKingdeeBookList:"金蝶用户管理",
       accountKingdeeBookForm:"金蝶用户管理编辑",
-      productManager:"货品管理",
+      materialPriceManager:"物料价格维护",
       voucherList:"凭证管理",
       voucherForm:"凭证管理编辑",
       kingdeeSynList:'金蝶核对',

@@ -16,16 +16,16 @@
             <el-form-item  label="总店">
               {{shop.name}}
             </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
-                <el-select   v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
-                  <el-option v-for="item in inputForm.extra.netTypeList" :key="item":label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
-                <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
-                  <el-option v-for="item in inputForm.extra.shipTypeList" :key="item":label="item" :value="item"></el-option>
-                </el-select>
-              </el-form-item>
+            <el-form-item :label="$t('goodsOrderForm.netType')" prop="netType">
+              <el-select   v-model="inputForm.netType"    clearable :placeholder="$t('goodsOrderForm.inputWord')" @change="refreshDetailList">
+                <el-option v-for="item in inputForm.extra.netTypeList" :key="item":label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderForm.shipType')" prop="shipType" >
+              <el-select   v-model="inputForm.shipType"  clearable :placeholder="$t('goodsOrderForm.inputKey')" @change="refreshDetailList" >
+                <el-option v-for="item in inputForm.extra.shipTypeList" :key="item":label="item" :value="item"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item :label="$t('goodsOrderForm.remarks')"  prop="remarks  ">
               <el-input type="textarea" v-model="inputForm.remarks"></el-input>
             </el-form-item>
@@ -40,18 +40,18 @@
             <el-form-item label="商城订单信息" prop="detailJson">
               <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="inputForm.detailJson" @blur="checkDetailJson(inputForm.detailJson)"></el-input>
             </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
-                {{shop.depotType}}
-              </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.priceSystem')" prop="pricesystem">
-                {{shop.pricesystemName}}
-              </el-form-item>
-              <el-form-item :label="$t('goodsOrderForm.summary')" prop="summary" style="color:red;">
-                {{summary}}
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderForm.save')}}</el-button>
-              </el-form-item>
+            <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
+              {{shop.depotType}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderForm.priceSystem')" prop="pricesystem">
+              {{shop.pricesystemName}}
+            </el-form-item>
+            <el-form-item :label="$t('goodsOrderForm.summary')" prop="summary" style="color:red;">
+              {{summary}}
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderForm.save')}}</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -127,19 +127,19 @@
             submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
             axios.post('/api/ws/future/crm/goodsOrder/save', qs.stringify(submitData, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-            if(that.isCreate){
-              Object.assign(this.$data, this.getData());
-              this.initPage();
-            }else{
-              this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
-            }
-          }).catch(()=> {
+              if(that.isCreate){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              }else{
+                this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
+              }
+            }).catch(()=> {
               that.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
-      }
-      })
+          }
+        })
       },checkDetailJson(item){
         var that=this;
         if(item){
@@ -176,7 +176,7 @@
         this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
       },shopChange(id){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:id}}).then((response)=>{
-            this.shop = response.data;
+          this.shop = response.data;
         });
       },refreshDetailList(){
         if(this.isCreate ) {
@@ -185,7 +185,7 @@
             axios.get('/api/ws/future/crm/goodsOrder/findDetailList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
               this.setGoodsOrderDetailList(response.data);
               this.pageLoading = false;
-          });
+            });
           }else{
             this.setGoodsOrderDetailList([]);
           }

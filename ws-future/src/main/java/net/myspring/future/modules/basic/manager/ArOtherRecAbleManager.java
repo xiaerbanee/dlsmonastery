@@ -43,14 +43,12 @@ public class ArOtherRecAbleManager {
             otherRecAbleDto.setDate(LocalDate.now());
         }
         otherRecAbleDto.setCustomerNumber(client.getOutCode());
-        otherRecAbleDto.setDepartmentNumber("");
         otherRecAbleDto.setAmount(shopDeposit.getAmount());
         List<ArOtherRecAbleFEntityDto> entityDtoList = Lists.newArrayList();
 
         ArOtherRecAbleFEntityDto entityDto = new ArOtherRecAbleFEntityDto();
         entityDto.setAccountNumber("2241");//其他应付款
         entityDto.setCustomerForNumber(null);
-        entityDto.setCostDepartmentNumber("");//同上
         entityDto.setEmpInfoNumber("0001");//员工
         entityDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
         entityDto.setAmount(shopDeposit.getAmount());
@@ -67,7 +65,6 @@ public class ArOtherRecAbleManager {
         ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
         otherRecAbleDto.setDate(shopDeposit.getBillDate());
         otherRecAbleDto.setCustomerNumber(client.getOutCode());
-        otherRecAbleDto.setDepartmentNumber("");
         otherRecAbleDto.setExtendType(ExtendTypeEnum.押金列表.name());
         otherRecAbleDto.setExtendId(shopDeposit.getId());
         otherRecAbleDto.setAmount(shopDeposit.getAmount());
@@ -79,7 +76,6 @@ public class ArOtherRecAbleManager {
         entityDto.setEmpInfoNumber("0001");//员工
         entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
         entityDto.setExpenseTypeNumber("6602.000");//无
-        entityDto.setCostDepartmentNumber("");//同上
         entityDto.setAmount(shopDeposit.getAmount());
         entityDto.setComment(depot.getName()+""+shopDeposit.getRemarks());
         entityDtoList.add(entityDto);
