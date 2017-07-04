@@ -14,6 +14,7 @@ import net.myspring.future.modules.crm.web.form.ImeAllotSimpleForm;
 import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -126,8 +128,8 @@ public class ImeAllotController {
     }
 
     @RequestMapping(value="export")
-    public String export(ImeAllotQuery imeAllotQuery) {
-        return imeAllotService.export(imeAllotQuery);
+    public ModelAndView export(ImeAllotQuery imeAllotQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", imeAllotService.export(imeAllotQuery));
     }
 
 }
