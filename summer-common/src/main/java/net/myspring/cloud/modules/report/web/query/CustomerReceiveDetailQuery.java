@@ -36,4 +36,5 @@ public class CustomerReceiveDetailQuery {
     public void setCustomerIdList(List<String> customerIdList) {
         this.customerIdList = customerIdList;
     }
+
 }
