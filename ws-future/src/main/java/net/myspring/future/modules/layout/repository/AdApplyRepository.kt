@@ -1,6 +1,5 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdApply
 import net.myspring.future.modules.layout.dto.AdApplyDto
@@ -66,7 +65,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             AND t.created_date > :dateStart
             AND product.out_group_id IN (:outGroupIds)
             ORDER BY t.created_date DESC
-        """,params,MyBeanPropertyRowMapper(AdApplyDto::class.java))
+        """,params,BeanPropertyRowMapper(AdApplyDto::class.java))
     }
 
     override fun findByFilter(adApplyQuery: AdApplyQuery):MutableList<AdApplyDto>{

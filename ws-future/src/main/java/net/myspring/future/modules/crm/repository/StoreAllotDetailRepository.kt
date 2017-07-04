@@ -1,11 +1,11 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllotDetail
 import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
 import java.util.*
@@ -35,7 +35,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
             crm_product t1
         WHERE
             t1.enabled = 1
-          """, MyBeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
+          """, BeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
     }
 
     override fun findByStoreAllotIds(storeAllotIdList: MutableList<String>): MutableList<StoreAllotDetailDto> {
@@ -45,7 +45,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
         WHERE t1.product_id = product.id
             AND  t1.store_allot_id in (:storeAllotIdList)
             ORDER BY t1.store_allot_id, product.has_ime DESC
-          """, Collections.singletonMap("storeAllotIdList", storeAllotIdList), MyBeanPropertyRowMapper(StoreAllotDetailDto::class.java))
+          """, Collections.singletonMap("storeAllotIdList", storeAllotIdList), BeanPropertyRowMapper(StoreAllotDetailDto::class.java))
     }
 
     override fun findStoreAllotDetailsForFastAllot(billDate: LocalDate, toStoreId: String, status: String): MutableList<StoreAllotDetailSimpleDto> {
@@ -75,7 +75,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
             ) result
         GROUP BY result.productId
         ORDER BY result.billQty DESC
-                """, params, MyBeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
+                """, params, BeanPropertyRowMapper(StoreAllotDetailSimpleDto::class.java))
     }
 
 }

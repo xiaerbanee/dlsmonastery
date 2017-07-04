@@ -1,8 +1,6 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.web.form.PrintConfigForm
 import net.myspring.future.modules.basic.web.query.PrintConfigQuery
 import net.myspring.future.modules.crm.domain.ExpressOrder
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
@@ -85,7 +83,7 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
             LEFT JOIN crm_express_company expressCompany ON t1.express_company_id = expressCompany.id
         WHERE
             t1.id = :id
-          """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ExpressOrderDto::class.java))
     }
 
     override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto> {
