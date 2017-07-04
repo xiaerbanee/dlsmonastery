@@ -60,6 +60,12 @@ public class AfterSaleService {
         return afterSaleDtoPage;
     }
 
+    public List<AfterSaleDto> findFilter(AfterSaleQuery afterSaleQuery){
+        List<AfterSaleDto> list=afterSaleRepository.findFilter(afterSaleQuery);
+        cacheUtils.initCacheInput(list);
+        return list;
+    }
+
 
     public List<ProductImeDto> findFormData(List<String> imeList) {
         List<ProductImeDto> productImeList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
@@ -291,8 +297,8 @@ public class AfterSaleService {
         List<String> badImes = Lists.newArrayList();
         List<String> productNames = Lists.newArrayList();
         for (List<String> row : datas) {
-            badImes.add(row.get(0));
-            productNames.add(row.get(1));
+            listAddTrim(badImes,row.get(3));
+            listAddTrim(productNames,row.get(1));
         }
         List<Product> productList = productRepository.findByNameIn(productNames);
         Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");

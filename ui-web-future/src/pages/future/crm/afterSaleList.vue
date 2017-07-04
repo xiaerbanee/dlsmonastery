@@ -14,36 +14,30 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item :label="$t('afterSaleList.bill')" >
-                <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+                <el-input type="textarea" v-model="formData.businessIdStr" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.areaDepot')" >
-                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+                <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.toAreaProductIme')" >
-                <el-input v-model="formData.toAreaProductIme" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+                <el-input type="textarea" v-model="formData.toAreaImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.badProductIme')" >
-                <el-input type="textarea" v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('afterSaleList.remarks')">
-                <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
+                <el-input type="textarea" v-model="formData.badImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('afterSaleList.createdBy')">
-                <el-input v-model="formData.createdBy" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
-              </el-form-item>
               <el-form-item :label="$t('afterSaleList.createdDate')">
-                <date-range-picker v-model="formData.createdDate"></date-range-picker>
+                <date-range-picker v-model="formData.createdRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.toCompanyDate')">
-                <date-range-picker v-model="formData.toCompanyDate" ></date-range-picker>
+                <date-range-picker v-model="formData.toCompanyDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.fromCompanyDate')" >
-                <date-range-picker v-model="formData.fromCompanyDate"></date-range-picker>
+                <date-range-picker v-model="formData.fromCompanyDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.toStoreDate')">
-                <date-range-picker v-model="formData.toStoreDate" ></date-range-picker>
+                <date-range-picker v-model="formData.toStoreDateRange" ></date-range-picker>
               </el-form-item>
             </el-col>
           </el-row>
