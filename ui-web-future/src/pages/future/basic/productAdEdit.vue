@@ -20,8 +20,8 @@
               <el-form-item :label="$t('productAdEdit.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productAdEdit.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productAdEdit.allowBill')" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowBill"></bool-select>
+              <el-form-item :label="$t('productAdEdit.visible')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.visible"></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">

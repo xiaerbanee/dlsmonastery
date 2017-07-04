@@ -35,7 +35,7 @@
               <depot-select  v-model="inputForm.carrierShopId" category="shop"></depot-select>
             </el-form-item>
             <el-form-item label="商城单号" prop="carrierCodes">
-              <el-input  v-model="inputForm.carrierCodes"></el-input>
+              <el-input  v-model="inputForm.carrierCodes" readonly></el-input>
             </el-form-item>
             <el-form-item label="商城订单信息" prop="carrierDetailJson">
               <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="inputForm.carrierDetailJson" @blur="checkDetailJson(inputForm.carrierDetailJson)"></el-input>
@@ -106,8 +106,8 @@
           inputForm:{
             extra:{}
           },
-          rules: {
-          }
+          rules: {},
+          productMap:{}
         }
       },
       formSubmit(){
@@ -146,7 +146,8 @@
           axios.get('/api/ws/future/api/carrierOrder/checkDetailJsons',{params: {detailJson:item,checkColor:true}}).then((response)=>{
             if(response.data.success){
               this.$message(response.data.message);
-              console.log(response.data)
+              this.inputForm.carrierCodes=response.data.extra.carrierCodes;
+              this.getProductDetail(response.data.extra.productQtyMap);
             }else {
               that.submitDisabled = false;
               this.$message({
@@ -162,24 +163,21 @@
           this.filterDetailList = [];
           return;
         }
-        let val=this.filterValue;
+        let val=_.trim(this.filterValue);
         let tempList=[];
+        let tempPostList=[];
         for(let goodsOrderDetail of this.goodsOrderDetailList){
           if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
+          }else if(util.contains(goodsOrderDetail.productName, val) && util.isNotBlank(val)){
+            tempPostList.push(goodsOrderDetail);
           }
         }
-        for(let goodsOrderDetail of this.goodsOrderDetailList){
-          if(util.contains(goodsOrderDetail.productName, val) && util.isBlank(goodsOrderDetail.qty)){
-            tempList.push(goodsOrderDetail);
-          }
-        }
-        this.filterDetailList = tempList;
+        this.filterDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
       },shopChange(id){
         axios.get('/api/ws/future/basic/depot/findOne',{params: {id:id}}).then((response)=>{
             this.shop = response.data;
         });
-        this.refreshDetailList();
       },refreshDetailList(){
         if(this.isCreate ) {
           if(this.inputForm.shopId && this.inputForm.netType && this.inputForm.shipType) {
@@ -196,34 +194,46 @@
         this.goodsOrderDetailList = list;
         this.filterProducts();
       },initSummary() {
-        var totalQty = 0;
-        var totalAmount = 0;
-        for(var index in this.filterDetailList) {
-          var filterDetail = this.filterDetailList[index];
-          if(util.isNotBlank(filterDetail.qty)) {
-            totalQty  = totalQty + filterDetail.qty*1;
-            totalAmount = totalAmount + (filterDetail.qty*1)*(filterDetail.price*1);
+        let totalQty = 0;
+        let totalAmount = 0;
+        let totalProductQty = 0;
+        let totalProductAmount = 0;
+
+        for(let detail of this.filterDetailList) {
+          if(util.isNotBlank(detail.qty)) {
+            totalQty  = totalQty + detail.qty*1;
+            totalAmount = totalAmount + (detail.qty*1)*(detail.price*1);
+            if(detail.hasIme){
+              totalProductQty  = totalProductQty + detail.qty*1;
+              totalProductAmount = totalProductAmount + (detail.qty*1)*(detail.price*1);
+            }
           }
         }
-        this.summary = "总订货数为：" + totalQty + "，总价格为：" + totalAmount;
+        this.summary = "总开单数："+totalQty+"，总开单金额："+totalAmount+"，总货品数：" + totalProductQty + "，总货品金额：" + totalProductAmount;
       },initPage(){
         axios.get('/api/ws/future/crm/goodsOrder/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
+        });
         axios.get('/api/ws/future/crm/goodsOrder/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           util.copyValue(response.data,this.inputForm);
-        if(!this.isCreate) {
-          axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.shopId}}).then((response)=>{
-            this.shop = response.data;
+          if(!this.isCreate) {
+            this.shopChange(this.inputForm.shopId);
+            axios.get('/api/ws/future/crm/goodsOrder/findDetailList',{params: {id:this.$route.query.id}}).then((response)=>{
+              this.setGoodsOrderDetailList(response.data);
+              this.initSummary();
+            });
+          }
         });
+      },getProductDetail(productMap){
+        for(var item in this.goodsOrderDetailList){
+          var product=this.goodsOrderDetailList[item];
+          var key=product.productId;
+          if(productMap.hasOwnProperty(key)){
+            product.qty=productMap[key]
+          }
         }
-      });
-      });
-        if(!this.isCreate){
-          axios.get('/api/ws/future/crm/goodsOrder/findDetailList',{params: {id:this.$route.query.id}}).then((response)=>{
-            this.setGoodsOrderDetailList(response.data);
-          this.initSummary();
-        });
-        }
+        this.filterProducts();
+        this.initSummary();
       }
     },created () {
       this.initPage();

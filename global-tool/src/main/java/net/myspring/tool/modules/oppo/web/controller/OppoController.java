@@ -46,7 +46,7 @@ public class OppoController {
         logger.info("开始同步颜色编码");
         oppoService.pullPlantProductSels(oppoPlantProductSels);
         logger.info("开始同步物料编码");
-//        同步物料编码
+        // 同步物料编码
         List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(agentCodes[0], passWords[0], "");
         String message = oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
         logger.info("开始同步发货串码");
@@ -74,9 +74,6 @@ public class OppoController {
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.synProductItemelectronSel(date,agentCode);
         return oppoPlantProductItemelectronSels;
     }
-
-
-
 
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)

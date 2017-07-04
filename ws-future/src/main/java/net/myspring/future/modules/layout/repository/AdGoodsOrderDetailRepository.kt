@@ -139,6 +139,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                     t2.created_date adGoodsOrderCreatedDate,
                     t2.bill_date adGoodsOrderBillDate,
                     t2.parent_id adGoodsOrderParentId,
+                    t3.office_id adGoodsOrderOfficeId,
                     t4.area_type adGoodsOrderDepotShopAreaType,
                     t5.contator expressOrderContator,
                     t5.mobile_phone expressOrderMobilePhone,
@@ -223,6 +224,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             t1.enabled = 1
                         AND t1.company_id = :companyId
                         AND t1.out_group_id IN (:outGroupIdList)
+                        AND t1.visible = 1
                         AND NOT EXISTS (
                             SELECT *
                             FROM crm_ad_goods_order_detail detail
@@ -302,6 +304,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             t1.enabled = 1
                         AND t1.company_id = :companyId
                         AND t1.out_group_id IN (:outGroupIdList)
+                        AND t1.visible = 1
                         AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)
                         AND NOT EXISTS (
                             SELECT *
@@ -337,8 +340,8 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           t1.enabled = 1
           AND t1.company_id = :companyId
           AND t1.out_group_id IN (:outGroupIdList)
+          AND t1.visible = 1
           AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)
-
 
           """, paramMap, BeanPropertyRowMapper(AdGoodsOrderDetailSimpleDto::class.java))
     }

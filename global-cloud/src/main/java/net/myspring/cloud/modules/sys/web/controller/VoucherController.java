@@ -4,27 +4,31 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.VoucherFlexEnum;
 import net.myspring.cloud.common.enums.VoucherStatusEnum;
+import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
+import net.myspring.cloud.modules.input.service.GlVoucherService;
 import net.myspring.cloud.modules.kingdee.domain.*;
 import net.myspring.cloud.modules.kingdee.service.*;
+import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
-import net.myspring.cloud.modules.sys.dto.VoucherModel;
+import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 凭证
@@ -50,6 +54,12 @@ public class VoucherController {
     @Autowired
     private HrEmpInfoService hrEmpInfoService;
     @Autowired
+    private GlVoucherService glVoucherService;
+    @Autowired
+    private KingdeeBookService kingdeeBookService;
+    @Autowired
+    private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
     private BdFlexItemGroupService bdFlexItemGroupService;
     @Autowired
     private BdFlexItemPropertyService bdFlexItemPropertyService;
@@ -69,18 +79,19 @@ public class VoucherController {
     @RequestMapping(value = "form")
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
-        VoucherModel voucherModel = getVoucherModel();
-        List<String> flexItemNameList = voucherService.getHeaders(voucherModel.getBdFlexItemGroupList());
+        voucherForm.setBdAccountList(bdAccountService.findAll());
+        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+        List<String> flexItemNameList = voucherService.getHeaders(voucherForm.getBdFlexItemGroupList());
         map.put("headerList", flexItemNameList);
-        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList()));
+        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList()));
         List<String> accountNumberNameList = Lists.newArrayList();
         for (BdAccount bdAccount :  bdAccountService.findAll()){
             accountNumberNameList.add(bdAccount.getFNumber()+CharConstant.SLASH_LINE+bdAccount.getFName());
         }
         map.put("accountNumberNameList",accountNumberNameList);
         if (voucherForm.getId() != null){
-            VoucherDto voucherDto = BeanUtil.map(voucherForm,VoucherDto.class);
-            map.put("data",voucherService.initData(voucherDto,voucherModel));
+            map.put("data",voucherService.initData(voucherForm));
         }else {
             map.put("data", Lists.newArrayList());
         }
@@ -135,8 +146,10 @@ public class VoucherController {
 
     @RequestMapping(value = "save")
     public RestResponse save(VoucherForm voucherForm) {
-        VoucherModel voucherModel = getVoucherModel();
-        return voucherService.save(voucherForm,voucherModel);
+        voucherForm.setBdAccountList(bdAccountService.findAll());
+        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+        return voucherService.save(voucherForm);
     }
 
     @RequestMapping(value="findOne")
@@ -144,11 +157,22 @@ public class VoucherController {
         return voucherService.findOne(id);
     }
 
-    public VoucherModel getVoucherModel(){
-        VoucherModel model = new VoucherModel();
-        model.setBdAccountList(bdAccountService.findAll());
-        model.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
-        model.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
-        return model;
+    @RequestMapping(value = "audit")
+    public RestResponse audit(VoucherForm voucherForm){
+        voucherForm.setBdAccountList(bdAccountService.findAll());
+        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+        Voucher voucher = voucherService.audit(voucherForm);
+        RestResponse restResponse = new RestResponse("凭证审核成功",null,true);
+        if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
+            KingdeeBook kingdeeBook = kingdeeBookService.findByCompanyId(RequestUtils.getCompanyId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm,kingdeeBook,accountKingdeeBook);
+            String outCode ="序号："+kingdeeSynDto.getBillNo()+"  凭证号："+ glVoucherService.findByBillNo(kingdeeSynDto.getBillNo());
+            voucher.setOutCode(outCode);
+            voucherService.save(voucher);
+            return new RestResponse("凭证同步成功",null,true);
+        }
+        return restResponse;
     }
 }

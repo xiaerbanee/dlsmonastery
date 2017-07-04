@@ -1,5 +1,8 @@
 package net.myspring.future.modules.crm.repository
 
+import com.google.common.collect.Lists
+import com.google.common.collect.Maps
+import net.myspring.common.constant.CharConstant
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
@@ -12,6 +15,7 @@ import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
+import org.elasticsearch.common.collect.HppcMaps
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -20,6 +24,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import java.lang.StringBuilder
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -77,11 +82,13 @@ interface ProductImeRepositoryCustom{
     fun findBaokaStoreReport(productImeReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
     fun findStoreReport(productImeReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
+
+    fun batchSave(productImes:MutableList<ProductIme>):IntArray?
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
     override fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto> {
-        if(allImeList.isEmpty()){
+        if (allImeList.isEmpty()) {
             return ArrayList()
         }
 
@@ -126,13 +133,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findBaokaStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t3.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
         }
         sb.append("""
@@ -147,7 +154,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                  t1.enabled = 1
                 and t3.depot_shop_id=t6.id
     """)
-        if(productImeReportQuery.date!=null){
+        if (productImeReportQuery.date != null) {
             sb.append("""
                 AND (
                     t1.retail_date IS NULL
@@ -160,7 +167,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND t1.created_date < :date
             """)
         }
-        if (productImeReportQuery.scoreType!=null) {
+        if (productImeReportQuery.scoreType != null) {
             sb.append(""" and t5.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -181,10 +188,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t3.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" group by t3.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" group by t5.id """)
         }
         print(sb.toString())
@@ -193,13 +200,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findStoreReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t6.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t6.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' ,t5.name as 'productTypeName'""")
         }
         sb.append("""
@@ -215,10 +222,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                     t1.enabled = 1
                     and t6.depot_shop_id=t7.id
     """)
-        if(productImeReportQuery.scoreType!=null){
+        if (productImeReportQuery.scoreType != null) {
             sb.append("""  and t5.score_type =:scoreType """)
         }
-        if(productImeReportQuery.date!=null){
+        if (productImeReportQuery.date != null) {
             sb.append("""
                AND (
                     t1.retail_date IS NULL
@@ -253,10 +260,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t6.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" group by t6.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" group by t5.id """)
         }
         print(sb.toString())
@@ -265,13 +272,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t2.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
         }
         sb.append("""
@@ -286,13 +293,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
              t1.enabled = 1
             and t2.depot_shop_id=t6.id
     """)
-        if(productImeReportQuery.dateStart!=null){
+        if (productImeReportQuery.dateStart != null) {
             sb.append(""" and t1.created_date>=:dateStart """)
         }
-        if(productImeReportQuery.dateEnd!=null){
+        if (productImeReportQuery.dateEnd != null) {
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType!=null) {
+        if (productImeReportQuery.scoreType != null) {
             sb.append(""" and t5.score_type=:scoreType""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -313,10 +320,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" group by t2.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" group by t5.id """)
         }
         print(sb.toString())
@@ -325,13 +332,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun findBaokaSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" select t2.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
         }
         sb.append("""
@@ -344,13 +351,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             where t1.enabled=1
             and t2.depot_shop_id=t5.id
     """)
-        if(productImeReportQuery.dateStart!=null){
+        if (productImeReportQuery.dateStart != null) {
             sb.append(""" and t1.retail_date>=:dateStart """)
         }
-        if(productImeReportQuery.dateEnd!=null){
+        if (productImeReportQuery.dateEnd != null) {
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType!=null) {
+        if (productImeReportQuery.scoreType != null) {
             sb.append(""" and t4.score_type=:scoreType """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
@@ -371,13 +378,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId)&&productImeReportQuery.sumType=="区域") {
+        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
             sb.append(""" group by t2.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType)&&productImeReportQuery.sumType=="型号") {
+        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" group by t4.id """)
         }
-        println("销售报表按电子报卡"+productImeReportQuery.officeIdList)
+        println("销售报表按电子报卡" + productImeReportQuery.officeIdList)
         println(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
@@ -416,12 +423,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme> {
-        if(CollectionUtil.isEmpty(productImeShipQuery.boxImeList) && CollectionUtil.isEmpty(productImeShipQuery.imeList)){
+        if (CollectionUtil.isEmpty(productImeShipQuery.boxImeList) && CollectionUtil.isEmpty(productImeShipQuery.imeList)) {
             return ArrayList()
         }
 
         val sb = StringBuilder()
-        if(CollectionUtil.isNotEmpty(productImeShipQuery.boxImeList)){
+        if (CollectionUtil.isNotEmpty(productImeShipQuery.boxImeList)) {
             sb.append("""
             SELECT
                 t1.*
@@ -433,10 +440,10 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND t1.box_ime IN (:boxImeList)
         """)
         }
-        if(productImeShipQuery.boxImeAndIme ){
+        if (productImeShipQuery.boxImeAndIme) {
             sb.append("    UNION   ")
         }
-        if(CollectionUtil.isNotEmpty(productImeShipQuery.imeList)){
+        if (CollectionUtil.isNotEmpty(productImeShipQuery.imeList)) {
             sb.append("""
             SELECT
                 t1.*
@@ -457,7 +464,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto> {
-        if(imeList.isEmpty()){
+        if (imeList.isEmpty()) {
             return ArrayList()
         }
 
@@ -625,22 +632,27 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (productImeQuery.createdTimeEnd != null) {
             sb.append("""  AND t1.created_time < :createdTimeEnd  """)
         }
-        if (StringUtils.isNotBlank(productImeQuery.depotId )) {
+        if (StringUtils.isNotBlank(productImeQuery.depotId)) {
             sb.append("""  and t1.depot_id = :depotId  """)
         }
-        if (StringUtils.isNotBlank(productImeQuery.productId )) {
+        if (StringUtils.isNotBlank(productImeQuery.productId)) {
             sb.append("""  and t1.product_id = :productId  """)
         }
-        if (StringUtils.isNotBlank(productImeQuery.inputType )) {
+        if (StringUtils.isNotBlank(productImeQuery.inputType)) {
             sb.append("""  and t1.input_type = :inputType  """)
         }
 
-        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
         val paramMap = BeanPropertySqlParameterSource(productImeQuery)
-        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeDto::class.java))
-        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        val list = namedParameterJdbcTemplate.query(pageableSql, paramMap, BeanPropertyRowMapper(ProductImeDto::class.java))
+        return PageImpl(list, pageable, ((pageable.pageNumber + 100) * pageable.pageSize).toLong())
 
     }
 
-
+    override fun batchSave(productImes: MutableList<ProductIme>): IntArray? {
+        val sb = StringBuilder()
+        sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,company_id,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ");
+        sb.append("(:depotId,:retailShopId,:productId,:ime,:createdTime,:ime2,:itemNumber,:colorId,:meid,:boxIme,:inputType,:companyId,:billId,:imeReverse,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate,:version,:locked,:enabled)")
+        return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(productImes.toTypedArray()));
+    }
 }

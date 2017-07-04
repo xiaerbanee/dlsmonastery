@@ -14,12 +14,20 @@ public class ProductQuery extends BaseQuery {
     private String code;  //编码
     private String type;
     private Boolean hasIme;  //包含串码
-    private Boolean allowBill;  //允许开单
+    private Boolean visible;
     private String productTypeId; //产品型号
-    private Boolean allowOrder;  //允许开单
+    private Boolean allowOrder;
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
     private List<String> ids= Lists.newArrayList();
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public String getId() {
         return id;
@@ -35,14 +43,6 @@ public class ProductQuery extends BaseQuery {
 
     public void setHasIme(Boolean hasIme) {
         this.hasIme = hasIme;
-    }
-
-    public Boolean getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(Boolean allowBill) {
-        this.allowBill = allowBill;
     }
 
     public Boolean getAllowOrder() {

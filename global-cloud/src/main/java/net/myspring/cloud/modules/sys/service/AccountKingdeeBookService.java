@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class AccountKingdeeBookService {
     @Autowired
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
@@ -62,6 +62,7 @@ public class AccountKingdeeBookService {
         return accountKingdeeBookForm;
     }
 
+    @Transactional
     public AccountKingdeeBook save(AccountKingdeeBookForm accountKingdeeBookForm){
         AccountKingdeeBook accountKingdeeBook;
         if (accountKingdeeBookForm.isCreate()){
@@ -77,6 +78,7 @@ public class AccountKingdeeBookService {
         return accountKingdeeBook;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         accountKingdeeBookRepository.logicDelete(id);
     }
