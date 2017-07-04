@@ -29,8 +29,6 @@ public class CustomUserDetails implements UserDetails {
     private List<String> officeIdList;
     //是否是超级用户
     private Boolean admin;
-    //是否拥有所有部门权限
-    private Boolean allDataScope;
 
 
     public CustomUserDetails(String username
@@ -47,8 +45,7 @@ public class CustomUserDetails implements UserDetails {
             ,String companyName
             ,String roleId
             ,List<String> officeIdList
-            ,Boolean admin
-            ,Boolean allDataScope) {
+            ,Boolean admin) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -67,7 +64,6 @@ public class CustomUserDetails implements UserDetails {
         this.roleId=roleId;
         this.officeIdList = officeIdList;
         this.admin = admin;
-        this.allDataScope = allDataScope;
     }
 
 
@@ -136,9 +132,5 @@ public class CustomUserDetails implements UserDetails {
 
     public Boolean getAdmin() {
         return admin;
-    }
-
-    public Boolean getAllDataScope() {
-        return allDataScope;
     }
 }

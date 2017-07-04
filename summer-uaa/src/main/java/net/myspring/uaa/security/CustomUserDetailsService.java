@@ -111,8 +111,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     accountDto.getCompanyName(),
                     accountDto.getRoleId(),
                     officeIdList,
-                    admin,
-                    allDataScope
+                    admin
             );
         }
         return customUserDetails;
