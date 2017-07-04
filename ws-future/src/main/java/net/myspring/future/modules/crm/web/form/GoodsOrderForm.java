@@ -25,6 +25,8 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String businessId;
     private String allotFromStockCode;
     private String allotToStockCode;
+    private String carrierCodes;
+    private String carrierDetailJson;
     private BigDecimal goodsDeposit;
     private LocalDate billDate;
     private Boolean lxMallOrder;
@@ -183,5 +185,21 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
 
     public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
         this.goodsOrderDetailFormList = goodsOrderDetailFormList;
+    }
+
+    public String getCarrierCodes() {
+        return carrierCodes;
+    }
+
+    public void setCarrierCodes(String carrierCodes) {
+        this.carrierCodes = carrierCodes;
+    }
+
+    public String getCarrierDetailJson() {
+        return carrierDetailJson;
+    }
+
+    public void setCarrierDetailJson(String carrierDetailJson) {
+        this.carrierDetailJson = carrierDetailJson;
     }
 }
