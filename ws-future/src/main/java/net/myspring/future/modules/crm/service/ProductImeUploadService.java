@@ -192,11 +192,10 @@ public class ProductImeUploadService {
         }
     }
 
-    public String export(ProductImeUploadQuery productImeUploadQuery) {
+    public SimpleExcelBook export(ProductImeUploadQuery productImeUploadQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> productImeUploadColumnList = Lists.newArrayList();
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "month", "上报月份"));
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
@@ -214,11 +213,9 @@ public class ProductImeUploadService {
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         List<ProductImeUploadDto> productImeUploadDtoList = findPage(new PageRequest(0,10000), productImeUploadQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList));
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return  new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheet);
 
     }
 

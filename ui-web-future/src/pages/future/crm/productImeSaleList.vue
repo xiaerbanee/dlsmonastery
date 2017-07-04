@@ -106,9 +106,7 @@
         this.pageRequest();
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/crm/productImeSale/export',{params:util.deleteExtra(this.formData)}).then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href='/api/ws/future/crm/productImeSale/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
 
       },sale(){

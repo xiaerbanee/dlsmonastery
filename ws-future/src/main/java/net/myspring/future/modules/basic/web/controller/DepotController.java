@@ -13,6 +13,7 @@ import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -127,18 +129,18 @@ public class DepotController {
     }
 
     @RequestMapping(value="depotAccountExportDetail")
-    public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
-        return depotService.depotAccountExportDetail(depotAccountQuery);
+    public ModelAndView depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotService.depotAccountExportDetail(depotAccountQuery));
     }
 
     @RequestMapping(value="depotAccountExportConfirmation")
-    public String depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
-        return depotService.depotAccountExportConfirmation(depotAccountQuery);
+    public ModelAndView depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotService.depotAccountExportConfirmation(depotAccountQuery));
     }
 
     @RequestMapping(value="depotAccountExportAllDepots")
-    public String depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
-        return depotService.depotAccountExportAllDepots(depotAccountQuery);
+    public ModelAndView depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", depotService.depotAccountExportAllDepots(depotAccountQuery));
     }
 
     @RequestMapping(value = "findOne")
@@ -171,6 +173,9 @@ public class DepotController {
             return null;
         }
         BdDepartment bdDepartment=depotService.getDefaultDepartment(depotId);
+        if(bdDepartment == null){
+            return null;
+        }
         return bdDepartment.getFNumber();
     }
 

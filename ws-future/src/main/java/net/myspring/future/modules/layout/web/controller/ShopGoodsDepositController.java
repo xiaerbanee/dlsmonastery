@@ -10,6 +10,7 @@ import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.service.ShopGoodsDepositService;
 import net.myspring.future.modules.layout.web.form.ShopGoodsDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,8 +93,8 @@ public class ShopGoodsDepositController {
     }
 
     @RequestMapping(value="export")
-    public String export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
-        return shopGoodsDepositService.export(shopGoodsDepositQuery);
+    public ModelAndView export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", shopGoodsDepositService.export(shopGoodsDepositQuery));
     }
 
     @RequestMapping(value = "findDto")

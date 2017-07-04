@@ -131,7 +131,7 @@ public class ArOtherRecAbleService {
             if (!arOtherRecAbleDtoMap.containsKey(billKey)) {
                 ArOtherRecAbleDto arOtherRecAbleDto = new ArOtherRecAbleDto();
                 arOtherRecAbleDto.setExtendType(ExtendTypeEnum.其他应收单_K3.name());
-                arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
+                arOtherRecAbleDto.setCreator(accountKingdeeBook.getUsername());
                 arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
                 arOtherRecAbleDto.setDate(billDate);
                 arOtherRecAbleDto.setCustomerNumber(customerNameMap.get(customerName));
@@ -180,7 +180,7 @@ public class ArOtherRecAbleService {
 
     @Transactional
     public KingdeeSynDto saveForWS(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
+        arOtherRecAbleDto.setCreator(accountKingdeeBook.getUsername());
         arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());
         String customerNumber = arOtherRecAbleDto.getCustomerNumber();
         BdCustomer bdCustomer = bdCustomerRepository.findByNumber(customerNumber);

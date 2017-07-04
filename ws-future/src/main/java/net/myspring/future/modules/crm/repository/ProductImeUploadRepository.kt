@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductImeUpload
 import net.myspring.future.modules.crm.dto.ProductImeUploadDto
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -80,7 +81,7 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         if (StringUtils.isNotBlank(productImeUploadQuery.month)) {
             sb.append("""  and t1.month = :month  """)
         }
-        if (productImeUploadQuery.imeOrMeidList != null) {
+        if (CollectionUtil.isNotEmpty(productImeUploadQuery.imeOrMeidList)) {
             sb.append("""  and (ime.ime in (:imeOrMeidList) or ime.ime2 in (:imeOrMeidList) or ime.meid in (:imeOrMeidList))  """)
         }
 

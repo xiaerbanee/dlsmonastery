@@ -7,6 +7,7 @@ import net.myspring.future.modules.basic.dto.ProductTypeDto;
 import net.myspring.future.modules.basic.service.ProductTypeService;
 import net.myspring.future.modules.basic.web.form.ProductTypeForm;
 import net.myspring.future.modules.basic.web.query.ProductTypeQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -68,9 +70,8 @@ public class ProductTypeController {
     }
 
     @RequestMapping(value = "export")
-    public String export(ProductTypeQuery productTypeQuery) {
-
-        return productTypeService.export(productTypeQuery);
+    public ModelAndView export(ProductTypeQuery productTypeQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", productTypeService.export(productTypeQuery));
     }
 
     @RequestMapping(value = "getForm")

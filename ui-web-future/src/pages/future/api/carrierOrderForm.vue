@@ -30,8 +30,8 @@
         submitDisabled:false,
         submitData:{
           goodsOrderId:"",
-          detailJson:"{\"id\":\"DD160406084651560338\",\"detail\":[{\"product\":\"OPPO A30黑\",\"qty\":2},{\"product\":\"OPPO A53金\",\"qty\":1}]}",
-          formatId:"116040600002",
+          detailJson:"",
+          formatId:"",
         },
         rules: {
           formatId: [{required: true,validator: this.checkOrderCode,trigger:'blur'}],

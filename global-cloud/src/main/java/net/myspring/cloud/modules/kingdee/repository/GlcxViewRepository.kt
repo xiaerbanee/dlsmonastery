@@ -14,7 +14,12 @@ import java.util.*
 @Component
 class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findEntityByPeriodForTotalDepartment(year:Integer, month:Integer, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+    fun findEntityByPeriodForTotalDepartment(year:Int, month:Int, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("year", year)
+        paramMap.put("month", month)
+        paramMap.put("accNameList", accNameList)
+        paramMap.put("fyNumList", fyNumList)
         return namedParameterJdbcTemplate.query("""
             SELECT
             FYEAR as year,
@@ -41,10 +46,14 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             faccname,
             Ffynum,
             Ffyname
-        """, Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """, paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityByPeriodForTotalDepartment(year:Integer, month:Integer, accName:String): MutableList<RetailAccountDto>?{
+    fun findEntityByPeriodForTotalDepartment(year:Int, month:Int, accName:String): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("year", year)
+        paramMap.put("month", month)
+        paramMap.put("accName", accName)
         return namedParameterJdbcTemplate.query("""
             SELECT
             FYEAR as year,
@@ -70,10 +79,15 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             faccname,
             Ffynum,
             Ffyname
-        """, Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """, paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityBySumPeriodForTotalDepartment(dateStart:Integer, dateEnd:Integer, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+    fun findEntityBySumPeriodForTotalDepartment(dateStart:Int, dateEnd:Int, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("accNameList", accNameList)
+        paramMap.put("fyNumList", fyNumList)
         return namedParameterJdbcTemplate.query("""
         SELECT
             faccnumber as accNumber,
@@ -95,10 +109,14 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             faccname,
             Ffynum,
             Ffyname
-        """, Collections.singletonMap("dateStart",dateStart),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityBySumPeriodForTotalDepartment(dateStart:Integer, dateEnd:Integer, accName:String): MutableList<RetailAccountDto>?{
+    fun findEntityBySumPeriodForTotalDepartment(dateStart:Int, dateEnd:Int, accName:String): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("accName", accName)
         return namedParameterJdbcTemplate.query("""
         SELECT
             faccnumber as accNumber,
@@ -119,10 +137,15 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             faccname,
             Ffynum,
             Ffyname
-        """, Collections.singletonMap("dateStart",dateStart),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """, paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityByPeriod(year:Integer, month:Integer, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+    fun findEntityByPeriod(year:Int, month:Int, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("year", year)
+        paramMap.put("month", month)
+        paramMap.put("accNameList", accNameList)
+        paramMap.put("fyNumList", fyNumList)
         return namedParameterJdbcTemplate.query("""
             SELECT
             FYEAR as year,
@@ -150,10 +173,14 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             Fdeptname,
             Ffynum,
             Ffyname
-        """,Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityByPeriod(year:Integer, month:Integer, accName:String): MutableList<RetailAccountDto>?{
+    fun findEntityByPeriod(year:Int, month:Int, accName:String): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("year", year)
+        paramMap.put("month", month)
+        paramMap.put("accName", accName)
         return namedParameterJdbcTemplate.query("""
             SELECT
             FYEAR as year,
@@ -180,10 +207,15 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             Fdeptname,
             Ffynum,
             Ffyname
-        """,Collections.singletonMap("year",year),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityBySumPeriod(dateStart:Integer, dateEnd:Integer, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+    fun findEntityBySumPeriod(dateStart:Int, dateEnd:Int, accNameList:List<String>, fyNumList:List<String>): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("accNameList", accNameList)
+        paramMap.put("fyNumList", fyNumList)
         return namedParameterJdbcTemplate.query("""
         SELECT
             faccnumber as accNumber,
@@ -207,10 +239,14 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             Fdeptname,
             Ffynum,
             Ffynamee
-        """,Collections.singletonMap("dateStart",dateStart),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findEntityBySumPeriod(dateStart:Integer, dateEnd:Integer, accName:String): MutableList<RetailAccountDto>?{
+    fun findEntityBySumPeriod(dateStart:Int, dateEnd:Int, accName:String): MutableList<RetailAccountDto>?{
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", dateStart)
+        paramMap.put("dateEnd", dateEnd)
+        paramMap.put("accName", accName)
         return namedParameterJdbcTemplate.query("""
         SELECT
             faccnumber as accNumber,
@@ -233,7 +269,7 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             Fdeptname,
             Ffynum,
             Ffynamee
-        """,Collections.singletonMap("dateStart",dateStart),BeanPropertyRowMapper(RetailAccountDto::class.java))
+        """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
 }

@@ -102,7 +102,7 @@
         <el-table-column prop="remarks" label="订单备注"></el-table-column>
         <el-table-column fixed="right" :label="$t('productTypeList.operation')" >
           <template scope="scope">
-            <div class="action" v-permit="'crm:productType:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button></div>
+            <div class="action" v-permit="'crm:productType:edit'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'detail')">详细</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -158,13 +158,9 @@
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'carrierOrderForm'})
-      },itemAction:function(id,action){
-        if(action==="detail") {
-          this.detailVisible=true;
-          axios.get('/api/ws/future/api/carrierOrder/findDto',{params:{id:id}}).then((response)=> {
-            this.detailData=response.data;
-            console.log(response.data)
-          });
+      },itemAction:function(goodsOrderId,action){
+        if(action =="detail"){
+          this.$router.push({ name: 'goodsOrderDetail', query: { id: goodsOrderId }})
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {

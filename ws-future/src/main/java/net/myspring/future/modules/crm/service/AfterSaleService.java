@@ -23,6 +23,7 @@ import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import org.elasticsearch.xpack.notification.hipchat.V1Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,19 @@ public class AfterSaleService {
         return productImeList;
     }
 
-    public Map<String, AfterSale> findAfterSale(List<String> imeList) {
+    public Map<String, AfterSaleDto> findDtoByImeList(List<String> imeList) {
+        Map<String, AfterSaleDto> map = Maps.newHashMap();
+        List<AfterSaleDto> afterSales = afterSaleRepository.findDtoByImeIn(imeList);
+        if(CollectionUtil.isNotEmpty(afterSales)){
+            Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(afterSales,"badProductImeId"));
+            for (AfterSaleDto afterSale : afterSales) {
+                map.put(productImeMap.get(afterSale.getBadProductImeId()).getIme(), afterSale);
+            }
+        }
+        return map;
+    }
+
+    public Map<String, AfterSale> findByImeList(List<String> imeList) {
         Map<String, AfterSale> map = Maps.newHashMap();
         List<AfterSale> afterSales = afterSaleRepository.findByBadProductImeIn(imeList);
         if(CollectionUtil.isNotEmpty(afterSales)){
@@ -96,11 +109,11 @@ public class AfterSaleService {
         for (List<String> row : datas) {
             if (CollectionUtil.isNotEmpty(row)) {
                 AfterSale afterSale = new AfterSale();
-                ProductIme badProductIme = productImeMap.get(row.get(0).trim());
-                ProductIme toAreaProductIme = productImeMap.get(row.get(3).trim());
-                Depot toAreaDepot = depotMap.get(row.get(5).trim());
+                ProductIme badProductIme = productImeMap.get(row.get(0));
+                ProductIme toAreaProductIme = productImeMap.get(row.get(3));
+                Depot toAreaDepot = depotMap.get(row.get(5));
                 for (int i = 0; i < row.size(); i++) {
-                    String value = StringUtils.toString(row.get(i)).trim();
+                    String value = StringUtils.toString(row.get(i));
                     switch (i) {
                         case 0:
                             if (badProductIme != null) {
@@ -137,8 +150,8 @@ public class AfterSaleService {
                             break;
                     }
                 }
-                String maxBusinessId = afterSaleRepository.findMaxBusinessId(LocalDate.now());
-                afterSale.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+                List<String> maxBusinessIdList = afterSaleRepository.findMaxBusinessId(LocalDate.now());
+                afterSale.setBusinessId(IdUtils.getNextBusinessId(CollectionUtil.isEmpty(maxBusinessIdList)?null:maxBusinessIdList.get(0)));
                 afterSale.setToStoreDate(toStoreDate);
                 afterSaleRepository.save(afterSale);
                 AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), badProductIme.getId(), badProductIme.getDepotId(), badStore.getId(), "坏机录入");
@@ -168,12 +181,12 @@ public class AfterSaleService {
         List<String> depotNameList = Lists.newArrayList();
         List<String> productNameList = Lists.newArrayList();
         for (List<String> row : datas) {
-            listAddTrim(badImeList, row.get(0).trim());
-            listAddTrim(imeList, row.get(3).trim());
-            listAddTrim(depotNameList, row.get(4).trim());
-            listAddTrim(productNameList, row.get(4).trim());
+            listAddTrim(badImeList, row.get(0));
+            listAddTrim(imeList, row.get(3));
+            listAddTrim(depotNameList, row.get(5));
+            listAddTrim(productNameList, row.get(9));
         }
-        Map<String, AfterSale> afterSaleMap = findAfterSale(badImeList);
+        Map<String, AfterSale> afterSaleMap = findByImeList(badImeList);
         if (afterSaleMap.size() > 0) {
             String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
             List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
@@ -184,14 +197,14 @@ public class AfterSaleService {
             Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
             Map<String, ProductIme> toAreaProductImeMap = productImeRepository.findMap(CollectionUtil.extractToList(afterSaleMap.values(), "toAreaProductImeId"));
             for (List<String> row : datas) {
-                String badIme = StringUtils.toString(row.get(0)).trim();
+                String badIme = StringUtils.toString(row.get(0));
                 AfterSale afterSale = afterSaleMap.get(badIme);
                 for (int i = 0; i < row.size(); i++) {
-                    String value = StringUtils.toString(row.get(i)).trim();
+                    String value = StringUtils.toString(row.get(i));
                     switch (i) {
                         case 3:
                             //更改替换机
-                            if (afterSale.getToAreaToFinance() == null || !afterSale.getToAreaToFinance()) {
+                            if (StringUtils.isNotBlank(value)&&(afterSale.getToAreaToFinance() == null || !afterSale.getToAreaToFinance())) {
                                 ProductIme toAreaProductIme = productImeMap.get(value);
                                 boolean isUpdate = false;
                                 if (toAreaProductIme == null && StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
@@ -220,27 +233,29 @@ public class AfterSaleService {
                                 }
                             }
                             break;
-                        case 4:
-                            Depot areaDepot = depotMap.get(value);
-                            afterSale.setAreaDepotId(areaDepot.getId());
-                            break;
                         case 5:
-                            afterSale.setPackageStatus(value);
+                            if(StringUtils.isNotBlank(value)){
+                                Depot areaDepot = depotMap.get(value);
+                                afterSale.setAreaDepotId(areaDepot.getId());
+                            }
                             break;
                         case 6:
-                            afterSale.setToStoreType(value);
+                            afterSale.setPackageStatus(value);
                             break;
                         case 7:
-                            afterSale.setMemory(value);
+                            afterSale.setToStoreType(value);
                             break;
                         case 8:
+                            afterSale.setMemory(value);
+                            break;
+                        case 9:
                             //更改工厂返回
-                            if (afterSale.getToAreaToFinance() == null || !afterSale.getFromCompanyToFinance() && StringUtils.isNotBlank(afterSale.getFromCompanyProductId())) {
+                            if (StringUtils.isNotBlank(value)&&(afterSale.getToAreaToFinance() == null || !afterSale.getFromCompanyToFinance() && StringUtils.isNotBlank(afterSale.getFromCompanyProductId()))) {
                                 Product fromCompanyProduct = productMap.get(value);
                                 afterSale.setFromCompanyProductId(fromCompanyProduct.getId());
                             }
                             break;
-                        case 9:
+                        case 10:
                             afterSale.setToStoreRemarks(value);
                             break;
                         default:
@@ -256,7 +271,7 @@ public class AfterSaleService {
     //坏机返厂
     @Transactional
     public void toCompany(List<String> badImes, LocalDate toCompanyDate, String toCompanyRemarks) {
-        Map<String, AfterSale> afterSaleMap = findAfterSale(badImes);
+        Map<String, AfterSale> afterSaleMap = findByImeList(badImes);
         for (int i = 0; i < badImes.size(); i++) {
             String badIme = badImes.get(i);
             AfterSale afterSale = afterSaleMap.get(badIme);
@@ -281,7 +296,7 @@ public class AfterSaleService {
         }
         List<Product> productList = productRepository.findByNameIn(productNames);
         Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");
-        Map<String, AfterSale> afterSaleMap = findAfterSale(badImes);
+        Map<String, AfterSale> afterSaleMap = findByImeList(badImes);
         for (int i = 0; i < badImes.size(); i++) {
             String badIme = badImes.get(i);
             AfterSale afterSale = afterSaleMap.get(badIme);

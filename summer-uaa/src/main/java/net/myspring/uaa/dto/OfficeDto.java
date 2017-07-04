@@ -17,6 +17,7 @@ public class OfficeDto {
     private String areaId;
     private String jointLevel;
     private String parentId;
+    private Boolean allDataScope;
 
     public String getParentId() {
         return parentId;
@@ -112,5 +113,13 @@ public class OfficeDto {
 
     public void setJointLevel(String jointLevel) {
         this.jointLevel = jointLevel;
+    }
+
+    public Boolean getAllDataScope() {
+        return allDataScope;
+    }
+
+    public void setAllDataScope(Boolean allDataScope) {
+        this.allDataScope = allDataScope;
     }
 }

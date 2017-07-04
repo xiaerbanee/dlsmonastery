@@ -6,8 +6,8 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto;
@@ -27,7 +27,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -98,14 +97,18 @@ public class ShopDepositService {
         }
 
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
-//TODO 同步金蝶 需要测试验证
-                if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
-                    KingdeeSynReturnDto returnDtoList = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
-                } else {
-                    KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit);
-                }
+            if (OutBillTypeEnum.其他应收单.name().equals(shopDepositForm.getOutBillType())) {
+                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
+                shopDeposit.setCloudSynId(returnDto.getId());
+                shopDeposit.setOutCode(returnDto.getBillNo());
+                shopDepositRepository.save(shopDeposit);
+            } else {
+                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent());
+                shopDeposit.setCloudSynId(returnDto.getId());
+                shopDeposit.setOutCode(returnDto.getBillNo());
+                shopDepositRepository.save(shopDeposit);
+            }
         }
-
     }
 
     public ShopDepositDto findDto(String id) {
@@ -120,7 +123,7 @@ public class ShopDepositService {
         return (latest == null ? BigDecimal.ZERO : latest.getLeftAmount());
     }
 
-    public String exportLatest() {
+    public SimpleExcelBook exportLatest() {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
@@ -137,7 +140,9 @@ public class ShopDepositService {
         shopDepositLatestColumnList.add(new SimpleExcelColumn(workbook, "marketDepositCreatedDate", "市场保证金创建时间"));
         List<ShopDepositLatestDto> shopDepositLatestDtoList = shopDepositRepository.findShopDepositLatestDto(10000);
         cacheUtils.initCacheInput(shopDepositLatestDtoList);
-        simpleExcelSheetList.add(new SimpleExcelSheet("门店最新押金数据", shopDepositLatestDtoList, shopDepositLatestColumnList));
+        SimpleExcelSheet sheet1 = new SimpleExcelSheet("门店最新押金数据", shopDepositLatestDtoList, shopDepositLatestColumnList);
+        ExcelUtils.doWrite(workbook, sheet1);
+        simpleExcelSheetList.add(sheet1);
 
         List<SimpleExcelColumn> shopDepositColumnList = Lists.newArrayList();
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
@@ -152,12 +157,11 @@ public class ShopDepositService {
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         List<ShopDepositDto> shopDepositDtoList = shopDepositRepository.findForExport(10000);
         cacheUtils.initCacheInput(shopDepositDtoList);
-        simpleExcelSheetList.add(new SimpleExcelSheet("押金明细", shopDepositDtoList, shopDepositColumnList));
+        SimpleExcelSheet sheet2 = new SimpleExcelSheet("押金明细", shopDepositDtoList, shopDepositColumnList);
+        ExcelUtils.doWrite(workbook, sheet2);
+        simpleExcelSheetList.add(sheet2);
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"押金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
-
+        return new SimpleExcelBook(workbook,"押金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
 }

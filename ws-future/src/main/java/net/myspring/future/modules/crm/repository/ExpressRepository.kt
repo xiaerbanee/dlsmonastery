@@ -107,14 +107,10 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append("""   and ord.from_depot_id = :expressOrderFromDepotId   """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(expressrQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
-
-
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val paramMap = BeanPropertySqlParameterSource(expressrQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressDto::class.java))
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
 
 

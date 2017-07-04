@@ -84,7 +84,7 @@ interface DepotRepositoryCustom{
 
 }
 
-class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotRepositoryCustom{
     override fun findDepotAccount(depotId: String): DepotAccountDto {
         return namedParameterJdbcTemplate.queryForObject("""
           select
@@ -271,9 +271,12 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             WHERE
                 t1.enabled=1
         """)
-        val query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as Page<DepotDto>
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(DepotDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(depotQuery),Long::class.java);
+        return PageImpl(list,pageable,count);
     }
 
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{
