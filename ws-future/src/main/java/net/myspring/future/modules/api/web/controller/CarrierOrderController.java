@@ -1,5 +1,6 @@
 package net.myspring.future.modules.api.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
@@ -51,7 +52,7 @@ public class CarrierOrderController {
     @RequestMapping(value = "getQuery")
     public CarrierOrderQuery getQuery(CarrierOrderQuery carrierOrderQuery) {
         carrierOrderQuery.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
-        carrierOrderQuery.getExtra().put("goodsOrderStatusList",GoodsOrderStatusEnum.getList());
+        carrierOrderQuery.getExtra().put("goodsOrderStatusList", Lists.newArrayList(GoodsOrderStatusEnum.待签收.name(),GoodsOrderStatusEnum.已完成.name()));
         return carrierOrderQuery;
     }
 

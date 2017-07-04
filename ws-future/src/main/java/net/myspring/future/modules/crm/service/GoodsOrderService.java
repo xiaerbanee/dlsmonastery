@@ -219,6 +219,7 @@ public class GoodsOrderService {
         expressOrderRepository.save(expressOrder);
         goodsOrder.setExpressOrderId(expressOrder.getId());
         goodsOrderRepository.save(goodsOrder);
+        goodsOrderForm.setId(goodsOrder.getId());
         return goodsOrder;
     }
 
