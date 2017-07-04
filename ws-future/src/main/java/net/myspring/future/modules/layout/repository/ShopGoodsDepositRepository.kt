@@ -102,7 +102,6 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             LEFT JOIN crm_bank bank ON t1.bank_id = bank.id
         WHERE
             t1.enabled = 1
-            AND t1.company_id = :companyId
         """)
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.remarks)){
             sb.append("""  and t1.remarks like concat('%',:remarks,'%')  """)

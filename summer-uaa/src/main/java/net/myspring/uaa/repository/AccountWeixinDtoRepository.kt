@@ -39,9 +39,9 @@ class AccountWeixinDtoRepository @Autowired constructor(val namedParameterJdbcTe
 
     fun save(accountWeixinDto: AccountWeixinDto) {
         if(StringUtils.isBlank(accountWeixinDto.id)) {
-            namedParameterJdbcTemplate.update("INSERT  INTO hr_account_weixin(account_id,company_id,open_id) VALUE (:accountId,:companyId,:openId)",BeanPropertySqlParameterSource(accountWeixinDto));
+            namedParameterJdbcTemplate.update("INSERT  INTO hr_account_weixin(account_id,open_id) VALUE (:accountId,:openId)",BeanPropertySqlParameterSource(accountWeixinDto));
         } else {
-            namedParameterJdbcTemplate.update("UPDATE  hr_account_weixin SET account_id=:accountId,company_id=:companyId,open_id=:openId where id=:id",BeanPropertySqlParameterSource(accountWeixinDto));
+            namedParameterJdbcTemplate.update("UPDATE  hr_account_weixin SET account_id=:accountId,open_id=:openId where id=:id",BeanPropertySqlParameterSource(accountWeixinDto));
         }
     }
 }

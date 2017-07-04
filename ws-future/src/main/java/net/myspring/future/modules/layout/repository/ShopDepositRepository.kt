@@ -62,7 +62,7 @@ class ShopDepositRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         SELECT
             depot.office_id shopOfficeId,
             depot.area_id shopAreaId,
-            t1.id, shop_id, t1.type, amount, left_amount, t1.created_by, t1.created_date, t1.last_modified_by, t1.last_modified_date, t1.remarks, t1.version, t1.locked, t1.enabled, t1.company_id, bank_id, out_code, cloud_syn_id, bill_date
+            t1.id, shop_id, t1.type, amount, left_amount, t1.created_by, t1.created_date, t1.last_modified_by, t1.last_modified_date, t1.remarks, t1.version, t1.locked, t1.enabled, bank_id, out_code, cloud_syn_id, bill_date
         FROM
             crm_shop_deposit t1, crm_depot depot
         WHERE
