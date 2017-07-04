@@ -53,7 +53,7 @@ public class ScheduleUtils {
 	}
 
 	@FactoryDataSource
-	private void synOppo(String date){
+	public void synOppo(String date){
 		String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
 		String[] agentCodes=agentCode.split(CharConstant.COMMA);
 		String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
