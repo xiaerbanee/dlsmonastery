@@ -23,7 +23,6 @@ public class ProductDto extends DataDto<Product> {
     private BigDecimal volume;
     private Boolean hasIme;
     private Boolean allowOrder;
-    private Boolean allowBill;
     private String image;
     private Boolean locked;
 
@@ -168,14 +167,6 @@ public class ProductDto extends DataDto<Product> {
 
     public void setAllowOrder(Boolean allowOrder) {
         this.allowOrder = allowOrder;
-    }
-
-    public Boolean getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(Boolean allowBill) {
-        this.allowBill = allowBill;
     }
 
     public String getImage() {

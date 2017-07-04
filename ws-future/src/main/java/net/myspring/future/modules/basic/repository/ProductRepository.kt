@@ -8,7 +8,6 @@ import net.myspring.future.modules.basic.web.query.ProductQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
-import org.springframework.data.repository.query.Param
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CachePut
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -231,11 +231,11 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (productQuery.allowOrder !=null && !productQuery.allowOrder) {
             sb.append("""  and t1.allow_order =0 """)
         }
-        if (productQuery.allowBill !=null && productQuery.allowBill ) {
-            sb.append("""  and t1.allow_bill = 1 """)
+        if (productQuery.visible !=null && productQuery.visible ) {
+            sb.append("""  and t1.visible = 1 """)
         }
-        if (productQuery.allowBill !=null && !productQuery.allowBill ) {
-            sb.append("""  and t1.allow_bill = 0 """)
+        if (productQuery.visible !=null && !productQuery.visible ) {
+            sb.append("""  and t1.visible = 0 """)
         }
         if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
             sb.append("""  and t1.product_type_id =:productTypeId """)
@@ -282,11 +282,11 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         if (productQuery.allowOrder !=null && !productQuery.allowOrder) {
             sb.append("""  and t1.allow_order =0 """)
         }
-        if (productQuery.allowBill !=null && productQuery.allowBill ) {
-            sb.append("""  and t1.allow_bill = 1 """)
+        if (productQuery.visible !=null && productQuery.visible ) {
+            sb.append("""  and t1.visible = 1 """)
         }
-        if (productQuery.allowBill !=null && !productQuery.allowBill ) {
-            sb.append("""  and t1.allow_bill = 0 """)
+        if (productQuery.visible !=null && !productQuery.visible ) {
+            sb.append("""  and t1.visible = 0 """)
         }
         if (StringUtils.isNotEmpty(productQuery.productTypeId)) {
             sb.append("""  and t1.product_type_id =:productTypeId """)
