@@ -98,7 +98,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="detailVisible=false">确定</el-button>
+          <el-button type="primary" @click="formSubmit()">确定</el-button>
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
@@ -200,6 +200,11 @@
               this.pageRequest();
             });
           }
+      },formSubmit(){
+            axios.post('/api/ws/future/api/carrierOrder/updateStatusAndRemarks', qs.stringify(this.inputForm)).then((response)=> {
+              this.$message(response.data.message);
+              this.detailVisible=false;
+            })
       }
     },created () {
       this.pageHeight = window.outerHeight -320;
