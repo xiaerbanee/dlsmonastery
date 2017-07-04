@@ -50,7 +50,7 @@ interface AdpricesystemRepository : BaseRepository<AdPricesystem,String>,Adprice
     """)
     fun findList(adPricesystemQuery: AdPricesystemQuery): MutableList<AdPricesystem>
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): AdPricesystem?
+    fun findByEnabledIsTrueAndName(name: String): AdPricesystem?
 
 
 }

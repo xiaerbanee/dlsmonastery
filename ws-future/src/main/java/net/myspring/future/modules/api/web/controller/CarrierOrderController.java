@@ -61,6 +61,13 @@ public class CarrierOrderController {
         return carrierOrderQuery;
     }
 
+    @RequestMapping(value = "getForm")
+    public CarrierOrderFrom getForm(CarrierOrderFrom carrierOrderFrom) {
+        carrierOrderFrom.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
+        return carrierOrderFrom;
+    }
+
+
     @RequestMapping(value = "checkBusinessId")
     public RestResponse checkBusinessId(CarrierOrderDto carrierOrderDto){
         RestResponse restResponse=new RestResponse("验证成功",null);
@@ -75,15 +82,6 @@ public class CarrierOrderController {
             restResponse=new RestResponse("必填信息",null,false);
         }
         return restResponse;
-    }
-
-    @RequestMapping(value="findDto")
-    public CarrierOrderDto findDto(String id){
-        if(StringUtils.isBlank(id)){
-            return new CarrierOrderDto();
-        }
-        return carrierOrderService.findDto(id);
-
     }
 
     @RequestMapping(value = "save")

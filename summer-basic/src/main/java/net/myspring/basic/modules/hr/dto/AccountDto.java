@@ -21,7 +21,6 @@ public class AccountDto extends DataDto<Account> {
     private String officeId;
     private String leaderId;
     private String employeeId;
-    private String companyId;
     private String outId;
     private String companyName;
 
@@ -72,14 +71,6 @@ public class AccountDto extends DataDto<Account> {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getCompanyName() {

@@ -17,17 +17,16 @@ interface ProductMonthPriceDetailRepository : BaseRepository<ProductMonthPriceDe
 
 interface ProductMonthPriceDetailRepositoryCustom {
 
-    fun findDetailListForNew(companyId :String): List<ProductMonthPriceDetailDto>
+    fun findDetailListForNew(): List<ProductMonthPriceDetailDto>
 
-    fun findDetailListForEdit(companyId :String, productMonthPriceId :String): List<ProductMonthPriceDetailDto>
+    fun findDetailListForEdit( productMonthPriceId :String): List<ProductMonthPriceDetailDto>
 
 }
 
 
 class ProductMonthPriceDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductMonthPriceDetailRepositoryCustom{
-    override fun findDetailListForEdit(companyId: String, productMonthPriceId: String): List<ProductMonthPriceDetailDto> {
+    override fun findDetailListForEdit(productMonthPriceId: String): List<ProductMonthPriceDetailDto> {
         val paramMap = HashMap<String, Any>()
-        paramMap.put("companyId",companyId)
         paramMap.put("productMonthPriceId",productMonthPriceId)
 
         return namedParameterJdbcTemplate.query("""
@@ -63,7 +62,6 @@ class ProductMonthPriceDetailRepositoryImpl @Autowired constructor(val namedPara
                             crm_product_type t1
                         WHERE
                             t1.enabled = 1
-                            AND t1.company_id = :companyId
                             AND t1.score_type = 1
                             AND t1.price1 IS NOT NULL
                             AND NOT EXISTS (
@@ -78,7 +76,7 @@ class ProductMonthPriceDetailRepositoryImpl @Autowired constructor(val namedPara
           """, paramMap, BeanPropertyRowMapper(ProductMonthPriceDetailDto::class.java))
     }
 
-    override fun findDetailListForNew(companyId :String): List<ProductMonthPriceDetailDto> {
+    override fun findDetailListForNew(): List<ProductMonthPriceDetailDto> {
         return namedParameterJdbcTemplate.query("""
          SELECT
             NULL id,
@@ -90,10 +88,9 @@ class ProductMonthPriceDetailRepositoryImpl @Autowired constructor(val namedPara
             crm_product_type t1
         WHERE
             t1.enabled = 1
-            AND t1.company_id = :companyId
             AND t1.score_type = 1
             AND t1.price1 IS NOT NULL
-          """, Collections.singletonMap("companyId", companyId), MyBeanPropertyRowMapper(ProductMonthPriceDetailDto::class.java))
+          """,MyBeanPropertyRowMapper(ProductMonthPriceDetailDto::class.java))
     }
 
 

@@ -392,7 +392,6 @@ public class DutyWorktimeService {
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(startTime);
-                                dutyWorktime.setCompanyId(RequestUtils.getCompanyId());
                                 dutyWorktime.setType(WorkTimeTypeEnum.打卡.toString());
                                 dutyWorktimeMap.put(key, dutyWorktime);
                             }
@@ -402,7 +401,6 @@ public class DutyWorktimeService {
                                 dutyWorktime.setEmployeeId(employeeId);
                                 dutyWorktime.setDutyDate(dutyDate);
                                 dutyWorktime.setDutyTime(endTime);
-                                dutyWorktime.setCompanyId(RequestUtils.getCompanyId());
                                 dutyWorktime.setType(WorkTimeTypeEnum.打卡.toString());
                                 dutyWorktimeMap.put(key, dutyWorktime);
                             }

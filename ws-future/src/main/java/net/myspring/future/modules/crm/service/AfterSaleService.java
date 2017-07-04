@@ -68,7 +68,7 @@ public class AfterSaleService {
 
 
     public List<ProductImeDto> findFormData(List<String> imeList) {
-        List<ProductImeDto> productImeList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeList = productImeRepository.findDtoListByImeList(imeList);
         return productImeList;
     }
 
@@ -99,8 +99,7 @@ public class AfterSaleService {
     //单据录入
     @Transactional
     public void save(List<List<String>> datas, LocalDate toStoreDate) {
-        String companyId = RequestUtils.getCompanyId();
-        Depot badStore = depotRepository.findOne(CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.BAD_STORE_ID.name()).getValue());
+        Depot badStore = depotRepository.findOne(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.BAD_STORE_ID.name()).getValue());
         List<String> imeList = Lists.newArrayList();
         List<String> depotNameList = Lists.newArrayList();
         for (List<String> row : datas) {
@@ -108,7 +107,7 @@ public class AfterSaleService {
             listAddTrim(imeList, row.get(3));
             listAddTrim(depotNameList, row.get(5));
         }
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         List<Depot> depotList = depotRepository.findByNameList(depotNameList);
         Map<String, ProductIme> productImeMap = CollectionUtil.extractToMap(productImeList, "ime");
         Map<String, Depot> depotMap = CollectionUtil.extractToMap(depotList, "name");
@@ -180,7 +179,6 @@ public class AfterSaleService {
     //单据修改
     @Transactional
     public void update(List<List<String>> datas) {
-        String companyId = RequestUtils.getCompanyId();
 
         List<String> badImeList = Lists.newArrayList();
         List<String> imeList = Lists.newArrayList();
@@ -194,8 +192,8 @@ public class AfterSaleService {
         }
         Map<String, AfterSale> afterSaleMap = findByImeList(badImeList);
         if (afterSaleMap.size() > 0) {
-            String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
-            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId, imeList);
+            String goodStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
+            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
             List<Depot> depotList = depotRepository.findByNameList(depotNameList);
             List<Product> productList = productRepository.findByNameIn(productNameList);
             Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");

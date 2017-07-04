@@ -39,7 +39,6 @@ public class AccountWeixinService {
                 if("xcxtest".equals(loginName)){
                     accountWeixin.setOpenId(weixinSessionDto.getOpenid());
                     accountWeixin.setAccountId(account.getId());
-                    accountWeixin.setCompanyId(account.getCompanyId());
                     accountWeixinDtoRepository.save(accountWeixin);
                     return new RestResponse("账号绑定成功",null);
                 }else {
@@ -53,7 +52,6 @@ public class AccountWeixinService {
                 AccountWeixinDto accountWeixin = new AccountWeixinDto();
                 accountWeixin.setAccountId(account.getId());
                 accountWeixin.setOpenId(weixinSessionDto.getOpenid());
-                accountWeixin.setCompanyId(account.getCompanyId());
                 accountWeixinDtoRepository.save(accountWeixin);
                 return new RestResponse("账号绑定成功",null);
             }

@@ -8,7 +8,6 @@ import net.myspring.basic.modules.hr.domain.Account;
  */
 public class AccountWeixinDto extends DataDto<Account> {
     private String accountId;
-    private String companyId;
     private String openId;
 
     public String getAccountId() {
@@ -18,15 +17,6 @@ public class AccountWeixinDto extends DataDto<Account> {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
     public String getOpenId() {
         return openId;
     }
