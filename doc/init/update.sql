@@ -811,7 +811,10 @@ ALTER TABLE `sys_office`
   ADD COLUMN `area_id`  bigint(20) NULL AFTER `office_rule_id`,
   ADD COLUMN `joint_level`  varchar(64) NULL AFTER `area_id`;
 
+ALTER TABLE `sys_office`
+  ADD COLUMN `all_data_scope`  tinyint(1) NULL AFTER `joint_level`;
 
+update sys_office set all_data_scope=0;
 
 ### memo(更新depot_store,depot_shop数据)
 INSERT INTO crm_depot_store (
