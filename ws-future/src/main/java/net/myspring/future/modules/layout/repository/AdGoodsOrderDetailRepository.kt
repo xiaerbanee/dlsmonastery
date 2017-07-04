@@ -139,6 +139,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                     t2.created_date adGoodsOrderCreatedDate,
                     t2.bill_date adGoodsOrderBillDate,
                     t2.parent_id adGoodsOrderParentId,
+                    t3.office_id adGoodsOrderOfficeId,
                     t4.area_type adGoodsOrderDepotShopAreaType,
                     t5.contator expressOrderContator,
                     t5.mobile_phone expressOrderMobilePhone,
