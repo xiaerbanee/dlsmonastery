@@ -56,6 +56,13 @@ public class CarrierOrderController {
         return carrierOrderQuery;
     }
 
+    @RequestMapping(value = "getForm")
+    public CarrierOrderFrom getForm(CarrierOrderFrom carrierOrderFrom) {
+        carrierOrderFrom.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
+        return carrierOrderFrom;
+    }
+
+
     @RequestMapping(value = "checkBusinessId")
     public RestResponse checkBusinessId(CarrierOrderDto carrierOrderDto){
         RestResponse restResponse=new RestResponse("验证成功",null);
