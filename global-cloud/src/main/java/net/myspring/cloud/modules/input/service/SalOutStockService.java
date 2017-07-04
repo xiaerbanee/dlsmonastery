@@ -57,7 +57,6 @@ public class SalOutStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    @Transactional
     private KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salOutStockDto.getExtendId(),
