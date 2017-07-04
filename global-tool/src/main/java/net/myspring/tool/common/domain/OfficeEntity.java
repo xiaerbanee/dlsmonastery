@@ -21,7 +21,6 @@ public class OfficeEntity  {
     private String jointLevel;
     private String parentId;
     private String parentIds;
-    private String companyId;
 
     public String getId() {
         return id;
@@ -126,13 +125,5 @@ public class OfficeEntity  {
 
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 }

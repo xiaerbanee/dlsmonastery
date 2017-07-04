@@ -20,7 +20,6 @@ public class ProductDto extends DataDto<Product>{
     private Integer version;
     private KingdeeBook kingdeeBook;
     private String kingdeeBookId;
-    private String companyId;
 
     public String getName() {
         return name;
@@ -92,13 +91,5 @@ public class ProductDto extends DataDto<Product>{
 
     public void setKingdeeBookId(String kingdeeBookId) {
         this.kingdeeBookId = kingdeeBookId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 }
