@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopAdService {
 
     @Autowired
@@ -61,6 +61,7 @@ public class ShopAdService {
         return page;
     }
 
+    @Transactional
     public ShopAd save(ShopAdForm shopAdForm) {
         ShopAd shopAd;
         ShopAdType shopAdType = shopAdTypeRepository.findOne(shopAdForm.getShopAdTypeId());
@@ -101,6 +102,7 @@ public class ShopAdService {
     }
 
 
+    @Transactional
     public String audit(ShopAdAuditForm shopAdAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopAd shopAd;
@@ -128,6 +130,7 @@ public class ShopAdService {
         return null;
     }
 
+    @Transactional
     public String batchAudit(String[] ids, Boolean pass){
         if(ids==null){
             return null;
@@ -162,6 +165,7 @@ public class ShopAdService {
         return shopAdForm;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopAdRepository.logicDelete(id);
     }

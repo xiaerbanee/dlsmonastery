@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PriceChangeImeService {
 
     @Autowired
@@ -85,7 +85,7 @@ public class PriceChangeImeService {
         return priceChangeImeForm;
     }
 
-
+    @Transactional
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
         priceChangeIme.setImage(priceChangeImeForm.getImage());
@@ -93,6 +93,7 @@ public class PriceChangeImeService {
         priceChangeImeRepository.save(priceChangeIme);
     }
 
+    @Transactional
     public void audit(PriceChangeImeForm priceChangeImeForm){
         if(priceChangeImeForm.getPass()!=null) {
             PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
@@ -108,6 +109,7 @@ public class PriceChangeImeService {
         }
     }
 
+    @Transactional
     public String save(PriceChangeImeUploadForm priceChangeImeUploadForm){
         String priceChangeId = priceChangeImeUploadForm.getPriceChangeId();
         List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();

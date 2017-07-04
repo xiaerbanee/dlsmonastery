@@ -25,8 +25,8 @@
             <el-form-item :label="$t('productForm.allowOrder')" prop="allowOrder">
               <bool-radio-group v-model="inputForm.allowOrder"></bool-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('productForm.allowBill')" prop="allowBill">
-              <bool-radio-group v-model="inputForm.allowBill"></bool-radio-group>
+            <el-form-item :label="$t('productForm.visible')" prop="visible">
+              <bool-radio-group v-model="inputForm.visible"></bool-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="8">

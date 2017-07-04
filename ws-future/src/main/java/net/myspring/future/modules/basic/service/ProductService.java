@@ -237,6 +237,7 @@ public class ProductService {
                         product.setVolume(BigDecimal.ZERO);
                         product.setAllowOrder(false);
                         product.setAllowBill(false);
+                        product.setVisible(true);
                         if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
                             product.setHasIme(true);
                         }else{

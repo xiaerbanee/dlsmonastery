@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdGoodsOrderDetailService {
 
     @Autowired

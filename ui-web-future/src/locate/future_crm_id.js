@@ -796,7 +796,7 @@ export default {
     productName: "nama produk",
     areaQty: "area",
     stock: "gudang",
-    allowBill: "memungkikan pemesanan",
+    allowOrder: "允许订货",
     qty: "kuantitas",
     billQty: "jumlah nota",
     price: "harga",

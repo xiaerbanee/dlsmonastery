@@ -54,7 +54,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class GoodsOrderShipService {
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
@@ -179,6 +179,7 @@ public class GoodsOrderShipService {
         return result;
     }
 
+    @Transactional
     public GoodsOrderPrintDto print(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
@@ -232,6 +233,7 @@ public class GoodsOrderShipService {
         return goodsOrderPrintDto;
     }
 
+    @Transactional
     public GoodsOrderPrintDto shipPrint(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
@@ -251,7 +253,7 @@ public class GoodsOrderShipService {
     }
 
 
-
+    @Transactional
     public void ship(GoodsOrderShipForm goodsOrderShipForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
         Map<String, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
@@ -319,7 +321,7 @@ public class GoodsOrderShipService {
         expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(),goodsOrder.getId(),goodsOrderShipForm.getExpressStr(),expressOrder.getExpressCompanyId());
     }
 
-
+    @Transactional
     public void sreturn(GoodsOrderForm goodsOrderForm) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
         if(StringUtils.isEmpty(goodsOrder.getOutCode())){
@@ -358,6 +360,7 @@ public class GoodsOrderShipService {
 
     }
 
+    @Transactional
     public void sign(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         if(goodsOrder!=null&&GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())){
@@ -366,6 +369,7 @@ public class GoodsOrderShipService {
         }
     }
 
+    @Transactional
     public void shipBack(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
         List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndGoodsOrderId(goodsOrderId);

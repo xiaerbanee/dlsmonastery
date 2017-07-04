@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ReportScoreService {
 
 
@@ -97,6 +97,7 @@ public class ReportScoreService {
         return reportScoreDto;
     }
 
+    @Transactional
     public ReportScore save(ReportScoreForm reportScoreForm) {
         ReportScore reportScore = BeanUtil.map(reportScoreForm, ReportScore.class);
         LocalDate date = reportScoreForm.getScoreDate();
@@ -242,6 +243,7 @@ public class ReportScoreService {
         return reportScore;
     }
 
+    @Transactional
     public void delete(ReportScoreForm reportScoreForm) {
         reportScoreRepository.logicDelete(reportScoreForm.getId());
     }
