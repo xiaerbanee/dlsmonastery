@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >添加基础属性</el-button>
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加业务属性</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -70,6 +70,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData()">导出</el-button>
           <el-button type="primary" @click="search()">过滤</el-button>
         </div>
       </search-dialog>
@@ -89,23 +90,24 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="depotName" label="门店名称" sortable ></el-table-column>
+        <el-table-column  prop="depotName" label="门店名称" sortable ></el-table-column>
+        <el-table-column prop="clientName" label="金蝶名称"  />
         <el-table-column prop="areaName" label="办事处"  />
         <el-table-column prop="officeName" label="机构"  />
         <el-table-column prop="areaType" label="地区属性"  />
-        <el-table-column prop="pricesystemType" label="价格体系"  />
-        <el-table-column prop="chainType" label="连锁体系"  />
-        <el-table-column prop="scbzj" label="市场保证金"  />
-        <el-table-column prop="xxbzj" label="形象押金"  />
+        <el-table-column prop="pricesystemName" label="价格体系"  />
+        <el-table-column prop="chainName" label="连锁体系"  />
+        <el-table-column prop="depositMap.scbzj" label="市场保证金"  />
+        <el-table-column prop="depositMap.xxbzj" label="形象押金"  />
         <el-table-column prop="contator" label="联系人"  />
         <el-table-column prop="mobilePhone" label="手机"  />
         <el-table-column prop="salePointType" label="门店类型"  />
         <el-table-column prop="remarks" label="备注"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="140">
+        <el-table-column  label="操作" width="140">
           <template scope="scope">
-            <el-button size="small"   @click.native="itemAction(scope.row.id,'depotShopEdit')">基础属性修改</el-button>
-            <el-button size="small"  @click.native="itemAction(scope.row.id,'depotEdit')">业务属性修改</el-button>
-            <el-button size="small"  @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <div class="action"><el-button size="small"   @click.native="itemAction(scope.row.id,'depotShopEdit')" v-permit="'crm:depotShop:basicEdit'">基础属性修改</el-button></div>
+            <div class="action"><el-button size="small"  @click.native="itemAction(scope.row.id,'depotEdit')" v-permit="'crm:depotShop:businessEdit'">业务属性修改</el-button></div>
+            <div class="action"><el-button size="small"  @click.native="itemAction(scope.row.id,'delete')" v-permit="'crm:depotShop:delete'">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -178,6 +180,12 @@
         this.$router.push({ name: 'depotShopForm'})
       },itemAddDepot(){
         this.$router.push({ name: 'shopForm'})
+      },exportData(){
+        this.formVisible = false;
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/basic/depot/export?'+qs.stringify(util.deleteExtra(this.formData));
+          this.pageRequest();
+        }).catch(()=>{});
       },synArea(){
         this.synArea = false;
         axios.get('/api/ws/future/basic/depot/synArea',{params:this.synData}).then((response) =>{

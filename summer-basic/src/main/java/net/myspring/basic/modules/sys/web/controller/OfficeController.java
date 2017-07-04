@@ -58,28 +58,14 @@ public class OfficeController {
         return officeDtos;
     }
 
-    @RequestMapping(value = "getOfficeFilterIds")
-    public List<String> getOfficeFilterIds(String officeId) {
-        List<String> officeIdList = Lists.newArrayList();
-        if (StringUtils.isNotBlank(officeId)) {
-            officeIdList = officeService.getOfficeFilterIds(officeId);
-        }
-        return officeIdList;
-    }
-
     @RequestMapping(value = "getTopIdsByFilter")
     public List<String> getTopIdsByFilter(){
-        List<String> officeIds=Lists.newArrayList();
-        List<String> filterOfficeIds=officeService.getOfficeFilterIds(RequestUtils.getOfficeId());
-        if(CollectionUtil.isNotEmpty(filterOfficeIds)){
-            officeIds=officeService.getTopOfficeListByIdList(filterOfficeIds);
-        }
-        return officeIds;
+        return officeService.getTopOfficeListByIdList();
     }
 
     @RequestMapping(value = "findByOfficeRuleName")
     public List<OfficeDto> findByOfficeRuleName(String officeRuleName) {
-        List<OfficeDto> officeList = Lists.newArrayList();
+        List<OfficeDto> officeList;
         if (StringUtils.isNotBlank(officeRuleName)) {
             officeList = BeanUtil.map(officeService.findByOfficeRuleName(officeRuleName), OfficeDto.class);
         }else {

@@ -5,9 +5,18 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
-        <el-button type="primary" @click="itemMallAdd" icon="plus">商城订单</el-button>
-        <el-button type="primary" @click="itemBatchAdd" icon="plus">{{ $t('goodsOrderList.batchAdd') }}</el-button>
-        <el-button type="primary" @click="itemCarrierOrder" icon="plus">商城相关</el-button>
+        <el-dropdown @command="handleCommand">
+          <el-button type="primary">
+            {{$t('goodsOrderList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="mallAdd">{{$t('goodsOrderList.mallAdd')}}</el-dropdown-item>
+            <el-dropdown-item command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
+            <el-dropdown-item command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
+            <el-dropdown-item command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
+            <el-dropdown-item command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <span  v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
@@ -180,13 +189,6 @@
       this.pageRequest();
     },itemAdd(){
       this.$router.push({ name: 'goodsOrderForm'})
-    },itemBatchAdd(){
-      this.$router.push({ name: 'goodsOrderBatchAdd'})
-    },
-    itemMallAdd(){
-      this.$router.push({ name: 'goodsOrderMallForm'})
-    },itemCarrierOrder(){
-      this.$router.push({name:'carrierOrderList'})
     },itemAction:function(id,action){
       if(action=="edit") {
         this.$router.push({ name: 'goodsOrderForm', query: { id: id }})
@@ -210,7 +212,21 @@
       }else if(action =="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }
-
+    },
+    handleCommand(command) {
+      if(command==="mallAdd") {
+        this.$router.push({ name: 'goodsOrderMallForm'});
+      }else if(command==="batchAdd"){
+        this.$router.push({ name: 'goodsOrderBatchAdd'});
+      }else if(command==="carrierOrder"){
+        this.$router.push({name:'carrierOrderList'});
+      }else if(command==="goodsOrderImeList"){
+        this.$router.push({ name: 'goodsOrderImeList'});
+      }else if(command==="exportData"){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/crm/goodsOrder/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
+      }
     }
  },created () {
     var that = this;

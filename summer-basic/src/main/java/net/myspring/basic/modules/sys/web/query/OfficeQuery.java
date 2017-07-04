@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class OfficeQuery extends BaseQuery {
     private String id;
-    private List<String> officeIds= Lists.newArrayList();
     private String name;
 
     public String getId() {
@@ -19,14 +18,6 @@ public class OfficeQuery extends BaseQuery {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public List<String> getOfficeIds() {
-        return officeIds;
-    }
-
-    public void setOfficeIds(List<String> officeIds) {
-        this.officeIds = officeIds;
     }
 
     public String getName() {

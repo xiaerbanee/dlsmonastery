@@ -53,7 +53,6 @@ public class ApPayBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    @Transactional
     private KingdeeSynDto save(ApPayBillDto apPayBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 apPayBillDto.getExtendId(),
@@ -61,7 +60,7 @@ public class ApPayBillService {
                 KingdeeFormIdEnum.AP_PAYBILL.name(),
                 apPayBillDto.getJson(),
                 kingdeeBook) {
-            };
+        };
         kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("付款单失败："+kingdeeSynDto.getResult());

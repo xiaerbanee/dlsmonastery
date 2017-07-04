@@ -114,7 +114,7 @@ public class StkTransferDirectDto {
                 detail.put("FPriceQty", billEntryDto.getQty());
                 detail.put("FSrcStockStatusId", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
                 detail.put("FDestStockStatusId", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
-                detail.put("FNoteEntry", "api接口");
+                detail.put("FNoteEntry", billEntryDto.getNoteEntry());
                 entity.add(detail);
             }
         }

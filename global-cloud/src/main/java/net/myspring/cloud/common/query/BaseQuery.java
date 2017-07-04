@@ -12,7 +12,8 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
-    private String companyName;
+    private String companyName = RequestUtils.getCompanyName();
+
     private  Integer page = 0;
 
     private Integer size = 50;

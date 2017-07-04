@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.utils.CacheUtils;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.repository.AccountPermissionRepository;
 import net.myspring.basic.modules.sys.domain.Menu;
 import net.myspring.basic.modules.sys.domain.MenuCategory;
@@ -50,8 +51,6 @@ public class MenuService {
     private AccountPermissionRepository accountPermissionRepository;
     @Autowired
     private MenuCategoryRepository menuCategoryRepository;
-    @Value("${setting.adminIdList}")
-    private String adminIdList;
 
     public List<MenuDto> findAll() {
         List<Menu> menuList = menuRepository.findAll();
@@ -126,7 +125,7 @@ public class MenuService {
 
     private List<String> getMenuIdList(String accountId) {
         List<String> menuIdList = Lists.newArrayList();
-        if (StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)) {
+        if (RequestUtils.getAdmin()) {
             List<Menu> menuList = menuRepository.findAllEnabled();
             menuIdList = CollectionUtil.extractToList(menuList, "id");
         } else {

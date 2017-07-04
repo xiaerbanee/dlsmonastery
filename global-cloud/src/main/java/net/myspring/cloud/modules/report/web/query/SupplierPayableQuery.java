@@ -1,7 +1,7 @@
 package net.myspring.cloud.modules.report.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.query.BaseQuery;
+import net.myspring.cloud.common.query.BaseQuery;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class SupplierPayableQuery extends BaseQuery{
+public class SupplierPayableQuery extends BaseQuery {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private List<String> supplierIdList = Lists.newArrayList();

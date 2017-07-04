@@ -21,6 +21,9 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     @CacheInput(inputKey = "offices",inputInstance = "shopAreaId",outputInstance = "name")
     private String shopAreaName;
     private String shopAreaId;
+    private String shopOfficeId;
+    @CacheInput(inputKey = "offices",inputInstance = "shopOfficeId",outputInstance = "name")
+    private String shopOfficeName;
     private String businessId;
     private LocalDate billDate;
     private LocalDateTime shipDate;
@@ -54,6 +57,8 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String  rebateRuleRemarks;
     private String expressOrderId;
     private String expressCompanyId;
+    @CacheInput(inputKey = "expressCompanies",inputInstance = "expressCompanyId",outputInstance = "name")
+    private String expressCompanyName;
     private Boolean syn;
     private String pullStatus;
     private String address;
@@ -61,10 +66,43 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String mobilePhone;
     private String expressOrderExpressCodes;
     private Boolean lxMallOrder;
+    private String shopDepotShopAreaType;
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public String getShopDepotShopAreaType() {
+        return shopDepotShopAreaType;
+    }
+
+    public void setShopDepotShopAreaType(String shopDepotShopAreaType) {
+        this.shopDepotShopAreaType = shopDepotShopAreaType;
+    }
+
+    public String getShopOfficeId() {
+        return shopOfficeId;
+    }
+
+    public void setShopOfficeId(String shopOfficeId) {
+        this.shopOfficeId = shopOfficeId;
+    }
+
+    public String getShopOfficeName() {
+        return shopOfficeName;
+    }
+
+    public void setShopOfficeName(String shopOfficeName) {
+        this.shopOfficeName = shopOfficeName;
+    }
+
+    public String getExpressCompanyName() {
+        return expressCompanyName;
+    }
+
+    public void setExpressCompanyName(String expressCompanyName) {
+        this.expressCompanyName = expressCompanyName;
+    }
 
     public String getShopCode() {
         return shopCode;

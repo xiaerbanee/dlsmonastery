@@ -9,6 +9,7 @@ import net.myspring.cloud.common.enums.StkMisDeliveryTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkMisDeliveryDto;
+import net.myspring.cloud.modules.input.dto.StkMisDeliveryFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
@@ -83,22 +84,23 @@ public class StkMisDeliveryService {
             Integer qty = Integer.valueOf(HandsontableUtils.getValue(row, 3));
             String type = HandsontableUtils.getValue(row, 4);
             String remarks = HandsontableUtils.getValue(row, 5);
-
+            StkMisDeliveryDto misDelivery = new StkMisDeliveryDto();
+            misDelivery.setExtendType(ExtendTypeEnum.其他出库单_K3.name());
+            misDelivery.setCreator(accountKingdeeBook.getUsername());
+            misDelivery.setBillDate(billDate);
+            misDelivery.setDepartmentNumber(departmentNumber);
             String billKey = materialNumber + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
-                StkMisDeliveryDto misDelivery = new StkMisDeliveryDto();
-                misDelivery.setExtendType(ExtendTypeEnum.其他出库单_K3.name());
-                misDelivery.setCreator(accountKingdeeBook.getUsername());
-                misDelivery.setBillDate(billDate);
-                misDelivery.setDepartmentNumber(departmentNumber);
-                misDelivery.setMaterialNumber(materialNumber);
-                misDelivery.setStockNumber(stockNumMap.get(stockName));
-                misDelivery.setQty(qty);
-                misDelivery.setFEntryNote(remarks);
+                StkMisDeliveryFEntityDto misDeliveryFEntityDto = new StkMisDeliveryFEntityDto();
+                misDeliveryFEntityDto.setMaterialNumber(materialNumber);
+                misDeliveryFEntityDto.setStockNumber(stockNumMap.get(stockName));
+                misDeliveryFEntityDto.setQty(qty);
+                misDeliveryFEntityDto.setFEntryNote(remarks);
                 misDelivery.setMisDeliveryType(type);
+                misDelivery.getStkMisDeliveryFEntityDtoList().add(misDeliveryFEntityDto);
                 misDeliveryMap.put(billKey, misDelivery);
             } else {
-                misDeliveryMap.get(billKey).setQty(qty + qty);
+                misDeliveryMap.get(billKey).getStkMisDeliveryFEntityDtoList().get(0).setQty(qty+qty);
             }
         }
         List<StkMisDeliveryDto> billList = Lists.newArrayList(misDeliveryMap.values());

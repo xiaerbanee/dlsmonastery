@@ -31,40 +31,6 @@ public class OfficeManager {
     private OfficeRuleRepository officeRuleRepository;
     @Autowired
     private OfficeBusinessRepository officeBusinessRepository;
-    @Value("${setting.adminIdList}")
-    private String adminIdList;
-
-    public List<String> officeFilter(String officeId) {
-        List<String> officeIdList = Lists.newLinkedList();
-        if (!StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())) {
-            Office office = officeRepository.findOne(officeId);
-            officeIdList.add(office.getId());
-            if (OfficeTypeEnum.业务部门.name().equalsIgnoreCase(office.getType())) {
-                officeIdList.addAll(CollectionUtil.extractToList(officeRepository.findByParentIdsLike("%,"+office.getId()+",%"), "id"));
-            } else if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(office.getType())) {
-                List<OfficeBusiness> businessList = officeBusinessRepository.findBusinessIdById(office.getId());
-                if (CollectionUtil.isNotEmpty(businessList)) {
-                    List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
-                    officeIdList.addAll(officeIds);
-                    List<Office> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
-                    officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));
-                }
-            }else {
-                officeIdList.add("0");
-            }
-        }
-        officeIdList = Lists.newArrayList(Sets.newHashSet(officeIdList));
-        return officeIdList;
-    }
-
-    public List<Office> findByOfficeIdAndRuleName(String officeId, String ruleName) {
-        List<Office> officeList =Lists.newArrayList();
-        OfficeRule officeRule = officeRuleRepository.findByName(ruleName);
-        if (officeRule != null) {
-            officeList = findByOfficeIdAndRuleId(officeId, officeRule.getId());
-        }
-        return officeList;
-    }
 
     public List<Office> findByOfficeIdAndRuleId(String officeId, String ruleId) {
         List<Office> officeList = officeRepository.findByOfficeIdAndRuleId("%,"+officeId+",%", ruleId);

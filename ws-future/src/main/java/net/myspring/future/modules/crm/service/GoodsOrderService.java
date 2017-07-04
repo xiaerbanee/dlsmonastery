@@ -23,6 +23,8 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.api.domain.CarrierOrder;
+import net.myspring.future.modules.api.repository.CarrierOrderRepository;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
@@ -32,7 +34,10 @@ import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
-import net.myspring.future.modules.basic.repository.*;
+import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
+import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
+import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
@@ -46,9 +51,13 @@ import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
 import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.*;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -87,8 +96,6 @@ public class GoodsOrderService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
     private CacheUtils cacheUtils;
     @Autowired
     private SalOutStockManager salOutStockManager;
@@ -98,6 +105,8 @@ public class GoodsOrderService {
     private DepotManager depotManager;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private CarrierOrderRepository carrierOrderRepository;
 
     public GoodsOrder findByBusinessId(String businessId){
         return goodsOrderRepository.findByBusinessId(businessId);
@@ -621,5 +630,246 @@ public class GoodsOrderService {
             expressOrderRepository.save(expressOrder);
 
         }
+    }
+
+    public SimpleExcelBook export(GoodsOrderQuery goodsOrderQuery) {
+
+        Workbook workbook = new SXSSFWorkbook(10000);
+        Map<String, CellStyle> cellStyleMap=ExcelUtils.getCellStyleMap(workbook);
+
+        if (goodsOrderQuery.getExpressCodes() != null) {
+            goodsOrderQuery.setExpresscodeList(Arrays.asList(goodsOrderQuery.getExpressCodes().split("[\n,]")));
+        }
+        if (goodsOrderQuery.getBusinessIds() != null) {
+            goodsOrderQuery.setBusinessIdList(Arrays.asList(goodsOrderQuery.getBusinessIds().split("[\n,]")));
+        }
+        goodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
+
+        List<GoodsOrderDto> goodsOrderDtoList=goodsOrderRepository.findAll(new PageRequest(0,10000), goodsOrderQuery).getContent();
+        cacheUtils.initCacheInput(goodsOrderDtoList);
+
+        List<String> goodsOrderIdList = CollectionUtil.extractToList(goodsOrderDtoList, "id");
+        Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap = getGoodsOrderDetailMap(goodsOrderIdList);
+        Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap = getGoodsOrderImeMap(goodsOrderIdList);
+        Map<String, String> carrierOrderMap = getCarrierOrderCodeMap(goodsOrderIdList);
+
+        List<SimpleExcelSheet> sheetList = new ArrayList<>();
+        sheetList.add(getGoodsOrderListSheet( goodsOrderDtoList, goodsOrderDetailMap, carrierOrderMap,cellStyleMap));
+        sheetList.add(getGoodsOrderDetailSheet(goodsOrderDtoList, goodsOrderDetailMap, carrierOrderMap,cellStyleMap));
+        sheetList.add(getGoodsOrderImeSheet(goodsOrderDtoList, goodsOrderImeMap, carrierOrderMap,cellStyleMap));
+        for(SimpleExcelSheet simpleExcelSheet : sheetList){
+            ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        }
+
+        return  new SimpleExcelBook(workbook,"货品订货"+ LocalDate.now()+".xlsx", sheetList);
+    }
+
+    private SimpleExcelSheet getGoodsOrderImeSheet(List<GoodsOrderDto> goodsOrderDtoList, Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap, Map<String, String> carrierOrderMap,Map<String, CellStyle> cellStyleMap) {
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+        List<List<SimpleExcelColumn>> excelColumnList= Lists.newArrayList();
+        List<SimpleExcelColumn> headColumnList=Lists.newArrayList();
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"订单编号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"外部编号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"商城单号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"开单日期"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"发货仓库"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"办事处"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"考核区域"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"地区属性"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"门店"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"产品名称"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"串码"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"串码2"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"MEID"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"创建人"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"备注"));
+        excelColumnList.add(headColumnList);
+
+        for(GoodsOrderDto goodsOrderDto : goodsOrderDtoList){
+            List<GoodsOrderImeDto> goodsOrderImeDtoList = goodsOrderImeMap.get(goodsOrderDto.getId());
+            if(goodsOrderImeDtoList == null){
+                continue;
+            }
+            for(GoodsOrderImeDto goodsOrderImeDto : goodsOrderImeDtoList){
+                List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getFormatId()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getOutCode()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,carrierOrderMap.get(goodsOrderDto.getId()) != null ? carrierOrderMap.get(goodsOrderDto.getId()).trim() : ""));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getBillDate()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getStoreName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopAreaName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopOfficeName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopDepotShopAreaType()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderImeDto.getProductName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderImeDto.getProductImeIme()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderImeDto.getProductImeIme2()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderImeDto.getProductImeMeid()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getCreatedByName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getRemarks()));
+                excelColumnList.add(simpleExcelColumnList);
+            }
+
+        }
+        return new SimpleExcelSheet("订货串码",excelColumnList);
+    }
+
+    private SimpleExcelSheet getGoodsOrderDetailSheet(List<GoodsOrderDto> goodsOrderDtoList, Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap, Map<String, String> carrierOrderMap, Map<String, CellStyle> cellStyleMap) {
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+        List<List<SimpleExcelColumn>> excelColumnList= Lists.newArrayList();
+
+        List<SimpleExcelColumn> headColumnList=Lists.newArrayList();
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"订单编号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"财务编号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"开单日期"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"状态"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"仓库"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"办事处"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"考核区域"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"门店"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"区域属性"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"产品名称"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"单价"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"开单数"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"金额"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"商城状态"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"商城单号"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"发货时间"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"创建人"));
+        headColumnList.add(new SimpleExcelColumn(headCellStyle,"备注"));
+        excelColumnList.add(headColumnList);
+
+        for(GoodsOrderDto goodsOrderDto : goodsOrderDtoList){
+            List<GoodsOrderDetailDto> goodsOrderDetailDtoList = goodsOrderDetailMap.get(goodsOrderDto.getId());
+            if(goodsOrderDetailDtoList == null){
+                continue;
+            }
+            for(GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtoList){
+                List<SimpleExcelColumn> simpleExcelColumnList=Lists.newArrayList();
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getFormatId()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getOutCode()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getBillDate()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getStatus()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getStoreName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopAreaName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopOfficeName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopDepotShopAreaType()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getProductName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getPrice()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDetailDto.getRealBillQty()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,new BigDecimal(goodsOrderDetailDto.getRealBillQty()).multiply(goodsOrderDetailDto.getPrice())));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getPullStatus()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,carrierOrderMap.get(goodsOrderDto.getId()) != null ? carrierOrderMap.get(goodsOrderDto.getId()).trim() : ""));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShipDate()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getCreatedByName()));
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getRemarks()));
+                excelColumnList.add(simpleExcelColumnList);
+            }
+        }
+        return new SimpleExcelSheet("订货单明细",excelColumnList);
+    }
+
+    private SimpleExcelSheet getGoodsOrderListSheet( List<GoodsOrderDto> goodsOrderDtoList, Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap, Map<String, String> carrierOrderMap,Map<String, CellStyle> cellStyleMap) {
+
+        CellStyle headCellStyle = cellStyleMap.get(ExcelCellStyle.HEADER.name());
+        CellStyle dataCellStyle = cellStyleMap.get(ExcelCellStyle.DATA.name());
+
+        List<List<SimpleExcelColumn>> excelColumnList1= Lists.newArrayList();
+
+        List<SimpleExcelColumn> headColumnList1=Lists.newArrayList();
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"单号"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"开单日期"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"发货日期"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"状态"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"商城单号"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"货品信息"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"仓库"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"门店"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"门店类型"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"区域属性"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"外部单号"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"是否天翼购订货"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"总金额"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"创建人"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"快递公司"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"快递单号"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"发货备注"));
+        headColumnList1.add(new SimpleExcelColumn(headCellStyle,"订单备注"));
+        excelColumnList1.add(headColumnList1);
+
+        for(GoodsOrderDto goodsOrderDto : goodsOrderDtoList){
+            List<SimpleExcelColumn> tmpColumnList=Lists.newArrayList();
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getFormatId()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getBillDate()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShipDate()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getStatus()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,carrierOrderMap.get(goodsOrderDto.getId()) != null ? carrierOrderMap.get(goodsOrderDto.getId()).trim() : ""));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,summarizeProductInfo(goodsOrderDetailMap.get(goodsOrderDto.getId()))));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getStoreName()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopName()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopType()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getShopDepotShopAreaType()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getOutCode()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getLxMallOrder()!=null&&goodsOrderDto.getLxMallOrder()?"是":"否"));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getAmount()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getCreatedByName()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getExpressCompanyName()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getExpressOrderExpressCodes()));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,""));
+            tmpColumnList.add(new SimpleExcelColumn(dataCellStyle,goodsOrderDto.getRemarks()));
+            excelColumnList1.add(tmpColumnList);
+        }
+
+        return new SimpleExcelSheet("订货单",excelColumnList1);
+    }
+
+    private String summarizeProductInfo(List<GoodsOrderDetailDto> goodsOrderDetailDtos) {
+        StringBuilder summary = new StringBuilder();
+        for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtos) {
+            summary.append(goodsOrderDetailDto.getProductName()).append(":数量").append(goodsOrderDetailDto.getRealBillQty()).append(CharConstant.ENTER);
+
+        }
+        return summary.toString();
+    }
+
+    private Map<String, String> getCarrierOrderCodeMap(List<String> goodsOrderIdList) {
+        List<CarrierOrder> carrierOrders = carrierOrderRepository.findByEnabledIsTrueAndGoodsOrderIdIn(goodsOrderIdList);
+        Map<String, String> carrierOrderMap = Maps.newHashMap();
+        for (CarrierOrder carrierOrder : carrierOrders) {
+            if (!carrierOrderMap.containsKey(carrierOrder.getGoodsOrderId())) {
+                carrierOrderMap.put(carrierOrder.getGoodsOrderId(), "");
+            }
+            carrierOrderMap.put(carrierOrder.getGoodsOrderId(),carrierOrderMap.get(carrierOrder.getGoodsOrderId()) + carrierOrder.getCode() + CharConstant.ENTER);
+        }
+        return carrierOrderMap;
+    }
+
+    private Map<String, List<GoodsOrderImeDto>> getGoodsOrderImeMap(List<String> goodsOrderIdList) {
+        List<GoodsOrderImeDto> goodsOrderImeDtos = goodsOrderImeRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
+        Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap = Maps.newHashMap();
+        for (GoodsOrderImeDto goodsOrderImeDto : goodsOrderImeDtos) {
+            String key = goodsOrderImeDto.getGoodsOrderId();
+            if (!goodsOrderImeMap.containsKey(key)) {
+                goodsOrderImeMap.put(key, new ArrayList<>());
+            }
+            goodsOrderImeMap.get(key).add(goodsOrderImeDto);
+        }
+        return goodsOrderImeMap;
+    }
+
+    private Map<String, List<GoodsOrderDetailDto>> getGoodsOrderDetailMap(List<String> goodsOrderIdList) {
+        List<GoodsOrderDetailDto> goodsOrderDetailDtos = goodsOrderDetailRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
+        Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap = Maps.newHashMap();
+        for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtos) {
+            String key = goodsOrderDetailDto.getGoodsOrderId();
+            if (!goodsOrderDetailMap.containsKey(key)) {
+                goodsOrderDetailMap.put(key, new ArrayList<>());
+            }
+            goodsOrderDetailMap.get(key).add(goodsOrderDetailDto);
+        }
+        return goodsOrderDetailMap;
     }
 }

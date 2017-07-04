@@ -54,7 +54,6 @@ public class EmployeeService {
     }
 
     public Page<EmployeeDto> findPage(Pageable pageable, EmployeeQuery employeeQuery){
-        employeeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getAccountId()));
         Page<EmployeeDto> page=employeeRepository.findPage(pageable,employeeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

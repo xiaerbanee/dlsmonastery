@@ -10,6 +10,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -21,19 +22,15 @@ import java.util.concurrent.TimeUnit;
 public class PermissionManager {
     @Value("${setting.adminIdList}")
     private String adminIdList;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
     @Autowired
     private PermissionRepository permissionRepository;
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    public void permissionCachePut(String companyName,String accountId,String roleId){
-        String key = "authorityCache:" + companyName+accountId;
-        redisTemplate.expire(key,24, TimeUnit.HOURS);
+    @CachePut(key = "#p0",value="authorityCache")
+    public List<String> getPermissionList(String accountId,String roleId){
         List<PermissionDto> permissionList;
-        if(net.myspring.util.text.StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
+        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
             permissionList=permissionRepository.findAllEnabled();
         }else {
             List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
@@ -43,10 +40,10 @@ public class PermissionManager {
                 permissionList=permissionRepository.findByRoleId(roleId);
             }
         }
-        List<String> permissionStrList= Lists.newArrayList();
+        List<String> list= Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(permissionList)){
-            permissionStrList=CollectionUtil.extractToList(permissionList,"permission");
+            list=CollectionUtil.extractToList(permissionList,"permission");
         }
-        redisTemplate.opsForValue().set(key,permissionStrList);
+       return list;
     }
 }

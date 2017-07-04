@@ -8,7 +8,25 @@ public class GoodsOrderImeDto extends DataDto<GoodsOrderIme> {
     private String productId;
     private String productName;
     private String productImeIme;
+    private String productImeIme2;
     private String productImeMeid;
+    private String goodsOrderId;
+
+    public String getGoodsOrderId() {
+        return goodsOrderId;
+    }
+
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
+    }
+
+    public String getProductImeIme2() {
+        return productImeIme2;
+    }
+
+    public void setProductImeIme2(String productImeIme2) {
+        this.productImeIme2 = productImeIme2;
+    }
 
     public String getProductId() {
         return productId;
