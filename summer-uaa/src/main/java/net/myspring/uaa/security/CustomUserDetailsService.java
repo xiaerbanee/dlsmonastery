@@ -2,6 +2,7 @@ package net.myspring.uaa.security;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.uaa.dto.AccountDto;
@@ -13,12 +14,12 @@ import net.myspring.uaa.manager.PermissionManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
-import net.myspring.uaa.repository.CompanyConfigRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,11 +47,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private WeixinManager weixinManager;
     @Autowired
-    private CompanyConfigRepository companyConfigRepository;
-    @Autowired
     private OfficeManager officeManager;
     @Autowired
     private PermissionManager permissionManager;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -80,7 +81,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             accountDto = accountDtoRepository.findByLoginName(username);
         }
         if(accountDto != null) {
-            accountDto.setCompanyName(companyConfigRepository.findByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()));
+            accountDto.setCompanyName(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.COMPANY_NAME.name()).getValue());
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
