@@ -26,7 +26,7 @@ import java.util.Set;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = false)
 public class VivoService {
     @Autowired
     private VivoRepository vivoRepository;
