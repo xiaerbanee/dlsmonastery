@@ -185,6 +185,8 @@ interface ProductRepositoryCustom{
 
     fun findByOutName(): MutableList<String>
 
+    fun findByNameOrCodeAndOutGroupName(nameOrCode:String,outGroupName:String):MutableList<ProductDto>
+
     fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>
 
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
@@ -202,6 +204,24 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             t.enabled = 1
         AND t.out_group_id IS NOT NULL
         """, HashMap<String, Any>(),String::class.java)
+    }
+
+    override fun findByNameOrCodeAndOutGroupName(nameOrCode:String,outGroupName:String):MutableList<ProductDto>{
+        val params = HashMap<String, Any>()
+        params.put("nameOrCode", nameOrCode)
+        params.put("outGroupName", outGroupName)
+
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+                t.*
+            FROM
+                crm_product t
+            WHERE
+                t.enabled = 1
+            AND t.name LIKE CONCAT('%',:nameOrCode,'%')
+            OR t.code LIKE CONCAT('%',:nameOrCode,'%')
+            AND t.out_group_name = :outGroupName
+          """, params, BeanPropertyRowMapper(ProductDto::class.java))
     }
 
     override fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>{
