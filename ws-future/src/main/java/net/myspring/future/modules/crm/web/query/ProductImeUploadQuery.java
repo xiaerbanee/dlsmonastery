@@ -18,18 +18,6 @@ public class ProductImeUploadQuery extends BaseQuery{
     private String officeId;
     private String createdDateRange;
 
-
-    //分页数据
-    private Pageable pageable;
-
-    public Pageable getPageable() {
-        return pageable;
-    }
-
-    public void setPageable(Pageable pageable) {
-        this.pageable = pageable;
-    }
-
     public String getMonth() {
         return month;
     }

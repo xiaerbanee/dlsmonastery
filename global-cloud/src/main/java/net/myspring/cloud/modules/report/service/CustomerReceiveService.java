@@ -12,11 +12,10 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class CustomerReceiveService {
     @Autowired
     private CustomerReceiveRepository customerReceiveRepository;

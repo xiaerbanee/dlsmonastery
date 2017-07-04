@@ -143,13 +143,8 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(expressOrderQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressOrderDto::class.java))
-        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
-
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
-
-
 }

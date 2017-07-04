@@ -119,9 +119,7 @@
         this.$router.push({ name: 'shopDepositBatchForm'})
       },exportLatest(){
         util.confirmBeforeExportData(this).then(() => {
-          axios.get('/api/ws/future/layout/shopDeposit/exportLatest').then((response)=> {
-            window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-          });
+          window.location.href='/api/ws/future/layout/shopDeposit/exportLatest';
         }).catch(()=>{});
       }
     },created () {

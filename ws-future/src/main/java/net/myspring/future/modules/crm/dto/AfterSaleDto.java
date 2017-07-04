@@ -2,173 +2,83 @@ package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.crm.domain.AfterSale;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Created by wangzm on 2017/5/12.
  */
 public class AfterSaleDto extends DataDto<AfterSale> {
-    private String detailId;
-    private String type;
+    private String businessId;
     private String badProductImeId;
-    private String badProductId;
-    private String badDepotId;
-    private String badProductName;
-    private String badDepotName;
     private String badType;
+    private String replaceProductImeId;
+    private String toAreaProductImeId;
     private String packageStatus;
     private String memory;
+    private String toStoreType;
+    private String toStoreRemarks;
+    private LocalDate toStoreDate;
+    private LocalDate toCompanyDate;
+    private String toCompanyRemarks;
+    private LocalDate fromCompanyDate;
+    private String fromCompanyProductId;
+    private String areaDepotId;
+    private Boolean fromAreaToFinance;
+    private Boolean toAreaToFinance;
+    private Boolean fromCompanyToFinance;
+    private Boolean toCompanyToFinance;
+    private String badDepotId;
+    private LocalDateTime toFinanceDate;
+    private String depotId;
+    private String areaDepotName;
+
     private String badProductIme;
-    private String replaceProductName;
-    private String fromDepotName;
-    private String toDepotName;
-    private String detailRemarks;
-    private String ime;
-    private String fleeShopName;
-    private String contact;
-    private String mobilePhone;
-    private String address;
-    private BigDecimal buyAmount;
-    private LocalDate inputDate;
-    private LocalDate replaceDate;
+    private String toAreaProductName;
+    private String badProductName;
+    private String retailDepotName;
+    private String toAreaProductIme;
+    private String fromCompanyProductName;
+    
+    private boolean deleted=true;
 
-    public String getDetailId() {
-        return detailId;
+    public boolean getDeleted() {
+        if (getFromAreaToFinance() || getToAreaToFinance() || getFromCompanyToFinance() || getToCompanyToFinance()) {
+            return false;
+        }
+        return deleted;
     }
 
-    public void setDetailId(String detailId) {
-        this.detailId = detailId;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
-    public LocalDate getInputDate() {
-        return inputDate;
+    public String getFromCompanyProductName() {
+        return fromCompanyProductName;
     }
 
-    public void setInputDate(LocalDate inputDate) {
-        this.inputDate = inputDate;
+    public void setFromCompanyProductName(String fromCompanyProductName) {
+        this.fromCompanyProductName = fromCompanyProductName;
     }
 
-    public LocalDate getReplaceDate() {
-        return replaceDate;
+    public String getToAreaProductIme() {
+        return toAreaProductIme;
     }
 
-    public void setReplaceDate(LocalDate replaceDate) {
-        this.replaceDate = replaceDate;
+    public void setToAreaProductIme(String toAreaProductIme) {
+        this.toAreaProductIme = toAreaProductIme;
     }
 
-    public String getDetailRemarks() {
-        return detailRemarks;
+    public String getRetailDepotName() {
+        return retailDepotName;
     }
 
-    public void setDetailRemarks(String detailRemarks) {
-        this.detailRemarks = detailRemarks;
-    }
-
-    public String getIme() {
-        return ime;
-    }
-
-    public void setIme(String ime) {
-        this.ime = ime;
-    }
-
-    public String getFleeShopName() {
-        return fleeShopName;
-    }
-
-    public void setFleeShopName(String fleeShopName) {
-        this.fleeShopName = fleeShopName;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public void setMobilePhone(String mobilePhone) {
-        this.mobilePhone = mobilePhone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public BigDecimal getBuyAmount() {
-        return buyAmount;
-    }
-
-    public void setBuyAmount(BigDecimal buyAmount) {
-        this.buyAmount = buyAmount;
-    }
-
-    public String getToDepotName() {
-        return toDepotName;
-    }
-
-    public void setToDepotName(String toDepotName) {
-        this.toDepotName = toDepotName;
-    }
-
-    public String getReplaceProductName() {
-        return replaceProductName;
-    }
-
-    public void setReplaceProductName(String replaceProductName) {
-        this.replaceProductName = replaceProductName;
-    }
-
-    public String getFromDepotName() {
-        return fromDepotName;
-    }
-
-    public void setFromDepotName(String fromDepotName) {
-        this.fromDepotName = fromDepotName;
-    }
-
-    public String getBadProductImeId() {
-        return badProductImeId;
-    }
-
-    public void setBadProductImeId(String badProductImeId) {
-        this.badProductImeId = badProductImeId;
-    }
-
-    public String getBadProductId() {
-        return badProductId;
-    }
-
-    public void setBadProductId(String badProductId) {
-        this.badProductId = badProductId;
-    }
-
-    public String getBadDepotId() {
-        return badDepotId;
-    }
-
-    public void setBadDepotId(String badDepotId) {
-        this.badDepotId = badDepotId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setRetailDepotName(String retailDepotName) {
+        this.retailDepotName = retailDepotName;
     }
 
     public String getBadProductName() {
@@ -179,12 +89,44 @@ public class AfterSaleDto extends DataDto<AfterSale> {
         this.badProductName = badProductName;
     }
 
-    public String getBadDepotName() {
-        return badDepotName;
+    public String getBadProductIme() {
+        return badProductIme;
     }
 
-    public void setBadDepotName(String badDepotName) {
-        this.badDepotName = badDepotName;
+    public void setBadProductIme(String badProductIme) {
+        this.badProductIme = badProductIme;
+    }
+
+    public String getToAreaProductName() {
+        return toAreaProductName;
+    }
+
+    public void setToAreaProductName(String toAreaProductName) {
+        this.toAreaProductName = toAreaProductName;
+    }
+
+    public String getAreaDepotName() {
+        return areaDepotName;
+    }
+
+    public void setAreaDepotName(String areaDepotName) {
+        this.areaDepotName = areaDepotName;
+    }
+
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
+
+    public String getBadProductImeId() {
+        return badProductImeId;
+    }
+
+    public void setBadProductImeId(String badProductImeId) {
+        this.badProductImeId = badProductImeId;
     }
 
     public String getBadType() {
@@ -193,6 +135,22 @@ public class AfterSaleDto extends DataDto<AfterSale> {
 
     public void setBadType(String badType) {
         this.badType = badType;
+    }
+
+    public String getReplaceProductImeId() {
+        return replaceProductImeId;
+    }
+
+    public void setReplaceProductImeId(String replaceProductImeId) {
+        this.replaceProductImeId = replaceProductImeId;
+    }
+
+    public String getToAreaProductImeId() {
+        return toAreaProductImeId;
+    }
+
+    public void setToAreaProductImeId(String toAreaProductImeId) {
+        this.toAreaProductImeId = toAreaProductImeId;
     }
 
     public String getPackageStatus() {
@@ -211,11 +169,123 @@ public class AfterSaleDto extends DataDto<AfterSale> {
         this.memory = memory;
     }
 
-    public String getBadProductIme() {
-        return badProductIme;
+    public String getToStoreType() {
+        return toStoreType;
     }
 
-    public void setBadProductIme(String badProductIme) {
-        this.badProductIme = badProductIme;
+    public void setToStoreType(String toStoreType) {
+        this.toStoreType = toStoreType;
+    }
+
+    public String getToStoreRemarks() {
+        return toStoreRemarks;
+    }
+
+    public void setToStoreRemarks(String toStoreRemarks) {
+        this.toStoreRemarks = toStoreRemarks;
+    }
+
+    public LocalDate getToStoreDate() {
+        return toStoreDate;
+    }
+
+    public void setToStoreDate(LocalDate toStoreDate) {
+        this.toStoreDate = toStoreDate;
+    }
+
+    public LocalDate getToCompanyDate() {
+        return toCompanyDate;
+    }
+
+    public void setToCompanyDate(LocalDate toCompanyDate) {
+        this.toCompanyDate = toCompanyDate;
+    }
+
+    public String getToCompanyRemarks() {
+        return toCompanyRemarks;
+    }
+
+    public void setToCompanyRemarks(String toCompanyRemarks) {
+        this.toCompanyRemarks = toCompanyRemarks;
+    }
+
+    public LocalDate getFromCompanyDate() {
+        return fromCompanyDate;
+    }
+
+    public void setFromCompanyDate(LocalDate fromCompanyDate) {
+        this.fromCompanyDate = fromCompanyDate;
+    }
+
+    public String getFromCompanyProductId() {
+        return fromCompanyProductId;
+    }
+
+    public void setFromCompanyProductId(String fromCompanyProductId) {
+        this.fromCompanyProductId = fromCompanyProductId;
+    }
+
+    public String getAreaDepotId() {
+        return areaDepotId;
+    }
+
+    public void setAreaDepotId(String areaDepotId) {
+        this.areaDepotId = areaDepotId;
+    }
+
+    public Boolean getFromAreaToFinance() {
+        return fromAreaToFinance;
+    }
+
+    public void setFromAreaToFinance(Boolean fromAreaToFinance) {
+        this.fromAreaToFinance = fromAreaToFinance;
+    }
+
+    public Boolean getToAreaToFinance() {
+        return toAreaToFinance;
+    }
+
+    public void setToAreaToFinance(Boolean toAreaToFinance) {
+        this.toAreaToFinance = toAreaToFinance;
+    }
+
+    public Boolean getFromCompanyToFinance() {
+        return fromCompanyToFinance;
+    }
+
+    public void setFromCompanyToFinance(Boolean fromCompanyToFinance) {
+        this.fromCompanyToFinance = fromCompanyToFinance;
+    }
+
+    public Boolean getToCompanyToFinance() {
+        return toCompanyToFinance;
+    }
+
+    public void setToCompanyToFinance(Boolean toCompanyToFinance) {
+        this.toCompanyToFinance = toCompanyToFinance;
+    }
+
+    public String getBadDepotId() {
+        return badDepotId;
+    }
+
+    public void setBadDepotId(String badDepotId) {
+        this.badDepotId = badDepotId;
+    }
+
+    public LocalDateTime getToFinanceDate() {
+        return toFinanceDate;
+    }
+
+    public void setToFinanceDate(LocalDateTime toFinanceDate) {
+        this.toFinanceDate = toFinanceDate;
+    }
+
+    public String getDepotId() {
+        return depotId;
+    }
+
+    public void setDepotId(String depotId) {
+        this.depotId = depotId;
     }
 }

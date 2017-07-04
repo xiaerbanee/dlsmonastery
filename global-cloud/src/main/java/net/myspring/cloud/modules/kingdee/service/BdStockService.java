@@ -6,8 +6,8 @@ import net.myspring.cloud.modules.kingdee.repository.BdStockRepository;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class BdStockService {
     @Autowired
     private BdStockRepository bdStockRepository;

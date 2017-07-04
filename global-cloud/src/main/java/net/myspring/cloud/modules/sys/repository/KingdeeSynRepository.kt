@@ -30,7 +30,7 @@ interface  KingdeeSynRepository : BaseRepository<KingdeeSyn, String>,KingdeeSynR
 }
 
 interface KingdeeSynRepositoryCustom{
-    fun findPage(pageable: Pageable, kingdeeBookQuery: KingdeeSynQuery): Page<KingdeeSyn>?
+    fun findPage(pageable: Pageable, kingdeeSynQuery: KingdeeSynQuery): Page<KingdeeSyn>?
 }
 
 class KingdeeSynRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): KingdeeSynRepositoryCustom{

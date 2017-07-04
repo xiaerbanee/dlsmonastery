@@ -43,7 +43,6 @@
             submitDisabled:false,
             depotName:'',
             filterShop:[],
-            products:{},
             inputForm:{
                 extra:{}
             },

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.modules.sys.dto.VoucherEntryFlowDto;
+import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -94,8 +95,8 @@ public class GlVoucherDto {
             detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
             //核算维度
             Map<String, Object> FDetailID = Maps.newLinkedHashMap();
-            for(VoucherEntryFlowDto flowDto:entityDto.getVoucherEntryFlowDtoList()){
-                FDetailID.put(flowDto.getName(),  flowDto.getCode());
+            for(NameValueDto nameValueDto :entityDto.getNameValueDtoList()){
+                FDetailID.put(nameValueDto.getName(),  nameValueDto.getValue());
             }
 //            FDetailID.put("FDETAILID__FF100002","");//其他类
 //            FDetailID.put("FDETAILID__FF100003","");//管理费用
