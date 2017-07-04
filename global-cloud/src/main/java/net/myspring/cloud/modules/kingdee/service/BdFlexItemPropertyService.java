@@ -5,8 +5,8 @@ import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
 import net.myspring.cloud.modules.kingdee.repository.BdFlexItemPropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class BdFlexItemPropertyService {
     @Autowired
     private BdFlexItemPropertyRepository bdFlexItemPropertyRepository;

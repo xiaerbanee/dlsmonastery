@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.input.dto;
 
-import net.myspring.cloud.modules.sys.dto.VoucherEntryDto;
-import net.myspring.cloud.modules.sys.dto.VoucherEntryFlowDto;
+import net.myspring.common.dto.NameValueDto;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +14,7 @@ public class GlVoucherFEntityDto {
     //科目
     private String accountNumber;
     //核算维度
-    private List<VoucherEntryFlowDto> voucherEntryFlowDtoList;
+    private List<NameValueDto> nameValueDtoList;
     //贷方总金额
     private BigDecimal credit;
     //借方总金额
@@ -53,11 +52,11 @@ public class GlVoucherFEntityDto {
         this.debit = debit;
     }
 
-    public List<VoucherEntryFlowDto> getVoucherEntryFlowDtoList() {
-        return voucherEntryFlowDtoList;
+    public List<NameValueDto> getNameValueDtoList() {
+        return nameValueDtoList;
     }
 
-    public void setVoucherEntryFlowDtoList(List<VoucherEntryFlowDto> voucherEntryFlowDtoList) {
-        this.voucherEntryFlowDtoList = voucherEntryFlowDtoList;
+    public void setNameValueDtoList(List<NameValueDto> nameValueDtoList) {
+        this.nameValueDtoList = nameValueDtoList;
     }
 }

@@ -30,9 +30,9 @@ import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class ArRefundBillService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
@@ -59,6 +59,7 @@ public class ArRefundBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
+    @Transactional
     private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arRefundBillDto.getExtendId(),
@@ -74,6 +75,7 @@ public class ArRefundBillService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(ArRefundBillForm arRefundBillForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String json = HtmlUtils.htmlUnescape(arRefundBillForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -167,6 +169,7 @@ public class ArRefundBillService {
         return kingdeeSynDtoList;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(List<ArRefundBillDto> arRefundBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());

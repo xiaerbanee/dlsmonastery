@@ -370,6 +370,7 @@ export default {
       vivoPlantElectronicList: 'vivo电子保卡',
       vivoProductsList: 'vivo颜色编码',
       vivoPlantSendImeList: 'vivo发货串码',
+      vivoFactoryOrderList:'工厂发货',
       productImeStockReport: '库存报表',
       productMonthPriceSum: '保卡统计',
       salaryTemplateList: '工资项目',
