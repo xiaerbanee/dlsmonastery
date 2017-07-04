@@ -203,8 +203,7 @@ public class OppoPushSerivce {
     @LocalDataSource
     public List<OppoCustomerAllot>  getOppoCustomerAllot(LocalDate dateStart, LocalDate dateEnd){
         initAreaDepotMap();
-        String companyId="1";
-        List<OppoCustomerAllot> oppoCustomerAllots=oppoClient.findOppoCustomerAllots(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoClient.findOppoCustomerAllots(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         Map<String, String> productColorMap = getProductColorMap();
         Map<String, OppoCustomerAllot> oppoCustomerAllotMap = Maps.newHashMap();
         for(OppoCustomerAllot oppoCustomerAllot:oppoCustomerAllots){
@@ -239,7 +238,7 @@ public class OppoPushSerivce {
         initAreaDepotMap();
         Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
         Map<String, String> productColorMap = getProductColorMap();
-        List<OppoCustomerStock> oppoCustomerStocks=oppoClient.findOppoCustomerStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerStock> oppoCustomerStocks=oppoClient.findOppoCustomerStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerStock oppoCustomerStock:oppoCustomerStocks){
             String customerId=getDepotId(customerDtoMap.get(oppoCustomerStock.getCustomerid()));
             String colorId=productColorMap.get(oppoCustomerStock.getProductcode());
@@ -269,7 +268,7 @@ public class OppoPushSerivce {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
        logger.info("dateStart==="+dateStart+"\tdateEnd=="+dateEnd);
-        List<OppoCustomerImeiStock> oppoCustomerImeiStockList=oppoClient.findOppoCustomerImeiStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerImeiStock> oppoCustomerImeiStockList=oppoClient.findOppoCustomerImeiStocks(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         logger.info("oppoCustomerImeiStockList==="+oppoCustomerImeiStockList.toString());
         for(OppoCustomerImeiStock oppoCustomerImeiStock:oppoCustomerImeiStockList){
             oppoCustomerImeiStock.setCustomerid(oppoCustomerImeiStock.getCustomerid());
@@ -288,7 +287,7 @@ public class OppoPushSerivce {
     public List<OppoCustomerSale> getOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd) {
         String companyId="1";
         initAreaDepotMap();
-        List<OppoCustomerSale> oppoCustomerSales=oppoClient.findOppoCustomerSales(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSale> oppoCustomerSales=oppoClient.findOppoCustomerSales(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerSale oppoCustomerSale:oppoCustomerSales){
             oppoCustomerSale.setCreatedDate(LocalDateTime.now());
         }
@@ -313,7 +312,7 @@ public class OppoPushSerivce {
         }
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         String agentName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        List<OppoCustomerSaleImei>    oppoCustomerSaleImes=oppoClient.findOppoCustomerSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleImei>    oppoCustomerSaleImes=oppoClient.findOppoCustomerSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerSaleImei oppoCustomerSaleIme:oppoCustomerSaleImes){
             if(StringUtils.isNotBlank(oppoCustomerSaleIme.getSalepromoter())&&employeeMap.get(oppoCustomerSaleIme.getSalepromoter())!=null){
                 oppoCustomerSaleIme.setSalepromoter(employeeMap.get(oppoCustomerSaleIme.getSalepromoter()).getName());
@@ -351,7 +350,7 @@ public class OppoPushSerivce {
         initAreaDepotMap();
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         Map<String, String> productColorMap = getProductColorMap();
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoClient.findOppoCustomerSaleCounts(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoClient.findOppoCustomerSaleCounts(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerSaleCount oppoCustomerSaleCount:oppoCustomerSaleCounts) {
             String colorId=productColorMap.get(oppoCustomerSaleCount.getProductCode());
             oppoCustomerSaleCount.setAgentCode(agentCode);
@@ -370,7 +369,7 @@ public class OppoPushSerivce {
         String companyId="1";
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
-        List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis=oppoClient.findOppoCustomerAfterSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis=oppoClient.findOppoCustomerAfterSaleImes(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerAfterSaleImei oppoCustomerAfterSaleImei:oppoCustomerAfterSaleImeis){
             oppoCustomerAfterSaleImei.setProductCode(productColorMap.get(oppoCustomerAfterSaleImei.getProductCode()));
             oppoCustomerAfterSaleImei.setDate(oppoCustomerAfterSaleImei.getDate());
@@ -386,7 +385,7 @@ public class OppoPushSerivce {
         String companyId="1";
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoClient.findOppoCustomerDemoPhones(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoClient.findOppoCustomerDemoPhones(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         for(OppoCustomerDemoPhone oppoCustomerDemoPhone:oppoCustomerDemoPhones){
             oppoCustomerDemoPhone.setCustomerid(oppoCustomerDemoPhone.getCustomerid());
             oppoCustomerDemoPhone.setDate(oppoCustomerDemoPhone.getDate());
