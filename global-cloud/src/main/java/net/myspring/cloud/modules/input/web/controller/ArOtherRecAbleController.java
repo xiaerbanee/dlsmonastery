@@ -59,8 +59,8 @@ public class ArOtherRecAbleController {
         return restResponse;
     }
 
-    @RequestMapping(value = "saveForShopDeposit",method = RequestMethod.POST)
-    public KingdeeSynReturnDto saveForShopDeposit(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
+    @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
+    public KingdeeSynReturnDto saveForWS(@RequestBody ArOtherRecAbleDto arOtherRecAbleDto) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if(accountKingdeeBook != null) {

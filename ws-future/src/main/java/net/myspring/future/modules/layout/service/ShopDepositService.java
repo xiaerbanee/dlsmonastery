@@ -101,7 +101,7 @@ public class ShopDepositService {
                 if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
                     KingdeeSynReturnDto returnDtoList = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
                 } else {
-                    KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit);
+                    KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent());
                 }
         }
 
