@@ -39,7 +39,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopGoodsDepositService {
 
     @Autowired
@@ -57,6 +57,7 @@ public class ShopGoodsDepositService {
         return page;
     }
 
+    @Transactional
     public void save(ShopGoodsDepositForm shopGoodsDepositForm) {
 
         if(shopGoodsDepositForm.isCreate()){
@@ -74,6 +75,7 @@ public class ShopGoodsDepositService {
         }
     }
 
+    @Transactional
     public void delete(String id) {
         shopGoodsDepositRepository.logicDelete(id);
     }
@@ -127,6 +129,7 @@ public class ShopGoodsDepositService {
         return shopGoodsDepositDto;
     }
 
+    @Transactional
     public void auditPass(String id) {
 
         ShopGoodsDepositDto  shopGoodsDepositDto = findDto(id);
