@@ -90,7 +90,7 @@ public interface CloudClient {
     @RequestMapping(method = RequestMethod.POST, value = "/input/salReturnStock/saveForXSTHD")
     List<KingdeeSynReturnDto> synSalReturnStock(List<SalReturnStockDto> salReturnStockDtoList);
     //直接调拨单
-    @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForStoreAllot")
+    @RequestMapping(method = RequestMethod.POST, value = "/input/stkTransferDirect/saveForWS")
     KingdeeSynReturnDto synStkTransferDirect(StkTransferDirectDto stkTransferDirectDto);
     //
     @RequestMapping(method = RequestMethod.GET, value = "/sys/kingdeeSyn/findByExtendIdAndExtendType")
