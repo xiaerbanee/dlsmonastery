@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductImeService {
 
     @Autowired
@@ -338,6 +338,7 @@ public class ProductImeService {
         return simpleExcelBook;
     }
 
+    @Transactional
     public void batchCreate(ProductImeBatchCreateForm productImeBatchCreateForm) {
 
         List<ProductIme> toBeSaved = Lists.newArrayList();
@@ -376,6 +377,7 @@ public class ProductImeService {
         productImeRepository.save(toBeSaved);
     }
 
+    @Transactional
     private String toUpperCase(String str) {
         if (str == null) {
             return null;
@@ -383,6 +385,7 @@ public class ProductImeService {
         return str.toUpperCase();
     }
 
+    @Transactional
     public void batchChange(ProductImeBatchChangeForm productImeBatchChangeForm) {
 
         for (ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()) {

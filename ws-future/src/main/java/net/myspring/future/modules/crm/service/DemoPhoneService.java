@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DemoPhoneService {
 
     @Autowired
@@ -56,10 +56,12 @@ public class DemoPhoneService {
         return page;
     }
 
+    @Transactional
     public void delete(String id) {
         demoPhoneRepository.logicDelete(id);
     }
 
+    @Transactional
     public String save(DemoPhoneForm demoPhoneForm) {
         Map<String,DemoPhone> demoPhoneMap = CollectionUtil.extractToMap(demoPhoneRepository.findAll(),"productImeId");
         if(demoPhoneMap.get(demoPhoneForm.getProductImeId())!=null){

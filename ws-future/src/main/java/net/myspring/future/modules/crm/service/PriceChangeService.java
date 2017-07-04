@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PriceChangeService {
 
     @Autowired
@@ -86,7 +86,7 @@ public class PriceChangeService {
         return page;
     }
 
-
+    @Transactional
     public void save(PriceChangeForm priceChangeForm){
         PriceChange priceChange;
 
@@ -112,7 +112,7 @@ public class PriceChangeService {
         }
     }
 
-
+    @Transactional
     public void delete(PriceChangeForm priceChangeForm){
         PriceChange priceChange = priceChangeRepository.findOne(priceChangeForm.getId());
         priceChange.setName(priceChange.getName()+LocalDate.now()+"废除");
@@ -120,7 +120,7 @@ public class PriceChangeService {
         priceChangeRepository.save(priceChange);
     }
 
-
+    @Transactional
     public void check(PriceChangeForm priceChangeForm){
         PriceChange priceChange = priceChangeRepository.findOne(priceChangeForm.getId());
         priceChange.setCheckPercent(priceChangeForm.getCheckPercent());

@@ -68,7 +68,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class GoodsOrderService {
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
@@ -161,6 +161,7 @@ public class GoodsOrderService {
     }
 
     //保存及修改订单
+    @Transactional
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
         GoodsOrder goodsOrder;
@@ -226,6 +227,7 @@ public class GoodsOrderService {
     }
 
     //开单
+    @Transactional
     public  void bill(GoodsOrderBillForm goodsOrderBillForm) {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
@@ -290,6 +292,7 @@ public class GoodsOrderService {
 
     }
 
+    @Transactional
     private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
@@ -554,6 +557,7 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
+    @Transactional
     public void delete(String id) {
         goodsOrderRepository.logicDelete(id);
     }
