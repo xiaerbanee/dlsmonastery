@@ -90,7 +90,7 @@
                   } else {
                     var productNames = new Array();
                     if(query.length>=2) {
-                      axios.get('/api/crm/product/search?name='+query).then((response)=>{
+                      axios.get('/api/ws/future/crm/product/filter?name='+query).then((response)=>{
                         if(response.data.length>0) {
                           for(var index in response.data) {
                             var productName = response.data[index].name;

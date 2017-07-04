@@ -20,6 +20,7 @@
                 <el-table-column prop="qty" :label="$t('afterSaleToCompany.qty')"></el-table-column>
               </el-table>
             </template>
+            <div style="height:30px"></div>
             <template>
               <el-table :data="searchData" style="width: 100%" border>
                 <el-table-column prop="badProductIme.product.name" :label="$t('afterSaleToCompany.badProductName')"></el-table-column>
