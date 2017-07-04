@@ -1,9 +1,11 @@
 package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.IdUtils;
 
 /**
  * Created by zhangyf on 2017/5/6.
@@ -18,6 +20,8 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
     private String officeName;
+    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "areaType")
+    private String areaType;
     private String shopType;
 
     private String applyAccountId;
@@ -25,9 +29,8 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String applyAccountName;
     @CacheInput(inputKey = "accounts", inputInstance = "applyAccountId", outputInstance = "employeeId")
     private String employeeId;
-    @CacheInput(inputKey = "accounts", inputInstance = "employeeId", outputInstance = "mobilePhone")
+    @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
     private String applyAccountPhone;
-
 
     private String fixtureType;
     private String buildType;
@@ -36,11 +39,37 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
     private String newContents;
     private String scenePhoto;
     private String confirmPhoto;
+    private String shopAgreement;
+    private String investInCause;
 
     private String processStatus;
     private String processInstanceId;
     private String processPositionId;
     private Boolean locked;
+
+    public String getShopAgreement() {
+        return shopAgreement;
+    }
+
+    public void setShopAgreement(String shopAgreement) {
+        this.shopAgreement = shopAgreement;
+    }
+
+    public String getAreaType() {
+        return areaType;
+    }
+
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
+
+    public String getInvestInCause() {
+        return investInCause;
+    }
+
+    public void setInvestInCause(String investInCause) {
+        this.investInCause = investInCause;
+    }
 
     public String getConfirmPhoto() {
         return confirmPhoto;
@@ -208,6 +237,20 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
 
     public void setProcessPositionId(String processPositionId) {
         this.processPositionId = processPositionId;
+    }
+
+    public String getFormatId(){
+        if(getId()!=null){
+            return IdUtils.getFormatId(getId(), FormatterConstant.SHOP_BUILD);
+        }else {
+            return null;
+        }
+    }
+
+    public String getAccountNameAndAccountPhone(){
+        String accountName = getApplyAccountName()!=null?getApplyAccountName():"";
+        String accountPhone = getApplyAccountPhone()!=null?getApplyAccountPhone():"";
+        return accountName+accountPhone;
     }
 
     public Boolean getIsAuditable(){

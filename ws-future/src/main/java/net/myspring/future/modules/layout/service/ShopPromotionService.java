@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopPromotionService {
 
     @Autowired
@@ -36,6 +36,7 @@ public class ShopPromotionService {
         return  page;
     }
 
+    @Transactional
     public ShopPromotion save(ShopPromotionForm shopPromotionForm){
         ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
@@ -66,6 +67,7 @@ public class ShopPromotionService {
         return shopPromotionDto;
     }
 
+    @Transactional
     public void logicDelete(String id){
         shopPromotionRepository.logicDelete(id);
     }

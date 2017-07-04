@@ -91,6 +91,7 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                 LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
                 LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
                 LEFT JOIN crm_express_order expressOrder ON t1.express_order_id = expressOrder.id
+                LEFT JOIN crm_shop_deposit deposit ON shop.id = deposit.shop_id
             WHERE
                 t1.enabled = 1
                 AND t1.company_id = :companyId
@@ -117,8 +118,18 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(adGoodsOrderQuery.parentId)) {
             sb.append("""  and t1.parent_id = :parentId """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.shopAreaId)) {
-            sb.append("""  and shop.area_id = :shopAreaId """)
+        if(adGoodsOrderQuery.hasDeposit!=null){
+            sb.append(""" and deposit.enabled = 1
+                          and deposit.locked = 0
+                          and deposit.type = '形象保证金' """)
+            if(adGoodsOrderQuery.hasDeposit){
+                sb.append(""" and deposit.left_amount > 0 """)
+            }else{
+                sb.append(""" and deposit.left_amount <= 0 """)
+            }
+        }
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.shopAreaId)) {
+            sb.append("""  and shop.area_id in (:shopAreaId) """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderQuery.storeId)) {
             sb.append("""  and t1.store_id = :storeId """)
@@ -132,8 +143,8 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (adGoodsOrderQuery.billDateEnd != null) {
             sb.append("""  and t1.bill_date < :billDateEnd """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.processStatus)) {
-            sb.append("""  and t1.process_status = :processStatus """)
+        if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.processStatus)) {
+            sb.append("""  and t1.process_status in (:processStatus) """)
         }
         if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList)  """)

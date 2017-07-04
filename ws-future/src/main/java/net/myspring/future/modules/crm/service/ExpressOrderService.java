@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ExpressOrderService {
 
 
@@ -56,6 +56,7 @@ public class ExpressOrderService {
         return page;
     }
 
+    @Transactional
     public void save(ExpressOrderForm expressOrderForm) {
         if(expressOrderForm.isCreate()){
             throw new ServiceException("expressOrderCantNew");
@@ -65,6 +66,7 @@ public class ExpressOrderService {
         expressOrderRepository.save(eo);
     }
 
+    @Transactional
     public void resetPrintStatus(String id) {
         ExpressOrder eo = expressOrderRepository.findOne(id);
 

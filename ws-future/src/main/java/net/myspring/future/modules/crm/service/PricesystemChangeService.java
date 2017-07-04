@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PricesystemChangeService {
 
     @Autowired
@@ -68,6 +68,7 @@ public class PricesystemChangeService {
         return pricesystemChangeForm;
     }
 
+    @Transactional
     public void save(PricesystemChangeForm pricesystemChangeForm){
         if(pricesystemChangeForm.getProductIds().size() == 0){
             return;
@@ -111,7 +112,7 @@ public class PricesystemChangeService {
         pricesystemChangeRepository.save(pricesystemChanges);
     }
 
-
+    @Transactional
     public void batchAudit(String[] ids,Boolean pass){
         List<String> idList = Arrays.asList(ids);
         if(CollectionUtil.isNotEmpty(idList)){
@@ -121,6 +122,7 @@ public class PricesystemChangeService {
         }
     }
 
+    @Transactional
     public void audit(String id,Boolean pass){
         if(StringUtils.isNotBlank(id)){
             PricesystemChange pricesystemChange = pricesystemChangeRepository.findOne(id);

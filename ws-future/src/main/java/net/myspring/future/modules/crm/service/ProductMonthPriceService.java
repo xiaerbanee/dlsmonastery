@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductMonthPriceService {
 
     @Autowired
@@ -98,6 +98,7 @@ public class ProductMonthPriceService {
         return result;
     }
 
+    @Transactional
     public void save(ProductMonthPriceForm productMonthPriceForm) {
         ProductMonthPrice productMonthPrice = null;
         if(productMonthPriceForm.isCreate()){
@@ -118,6 +119,7 @@ public class ProductMonthPriceService {
 
     }
 
+    @Transactional
     private void batchSaveProductMonthPriceDetails(List<ProductMonthPriceDetailForm> productMonthPriceDetailList, ProductMonthPrice productMonthPrice) {
 
         if(productMonthPriceDetailList == null || productMonthPriceDetailList.isEmpty()){

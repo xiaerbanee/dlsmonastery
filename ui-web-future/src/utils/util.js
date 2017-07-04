@@ -2,6 +2,7 @@ import store from '../store/'
 
 var util = {};
 
+util.MAX_DETAIL_ROW = 100;
 util.pickerDateOption = {
   shortcuts: [{
     text: '今天',
@@ -263,7 +264,15 @@ util.getComponentValueLabel = function (component){
   }
   let value = null;
   if(component.$options.componentName === "ElSelect") {
-    value = component.selectedLabel;
+
+    if(component.multiple){
+      value="";
+      component.selected.forEach(function(item){
+        value += `${item.label} `;
+      })
+    }else{
+      value = component.selectedLabel;
+    }
   }else if(component.$options.componentName === "ElDatePicker"){
     value = component.value;
   }else if(component.$options.componentName === "ElInput"){

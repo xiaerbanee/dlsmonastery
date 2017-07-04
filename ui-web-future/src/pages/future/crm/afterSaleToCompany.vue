@@ -5,20 +5,14 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="6">
-            <el-form-item label="类型" :label-width="formLabelWidth">
-              <el-select v-model="inputForm.type" placeholder="请选择">
-                <el-option v-for="item in inputForm.extra.typeList" :key="item" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$t('afterSaleToCompany.ime')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('afterSaleToCompany.inputIme')" @change="onchange"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="onchange()">{{$t('afterSaleToCompany.search')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled" @click="onchange(inputForm.imeStr)">{{$t('afterSaleToCompany.search')}}</el-button>
             </el-form-item>
           </el-col>
-          <el-col :span="16" v-if="inputForm.imeStr!=null&&inputForm.imeStr !==''">
+          <el-col :span="16" v-if="inputForm.imeStr !==''">
             <template>
               <el-alert :title="message" type="error" show-icon v-if="message !==''"> </el-alert>
               <el-table :data="product" style="width: 100%" border>
@@ -26,17 +20,16 @@
                 <el-table-column prop="qty" :label="$t('afterSaleToCompany.qty')"></el-table-column>
               </el-table>
             </template>
-            <div style="height:30px"></div>
             <template>
-              <el-table :data="searchData.afterSaleList" style="width: 100%" border>
-                <el-table-column prop="badProductName" :label="$t('afterSaleToCompany.badProductName')"></el-table-column>
-                <el-table-column prop="badProductIme" :label="$t('afterSaleToCompany.badProductIme')"></el-table-column>
-                <el-table-column prop="replaceProductName" :label="$t('afterSaleToCompany.toAreaProductName')"></el-table-column>
-                <el-table-column prop="fromDepotName" :label="$t('afterSaleToCompany.areaDepot')"></el-table-column>
+              <el-table :data="searchData" style="width: 100%" border>
+                <el-table-column prop="badProductIme.product.name" :label="$t('afterSaleToCompany.badProductName')"></el-table-column>
+                <el-table-column prop="badProductIme.ime" :label="$t('afterSaleToCompany.badProductIme')"></el-table-column>
+                <el-table-column prop="toAreaProductIme.product.name" :label="$t('afterSaleToCompany.toAreaProductName')"></el-table-column>
+                <el-table-column prop="areaDepot.name" :label="$t('afterSaleToCompany.areaDepot')"></el-table-column>
                 <el-table-column prop="packageStatus" :label="$t('afterSaleToCompany.packageStatus')"></el-table-column>
-                <el-table-column prop="badType" :label="$t('afterSaleToCompany.toStoreType')"></el-table-column>
+                <el-table-column prop="toStoreType" :label="$t('afterSaleToCompany.toStoreType')"></el-table-column>
                 <el-table-column prop="memory" :label="$t('afterSaleToCompany.memory')"></el-table-column>
-                <el-table-column prop="remarks" :label="$t('afterSaleToCompany.remarks')"></el-table-column>
+                <el-table-column prop="toStoreRemarks" :label="$t('afterSaleToCompany.remarks')"></el-table-column>
               </el-table>
             </template>
             <el-form-item :label="$t('afterSaleToCompany.toCompanyDate')" prop="toCompanyDate">
@@ -59,61 +52,54 @@
 <script>
   export default{
     data(){
-      return {
-        formLabelWidth: '120px',
-        submitDisabled: false,
-        remoteLoading: false,
-        inputForm: {
-          extra: [],
+      return{
+        isCreate:this.$route.query.id==null,
+        submitDisabled:false,
+        remoteLoading:false,
+        inputForm:{
+          imeStr:'',
+          toCompanyDate:'',
+          toCompanyRemarks:''
         },
         rules: {
-          imeStr: [{required: true, message: this.$t('afterSaleToCompany.prerequisiteMessage')}],
+          imeStr: [{ required: true, message: this.$t('afterSaleToCompany.prerequisiteMessage')}],
         },
-        searchData: [],
-        message: '',
-        product: []
+        searchData:[],
+        message:'',
+        product:[],
       }
     },
-    methods: {
+    methods:{
       formSubmit(){
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
+        if(this.message !==''){
+          alert($t('afterSaleToCompany.alertDealErrorData'));
+          form.resetFields();
+          return
+        }
         form.validate((valid) => {
           if (valid) {
-            this.inputForm.toCompanyDate = util.formatLocalDate(this.inputForm.toCompanyDate)
-            let submitData = util.deleteExtra(this.inputForm)
-            axios.post('/api/ws/future/crm/afterSale/toCompany', qs.stringify(submitData)).then((response) => {
+            this.inputForm.toCompanyDate=util.formatLocalDate(this.inputForm.toCompanyDate)
+            axios.post('/api/ws/future/crm/afterSale/toCompany',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              form.resetFields();
-              this.submitDisabled = false;
-            }).catch(function () {
-              this.submitDisabled = false;
+              this.$router.push({name:'imeAllotList',query:util.getQuery("imeAllotList"),params:{_closeFrom:true}})
             });
           }
         })
-      }, onchange(){
-        this.message = '';
-        axios.get('/api/ws/future/crm/afterSale/searchImeMap', {
-          params: {
-            imeStr: this.inputForm.imeStr,
-            type: this.inputForm.type
+      },onchange(imeStr){
+        axios.get('/api/ws/future/crm/afterSale/toCompanyForm',{params:{imeStr:imeStr}}).then((response)=>{
+          this.searchData=response.data.list;
+          var product=new Array();
+          for(let i in response.data.qtyMap){
+            product.push({name:i,qty:response.data.qtyMap[i]})
           }
-        }).then((response) => {
-          this.searchData = response.data;
-          var product = new Array();
-          for (let i in response.data.productQtyMap) {
-            product.push({name: i, qty: response.data.productQtyMap[i]})
-          }
-          this.product = product;
-        })
-      },
-      initPage(){
-        axios.get('/api/ws/future/crm/afterSale/getToCompanyForm').then((response)=> {
-          this.inputForm = response.data
+        this.product=product;
+        this.message = response.data.message;
+        this.inputForm.toCompanyDate=response.data.toCompanyDate
         })
       }
-    }, created () {
-      this.initPage();
+    },created(){
     }
   }
 </script>

@@ -17,9 +17,17 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
     //显示信息
     private String productName;
     private Boolean hasIme;
-    private Boolean allowBill;
+    private Boolean visible;
     //办事处已开单数
     private Integer areaQty;
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public String getProductId() {
         return productId;
@@ -67,14 +75,6 @@ public class GoodsOrderBillDetailForm extends BaseForm<GoodsOrderDetail> {
 
     public void setHasIme(Boolean hasIme) {
         this.hasIme = hasIme;
-    }
-
-    public Boolean getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(Boolean allowBill) {
-        this.allowBill = allowBill;
     }
 
     public Integer getAreaQty() {

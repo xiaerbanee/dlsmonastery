@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ExpressService {
 
     @Autowired
@@ -65,10 +65,12 @@ public class ExpressService {
         return page;
     }
 
+    @Transactional
     public void logicDelete(String expressId) {
         expressRepository.logicDelete(expressId);
     }
 
+    @Transactional
     public Express save(ExpressForm expressForm) {
 
         ExpressOrder eo = saveExpressOrderWithoutSettingExpressCodes(expressForm);
@@ -93,7 +95,7 @@ public class ExpressService {
         return express;
     }
 
-
+    @Transactional
     private ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 
         ExpressOrder eo = expressOrderRepository.findOne(expressOrderId);
@@ -144,6 +146,7 @@ public class ExpressService {
 
     }
 
+    @Transactional
     private ExpressOrder saveExpressOrderWithoutSettingExpressCodes(ExpressForm expressForm) {
 
         if(expressForm.getExpressOrderToDepotId()  == null){

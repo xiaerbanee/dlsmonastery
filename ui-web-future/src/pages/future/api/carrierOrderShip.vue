@@ -5,7 +5,7 @@
       <div class="header">
         <h1>商城发货</h1>
       </div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm"  label-width="120px" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="24">
             <div ref="handsontable" style="width:800px;height:603px;overflow:hidden;"></div>
@@ -27,7 +27,43 @@
   var table = null;
   export default {
     data(){
-      return {
+      return this.getData()
+    },mounted () {
+      table = new Handsontable(this.$refs["handsontable"], this.settings);
+    },
+    methods:{
+      formSubmit(){
+        var that=this;
+        this.inputForm.data =new Array();
+        let list=table.getData();
+        for(var item in list){
+          if(!table.isEmptyRow(item)){
+            this.inputForm.data.push(list[item]);
+          }
+        }
+        this.inputForm.data = JSON.stringify(this.inputForm.data);
+        axios.post('/api/ws/future/api/carrierOrder/ship',qs.stringify(this.inputForm,{allowDots:true})).then((response)=> {
+          if(response.data.success){
+            this.$message(response.data.message);
+            if (this.isCreate) {
+              Object.assign(this.$data,this.getData());
+              this.initPage();
+            }else {
+              this.$router.push({name: 'carrierOrderList', query: util.getQuery("carrierOrderList"),params:{_closeFrom:true}})
+            }
+          }else {
+            that.submitDisabled = false;
+            this.$message({
+              showClose: true,
+              message: response.data.message,
+              type: 'error'
+            });
+          }
+        });
+      },getData(){
+        return {
+          inputForm:{},
+          submitDisabled:false,
           settings:{
             colHeaders:[this.$t('carrierOrderShip.billCode'),this.$t('carrierOrderShip.shipCode')],
             rowHeaders: true,
@@ -41,12 +77,8 @@
               }
             ]
           }
+        }
       }
-    },mounted () {
-      table = new Handsontable(this.$refs["handsontable"], this.settings);
-    },
-    methods:{
-
     }
   }
 </script>

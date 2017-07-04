@@ -18,7 +18,7 @@ public class ProductForm extends BaseForm<Product> {
     private String netType;
     private Boolean hasIme;
     private Boolean allowOrder;
-    private Boolean allowBill;
+    private Boolean visible;
     private BigDecimal price2;
     private BigDecimal retailPrice;
     private BigDecimal depositPrice;
@@ -26,6 +26,14 @@ public class ProductForm extends BaseForm<Product> {
     private String image;
 
     private List<String> netTypeList= Lists.newArrayList();
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public List<String> getNetTypeList() {
         return netTypeList;
@@ -89,14 +97,6 @@ public class ProductForm extends BaseForm<Product> {
 
     public void setAllowOrder(Boolean allowOrder) {
         this.allowOrder = allowOrder;
-    }
-
-    public Boolean getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(Boolean allowBill) {
-        this.allowBill = allowBill;
     }
 
     public BigDecimal getPrice2() {

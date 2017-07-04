@@ -41,6 +41,9 @@
             <el-form-item :label="$t('adGoodsOrderBill.address')" prop="expressOrderAddress">
               <el-input v-model="inputForm.expressOrderAddress"></el-input>
             </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderBill.billAddress')" prop="billAddress">
+              <el-input v-model="inputForm.billAddress"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.mobilePhone')" prop="expressOrderMobilePhone">
               <el-input v-model="inputForm.expressOrderMobilePhone"></el-input>
             </el-form-item>
@@ -105,6 +108,7 @@
           storeId: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
           expressOrderContator: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
           expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
+          billAddress:[{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
           expressOrderMobilePhone: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
           expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],
           splitBill: [{required: true, message: this.$t('adGoodsOrderBill.prerequisiteMessage')}],

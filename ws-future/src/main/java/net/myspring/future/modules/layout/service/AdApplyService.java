@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdApplyService {
     @Autowired
     private AdApplyRepository adApplyRepository;
@@ -119,6 +119,7 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
+        adApplyBillForm.setExpressCompanyId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_AD_EXPRESS_COMPANY_ID.name()).getValue());
         return adApplyBillForm;
     }
 
@@ -160,6 +161,7 @@ public class AdApplyService {
         return adApplyGoodsForm;
     }
 
+    @Transactional
     public void save(AdApplyForm adApplyForm){
         if(CollectionUtil.isEmpty(adApplyForm.getProductAdForms())){
             return;
@@ -184,6 +186,7 @@ public class AdApplyService {
         adApplyRepository.save(adApplyList);
     }
 
+    @Transactional
     public void saveConfirmQty(AdApplyEditForm adApplyEditForm){
         if(!adApplyEditForm.isCreate()){
             AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
@@ -193,6 +196,7 @@ public class AdApplyService {
         }
     }
 
+    @Transactional
     public void goodsSave(AdApplyGoodsForm adApplyGoodsForm){
         if(adApplyGoodsForm.getDepotAdApplyForms() == null){
             return;
@@ -221,6 +225,7 @@ public class AdApplyService {
         adApplyRepository.save(adApplyList);
     }
 
+    @Transactional
     public void billSave(AdApplyBillForm adApplyBillForm){
         List<String> adApplyId  =CollectionUtil.extractToList(adApplyBillForm.getAdApplyDetailForms(),"id");
         Map<String,AdApplyDetailForm> adApplyDetailFormMap = CollectionUtil.extractToMap(adApplyBillForm.getAdApplyDetailForms(),"id");

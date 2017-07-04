@@ -6,7 +6,9 @@
         <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item :label="$t('shopPrintForm.officeName')" prop="officeId">
-              <office-select v-model="inputForm.officeId" :disabled="officeDisabled"></office-select>
+              <el-select v-model="inputForm.officeId" filterable clearable >
+                <el-option v-for="item in inputForm.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.printType')" prop="printType">
               <dict-map-select v-model="inputForm.printType" category="门店_广告印刷" @input="typeChange"></dict-map-select>
@@ -29,12 +31,11 @@
             <el-input v-model="inputForm.mobilePhone" ></el-input>
           </el-form-item>
             <el-form-item :label="$t('shopPrintForm.remarks')" prop="remarks">
-              <el-input v-model="inputForm.remarks"></el-input>
+              <el-input v-model="inputForm.remarks" type="textarea" :placeholder="$t('shopPrintForm.remarksPlaceholder')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPrintForm.attachment')" prop="attachment">
-                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+                  <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/广告印刷" :on-change="handleChange" :on-remove="handleRemove"  :on-preview="handlePreview" :file-list="fileList" list-type="text">
                     <el-button size="small" type="primary">{{$t('shopPrintForm.clickUpload')}}</el-button>
-                    <div slot="tip" class="el-upload__tip">{{$t('shopPrintForm.uploadImageSizeFor5000KB')}}</div>
                   </el-upload>
             </el-form-item>
             <el-form-item>

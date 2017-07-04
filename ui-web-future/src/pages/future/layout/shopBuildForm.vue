@@ -2,11 +2,17 @@
   <div>
     <head-tab active="shopBuildForm"></head-tab>
     <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="140px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="shopDisabled"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="adShop" @input="refreshRecentMonthSaleAmount()" :disabled="shopDisabled"></depot-select>
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.monthSaleQty')" prop="recentSaleDescription">
+              {{recentSaleDescription}}
+            </el-form-item>
+            <el-form-item :label="$t('shopBuildForm.investInCause')" prop="investInCause">
+              <el-input v-model="inputForm.investInCause" type="textarea"></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.shopType')" prop="shopType">
               <dict-enum-select v-model="inputForm.shopType" category="店面类型"></dict-enum-select>
@@ -33,14 +39,14 @@
             <el-form-item :label="$t('shopBuildForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks" type="textarea"></el-input>
             </el-form-item>
-            <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange1" :on-remove="handleRemove1" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
+            <el-form-item :label="$t('shopBuildForm.shopAgreement')" prop="shopAgreement">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('shopBuildForm.confirmPhoto')" prop="confirmPhoto">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange2" :on-remove="handleRemove2" :on-preview="handlePreview2" :file-list="fileList2" list-type="picture">
+            <el-form-item :label="$t('shopBuildForm.scenePhoto')" prop="scenePhoto">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/门店建设" :on-change="handleChange1" :on-remove="handleRemove1" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
                 <el-button size="small" type="primary">{{$t('shopBuildForm.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('shopBuildForm.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
@@ -80,15 +86,17 @@
           inputForm: {
             extra:{}
           },
+          recentSaleDescription:'',
           rules: {
             shopId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            investInCause: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             shopType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             fixtureType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             newContents: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             buildType: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             scenePhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-            confirmPhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            shopAgreement: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
         }
@@ -97,7 +105,7 @@
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
         this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
-        this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList2);
+        this.inputForm.shopAgreement = util.getFolderFileIdStr(this.fileList2);
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
@@ -122,6 +130,23 @@
         axios.get('/api/basic/sys/dictEnum/findByValue',{params: {value:this.inputForm.fixtureType,category:'装修类别'}}).then((response)=>{
           this.fixtureContent=response.data;
         })
+      },refreshRecentMonthSaleAmount(){
+        if(util.isBlank(this.inputForm.shopId)){
+          this.recentSaleDescription='';
+          return;
+        }
+
+        axios.get('/api/ws/future/basic/depot/getRecentMonthSaleAmount' , {params: {depotId: this.inputForm.shopId, monthQty:3}}).then((response) => {
+          if(response.data){
+            let tmp = '';
+            for(let key in response.data){
+              tmp = tmp + key +"销量："+  response.data[key] +"台；";
+            }
+            this.recentSaleDescription=tmp;
+          }else{
+            this.recentSaleDescription='';
+          }
+        });
       },
       handlePreview1(file) {
         window.open(file.url);
@@ -141,9 +166,8 @@
           if(!this.isCreate) {
             axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
               util.copyValue(response.data, this.inputForm);
-              if (this.inputForm.id != null) {
-                this.shopDisabled = true;
-              }
+              this.shopDisabled = true;
+              this.refreshRecentMonthSaleAmount();
               if (this.inputForm.fixtureType != null) {
                 this.shopChange();
               }
@@ -152,8 +176,8 @@
                   this.fileList1 = response.data;
                 });
               }
-              if (this.inputForm.confirmPhoto != null) {
-                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.confirmPhoto}}).then((response) => {
+              if (this.inputForm.shopAgreement != null) {
+                axios.get('/api/general/sys/folderFile/findByIds', {params: {ids: this.inputForm.shopAgreement}}).then((response) => {
                   this.fileList2 = response.data;
                 });
               }

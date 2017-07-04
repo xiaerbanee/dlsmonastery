@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.service;
 
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopPrintService {
 
     @Autowired
@@ -43,11 +44,7 @@ public class ShopPrintService {
     }
 
     public ShopPrintForm getForm(ShopPrintForm  shopPrintForm){
-        if(!shopPrintForm.isCreate()){
-            ShopPrint shopPrint = shopPrintRepository.findOne(shopPrintForm.getId());
-            shopPrintForm = BeanUtil.map(shopPrint,ShopPrintForm.class);
-            cacheUtils.initCacheInput(shopPrintForm);
-        }
+        shopPrintForm.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return shopPrintForm;
     }
 
@@ -61,6 +58,7 @@ public class ShopPrintService {
         return shopPrintDto;
     }
 
+    @Transactional
     public ShopPrint save(ShopPrintForm shopPrintForm) {
         ShopPrint shopPrint;
         if(shopPrintForm.isCreate()){
@@ -85,10 +83,12 @@ public class ShopPrintService {
         return shopPrint;
     }
 
+    @Transactional
     public void logicDelete(String id){
         shopPrintRepository.logicDelete(id);
     }
 
+    @Transactional
     public void audit(ShopPrintAuditForm shopPrintAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 

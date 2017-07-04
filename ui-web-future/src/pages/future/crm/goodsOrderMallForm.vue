@@ -37,8 +37,8 @@
             <el-form-item label="商城单号" prop="carrierCodes">
               <el-input  v-model="inputForm.carrierCodes"></el-input>
             </el-form-item>
-            <el-form-item label="商城订单信息" prop="carrierDetails">
-              <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="inputForm.carrierDetails"></el-input>
+            <el-form-item label="商城订单信息" prop="carrierDetailJson">
+              <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="inputForm.carrierDetailJson" @blur="checkDetailJson(inputForm.carrierDetailJson)"></el-input>
             </el-form-item>
               <el-form-item :label="$t('goodsOrderForm.shopType')" prop="type">
                 {{shop.depotType}}
@@ -140,6 +140,23 @@
             this.submitDisabled = false;
       }
       })
+      },checkDetailJson(item){
+        var that=this;
+        if(item){
+          axios.get('/api/ws/future/api/carrierOrder/checkDetailJsons',{params: {detailJson:item,checkColor:true}}).then((response)=>{
+            if(response.data.success){
+              this.$message(response.data.message);
+              console.log(response.data)
+            }else {
+              that.submitDisabled = false;
+              this.$message({
+                showClose: true,
+                message: response.data.message,
+                type: 'error'
+              });
+            }
+          });
+        }
       },filterProducts(){
         if(!this.goodsOrderDetailList){
           this.filterDetailList = [];
@@ -169,7 +186,7 @@
             this.pageLoading = true;
             axios.get('/api/ws/future/crm/goodsOrder/findDetailList', {params: {shopId:this.inputForm.shopId, netType: this.inputForm.netType,shipType:this.inputForm.shipType}}).then((response)=>{
               this.setGoodsOrderDetailList(response.data);
-            this.pageLoading = false;
+              this.pageLoading = false;
           });
           }else{
             this.setGoodsOrderDetailList([]);

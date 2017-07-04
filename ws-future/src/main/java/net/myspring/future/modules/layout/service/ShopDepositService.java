@@ -33,7 +33,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopDepositService {
 
     @Autowired
@@ -51,6 +51,7 @@ public class ShopDepositService {
         return page;
     }
 
+    @Transactional
     public void save(ShopDepositForm shopDepositForm) {
 
         if(!shopDepositForm.isCreate()){
@@ -69,10 +70,12 @@ public class ShopDepositService {
 
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopDepositRepository.logicDelete(id);
     }
 
+    @Transactional
     private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
         ShopDeposit shopDeposit  = new ShopDeposit();
         shopDeposit.setShopId(shopDepositForm.getShopId());

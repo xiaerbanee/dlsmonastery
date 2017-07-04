@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DepotDetailService {
 
     @Autowired
@@ -62,6 +62,7 @@ public class DepotDetailService {
         return null;
     }
 
+    @Transactional
     public void syn(){ }
 
 }

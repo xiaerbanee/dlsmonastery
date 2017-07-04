@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class MenuService {
     @Autowired
     private MenuRepository menuRepository;
@@ -79,10 +79,12 @@ public class MenuService {
         return menuDtoPage;
     }
 
+    @Transactional
     public void delete(String id) {
         menuRepository.logicDelete(id);
     }
 
+    @Transactional
     public Menu save(MenuForm menuForm) {
         Menu menu;
         if (menuForm.isCreate()) {

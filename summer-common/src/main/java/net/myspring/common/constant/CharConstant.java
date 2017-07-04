@@ -19,4 +19,5 @@ public class CharConstant {
     public static final String MINUS = "-";
     public static final String SLASH_LINE = "/";
     public static final String DATE_RANGE_SPLITTER = " - ";
+    public static final String SEMICOLON = ";";
 }

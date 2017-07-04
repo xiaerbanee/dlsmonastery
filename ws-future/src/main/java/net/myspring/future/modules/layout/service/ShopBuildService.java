@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopBuildService {
 
     @Autowired
@@ -76,6 +76,7 @@ public class ShopBuildService {
         return shopBuildDto;
     }
 
+    @Transactional
     public ShopBuild save(ShopBuildForm shopBuildForm) {
         ShopBuild shopBuild;
         if(shopBuildForm.isCreate()){
@@ -99,6 +100,7 @@ public class ShopBuildService {
         return shopBuild;
     }
 
+    @Transactional
     public String audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopBuild shopBuild;
@@ -127,6 +129,7 @@ public class ShopBuildService {
 
     }
 
+    @Transactional
     public String batchAudit(String[] ids,Boolean pass){
         if(ids ==null){
             return "未选中任何记录";
@@ -146,6 +149,7 @@ public class ShopBuildService {
         return message;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopBuildRepository.logicDelete(id);
     }
@@ -154,18 +158,21 @@ public class ShopBuildService {
         Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "地区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "店名"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "fixtureType", "装修类别"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "装修规格说明"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "oldContents", "原始尺寸"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "newContents", "最新尺寸"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "创建人"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "创建时间"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedByName", "最后修改人"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "最后修改时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "accountNameAndAccountPhone", "项目对接人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
 
         List<ShopBuildDto> shopBuildList = findPage(new PageRequest(0,10000),shopBuildQuery).getContent();
+        cacheUtils.initCacheInput(shopBuildList);
         cacheUtils.initCacheInput(shopBuildList);
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("门店建设", shopBuildList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);

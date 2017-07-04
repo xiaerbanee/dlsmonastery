@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DutyTripService {
 
     @Autowired
@@ -31,6 +31,7 @@ public class DutyTripService {
         return page;
     }
 
+    @Transactional
     public DutyTrip save(DutyTripForm dutyTripForm) {
         dutyTripForm.setStatus(AuditTypeEnum.APPLY.getValue());
         dutyTripForm.setEmployeeId(RequestUtils.getEmployeeId());
@@ -39,6 +40,7 @@ public class DutyTripService {
         return dutyTrip;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         dutyTripRepository.logicDelete(id);
     }

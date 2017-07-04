@@ -32,9 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -64,12 +64,17 @@ public class VoucherService {
         return page;
     }
 
+    public VoucherDto findOne(String id) {
+        Voucher voucher = voucherRepository.findOne(id);
+        return BeanUtil.map(voucher,VoucherDto.class);
+    }
+
     public RestResponse save(VoucherForm voucherForm,VoucherModel voucherModel){
-        LocalDate date = voucherForm.getBillDate();
+        LocalDate date = voucherForm.getFDate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         RestResponse restResponse = check(data,voucherModel);
-        if (StringUtils.isNotBlank(restResponse.getMessage())) {
+        if (!restResponse.getSuccess()) {
             return restResponse;
         }else{
             Boolean isCreate = StringUtils.isBlank(voucherForm.getId());
@@ -111,8 +116,8 @@ public class VoucherService {
             for (List<Object> row : data){
                 VoucherEntry voucherEntry = new VoucherEntry();
                 voucherEntry.setFExplanation(HandsontableUtils.getValue(row,0));
-                String accountName = HandsontableUtils.getValue(row,1);
-                voucherEntry.setFAccountid(accountName);//accountNumber;
+                String accountNumberName = HandsontableUtils.getValue(row,1);
+                voucherEntry.setFAccountid(accountNumberName.split(CharConstant.SLASH_LINE)[0]);
                 String debitStr = HandsontableUtils.getValue(row,row.size()-2);
                 String creditStr = HandsontableUtils.getValue(row,row.size()-1);
                 if (StringUtils.isNoneEmpty(debitStr)){
@@ -132,7 +137,7 @@ public class VoucherService {
                         VoucherEntryFlow voucherEntryFlow = new VoucherEntryFlow();
                         voucherEntryFlow.setName(name);
                         voucherEntryFlow.setValue(value.split(CharConstant.SLASH_LINE)[1]);//科目名称
-                        voucherEntryFlow.setCode(value.split(CharConstant.SLASH_LINE)[1]);//科目编码
+                        voucherEntryFlow.setCode(value.split(CharConstant.SLASH_LINE)[0]);//科目编码
                         voucherEntryFlow.setGlVoucherEntryId(voucherEntry.getId());
                         voucherEntryFlowList.add(voucherEntryFlow);
                         voucherEntryFlowRepository.save(voucherEntryFlow);
@@ -140,6 +145,7 @@ public class VoucherService {
                 }
             }
             restResponse.setMessage("凭证保存成功");
+            restResponse.setSuccess(true);
             return restResponse;
         }
     }
@@ -147,9 +153,9 @@ public class VoucherService {
 
 
     public RestResponse check(List<List<Object>> data,VoucherModel voucherModel) {
-        RestResponse restResponse = new RestResponse("",null,false);
+        StringBuilder sb = new StringBuilder();
         //所有科目
-        Map<String, List<String>> map = accountNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList());
+        Map<String, List<String>> map = accountNumberNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList());
         List<String> header = getHeaders(voucherModel.getBdFlexItemGroupList());
         BigDecimal debitAmount = BigDecimal.ZERO;
         BigDecimal creditAmount = BigDecimal.ZERO;
@@ -157,22 +163,20 @@ public class VoucherService {
             int index = i + 1;
             List<Object> row = data.get(i);
             //科目
-            String accountName = HandsontableUtils.getValue(row,1);
-            if (map.containsKey(accountName)) {
+            String accountNumberName = HandsontableUtils.getValue(row,1);
+            if (map.containsKey(accountNumberName)) {
                 //科目对应核算维度
-                List<String> FlexGroupNames = map.get(accountName);
+                List<String> FlexGroupNames = map.get(accountNumberName);
                 for (int j = 2; j < row.size() - 2; j++) {
                     Object FlexGroupNameToElement = row.get(j);
                     String FlexGroupName = header.get(j);
                     if (StringUtils.isBlank(FlexGroupNameToElement.toString())) {
                         if (FlexGroupNames.contains(FlexGroupName)) {
-                            RestErrorField errorField = new RestErrorField("第" + index + "行，" + FlexGroupName + "为必填<br/>",null,"");
-                            restResponse.getErrors().add(errorField);
+                            sb.append("第" + index + "行，" + FlexGroupName + "为必填<br/>");
                         }
                     } else {
                         if (!FlexGroupNames.contains(FlexGroupName)) {
-                            RestErrorField errorField = new RestErrorField("第" + index + "行，" + FlexGroupName + "必须为空<br/>",null,"");
-                            restResponse.getErrors().add(errorField);
+                            sb.append("第" + index + "行，" + FlexGroupName + "必须为空<br/>");
                         }
                     }
                 }
@@ -188,18 +192,20 @@ public class VoucherService {
                 creditAmount = creditAmount.add(new BigDecimal(creditStr));
             }
             if ((StringUtils.isBlank(debitStr) && StringUtils.isBlank(creditStr)) || (StringUtils.isNotBlank(debitStr) && StringUtils.isNotBlank(creditStr))) {
-                RestErrorField errorField = new RestErrorField("第" + index + "行，借方和贷方请填写一项！<br/>",null,"");
-                restResponse.getErrors().add(errorField);
+                sb.append("第" + index + "行，借方和贷方请填写一项！<br/>");
             }
         }
         if (debitAmount.compareTo(creditAmount) != 0) {
-            RestErrorField errorField = new RestErrorField("借贷方金额必须相等",null,"");
-            restResponse.getErrors().add(errorField);
+            sb.append("借贷方金额必须相等");
         }
-        return restResponse;
+        if (sb != null){
+           return new RestResponse(sb.toString(),null,false);
+        }else {
+            return new RestResponse("",null,true);
+        }
     }
 
-    //将headers和data赋值
+    @Transactional(readOnly =true)
     public List<List<String>>  initData(VoucherDto voucherDto, VoucherModel voucherModel) {
         if (voucherDto.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
@@ -213,15 +219,6 @@ public class VoucherService {
             for (String header : getFlexItemGroupAllName(voucherModel.getBdFlexItemGroupList())) {
                 headers.add("FDetailID__" + flexItemPropertyNameMap.get(header).getFFlexNumber());
             }
-            //设置名称
-            Map<String, Map<String, String>> map = voucherModel.getResult();
-            Map<String, Map<String, String>> reverseMap = Maps.newHashMap();
-            for (String key : map.keySet()) {
-                reverseMap.put(key, Maps.<String, String>newHashMap());
-                for (String tempKey : map.get(key).keySet()) {
-                    reverseMap.get(key).put(map.get(key).get(tempKey), tempKey);
-                }
-            }
             List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucherDto.getId());
             for (VoucherEntry voucherEntry : voucherEntryList) {
                 List<String> list = Lists.newArrayList();
@@ -234,7 +231,7 @@ public class VoucherService {
                     voucherEntryFlowNameMap = voucherEntryFlowList.stream().collect(Collectors.toMap(VoucherEntryFlow::getName,VoucherEntryFlow->VoucherEntryFlow));
                     for (VoucherEntryFlow voucherEntryFlow : voucherEntryFlowList) {
                         voucherEntryFlow.setFlexName(flexItemPropertyFlexNumberMap.get(voucherEntryFlow.getFlexNumber()).getFName());
-                        String value = reverseMap.get(voucherEntryFlow.getFlexName()).get(voucherEntryFlow.getCode());
+                        String value = voucherEntryFlow.getValue();
                         voucherEntryFlow.setValue(voucherEntryFlow.getCode() + CharConstant.SLASH_LINE + value);
                     }
                 }
@@ -260,12 +257,12 @@ public class VoucherService {
     }
 
     //获取所有科目名称及其对应的核算维度
-    public Map<String, List<String>> accountNameToFlexGroupNamesMap(List<BdAccount> bdAccountList, List<BdFlexItemGroup> bdFlexItemGroupList) {
+    public Map<String, List<String>> accountNumberNameToFlexGroupNamesMap(List<BdAccount> bdAccountList, List<BdFlexItemGroup> bdFlexItemGroupList) {
         Map<String, List<String>> result = Maps.newHashMap();
         Map<String, BdFlexItemGroup> flexItemgroupIdMap = bdFlexItemGroupList.stream().collect(Collectors.toMap(BdFlexItemGroup::getFId,BdFlexItemGroup->BdFlexItemGroup));
         for (BdAccount bdAccount : bdAccountList) {
             if (!"0".equals(bdAccount.getFItemDetailId())) {
-                result.put( bdAccount.getFName(), flexItemgroupIdMap.get(bdAccount.getFItemDetailId()).getFNames());
+                result.put( bdAccount.getFNumber()+CharConstant.SLASH_LINE+bdAccount.getFName(), flexItemgroupIdMap.get(bdAccount.getFItemDetailId()).getFNames());
             }
         }
         return result;

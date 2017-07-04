@@ -170,14 +170,14 @@
           this.totalLeftQty = tempLeftQty;
       }
     },created () {
-        let that = this;
-      that.pageHeight = window.outerHeight -350;
+      let that = this;
+      that.pageHeight = window.outerHeight -380;
       this.initPromise = axios.get('/api/ws/future/layout/adApply/getQuery').then((response)=>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
       });
     },activated(){
-        this.getAllowOrderProductCode();
+      this.getAllowOrderProductCode();
       this.initPromise.then(()=>{
         this.pageRequest();
       });

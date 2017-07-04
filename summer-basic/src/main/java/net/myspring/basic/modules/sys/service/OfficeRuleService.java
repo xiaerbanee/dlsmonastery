@@ -22,7 +22,7 @@ import java.util.List;
  * Created by wangzm on 2017/4/22.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class OfficeRuleService {
     
     @Autowired
@@ -58,6 +58,7 @@ public class OfficeRuleService {
         return officeRule;
     }
 
+    @Transactional
     public OfficeRule save(OfficeRuleForm officeRuleForm) {
         OfficeRule officeRule;
         setParentIdsAndLevel(officeRuleForm);
@@ -73,6 +74,7 @@ public class OfficeRuleService {
         return officeRule;
     }
 
+    @Transactional
     public void logicDelete(OfficeRuleForm officeRuleForm) {
         officeRuleRepository.logicDelete(officeRuleForm.getId());
     }

@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ImeAllotService {
 
     @Autowired
@@ -60,6 +60,7 @@ public class ImeAllotService {
         return page;
     }
 
+    @Transactional
     public void audit(String[] ids, boolean pass) {
 
         List<ImeAllot> imeAllots = imeAllotRepository.findAll(Arrays.asList(ids));
@@ -121,6 +122,7 @@ public class ImeAllotService {
 
     }
 
+    @Transactional
     public void allot(ImeAllotForm imeAllotForm) {
 
         List<String> imeList = imeAllotForm.getImeList();
@@ -198,6 +200,7 @@ public class ImeAllotService {
         return CollectionUtil.extractToList(depotList, "name");
     }
 
+    @Transactional
     public void batchAllot(ImeAllotBatchForm imeAllotBatchForm) {
 
         List<String> imeList =  CollectionUtil.extractToList(imeAllotBatchForm.getImeAllotSimpleFormList(),"ime");

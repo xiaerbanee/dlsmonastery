@@ -24,9 +24,11 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
+import net.myspring.future.modules.basic.domain.PricesystemDetail;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
-import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
@@ -41,10 +43,7 @@ import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderDetailForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
@@ -62,13 +61,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class GoodsOrderService {
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
@@ -161,6 +157,7 @@ public class GoodsOrderService {
     }
 
     //保存及修改订单
+    @Transactional
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
         GoodsOrder goodsOrder;
@@ -226,6 +223,7 @@ public class GoodsOrderService {
     }
 
     //开单
+    @Transactional
     public  void bill(GoodsOrderBillForm goodsOrderBillForm) {
         Integer totalBillQty = 0;
         Integer mobileBillQty = 0;
@@ -290,6 +288,7 @@ public class GoodsOrderService {
 
     }
 
+    @Transactional
     private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
@@ -418,17 +417,7 @@ public class GoodsOrderService {
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
             if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netTypeMatch(netType, product.getNetType())) {
-                //是否允许下单
-                Boolean showNotAllow = true;
-                //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
-                if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
-                    OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());
-                    if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
-                        showNotAllow = false;
-                    }
-                }
-                Boolean allowOrder = product.getAllowOrder() && product.getAllowBill();
-                if(showNotAllow || allowOrder) {
+                if(allowOrder(product, shipType)) {
                     GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
                     goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
                     goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
@@ -451,11 +440,26 @@ public class GoodsOrderService {
         for(GoodsOrderDetailDto goodsOrderDetailDto:goodsOrderDetailDtoList) {
             Product product= productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setProductName(product.getName());
-            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder() && product.getAllowBill());
+            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setAreaQty(areaDetailMap.get(product.getId()));
         }
         return goodsOrderDetailDtoList;
+    }
+
+    private boolean allowOrder(Product product, String shipType) {
+        if(!Boolean.TRUE.equals(product.getVisible())){
+            return false;
+        }
+        //TODO 判断逻辑是否完整
+        //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
+        if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
+            OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());
+            if(JointLevelEnum.二级.name().equals(officeDto.getJointLevel())) {
+                return product.getAllowOrder();
+            }
+        }
+        return true;
     }
 
     public GoodsOrderDto getBill(String id) {
@@ -491,7 +495,7 @@ public class GoodsOrderService {
             Product product = productMap.get(goodsOrderDetailDto.getProductId());
             goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
             goodsOrderDetailDto.setProductName(product.getName());
-            goodsOrderDetailDto.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+            goodsOrderDetailDto.setAllowOrder(product.getAllowOrder());
             goodsOrderDetailDto.setHasIme(product.getHasIme());
             goodsOrderDetailDto.setProductOutId(product.getOutId());
         }
@@ -499,14 +503,14 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(product != null && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && netTypeMatch(goodsOrderDto.getNetType(), product.getNetType())) {
+            if(product != null && Boolean.TRUE.equals(product.getVisible()) && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && netTypeMatch(goodsOrderDto.getNetType(), product.getNetType())) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setProductOutId(product.getOutId());
                 goodsOrderDetailDto.setPrice(pricesystemDetailMap.get(product.getId()).getPrice());
 
                 goodsOrderDetailDto.setProductName(product.getName());
-                goodsOrderDetailDto.setAllowBill(product.getAllowOrder() && product.getAllowBill());
+                goodsOrderDetailDto.setAllowOrder(product.getAllowOrder());
                 goodsOrderDetailDto.setHasIme(product.getHasIme());
                 goodsOrderDetailDtoList.add(goodsOrderDetailDto);
             }
@@ -554,6 +558,7 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
+    @Transactional
     public void delete(String id) {
         goodsOrderRepository.logicDelete(id);
     }
@@ -580,5 +585,39 @@ public class GoodsOrderService {
             result.setQmys(BigDecimal.ZERO);
         }
         return result;
+    }
+
+    public void batchAdd(GoodsOrderBatchAddForm goodsOrderBatchAddForm) {
+        for(GoodsOrderBatchAddDetailForm goodsOrderBatchAddDetailForm : goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList()){
+
+            GoodsOrderForm goodsOrderForm = new GoodsOrderForm();
+            goodsOrderForm.setShipType(goodsOrderBatchAddDetailForm.getShipType());
+            goodsOrderForm.setNetType(goodsOrderBatchAddDetailForm.getNetType());
+            Depot depot = depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(),goodsOrderBatchAddDetailForm.getShopName());
+            if(depot == null){
+                throw new ServiceException("门店："+goodsOrderBatchAddDetailForm.getShopName()+"不存在");
+            }
+            goodsOrderForm.setShopId(depot.getId());
+            goodsOrderForm.setRemarks(goodsOrderBatchAddDetailForm.getRemarks());
+
+            GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
+            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(),goodsOrderBatchAddDetailForm.getProductName());
+            if(product == null){
+                throw new ServiceException("型号："+goodsOrderBatchAddDetailForm.getProductName()+"不存在");
+            }
+            goodsOrderDetailForm.setProductId(product.getId());
+            goodsOrderDetailForm.setPrice(goodsOrderBatchAddDetailForm.getPrice());
+            goodsOrderDetailForm.setQty(goodsOrderBatchAddDetailForm.getQty());
+            goodsOrderForm.setGoodsOrderDetailFormList(Collections.singletonList(goodsOrderDetailForm));
+
+            GoodsOrder goodsOrder = save(goodsOrderForm);
+
+            ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+            expressOrder.setContator(goodsOrderBatchAddDetailForm.getContator());
+            expressOrder.setAddress(goodsOrderBatchAddDetailForm.getAddress());
+            expressOrder.setMobilePhone(goodsOrderBatchAddDetailForm.getMobilePhone());
+            expressOrderRepository.save(expressOrder);
+
+        }
     }
 }

@@ -93,8 +93,19 @@
     },
     methods: {
       getData(){
-        return {
+        function phoneFormatter(rule, value, callback){
+          if(!value){
+            return callback(new Error('必填信息'));
+          }else if(value.length != 11){
+            return callback(new Error('请输入11位手机号(不包含空格或-)！'));
+          }else if(/[^\d]/.test(value)){
+            return callback(new Error('请输入纯数字手机号!'));
+          }else{
+            return callback();
+          }
+        }
 
+        return {
           isCreate: this.$route.query.id == null,
           recentSaleDescription:'',
           submitDisabled: false,
@@ -114,7 +125,7 @@
             expressOrderExpressCompanyId: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderAddress: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
             expressOrderContator: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
-            expressOrderMobilePhone: [{required: true, message: this.$t('adGoodsOrderForm.prerequisiteMessage')}],
+            expressOrderMobilePhone: [{required: true,validator:phoneFormatter}],
           },
           totalQty: 0,
           totalPrice: 0,
@@ -221,7 +232,7 @@
           }
         }
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if (util.contains(adGoodsOrderDetail.productName, val) && util.isBlank(adGoodsOrderDetail.qty)) {
+          if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.qty)) {
             tempList.push(adGoodsOrderDetail)
           }
         }

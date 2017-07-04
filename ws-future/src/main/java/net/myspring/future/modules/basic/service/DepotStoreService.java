@@ -33,7 +33,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/12.
  */
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DepotStoreService {
     @Autowired
     private DepotStoreRepository depotStoreRepository;
@@ -63,6 +63,7 @@ public class DepotStoreService {
         return depotStoreDto;
     }
 
+    @Transactional
     public DepotStore save(DepotStoreForm depotStoreForm) {
         DepotStore depotStore;
         //保存depot
@@ -122,10 +123,12 @@ public class DepotStoreService {
         }
     }
 
+    @Transactional
     public void logicDelete(String id) {
         depotStoreRepository.logicDelete(id);
     }
 
+    @Transactional
     public void syn() {
         List<BdStock> bdstocks = cloudClient.getAllStock();
         List<DepotStore> outIdDepotStoreList=depotStoreRepository.findByOutIdIn(CollectionUtil.extractToList(bdstocks,"FStockId"));
