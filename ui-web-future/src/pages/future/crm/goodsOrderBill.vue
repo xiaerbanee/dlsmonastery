@@ -77,9 +77,9 @@
         <el-table-column  prop="productName" :label="$t('goodsOrderBill.productName')" sortable width="300"></el-table-column>
         <el-table-column prop="areaQty" sortable :label="$t('goodsOrderBill.areaBillQty')"></el-table-column>
         <el-table-column prop="storeQty" :label="$t('goodsOrderBill.stock')"></el-table-column>
-        <el-table-column prop="allowBill" :label="$t('goodsOrderBill.allowBill')">
+        <el-table-column prop="allowOrder" :label="$t('goodsOrderBill.allowOrder')">
           <template scope="scope">
-            <el-tag :type="scope.row.allowBill? 'primary' : 'danger'">{{scope.row.allowBill | bool2str}}</el-tag>
+            <el-tag :type="scope.row.allowOrder? 'primary' : 'danger'">{{scope.row.allowOrder | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="qty" :label="$t('goodsOrderBill.qty')"></el-table-column>

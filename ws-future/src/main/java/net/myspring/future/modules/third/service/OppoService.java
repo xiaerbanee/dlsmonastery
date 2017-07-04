@@ -32,7 +32,7 @@ import java.util.Set;
  * Created by guolm on 2017/5/23.
  */
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class OppoService {
     @Autowired
     private OppoClient oppoClient;
