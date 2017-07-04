@@ -160,4 +160,11 @@ public class VivoService {
         List<VivoPlantSendimei> vivoPlantSendimeis = vivoPlantSendimeiRepository.findSynList(dateStart, dateEnd, mainCodes);
         return vivoPlantSendimeis;
     }
+
+    @Transactional(readOnly = true)
+    public void factoryOrder(String factoryCode, String factoryPassword){
+
+
+    }
+
 }
