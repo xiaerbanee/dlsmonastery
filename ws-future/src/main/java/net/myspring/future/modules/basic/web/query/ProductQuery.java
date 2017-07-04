@@ -16,7 +16,7 @@ public class ProductQuery extends BaseQuery {
     private Boolean hasIme;  //包含串码
     private Boolean visible;
     private String productTypeId; //产品型号
-    private Boolean allowOrder;  //允许开单
+    private Boolean allowOrder;
     private String outGroupName;  //产品类型
     private String netType;  //网络制式
     private List<String> ids= Lists.newArrayList();

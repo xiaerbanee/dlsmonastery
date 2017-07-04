@@ -22,9 +22,9 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class ApPayBillService {
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
@@ -53,6 +53,7 @@ public class ApPayBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
+    @Transactional
     private KingdeeSynDto save(ApPayBillDto apPayBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 apPayBillDto.getExtendId(),
@@ -68,6 +69,7 @@ public class ApPayBillService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(ApPayBillForm apPayBillForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = apPayBillForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(apPayBillForm.getJson());
@@ -127,7 +129,7 @@ public class ApPayBillService {
         return kingdeeSynDtoList;
     }
 
-    //一张单据
+    @Transactional
     public KingdeeSynDto save(ApPayBillDto apPayBillDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -139,7 +141,7 @@ public class ApPayBillService {
         return kingdeeSynDto;
     }
 
-    //多张单据
+    @Transactional
     public List<KingdeeSynDto> save(List<ApPayBillDto> apPayBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());

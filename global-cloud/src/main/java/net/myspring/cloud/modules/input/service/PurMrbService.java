@@ -20,9 +20,9 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,13 +36,14 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class PurMrbService {
     @Autowired
     private KingdeeManager kingdeeManager;
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
+    @Transactional
     private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 purMrbDto.getExtendId(),
@@ -58,6 +59,7 @@ public class PurMrbService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto save(PurMrbForm purMrbForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = purMrbForm.getBillDate();
         String stockNumber = purMrbForm.getStockNumber();
@@ -93,6 +95,7 @@ public class PurMrbService {
         return save(purMrbDto,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
