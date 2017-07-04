@@ -1,6 +1,6 @@
 package net.myspring.general.modules.sys.domain;
 
-import net.myspring.general.common.domain.CompanyEntity;
+import net.myspring.general.common.domain.DataEntity;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_process_type")
 @Where(clause = "enabled=true")
-public class ProcessType extends CompanyEntity<ProcessType> {
+public class ProcessType extends DataEntity<ProcessType> {
     private String type;
     private String name;
     private String viewPositionIds;

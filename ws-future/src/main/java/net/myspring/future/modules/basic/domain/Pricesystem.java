@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_pricesystem")
-public class Pricesystem extends CompanyEntity<Pricesystem> {
+public class Pricesystem extends DataEntity<Pricesystem> {
     private String name;
     private Integer sort;
     private Integer version = 0;

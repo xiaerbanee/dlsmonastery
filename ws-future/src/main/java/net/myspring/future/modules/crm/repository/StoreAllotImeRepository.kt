@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllotIme
 import net.myspring.future.modules.crm.dto.StoreAllotDto
@@ -9,6 +8,7 @@ import net.myspring.future.modules.crm.web.query.StoreAllotQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
@@ -52,7 +52,7 @@ class StoreAllotImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcT
                   AND t1.id in (:storeAllotIdList)
         ORDER BY t1.id, t2.created_date
         limit 0, :limit
-          """, params, MyBeanPropertyRowMapper(StoreAllotImeDto::class.java))
+          """, params, BeanPropertyRowMapper(StoreAllotImeDto::class.java))
     }
 
     override  fun findByStoreAllotId(storeAllotId: String): MutableList<StoreAllotImeDto>{
@@ -71,7 +71,7 @@ class StoreAllotImeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcT
             AND t1.enabled = 1
             AND t1.product_id = product.id
             AND t1.product_ime_id = ime.id
-          """, Collections.singletonMap("storeAllotId", storeAllotId), MyBeanPropertyRowMapper(StoreAllotImeDto::class.java))
+          """, Collections.singletonMap("storeAllotId", storeAllotId), BeanPropertyRowMapper(StoreAllotImeDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {

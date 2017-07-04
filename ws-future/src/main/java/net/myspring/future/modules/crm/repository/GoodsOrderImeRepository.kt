@@ -1,10 +1,10 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.GoodsOrderIme
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
@@ -40,7 +40,7 @@ class GoodsOrderImeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             t1.goods_order_id = :goodsOrderId
             AND t1.enabled = 1
 
-          """, Collections.singletonMap("goodsOrderId", goodsOrderId), MyBeanPropertyRowMapper(GoodsOrderImeDto::class.java))
+          """, Collections.singletonMap("goodsOrderId", goodsOrderId), BeanPropertyRowMapper(GoodsOrderImeDto::class.java))
     }
 
 

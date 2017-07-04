@@ -1,6 +1,5 @@
 package net.myspring.future.modules.basic.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.basic.domain.Bank
 import net.myspring.future.modules.basic.dto.BankDto
@@ -18,9 +17,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.EntityManager
 
 @CacheConfig(cacheNames = arrayOf("banks"))
 interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {

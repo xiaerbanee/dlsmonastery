@@ -7,7 +7,7 @@ import net.myspring.cloud.modules.sys.domain.KingdeeBook;
  * Created by lihx on 2017/4/5.
  */
 public class KingdeeBookDto extends DataDto<KingdeeBook> {
-    private String companyId;
+    private String companyName;
     private String name;
     private String type;
     private String kingdeeUrl;
@@ -15,12 +15,12 @@ public class KingdeeBookDto extends DataDto<KingdeeBook> {
     private String kingdeeDbid;
     private Integer version;
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getName() {

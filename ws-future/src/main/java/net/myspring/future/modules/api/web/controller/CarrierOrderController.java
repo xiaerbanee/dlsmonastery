@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.api.domain.CarrierOrder;
+import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.api.dto.CarrierOrderDto;
 import net.myspring.future.modules.api.service.CarrierOrderService;
@@ -18,6 +20,7 @@ import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +52,7 @@ public class CarrierOrderController {
         Page<CarrierOrderDto> carrierOrderDtoPage=carrierOrderService.findPage(pageable,carrierOrderQuery);
         return carrierOrderDtoPage;
     }
+
 
     @RequestMapping(value = "getQuery")
     public CarrierOrderQuery getQuery(CarrierOrderQuery carrierOrderQuery) {

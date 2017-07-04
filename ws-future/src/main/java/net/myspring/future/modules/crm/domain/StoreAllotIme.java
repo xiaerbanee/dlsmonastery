@@ -1,14 +1,14 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_store_allot_ime")
-public class StoreAllotIme extends CompanyEntity<StoreAllotIme> {
+public class StoreAllotIme extends DataEntity<StoreAllotIme> {
     private Integer version = 0;
 
     private String productImeId;

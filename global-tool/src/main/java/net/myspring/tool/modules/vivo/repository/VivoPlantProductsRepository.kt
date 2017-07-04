@@ -2,20 +2,19 @@ package net.myspring.tool.modules.vivo.repository;
 
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
-import org.springframework.stereotype.Repository
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
-/**
- * Created by admin on 2016/10/17.
- */
-@Repository
-interface VivoPlantProductsRepository: BaseRepository<VivoPlantProducts, String> {
+interface VivoPlantProductsRepository : BaseRepository<VivoPlantProducts, String>, VivoPlantProductsRepositoryCustom {
 
-    @Query("""
-        select t.itemNumber
-        from #{#entityName} t
-        where t.itemNumber in ?1
-        """)
-    fun findItemNumbers(itemNumbers: MutableCollection<String>): MutableList<String>
+    @Query("select  t from #{#entityName}  t where t.itemNumber in (?1)")
+    fun findItemNumbers(itemNumbers: MutableCollection<VivoPlantProducts>): MutableList<VivoPlantProducts>
+}
+interface VivoPlantProductsRepositoryCustom{
+
+}
+class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantProductsRepositoryCustom {
+
 }

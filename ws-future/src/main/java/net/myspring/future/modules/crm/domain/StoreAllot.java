@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_store_allot")
-public class StoreAllot extends CompanyEntity<StoreAllot> {
+public class StoreAllot extends DataEntity<StoreAllot> {
     private String fromStoreId;
     private String toStoreId;
     private String outCode;

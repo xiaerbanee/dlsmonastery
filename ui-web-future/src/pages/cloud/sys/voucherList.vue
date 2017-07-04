@@ -100,7 +100,7 @@
         this.$router.push({ name: 'voucherForm'})
       },itemAction:function(id,action){
         if(action === "detail") {
-          this.$router.push({ name: 'voucherForm', query: { id: id }})
+          this.$router.push({ name: 'voucherDetail', query: { id: id }})
         }else if(action === "edit") {
           this.$router.push({ name: 'voucherForm', query: { id: id }})
         }else if(action === "delete") {

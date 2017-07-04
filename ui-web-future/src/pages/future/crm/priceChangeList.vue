@@ -33,6 +33,7 @@
         <el-table-column  :label="$t('priceChangeList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('priceChangeList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:priceChange:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('priceChangeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

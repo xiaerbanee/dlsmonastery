@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_price_change_commission")
-public class PriceChangeCommission extends CompanyEntity<PriceChangeCommission> {
+public class PriceChangeCommission extends DataEntity<PriceChangeCommission> {
     private String areaId;
     private BigDecimal amount;
     private Integer version = 0;

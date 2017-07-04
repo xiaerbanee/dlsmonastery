@@ -1,20 +1,16 @@
 package net.myspring.future.modules.basic.domain;
 
 
-import com.google.common.collect.Lists;
-import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
-import net.myspring.future.modules.basic.web.form.ProductForm;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.List;
 
 
 @Entity
 @Table(name="crm_product_type")
-public class ProductType extends CompanyEntity<ProductType> {
+public class ProductType extends DataEntity<ProductType> {
     private String name;
     private String reportName;
     private String code;

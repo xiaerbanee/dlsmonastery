@@ -32,6 +32,8 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
         """)
     fun findByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSale>
 
+    fun findByToFinanceDateIsNull():MutableList<AfterSale>
+
     fun findByBadProductImeIdIn(badProductImeId:MutableList<String>):MutableList<AfterSale>
 
 }
@@ -40,6 +42,8 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
 interface AfterSaleRepositoryCustom{
 
     fun findPage(pageable: Pageable, afterSaleQuery : AfterSaleQuery): Page<AfterSaleDto>
+
+    fun findFilter(afterSaleQuery : AfterSaleQuery): MutableList<AfterSaleDto>
 
     fun findDtoByImeIn(imeList:MutableList<String>): MutableList<AfterSaleDto>
 
@@ -55,6 +59,68 @@ interface AfterSaleRepositoryCustom{
 }
 
 class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): AfterSaleRepositoryCustom {
+    override fun findFilter(afterSaleQuery: AfterSaleQuery): MutableList<AfterSaleDto> {
+        val sb = StringBuilder()
+        sb.append("""
+             SELECT
+                 t1.*,t4.name as 'areaDepotName',t2.ime as 'badProductIme',t3.name as 'badProductName',
+                 t6.name as 'toAreaProductName',t7.name as 'retailDepotName',t5.ime as 'toAreaProductIme',t8.name as 'fromCompanyProductName'
+             FROM
+                crm_after_sale  t1 left join crm_product_ime t2 on t1.bad_product_ime_id=t2.id
+                left join crm_product t3 on t2.product_id=t3.id
+                left join crm_depot t4 on t1.area_depot_id=t4.id
+                left join crm_product_ime t5 on t1.to_area_product_ime_id=t5.id
+                left join crm_product t6 on t5.product_id=t6.id
+                left join crm_depot t7 on t2.retail_shop_id=t7.id
+                left join crm_product t8 on t1.from_company_product_id=t8.id
+             WHERE
+                 t1.enabled=1
+            """)
+        if (afterSaleQuery.toStoreDateStart != null) {
+            sb.append("""  and t1.to_store_date  >= :toStoreDateStart """)
+        }
+        if (afterSaleQuery.toStoreDateEnd!= null) {
+            sb.append("""  and t1.to_store_date  < :toStoreDateEnd """)
+        }
+        if (afterSaleQuery.toCompanyDateStart != null) {
+            sb.append("""  and t1.to_company_date  >= :toCompanyDateStart """)
+        }
+        if (afterSaleQuery.toCompanyDateEnd!= null) {
+            sb.append("""  and t1.to_company_date  < :toCompanyDateEnd """)
+        }
+        if (afterSaleQuery.createdDateStart!= null) {
+            sb.append("""  and t1.created_date  < :createdDateStart """)
+        }
+        if (afterSaleQuery.createdDateEnd != null) {
+            sb.append("""  and t1.created_date  >= :createdDateEnd """)
+        }
+        if (afterSaleQuery.fromCompanyDateStart != null) {
+            sb.append("""  and t1.from_company_date  >= :fromCompanyDateStart """)
+        }
+        if (afterSaleQuery.fromCompanyDateEnd!= null) {
+            sb.append("""  and t1.from_company_date  < :fromCompanyDateEnd """)
+        }
+        if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
+            sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
+        }
+        if (StringUtils.isNotBlank(afterSaleQuery.depotName)) {
+            sb.append("""  and t4.name like concat('%',:depotName,'%') """)
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.imeList)) {
+            sb.append("""  and t2.ime in (:imeList) """)
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.toAreaImeList)) {
+            sb.append("""  and t5.ime in (:toAreaImeList) """)
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleQuery.businessIdList)) {
+            sb.append("""  and t1.business_id in (:businessIdList) """)
+        }
+        if (afterSaleQuery.fromCompany) {
+            sb.append("""  and t1.from_company_date is  null """)
+        }
+        print(sb.toString())
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));
+    }
 
     override fun findMaxBusinessId(dateStart: LocalDate): MutableList<String> {
         val sb = StringBuilder()
@@ -104,6 +170,45 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
              WHERE
                  t1.enabled=1
             """)
+            if (afterSaleQuery.toStoreDateStart != null) {
+                sb.append("""  and t1.to_store_date  >= :toStoreDateStart """)
+            }
+            if (afterSaleQuery.toStoreDateEnd!= null) {
+                sb.append("""  and t1.to_store_date  < :toStoreDateEnd """)
+            }
+            if (afterSaleQuery.toCompanyDateStart != null) {
+                sb.append("""  and t1.to_company_date  >= :toCompanyDateStart """)
+            }
+            if (afterSaleQuery.toCompanyDateEnd!= null) {
+                sb.append("""  and t1.to_company_date  < :toCompanyDateEnd """)
+            }
+            if (afterSaleQuery.createdDateStart!= null) {
+                sb.append("""  and t1.created_date  < :createdDateStart """)
+            }
+            if (afterSaleQuery.createdDateEnd != null) {
+                sb.append("""  and t1.created_date  >= :createdDateEnd """)
+            }
+            if (afterSaleQuery.fromCompanyDateStart != null) {
+                sb.append("""  and t1.from_company_date  >= :fromCompanyDateStart """)
+            }
+            if (afterSaleQuery.fromCompanyDateEnd!= null) {
+                sb.append("""  and t1.from_company_date  < :fromCompanyDateEnd """)
+            }
+            if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
+                sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
+            }
+            if (StringUtils.isNotBlank(afterSaleQuery.depotName)) {
+                sb.append("""  and t4.name like concat('%',:depotName,'%') """)
+            }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.imeList)) {
+                sb.append("""  and t2.ime in (:imeList) """)
+            }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.toAreaImeList)) {
+                sb.append("""  and t5.ime in (:toAreaImeList) """)
+            }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.businessIdList)) {
+                sb.append("""  and t1.business_id in (:businessIdList) """)
+            }
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
             var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));

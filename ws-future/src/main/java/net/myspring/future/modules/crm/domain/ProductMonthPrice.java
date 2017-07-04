@@ -1,14 +1,14 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_product_month_price")
-public class ProductMonthPrice extends CompanyEntity<ProductMonthPrice> {
+public class ProductMonthPrice extends DataEntity<ProductMonthPrice> {
     private String month;
     private Integer version = 0;
 
