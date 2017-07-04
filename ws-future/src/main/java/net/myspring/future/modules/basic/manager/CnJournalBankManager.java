@@ -31,26 +31,28 @@ public class CnJournalBankManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
-
+        Bank bank = bankRepository.findOne(shopDeposit.getBankId());
+        Depot depot = depotRepository.findOne(shopDeposit.getShopId());
         CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
         cnJournalForBankDto.setExtendId(shopDeposit.getId());
         cnJournalForBankDto.setExtendType(ExtendTypeEnum.押金列表.name());
-        cnJournalForBankDto.setDate(null);
+        cnJournalForBankDto.setDate(shopDeposit.getBillDate());
         List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
 
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         entityForBankDto.setDebitAmount(shopDeposit.getAmount());
         entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-        entityForBankDto.setDepartmentNumber("");
-        entityForBankDto.setBankAccountNumber("");
-        entityForBankDto.setComment("");
+        entityForBankDto.setDepartmentNumber(departmentNumber);
+        entityForBankDto.setBankAccountNumber(bank.getCode());
+        entityForBankDto.setComment(depot.getName()+shopDeposit.getRemarks());
         cnJournalEntityForBankDtoList.add(entityForBankDto);
         cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
         cnJournalForBankDtoList.add(cnJournalForBankDto);
 
         return cloudClient.synJournalBankForShopDeposit(cnJournalForBankDtoList).get(0);
+
     }
 
     public List<KingdeeSynReturnDto> synEmployeePhoneDeposit(List<EmployeePhoneDeposit> employeePhoneDepositList){
@@ -67,7 +69,7 @@ public class CnJournalBankManager {
             entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
             entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
             entityForBankDto.setBankAccountNumber(bank.getCode());
-            entityForBankDto.setComment(depot.getName());
+            entityForBankDto.setComment(depot.getName()+employeePhoneDeposit.getRemarks());
             cnJournalEntityForBankDtoList.add(entityForBankDto);
             cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
             cnJournalForBankDtoList.add(cnJournalForBankDto);
