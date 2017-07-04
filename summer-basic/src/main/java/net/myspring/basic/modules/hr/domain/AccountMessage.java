@@ -1,7 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import net.myspring.basic.common.domain.CompanyEntity;
 import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_account_message")
-public class AccountMessage extends CompanyEntity<AccountMessage> {
+public class AccountMessage extends DataEntity<AccountMessage> {
     private String toAccountId;
     private String title;
     private String content;

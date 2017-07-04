@@ -1,15 +1,14 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import net.myspring.basic.modules.sys.domain.Office;
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_office_change")
-public class OfficeChange extends CompanyEntity<OfficeChange> {
+public class OfficeChange extends DataEntity<OfficeChange> {
     private String type;
     private String oldLabel;
     private String oldValue;

@@ -1,14 +1,14 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_audit_file")
-public class AuditFile extends CompanyEntity<AuditFile> {
+public class AuditFile extends DataEntity<AuditFile> {
     private String title;
     private String content;
     private String attachment;
