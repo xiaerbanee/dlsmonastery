@@ -1,8 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import com.google.common.collect.Lists
-import com.google.common.collect.Maps
-import net.myspring.common.constant.CharConstant
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
@@ -15,7 +12,6 @@ import net.myspring.future.modules.crm.web.query.ReportQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
-import org.elasticsearch.common.collect.HppcMaps
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -33,11 +29,11 @@ import java.util.*
 
 interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeRepositoryCustom{
 
-    fun findByEnabledIsTrueAndCompanyIdAndIme(companyId: String, ime: String): ProductIme?
+    fun findByEnabledIsTrueAndIme( ime: String): ProductIme?
 
-    fun findByEnabledIsTrueAndCompanyIdAndImeIn(companyId :String, imeList: MutableList<String>): MutableList<ProductIme>
+    fun findByEnabledIsTrueAndImeIn(imeList: MutableList<String>): MutableList<ProductIme>
 
-    fun countByEnabledIsTrueAndDepotIdAndCompanyIdAndRetailDateBetween(depotId: String, companyId: String, retailDateStart: LocalDateTime, retailDateEnd: LocalDateTime): Long
+    fun countByEnabledIsTrueAndDepotIdAndRetailDateBetween(depotId: String,  retailDateStart: LocalDateTime, retailDateEnd: LocalDateTime): Long
 
     @Query("""
     SELECT
@@ -67,13 +63,13 @@ interface ProductImeRepositoryCustom{
 
     fun findProductImeDto(productImeId: String): ProductImeDto
 
-    fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto>
+    fun findDtoListByImeList(imeList: MutableList<String>): MutableList<ProductImeDto>
 
-    fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto>
+    fun batchQuery(allImeList: List<String>): List<ProductImeDto>
 
     fun findShipList(productImeShipQuery: ProductImeShipQuery): MutableList<ProductIme>
 
-    fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate,   companyId :String) : MutableList<ProductImeForReportScoreDto>
+    fun findForReportScore( dateStart :LocalDate,  dateEnd : LocalDate) : MutableList<ProductImeForReportScoreDto>
 
     fun findBaokaSaleReport(productImeSaleReportQuery: ReportQuery) : MutableList<ProductImeReportDto>
 
@@ -87,14 +83,13 @@ interface ProductImeRepositoryCustom{
 }
 
 class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeRepositoryCustom {
-    override fun batchQuery(allImeList: List<String>, companyId: String): List<ProductImeDto> {
+    override fun batchQuery(allImeList: List<String>): List<ProductImeDto> {
         if (allImeList.isEmpty()) {
             return ArrayList()
         }
 
         val params = HashMap<String, Any>()
         params.put("allImeList", allImeList)
-        params.put("companyId", companyId)
         return namedParameterJdbcTemplate.query("""
         SELECT
             sale.created_date productImeSaleCreatedDate,
@@ -121,7 +116,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
-                AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.enabled =  1
                 AND (t1.ime IN (:allImeList) OR t1.ime2 IN (:allImeList) OR t1.box_ime IN (:allImeList) OR t1.meid IN (:allImeList))
@@ -270,15 +264,15 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
-    override fun findSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
+    override fun findSaleReport(productImeSaleReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" select t2.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
         }
         sb.append("""
@@ -293,52 +287,52 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
              t1.enabled = 1
             and t2.depot_shop_id=t6.id
     """)
-        if (productImeReportQuery.dateStart != null) {
+        if (productImeSaleReportQuery.dateStart != null) {
             sb.append(""" and t1.created_date>=:dateStart """)
         }
-        if (productImeReportQuery.dateEnd != null) {
+        if (productImeSaleReportQuery.dateEnd != null) {
             sb.append(""" and t1.created_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType != null) {
+        if (productImeSaleReportQuery.scoreType != null) {
             sb.append(""" and t5.score_type=:scoreType""")
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.townType)) {
             sb.append(""" and t6.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
             sb.append(""" and t6.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
             sb.append(""" and t5.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIds)) {
             sb.append(""" and t2.office_id in (:officeIds) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" group by t2.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" group by t5.id """)
         }
         print(sb.toString())
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeSaleReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
-    override fun findBaokaSaleReport(productImeReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
+    override fun findBaokaSaleReport(productImeSaleReportQuery: ReportQuery): MutableList<ProductImeReportDto> {
         val sb = StringBuilder()
-        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" select t2.office_id,t1.id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
         }
         sb.append("""
@@ -351,51 +345,50 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             where t1.enabled=1
             and t2.depot_shop_id=t5.id
     """)
-        if (productImeReportQuery.dateStart != null) {
+        if (productImeSaleReportQuery.dateStart != null) {
             sb.append(""" and t1.retail_date>=:dateStart """)
         }
-        if (productImeReportQuery.dateEnd != null) {
+        if (productImeSaleReportQuery.dateEnd != null) {
             sb.append(""" and t1.retail_date<=:dateEnd """)
         }
-        if (productImeReportQuery.scoreType != null) {
+        if (productImeSaleReportQuery.scoreType != null) {
             sb.append(""" and t4.score_type=:scoreType """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.townType)) {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.townType)) {
             sb.append(""" and t5.town_type=:townType """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.areaType)) {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.areaType)) {
             sb.append(""" and t5.area_type=:areaType """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.productTypeIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.productTypeIdList)) {
             sb.append(""" and t4.id in (:productTypeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIdList)) {
             sb.append(""" and t2.office_id in (:officeIdList) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.officeIds)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.officeIds)) {
             sb.append(""" and t2.office_id in (:officeIds) """)
         }
-        if (CollectionUtil.isNotEmpty(productImeReportQuery.depotIdList)) {
+        if (CollectionUtil.isNotEmpty(productImeSaleReportQuery.depotIdList)) {
             sb.append(""" and t2.id in (:depotIdList) """)
         }
-        if (StringUtils.isBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
+        if (StringUtils.isBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
             sb.append(""" group by t2.area_id """)
         }
-        if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
+        if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" group by t4.id """)
         }
-        println("销售报表按电子报卡" + productImeReportQuery.officeIdList)
+        println("销售报表按电子报卡" + productImeSaleReportQuery.officeIdList)
         println(sb.toString())
-        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeSaleReportQuery), BeanPropertyRowMapper(ProductImeReportDto::class.java))
     }
 
 
-    override fun findForReportScore(dateStart: LocalDate, dateEnd: LocalDate, companyId: String): MutableList<ProductImeForReportScoreDto> {
+    override fun findForReportScore(dateStart: LocalDate, dateEnd: LocalDate): MutableList<ProductImeForReportScoreDto> {
 
         val params = HashMap<String, Any>()
         params.put("dateStart", dateStart)
         params.put("dateEnd", dateEnd)
-        params.put("companyId", companyId)
 
         return namedParameterJdbcTemplate.query("""
 
@@ -410,7 +403,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
-                AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.product_type_id = type.id
                 AND product.enabled = 1
@@ -463,14 +455,13 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(productImeShipQuery), BeanPropertyRowMapper(ProductIme::class.java))
     }
 
-    override fun findDtoListByImeList(imeList: MutableList<String>, companyId: String): MutableList<ProductImeDto> {
+    override fun findDtoListByImeList(imeList: MutableList<String>): MutableList<ProductImeDto> {
         if (imeList.isEmpty()) {
             return ArrayList()
         }
 
         val params = HashMap<String, Any>()
         params.put("imeList", imeList)
-        params.put("companyId", companyId)
         return namedParameterJdbcTemplate.query("""
         SELECT
             sale.created_date productImeSaleCreatedDate,
@@ -498,7 +489,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
-                AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.enabled =  1
                 AND t1.ime in (:imeList)
@@ -597,7 +587,6 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             LEFT JOIN crm_product_ime_upload upload ON t1.product_ime_upload_id = upload.id AND upload.enabled = 1
 		WHERE
 			t1.enabled = 1
-		    AND t1.company_id = :companyId
         """)
         if (StringUtils.isNotEmpty(productImeQuery.boxIme)) {
             sb.append("""  and t1.box_ime like CONCAT('%', :boxIme,'%') """)
@@ -651,8 +640,8 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun batchSave(productImes: MutableList<ProductIme>): IntArray? {
         val sb = StringBuilder()
-        sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,company_id,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ");
-        sb.append("(:depotId,:retailShopId,:productId,:ime,:createdTime,:ime2,:itemNumber,:colorId,:meid,:boxIme,:inputType,:companyId,:billId,:imeReverse,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate,:version,:locked,:enabled)")
+        sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ");
+        sb.append("(:depotId,:retailShopId,:productId,:ime,:createdTime,:ime2,:itemNumber,:colorId,:meid,:boxIme,:inputType,:billId,:imeReverse,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate,:version,:locked,:enabled)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(productImes.toTypedArray()));
     }
 }

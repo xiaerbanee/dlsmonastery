@@ -13,17 +13,14 @@ import javax.persistence.PrePersist;
  */
 @MappedSuperclass
 public class CompanyEntity<T> extends DataEntity<T> {
+    private String companyName = RequestUtils.getCompanyName();
 
-    @Column(updatable = false)
-    private String companyId="1";
-
-    public String getCompanyId() {
-        return companyId;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
-
 }
 

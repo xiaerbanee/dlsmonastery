@@ -1,12 +1,11 @@
 package net.myspring.cloud.modules.report.repository
 
-import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto
 import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery
-import org.hibernate.Hibernate
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
@@ -162,7 +161,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     a.supplierId,
                     a.departmentId
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(SupplierPayableDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
 
     //应付金额：采购入库单-采购退料单+其他应付单+应付单
@@ -272,7 +271,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
               a.supplierId,
               a.departmentId
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(SupplierPayableDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
 
     //实付金额：付款单-付款退款单
@@ -335,7 +334,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
               a.supplierId,
               a.departmentId
         """);
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(SupplierPayableDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
 
     //采购入库单sum+采购退料单sum+应付单sum+付款单+付款退款单+其他应付单
@@ -583,7 +582,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 t.departmentId,
                 t.date
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
     }
 
     //显示物料: 采购入库单+采购退料单+应付单
@@ -687,7 +686,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         if(supplierPayableDetailQuery.departmentIdList.size>0){
             sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
         }
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, MyBeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
     }
 
 }

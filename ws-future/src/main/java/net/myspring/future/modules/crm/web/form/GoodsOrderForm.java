@@ -25,11 +25,26 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String businessId;
     private String allotFromStockCode;
     private String allotToStockCode;
+    private String carrierCodes;
+    private String detailJson;
     private BigDecimal goodsDeposit;
     private LocalDate billDate;
     private Boolean lxMallOrder;
     private List<String> netTypeList;
     private List<String> shipTypeList;
+    private String carrierShopId;
+
+    public boolean isSyn() {
+        return syn;
+    }
+
+    public String getCarrierShopId() {
+        return carrierShopId;
+    }
+
+    public void setCarrierShopId(String carrierShopId) {
+        this.carrierShopId = carrierShopId;
+    }
 
     public Boolean getLxMallOrder() {
         return lxMallOrder;
@@ -183,5 +198,21 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
 
     public void setGoodsOrderDetailFormList(List<GoodsOrderDetailForm> goodsOrderDetailFormList) {
         this.goodsOrderDetailFormList = goodsOrderDetailFormList;
+    }
+
+    public String getCarrierCodes() {
+        return carrierCodes;
+    }
+
+    public void setCarrierCodes(String carrierCodes) {
+        this.carrierCodes = carrierCodes;
+    }
+
+    public String getDetailJson() {
+        return detailJson;
+    }
+
+    public void setDetailJson(String detailJson) {
+        this.detailJson = detailJson;
     }
 }

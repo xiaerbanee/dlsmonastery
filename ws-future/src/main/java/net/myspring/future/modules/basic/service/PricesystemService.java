@@ -108,7 +108,7 @@ public class PricesystemService {
                         return p1.getProductName().compareTo(p2.getProductName());
                     }
                 });
-                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
+                String expressProductId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
                 for(int i = 0;i<pricesystemDetails.size();i++) {
                     if(StringUtils.isNotBlank(expressProductId) && expressProductId.equals(pricesystemDetails.get(i).getProductId())) {
                         pricesystemDetails.get(i).setSort(0);
@@ -135,7 +135,7 @@ public class PricesystemService {
     public PricesystemForm initPricesystemDetail(PricesystemForm pricesystemForm){
         List<PricesystemDetailForm> pricesystemDetailFormList=Lists.newArrayList();
         if(pricesystemForm.isCreate()){
-            String value =CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
+            String value =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue();
             List<String> outGroupIds = IdUtils.getIdList(value);
             List<Product> productList = productRepository.findByOutGroupIdIn(outGroupIds);
             for(Product product:productList){

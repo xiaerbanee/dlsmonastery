@@ -72,7 +72,7 @@ public class CacheService {
         cacheUtils.initCache("officeRules",officeRuleRepository.findAll());
         List<CompanyConfigCacheDto> companyConfigs=companyConfigRepository.findAllCache();
         for(CompanyConfigCacheDto companyConfigCacheDto:companyConfigs) {
-            companyConfigCacheDto.setKey(companyConfigCacheDto.getCompanyId() + CharConstant.ENTER + companyConfigCacheDto.getCode());
+            companyConfigCacheDto.setKey(companyConfigCacheDto.getCode());
         }
         cacheUtils.initCache("companyConfigCodes",companyConfigs,"key");
         LocalDateTime end = LocalDateTime.now();

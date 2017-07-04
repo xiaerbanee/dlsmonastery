@@ -15,6 +15,7 @@ import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
 import net.myspring.future.modules.crm.web.validator.ProductImeSaleValidator;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -116,12 +118,11 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value="export")
-    public String export(ProductImeSaleQuery productImeSaleQuery) {
+    public ModelAndView export(ProductImeSaleQuery productImeSaleQuery) {
         if(StringUtils.isNotBlank(productImeSaleQuery.getIme())&&productImeSaleQuery.getIme().length()<6){
             throw new ServiceException("请输入至少六位串码尾数");
         }
-
-        return productImeSaleService.export(productImeSaleQuery);
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", productImeSaleService.export(productImeSaleQuery));
     }
 
     @RequestMapping(value="getSaleForm")

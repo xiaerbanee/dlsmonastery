@@ -1,18 +1,22 @@
 <template>
   <div>
     <head-tab active="goodsOrderBatchAdd"></head-tab>
-    <div >
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+    <div class="outer">
+      <div class="header">
+        <h1>批量订货</h1>
+      </div>
+      <el-form :model="formData" ref="inputForm"  label-width="120px" class="form input-form">
+
+        <el-row :gutter="24">
+          <el-col :span="24">
+            <div ref="handsontable" style="width:96%;height:605px;overflow:hidden;"></div>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBatchAdd.save')}}</el-button>
+              <el-button type="primary btnSave" icon="check" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBatchAdd.save')}}</el-button>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <div ref="handsontable" style="width:1500px;height:600px;overflow:hidden;"></div>
           </el-col>
         </el-row>
       </el-form>
@@ -21,13 +25,20 @@
 </template>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
-  var table = null;
-  var shipTypes=["总部发货","总部自提","地区发货","地区自提","代理发货","代理自提"];
-  var netTypes=["全网通","移动","联信"];
+  import suAlert from 'components/common/su-alert'
+  let table = null;
   export default {
+    components:{
+      suAlert,
+    },
     data() {
       return {
+        formData:{
+          extra:{}
+        },
         submitDisabled: false,
+        initPromise:{},
+
         settings: {
           colHeaders: [this.$t('goodsOrderBatchAdd.shopName'), this.$t('goodsOrderBatchAdd.carrierCodes'), this.$t('goodsOrderBatchAdd.receiveAddress'),
             this.$t('goodsOrderBatchAdd.receiver'),this.$t('goodsOrderBatchAdd.tel'),this.$t('goodsOrderBatchAdd.remarks'),this.$t('goodsOrderBatchAdd.netType'),
@@ -43,19 +54,18 @@
               strict: true,
               tempShopNames: [],
               source: function (query, process) {
-                var that = this;
-                if (that.tempShopNames.indexOf(query) >= 0) {
-                  process(that.tempShopNames);
+                if (this.tempShopNames.indexOf(query) >= 0) {
+                  process(this.tempShopNames);
                 } else {
-                  var shopNames = new Array();
-                  if (query.length >= 1) {
+                  let shopNames = new Array();
+                  if (query.length >= 2) {
                     axios.get('/api/ws/future/basic/depot/shop?name=' + query).then((response) => {
                       if (response.data.length > 0) {
-                        for (var index in response.data) {
-                          var shopName = response.data[index].name;
+                        for (let row of response.data) {
+                          let shopName = row.name;
                           shopNames.push(shopName);
-                          if (that.tempShopNames.indexOf(shopName) < 0) {
-                            that.tempShopNames.push(shopName);
+                          if (this.tempShopNames.indexOf(shopName) < 0) {
+                            this.tempShopNames.push(shopName);
                           }
                         }
                       }
@@ -82,25 +92,23 @@
               type: "autocomplete",
               allowEmpty: false,
               strict: true,
-              source: netTypes,
               width:100
             },{
               type: "autocomplete",
               tempType: [],
               source: function (query, process) {
-                var that = this;
-                if (that.tempType.indexOf(query) >= 0) {
-                  process(that.tempType);
+                if (this.tempType.indexOf(query) >= 0) {
+                  process(this.tempType);
                 } else {
-                  var types = new Array();
-                  if (query.length >= 1) {
-                    axios.get('/api/ws/future/basic/productType/search?name=' + query).then((response) => {
+                  let types = new Array();
+                  if (query.length >= 2) {
+                    axios.get('/api/ws/future/basic/product/search?name=' + query).then((response) => {
                       if (response.data.length > 0) {
-                        for (var index in response.data) {
-                          var type = response.data[index].name;
+                        for (let row of response.data) {
+                          let type = row.name;
                           types.push(type);
-                          if (that.tempType.indexOf(type) < 0) {
-                            that.tempType.push(type);
+                          if (this.tempType.indexOf(type) < 0) {
+                            this.tempType.push(type);
                           }
                         }
                       }
@@ -121,21 +129,68 @@
               type: "autocomplete",
               allowEmpty: false,
               strict: true,
-              source: shipTypes,
               width:150
             }]
         }
       }
-    },mounted () {
-      table = new Handsontable(this.$refs["handsontable"], this.settings);
+    },created(){
+        this.initPage();
     },
     methods:{
         formSubmit(){
+            let list = table.getData();
+            this.formData.goodsOrderBatchAddDetailFormList = new Array();
+            for(let item in list){
+              if(!table.isEmptyRow(item)){
+                let row = list[item];
+                let temData = {};
+                temData.shopName = row[0];
+                temData.carrierOrderId = row[1];
+                temData.address = row[2];
+                temData.contator = row[3];
+                temData.mobilePhone = row[4];
+                temData.remarks = row[5];
+                temData.netType = row[6];
+                temData.productName = row[7];
+                temData.qty = Number.parseInt(row[8]);
+                temData.price = Number.parseInt(row[9]);
+                temData.shipType = row[10];
 
-        }
+                this.formData.goodsOrderBatchAddDetailFormList.push(temData);
+              }
+            }
+          /*this.formData.data = JSON.stringify(this.formData.data);*/
+          console.log(this.formData);
+          axios.post('/api/ws/future/crm/goodsOrder/batchAdd', qs.stringify(util.deleteExtra(this.formData),{allowDots: true})).then((response)=>{
+            this.$message(response.data.message);
+            Object.assign(this.$data, this.getData());
+            this.initPage();
+          }).catch( () => {
+            this.submitDisabled = false;
+          });
+        },initPage(){
+            axios.get('/api/ws/future/crm/goodsOrder/getForm').then((response)=>{
+              this.settings.columns[6].source=response.data.extra.netTypeList;
+              this.settings.columns[10].source=response.data.extra.shipTypeList;
+              table = new Handsontable(this.$refs["handsontable"], this.settings);
+            });
+      }
     }
   }
 </script>
 <style>
   @import "~handsontable/dist/handsontable.full.css";
+</style>
+<style>
+  .outer{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .header{
+    text-align: center;
+  }
+  .btnSave{
+    margin-top: 20px;
+    margin-left: 600px;
+  }
 </style>

@@ -185,40 +185,11 @@ public class CnJournalForBankService {
     }
 
     @Transactional
-    public List<KingdeeSynDto> saveForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynDto> saveForWS(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
             cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
-            cnJournalForBankDto.setDate(LocalDate.now());
-            cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款
             cnJournalForBankDto.setKingdeeName(kingdeeBook.getName());
             cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());
-            for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalForBankDto.getEntityForBankDtoList()) {
-                cnJournalEntityForBankDto.setAccountNumber("2241");//其他应付款
-                cnJournalEntityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
-                cnJournalEntityForBankDto.setEmpInfoNumber("0001");//员工
-                cnJournalEntityForBankDto.setOtherTypeNumber("2241.00029");//其他应付款-导购业务机押金
-                cnJournalEntityForBankDto.setExpenseTypeNumber("6602.000");//无
-                cnJournalEntityForBankDto.setCustomerNumber(null);
-            }
-        }
-        return save(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
-    }
-
-    @Transactional
-    public List<KingdeeSynDto> saveForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
-            cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
-            cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款
-            cnJournalForBankDto.setKingdeeName(kingdeeBook.getName());
-            cnJournalForBankDto.setKingdeeType(kingdeeBook.getType());
-            for (CnJournalEntityForBankDto cnJournalEntityForBankDto : cnJournalForBankDto.getEntityForBankDtoList()) {
-                cnJournalEntityForBankDto.setAccountNumber("2241");//其他应付款
-                cnJournalEntityForBankDto.setSettleTypeNumber("JSFS04_SYS");//电汇
-                cnJournalEntityForBankDto.setEmpInfoNumber("0001");//员工
-                cnJournalEntityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
-                cnJournalEntityForBankDto.setExpenseTypeNumber("6602.000");//无
-                cnJournalEntityForBankDto.setCustomerNumber(null);
-            }
         }
         return save(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
     }

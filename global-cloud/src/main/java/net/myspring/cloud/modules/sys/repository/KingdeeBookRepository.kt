@@ -40,9 +40,9 @@ interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBoo
         SELECT t1
         FROM  #{#entityName} t1
         where t1.enabled = 1
-        and t1.companyId = :companyId
+        and t1.companyName = :companyName
      """)
-    fun findByCompanyId(@Param("companyId")companyId:String): KingdeeBook
+    fun findByCompanyName(@Param("companyName")companyName:String): KingdeeBook
 
     @Query("""
         SELECT distinct t1.type
@@ -59,8 +59,8 @@ interface KingdeeBookRepositoryCustom{
 class KingdeeBookRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): KingdeeBookRepositoryCustom{
     override fun findPage(pageable: Pageable, kingdeeBookQuery: KingdeeBookQuery): Page<KingdeeBook>? {
         var sb = StringBuilder("select * from sys_kingdee_book where enabled=1 ");
-        if(StringUtils.isNotBlank(kingdeeBookQuery.companyId)) {
-            sb.append(" and company_id = :companyId ");
+        if(StringUtils.isNotBlank(kingdeeBookQuery.companyName)) {
+            sb.append(" and company_name = :companyName ");
         }
         if(StringUtils.isNotBlank(kingdeeBookQuery.name)){
             sb.append(" and name = :name ");

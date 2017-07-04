@@ -9,16 +9,16 @@
       <el-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
-            <product-type-select v-model="formData.productTypeId" ></product-type-select>
+            <el-input v-model="formData.badProductName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
           </el-form-item>
           <el-form-item :label="$t('afterSaleFromCompany.badProductIme')" >
-            <el-input v-model="formData.badProductIme" auto-complete="off" :placeholder="$t('afterSaleFromCompany.likeSearch')"></el-input>
+            <el-input type="textarea" v-model="formData.badImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
           </el-form-item>
           <el-form-item :label="$t('afterSaleFromCompany.toStoreDate')">
-            <date-range-picker v-model="formData.toStoreDate"></date-range-picker>
+            <date-range-picker v-model="formData.toStoreDateRange"></date-range-picker>
           </el-form-item>
           <el-form-item :label="$t('afterSaleFromCompany.toCompanyDate')">
-          <date-range-picker v-model="formData.toCompanyDate"></date-range-picker>
+          <date-range-picker v-model="formData.toCompanyDateRange"></date-range-picker>
         </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -74,23 +74,24 @@
               rowHeaders:true,
               maxRows:1000,
               columns: [{
-                data:"badProductIme.product.name",
+                data:"badProductName",
                 strict:true,
                 width:150
               },{
-                  data:"toAreaProductIme.product.name",
+                data:"toAreaProductName",
                 type: "autocomplete",
                 allowEmpty: false,
                 strict: true,
                 tempProductNames:[],
                 source:function (query, process) {
+                    console.log("111")
                   var that = this;
                   if(that.tempProductNames.indexOf(query)>=0) {
                     process(that.tempProductNames);
                   } else {
                     var productNames = new Array();
                     if(query.length>=2) {
-                      axios.get('/api/crm/product/search?name='+query).then((response)=>{
+                      axios.get('/api/ws/future/basic/product/filter?name='+query).then((response)=>{
                         if(response.data.length>0) {
                           for(var index in response.data) {
                             var productName = response.data[index].name;
@@ -112,22 +113,31 @@
                 data:"toCompanyDate",
                 type: 'date',
                 dateFormat: 'YYYY-DD-MM',
+                readOnly:true,
                 width:150
               },{
-                data:"badProductIme.ime",
+                data:"badProductIme",
+                readOnly:true,
                 width:150
               },{
-                data:"areaDepot.name",
+                data:"areaDepotName",
+                readOnly:true,
                 width:150
               },{
                 data:"packageStatus",
+                readOnly:true,
                 width:150
               },{
                 data:"toStoreType",
+                readOnly:true,
                 width:150
               },{
+                data:"memory",
+                readOnly:true,
                 width:150
               },{
+                data:"toStoreRemarks",
+                readOnly:true,
                 width:150
               }]
             },
@@ -159,6 +169,9 @@
               this.inputForm.data = JSON.stringify(this.inputForm.data);
               axios.post('/api/ws/future/crm/afterSale/fromCompany',qs.stringify(this.inputForm)).then((response)=> {
                 this.$message(response.data.message);
+                if (response.data.success) {
+                  this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
+                }
                 this.submitDisabled = false;
               });
             }else{
@@ -167,6 +180,7 @@
           })
         },search() {
           this.formVisible = false;
+          this.formData.fromCompany=true
           axios.get('/api/ws/future/crm/afterSale/getFromCompanyData',{params:this.formData}).then((response)=>{
               this.settings.data=response.data;
               table.loadData(this.settings.data);

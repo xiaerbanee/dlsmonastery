@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.Express
 import net.myspring.future.modules.crm.dto.ExpressDto
@@ -56,7 +55,7 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         WHERE
             t1.enabled = 1
             AND t1.id = :id
-          """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressDto::class.java))
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ExpressDto::class.java))
 
     }
 
@@ -107,14 +106,10 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             sb.append("""   and ord.from_depot_id = :expressOrderFromDepotId   """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(expressrQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
-
-
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val paramMap = BeanPropertySqlParameterSource(expressrQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressDto::class.java))
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
 
 

@@ -6,6 +6,7 @@ import basicSys from './basic_sys'
 import businessBasic from './future_basic'
 import businessCrm from './future_crm'
 import businessLayout from './future_layout'
+import businessApi from './future_api'
 import cloudSys from './cloud_sys'
 import cloudReport from './cloud_report'
 import cloudInput from './cloud_input'
@@ -25,6 +26,7 @@ const routes = [
   ...businessBasic,
   ...businessCrm,
   ...businessLayout,
+  ...businessApi,
   ...cloudSys,
   ...cloudReport,
   ...cloudInput,

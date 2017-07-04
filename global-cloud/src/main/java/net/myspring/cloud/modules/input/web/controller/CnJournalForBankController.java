@@ -59,26 +59,13 @@ public class CnJournalForBankController {
         return restResponse;
     }
 
-    @RequestMapping(value = "saveForEmployeePhoneDeposit", method= RequestMethod.POST)
-    public List<KingdeeSynReturnDto>  saveForEmployeePhoneDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
+    @RequestMapping(value = "saveForWS", method= RequestMethod.POST)
+    public List<KingdeeSynReturnDto> saveForWS(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList;
         if (accountKingdeeBook != null) {
-            kingdeeSynDtoList = cnJournalForBankService.saveForEmployeePhoneDeposit(cnJournalForBankDtoList, kingdeeBook, accountKingdeeBook);
-        }else {
-            throw new ServiceException("您没有金蝶账号，不能开单");
-        }
-        return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
-    }
-
-    @RequestMapping(value = "saveForShopDeposit", method= RequestMethod.POST)
-    public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<CnJournalForBankDto> cnJournalForBankDtoList) {
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList;
-        if (accountKingdeeBook != null) {
-            kingdeeSynDtoList = cnJournalForBankService.saveForShopDeposit(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
+            kingdeeSynDtoList = cnJournalForBankService.saveForWS (cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
         }else {
             throw new ServiceException("您没有金蝶账号，不能开单");
         }

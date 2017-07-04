@@ -16,9 +16,6 @@ import java.util.Map;
  */
 public class BaseQuery {
     @JsonIgnore
-    private String companyId= RequestUtils.getCompanyId();
-
-    @JsonIgnore
     private List<String> officeIdList= Lists.newArrayList();
     @JsonIgnore
     private List<String> depotIdList= Lists.newArrayList();
@@ -30,14 +27,6 @@ public class BaseQuery {
     private String sort = "id,DESC";
 
     private Map<String,Object> extra = Maps.newHashMap();
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public List<String> getOfficeIdList() {
         if(CollectionUtil.isEmpty(officeIdList)){

@@ -294,11 +294,11 @@
         this.initSummary(null);
         this.refreshStoreQty();
       });
-      axios.get('/api/ws/future/crm/goodsOrder/findShopAccountByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+      let shopAccountPromise = axios.get('/api/ws/future/crm/goodsOrder/findShopAccountByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.shopAccount = response.data;
       });
 
-      Promise.all([formPropertyPromise, billPromise]).then( () => {
+      Promise.all([formPropertyPromise, billPromise, shopAccountPromise]).then( () => {
           this.refreshExpressShouldGet(null);
       });
     }

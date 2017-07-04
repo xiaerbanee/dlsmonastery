@@ -7,16 +7,22 @@ import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 
-/**
- * Created by lihx on 2017/4/18.
- */
 public class DepotAccountQuery extends BaseQuery {
 
     private String name;
     private String dutyDateRange;
     private String officeId;
+    private String areaId;
     private Boolean specialityStore;
     private Boolean accountTaxPermitted;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public Boolean getAccountTaxPermitted() {
         return accountTaxPermitted;

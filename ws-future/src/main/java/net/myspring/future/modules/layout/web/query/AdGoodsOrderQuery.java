@@ -15,7 +15,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
     private String idStr;
     private List<String> shopAreaId = new ArrayList<>();
     private String storeId;
-    private String shopId;
+    private String shopName;
     private String billType = BillTypeEnum.柜台.name();
     private String parentId;
     private List<String> processStatus=new ArrayList<>();
@@ -73,12 +73,12 @@ public class AdGoodsOrderQuery extends BaseQuery {
         this.storeId = storeId;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public String getBillType() {

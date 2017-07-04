@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.web.controller;
 import com.google.common.collect.Lists;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
 import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
@@ -44,13 +45,12 @@ public class ProductController {
         return productList;
     }
 
-    @RequestMapping(value = "searchAll")
-    public List<ProductDto> searchAll(String name,String code){
+    @RequestMapping(value = "searchByNameOrCode")
+    public List<ProductDto> searchByNameOrCode(String nameOrCode){
         List<ProductDto> productList = Lists.newArrayList();
-        if(StringUtils.isNotBlank(name)){
-            productList = productService.findByNameLike(name);
-        }else if(StringUtils.isNotBlank(code)){
-            productList = productService.findByCodeLike(code);
+        String outGroupName = BillTypeEnum.POP.name();
+        if(StringUtils.isNotBlank(nameOrCode)){
+            productList = productService.findByNameOrCodeAndOutGroupName(nameOrCode,outGroupName);
         }
         return productList;
     }

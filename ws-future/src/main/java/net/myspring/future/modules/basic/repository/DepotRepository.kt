@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
 
 @CacheConfig(cacheNames = arrayOf("depots"))
@@ -36,7 +35,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
-    fun findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(companyId :String): MutableList<Depot>
+    fun findByEnabledIsTrueAndDepotShopIdIsNotNull(): MutableList<Depot>
 
     fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>
 
@@ -46,7 +45,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): Depot?
+    fun findByEnabledIsTrueAndName(name: String): Depot?
 
     @Query("""
         select t
@@ -73,7 +72,7 @@ interface DepotRepositoryCustom{
 
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
 
-    fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto>
+    fun findAdStoreDtoList(outGroupId: String): List<DepotDto>
 
     fun findChainIds(depotQuery: DepotQuery):MutableList<String>
 
@@ -84,7 +83,7 @@ interface DepotRepositoryCustom{
 
 }
 
-class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate, val entityManager: EntityManager):DepotRepositoryCustom{
+class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotRepositoryCustom{
     override fun findDepotAccount(depotId: String): DepotAccountDto {
         return namedParameterJdbcTemplate.queryForObject("""
           select
@@ -135,9 +134,8 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(String::class.java))
     }
 
-    override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
+    override fun findAdStoreDtoList( outGroupId: String): List<DepotDto> {
         val params = HashMap<String, Any>()
-        params.put("companyId", companyId)
         params.put("outGroupId", outGroupId)
 
         return namedParameterJdbcTemplate.query("""
@@ -150,7 +148,6 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
                 t1.depot_store_id = t2.id
             AND t1.enabled = 1
             AND t2.enabled = 1
-            AND t1.company_id = :companyId
             AND t2.out_group_id = :outGroupId
             AND t1.is_hidden = 0
           """, params, BeanPropertyRowMapper(DepotDto::class.java))
@@ -271,9 +268,12 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             WHERE
                 t1.enabled=1
         """)
-        val query = entityManager.createNativeQuery(sb.toString(), DepotDto::class.java)
 
-        return query.resultList as Page<DepotDto>
+        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
+        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
+        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(DepotDto::class.java));
+        var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(depotQuery),Long::class.java);
+        return PageImpl(list,pageable,count);
     }
 
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{
@@ -313,6 +313,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         }
         if(StringUtils.isNotBlank(depotAccountQuery.officeId)){
             sb.append("""  and t1.office_id = :officeId  """)
+        }
+        if(StringUtils.isNotBlank(depotAccountQuery.areaId)){
+            sb.append("""  and t1.area_id = :areaId  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

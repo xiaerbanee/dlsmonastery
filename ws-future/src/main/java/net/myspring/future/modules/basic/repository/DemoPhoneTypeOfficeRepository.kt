@@ -24,7 +24,7 @@ interface DemoPhoneTypeOfficeRepository : BaseRepository<DemoPhoneTypeOffice,Str
 }
 
 interface DemoPhoneTypeOfficeRepositoryCustom{
-    fun findPage(pageable: Pageable, demoPhoneTypeQuery: DemoPhoneTypeOfficeQuery): Page<DemoPhoneTypeOfficeDto>
+    fun findPage(pageable: Pageable, demoPhoneTypeOfficeQuery: DemoPhoneTypeOfficeQuery): Page<DemoPhoneTypeOfficeDto>
 }
 
 class DemoPhoneTypeOfficeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DemoPhoneTypeOfficeRepositoryCustom{

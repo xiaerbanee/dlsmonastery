@@ -20,12 +20,13 @@
                 <el-table-column prop="qty" :label="$t('afterSaleToCompany.qty')"></el-table-column>
               </el-table>
             </template>
+            <div style="height:30px"></div>
             <template>
               <el-table :data="searchData" style="width: 100%" border>
-                <el-table-column prop="badProductIme.product.name" :label="$t('afterSaleToCompany.badProductName')"></el-table-column>
-                <el-table-column prop="badProductIme.ime" :label="$t('afterSaleToCompany.badProductIme')"></el-table-column>
-                <el-table-column prop="toAreaProductIme.product.name" :label="$t('afterSaleToCompany.toAreaProductName')"></el-table-column>
-                <el-table-column prop="areaDepot.name" :label="$t('afterSaleToCompany.areaDepot')"></el-table-column>
+                <el-table-column prop="badProductName" :label="$t('afterSaleToCompany.badProductName')"></el-table-column>
+                <el-table-column prop="badProductIme" :label="$t('afterSaleToCompany.badProductIme')"></el-table-column>
+                <el-table-column prop="toAreaProductName" :label="$t('afterSaleToCompany.toAreaProductName')"></el-table-column>
+                <el-table-column prop="areaDepotName" :label="$t('afterSaleToCompany.areaDepot')"></el-table-column>
                 <el-table-column prop="packageStatus" :label="$t('afterSaleToCompany.packageStatus')"></el-table-column>
                 <el-table-column prop="toStoreType" :label="$t('afterSaleToCompany.toStoreType')"></el-table-column>
                 <el-table-column prop="memory" :label="$t('afterSaleToCompany.memory')"></el-table-column>
@@ -83,7 +84,7 @@
             this.inputForm.toCompanyDate=util.formatLocalDate(this.inputForm.toCompanyDate)
             axios.post('/api/ws/future/crm/afterSale/toCompany',qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
-              this.$router.push({name:'imeAllotList',query:util.getQuery("imeAllotList"),params:{_closeFrom:true}})
+              this.$router.push({name:'afterSaleList',query:util.getQuery("afterSaleList"),params:{_closeFrom:true}})
             });
           }
         })

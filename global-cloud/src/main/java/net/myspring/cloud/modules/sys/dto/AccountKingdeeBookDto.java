@@ -9,7 +9,6 @@ import net.myspring.cloud.common.dto.DataDto;
 public class AccountKingdeeBookDto extends DataDto<AccountKingdeeBook> {
     private String accountId;
     private String username;
-    private String companyId;
     private String kingdeeBookName;
     private String kingdeeBookType;
     private String remarks;
@@ -44,14 +43,6 @@ public class AccountKingdeeBookDto extends DataDto<AccountKingdeeBook> {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getRemarks() {

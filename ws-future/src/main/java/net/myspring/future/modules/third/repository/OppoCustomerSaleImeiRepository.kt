@@ -12,14 +12,13 @@ interface OppoCustomerSaleImeiRepository : BaseRepository<OppoCustomerSaleImei, 
 
 }
 interface OppoCustomerSaleImeiRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerSaleImei>
+    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerSaleImei>
 }
 class OppoCustomerSaleImeiRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerSaleImeiRepositoryCustom {
-    override fun findAll(dateStart: String, dateEnd: String, companyId: String): MutableList<OppoCustomerSaleImei> {
+    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerSaleImei> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);
-        paramMap.put("companyId", companyId);
 
         return namedParameterJdbcTemplate.query("""
              select
@@ -43,7 +42,6 @@ class OppoCustomerSaleImeiRepositoryImpl @Autowired constructor(val namedParamet
                     and sa.shop_id = de.id
                     and sa.is_back = 0
                     and sa.enabled = 1
-                    and sa.company_id = :companyId
              order by sa.shop_id asc
                 """, paramMap, BeanPropertyRowMapper(OppoCustomerSaleImei::class.java));
     }

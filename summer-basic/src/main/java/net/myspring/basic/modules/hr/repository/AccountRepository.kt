@@ -225,7 +225,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
 
     }
 
-    override fun findByLoginNameLikeAndType(type: String, name: String): MutableList<Account> {
+    override fun findByLoginNameLikeAndType(type: String, loginName: String): MutableList<Account> {
         var sb = StringBuilder()
         sb.append("""
             SELECT
@@ -241,7 +241,7 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         sb.append(" limit 0, 100")
         var paramMap = HashMap<String, Any>()
         paramMap.put("type", type)
-        paramMap.put("name", name)
+        paramMap.put("name", loginName)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(Account::class.java))
     }
 

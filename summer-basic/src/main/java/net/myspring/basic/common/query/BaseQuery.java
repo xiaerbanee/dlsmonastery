@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.util.collection.CollectionUtil;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Map;
@@ -15,12 +14,9 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery{
-    @JsonIgnore
-    private String companyId= RequestUtils.getCompanyId();
 
     @JsonIgnore
     private List<String> officeIdList= Lists.newArrayList();
-
 
     private  Integer page = 0;
 
@@ -29,14 +25,6 @@ public class BaseQuery{
     private String sort = "id,DESC";
 
     private Map<String,Object> extra = Maps.newHashMap();
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public List<String> getOfficeIdList() {
         if(CollectionUtil.isEmpty(officeIdList)){
