@@ -51,7 +51,13 @@
           password:that.password
         };
         axios.post('/user/login',qs.stringify(data)).then((response)=>{
-          that.initLogin();
+          if(response.data.success){
+            that.initLogin();
+          }else {
+            that.$store.dispatch('clearGlobal');
+            that.isBtnLoading = false;
+            that.$message.error("用户名或密码不正确");
+          }
         }).catch(function (error) {
           that.$store.dispatch('clearGlobal');
           that.isBtnLoading = false;
