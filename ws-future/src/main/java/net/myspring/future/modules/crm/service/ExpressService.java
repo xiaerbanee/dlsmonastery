@@ -127,7 +127,7 @@ public class ExpressService {
     }
 
     private Map<String,Object> findMatchingRuleForExpressShouldPay(BigDecimal weight) {
-        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_SHOULD_PAY_RULE.name());
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_PAY_RULE.name());
        if(companyConfigCacheDto == null || StringUtils.isBlank(companyConfigCacheDto.getValue())){
             return null;
         }
@@ -173,7 +173,7 @@ public class ExpressService {
     }
 
     private String getDefaultExpressCompanyId() {
-        String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
+        String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
         return StringUtils.trimToNull(defaultExpressCompanyId);
 
     }

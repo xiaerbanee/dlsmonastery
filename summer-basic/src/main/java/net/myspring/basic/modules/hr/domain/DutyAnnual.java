@@ -1,17 +1,14 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import com.google.common.collect.Lists;
-import net.myspring.basic.common.domain.CompanyEntity;
 import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name="hr_duty_annual")
-public class DutyAnnual extends CompanyEntity<DutyAnnual> {
+public class DutyAnnual extends DataEntity<DutyAnnual> {
     private String annualYear;
     private Double hour;
     private Double leftHour;

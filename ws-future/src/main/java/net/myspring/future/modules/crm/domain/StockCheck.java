@@ -1,14 +1,14 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_stock_check")
-public class StockCheck extends CompanyEntity<StockCheck> {
+public class StockCheck extends DataEntity<StockCheck> {
     private String name;
     private String status;
     private Integer version = 0;

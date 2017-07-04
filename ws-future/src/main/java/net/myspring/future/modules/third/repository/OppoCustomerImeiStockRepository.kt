@@ -12,14 +12,13 @@ interface OppoCustomerImeiStockRepository : BaseRepository<OppoCustomerImeiStock
 
 }
 interface OppoCustomerImeiStockRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerImeiStock>
+    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerImeiStock>
 }
 class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerImeiStockRepositoryCustom {
-    override fun findAll(dateStart: String, dateEnd: String, companyId:String): MutableList<OppoCustomerImeiStock> {
+    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerImeiStock> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
-        paramMap.put("companyId",companyId);
 
         return namedParameterJdbcTemplate.query("""
          select
@@ -33,7 +32,6 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and goi.product_ime_id=im.id
                 and go.ship_date>=:dateStart
                 and go.ship_date<=:dateEnd
-                and go.company_id=:companyId
                 and go.enabled=1
                 and go.shop_id in (select depot_id from crm_depot_shop)
             union
@@ -48,7 +46,6 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and im.product_id = pro.id
                 and al.created_date>=:dateStart
                 and al.created_date<=:dateEnd
-                and al.company_id=:companyId
                 and al.enabled=1
                 and al.from_depot_id in (select depot_id from crm_depot_shop)
             union
@@ -63,7 +60,6 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and im.product_id = pro.id
                 and al.created_date>=:dateStart
                 and al.created_date<=:dateEnd
-                and al.company_id=:companyId
                 and al.enabled=1
                 and al.to_depot_id in (select depot_id from crm_depot_shop)
             union
@@ -78,7 +74,6 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and im.product_id=pro.id
                 and af.created_date>=:dateStart
                 and af.created_date<=:dateEnd
-                and af.company_id=:companyId
                 and af.enabled=1
                 and af.from_depot_id in (select depot_id from crm_depot_shop)
             union
@@ -93,7 +88,6 @@ class OppoCustomerImeiStockRepositoryImpl @Autowired constructor(val namedParame
                 and im.product_id=pro.id
                 and af.created_date>=:dateStart
                 and af.created_date<=:dateEnd
-                and af.company_id=:companyId
                 and af.enabled=1
                 and af.to_depot_id in (select depot_id from crm_depot_shop)
             """,paramMap, BeanPropertyRowMapper(OppoCustomerImeiStock::class.java));

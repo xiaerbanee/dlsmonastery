@@ -100,16 +100,6 @@
         <el-table-column prop="productName" column-key="productId" :label="$t('productImeList.productType')" sortable></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
         <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')" sortable></el-table-column>
-        <el-table-column prop="locked" :label="$t('productImeList.locked')" >
-          <template scope="scope">
-            <el-tag :type="scope.row.locked ? 'danger' : 'primary'">{{scope.row.locked | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="enabled" :label="$t('productImeList.enabled')" >
-          <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
         <el-table-column fixed="right" :label="$t('productImeList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'crm:productIme:view'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button></div>

@@ -296,6 +296,7 @@ export default {
     inputLegalValue: "必填信息且请输入11位数字的手机号码(不含空格或-)",
     selectKeyShow20time: "请输入关键词,显示前20条",
     recentSaleQty:'门店近三个月销量',
+    imageDeposit:'形象押金',
     investInCause:'投入理由',
     enter:'以回车分割',
     expressCodes: "快递单号",

@@ -1,8 +1,12 @@
 package net.myspring.future.modules.api.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.api.domain.CarrierOrder;
+import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.api.dto.CarrierOrderDto;
 import net.myspring.future.modules.api.service.CarrierOrderService;
@@ -16,6 +20,7 @@ import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,12 +53,20 @@ public class CarrierOrderController {
         return carrierOrderDtoPage;
     }
 
+
     @RequestMapping(value = "getQuery")
     public CarrierOrderQuery getQuery(CarrierOrderQuery carrierOrderQuery) {
         carrierOrderQuery.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
-        carrierOrderQuery.getExtra().put("goodsOrderStatusList",GoodsOrderStatusEnum.getList());
+        carrierOrderQuery.getExtra().put("goodsOrderStatusList", Lists.newArrayList(GoodsOrderStatusEnum.待签收.name(),GoodsOrderStatusEnum.已完成.name()));
         return carrierOrderQuery;
     }
+
+    @RequestMapping(value = "getForm")
+    public CarrierOrderFrom getForm(CarrierOrderFrom carrierOrderFrom) {
+        carrierOrderFrom.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
+        return carrierOrderFrom;
+    }
+
 
     @RequestMapping(value = "checkBusinessId")
     public RestResponse checkBusinessId(CarrierOrderDto carrierOrderDto){
@@ -69,15 +82,6 @@ public class CarrierOrderController {
             restResponse=new RestResponse("必填信息",null,false);
         }
         return restResponse;
-    }
-
-    @RequestMapping(value="findDto")
-    public CarrierOrderDto findDto(String id){
-        if(StringUtils.isBlank(id)){
-            return new CarrierOrderDto();
-        }
-        return carrierOrderService.findDto(id);
-
     }
 
     @RequestMapping(value = "save")
@@ -148,6 +152,12 @@ public class CarrierOrderController {
     @RequestMapping(value = "batchStatus")
     public RestResponse batchStatus(CarrierOrderQuery carrierOrderQuery){
         carrierOrderService.updateStatus(carrierOrderQuery);
+        return new RestResponse("保存成功",null);
+    }
+
+    @RequestMapping(value = "updateStatusAndRemarks")
+    public RestResponse updateStatusAndRemarks(CarrierOrderFrom carrierOrderFrom){
+        carrierOrderService.updateStatusAndRemarks(carrierOrderFrom);
         return new RestResponse("保存成功",null);
     }
 }

@@ -31,8 +31,8 @@ public class StkTransferDirectController {
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
 
-    @RequestMapping(value = "saveForStoreAllot",method= RequestMethod.POST)
-    public KingdeeSynReturnDto saveForStoreAllot(@RequestBody StkTransferDirectDto stkTransferDirectDto) {
+    @RequestMapping(value = "saveForWS",method= RequestMethod.POST)
+    public KingdeeSynReturnDto saveForWS(@RequestBody StkTransferDirectDto stkTransferDirectDto) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null){

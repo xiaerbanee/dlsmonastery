@@ -15,14 +15,13 @@ interface OppoCustomerSaleCountRepository : BaseRepository<OppoCustomerSaleCount
 
 }
 interface OppoCustomerSaleCountRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerSaleCount>
+    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerSaleCount>
 }
 class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerSaleCountRepositoryCustom {
-    override fun findAll(dateStart: String, dateEnd: String, companyId:String): MutableList<OppoCustomerSaleCount>{
+    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerSaleCount>{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart",dateStart);
         paramMap.put("dateEnd",dateEnd);
-        paramMap.put("companyId",companyId);
         return namedParameterJdbcTemplate.query("""
              select
                         sa.shop_id as shopCode,
@@ -38,7 +37,6 @@ class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParame
                             and sa.is_back = 0
                             and sa.enabled = 1
                             and im.enabled=1
-                            and sa.company_id =:companyId
                     group by
                             shopCode,saleTime,productCode
                  """, paramMap,BeanPropertyRowMapper(OppoCustomerSaleCount::class.java));

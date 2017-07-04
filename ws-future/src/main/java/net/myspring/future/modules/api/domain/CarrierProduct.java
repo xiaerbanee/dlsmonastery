@@ -1,12 +1,12 @@
 package net.myspring.future.modules.api.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "api_carrier_product")
-public class CarrierProduct extends CompanyEntity<CarrierProduct> {
+public class CarrierProduct extends DataEntity<CarrierProduct> {
 	private String name;
 	private String productId;
 

@@ -3,7 +3,7 @@
     <head-tab active="depotAccountDetail"></head-tab>
     <div>
       <el-table :data="depotAccountDetailList"  :pageHeight="pageHeight" style="margin-top:5px;"  :element-loading-text="$t('depotAccountDetail.loading')" stripe border :row-class-name="tableRowClassName">
-        <el-table-column fixed prop="billType" :label="$t('depotAccountDetail.billType')" width="330px"></el-table-column>
+        <el-table-column prop="billType" :label="$t('depotAccountDetail.billType')"></el-table-column>
         <el-table-column prop="billNo" :label="$t('depotAccountDetail.billNo')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('depotAccountDetail.date')"></el-table-column>
         <el-table-column prop="materialName" :label="$t('depotAccountDetail.materialName')"></el-table-column>

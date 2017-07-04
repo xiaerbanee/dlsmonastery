@@ -1,13 +1,12 @@
 package net.myspring.cloud.modules.report.repository
 
-import net.myspring.cloud.common.config.MyBeanPropertyRowMapper
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery
 import net.myspring.common.dto.NameValueDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 import java.time.LocalDate
@@ -87,7 +86,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
             ) temp
             GROUP BY
             temp.customerId
-        """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(CustomerReceiveDto::class.java))
     }
 
     //其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单
@@ -270,7 +269,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 t.customerId,
                 t.date,
                 t.billNo
-        """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
 
     }
 
@@ -327,7 +326,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 AND t21.FRETCUSTID IN (:customerIdList)
                 AND t21.FDATE >=:dateStart
                 AND t21.FDATE <:dateEnd
-        """, paramMap, MyBeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
     }
 
     //其他应收+收款单+收款退款单
@@ -372,7 +371,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 AND t5.FCONTACTUNIT IN (:customerIdList)
                 AND t5.FDATE  >:dateStart
                 AND t5.FDATE <:dateEnd
-        """, paramMap, MyBeanPropertyRowMapper(NameValueDto::class.java))
+        """, paramMap, BeanPropertyRowMapper(NameValueDto::class.java))
 
     }
 }

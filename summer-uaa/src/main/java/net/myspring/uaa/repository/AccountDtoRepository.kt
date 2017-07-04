@@ -28,7 +28,7 @@ class AccountDtoRepository @Autowired constructor(val namedParameterJdbcTemplate
                 return accountDto;
     }
 
-    fun findById(id: String): AccountDto {
+    fun findOne(id: String): AccountDto {
         return namedParameterJdbcTemplate.queryForObject("""
                     SELECT
                     t1.*,

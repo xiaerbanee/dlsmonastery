@@ -12,7 +12,6 @@ public class OppoPlantSendImeiPpselDto  {
     private String imeiState;
     private String remark;
     private String imei2;
-    private String companyId;
     private String colorId;
     private String lxProductId;
     private String productId;
@@ -88,15 +87,6 @@ public class OppoPlantSendImeiPpselDto  {
     public void setImei2(String imei2) {
         this.imei2 = imei2;
     }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
     public String getColorId() {
         return colorId;
     }

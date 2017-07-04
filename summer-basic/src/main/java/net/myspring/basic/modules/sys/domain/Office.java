@@ -21,6 +21,8 @@ public class Office extends TreeEntity<Office> {
     private String type;
     private String areaId;
     private String jointLevel;
+    //是否拥有所有数据权限
+    private Boolean allDataScope;
 
     public String getJointLevel() {
         return jointLevel;
@@ -107,5 +109,13 @@ public class Office extends TreeEntity<Office> {
 
     public void setOfficeRuleId(String officeRuleId) {
         this.officeRuleId = officeRuleId;
+    }
+
+    public Boolean getAllDataScope() {
+        return allDataScope;
+    }
+
+    public void setAllDataScope(Boolean allDataScope) {
+        this.allDataScope = allDataScope;
     }
 }

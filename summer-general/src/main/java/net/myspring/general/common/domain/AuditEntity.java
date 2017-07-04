@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-public class AuditEntity<T> extends CompanyEntity<T> {
+public class AuditEntity<T> extends DataEntity<T> {
 	protected String auditBy;
 	protected LocalDateTime auditDate;
 	protected String auditRemarks;

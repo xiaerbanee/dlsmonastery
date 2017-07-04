@@ -43,7 +43,6 @@ public class UserService {
         Boolean success = true;
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).readTimeout(3, TimeUnit.SECONDS).cookieJar(new CookieJar() {
             private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
-
             @Override
             public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                 Map<String, Cookie> cookieMap = Maps.newHashMap();

@@ -14,6 +14,7 @@ import net.myspring.future.modules.crm.web.form.ProductImeUploadBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeUploadForm;
 import net.myspring.future.modules.crm.web.query.ProductImeUploadQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -121,9 +123,8 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value="export")
-    public String export(ProductImeUploadQuery productImeUploadQuery) {
-
-        return productImeUploadService.export(productImeUploadQuery);
+    public ModelAndView export(ProductImeUploadQuery productImeUploadQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", productImeUploadService.export(productImeUploadQuery));
     }
 
 }

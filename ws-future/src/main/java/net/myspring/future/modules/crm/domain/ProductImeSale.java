@@ -1,17 +1,16 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name="crm_product_ime_sale")
-public class ProductImeSale extends CompanyEntity<ProductImeSale> {
+public class ProductImeSale extends DataEntity<ProductImeSale> {
     private String shopId;
 
     private Boolean isBack;

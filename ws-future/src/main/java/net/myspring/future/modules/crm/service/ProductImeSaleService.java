@@ -26,6 +26,7 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class ProductImeSaleService {
 
     public String checkForSale(List<String> imeList) {
         StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -112,7 +113,7 @@ public class ProductImeSaleService {
         }
 
         Map<String, ProductImeSaleDetailForm> detailFormMap = CollectionUtil.extractToMap(productImeSaleForm.getProductImeSaleDetailList(), "productImeId");
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         for (ProductIme productIme : productImeList) {
 
             String saleShopId = productIme.getDepotId();
@@ -151,7 +152,7 @@ public class ProductImeSaleService {
     public String checkForSaleBack(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -180,7 +181,7 @@ public class ProductImeSaleService {
         List<String> imeList = productImeSaleBackForm.getImeList();
         String employeeId = RequestUtils.getEmployeeId();
 
-        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
         Integer leftCredit =0;
         if(latestProductImeSale!=null){
@@ -212,11 +213,10 @@ public class ProductImeSaleService {
 
     }
 
-    public String export(ProductImeSaleQuery productImeSaleQuery) {
+    public SimpleExcelBook export(ProductImeSaleQuery productImeSaleQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> productImeSaleColumnList = Lists.newArrayList();
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "productImeProductName", "货品型号"));
@@ -237,13 +237,11 @@ public class ProductImeSaleService {
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "lotteryDate", "抽奖时间"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "hongbao", "红包"));
 
-
         List<ProductImeSaleDto> productImeSaleDtoList = findPage(new PageRequest(0,10000), productImeSaleQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("核销列表", productImeSaleDtoList, productImeSaleColumnList));
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"核销列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("核销列表", productImeSaleDtoList, productImeSaleColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"核销列表"+ LocalDate.now()+".xlsx", simpleExcelSheet);
 
     }
 
@@ -252,7 +250,7 @@ public class ProductImeSaleService {
             return new ArrayList<>();
         }
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        List<ProductImeForSaleDto> result = productImeSaleRepository.findProductImeForSaleDto(imeList, RequestUtils.getCompanyId());
+        List<ProductImeForSaleDto> result = productImeSaleRepository.findProductImeForSaleDto(imeList);
         cacheUtils.initCacheInput(result);
 
             for(ProductImeForSaleDto productImeForSaleDto : result) {

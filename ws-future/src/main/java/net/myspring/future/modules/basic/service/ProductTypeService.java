@@ -28,7 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class ProductTypeService {
 
         ProductType productType;
         if (productTypeForm.isCreate()) {
-            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            ProductType sameNameRecord = productTypeRepository.findByName(productTypeForm.getName());
             if(sameNameRecord != null){
                 throw new ServiceException("名称已经存在，不能新增");
             }
@@ -57,7 +56,7 @@ public class ProductTypeService {
             productTypeRepository.save(productType);
 
         } else {
-            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            ProductType sameNameRecord = productTypeRepository.findByName(productTypeForm.getName());
             if(sameNameRecord != null && !sameNameRecord.getId().equals(productTypeForm.getId())){
                 throw new ServiceException("名称已经存在，不能修改");
             }
@@ -122,12 +121,10 @@ public class ProductTypeService {
         return result;
     }
 
-    public String export(ProductTypeQuery productTypeQuery) {
-
+    public SimpleExcelBook export(ProductTypeQuery productTypeQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> productTypeColumnList = Lists.newArrayList();
         productTypeColumnList.add(new SimpleExcelColumn(workbook, "name", "产品型号"));
         productTypeColumnList.add(new SimpleExcelColumn(workbook, "code", "型号编码"));
@@ -136,11 +133,8 @@ public class ProductTypeService {
         productTypeColumnList.add(new SimpleExcelColumn(workbook, "scoreTypeName", "是否打分"));
 
         List<ProductTypeDto> productTypeDtoList = findPage(new PageRequest(0,10000), productTypeQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("统计型号列表", productTypeDtoList, productTypeColumnList));
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"统计型号列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
-
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("统计型号列表", productTypeDtoList, productTypeColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return  new SimpleExcelBook(workbook,"统计型号列表"+ LocalDate.now()+".xlsx", simpleExcelSheet);
     }
 }

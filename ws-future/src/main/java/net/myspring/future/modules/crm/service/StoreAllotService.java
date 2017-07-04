@@ -5,9 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
-import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
@@ -139,7 +136,6 @@ public class StoreAllotService {
         productImeShipQuery.setDepotId(fromStoreId);
         productImeShipQuery.setBoxImeList(boxImeList);
         productImeShipQuery.setImeList(imeList);
-        productImeShipQuery.setCompanyId(RequestUtils.getCompanyId());
 
         List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
         Set<String> boxImeSet = Sets.newHashSet();
@@ -367,7 +363,7 @@ public class StoreAllotService {
     }
 
     public List<StoreAllotDetailSimpleDto> findDetailListForCommonAllot(String fromStoreId) {
-        List<StoreAllotDetailSimpleDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew(RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result =  storeAllotDetailRepository.findStoreAllotDetailListForNew();
         cacheUtils.initCacheInput(result);
         if(StringUtils.isNotBlank(fromStoreId)){
             fulfillCloudQty(fromStoreId, result);
@@ -377,7 +373,7 @@ public class StoreAllotService {
 
     public List<String> getMergeStoreIds(){
 
-        CompanyConfigCacheDto companyConfigCacheDto =  CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        CompanyConfigCacheDto companyConfigCacheDto =  CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
         if(companyConfigCacheDto == null || StringUtils.isBlank(companyConfigCacheDto.getValue())){
             return null;
         }
@@ -394,7 +390,7 @@ public class StoreAllotService {
         String fromStoreId =mergeIdList.get(0);
         String toStoreId =mergeIdList.get(1);
 
-        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货", RequestUtils.getCompanyId());
+        List<StoreAllotDetailSimpleDto> result = storeAllotDetailRepository.findStoreAllotDetailsForFastAllot(LocalDate.now(), toStoreId, "待发货");
         cacheUtils.initCacheInput(result);
         if(StringUtils.isNotBlank(fromStoreId)){
             fulfillCloudQty(fromStoreId, result);

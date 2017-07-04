@@ -62,7 +62,12 @@ public class PriceChangeImeController {
         }else{
             return new RestResponse(info, ResponseCodeEnum.saved.name(),false);
         }
+    }
 
+    @RequestMapping(value = "delete")
+    public RestResponse delete(String id){
+        priceChangeImeService.delete(id);
+        return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "imageUpload")

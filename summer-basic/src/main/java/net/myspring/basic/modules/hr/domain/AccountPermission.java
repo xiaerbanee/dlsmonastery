@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "hr_account_permission")
-public class AccountPermission extends CompanyEntity<AccountPermission>{
+public class AccountPermission extends DataEntity<AccountPermission> {
 
     private String accountId;
     private String permissionId;

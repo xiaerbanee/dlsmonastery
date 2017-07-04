@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "hr_office_leader")
-public class OfficeLeader extends CompanyEntity<OfficeLeader> {
+public class OfficeLeader extends DataEntity<OfficeLeader> {
     private String officeId;
     private String leaderId;
 

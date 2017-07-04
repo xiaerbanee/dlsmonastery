@@ -124,7 +124,7 @@ public class ProductImeController {
         reportQuery.getExtra().put("outTypeList",ProductImeStockReportOutTypeEnum.getList());
         reportQuery.getExtra().put("boolMap",BoolEnum.getMap());
         reportQuery.setSumType(ProductImeStockReportSumTypeEnum.区域.name());
-        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode( redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_NAME.name());
+        CompanyConfigCacheDto  companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_NAME.name());
         if(companyConfigCacheDto != null && "WZOPPO".equals(companyConfigCacheDto.getValue())) {
             reportQuery.setOutType(ProductImeStockReportOutTypeEnum.核销.name());
         }else{
@@ -151,7 +151,7 @@ public class ProductImeController {
     @RequestMapping(value = "getBatchCreateForm")
     public ProductImeBatchCreateForm getBatchCreateForm(ProductImeBatchCreateForm productImeBatchCreateForm){
 
-        productImeBatchCreateForm.getExtra().put("productNameList" , productService.findNameList(RequestUtils.getCompanyId()));
+        productImeBatchCreateForm.getExtra().put("productNameList" , productService.findNameList());
         productImeBatchCreateForm.getExtra().put("storeNameList" , CollectionUtil.extractToList(depotService.findStoreList(new DepotQuery()),"name"));
         return productImeBatchCreateForm;
 
@@ -186,7 +186,7 @@ public class ProductImeController {
     @RequestMapping(value = "getBatchChangeForm")
     public ProductImeBatchChangeForm getBatchChangeForm(ProductImeBatchChangeForm  productImeBatchChangeForm){
 
-        productImeBatchChangeForm.getExtra().put("productNameList" , productService.findNameList(RequestUtils.getCompanyId()));
+        productImeBatchChangeForm.getExtra().put("productNameList" , productService.findNameList());
         return productImeBatchChangeForm;
 
     }

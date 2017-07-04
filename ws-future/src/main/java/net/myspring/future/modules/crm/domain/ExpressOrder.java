@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_express_order")
-public class ExpressOrder extends CompanyEntity<ExpressOrder> {
+public class ExpressOrder extends DataEntity<ExpressOrder> {
     private String extendId;
     private String extendType;
     private Integer version = 0;

@@ -44,7 +44,7 @@ public class ImooService {
 
     @FactoryDataSource
     public List<ImooPrdocutImeiDeliver> plantPrdocutImeiDeliverByDate(LocalDate date) {
-        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         LocalDate dateStart = date.minusDays(2);
         LocalDate dateEnd = date.plusDays(1);
         return imooRepository.plantPrdocutImeiDeliverByDate(dateStart, dateEnd, StringUtils.getSplitList(agentCodes, CharConstant.COMMA));
@@ -71,7 +71,7 @@ public class ImooService {
     //查询发货串码
     @LocalDataSource
     public String pullPlantSendimeis(List<ImooPrdocutImeiDeliver> imooPrdocutImeiDelivers) {
-        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
+        String agentCodes = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue();
         List<String> agentCodeList = StringUtils.getSplitList(agentCodes, CharConstant.COMMA);
         List<ImooPrdocutImeiDeliver> list = Lists.newArrayList();
         for (String agentCode : agentCodeList) {

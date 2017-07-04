@@ -73,7 +73,7 @@ public class ProductImeUploadService {
     public String checkForUpload(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         Map<String, ProductImeDto> imeMap = CollectionUtil.extractToMap(productImeDtoList, "ime");
 
@@ -106,7 +106,7 @@ public class ProductImeUploadService {
 
         String employeeId = RequestUtils.getEmployeeId();
 
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -144,7 +144,7 @@ public class ProductImeUploadService {
     public String checkForUploadBack(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         Map<String, ProductImeDto> imeMap = CollectionUtil.extractToMap(productImeDtoList, "ime");
 
@@ -175,7 +175,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         Map<String, ProductImeUpload> productImeUploadMap = productImeUploadRepository.findMap(CollectionUtil.extractToList(productImeList, "productImeUploadId"));
 
         for (ProductIme productIme : productImeList) {
@@ -192,11 +192,10 @@ public class ProductImeUploadService {
         }
     }
 
-    public String export(ProductImeUploadQuery productImeUploadQuery) {
+    public SimpleExcelBook export(ProductImeUploadQuery productImeUploadQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> productImeUploadColumnList = Lists.newArrayList();
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "month", "上报月份"));
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
@@ -214,11 +213,9 @@ public class ProductImeUploadService {
         productImeUploadColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         List<ProductImeUploadDto> productImeUploadDtoList = findPage(new PageRequest(0,10000), productImeUploadQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList));
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码上报记录", productImeUploadDtoList, productImeUploadColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return  new SimpleExcelBook(workbook,"串码上报记录"+ LocalDate.now()+".xlsx", simpleExcelSheet);
 
     }
 

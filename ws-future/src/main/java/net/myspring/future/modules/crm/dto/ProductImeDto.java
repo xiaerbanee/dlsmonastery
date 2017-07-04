@@ -17,10 +17,6 @@ public class ProductImeDto extends DataDto<ProductIme> {
     private String meid;
     private LocalDateTime retailDate;
     private String retailDepotName;
-    private String companyId;
-    @CacheInput(inputKey = "companys",inputInstance = "companyId",outputInstance = "name")
-    private String companyName;
-
 
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "netType")
     private String productNetType;
@@ -81,22 +77,6 @@ public class ProductImeDto extends DataDto<ProductIme> {
 
     public void setRetailDepotName(String retailDepotName) {
         this.retailDepotName = retailDepotName;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
     }
 
     public String getProductImeUploadMonth() {

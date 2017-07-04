@@ -115,22 +115,6 @@ public class StkTransferDirectManager {
 
     }
 
-    //直接调拨单成功示例
-    public KingdeeSynReturnDto synStkTransferDirectTest(StoreAllotDto storeAllotDto){
-        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId("2");
-        transferDirectDto.setExtendType(ExtendTypeEnum.大库调拨.name());
-        transferDirectDto.setNote("模拟测试");
-        transferDirectDto.setDate(LocalDate.now());
-        StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
-        entryDto.setQty(1);
-        entryDto.setMaterialNumber("O4805804");//product.outCode
-        entryDto.setSrcStockNumber("G001"); //调出仓库
-        entryDto.setDestStockNumber("G020");//调入仓库
-        transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
-        return cloudClient.synStkTransferDirect(transferDirectDto);
-    }
-
     public KingdeeSynReturnDto synForShopAllot(ShopAllotDto shopAllotDto){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
         transferDirectDto.setExtendId(shopAllotDto.getId());

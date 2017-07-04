@@ -11,6 +11,8 @@ import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.api.service.CarrierOrderService;
+import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.service.DepotService;
@@ -23,6 +25,7 @@ import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +50,7 @@ public class GoodsOrderController {
     @Autowired
     private ExpressCompanyService expressCompanyService;
     @Autowired
-    private DepotService depotService;
+    private CarrierOrderService carrierOrderService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
@@ -94,6 +97,11 @@ public class GoodsOrderController {
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
         goodsOrderService.save(goodsOrderForm);
+        if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
+            CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);
+            carrierOrderFrom.setGoodsOrderId(goodsOrderForm.getId());
+            carrierOrderService.save(carrierOrderFrom);
+        }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
@@ -105,8 +113,8 @@ public class GoodsOrderController {
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderDto.getShipType());
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
-        goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
-        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
+        goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
+        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
         return goodsOrderBillForm;
     }
 

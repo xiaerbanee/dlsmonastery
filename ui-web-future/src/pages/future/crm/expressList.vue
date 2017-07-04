@@ -43,7 +43,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable width="150"></el-table-column>
+        <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable></el-table-column>
         <el-table-column prop="expressOrderExpressCompanyName"  :label="$t('expressList.expressCompanyName')" ></el-table-column>
         <el-table-column prop="expressOrderExtendType" :label="$t('expressList.extendType')" ></el-table-column>
         <el-table-column prop="expressOrderExtendBusinessId" :label="$t('expressList.extendBusinessId')" ></el-table-column>

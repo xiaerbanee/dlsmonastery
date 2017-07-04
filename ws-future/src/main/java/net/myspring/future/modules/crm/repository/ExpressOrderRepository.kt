@@ -1,8 +1,6 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
-import net.myspring.future.modules.basic.web.form.PrintConfigForm
 import net.myspring.future.modules.basic.web.query.PrintConfigQuery
 import net.myspring.future.modules.crm.domain.ExpressOrder
 import net.myspring.future.modules.crm.dto.ExpressOrderDto
@@ -85,7 +83,7 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
             LEFT JOIN crm_express_company expressCompany ON t1.express_company_id = expressCompany.id
         WHERE
             t1.id = :id
-          """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressOrderDto::class.java))
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ExpressOrderDto::class.java))
     }
 
     override fun findPage(pageable : Pageable,expressOrderQuery: ExpressOrderQuery): Page<ExpressOrderDto> {
@@ -143,13 +141,8 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(expressOrderQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ExpressOrderDto::class.java))
-        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
-
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
-
-
 }

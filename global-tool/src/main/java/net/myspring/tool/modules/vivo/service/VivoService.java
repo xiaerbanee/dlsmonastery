@@ -2,24 +2,27 @@ package net.myspring.tool.modules.vivo.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
+import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by guolm on 2017/5/12.
@@ -160,9 +163,43 @@ public class VivoService {
     }
 
     @Transactional(readOnly = true)
-    public void factoryOrder(String factoryCode, String factoryPassword){
+    public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
+        List<String> factoryCodeList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_CODES.split(CharConstant.COMMA));
+        List<String> factoryNameList = Lists.newArrayList(CharConstant.JX_VIVO_FACTORY_AGENT_NAMES.split(CharConstant.COMMA));
+        if(CollectionUtil.isNotEmpty(factoryCodeList)&&CollectionUtil.isNotEmpty(factoryNameList)){
+            Map<String,String> map = Maps.newHashMap();
+            for(int i = 0; i < factoryCodeList.size(); i++){
+                map.put(factoryCodeList.get(i),factoryNameList.get(i));
+            }
+            factoryOrderDto.getExtra().put("factoryCodeMap",map);
+        }
+        if(StringUtils.isNotBlank(factoryOrderDto.getFactoryCode())&&StringUtils.isNotBlank(factoryOrderDto.getFactoryPassword())){
+            factoryOrderDto.setCode(vivoFactoryDes(factoryOrderDto.getFactoryCode()));
+            factoryOrderDto.setPassword(vivoFactoryDes(factoryOrderDto.getFactoryPassword()));
+        }
+        return factoryOrderDto;
+    }
 
-
+    private String vivoFactoryDes(String code){
+        Runtime runtime = Runtime.getRuntime();
+        Process process;
+        String command= "c:\\vivoDes.exe "+ code;
+        System.out.println(command);
+        try {
+            process = runtime.exec(command);
+            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String inline;
+            while ((inline = br.readLine()) != null) {
+                sb.append(inline.trim());
+            }
+            br.close();
+            process.destroy();
+            System.out.println(sb.toString());
+            return sb.toString().trim();
+        } catch (IOException e) {
+            return "";
+        }
     }
 
 }

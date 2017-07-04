@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="sys_office_business")
-public class OfficeBusiness extends CompanyEntity<OfficeBusiness> {
+public class OfficeBusiness extends DataEntity<OfficeBusiness> {
     private String officeId;
     private String businessOfficeId;
 

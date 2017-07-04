@@ -1,6 +1,5 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
@@ -30,13 +29,13 @@ interface AdGoodsOrderDetailRepository : BaseRepository<AdGoodsOrderDetail,Strin
 
 interface AdGoodsOrderDetailRepositoryCustom{
 
-    fun findDetailListForNew(companyId:String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
+    fun findDetailListForNew(outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
 
-    fun findDetailListForEdit(adGoodsOrderId: String, companyId:String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
+    fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto>
 
     fun findDtoListByAdGoodsOrderId(adGoodsOrderId :String): MutableList<AdGoodsOrderDetailSimpleDto>
 
-    fun findDetailListForBill(adGoodsOrderId: String, companyId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailSimpleDto>
+    fun findDetailListForBill(adGoodsOrderId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailSimpleDto>
 
     fun findDtoListForExport(adGoodsOrderIdList: List<String>, limit: Int): List<AdGoodsOrderDetailExportDto>
 
@@ -69,8 +68,6 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
 
             WHERE
                 t2.enabled = 1
-                AND t2.company_id = :companyId
-
         """)
         if (CollectionUtil.isNotEmpty(adGoodsOrderDetailQuery.adGoodsOrderIdList)) {
             sb.append("""  and t1.ad_goods_order_id IN (:adGoodsOrderIdList) """)
@@ -161,15 +158,14 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         where t1.ad_goods_order_id IN (:adGoodsOrderIdList)
         ORDER BY t1.ad_goods_order_id DESC
         limit 0, :limit
-          """, params, MyBeanPropertyRowMapper(AdGoodsOrderDetailExportDto::class.java))
+          """, params, BeanPropertyRowMapper(AdGoodsOrderDetailExportDto::class.java))
     }
 
 
-    override fun findDetailListForBill(adGoodsOrderId: String, companyId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailSimpleDto> {
+    override fun findDetailListForBill(adGoodsOrderId: String, outGroupIdList: List<String>): List<AdGoodsOrderDetailSimpleDto> {
 
         val paramMap = HashMap<String, Any>()
         paramMap.put("adGoodsOrderId",adGoodsOrderId)
-        paramMap.put("companyId",companyId)
         paramMap.put("outGroupIdList",outGroupIdList)
 
         return namedParameterJdbcTemplate.query("""
@@ -222,7 +218,6 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             crm_product t1
                         WHERE
                             t1.enabled = 1
-                        AND t1.company_id = :companyId
                         AND t1.out_group_id IN (:outGroupIdList)
                         AND t1.visible = 1
                         AND NOT EXISTS (
@@ -254,10 +249,9 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           """, Collections.singletonMap("adGoodsOrderId", adGoodsOrderId), BeanPropertyRowMapper(AdGoodsOrderDetailSimpleDto::class.java))
     }
 
-    override fun findDetailListForEdit(adGoodsOrderId: String, companyId:String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
+    override fun findDetailListForEdit(adGoodsOrderId: String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
         paramMap.put("adGoodsOrderId",adGoodsOrderId)
-        paramMap.put("companyId",companyId)
         paramMap.put("outGroupIdList",outGroupIdList)
         paramMap.put("includeNotAllowOrderProduct",includeNotAllowOrderProduct)
 
@@ -302,7 +296,6 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             crm_product t1
                         WHERE
                             t1.enabled = 1
-                        AND t1.company_id = :companyId
                         AND t1.out_group_id IN (:outGroupIdList)
                         AND t1.visible = 1
                         AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)
@@ -319,9 +312,8 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
 
     }
 
-    override fun findDetailListForNew(companyId:String, outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
+    override fun findDetailListForNew(outGroupIdList:List<String>, includeNotAllowOrderProduct : Boolean): List<AdGoodsOrderDetailSimpleDto> {
         val paramMap = HashMap<String, Any>()
-        paramMap.put("companyId",companyId)
         paramMap.put("outGroupIdList",outGroupIdList)
         paramMap.put("includeNotAllowOrderProduct",includeNotAllowOrderProduct)
 
@@ -338,7 +330,6 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           crm_product t1
         WHERE
           t1.enabled = 1
-          AND t1.company_id = :companyId
           AND t1.out_group_id IN (:outGroupIdList)
           AND t1.visible = 1
           AND ( :includeNotAllowOrderProduct OR t1.allow_order = 1)

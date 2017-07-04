@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.StoreAllot
 import net.myspring.future.modules.crm.dto.StoreAllotDto
@@ -16,7 +15,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -67,7 +65,7 @@ class StoreAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 t1.enabled = 1
                 AND t1.id =  :id
 
-                """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(StoreAllotDto::class.java))
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(StoreAllotDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, storeAllotQuery: StoreAllotQuery): Page<StoreAllotDto> {

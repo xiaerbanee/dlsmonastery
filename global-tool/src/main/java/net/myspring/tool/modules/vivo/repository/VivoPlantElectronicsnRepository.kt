@@ -23,6 +23,31 @@ interface VivoPlantElectronicsnRepositoryCustom{
 class VivoPlantElectronicsnRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantElectronicsnRepositoryCustom {
 
     override fun findNameQtyList(@Param("dateStart") dateStart: String, @Param("dateEnd") dateEnd: String): MutableList<VivoPlantElectronicsn>{
+    fun updateProductImeRetailDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): Int{
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateStart", dateStart);
+        paramMap.put("dateEnd", dateEnd);
+
+        return namedParameterJdbcTemplate.update("""
+            update crm_product_ime t1,#{#entityName} t2
+            set t1.retail_date=t2.retail_date
+            where t1.ime=t2.sn_imei
+            and t2.retail_date >= :dateStart
+            and t2.retail_date <= :dateEnd
+        """,paramMap);
+    }
+
+    fun findSnImeis(snImeis: MutableList<String>): MutableList<String> {
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("snImeis", snImeis);
+        return namedParameterJdbcTemplate.query("""
+          select t.snImei
+          from #{#entityName} t
+          where t.snImei in :snImeis
+        """,paramMap, BeanPropertyRowMapper(String::class.java));
+    }
+
+    fun findNameQtyList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): MutableList<VivoPlantElectronicsn>{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);

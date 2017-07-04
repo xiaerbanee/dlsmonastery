@@ -1,6 +1,5 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdApply
 import net.myspring.future.modules.layout.dto.AdApplyDto
@@ -66,7 +65,7 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             AND t.created_date > :dateStart
             AND product.out_group_id IN (:outGroupIds)
             ORDER BY t.created_date DESC
-        """,params,MyBeanPropertyRowMapper(AdApplyDto::class.java))
+        """,params,BeanPropertyRowMapper(AdApplyDto::class.java))
     }
 
     override fun findByFilter(adApplyQuery: AdApplyQuery):MutableList<AdApplyDto>{
@@ -74,14 +73,14 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             SELECT
                 t1.*
             FROM
-                crm_ad_apply t1,
-                crm_product product
+                crm_ad_apply t1
+                LEFT JOIN crm_product product ON t1.product_id = product.id
+                LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
             WHERE
                 t1.enabled = 1
-            AND t1.product_id = product.id
         """)
-        if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(adApplyQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList) """)
@@ -124,14 +123,14 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             SELECT
                 t1.*
             FROM
-                crm_ad_apply t1,
-                crm_product product
+                crm_ad_apply t1
+                LEFT JOIN crm_product product ON t1.product_id = product.id
+                LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
             WHERE
                 t1.enabled = 1
-            AND t1.product_id = product.id
         """)
-        if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(adApplyQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList) """)

@@ -12,7 +12,6 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.CustomerDto;
@@ -21,12 +20,9 @@ import net.myspring.future.modules.basic.dto.DepotDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.DepotShopRepository;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
-import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
@@ -45,21 +41,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
 public class DepotService {
     @Autowired
     private DepotRepository depotRepository;
-    @Autowired
-    private DepotShopRepository depotShopRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -138,7 +133,7 @@ public class DepotService {
         return page;
     }
 
-    public String depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
+    public SimpleExcelBook depotAccountExportDetail(DepotAccountQuery depotAccountQuery) {
 
         List<SimpleExcelSheet> sheets = new ArrayList<>();
         Workbook workbook = new SXSSFWorkbook(10000);
@@ -150,9 +145,11 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qmys", "期末应收"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scbzj", "市场保证金"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "xxbzj", "形象押金"));
-        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery).getContent();
 
-        sheets.add(new SimpleExcelSheet("应收报表", depotAccountList, simpleExcelColumnList));
+        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery).getContent();
+        SimpleExcelSheet sheet = new SimpleExcelSheet("应收报表", depotAccountList, simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook, sheet);
+        sheets.add(sheet);
 
         Set<String> clientOutIds = Sets.newHashSet();
         for(DepotAccountDto depotAccountDto : depotAccountList){
@@ -179,22 +176,20 @@ public class DepotService {
             //TODO 获取明细
             List<String> customerAccounts = new ArrayList<>();// k3cloudService.findCustomerAccount(AccountUtils.getCompany().getOutDbname(),depot.getOutId(), depot.getName(), dateStart, dateEnd);
 
-            sheets.add(new SimpleExcelSheet(depotAccountDto.getName(), customerAccounts, depotAccountColumnList));
+            SimpleExcelSheet tmpSheet = new SimpleExcelSheet(depotAccountDto.getName(), customerAccounts, depotAccountColumnList);
+            ExcelUtils.doWrite(workbook, tmpSheet);
+            sheets.add(tmpSheet);
         }
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"客户应收" + LocalDateUtils.format(depotAccountQuery.getDutyDateStart(), "yyyyMMdd") + "~" + LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(), "yyyyMMdd")+".xlsx", sheets);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        return  new SimpleExcelBook(workbook,"客户应收" + LocalDateUtils.format(depotAccountQuery.getDutyDateStart(), "yyyyMMdd") + "~" + LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(), "yyyyMMdd")+".xlsx", sheets);
     }
 
-    public String depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
+    public SimpleExcelBook depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
         //TODO 写确认书需要增强excel的打印能力
 
         return null;
     }
 
-    public String depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
+    public SimpleExcelBook depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
@@ -206,12 +201,9 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qmys", "期末应收"));
 
         List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery).getContent();
-
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收列表", depotAccountList, simpleExcelColumnList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"应收列表"+LocalDateUtils.format(LocalDate.now()) +".xlsx" ,simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return  new SimpleExcelBook(workbook,"应收列表"+LocalDateUtils.format(LocalDate.now()) +".xlsx" ,simpleExcelSheet);
     }
 
     @Transactional
@@ -240,8 +232,8 @@ public class DepotService {
     }
 
     public List<DepotDto> findAdStoreDtoList() {
-        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
-        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(RequestUtils.getCompanyId(), outGroupId);
+        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
+        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(outGroupId);
         cacheUtils.initCacheInput(adStoreDtoList);
         return adStoreDtoList;
 
@@ -272,7 +264,7 @@ public class DepotService {
             LocalDateTime dateStart=now.minusMonths(i).atStartOfDay();
             LocalDateTime dateEnd=now.minusMonths(i-1).atStartOfDay();
 
-            Long saleQty=productImeRepository.countByEnabledIsTrueAndDepotIdAndCompanyIdAndRetailDateBetween(depotId, RequestUtils.getCompanyId(), dateStart, dateEnd);
+            Long saleQty=productImeRepository.countByEnabledIsTrueAndDepotIdAndRetailDateBetween(depotId, dateStart, dateEnd);
             String month = LocalDateTimeUtils.format(dateStart, "yyyy-MM");
             recentMonthSaleAmountMap.put(month, saleQty);
         }
