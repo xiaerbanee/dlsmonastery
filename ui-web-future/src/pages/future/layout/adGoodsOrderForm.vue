@@ -14,6 +14,9 @@
             <el-form-item :label="$t('adGoodsOrderForm.recentSaleQty')" >
               {{recentSaleDescription}}
             </el-form-item>
+            <el-form-item :label="$t('adGoodsOrderForm.imageDeposit')" >
+              {{imageDeposit}}
+            </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.investInCause')" prop="investInCause">
               <el-input v-model="inputForm.investInCause" type="textarea"></el-input>
             </el-form-item>
@@ -108,6 +111,7 @@
         return {
           isCreate: this.$route.query.id == null,
           recentSaleDescription:'',
+          imageDeposit:0,
           submitDisabled: false,
           productName: "",
           filterAdGoodsOrderDetailList: [],
@@ -166,15 +170,16 @@
             this.isDelegateShop = false;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
+            this.imageDeposit =0;
             return;
           }
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-              console.log(response.data);
           if (response.data[0].jointType === '代理') {
             this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
+            this.imageDeposit =0;
           }else{
             this.isDelegateShop = false;
             this.inputForm.shopId = this.inputForm.outShopId;
@@ -187,6 +192,7 @@
       refreshRecentMonthSaleAmount(){
         if(util.isBlank(this.inputForm.shopId)){
           this.recentSaleDescription='';
+          this.imageDeposit =0;
           return;
         }
 
@@ -200,6 +206,10 @@
           }else{
             this.recentSaleDescription='';
           }
+        });
+
+        axios.get('/api/ws/future/layout/shopDeposit/findLeftAmount', {params: {type: '形象保证金', depotId: this.inputForm.shopId}}).then((response) => {
+          this.imageDeposit = response.data;
         });
       },customValidate(){
         let totalQty = 0;
