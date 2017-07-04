@@ -81,11 +81,7 @@ public class CarrierOrderService {
         carrierOrder.setRemarks(carrierOrderFrom.getRemarks());
         carrierOrderRepository.save(carrierOrder);
     }
-    public CarrierOrderDto findDto(String id) {
-        CarrierOrderDto result = carrierOrderRepository.findDto(id);
-        cacheUtils.initCacheInput(result);
-        return result;
-    }
+
 
     public Map<String, Object> checkDetailJsons(CarrierOrderFrom carrierOrderFrom) {
         Boolean checkColor = carrierOrderFrom.getCheckColor();

@@ -66,22 +66,34 @@
         <el-form :model="detailData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item label="订货单号">{{detailData.formatId}}</el-form-item>
-              <el-form-item label="发货仓库"></el-form-item>
-              <el-form-item label="门店"></el-form-item>
-              <el-form-item label="开单日期" ></el-form-item>
-              <el-form-item label="外部单号" ></el-form-item>
-              <el-form-item label="商城单号" ></el-form-item>
-              <el-form-item label="商城订单信息" ></el-form-item>
+              <el-form-item label="货品订货单号" prop="category">
+                {{inputForm.formatId}}
+              </el-form-item>
+              <el-form-item label="办事处" prop="sort">
+                {{inputForm.areaName}}
+              </el-form-item>
+              <el-form-item label="门店" prop="value">
+                {{inputForm.depotName}}
+              </el-form-item>
+              <el-form-item label="商城门店" prop="remarks">
+                {{inputForm.carrierShopName}}
+              </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="创建人"></el-form-item>
-              <el-form-item label="创建时间"></el-form-item>
-              <el-form-item label="使用电子券"></el-form-item>
-              <el-form-item label="快递单号" ></el-form-item>
-              <el-form-item label="发货类型" ></el-form-item>
-              <el-form-item label="专卖店货品信息" ></el-form-item>
-              <el-form-item label="备注" ></el-form-item>
+              <el-form-item label="发货时间" prop="category">
+                {{inputForm.shipDate}}
+              </el-form-item>
+              <el-form-item label="商城单号" prop="sort">
+                {{inputForm.code}}
+              </el-form-item>
+              <el-form-item label="状态" prop="value">
+                <el-select v-model="inputForm.status" filterable clearable placeholder="请选择">
+                  <el-option v-for="status in formData.extra.carrierOrderStatusList" :key="status" :label="status" :value="status"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="订单备注" prop="remarks">
+                <el-input v-model="inputForm.remarks"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -119,6 +131,7 @@
         formData:{
           extra:{}
         },
+        inputForm:{},
         detailData:{},
         initPromise:{},
         searchText:'',
@@ -163,7 +176,13 @@
         if(action =="detail"){
           this.$router.push({ name: 'goodsOrderDetail', query: { id: goodsOrderId }})
         }else if(action=="edit"){
-          this.$router.push({ name: 'carrierOrderEditForm', query: { id: goodsOrderId }})
+         this.detailVisible=true;
+         let page=this.page.content;
+         for(let item in page){
+           if(goodsOrderId==page[item].goodsOrderId){
+             this.inputForm=page[item];
+           }
+         }
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {

@@ -46,7 +46,7 @@
           <el-button type="primary" @click="search()">{{$t('shopGoodsDepositList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight"  style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('shopGoodsDepositList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column prop="formatId" column-key="id"  :label="$t('shopGoodsDepositList.code')" sortable></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopGoodsDepositList.shopName')" sortable></el-table-column>
@@ -70,7 +70,7 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column  :label="$t('shopGoodsDepositList.operation')" >
+        <el-table-column  fixed="right" :label="$t('shopGoodsDepositList.operation')" >
           <template scope="scope">
             <div class="action" v-if="scope.row.editable" v-permit="'crm:shopGoodsDeposit:edit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('shopGoodsDepositList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopGoodsDeposit:delete'"><el-button size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('shopGoodsDepositList.delete')}}</el-button></div>
@@ -94,6 +94,7 @@
         },
         selects:[],
         formVisible: false,
+        pageHeight: 600,
 
       };
     },
@@ -172,6 +173,7 @@
       }
 
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/shopGoodsDeposit/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

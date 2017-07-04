@@ -5,15 +5,12 @@ import net.myspring.future.modules.layout.domain.ShopGoodsDeposit
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto
 import net.myspring.future.modules.layout.web.query.ShopGoodsDepositQuery
-import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -21,20 +18,6 @@ import java.util.*
 
 
 interface ShopGoodsDepositRepository : BaseRepository<ShopGoodsDeposit,String>,ShopGoodsDepositRepositoryCustom {
-
-    @Query("""
-    SELECT
-        t1
-    FROM
-        #{#entityName} t1
-    WHERE
-        t1.enabled = 1
-    AND t1.shopId = :shopId
-    AND t1.status = :status
-    ORDER BY
-        created_date DESC
-    """)
-    fun findByShopId(shopId: String,status: String): MutableList<ShopGoodsDeposit>
 }
 
 interface ShopGoodsDepositRepositoryCustom{
