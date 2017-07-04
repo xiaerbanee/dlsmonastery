@@ -144,7 +144,6 @@ public class DepotStoreService {
             if(depot==null){
                 depot=new Depot();
             }
-            store.setCompanyId(RequestUtils.getCompanyId());
             store.setOutId(bdStock.getFStockId());
             store.setOutGroupId(bdStock.getFGroup());
             store.setOutGroupName(bdStock.getFGroupName());

@@ -86,6 +86,11 @@ public class PriceChangeImeService {
     }
 
     @Transactional
+    public void delete(String id){
+        priceChangeImeRepository.logicDelete(id);
+    }
+
+    @Transactional
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
         priceChangeIme.setImage(priceChangeImeForm.getImage());
@@ -153,7 +158,7 @@ public class PriceChangeImeService {
             return notExist+"不存在,保存失败";
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
-            List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes,RequestUtils.getCompanyId());
+            List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
             if(productImeDtos == null){
                 return "保存失败";
             }

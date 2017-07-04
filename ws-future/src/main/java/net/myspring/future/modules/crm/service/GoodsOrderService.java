@@ -271,7 +271,7 @@ public class GoodsOrderService {
         }
         goodsOrder.setAmount(amount);
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(RequestUtils.getCompanyId(),goodsOrderBillForm.getBillDate()));
+        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
         ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
         //设置需要打印的快递单个数
@@ -294,7 +294,7 @@ public class GoodsOrderService {
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
-        CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
+        CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.MERGE_STORE_IDS.name());
 
         if (companyConfig!=null&&StringUtils.isNotBlank(companyConfig.getValue())) {
             String mergeStoreIds =companyConfig.getValue();
@@ -367,16 +367,16 @@ public class GoodsOrderService {
     private String getDefaultStoreId(GoodsOrder goodsOrder) {
         String defaultStoreId;
         if(NetTypeEnum.联信.name().equals(goodsOrder.getNetType())){
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
+            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
         }else {
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
         }
-        String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
+        String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
         if(StringUtils.isNotBlank(carrierLockOfficeIds)){
             List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
             Depot shop = depotRepository.findOne(goodsOrder.getShopId());
             if(officeIdList.contains(shop.getOfficeId())) {
-                defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+                defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
             }
         }
         return defaultStoreId;
@@ -471,7 +471,7 @@ public class GoodsOrderService {
         if(StringUtils.isNotBlank(expressOrder.getExpressCompanyId())){
             goodsOrderDto.setExpressCompanyId(expressOrder.getExpressCompanyId());
         }else{
-            String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
+            String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
             goodsOrderDto.setExpressCompanyId(StringUtils.trimToNull(defaultExpressCompanyId));
         }
 
@@ -595,7 +595,7 @@ public class GoodsOrderService {
             GoodsOrderForm goodsOrderForm = new GoodsOrderForm();
             goodsOrderForm.setShipType(goodsOrderBatchAddDetailForm.getShipType());
             goodsOrderForm.setNetType(goodsOrderBatchAddDetailForm.getNetType());
-            Depot depot = depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(),goodsOrderBatchAddDetailForm.getShopName());
+            Depot depot = depotRepository.findByEnabledIsTrueAndName(goodsOrderBatchAddDetailForm.getShopName());
             if(depot == null){
                 throw new ServiceException("门店："+goodsOrderBatchAddDetailForm.getShopName()+"不存在");
             }
@@ -603,7 +603,7 @@ public class GoodsOrderService {
             goodsOrderForm.setRemarks(goodsOrderBatchAddDetailForm.getRemarks());
 
             GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
-            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(),goodsOrderBatchAddDetailForm.getProductName());
+            Product product = productRepository.findByEnabledIsTrueAndName(goodsOrderBatchAddDetailForm.getProductName());
             if(product == null){
                 throw new ServiceException("型号："+goodsOrderBatchAddDetailForm.getProductName()+"不存在");
             }

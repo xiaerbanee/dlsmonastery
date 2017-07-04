@@ -12,10 +12,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class CompanyConfigUtil {
     private static ObjectMapper objectMapper = ObjectMapperUtils.getObjectMapper();
 
-    public static CompanyConfigCacheDto findByCode(RedisTemplate redisTemplate,String companyId, String code) {
+    public static CompanyConfigCacheDto findByCode(RedisTemplate redisTemplate,String code) {
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        String key  = companyId + CharConstant.ENTER + code;
-        CompanyConfigCacheDto companyConfigCacheDto = (CompanyConfigCacheDto) redisTemplate.opsForValue().get(("companyConfigCodes:" + key));
+        CompanyConfigCacheDto companyConfigCacheDto = (CompanyConfigCacheDto) redisTemplate.opsForValue().get(("companyConfigCodes:" + code));
         if(companyConfigCacheDto==null) {
             companyConfigCacheDto = new CompanyConfigCacheDto();
         }

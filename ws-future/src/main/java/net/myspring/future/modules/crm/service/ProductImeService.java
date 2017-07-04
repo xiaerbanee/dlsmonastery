@@ -148,7 +148,7 @@ public class ProductImeService {
             return new ArrayList<>();
         }
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         return productImeDtoList;
     }
@@ -344,18 +344,18 @@ public class ProductImeService {
         List<ProductIme> toBeSaved = Lists.newArrayList();
         for (ProductImeCreateForm productImeCreateForm : productImeBatchCreateForm.getProductImeCreateFormList()) {
 
-            if (productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeCreateForm.getIme()) != null) {
+            if (productImeRepository.findByEnabledIsTrueAndIme(productImeCreateForm.getIme()) != null) {
                 throw new ServiceException("串码：" + productImeCreateForm.getIme() + " 在本公司中已经存在");
             }
 
             ProductIme productIme = new ProductIme();
-            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getProductName());
+            Product product = productRepository.findByEnabledIsTrueAndName(productImeCreateForm.getProductName());
             if (product == null) {
                 throw new ServiceException("货品：" + productImeCreateForm.getProductName() + " 在本公司中无效或不存在");
             }
             productIme.setProductId(product.getId());
 
-            Depot depot = depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeCreateForm.getStoreName());
+            Depot depot = depotRepository.findByEnabledIsTrueAndName( productImeCreateForm.getStoreName());
             if (depot == null) {
                 throw new ServiceException("仓库：" + productImeCreateForm.getStoreName() + " 在本公司中无效或不存在");
             }
@@ -390,12 +390,12 @@ public class ProductImeService {
 
         for (ProductImeChangeForm productImeChangeForm : productImeBatchChangeForm.getProductImeChangeFormList()) {
 
-            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), productImeChangeForm.getIme());
+            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(productImeChangeForm.getIme());
             if (productIme == null) {
                 throw new ServiceException("串码" + productImeChangeForm.getIme() + " 在本公司中无效或不存在");
             }
 
-            Product product = productRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), productImeChangeForm.getProductName());
+            Product product = productRepository.findByEnabledIsTrueAndName(productImeChangeForm.getProductName());
             if (product == null) {
                 throw new ServiceException("调整后型号：" + productImeChangeForm.getProductName() + " 在本公司中无效或不存在");
             }
@@ -406,7 +406,7 @@ public class ProductImeService {
     }
 
     public List<ProductImeDto> batchQuery(List<String> allImeList) {
-        List<ProductImeDto> result = productImeRepository.batchQuery(allImeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> result = productImeRepository.batchQuery(allImeList);
         cacheUtils.initCacheInput(result);
         return result;
     }

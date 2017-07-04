@@ -17,7 +17,6 @@ public class VoucherDto extends DataDto<Voucher> {
     //业务日期
     private LocalDate FDate;
     private String createdName;
-    private String companyId;
     private String status;
     //同步到金蝶后返回值
     private String outCode;
@@ -36,14 +35,6 @@ public class VoucherDto extends DataDto<Voucher> {
 
     public void setCreatedName(String createdName) {
         this.createdName = createdName;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getStatus() {

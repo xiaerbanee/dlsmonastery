@@ -13,8 +13,6 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
-    @JsonIgnore
-    private String companyId= RequestUtils.getCompanyId();
 
     @JsonIgnore
     private List<String> officeIdList;
@@ -26,14 +24,6 @@ public class BaseQuery {
     private String sort = "id,DESC";
 
     private Map<String,Object> extra = Maps.newHashMap();
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public List<String> getOfficeIdList() {
         if(CollectionUtil.isEmpty(officeIdList)){

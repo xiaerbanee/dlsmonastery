@@ -91,14 +91,14 @@
         <el-table-column fixed="right" :label="$t('goodsOrderShipList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'"><el-button size="small" @click.native="itemShip(scope.row.formatId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderShipList.sign')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderShipList.sreturn')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderShipList.delete')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'storePrint')">出库单</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')"><el-button   size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'" v-permit="'crm:goodsOrderShip:ship'" ><el-button size="small" @click.native="itemShip(scope.row.formatId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:sign'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderShipList.sign')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:shipBack'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:mallOrder'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:sreturn'" ><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderShipList.sreturn')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderShipList.delete')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'storePrint')">出库单</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
 
           </template>
         </el-table-column>

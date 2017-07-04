@@ -84,13 +84,13 @@ public class ExpressCompanyService {
     }
 
     public List<ExpressCompanyDto> findByNameLike(String name) {
-        List<ExpressCompanyDto> result = expressCompanyRepository.findByNameLike(RequestUtils.getCompanyId(), name);
+        List<ExpressCompanyDto> result = expressCompanyRepository.findByNameLike(name);
         cacheUtils.initCacheInput(result);
         return result;
     }
 
     public String getDefaultExpressCompanyId() {
-        String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
+        String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
         return StringUtils.trimToNull(defaultExpressCompanyId);
     }
 

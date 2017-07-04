@@ -82,7 +82,7 @@ public class VoucherService {
             if (isCreate){
                 voucher = new Voucher();
                 voucher.setFDate(date);
-                voucher.setCompanyId(RequestUtils.getCompanyId());
+                voucher.setCompanyName(RequestUtils.getCompanyName());
                 AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
                 voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
                 if (accountKingdeeBook != null){

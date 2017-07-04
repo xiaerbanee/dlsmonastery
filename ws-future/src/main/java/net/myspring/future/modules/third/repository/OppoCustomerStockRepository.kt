@@ -12,14 +12,13 @@ interface OppoCustomerStockRepository : BaseRepository<OppoCustomerStock, String
 
 }
 interface OppoCustomerStockRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerStock>
+    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerStock>
 }
 class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerStockRepositoryCustom {
-    override fun findAll(dateStart: String, dateEnd: String, companyId: String): MutableList<OppoCustomerStock> {
+    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerStock> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);
-        paramMap.put("companyId", companyId);
         return namedParameterJdbcTemplate.query("""
              select
                   de.id as customerid,
@@ -33,7 +32,6 @@ class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJ
                     and im.depot_id = de.id
                     and im.created_date>=:dateStart
                     and im.created_date<:dateEnd
-                    and im.company_id = :companyId
                     and im.enabled = 1
                     and (
                         im.retail_date is null

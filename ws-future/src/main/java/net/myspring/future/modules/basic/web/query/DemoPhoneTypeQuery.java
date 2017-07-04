@@ -7,6 +7,7 @@ import net.myspring.future.common.query.BaseQuery;
  */
 public class DemoPhoneTypeQuery extends BaseQuery {
     private String name;
+    private String productTypeName;
 
     public String getName() {
         return name;
@@ -14,5 +15,13 @@ public class DemoPhoneTypeQuery extends BaseQuery {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
     }
 }

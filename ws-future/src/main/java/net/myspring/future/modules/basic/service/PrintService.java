@@ -157,7 +157,7 @@ public class PrintService {
         if(CollectionUtil.isEmpty(expressOrders)) {
             return expressOrderPrintList;
         }
-        String expressProductId = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
+        String expressProductId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue();
         List<String> businessIds = CollectionUtil.extractToList(expressOrders, "extendBusinessId");
         List<String> depotIdList=Lists.newArrayList();
         depotIdList.addAll(CollectionUtil.extractToList(expressOrders,"toDepotId"));

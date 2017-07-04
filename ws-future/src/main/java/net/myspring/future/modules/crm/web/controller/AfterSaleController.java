@@ -12,6 +12,8 @@ import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
 import net.myspring.future.common.enums.AfterSaleTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.api.dto.CarrierOrderDto;
+import net.myspring.future.modules.api.web.query.CarrierOrderQuery;
 import net.myspring.future.modules.basic.client.DictEnumClient;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ProductDto;
@@ -22,6 +24,7 @@ import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.service.AfterSaleService;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.AfterSaleForm;
@@ -58,11 +61,19 @@ public class AfterSaleController {
     private ProductImeService productImeService;
     @Autowired
     private DictEnumClient dictEnumClient;
+    @Autowired
+    private AfterSaleRepository afterSaleRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<AfterSaleDto> list(Pageable pageable,AfterSaleQuery afterSaleQuery) {
         Page<AfterSaleDto> page = afterSaleService.findPage(pageable, afterSaleQuery);
         return page;
+    }
+
+    @RequestMapping(value = "getFromCompanyData",method = RequestMethod.GET)
+    public List<AfterSaleDto> getFromCompanyData(AfterSaleQuery afterSaleQuery) {
+        List<AfterSaleDto> list=afterSaleService.findFilter(afterSaleQuery);
+        return list;
     }
 
     @RequestMapping(value="getQuery")

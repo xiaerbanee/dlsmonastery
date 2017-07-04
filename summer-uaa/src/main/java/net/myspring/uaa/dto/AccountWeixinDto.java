@@ -9,7 +9,6 @@ import javax.persistence.Table;
 public class AccountWeixinDto {
     private String id;
     private String accountId;
-    private String companyId;
     private String openId;
 
     private String accountName;
@@ -45,14 +44,6 @@ public class AccountWeixinDto {
 
     public void setAccountId(String accountId) {
         this.accountId = accountId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public String getOpenId() {

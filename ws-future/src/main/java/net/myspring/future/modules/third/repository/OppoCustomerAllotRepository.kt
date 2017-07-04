@@ -11,17 +11,14 @@ interface OppoCustomerAllotRepository : BaseRepository<OppoCustomerAllot, String
 
 }
 interface OppoCustomerAllotRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String,companyId:String): MutableList<OppoCustomerAllot>
+    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerAllot>
 }
 
 class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerAllotRepositoryCustom{
-    override fun findAll(dateStart: String,dateEnd: String,companyId:String) : MutableList<OppoCustomerAllot>{
+    override fun findAll(dateStart: String,dateEnd: String) : MutableList<OppoCustomerAllot>{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);
-        paramMap.put("companyId", companyId);
-
-        System.err.println("aaaa==="+dateStart+"\t"+dateEnd+"\t"+companyId);
 
         return namedParameterJdbcTemplate.query("""
             select
@@ -35,7 +32,6 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
                     and go.ship_date<=:dateEnd
                     and de.shipped_qty >0
                     and go.enabled=1
-                    and go.company_id=:companyId
                     group by go.store_id,go.shop_id,de.product_id
             union
             select
@@ -49,7 +45,6 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
                     and st.ship_date<=:dateEnd
                     and de.shipped_qty>0
                     and st.enabled=1
-                    and st.company_id=:companyId
                     group by st.from_store_id,st.to_store_id,de.product_id
             union
             select
@@ -59,7 +54,6 @@ class OppoCustomerAllotRepositoryImpl @Autowired constructor(val namedParameterJ
                 where
                     t.audit_date >= :dateStart
                     and t.audit_date <= :dateEnd
-                    and t.company_id = :companyId
                     and t.enabled = 1
                     and t.`status` = '已通过'
                     and t.product_ime_id=im.id

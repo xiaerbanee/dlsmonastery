@@ -96,7 +96,7 @@ public class ImeAllotService {
     public String checkForImeAllot(List<String> imeList, boolean  checkAccess) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime : imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -127,7 +127,7 @@ public class ImeAllotService {
 
         List<String> imeList = imeAllotForm.getImeList();
 
-        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Depot toDepot = depotRepository.findOne(imeAllotForm.getToDepotId());
 
         for(ProductIme productIme:productImes) {
@@ -191,7 +191,7 @@ public class ImeAllotService {
     }
 
     public List<String> findToDepotNameList() {
-        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(RequestUtils.getCompanyId());
+        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndDepotShopIdIsNotNull();
         return CollectionUtil.extractToList(depotList, "name");
     }
 
@@ -206,12 +206,12 @@ public class ImeAllotService {
 
         for (ImeAllotSimpleForm imeAllotSimpleForm : imeAllotBatchForm.getImeAllotSimpleFormList()) {
 
-            Depot toDepot=depotRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), imeAllotSimpleForm.getToDepotName());
+            Depot toDepot=depotRepository.findByEnabledIsTrueAndName(imeAllotSimpleForm.getToDepotName());
             if(toDepot == null){
                 throw new ServiceException("调拨后门店在本公司无效或者不存在");
             }
 
-            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndCompanyIdAndIme(RequestUtils.getCompanyId(), imeAllotSimpleForm.getIme());
+            ProductIme productIme = productImeRepository.findByEnabledIsTrueAndIme(imeAllotSimpleForm.getIme());
             if(productIme == null){
                 throw new ServiceException("串码："+imeAllotSimpleForm.getIme()+" 在本公司中无效或者不存在");
             }

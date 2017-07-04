@@ -71,28 +71,9 @@ interface CarrierOrderRepositoryCustom {
     fun findPage(pageable: Pageable, carrierOrderQuery: CarrierOrderQuery): Page<CarrierOrderDto>
 
     fun findFilter(carrierOrderQuery: CarrierOrderQuery): MutableList<CarrierOrderDto>
-
-    fun findDto(id: String): CarrierOrderDto
-
 }
 
 class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : CarrierOrderRepositoryCustom {
-    override fun findDto(id: String): CarrierOrderDto {
-        return namedParameterJdbcTemplate.queryForObject("""
-        SELECT
-                t1.*,t2.*
-            FROM
-                api_carrier_order t1
-            LEFT JOIN crm_goods_order t2 ON t2.id = t1.goods_order_id
-            WHERE
-                t1.enabled = 1
-            AND t2.enabled = 1
-            AND t1.id = :id
-            GROUP BY
-                t1.id
-                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(CarrierOrderDto::class.java))
-
-    }
 
     override fun findFilter(carrierOrderQuery: CarrierOrderQuery): MutableList<CarrierOrderDto> {
         val sb = StringBuffer()
