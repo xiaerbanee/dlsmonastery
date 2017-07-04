@@ -210,6 +210,7 @@ export default {
   demoPhoneTypeList: {
     demoPhoneTypeList: "演示机型",
     name: "名称",
+    productTypeName:"型号",
     productTypeNames: "包含型号",
     limitQty: "演示机额度",
     applyEndDate: "申请截止日期",

@@ -15,10 +15,10 @@ public class AccountEntity<T> extends DataEntity<T>{
     private String accountId;
     @Column(updatable = false)
     private String companyId;
+
     @PrePersist
     public void prePersist() {
         this.accountId = RequestUtils.getAccountId();
-        this.companyId = RequestUtils.getCompanyId();
     }
 
     public String getAccountId() {

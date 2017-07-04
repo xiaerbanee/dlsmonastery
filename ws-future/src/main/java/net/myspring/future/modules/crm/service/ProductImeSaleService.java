@@ -75,7 +75,7 @@ public class ProductImeSaleService {
 
     public String checkForSale(List<String> imeList) {
         StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -113,7 +113,7 @@ public class ProductImeSaleService {
         }
 
         Map<String, ProductImeSaleDetailForm> detailFormMap = CollectionUtil.extractToMap(productImeSaleForm.getProductImeSaleDetailList(), "productImeId");
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         for (ProductIme productIme : productImeList) {
 
             String saleShopId = productIme.getDepotId();
@@ -152,7 +152,7 @@ public class ProductImeSaleService {
     public String checkForSaleBack(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
         Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
         for(String ime:imeList){
             ProductIme productIme = imeMap.get(ime);
@@ -181,7 +181,7 @@ public class ProductImeSaleService {
         List<String> imeList = productImeSaleBackForm.getImeList();
         String employeeId = RequestUtils.getEmployeeId();
 
-        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
         Integer leftCredit =0;
         if(latestProductImeSale!=null){
@@ -250,7 +250,7 @@ public class ProductImeSaleService {
             return new ArrayList<>();
         }
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        List<ProductImeForSaleDto> result = productImeSaleRepository.findProductImeForSaleDto(imeList, RequestUtils.getCompanyId());
+        List<ProductImeForSaleDto> result = productImeSaleRepository.findProductImeForSaleDto(imeList);
         cacheUtils.initCacheInput(result);
 
             for(ProductImeForSaleDto productImeForSaleDto : result) {

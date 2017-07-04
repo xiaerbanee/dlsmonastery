@@ -133,7 +133,7 @@ public class  AdGoodsOrderController {
 
         adGoodsOrderBillForm.getExtra().put("adStoreList",depotService.findAdStoreDtoList() );
 
-        String defaultStoreId=CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue();
+        String defaultStoreId=CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue();
         adGoodsOrderBillForm.getExtra().put("defaultStoreId",defaultStoreId);
 
         adGoodsOrderBillForm.getExtra().put("defaultBillDate", LocalDate.now());

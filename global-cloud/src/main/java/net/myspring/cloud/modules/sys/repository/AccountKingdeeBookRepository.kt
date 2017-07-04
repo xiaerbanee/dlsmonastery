@@ -44,8 +44,8 @@ class AccountKingdeeBookRepositoryImpl @Autowired constructor(val namedParameter
         if(StringUtils.isNoneBlank(accountKingdeeBookQuery.accountId)){
             sb.append(" and t1.account_id = :accountId ")
         }
-        if (StringUtils.isNoneBlank(accountKingdeeBookQuery.companyId)){
-            sb.append(" and t1.company_id = :companyId ")
+        if (StringUtils.isNoneBlank(accountKingdeeBookQuery.companyName)){
+            sb.append(" and t1.company_name = :companyName")
         }
         if (StringUtils.isNoneBlank(accountKingdeeBookQuery.username)){
             sb.append(" and t1.username LIKE CONCAT('%',:username,'%') ")

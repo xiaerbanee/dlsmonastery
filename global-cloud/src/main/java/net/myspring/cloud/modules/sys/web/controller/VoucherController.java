@@ -165,7 +165,7 @@ public class VoucherController {
         Voucher voucher = voucherService.audit(voucherForm);
         RestResponse restResponse = new RestResponse("凭证审核成功",null,true);
         if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
-            KingdeeBook kingdeeBook = kingdeeBookService.findByCompanyId(RequestUtils.getCompanyId());
+            KingdeeBook kingdeeBook = kingdeeBookService.findByCompanyName(RequestUtils.getCompanyName());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
             KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm,kingdeeBook,accountKingdeeBook);
             String outCode ="序号："+kingdeeSynDto.getBillNo()+"  凭证号："+ glVoucherService.findByBillNo(kingdeeSynDto.getBillNo());

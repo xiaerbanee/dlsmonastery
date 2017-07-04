@@ -302,13 +302,13 @@ public class AdGoodsOrderService {
 
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
 
-        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
 
         List<AdGoodsOrderDetailSimpleDto> result;
         if (StringUtils.isBlank(adGoodsOrderId)) {
-            result = adGoodsOrderDetailRepository.findDetailListForNew(RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForNew(outGroupIdList, includeNotAllowOrderProduct);
         } else {
-            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList, includeNotAllowOrderProduct);
+            result = adGoodsOrderDetailRepository.findDetailListForEdit(adGoodsOrderId, outGroupIdList, includeNotAllowOrderProduct);
         }
         cacheUtils.initCacheInput(result);
         return result;
@@ -335,8 +335,8 @@ public class AdGoodsOrderService {
 
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
 
-        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
-        List<AdGoodsOrderDetailSimpleDto> result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, RequestUtils.getCompanyId(), outGroupIdList);
+        List<String> outGroupIdList = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_COUNTER_GROUP_IDS.name()).getValue());
+        List<AdGoodsOrderDetailSimpleDto> result = adGoodsOrderDetailRepository.findDetailListForBill(adGoodsOrderId, outGroupIdList);
         cacheUtils.initCacheInput(result);
 
         fulfillCloudQty(adGoodsOrderId, result);
@@ -347,7 +347,7 @@ public class AdGoodsOrderService {
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderId);
         String depotId = adGoodsOrder.getStoreId();
         if(StringUtils.isBlank(adGoodsOrder.getStoreId())){
-            depotId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue();
+            depotId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue();
         }
         if(StringUtils.isBlank(depotId)) {
             return;
@@ -808,7 +808,7 @@ public class AdGoodsOrderService {
     private BigDecimal getYsAmount(List<AdGoodsOrderDetail> adGoodsOrderDetailList) {
         //统计应收运费 全部以A类物料运费为准
         Map<String, BigDecimal> ysMap = Maps.newHashMap();
-        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByEnabledIsTrueAndCompanyIdAndName(RequestUtils.getCompanyId(), "A类物料运费");//TODO 默认的ADPriceSystem，应该写成constant或者在companyConfig中配置
+        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByEnabledIsTrueAndName( "A类物料运费");//TODO 默认的ADPriceSystem，应该写成constant或者在companyConfig中配置
         if (defaultAdPricesystem != null) {
             for (AdPricesystemDetail adPricesystemDetail : adPricesystemDetailRepository.findByEnabledIsTrueAndAdPricesystemId(defaultAdPricesystem.getId())) {
                 ysMap.put(adPricesystemDetail.getProductId(), adPricesystemDetail.getPrice());
@@ -824,7 +824,7 @@ public class AdGoodsOrderService {
     }
 
     private Map<String, Object> getAdShipPriceRuleMap() {
-        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.AD_SHIP_PRICE_RULE.name());
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.AD_SHIP_PRICE_RULE.name());
         if (companyConfigCacheDto == null || StringUtils.isBlank(companyConfigCacheDto.getValue())) {
             return null;
         }

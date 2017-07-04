@@ -14,6 +14,9 @@
               <el-form-item :label="$t('demoPhoneTypeList.name')" :label-width="formLabelWidth">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('demoPhoneTypeList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('demoPhoneTypeList.productTypeName')" :label-width="formLabelWidth">
+                <el-input v-model="formData.productTypeName" auto-complete="off" :placeholder="$t('demoPhoneTypeList.likeSearch')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>

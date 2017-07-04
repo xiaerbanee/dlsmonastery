@@ -119,7 +119,7 @@ public class AdApplyService {
         billTypes.add(BillTypeEnum.POP.name());
         billTypes.add(BillTypeEnum.配件赠品.name());
         adApplyBillForm.getExtra().put("billTypes",billTypes);
-        adApplyBillForm.setExpressCompanyId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_AD_EXPRESS_COMPANY_ID.name()).getValue());
+        adApplyBillForm.setExpressCompanyId(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFAULT_AD_EXPRESS_COMPANY_ID.name()).getValue());
         return adApplyBillForm;
     }
 
@@ -127,12 +127,12 @@ public class AdApplyService {
         AdApplyBillTypeChangeForm adApplyBillTypeChangeForm = new AdApplyBillTypeChangeForm();
         List<String> outGroupIds = Lists.newArrayList();
         if(BillTypeEnum.POP.name().equalsIgnoreCase(billType)){
-            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
-            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.AD_DEFAULT_STORE_ID.name()).getValue());
         }
         if(BillTypeEnum.配件赠品.name().equalsIgnoreCase(billType)){
-            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
-            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
+            outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+            adApplyBillTypeChangeForm.setStoreId(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue());
         }
         LocalDate dateStart = LocalDate.now().plusYears(-1);
         List<AdApplyDto> adApplyDtos = adApplyRepository.findByOutGroupIdAndDate(dateStart,outGroupIds);

@@ -209,6 +209,7 @@ export default {
   demoPhoneTypeList: {
     demoPhoneTypeList: "demo mesin",
     name: "nama",
+    productTypeName:"型号",
     productTypeNames: "jenis",
     limitQty: "kuota mesin demo",
     applyEndDate: "tanggal",
