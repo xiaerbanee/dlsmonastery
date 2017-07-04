@@ -68,18 +68,13 @@ public class OfficeService {
         return page;
     }
 
-    public List<String> getOfficeFilterIds(String officeId) {
-        List<String> officeIdList =officeManager.officeFilter(officeId);
-        return officeIdList;
-    }
-
     public List<Office> findByParentIdsLike(String parentId) {
         List<Office> officeList = officeRepository.findByParentIdsLike("%,"+parentId+",%");
         return officeList;
     }
 
-    public List<String> getTopOfficeListByIdList(List<String> officeIdList){
-        List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(officeIdList);
+    public List<String> getTopOfficeListByIdList(){
+        List<Office> officeList=officeRepository.findByEnabledIsTrueAndIdIn(RequestUtils.getOfficeIdList());
         List<OfficeRule> officeRuleList=officeRuleRepository.findAllEnabled();
         Map<String,OfficeRule> officeRuleMap=officeRuleList.stream().collect(Collectors.toMap(OfficeRule::getId,OfficeRule -> OfficeRule));
         Map<Integer, List<String>> levelMap = Maps.newTreeMap();
@@ -98,18 +93,6 @@ public class OfficeService {
 
     public List<Office> findAll() {
         return officeRepository.findAll();
-    }
-
-    public OfficeDto searchById(OfficeQuery officeQuery) {
-        OfficeDto officeDto=new OfficeDto();
-        List<String> officeFilter = officeManager.officeFilter(RequestUtils.getOfficeId());
-        officeQuery.setOfficeIds(officeFilter);
-        List<Office> officeList = officeRepository.findByFilter(officeQuery);
-        if(CollectionUtil.isNotEmpty(officeList)){
-            officeDto= BeanUtil.map(officeList.get(0),OfficeDto.class);
-            cacheUtils.initCacheInput(officeDto);
-        }
-        return officeDto;
     }
 
     public List<String> getSameAreaByOfficeId(String officeId){
@@ -302,7 +285,6 @@ public class OfficeService {
     }
 
     public List<OfficeDto> findByFilter(OfficeQuery officeQuery) {
-        officeQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Office> officeList = officeRepository.findByFilter(officeQuery);
         List<OfficeDto> officeDtoList = BeanUtil.map(officeList, OfficeDto.class);
         cacheUtils.initCacheInput(officeDtoList);

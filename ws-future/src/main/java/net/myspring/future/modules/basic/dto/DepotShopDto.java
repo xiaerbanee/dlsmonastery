@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.dto;
 
+import com.google.common.collect.Maps;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.DepotShop;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 /**
  * Created by wangzm on 2017/5/13.
@@ -43,6 +45,42 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String chainType;
     private boolean doorHead;
     private boolean specialityStore;
+    private String pricesystemName;
+    private String chainName;
+    private String clientName;
+    private Map<String,Object> depositMap= Maps.newHashMap();
+
+    public String getChainName() {
+        return chainName;
+    }
+
+    public void setChainName(String chainName) {
+        this.chainName = chainName;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getPricesystemName() {
+        return pricesystemName;
+    }
+
+    public void setPricesystemName(String pricesystemName) {
+        this.pricesystemName = pricesystemName;
+    }
+
+    public Map<String, Object> getDepositMap() {
+        return depositMap;
+    }
+
+    public void setDepositMap(Map<String, Object> depositMap) {
+        this.depositMap = depositMap;
+    }
 
     public boolean isDoorHead() {
         return doorHead;

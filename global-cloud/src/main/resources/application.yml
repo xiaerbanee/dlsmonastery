@@ -38,9 +38,6 @@ feign:
   httpclient:
     enabled: true
 
-setting:
-  adminIdList:  1
-
 ribbon:
   ReadTimeout: 600000
   ConnectTimeout: 600000

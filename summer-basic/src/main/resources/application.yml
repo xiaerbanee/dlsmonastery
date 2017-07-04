@@ -60,8 +60,6 @@ weixin:
     name: mktsp
   audit:
     menuId: 14,15,16,17,34,130,131,170
-setting:
-    adminIdList:  1
 map:
   key: 6186e993a28a8cba1d5d9e4b8b34efe3
 amap:

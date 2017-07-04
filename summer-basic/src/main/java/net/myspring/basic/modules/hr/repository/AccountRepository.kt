@@ -169,11 +169,6 @@ class AccountRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             t1.enabled=1
             and t1.office_id=office.id
         """)
-        if (accountQuery.officeIds != null && accountQuery.officeIds.size != 0) {
-            sb.append("""
-                and office.id IN :officeIds
-            """)
-        }
         if (accountQuery.loginName != null) {
             sb.append(" AND t1.login_name LIKE CONCAT('%',:loginName,'%') ")
         }

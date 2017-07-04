@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,11 +25,15 @@ import java.util.*
  * Created by zhangyf on 2017/5/24.
  */
 interface DepotShopRepository : BaseRepository<DepotShop,String>,DepotShopRepositoryCustom {
+
 }
+
 
 interface DepotShopRepositoryCustom{
 
     fun findPage(pageable: Pageable, depotShopQuery: DepotShopQuery): Page<DepotShopDto>?
+
+    fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto>
 
     fun findSaleReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
 
@@ -39,9 +44,86 @@ interface DepotShopRepositoryCustom{
     fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
     
     fun findDto(id:String):DepotShopDto;
+
+
+
+
+
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
+    override fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto> {
+        val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t1.id AS 'depotId',
+                t1.name as 'depotName',
+                t1.area_id areaId,
+                t1.office_id officeId,
+                t1.contator,
+                t1.mobile_phone mobilePhone,
+                t2.*,
+                t3.name as 'pricesystemName',
+                t4.name as 'clientName',
+                t5.name as 'chainName'
+            FROM
+                crm_depot t1 left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
+                left join crm_client t4 on t1.client_id=t4.id
+                left join crm_chain t5 on t1.chain_id =t5.id,
+                crm_depot_shop t2
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t1.depot_shop_id = t2.id
+        """)
+        if (StringUtils.isNotEmpty(depotShopQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.areaType)) {
+            sb.append("""  and t1.area_type =:areaType  """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.pricesystemId)) {
+            sb.append("""  and t1.pricesystem_id =:pricesystemId """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.contator)) {
+            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.mobilePhone)) {
+            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
+        }
+        if (depotShopQuery.specialityStore !=null) {
+            sb.append("""  and t1.speciality_store =:specialityStore """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.specialityStoreType)) {
+            sb.append("""  and t1.speciality_store_type =:specialityStoreType """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.officeId)) {
+            sb.append("""  and t1.office_id =:officeId """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.chainId)) {
+            sb.append("""  and t1.chain_id =:chainId """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.adPricesystemId)) {
+            sb.append("""  and t1.ad_pricesystem_id =:adPricesystemId """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.expressCompanyId)) {
+            sb.append("""  and t1.express_company_id =:expressCompanyId """)
+        }
+        if (StringUtils.isNotEmpty(depotShopQuery.districtId)) {
+            sb.append("""  and t1.district_id =:districtId """)
+        }
+        if (depotShopQuery.adShopBsc !=null) {
+            sb.append("""  and t1.ad_shop_bsc =:adShopBsc  """)
+        }
+        if (depotShopQuery.adShop !=null) {
+            sb.append("""  and t1.ad_shop =:adShop""")
+        }
+        if (depotShopQuery.hidden !=null) {
+            sb.append("""  and t1.is_hidden =:hidden """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotShopDto::class.java))
+    }
+
     override fun findDto(id: String): DepotShopDto {
         return namedParameterJdbcTemplate.queryForObject("""
               SELECT
@@ -353,9 +435,16 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.name as 'depotName',
                 t1.area_id areaId,
                 t1.office_id officeId,
-                t2.*
+                t1.contator,
+                t1.mobile_phone mobilePhone,
+                t2.*,
+                t3.name as 'pricesystemName',
+                t4.name as 'clientName',
+                t5.name as 'chainName'
             FROM
-                crm_depot t1,
+                crm_depot t1 left join crm_pricesystem t3 on t1.pricesystem_id=t3.id
+                left join crm_client t4 on t1.client_id=t4.id
+                left join crm_chain t5 on t1.chain_id =t5.id,
                 crm_depot_shop t2
             WHERE
                 t1.enabled = 1
@@ -415,4 +504,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
     }
+
+
+
 }

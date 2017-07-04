@@ -13,12 +13,10 @@ import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.crm.domain.GoodsOrder;
-import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
-import net.myspring.future.modules.crm.domain.StoreAllot;
-import net.myspring.future.modules.crm.domain.StoreAllotDetail;
+import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
+import net.myspring.future.modules.crm.web.form.AfterSaleStoreAllotForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
@@ -113,6 +111,47 @@ public class StkTransferDirectManager {
         }
         return cloudClient.synStkTransferDirect(transferDirectDto);
 
+    }
+
+    public KingdeeSynReturnDto synForAfterSale(List<AfterSaleStoreAllotForm> afterSaleStoreAllotFormList){
+        StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+        transferDirectDto.setExtendId(null);
+        transferDirectDto.setExtendType(ExtendTypeEnum.售后调拨.name());
+        transferDirectDto.setNote("");
+        transferDirectDto.setDate(LocalDate.now());
+        List<String> materialIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getProductId).collect(Collectors.toList());
+        Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(materialIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
+        List<String> fromStoreIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getFromStoreId).collect(Collectors.toList());
+        Map<String, DepotStore> fromDepotStoreIdMap = depotStoreRepository.findByIds(fromStoreIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
+        List<String> toStoreIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getToStoreId).collect(Collectors.toList());
+        Map<String, DepotStore> toDepotStoreIdMap = depotStoreRepository.findByIds(toStoreIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
+        for (AfterSaleStoreAllotForm afterSaleStoreAllot : afterSaleStoreAllotFormList) {
+            if (afterSaleStoreAllot.getQty() != null && afterSaleStoreAllot.getQty() > 0) {
+                StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                entryDto.setQty(afterSaleStoreAllot.getQty());
+                Product product = productIdToOutCodeMap.get(afterSaleStoreAllot.getProductId());
+                if (product.getCode() != null) {
+                    entryDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
+                DepotStore fromDepotStore = fromDepotStoreIdMap.get(afterSaleStoreAllot.getFromStoreId());
+                if (fromDepotStore.getOutCode() != null) {
+                    entryDto.setSrcStockNumber(fromDepotStore.getOutCode());//调出仓库
+                } else {
+                    throw new ServiceException(fromDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                }
+                DepotStore toDepotStore = toDepotStoreIdMap.get(afterSaleStoreAllot.getFromStoreId());
+                if (toDepotStore.getOutCode() != null) {
+                    entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
+                } else {
+                    throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                }
+                entryDto.setNoteEntry(afterSaleStoreAllot.getAfterSaleId() + CharConstant.COMMA + afterSaleStoreAllot.getRemarks());
+                transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+            }
+        }
+        return cloudClient.synStkTransferDirect(transferDirectDto);
     }
 
     public KingdeeSynReturnDto synForShopAllot(ShopAllotDto shopAllotDto){

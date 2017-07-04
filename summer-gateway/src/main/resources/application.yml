@@ -73,6 +73,3 @@ security:
       preferTokenInfo: false
       user-info-uri: http://localhost:1100/uaa/user
   sessions: ALWAYS
-
-setting:
-    adminIdList:  1

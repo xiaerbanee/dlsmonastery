@@ -1,17 +1,25 @@
 package net.myspring.cloud.modules.report.web.query;
 
 import com.google.common.collect.Lists;
-import net.myspring.common.query.BaseQuery;
-import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
+import com.google.common.collect.Maps;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/11.
  */
-public class CustomerReceiveQuery extends BaseQuery{
+public class CustomerReceiveQuery{
+
+    private  Integer page = 0;
+
+    private Integer size = 50;
+
+    private String sort = "id,DESC";
+
+    private Map<String,Object> extra = Maps.newHashMap();
+
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private List<String> customerIdList = Lists.newArrayList();
@@ -63,5 +71,37 @@ public class CustomerReceiveQuery extends BaseQuery{
 
     public void setCustomerIdList(List<String> customerIdList) {
         this.customerIdList = customerIdList;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    public void setExtra(Map<String, Object> extra) {
+        this.extra = extra;
     }
 }

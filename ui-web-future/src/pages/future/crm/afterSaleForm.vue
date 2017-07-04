@@ -157,7 +157,6 @@
               }
             }
             this.inputForm.data = JSON.stringify(this.inputForm.data);
-            console.log(this.inputForm.data)
             axios.post('/api/ws/future/crm/afterSale/save', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               if (response.data.success) {
