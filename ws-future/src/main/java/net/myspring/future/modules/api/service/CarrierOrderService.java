@@ -273,8 +273,8 @@ public class CarrierOrderService {
     }
 
     public void save(CarrierOrderFrom carrierOrderFrom) {
-        GoodsOrder goodsOrder = goodsOrderRepository.findByBusinessId(carrierOrderFrom.getBusinessId());
-        List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(goodsOrder.getId());
+        String carrierShopId=carrierOrderFrom.getCarrierShopId();
+        List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(carrierOrderFrom.getGoodsOrderId());
         //解析获取商城单号
         Map<String, String> detailMap = Maps.newHashMap();
         List<String> carrierCodes = Lists.newArrayList();
@@ -291,6 +291,9 @@ public class CarrierOrderService {
         }
         for (int i = carrierOrders.size() - 1; i >= 0; i--) {
             CarrierOrder carrierOrder = carrierOrders.get(i);
+            if(StringUtils.isBlank(carrierShopId)&&StringUtils.isNotBlank(carrierOrder.getCarrierShopId())){
+                carrierShopId=carrierOrder.getCarrierShopId();
+            }
             if (!carrierCodes.contains(carrierOrder.getCode())) {
                 carrierOrderRepository.delete(carrierOrder.getId());
                 carrierOrders.remove(i);
@@ -300,7 +303,10 @@ public class CarrierOrderService {
         for (String code : carrierCodes) {
             if (!carrierOrderMap.containsKey(code)) {
                 CarrierOrder carrierOrder = new CarrierOrder();
-                carrierOrder.setGoodsOrderId(goodsOrder.getId());
+                if(StringUtils.isNotBlank(carrierShopId)){
+                    carrierOrder.setCarrierShopId(carrierShopId);
+                }
+                carrierOrder.setGoodsOrderId(carrierOrderFrom.getGoodsOrderId());
                 carrierOrder.setCode(code);
                 carrierOrder.setDetailJson(detailMap.get(code));
                 carrierOrder.setStatus(CarrierOrderStatusEnum.空值.name());
