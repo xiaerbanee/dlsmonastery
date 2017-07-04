@@ -28,10 +28,10 @@ public class AfterSale extends DataEntity<AfterSale> {
     private LocalDate fromCompanyDate;
     private String fromCompanyProductId;
     private String areaDepotId;
-    private Boolean fromAreaToFinance;
-    private Boolean toAreaToFinance;
-    private Boolean fromCompanyToFinance;
-    private Boolean toCompanyToFinance;
+    private Boolean fromAreaToFinance=false;
+    private Boolean toAreaToFinance=false;
+    private Boolean fromCompanyToFinance=false;
+    private Boolean toCompanyToFinance=false;
     private String badDepotId;
     private LocalDateTime toFinanceDate;
     private Integer version = 0;

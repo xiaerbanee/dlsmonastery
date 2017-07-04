@@ -97,14 +97,18 @@ public class ShopDepositService {
         }
 
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
-//TODO 同步金蝶 需要测试验证
-                if ("其他应收单".equals(shopDepositForm.getOutBillType())) {
-                    KingdeeSynReturnDto returnDtoList = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
-                } else {
-                    KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent());
-                }
+            if (OutBillTypeEnum.其他应收单.name().equals(shopDepositForm.getOutBillType())) {
+                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
+                shopDeposit.setCloudSynId(returnDto.getId());
+                shopDeposit.setOutCode(returnDto.getBillNo());
+                shopDepositRepository.save(shopDeposit);
+            } else {
+                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit);
+                shopDeposit.setCloudSynId(returnDto.getId());
+                shopDeposit.setOutCode(returnDto.getBillNo());
+                shopDepositRepository.save(shopDeposit);
+            }
         }
-
     }
 
     public ShopDepositDto findDto(String id) {

@@ -54,10 +54,10 @@
       </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('afterSaleList.bill')" sortable></el-table-column>
-        <el-table-column prop="badProductIme.ime" :label="$t('afterSaleList.badProductIme')"></el-table-column>
-        <el-table-column prop="badProductIme.product.name" :label="$t('afterSaleList.badProductName')" ></el-table-column>
-        <el-table-column prop="toAreaProductIme.product.name" :label="$t('afterSaleList.toAreaProductName')"></el-table-column>
-        <el-table-column prop="areaDepot.name" :label="$t('afterSaleList.areaDepot')"></el-table-column>
+        <el-table-column prop="badProductIme" :label="$t('afterSaleList.badProductIme')"></el-table-column>
+        <el-table-column prop="badProductName" :label="$t('afterSaleList.badProductName')" ></el-table-column>
+        <el-table-column prop="toAreaProductName" :label="$t('afterSaleList.toAreaProductName')"></el-table-column>
+        <el-table-column prop="areaDepotName" :label="$t('afterSaleList.areaDepot')"></el-table-column>
         <el-table-column prop="packageStatus" :label="$t('afterSaleList.package')" ></el-table-column>
         <el-table-column prop="memory" :label="$t('afterSaleList.memory')" ></el-table-column>
         <el-table-column prop="toStoreType":label="$t('afterSaleList.toStoreType')"></el-table-column>
@@ -65,7 +65,7 @@
         <el-table-column prop="toStoreDate" :label="$t('afterSaleList.toStoreDate')"></el-table-column>
         <el-table-column prop="toCompanyDate" :label="$t('afterSaleList.toCompanyDate')" ></el-table-column>
         <el-table-column prop="fromCompanyDate" :label="$t('afterSaleList.fromCompanyDate')"></el-table-column>
-        <el-table-column prop="created.loginName" :label="$t('afterSaleList.createdBy')"></el-table-column>
+        <el-table-column prop="createdByName" :label="$t('afterSaleList.createdBy')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('afterSaleList.remarks')"></el-table-column>
         <el-table-column prop="syn" :label="$t('afterSaleList.synFor')">
           <template scope="scope">
@@ -74,9 +74,7 @@
         </el-table-column>
         <el-table-column fixed="right" :label="$t('afterSaleList.operation')" width="140">
           <template scope="scope">
-            <div v-for="action in scope.row.actionList" :key="action" class="action">
-              <el-button size="small" @click.native="itemAction(scope.row.id,action)">{{action}}</el-button>
-            </div>
+            <div class="action" ><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')" v-if="scope.row.deleted">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -128,23 +126,18 @@
       },itemEdit(){
         this.$router.push({ name: 'afterSaleEditForm'})
       },itemSyn(){
-        axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
+        axios.get('/api/ws/future/crm/afterSale/synToFinance').then((response) =>{
           this.$message(response.data.message);
           this.pageRequest();
         })
       },itemAction:function(id,action){
-        if(action=="修改") {
-          this.$router.push({ name: 'afterSaleEditForm', query: { id: id }})
-        }else if(action=="刪除"){
-          axios.get('/api/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
-        }else if(action=="同步"){
-          axios.get('/api/crm/afterSale/synToFinance').then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          })
+         if(action=="delete"){
+           util.confirmBeforeDelRecord(this).then(() => {
+             axios.get('/api/ws/future/crm/afterSale/delete',{params:{id:id}}).then((response) =>{
+               this.$message(response.data.message);
+               this.pageRequest();
+             })
+           }).catch(()=>{});
         }
       }
     },created () {
