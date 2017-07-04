@@ -19,7 +19,7 @@
       </el-form>
     </div>
     <div>
-        <ul v-if="this.showList">
+        <ul v-if="this.showList" style="color: #20A0FF;text-decoration: underline" >
           <li><a @click="itemAction('GCDD')" href="#">工厂订单</a></li>
           <li><a @click="itemAction('YDDHD')" href="#">一代调货单</a></li>
           <li><a @click="itemAction('GCFHD')" href="#">工厂发货单</a></li>
