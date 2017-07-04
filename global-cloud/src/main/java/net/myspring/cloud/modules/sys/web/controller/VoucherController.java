@@ -20,6 +20,7 @@ import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,19 +80,25 @@ public class VoucherController {
     @RequestMapping(value = "form")
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
-        voucherForm.setBdAccountList(bdAccountService.findAll());
-        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
-        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
-        List<String> flexItemNameList = voucherService.getHeaders(voucherForm.getBdFlexItemGroupList());
+        VoucherDto voucherDto;
+        if (StringUtils.isNotBlank(voucherForm.getId())){
+            voucherDto = voucherService.findOne(voucherForm.getId());
+        }else {
+            voucherDto = new VoucherDto();
+        }
+        voucherDto.setBdAccountList(bdAccountService.findAll());
+        voucherDto.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherDto.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+        List<String> flexItemNameList = voucherService.getHeaders(voucherDto.getBdFlexItemGroupList());
         map.put("headerList", flexItemNameList);
-        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList()));
+        map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherDto.getBdAccountList(),voucherDto.getBdFlexItemGroupList()));
         List<String> accountNumberNameList = Lists.newArrayList();
         for (BdAccount bdAccount :  bdAccountService.findAll()){
             accountNumberNameList.add(bdAccount.getFNumber()+CharConstant.SLASH_LINE+bdAccount.getFName());
         }
         map.put("accountNumberNameList",accountNumberNameList);
-        if (voucherForm.getId() != null){
-            map.put("data",voucherService.initData(voucherForm));
+        if (voucherDto.getId() != null){
+            map.put("data",voucherService.initData(voucherDto));
         }else {
             map.put("data", Lists.newArrayList());
         }
@@ -142,6 +149,22 @@ public class VoucherController {
         }
         voucherForm.setExtra(map);
         return voucherForm;
+    }
+
+    @RequestMapping(value = "detail")
+    public Map<String,Object> detail (String id) {
+        Map<String,Object> map = Maps.newHashMap();
+        VoucherDto voucherDto = voucherService.findOne(id);
+        if (voucherDto != null) {
+            voucherDto.setBdAccountList(bdAccountService.findAll());
+            voucherDto.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+            voucherDto.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+            List<String> flexItemNameList = voucherService.getHeaders(voucherDto.getBdFlexItemGroupList());
+            map.put("headerList", flexItemNameList);
+            map.put("data", voucherService.initData(voucherDto));
+            return map;
+        }
+        return null;
     }
 
     @RequestMapping(value = "save")

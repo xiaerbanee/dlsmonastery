@@ -5,6 +5,7 @@ const accountKingdeeBookForm  = r => require.ensure([], () => r(require('pages/c
 const materialPriceManager  = r => require.ensure([], () => r(require('pages/cloud/sys/materialPriceManager.vue')));
 const voucherList  = r => require.ensure([], () => r(require('pages/cloud/sys/voucherList.vue')));
 const voucherForm  = r => require.ensure([], () => r(require('pages/cloud/sys/voucherForm.vue')));
+const voucherDetail  = r => require.ensure([], () => r(require('pages/cloud/sys/voucherDetail.vue')));
 const kingdeeSynList  = r => require.ensure([], () => r(require('pages/cloud/sys/kingdeeSynList.vue')));
 const kingdeeSynDetail  = r => require.ensure([], () => r(require('pages/cloud/sys/kingdeeSynDetail.vue')));
 
@@ -16,6 +17,7 @@ let routes = [
   {path: '/cloud/sys/materialPriceManager',component: materialPriceManager,name: 'materialPriceManager'},
   {path: '/cloud/sys/voucherList',component: voucherList,name: 'voucherList'},
   {path: '/cloud/sys/voucherForm',component: voucherForm,name: 'voucherForm',meta:{menu:"voucherList"}},
+  {path: '/cloud/sys/voucherDetail',component: voucherDetail,name: 'voucherDetail',meta:{menu:"voucherList"}},
   {path: '/cloud/sys/kingdeeSynList',component: kingdeeSynList,name: 'kingdeeSynList'},
   {path: '/cloud/sys/kingdeeSynDetail',component: kingdeeSynDetail,name: 'kingdeeSynDetail',meta:{menu:"kingdeeSynList"}},
 ];

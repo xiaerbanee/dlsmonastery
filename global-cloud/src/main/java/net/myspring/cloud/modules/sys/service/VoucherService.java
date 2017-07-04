@@ -208,20 +208,20 @@ public class VoucherService {
         }
     }
 
-    public List<List<String>>  initData(VoucherForm voucherForm) {
-        if (voucherForm.getId() != null) {
+    public List<List<String>>  initData(VoucherDto voucherDto) {
+        if (voucherDto.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
             //所有科目
-            Map<String, BdAccount> accountNumberMap = voucherForm.getBdAccountList().stream().collect(Collectors.toMap(BdAccount::getFNumber, BdAccount -> BdAccount));
+            Map<String, BdAccount> accountNumberMap = voucherDto.getBdAccountList().stream().collect(Collectors.toMap(BdAccount::getFNumber, BdAccount -> BdAccount));
             //所有核算维度
-            Map<String, BdFlexItemProperty> flexItemPropertyNameMap = voucherForm.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty -> BdFlexItemProperty));
-            Map<String, BdFlexItemProperty> flexItemPropertyFlexNumberMap = voucherForm.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFFlexNumber, BdFlexItemProperty -> BdFlexItemProperty));
+            Map<String, BdFlexItemProperty> flexItemPropertyNameMap = voucherDto.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty -> BdFlexItemProperty));
+            Map<String, BdFlexItemProperty> flexItemPropertyFlexNumberMap = voucherDto.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFFlexNumber, BdFlexItemProperty -> BdFlexItemProperty));
             //所有使用的核算维度组
             List<String> headers = Lists.newLinkedList();
-            for (String header : getFlexItemGroupAllName(voucherForm.getBdFlexItemGroupList())) {
+            for (String header : getFlexItemGroupAllName(voucherDto.getBdFlexItemGroupList())) {
                 headers.add("FDetailID__" + flexItemPropertyNameMap.get(header).getFFlexNumber());
             }
-            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucherForm.getId());
+            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucherDto.getId());
             for (VoucherEntry voucherEntry : voucherEntryList) {
                 List<String> list = Lists.newArrayList();
                 list.add(voucherEntry.getFExplanation());//摘要
