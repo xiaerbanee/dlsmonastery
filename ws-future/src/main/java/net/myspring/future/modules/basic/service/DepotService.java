@@ -237,8 +237,8 @@ public class DepotService {
     }
 
     public List<DepotDto> findAdStoreDtoList() {
-        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
-        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(RequestUtils.getCompanyId(), outGroupId);
+        String outGroupId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.STORE_AD_GROUP_IDS.name()).getValue();
+        List<DepotDto> adStoreDtoList = depotRepository.findAdStoreDtoList(outGroupId);
         cacheUtils.initCacheInput(adStoreDtoList);
         return adStoreDtoList;
 
@@ -269,7 +269,7 @@ public class DepotService {
             LocalDateTime dateStart=now.minusMonths(i).atStartOfDay();
             LocalDateTime dateEnd=now.minusMonths(i-1).atStartOfDay();
 
-            Long saleQty=productImeRepository.countByEnabledIsTrueAndDepotIdAndCompanyIdAndRetailDateBetween(depotId, RequestUtils.getCompanyId(), dateStart, dateEnd);
+            Long saleQty=productImeRepository.countByEnabledIsTrueAndDepotIdAndRetailDateBetween(depotId, dateStart, dateEnd);
             String month = LocalDateTimeUtils.format(dateStart, "yyyy-MM");
             recentMonthSaleAmountMap.put(month, saleQty);
         }

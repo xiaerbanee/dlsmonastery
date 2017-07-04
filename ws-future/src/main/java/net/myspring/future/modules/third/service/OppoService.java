@@ -145,7 +145,6 @@ public class OppoService {
                 productIme.setMeid(oppoPlantSendImeiPpsel.getMeid());
                 productIme.setBoxIme(oppoPlantSendImeiPpsel.getRemark());
                 productIme.setInputType("工厂入库");
-                productIme.setCompanyId(RequestUtils.getCompanyId());
                 productIme.setBillId(oppoPlantSendImeiPpsel.getBillId());
                 productIme.setImeReverse(StringUtils.reverse(oppoPlantSendImeiPpsel.getImei()));
                 productImeMap.put(imei,productIme);

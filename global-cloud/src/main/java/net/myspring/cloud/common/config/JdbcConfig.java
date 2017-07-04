@@ -34,7 +34,7 @@ public class JdbcConfig {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
         List<KingdeeBook> kingdeeBookList = getKingdeeBookList();
         for (KingdeeBook kingdeeBook:kingdeeBookList) {
-            targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + kingdeeBook.getCompanyId(),getCloudDataSource(kingdeeBook));
+            targetDataSources.put(DataSourceTypeEnum.KINGDEE.name() + "_" + kingdeeBook.getCompanyName(),getCloudDataSource(kingdeeBook));
         }
         targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getLocalDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();

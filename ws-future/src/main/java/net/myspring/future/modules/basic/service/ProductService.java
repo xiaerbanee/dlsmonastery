@@ -136,10 +136,10 @@ public class ProductService {
     public  List<ProductAdApplyDto> findAdProductAndAllowOrder(String billType){
         List<String> outGroupIds =Lists.newArrayList();
         if(BillTypeEnum.POP.name().equals(billType)){
-            String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
+            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }else if (BillTypeEnum.配件赠品.name().equals(billType)){
-            String value = CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
+            String value = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue();
             outGroupIds = IdUtils.getIdList(value);
         }
         List<ProductAdApplyDto> productAdApplyDtos  = BeanUtil.map(productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outGroupIds),ProductAdApplyDto.class);
@@ -223,7 +223,7 @@ public class ProductService {
         List<Product> products = productRepository.findAllEnabled();
         Map<String,Product> productMapByOutId = CollectionUtil.extractToMap(products,"outId");
         Map<String,Product> productMapByName = CollectionUtil.extractToMap(products,"name");
-        List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,RequestUtils.getCompanyId(),CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
+        List<String> goodsOrderIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.PRODUCT_GOODS_GROUP_IDS.name()).getValue());
         List<Product> synProduct = Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(bdMaterials)){
             for(BdMaterial bdMaterial:bdMaterials){
@@ -279,13 +279,13 @@ public class ProductService {
         return  productRepository.findIntersectionOfBothPricesystem(pricesystemId1, pricesystemId2);
     }
 
-    public List<String> findNameList(String companyId) {
-        return CollectionUtil.extractToList(productRepository.findByEnabledIsTrueAndCompanyId(companyId), "name");
+    public List<String> findNameList() {
+        return CollectionUtil.extractToList(productRepository.findByEnabledIsTrue(), "name");
     }
 
     public String findAdProductCodeAndAllowOrder(){
-        List<String> outIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue()
-                    +CharConstant.COMMA+CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
+        List<String> outIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue()
+                    +CharConstant.COMMA+CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_GOODS_POP_GROUP_IDS.name()).getValue());
         List<Product> productList = productRepository.findByOutGroupIdInAndAllowOrderIsTrue(outIds);
         List<String> productCodes = CollectionUtil.extractToList(productList,"code");
         if(productCodes!=null&&productCodes.size()>0){

@@ -40,9 +40,9 @@ interface  KingdeeBookRepository : BaseRepository<KingdeeBook,String>,KingdeeBoo
         SELECT t1
         FROM  #{#entityName} t1
         where t1.enabled = 1
-        and t1.companyId = :companyId
+        and t1.companyName = :companyName
      """)
-    fun findByCompanyId(@Param("companyId")companyId:String): KingdeeBook
+    fun findByCompanyName(@Param("companyName")companyName:String): KingdeeBook
 
     @Query("""
         SELECT distinct t1.type

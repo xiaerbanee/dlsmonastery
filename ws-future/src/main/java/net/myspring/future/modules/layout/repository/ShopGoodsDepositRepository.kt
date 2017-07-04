@@ -41,7 +41,7 @@ interface ShopGoodsDepositRepositoryCustom{
     fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto>
 
 
-    fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto>
+    fun findShopGoodsDepositSumDtoList(): List<ShopGoodsDepositSumDto>
 
     fun findDto(id: String): ShopGoodsDepositDto
 
@@ -67,7 +67,7 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
           """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ShopGoodsDepositDto::class.java))
     }
 
-    override fun findShopGoodsDepositSumDtoList(companyId: String): List<ShopGoodsDepositSumDto> {
+    override fun findShopGoodsDepositSumDtoList(): List<ShopGoodsDepositSumDto> {
 
         return namedParameterJdbcTemplate.query("""
        SELECT
@@ -79,12 +79,11 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             crm_depot t2
         WHERE
             t1.enabled = 1
-            AND t1.company_id = :companyId
             AND t1.status='已通过'
             AND t1.shop_id = t2.id
         GROUP BY
             t2.id,  t2.area_id
-          """, Collections.singletonMap("companyId", companyId), BeanPropertyRowMapper(ShopGoodsDepositSumDto::class.java))
+          """, BeanPropertyRowMapper(ShopGoodsDepositSumDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto> {

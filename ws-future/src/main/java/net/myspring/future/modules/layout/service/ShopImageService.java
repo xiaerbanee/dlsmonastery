@@ -58,7 +58,7 @@ public class ShopImageService {
     }
 
     public ShopImageForm getForm(ShopImageForm shopImageForm){
-        List<String> imageTypeList= Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(CharConstant.COMMA));
+        List<String> imageTypeList= Arrays.asList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.SHOP_IMAGE_TYPE.name()).getValue().split(CharConstant.COMMA));
         shopImageForm.getExtra().put("imageTypeList",imageTypeList);
         return shopImageForm;
     }

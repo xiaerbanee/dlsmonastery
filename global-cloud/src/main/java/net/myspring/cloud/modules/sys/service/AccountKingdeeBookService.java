@@ -67,7 +67,7 @@ public class AccountKingdeeBookService {
         AccountKingdeeBook accountKingdeeBook;
         if (accountKingdeeBookForm.isCreate()){
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
-            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyId(RequestUtils.getCompanyId());
+            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }else{

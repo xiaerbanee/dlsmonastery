@@ -113,8 +113,8 @@ public class GoodsOrderController {
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderDto.getShipType());
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
-        goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
-        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
+        goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
+        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
         return goodsOrderBillForm;
     }
 

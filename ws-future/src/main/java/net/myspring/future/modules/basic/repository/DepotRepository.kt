@@ -36,7 +36,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
-    fun findByEnabledIsTrueAndDepotShopIdIsNotNullAndCompanyId(companyId :String): MutableList<Depot>
+    fun findByEnabledIsTrueAndDepotShopIdIsNotNull(): MutableList<Depot>
 
     fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>
 
@@ -46,7 +46,7 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByName(name: String): Depot
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId: String, name: String): Depot?
+    fun findByEnabledIsTrueAndName(name: String): Depot?
 
     @Query("""
         select t
@@ -73,7 +73,7 @@ interface DepotRepositoryCustom{
 
     fun findByFilter(depotQuery: DepotQuery):MutableList<Depot>
 
-    fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto>
+    fun findAdStoreDtoList(outGroupId: String): List<DepotDto>
 
     fun findChainIds(depotQuery: DepotQuery):MutableList<String>
 
@@ -135,9 +135,8 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(String::class.java))
     }
 
-    override fun findAdStoreDtoList(companyId: String, outGroupId: String): List<DepotDto> {
+    override fun findAdStoreDtoList( outGroupId: String): List<DepotDto> {
         val params = HashMap<String, Any>()
-        params.put("companyId", companyId)
         params.put("outGroupId", outGroupId)
 
         return namedParameterJdbcTemplate.query("""
@@ -150,7 +149,6 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
                 t1.depot_store_id = t2.id
             AND t1.enabled = 1
             AND t2.enabled = 1
-            AND t1.company_id = :companyId
             AND t2.out_group_id = :outGroupId
             AND t1.is_hidden = 0
           """, params, BeanPropertyRowMapper(DepotDto::class.java))

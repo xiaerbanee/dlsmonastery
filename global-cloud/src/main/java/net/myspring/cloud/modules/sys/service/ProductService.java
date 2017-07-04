@@ -36,28 +36,24 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public LocalDateTime findMaxOutDate(){
-        String companyId = RequestUtils.getCompanyId();
-        return productRepository.findMaxOutDate(companyId);
+        return productRepository.findMaxOutDate(RequestUtils.getCompanyName());
     }
 
     public ProductForm getForm(ProductForm productForm){
-        String companyId = RequestUtils.getCompanyId();
-        List<String> productList = productRepository.findNameByCompanyId(companyId);
+        List<String> productList = productRepository.findNameByCompanyName(RequestUtils.getCompanyName());
         productForm.setProductNameList(productList);
         return productForm;
     }
 
     public List<ProductDto> findAll(){
-        String companyId = RequestUtils.getCompanyId();
-        List<Product> productList = productRepository.findByCompanyId(companyId);
+        List<Product> productList = productRepository.findByCompanyName(RequestUtils.getCompanyName());
         List<ProductDto> productDtoList = BeanUtil.map(productList,ProductDto.class);
         return productDtoList;
     }
 
     public ProductDto findByName(String name){
         if (StringUtils.isNotBlank(name)) {
-            String companyId = RequestUtils.getCompanyId();
-            Product product = productRepository.findByNameAndCompanyId(companyId, name);
+            Product product = productRepository.findByNameAndCompanyName(RequestUtils.getCompanyName(), name);
             ProductDto productDto = BeanUtil.map(product, ProductDto.class);
             return productDto;
         }
@@ -65,14 +61,12 @@ public class ProductService {
     }
 
     public String findReturnOutId(){
-        String companyId = RequestUtils.getCompanyId();
-        return productRepository.findReturnOutId(companyId);
+        return productRepository.findReturnOutId(RequestUtils.getCompanyName());
     }
 
     public ProductDto findByCode(String code){
         if (StringUtils.isNotBlank(code)){
-            String companyId = RequestUtils.getCompanyId();
-            Product product = productRepository.findByCodeAndCompanyId(companyId,code);
+            Product product = productRepository.findByCodeAndCompanyName(RequestUtils.getCompanyName(),code);
             ProductDto productDto = BeanUtil.map(product,ProductDto.class);
             return productDto;
         }
@@ -83,8 +77,7 @@ public class ProductService {
     public void save(ProductForm productForm) {
         String json = HtmlUtils.htmlUnescape(productForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        String companyId = RequestUtils.getCompanyId();
-        List<Product> productList = productRepository.findByCompanyId(companyId);
+        List<Product> productList = productRepository.findByCompanyName(RequestUtils.getCompanyName());
         Map<String,Product> productMap = productList.stream().collect(Collectors.toMap(Product::getCode, Product->Product));
         for (List<Object> row : data) {
             String code = HandsontableUtils.getValue(row,1);
@@ -101,16 +94,16 @@ public class ProductService {
     @Transactional
     public void syn(List<BdMaterial> bdMaterialList,KingdeeBook kingdeeBook){
         String returnOutId = "";
-        String companyId = RequestUtils.getCompanyId();
+        String companyName = RequestUtils.getCompanyName();
         if(!KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
-            returnOutId = productRepository.findReturnOutId(companyId);
+            returnOutId = productRepository.findReturnOutId(companyName);
         }
-        Map<String,Product> productMap = productRepository.findByCompanyId(companyId).stream().collect(Collectors.toMap(Product::getOutId,Product->Product));
+        Map<String,Product> productMap = productRepository.findByCompanyName(companyName).stream().collect(Collectors.toMap(Product::getOutId,Product->Product));
         for (BdMaterial bdmaterial : bdMaterialList) {
             Product product = productMap.get(bdmaterial.getFMasterId());
             if (product == null) {
                 product = new Product();
-                product.setCompanyId(companyId);
+                product.setCompanyName(companyName);
                 product.setName(bdmaterial.getFName());
                 product.setCode(bdmaterial.getFNumber());
                 product.setOutId(bdmaterial.getFMasterId());
