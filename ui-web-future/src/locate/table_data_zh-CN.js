@@ -130,6 +130,7 @@ export default {
       materialPriceManager:"物料价格维护",
       voucherList:"凭证管理",
       voucherForm:"凭证管理编辑",
+      voucherDetail:"凭证详细",
       kingdeeSynList:'金蝶核对',
       kingdeeSynDetail:'金蝶核对详细',
       404: "404",
