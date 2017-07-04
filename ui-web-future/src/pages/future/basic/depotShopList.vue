@@ -93,15 +93,13 @@
         <el-table-column prop="areaName" label="办事处"  />
         <el-table-column prop="officeName" label="机构"  />
         <el-table-column prop="areaType" label="地区属性"  />
-        <el-table-column prop="carrierType" label="运营商营业厅类型"  />
-        <el-table-column prop="turnoverType" label="营业额分类"  />
-        <el-table-column prop="channelType" label="运营商类型" />
         <el-table-column prop="pricesystemType" label="价格体系"  />
         <el-table-column prop="chainType" label="连锁体系"  />
-        <el-table-column prop="adPricesystemType" label="物料价格体系"  />
+        <el-table-column prop="scbzj" label="市场保证金"  />
+        <el-table-column prop="xxbzj" label="形象押金"  />
+        <el-table-column prop="contator" label="联系人"  />
+        <el-table-column prop="mobilePhone" label="手机"  />
         <el-table-column prop="salePointType" label="门店类型"  />
-        <el-table-column prop="townType" label="乡镇类型"  />
-        <el-table-column prop="shopArea" label="面积大小"  />
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" label="操作" width="140">
           <template scope="scope">

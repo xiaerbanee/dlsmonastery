@@ -3,6 +3,7 @@ package net.myspring.future.modules.basic.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.future.common.enums.OutTypeEnum;
+import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
@@ -21,16 +22,22 @@ import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
+import net.myspring.future.modules.layout.domain.ShopDeposit;
+import net.myspring.future.modules.layout.dto.ShopDepositDto;
+import net.myspring.future.modules.layout.repository.ShopDepositRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +59,8 @@ public class DepotShopService {
     private OfficeClient officeClient;
     @Autowired
     private TownClient townClient;
+    @Autowired
+    private ShopDepositRepository shopDepositRepository;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery) {
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -59,6 +68,18 @@ public class DepotShopService {
             depotShopQuery.getOfficeIdList().addAll(officeClient.getChildOfficeIds(depotShopQuery.getOfficeId()));
         }
         Page<DepotShopDto> page = depotShopRepository.findPage(pageable, depotShopQuery);
+        Map<String, ShopDepositDto> scbzjMap = Maps.newHashMap();
+        Map<String, ShopDepositDto> xxbzjMap = Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(page.getContent())) {
+            List<ShopDeposit> scbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.市场保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            List<ShopDeposit> xxbzjList = shopDepositRepository.findByTypeAndShopIdIn(ShopDepositTypeEnum.形象保证金.name(), CollectionUtil.extractToList(page.getContent(), "id"));
+            xxbzjMap = CollectionUtil.extractToMap(BeanUtil.map(xxbzjList,ShopDepositDto.class), "shopId");
+            scbzjMap = CollectionUtil.extractToMap(BeanUtil.map(scbzjList,ShopDepositDto.class), "shopId");
+        }
+        for (DepotShopDto depotShopDto : page.getContent()) {
+            depotShopDto.getDepositMap().put("xxbzj", xxbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : xxbzjMap.get(depotShopDto.getId()).getAmount());
+            depotShopDto.getDepositMap().put("scbzj", scbzjMap.get(depotShopDto.getId()) == null ? BigDecimal.ZERO : scbzjMap.get(depotShopDto.getId()).getAmount());
+        }
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }

@@ -1,6 +1,8 @@
 package net.myspring.future.modules.layout.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.basic.domain.DepotShop
+import net.myspring.future.modules.basic.dto.DepotShopDto
 import net.myspring.future.modules.layout.domain.ShopDeposit
 import net.myspring.future.modules.layout.dto.ShopDepositDto
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto
@@ -18,6 +20,8 @@ import java.util.*
 
 
 interface ShopDepositRepository : BaseRepository<ShopDeposit,String>,ShopDepositRepositoryCustom {
+
+    fun findByTypeAndShopIdIn(type:String,shopIds: List<String>):MutableList<ShopDeposit>
 }
 
 interface ShopDepositRepositoryCustom{

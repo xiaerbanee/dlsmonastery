@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -24,7 +25,9 @@ import java.util.*
  * Created by zhangyf on 2017/5/24.
  */
 interface DepotShopRepository : BaseRepository<DepotShop,String>,DepotShopRepositoryCustom {
+
 }
+
 
 interface DepotShopRepositoryCustom{
 
@@ -39,6 +42,11 @@ interface DepotShopRepositoryCustom{
     fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
     
     fun findDto(id:String):DepotShopDto;
+
+
+
+
+
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
@@ -353,6 +361,8 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.name as 'depotName',
                 t1.area_id areaId,
                 t1.office_id officeId,
+                t1.contator,
+                t1.mobile_phone mobilePhone,
                 t2.*
             FROM
                 crm_depot t1,
@@ -415,4 +425,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
         return PageImpl(list,pageable,count)
     }
+
+
+
 }
