@@ -68,7 +68,6 @@
     },created(){
       axios.get('api/global/tool/vivo/factoryOrder').then((response)=>{
         this.inputForm = response.data;
-        console.log(this.inputForm);
       })
     }
   }
