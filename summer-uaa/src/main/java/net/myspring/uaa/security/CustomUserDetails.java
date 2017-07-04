@@ -19,7 +19,6 @@ public class CustomUserDetails implements UserDetails {
     private final boolean credentialsNonExpired;
     private final boolean enabled;
     private final String accountId;
-    private final String companyId;
     private final String companyName;
     private final String positionId;
     private final String officeId;
@@ -28,6 +27,11 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private String roleId;
     private List<String> officeIdList;
+    //是否是超级用户
+    private Boolean admin;
+    //是否拥有所有部门权限
+    private Boolean allDataScope;
+
 
     public CustomUserDetails(String username
             ,String password
@@ -37,13 +41,14 @@ public class CustomUserDetails implements UserDetails {
             ,boolean accountNonLocked
             ,Collection<? extends GrantedAuthority> authorities
             ,String accountId
-            ,String companyId
             ,String positionId
             ,String officeId
             ,String employeeId
             ,String companyName
             ,String roleId
-            ,List<String> officeIdList) {
+            ,List<String> officeIdList
+            ,Boolean admin
+            ,Boolean allDataScope) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
         }
@@ -55,13 +60,14 @@ public class CustomUserDetails implements UserDetails {
         this.accountNonLocked = accountNonLocked;
         this.authorities = Sets.newHashSet(authorities);
         this.accountId = accountId;
-        this.companyId = companyId;
         this.positionId = positionId;
         this.officeId=officeId;
         this.employeeId=employeeId;
         this.companyName=companyName;
         this.roleId=roleId;
         this.officeIdList = officeIdList;
+        this.admin = admin;
+        this.allDataScope = allDataScope;
     }
 
 
@@ -104,10 +110,6 @@ public class CustomUserDetails implements UserDetails {
         return accountId;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
     public String getPositionId() {
         return positionId;
     }
@@ -132,4 +134,11 @@ public class CustomUserDetails implements UserDetails {
         return officeIdList;
     }
 
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public Boolean getAllDataScope() {
+        return allDataScope;
+    }
 }

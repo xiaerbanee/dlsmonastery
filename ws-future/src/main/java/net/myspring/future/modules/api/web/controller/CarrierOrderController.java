@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierOrderStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
+import net.myspring.future.modules.api.domain.CarrierOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.api.dto.CarrierOrderDto;
 import net.myspring.future.modules.api.service.CarrierOrderService;
@@ -149,6 +150,12 @@ public class CarrierOrderController {
     @RequestMapping(value = "batchStatus")
     public RestResponse batchStatus(CarrierOrderQuery carrierOrderQuery){
         carrierOrderService.updateStatus(carrierOrderQuery);
+        return new RestResponse("保存成功",null);
+    }
+
+    @RequestMapping(value = "updateStatusAndRemarks")
+    public RestResponse updateStatusAndRemarks(CarrierOrderFrom carrierOrderFrom){
+        carrierOrderService.updateStatusAndRemarks(carrierOrderFrom);
         return new RestResponse("保存成功",null);
     }
 }

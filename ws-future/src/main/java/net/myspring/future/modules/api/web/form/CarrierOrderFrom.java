@@ -13,6 +13,19 @@ public class CarrierOrderFrom extends BaseForm<CarrierOrder>{
     private String carrierShopId;
     private String goodsOrderId;
     private boolean checkColor=false;
+    private String status;
+
+    public boolean isCheckColor() {
+        return checkColor;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getGoodsOrderId() {
         return goodsOrderId;

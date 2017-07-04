@@ -1,18 +1,22 @@
 <template>
   <div>
     <head-tab active="goodsOrderBatchAdd"></head-tab>
-    <div >
+    <div class="outer">
+      <div class="header">
+        <h1>批量订货</h1>
+      </div>
       <el-form :model="formData" ref="inputForm"  label-width="120px" class="form input-form">
+
+        <el-row :gutter="24">
+          <el-col :span="24">
+            <div ref="handsontable" style="width:96%;height:605px;overflow:hidden;"></div>
+          </el-col>
+        </el-row>
         <el-row :gutter="20">
           <el-col :span="10">
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBatchAdd.save')}}</el-button>
+              <el-button type="primary btnSave" icon="check" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBatchAdd.save')}}</el-button>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <div ref="handsontable" style="width:1500px;height:600px;overflow:hidden;"></div>
           </el-col>
         </el-row>
       </el-form>
@@ -98,7 +102,7 @@
                 } else {
                   let types = new Array();
                   if (query.length >= 2) {
-                    axios.get('/api/ws/future/basic/productType/search?name=' + query).then((response) => {
+                    axios.get('/api/ws/future/basic/product/search?name=' + query).then((response) => {
                       if (response.data.length > 0) {
                         for (let row of response.data) {
                           let type = row.name;
@@ -176,4 +180,17 @@
 </script>
 <style>
   @import "~handsontable/dist/handsontable.full.css";
+</style>
+<style>
+  .outer{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .header{
+    text-align: center;
+  }
+  .btnSave{
+    margin-top: 20px;
+    margin-left: 600px;
+  }
 </style>
