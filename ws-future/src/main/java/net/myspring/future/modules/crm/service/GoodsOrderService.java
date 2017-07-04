@@ -157,7 +157,7 @@ public class GoodsOrderService {
     }
 
     //保存及修改订单
-    @Transactional
+    @Transactional(readOnly = false)
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
         GoodsOrder goodsOrder;
@@ -219,6 +219,7 @@ public class GoodsOrderService {
         expressOrderRepository.save(expressOrder);
         goodsOrder.setExpressOrderId(expressOrder.getId());
         goodsOrderRepository.save(goodsOrder);
+        goodsOrderForm.setId(goodsOrder.getId());
         return goodsOrder;
     }
 
