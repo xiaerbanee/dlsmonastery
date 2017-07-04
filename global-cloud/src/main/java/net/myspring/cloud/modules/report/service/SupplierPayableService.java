@@ -10,7 +10,6 @@ import net.myspring.cloud.modules.kingdee.domain.BdSupplier;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdSupplierRepository;
-import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
 import net.myspring.cloud.modules.report.repository.SupplierPayableRepository;
@@ -20,8 +19,8 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class SupplierPayableService {
     @Autowired
     private SupplierPayableRepository supplierPayableRepository;
