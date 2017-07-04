@@ -23,9 +23,9 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class StkMisDeliveryService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -47,6 +47,7 @@ public class StkMisDeliveryService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
+    @Transactional
     private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 stkMisDeliveryDto.getExtendId(),
@@ -61,6 +62,7 @@ public class StkMisDeliveryService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(StkMisDeliveryForm stkMisDeliveryForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         Map<String, StkMisDeliveryDto> misDeliveryMap = Maps.newLinkedHashMap();
         String departmentNumber = stkMisDeliveryForm.getDepartmentNumber();
@@ -103,6 +105,7 @@ public class StkMisDeliveryService {
         return save(billList,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(List<StkMisDeliveryDto> billList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(billList)) {

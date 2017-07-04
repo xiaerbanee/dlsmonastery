@@ -14,20 +14,17 @@ import net.myspring.cloud.modules.kingdee.domain.BdFlexItemProperty;
 import net.myspring.cloud.modules.kingdee.domain.GlVoucher;
 import net.myspring.cloud.modules.kingdee.repository.GlVoucherRepository;
 import net.myspring.cloud.modules.sys.domain.*;
-import net.myspring.cloud.modules.sys.dto.VoucherDto;
-import net.myspring.cloud.modules.sys.dto.VoucherEntryFlowDto;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.common.response.RestResponse;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class GlVoucherService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -52,6 +49,7 @@ public class GlVoucherService {
         return glVoucherRepository.findByBillNo(billNo);
     }
 
+    @Transactional
     private KingdeeSynDto save(GlVoucherDto glVoucherDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 glVoucherDto.getExtendId(),
@@ -67,6 +65,7 @@ public class GlVoucherService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto save(GlVoucherDto glVoucherDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -78,6 +77,7 @@ public class GlVoucherService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto save(VoucherForm voucherForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         LocalDate date = voucherForm.getFDate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
