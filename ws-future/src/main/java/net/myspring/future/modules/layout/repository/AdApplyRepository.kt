@@ -74,14 +74,14 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             SELECT
                 t1.*
             FROM
-                crm_ad_apply t1,
-                crm_product product
+                crm_ad_apply t1
+                LEFT JOIN crm_product product ON t1.product_id = product.id
+                LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
             WHERE
                 t1.enabled = 1
-            AND t1.product_id = product.id
         """)
-        if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(adApplyQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList) """)
@@ -124,14 +124,14 @@ class AdApplyRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             SELECT
                 t1.*
             FROM
-                crm_ad_apply t1,
-                crm_product product
+                crm_ad_apply t1
+                LEFT JOIN crm_product product ON t1.product_id = product.id
+                LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
             WHERE
                 t1.enabled = 1
-            AND t1.product_id = product.id
         """)
-        if (StringUtils.isNotEmpty(adApplyQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(adApplyQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (CollectionUtil.isNotEmpty(adApplyQuery.depotIdList)) {
             sb.append("""  and t1.shop_id in (:depotIdList) """)

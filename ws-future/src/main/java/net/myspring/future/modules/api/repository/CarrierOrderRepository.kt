@@ -87,9 +87,9 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             WHERE
                 t1.enabled = 1
             AND t2.enabled = 1
-            AND t1.id = :id
+            AND t1.goods_order_id = :id
             GROUP BY
-                t1.id
+                t1.goods_order_id
                 """, Collections.singletonMap("id", id), BeanPropertyRowMapper(CarrierOrderDto::class.java))
 
     }
