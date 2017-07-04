@@ -157,7 +157,7 @@ public class GoodsOrderService {
     }
 
     //保存及修改订单
-    @Transactional
+    @Transactional(readOnly = false)
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
         GoodsOrder goodsOrder;
@@ -588,6 +588,7 @@ public class GoodsOrderService {
         return result;
     }
 
+    @Transactional
     public void batchAdd(GoodsOrderBatchAddForm goodsOrderBatchAddForm) {
         for(GoodsOrderBatchAddDetailForm goodsOrderBatchAddDetailForm : goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList()){
 

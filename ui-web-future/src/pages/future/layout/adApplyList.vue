@@ -18,7 +18,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('adApplyList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('adApplyList.productCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adApplyList.likeSearch')"></el-input>

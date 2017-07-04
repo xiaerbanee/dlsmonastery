@@ -1,9 +1,12 @@
 package net.myspring.uaa.security;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.uaa.dto.AccountDto;
 import net.myspring.uaa.dto.AccountWeixinDto;
+import net.myspring.uaa.dto.OfficeDto;
 import net.myspring.uaa.dto.WeixinSessionDto;
 import net.myspring.uaa.manager.OfficeManager;
 import net.myspring.uaa.manager.PermissionManager;
@@ -12,9 +15,10 @@ import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
 import net.myspring.uaa.repository.CompanyConfigRepository;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +37,8 @@ import java.util.Set;
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    @Value("${setting.adminIdList}")
+    private String adminIdList;
     @Autowired
     private AccountDtoRepository accountDtoRepository;
     @Autowired
@@ -68,7 +74,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 }
             }
             if(StringUtils.isNotBlank(accountId)) {
-                accountDto = accountDtoRepository.findById(accountId);
+                accountDto = accountDtoRepository.findOne(accountId);
             }
         } else {
             accountDto = accountDtoRepository.findByLoginName(username);
@@ -80,6 +86,16 @@ public class CustomUserDetailsService implements UserDetailsService {
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
             permissionManager.permissionCachePut(accountDto.getCompanyName(),accountDto.getId(),accountDto.getRoleId());
+            Boolean admin = StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountDto.getId());
+            OfficeDto officeDto = officeManager.findOne(accountDto.getOfficeId());
+            Boolean allDataScope = officeDto.getAllDataScope();
+            if(admin) {
+                allDataScope = true;
+            }
+            List<String> officeIdList = Lists.newArrayList();
+            if(!allDataScope) {
+                officeIdList = officeManager.getOfficeIdList(accountDto.getOfficeId());
+            }
             customUserDetails = new CustomUserDetails(
                     accountDto.getLoginName(),
                     accountDto.getPassword(),
@@ -89,13 +105,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                     !accountDto.getLocked(),
                     authList,
                     accountDto.getId(),
-                    accountDto.getCompanyId(),
                     accountDto.getPositionId(),
                     accountDto.getOfficeId(),
                     accountDto.getEmployeeId(),
                     accountDto.getCompanyName(),
                     accountDto.getRoleId(),
-                    officeManager.officeFilter(accountDto.getId(),accountDto.getOfficeId())
+                    officeIdList,
+                    admin,
+                    allDataScope
             );
         }
         return customUserDetails;
