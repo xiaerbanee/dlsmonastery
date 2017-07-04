@@ -28,84 +28,6 @@ CREATE TABLE `crm_ad_pricesystem_office` (
 );
 
 
-DROP TABLE IF EXISTS `crm_after_sale`;
-CREATE TABLE `crm_after_sale` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `type` varchar(64) DEFAULT NULL,
-  `business_id` bigint(20) DEFAULT NULL,
-  `bad_product_id` bigint(20) DEFAULT NULL,
-  `bad_product_ime_id` bigint(20) DEFAULT NULL,
-  `bad_type` varchar(64) DEFAULT NULL,
-  `package_status` varchar(64) DEFAULT NULL,
-  `memory` varchar(64) DEFAULT NULL,
-  `bad_depot_id` bigint(20) DEFAULT NULL,
-  `created_by` bigint(20) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `last_modified_by` bigint(20) NOT NULL,
-  `last_modified_date` datetime NOT NULL,
-  `remarks` varchar(255) DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0',
-  `locked` tinyint(1) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
-  `company_id` bigint(20) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `bad_product_ime_id` (`bad_product_ime_id`,`company_id`) USING BTREE,
-  KEY `business_id` (`business_id`) USING BTREE,
-  KEY `bad_depot_id` (`bad_depot_id`) USING BTREE,
-  KEY `created_date` (`created_date`) USING BTREE,
-  KEY `created_by` (`created_by`) USING BTREE,
-  KEY `last_modified_by` (`last_modified_by`) USING BTREE,
-  KEY `last_modified_date` (`last_modified_date`) USING BTREE
-);
-
-DROP TABLE IF EXISTS `crm_after_sale_detail`;
-CREATE TABLE `crm_after_sale_detail` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `type` varchar(64) DEFAULT NULL,
-  `from_depot_id` bigint(20) DEFAULT NULL,
-  `to_depot_id` bigint(20) DEFAULT NULL,
-  `input_date` date DEFAULT NULL,
-  `replace_date` date DEFAULT NULL,
-  `replace_product_ime_id` bigint(20) DEFAULT NULL,
-  `replace_product_id` bigint(20) DEFAULT NULL,
-  `replace_amount` decimal(10,0) DEFAULT NULL,
-  `input_out_code` varchar(255) DEFAULT NULL,
-  `replace_out_code` varchar(255) DEFAULT NULL,
-  `after_sale_id` bigint(20) DEFAULT NULL,
-  `created_by` bigint(20) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `last_modified_by` bigint(20) NOT NULL,
-  `last_modified_date` datetime NOT NULL,
-  `remarks` varchar(255) DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0',
-  `locked` tinyint(1) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
-  `company_id` bigint(20) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-);
-
-DROP TABLE IF EXISTS `crm_after_sale_flee`;
-CREATE TABLE `crm_after_sale_flee` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ime` varchar(255) DEFAULT NULL,
-  `flee_shop_name` varchar(255) DEFAULT NULL,
-  `contact` varchar(255) DEFAULT NULL,
-  `mobile_phone` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `buy_amount` decimal(10,0) DEFAULT NULL,
-  `after_sale_id` bigint(20) DEFAULT NULL,
-  `created_by` bigint(20) NOT NULL,
-  `created_date` datetime NOT NULL,
-  `last_modified_by` bigint(20) NOT NULL,
-  `last_modified_date` datetime NOT NULL,
-  `remarks` varchar(255) DEFAULT NULL,
-  `version` int(11) NOT NULL DEFAULT '0',
-  `locked` tinyint(1) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
-  `company_id` bigint(20) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-);
-
 ALTER TABLE `crm_bank_in`
 ADD COLUMN `position_id`  bigint(20) NULL AFTER `check_id`;
 update crm_bank_in t1,sys_process_flow t2 set t1.position_id = t2.position_id where t1.process_flow_id=t2.id;
@@ -869,6 +791,11 @@ DROP TABLE IF EXISTS `sys_monitor`;
 ALTER TABLE `sys_menu`
   ADD COLUMN `code`  varchar(255) NULL AFTER `mobile_icon`,
   ADD COLUMN `company_id`  bigint(20) NULL AFTER `code`;
+
+ALTER TABLE `sys_menu`
+  MODIFY COLUMN `href`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL AFTER `name`;
+
+
 
 update sys_menu set company_id=1;
 
