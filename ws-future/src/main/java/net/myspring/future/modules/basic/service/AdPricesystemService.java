@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdPricesystemService {
 
     @Autowired
@@ -51,6 +51,7 @@ public class AdPricesystemService {
         return adPricesystemDtoList;
     }
 
+    @Transactional
     public AdPricesystem save(AdPricesystemForm adPricesystemForm){
         AdPricesystem adPricesystem;
         if(adPricesystemForm.isCreate()){
@@ -76,6 +77,7 @@ public class AdPricesystemService {
         return adPricesystemDtoList;
     }
 
+    @Transactional
     public void logicDelete(String id){
         adpricesystemRepository.logicDelete(id);
     }

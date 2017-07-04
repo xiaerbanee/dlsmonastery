@@ -37,7 +37,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class PricesystemService {
 
     @Autowired
@@ -77,6 +77,7 @@ public class PricesystemService {
         return pricesystemDto;
     }
 
+    @Transactional
     public void logicDelete(PricesystemForm pricesystemForm) {
         Pricesystem pricesystem = pricesystemRepository.findOne(pricesystemForm.getId());
         pricesystemForm  = BeanUtil.map(pricesystem,PricesystemForm.class);
@@ -86,6 +87,7 @@ public class PricesystemService {
         pricesystemRepository.save(pricesystem);
     }
 
+    @Transactional
     public Pricesystem save(PricesystemForm pricesystemForm) {
         Pricesystem pricesystem;
         if(pricesystemForm.isCreate()) {

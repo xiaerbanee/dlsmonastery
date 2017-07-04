@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopAttributeService {
 
     @Autowired
@@ -85,6 +85,7 @@ public class ShopAttributeService {
         return shopAttributeForm;
     }
 
+    @Transactional
     public ShopAttributeForm save(ShopAttributeForm shopAttributeForm) {
         Depot shop = depotRepository.findOne(shopAttributeForm.getShop().getId());
         depotRepository.save(shop);

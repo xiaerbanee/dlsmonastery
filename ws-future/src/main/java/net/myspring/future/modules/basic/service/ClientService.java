@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ClientService {
 
     @Autowired
@@ -48,6 +48,7 @@ public class ClientService {
         return page;
     }
 
+    @Transactional
     public Client save(ClientForm clientForm) {
         Client client;
         if(clientForm.isCreate()) {
@@ -83,6 +84,7 @@ public class ClientService {
        return result;
     }
 
+    @Transactional
     public void delete(String id){
         clientRepository.logicDelete(id);
     }
@@ -104,6 +106,7 @@ public class ClientService {
         return clientDtoList;
     }
 
+    @Transactional
     public void syn(){
         List<BdCustomer> bdCustomers=cloudClient.getAllCustomer();
         List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));

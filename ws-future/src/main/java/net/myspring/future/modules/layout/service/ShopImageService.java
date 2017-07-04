@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopImageService {
 
     @Autowired
@@ -68,6 +68,7 @@ public class ShopImageService {
         return shopImageQuery;
     }
 
+    @Transactional
     public ShopImage save(ShopImageForm shopImageForm) {
         ShopImage shopImage;
         if(shopImageForm.isCreate()){
@@ -81,6 +82,7 @@ public class ShopImageService {
         return shopImage;
     }
 
+    @Transactional
     public void logicDelete(String id){
         shopImageRepository.logicDelete(id);
     }

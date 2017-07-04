@@ -16,8 +16,8 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class ArReceiveBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -35,6 +35,7 @@ public class ArReceiveBillService {
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
 
+    @Transactional
     private KingdeeSynDto save(ArReceiveBillDto arReceiveBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arReceiveBillDto.getExtendId(),
@@ -50,6 +51,7 @@ public class ArReceiveBillService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(List<ArReceiveBillDto> arReceiveBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -66,6 +68,7 @@ public class ArReceiveBillService {
         return kingdeeSynDtoList;
     }
 
+    @Transactional
     public List<KingdeeSynDto> saveForWS(List<ArReceiveBillDto> arReceiveBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         if (arReceiveBillDtoList.size() > 0) {
             for (ArReceiveBillDto arReceiveBillDto : arReceiveBillDtoList) {

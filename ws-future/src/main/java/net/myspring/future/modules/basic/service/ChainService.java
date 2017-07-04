@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ChainService {
 
     @Autowired
@@ -55,10 +55,12 @@ public class ChainService {
         return page;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         chainRepository.logicDelete(id);
     }
 
+    @Transactional
     public void save(ChainForm chainForm) {
         Chain chain;
         if (chainForm.isCreate()) {

@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DepotChangeService {
 
     @Autowired
@@ -63,6 +63,7 @@ public class DepotChangeService {
         return depotChangeDto;
     }
 
+    @Transactional
     public void save(DepotChangeForm depotChangeForm){
         DepotChange depotChange;
         if(depotChangeForm.isCreate()){
@@ -72,7 +73,7 @@ public class DepotChangeService {
         }
     }
 
-
+    @Transactional
     public void logicDelete(String id) {
         depotChangeRepository.logicDelete(id);
     }
@@ -83,6 +84,7 @@ public class DepotChangeService {
         return depotChangeForm;
     }
 
+    @Transactional
     public void audit(DepotChangeAuditForm depotChangeAuditForm){
 
         DepotChange depotChange = depotChangeRepository.findOne(depotChangeAuditForm.getId());

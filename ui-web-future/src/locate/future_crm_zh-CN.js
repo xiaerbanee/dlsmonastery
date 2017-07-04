@@ -835,7 +835,7 @@ export default {
     productName: "货品名称",
     areaQty: "办事处已开单数",
     stock: "库存",
-    allowBill: "允许下单",
+    allowOrder: "允许订货",
     qty: "订货数",
     billQty: "开单数",
     price: "单价",

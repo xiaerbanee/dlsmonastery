@@ -21,6 +21,9 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
     private String adGoodsOrderShopName;
     @CacheInput(inputKey = "depots", inputInstance = "adGoodsOrderShopId", outputInstance = "address")
     private String adGoodsOrderShopAddress;
+    private String adGoodsOrderOfficeId;
+    @CacheInput(inputKey = "offices", inputInstance = "adGoodsOrderOfficeId", outputInstance = "name")
+    private String adGoodsOrderOfficeName;
 
     private String adGoodsOrderBillRemarks;
 
@@ -146,6 +149,22 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
 
     public void setAdGoodsOrderShopName(String adGoodsOrderShopName) {
         this.adGoodsOrderShopName = adGoodsOrderShopName;
+    }
+
+    public String getAdGoodsOrderOfficeId() {
+        return adGoodsOrderOfficeId;
+    }
+
+    public void setAdGoodsOrderOfficeId(String adGoodsOrderOfficeId) {
+        this.adGoodsOrderOfficeId = adGoodsOrderOfficeId;
+    }
+
+    public String getAdGoodsOrderOfficeName() {
+        return adGoodsOrderOfficeName;
+    }
+
+    public void setAdGoodsOrderOfficeName(String adGoodsOrderOfficeName) {
+        this.adGoodsOrderOfficeName = adGoodsOrderOfficeName;
     }
 
     public String getAdGoodsOrderShopAddress() {

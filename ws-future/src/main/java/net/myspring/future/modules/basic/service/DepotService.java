@@ -54,7 +54,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class DepotService {
     @Autowired
     private DepotRepository depotRepository;
@@ -214,6 +214,7 @@ public class DepotService {
 
     }
 
+    @Transactional
     public void scheduleSynArea(){
         List<Depot> depotList=depotRepository.findAll();
         List<DepotDto> depotDtoList=BeanUtil.map(depotList,DepotDto.class);
@@ -225,6 +226,7 @@ public class DepotService {
         }
     }
 
+    @Transactional
     public void synArea(DepotQuery depotQuery){
       depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
       List<Depot> depotList=depotRepository.findByFilter(depotQuery);

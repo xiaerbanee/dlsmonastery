@@ -21,9 +21,9 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class CnJournalForBankService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
@@ -56,6 +56,7 @@ public class CnJournalForBankService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
+    @Transactional
     public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                     cnJournalForBankDto.getExtendId(),
@@ -71,6 +72,7 @@ public class CnJournalForBankService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto save(CnJournalForBankForm cnJournalForBankForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         Map<String, String> customerNameMap = Maps.newHashMap();
         LocalDate billDate = cnJournalForBankForm.getBillDate();
@@ -152,6 +154,7 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDto,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public KingdeeSynDto save(CnJournalForBankDto cnJournalForBankDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -163,6 +166,7 @@ public class CnJournalForBankService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
@@ -180,6 +184,7 @@ public class CnJournalForBankService {
         return kingdeeSynExtendDtoList;
     }
 
+    @Transactional
     public List<KingdeeSynDto> saveForEmployeePhoneDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
             cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());
@@ -199,6 +204,7 @@ public class CnJournalForBankService {
         return save(cnJournalForBankDtoList,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public List<KingdeeSynDto> saveForShopDeposit(List<CnJournalForBankDto> cnJournalForBankDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         for (CnJournalForBankDto cnJournalForBankDto : cnJournalForBankDtoList) {
             cnJournalForBankDto.setCreator(accountKingdeeBook.getUsername());

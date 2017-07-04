@@ -67,7 +67,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class StoreAllotService {
 
     @Autowired
@@ -240,6 +240,7 @@ public class StoreAllotService {
 
     }
 
+    @Transactional
     public void save(StoreAllotForm storeAllotForm) {
         //大库调拨单只允许新增和删除，不能修改
         if(!storeAllotForm.isCreate()){
@@ -256,6 +257,7 @@ public class StoreAllotService {
         }
     }
 
+    @Transactional
     private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList, ExpressOrder expressOrder, Map<String, Product> productMap){
         KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForStoreAllot(storeAllot,detailList,productMap);
 
@@ -267,6 +269,7 @@ public class StoreAllotService {
 
     }
 
+    @Transactional
     private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
         StoreAllot storeAllot = new StoreAllot();
         storeAllot.setFromStoreId(storeAllotForm.getFromStoreId());
@@ -282,6 +285,7 @@ public class StoreAllotService {
         return storeAllot;
     }
 
+    @Transactional
     private List<StoreAllotDetail> saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> detailFormList) {
         //大库调拨只有新增，没有修改
 
@@ -304,6 +308,7 @@ public class StoreAllotService {
         return toBeSaved;
     }
 
+    @Transactional
     private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm, Map<String, Product> productMap) {
 
         ExpressOrder expressOrder = new ExpressOrder();
@@ -356,6 +361,7 @@ public class StoreAllotService {
 
     }
 
+    @Transactional
     public void delete(String id) {
         storeAllotRepository.logicDelete(id);
     }
@@ -418,6 +424,7 @@ public class StoreAllotService {
         return getMergeStoreIds() != null;
     }
 
+    @Transactional
     public StoreAllotDto print(String id) {
         StoreAllot storeAllot = storeAllotRepository.findOne(id);
 
@@ -432,6 +439,7 @@ public class StoreAllotService {
         return findDto(id);
     }
 
+    @Transactional
     public StoreAllotDto shipPrint(String id) {
         StoreAllot storeAllot = storeAllotRepository.findOne(id);
 

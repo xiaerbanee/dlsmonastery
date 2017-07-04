@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductImeUploadService {
 
     @Autowired
@@ -94,6 +94,7 @@ public class ProductImeUploadService {
         return sb.toString();
     }
 
+    @Transactional
     public void upload(ProductImeUploadForm productImeUploadForm) {
 
         List<String> imeList = productImeUploadForm.getImeList();
@@ -166,6 +167,7 @@ public class ProductImeUploadService {
         return sb.toString();
     }
 
+    @Transactional
     public void uploadBack(List<String> imeList) {
 
         String errMsg = checkForUploadBack(imeList);
@@ -220,6 +222,7 @@ public class ProductImeUploadService {
 
     }
 
+    @Transactional
     public Long batchUpload(ProductImeBatchUploadForm productImeBatchUploadForm) {
         Long uploadQty = 0L;
 

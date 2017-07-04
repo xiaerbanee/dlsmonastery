@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductImeSaleService {
 
     @Autowired
@@ -100,6 +100,7 @@ public class ProductImeSaleService {
         return sb.toString();
     }
 
+    @Transactional
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
@@ -174,6 +175,7 @@ public class ProductImeSaleService {
 
     }
 
+    @Transactional
     public void saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
         String employeeId = RequestUtils.getEmployeeId();

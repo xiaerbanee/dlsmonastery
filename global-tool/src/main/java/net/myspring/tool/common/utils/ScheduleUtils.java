@@ -2,7 +2,6 @@ package net.myspring.tool.common.utils;
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.tool.GlobalToolApplication;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.ToolClient;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
@@ -14,16 +13,10 @@ import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelReposit
 import net.myspring.tool.modules.oppo.repository.OppoPlantProductItemelectronSelRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantProductSelRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantSendImeiPpselRepository;
-import net.myspring.tool.modules.oppo.service.OppoService;
-import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +44,7 @@ public class ScheduleUtils {
 	@Autowired
 	private OppoPlantProductItemelectronSelRepository oppoPlantProductItemelectronSelRepository;
 
+
 	public void syn() {
 		logger.info("工厂自动同步开始");
 		String date= LocalDateUtils.format(LocalDate.now());
@@ -59,7 +53,7 @@ public class ScheduleUtils {
 	}
 
 	@FactoryDataSource
-	private void synOppo(String date){
+	public void synOppo(String date){
 		String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
 		String[] agentCodes=agentCode.split(CharConstant.COMMA);
 		String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");

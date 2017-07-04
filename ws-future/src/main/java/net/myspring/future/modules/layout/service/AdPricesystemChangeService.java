@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdPricesystemChangeService {
 
     @Autowired
@@ -72,6 +72,7 @@ public class AdPricesystemChangeService {
         return data;
     }
 
+    @Transactional
     public void save(String adpricesystemChanges){
         String json = HtmlUtils.htmlUnescape(adpricesystemChanges);
         Map<String,Product> productMap= CollectionUtil.extractToMap(productRepository.findAll(),"id");
