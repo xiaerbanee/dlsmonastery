@@ -39,7 +39,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopGoodsDepositService {
 
     @Autowired
@@ -57,6 +57,7 @@ public class ShopGoodsDepositService {
         return page;
     }
 
+    @Transactional
     public void save(ShopGoodsDepositForm shopGoodsDepositForm) {
 
         if(shopGoodsDepositForm.isCreate()){
@@ -74,11 +75,12 @@ public class ShopGoodsDepositService {
         }
     }
 
+    @Transactional
     public void delete(String id) {
         shopGoodsDepositRepository.logicDelete(id);
     }
 
-    public String export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
+    public SimpleExcelBook export(ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
@@ -99,7 +101,9 @@ public class ShopGoodsDepositService {
         shopGoodsDepositColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
         List<ShopGoodsDepositDto> shopGoodsDepositDtoList = findPage(new PageRequest(0,10000), shopGoodsDepositQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("订金详细", shopGoodsDepositDtoList, shopGoodsDepositColumnList));
+        SimpleExcelSheet sheet1 = new SimpleExcelSheet("订金详细", shopGoodsDepositDtoList, shopGoodsDepositColumnList);
+        ExcelUtils.doWrite(workbook, sheet1);
+        simpleExcelSheetList.add(sheet1);
 
         List<SimpleExcelColumn> shopGoodsDepositSumColumnList = Lists.newArrayList();
         shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
@@ -107,11 +111,11 @@ public class ShopGoodsDepositService {
         shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "totalAmount", "剩余订金"));
 
         List<ShopGoodsDepositSumDto> shopGoodsDepositSumDtoList = findShopGoodsDepositSumDtoList(RequestUtils.getCompanyId());
-        simpleExcelSheetList.add(new SimpleExcelSheet("订金汇总", shopGoodsDepositSumDtoList, shopGoodsDepositSumColumnList));
+        SimpleExcelSheet sheet2 = new SimpleExcelSheet("订金汇总", shopGoodsDepositSumDtoList, shopGoodsDepositSumColumnList);
+        ExcelUtils.doWrite(workbook, sheet2);
+        simpleExcelSheetList.add(sheet2);
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"订金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
+        return new SimpleExcelBook(workbook,"订金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
     private List<ShopGoodsDepositSumDto> findShopGoodsDepositSumDtoList(String companyId) {
@@ -127,6 +131,7 @@ public class ShopGoodsDepositService {
         return shopGoodsDepositDto;
     }
 
+    @Transactional
     public void auditPass(String id) {
 
         ShopGoodsDepositDto  shopGoodsDepositDto = findDto(id);

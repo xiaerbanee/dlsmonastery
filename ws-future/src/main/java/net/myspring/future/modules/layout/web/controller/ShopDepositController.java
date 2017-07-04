@@ -11,6 +11,7 @@ import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.service.ShopDepositService;
 import net.myspring.future.modules.layout.web.form.ShopDepositForm;
 import net.myspring.future.modules.layout.web.query.ShopDepositQuery;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 
@@ -75,8 +77,8 @@ public class ShopDepositController {
     }
 
     @RequestMapping(value="exportLatest")
-    public String exportLatest() {
-        return shopDepositService.exportLatest();
+    public ModelAndView exportLatest() {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", shopDepositService.exportLatest());
     }
 
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleStoreAllotList.afterSaleStoreAllotList') "></head-tab>
+    <head-tab active="afterSaleStoreAllotList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleStoreAllotList.filter')}}</el-button>
@@ -68,6 +68,7 @@
         formLabelWidth: '120px',
         formVisible: false,
         pageLoading: false,
+        afterSaleStoreAllotList:{}
       };
     },
     methods: {
@@ -100,8 +101,8 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

@@ -106,26 +106,16 @@
       }, itemDetail(clientOutId) {
           this.$router.push({name: 'depotAccountDetail', query: {clientOutId: clientOutId, dateRange:  this.formData.dutyDateRange }});
       }, exportAllDepots() {
-
       util.confirmBeforeExportData(this).then(() => {
-
-        axios.get('/api/ws/future/basic/depot/depotAccountExportAllDepots', {params:{dutyDateRange:this.formData.dutyDateRange, accountTaxPermitted:this.accountTaxPermitted}}).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportAllDepots?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange, accountTaxPermitted:this.accountTaxPermitted});
       }).catch(()=>{});
-
     }, exportConfirmation(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportConfirmation', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted}}).then((response) => {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportConfirmation?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted});
       }).catch(()=>{});
-
     }, exportDetail(){
       util.confirmBeforeExportData(this).then(() => {
-        axios.get('/api/ws/future/basic/depot/depotAccountExportDetail', {params:{dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted}}).then((response) => {
-          window.location.href = "/api/general/sys/folderFile/download?id=" + response.data;
-        });
+        window.location.href='/api/ws/future/basic/depot/depotAccountExportDetail?'+qs.stringify({dutyDateRange:this.formData.dutyDateRange,specialityStore: this.formData.specialityStore, accountTaxPermitted:this.accountTaxPermitted});
       }).catch(()=>{});
     }
   }, created (){

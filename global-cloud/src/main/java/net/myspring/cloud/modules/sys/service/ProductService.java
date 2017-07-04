@@ -15,9 +15,9 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class ProductService {
     @Autowired
     private ProductRepository productRepository;
@@ -79,6 +79,7 @@ public class ProductService {
         return null;
     }
 
+    @Transactional
     public void save(ProductForm productForm) {
         String json = HtmlUtils.htmlUnescape(productForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -96,7 +97,8 @@ public class ProductService {
             }
         }
     }
-    
+
+    @Transactional
     public void syn(List<BdMaterial> bdMaterialList,KingdeeBook kingdeeBook){
         String returnOutId = "";
         String companyId = RequestUtils.getCompanyId();

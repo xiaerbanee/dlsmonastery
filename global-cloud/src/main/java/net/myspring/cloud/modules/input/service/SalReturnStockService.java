@@ -28,9 +28,9 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class SalReturnStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -57,6 +57,7 @@ public class SalReturnStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
+    @Transactional
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salReturnStockDto.getExtendId(),
@@ -95,6 +96,7 @@ public class SalReturnStockService {
         return kingdeeSynExtendDto;
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String storeNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
@@ -150,6 +152,7 @@ public class SalReturnStockService {
         return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> save (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
@@ -165,6 +168,7 @@ public class SalReturnStockService {
         return kingdeeSynExtendDtoList;
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalReturnStockDto salReturnStockDto  : salReturnStockDtoList){

@@ -26,6 +26,7 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductImeSaleService {
 
     @Autowired
@@ -100,6 +101,7 @@ public class ProductImeSaleService {
         return sb.toString();
     }
 
+    @Transactional
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
@@ -174,6 +176,7 @@ public class ProductImeSaleService {
 
     }
 
+    @Transactional
     public void saleBack(ProductImeSaleBackForm productImeSaleBackForm) {
         List<String> imeList = productImeSaleBackForm.getImeList();
         String employeeId = RequestUtils.getEmployeeId();
@@ -210,11 +213,10 @@ public class ProductImeSaleService {
 
     }
 
-    public String export(ProductImeSaleQuery productImeSaleQuery) {
+    public SimpleExcelBook export(ProductImeSaleQuery productImeSaleQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> productImeSaleColumnList = Lists.newArrayList();
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "productImeIme", "串码"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "productImeProductName", "货品型号"));
@@ -235,13 +237,11 @@ public class ProductImeSaleService {
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "lotteryDate", "抽奖时间"));
         productImeSaleColumnList.add(new SimpleExcelColumn(workbook, "hongbao", "红包"));
 
-
         List<ProductImeSaleDto> productImeSaleDtoList = findPage(new PageRequest(0,10000), productImeSaleQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("核销列表", productImeSaleDtoList, productImeSaleColumnList));
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"核销列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("核销列表", productImeSaleDtoList, productImeSaleColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"核销列表"+ LocalDate.now()+".xlsx", simpleExcelSheet);
 
     }
 

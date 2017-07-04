@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = false)
 public class OppoService {
     @Autowired
     private OppoPlantProductSelRepository oppoPlantProductSelRepository;
@@ -138,6 +138,7 @@ public class OppoService {
     }
 
     // 获取电子保卡信息
+    @LocalDataSource
     public String pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
@@ -163,7 +164,7 @@ public class OppoService {
     }
 
 
-
+    @LocalDataSource
     public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
@@ -173,6 +174,7 @@ public class OppoService {
         return oppoPlantSendImeiPpselDtos;
     }
 
+    @LocalDataSource
     public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
         LocalDate nowDate= LocalDateUtils.parse(date);
         String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));

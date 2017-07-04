@@ -22,7 +22,7 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
 
     private Integer areaQty;
     private Boolean allowOrder;
-    private Boolean allowBill;
+    private Boolean visible;
 
     //发货信息
     private Integer shippedQty;
@@ -33,6 +33,14 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private Integer realBillQty;
 
     private Integer storeQty;
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     public String getProductOutId() {
         return productOutId;
@@ -64,14 +72,6 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
 
     public void setAllowOrder(Boolean allowOrder) {
         this.allowOrder = allowOrder;
-    }
-
-    public Boolean getAllowBill() {
-        return allowBill;
-    }
-
-    public void setAllowBill(Boolean allowBill) {
-        this.allowBill = allowBill;
     }
 
     public Integer getAreaQty() {

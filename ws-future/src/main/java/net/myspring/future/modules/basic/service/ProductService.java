@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ProductService {
 
     @Autowired
@@ -146,6 +146,7 @@ public class ProductService {
         return productAdApplyDtos;
     }
 
+    @Transactional
     public void save(ProductForm productForm) {
         Product product;
         if(productForm.isCreate()){
@@ -158,6 +159,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void batchSave(ProductBatchForm productBatchForm){
         String json = HtmlUtils.htmlUnescape(productBatchForm.getProductList());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -215,6 +217,7 @@ public class ProductService {
         return productForm;
     }
 
+    @Transactional
     public void syn() {
         List<BdMaterial> bdMaterials = cloudClient.getAllProduct();
         List<Product> products = productRepository.findAllEnabled();
@@ -234,6 +237,7 @@ public class ProductService {
                         product.setVolume(BigDecimal.ZERO);
                         product.setAllowOrder(false);
                         product.setAllowBill(false);
+                        product.setVisible(true);
                         if(goodsOrderIds.contains(bdMaterial.getFMaterialGroup())){
                             product.setHasIme(true);
                         }else{
@@ -266,7 +270,7 @@ public class ProductService {
         }
     }
 
-
+    @Transactional
     public void delete(ProductDto productDto) {
         productRepository.logicDelete(productDto.getId());
     }

@@ -47,7 +47,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class BankInService {
     @Autowired
     private CloudClient cloudClient;
@@ -73,6 +73,7 @@ public class BankInService {
         return page;
     }
 
+    @Transactional
     public void audit(BankInAuditForm bankInAuditForm){
 
         BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
@@ -92,6 +93,7 @@ public class BankInService {
         }
     }
 
+    @Transactional
     private void synToCloud(BankIn bankIn, BankInAuditForm bankInAuditForm) {
 
         KingdeeSynReturnDto kingdeeSynReturnDto = arReceiveBillManager.synForBankIn(bankIn,bankInAuditForm);
@@ -101,6 +103,7 @@ public class BankInService {
         bankInRepository.save(bankIn);
     }
 
+    @Transactional
     public BankIn save(BankInForm bankInForm) {
         BankIn bankIn;
         if(bankInForm.isCreate()) {
@@ -129,6 +132,7 @@ public class BankInService {
         return bankIn;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         bankInRepository.logicDelete(id);
     }

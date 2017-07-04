@@ -22,9 +22,9 @@ import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class ArOtherRecAbleService {
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
@@ -53,6 +53,7 @@ public class ArOtherRecAbleService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
+    @Transactional
     private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arOtherRecAbleDto.getExtendId(),
@@ -68,6 +69,7 @@ public class ArOtherRecAbleService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(ArOtherRecAbleForm arOtherRecAbleForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = arOtherRecAbleForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(arOtherRecAbleForm.getJson());
@@ -147,6 +149,7 @@ public class ArOtherRecAbleService {
         return kingdeeSynDtoList;
     }
 
+    @Transactional
     public KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto;
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -158,6 +161,7 @@ public class ArOtherRecAbleService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public List<KingdeeSynDto> save(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
         Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
@@ -174,6 +178,7 @@ public class ArOtherRecAbleService {
         return kingdeeSynDtoList;
     }
 
+    @Transactional
     public KingdeeSynDto saveForWS(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         arOtherRecAbleDto.setCreatorK3(accountKingdeeBook.getUsername());
         arOtherRecAbleDto.setKingdeeName(kingdeeBook.getName());

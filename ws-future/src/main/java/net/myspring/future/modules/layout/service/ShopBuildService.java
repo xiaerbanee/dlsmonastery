@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopBuildService {
 
     @Autowired
@@ -76,6 +76,7 @@ public class ShopBuildService {
         return shopBuildDto;
     }
 
+    @Transactional
     public ShopBuild save(ShopBuildForm shopBuildForm) {
         ShopBuild shopBuild;
         if(shopBuildForm.isCreate()){
@@ -99,6 +100,7 @@ public class ShopBuildService {
         return shopBuild;
     }
 
+    @Transactional
     public String audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         ShopBuild shopBuild;
@@ -127,6 +129,7 @@ public class ShopBuildService {
 
     }
 
+    @Transactional
     public String batchAudit(String[] ids,Boolean pass){
         if(ids ==null){
             return "未选中任何记录";
@@ -146,6 +149,7 @@ public class ShopBuildService {
         return message;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopBuildRepository.logicDelete(id);
     }

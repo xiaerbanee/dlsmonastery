@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class StoreAllotDetailService {
 
     @Autowired

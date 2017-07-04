@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab :active="$t('afterSaleProductAllotList.afterSaleProductAllotList') "></head-tab>
+    <head-tab active="afterSaleProductAllotList"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleProductAllotList.filter')}}</el-button>
@@ -60,6 +60,7 @@
   export default {
     data() {
       return {
+        searchText:"",
         page:{},
         formData:{
           extra:{}
@@ -100,8 +101,8 @@
     },created () {
       this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
-        that.formData=response.data;
-        util.copyValue(that.$route.query,that.formData);
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
       });
     },activated(){
       this.initPromise.then(()=>{

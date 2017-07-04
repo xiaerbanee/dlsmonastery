@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AfterSaleService {
 
     @Autowired
@@ -91,6 +91,7 @@ public class AfterSaleService {
     }
 
     //单据录入
+    @Transactional
     public void save(List<List<String>> datas, LocalDate toStoreDate) {
         String companyId = RequestUtils.getCompanyId();
         Depot badStore = depotRepository.findOne(CompanyConfigUtil.findByCode(redisTemplate, companyId, CompanyConfigCodeEnum.BAD_STORE_ID.name()).getValue());
@@ -309,7 +310,7 @@ public class AfterSaleService {
         }
     }
 
-
+    @Transactional
     public void delete(String id) {
         AfterSale afterSale = afterSaleRepository.findOne(id);
         if (!(afterSale.getFromAreaToFinance() || afterSale.getToAreaToFinance() || afterSale.getFromCompanyToFinance() || afterSale.getToCompanyToFinance())) {

@@ -16,7 +16,7 @@ import java.time.temporal.ChronoUnit;
  * Created by liuj on 2017/4/22.
  */
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class CacheService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired

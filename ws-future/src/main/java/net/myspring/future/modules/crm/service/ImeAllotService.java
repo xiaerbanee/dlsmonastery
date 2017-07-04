@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ImeAllotService {
 
     @Autowired
@@ -60,6 +60,7 @@ public class ImeAllotService {
         return page;
     }
 
+    @Transactional
     public void audit(String[] ids, boolean pass) {
 
         List<ImeAllot> imeAllots = imeAllotRepository.findAll(Arrays.asList(ids));
@@ -121,6 +122,7 @@ public class ImeAllotService {
 
     }
 
+    @Transactional
     public void allot(ImeAllotForm imeAllotForm) {
 
         List<String> imeList = imeAllotForm.getImeList();
@@ -163,11 +165,10 @@ public class ImeAllotService {
         }
     }
 
-    public String export(ImeAllotQuery imeAllotQuery) {
+    public SimpleExcelBook export(ImeAllotQuery imeAllotQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
 
-        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> imeAllotColumnList = Lists.newArrayList();
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "fromDepotName", "调拨前门店"));
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "toDepotName", "调拨后门店"));
@@ -177,14 +178,10 @@ public class ImeAllotService {
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "createdByName", "调拨人"));
         imeAllotColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-
         List<ImeAllotDto> imeAllotDtoList = findPage(new PageRequest(0,10000), imeAllotQuery).getContent();
-        simpleExcelSheetList.add(new SimpleExcelSheet("调拨列表", imeAllotDtoList, imeAllotColumnList));
-
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"调拨列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
-
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("调拨列表", imeAllotDtoList, imeAllotColumnList);
+        ExcelUtils.doWrite(workbook, simpleExcelSheet);
+        return  new SimpleExcelBook(workbook,"调拨列表"+ LocalDate.now()+".xlsx", simpleExcelSheet);
     }
 
     public ImeAllotDto findDto(String id) {
@@ -198,6 +195,7 @@ public class ImeAllotService {
         return CollectionUtil.extractToList(depotList, "name");
     }
 
+    @Transactional
     public void batchAllot(ImeAllotBatchForm imeAllotBatchForm) {
 
         List<String> imeList =  CollectionUtil.extractToList(imeAllotBatchForm.getImeAllotSimpleFormList(),"ime");

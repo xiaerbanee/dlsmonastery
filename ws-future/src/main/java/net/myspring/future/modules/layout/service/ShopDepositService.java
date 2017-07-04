@@ -6,8 +6,8 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto;
@@ -27,13 +27,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopDepositService {
 
     @Autowired
@@ -51,6 +50,7 @@ public class ShopDepositService {
         return page;
     }
 
+    @Transactional
     public void save(ShopDepositForm shopDepositForm) {
 
         if(!shopDepositForm.isCreate()){
@@ -69,10 +69,12 @@ public class ShopDepositService {
 
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopDepositRepository.logicDelete(id);
     }
 
+    @Transactional
     private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
         ShopDeposit shopDeposit  = new ShopDeposit();
         shopDeposit.setShopId(shopDepositForm.getShopId());
@@ -117,7 +119,7 @@ public class ShopDepositService {
         return (latest == null ? BigDecimal.ZERO : latest.getLeftAmount());
     }
 
-    public String exportLatest() {
+    public SimpleExcelBook exportLatest() {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
@@ -134,7 +136,9 @@ public class ShopDepositService {
         shopDepositLatestColumnList.add(new SimpleExcelColumn(workbook, "marketDepositCreatedDate", "市场保证金创建时间"));
         List<ShopDepositLatestDto> shopDepositLatestDtoList = shopDepositRepository.findShopDepositLatestDto(10000);
         cacheUtils.initCacheInput(shopDepositLatestDtoList);
-        simpleExcelSheetList.add(new SimpleExcelSheet("门店最新押金数据", shopDepositLatestDtoList, shopDepositLatestColumnList));
+        SimpleExcelSheet sheet1 = new SimpleExcelSheet("门店最新押金数据", shopDepositLatestDtoList, shopDepositLatestColumnList);
+        ExcelUtils.doWrite(workbook, sheet1);
+        simpleExcelSheetList.add(sheet1);
 
         List<SimpleExcelColumn> shopDepositColumnList = Lists.newArrayList();
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "shopAreaName", "办事处"));
@@ -149,12 +153,11 @@ public class ShopDepositService {
         shopDepositColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
         List<ShopDepositDto> shopDepositDtoList = shopDepositRepository.findForExport(10000);
         cacheUtils.initCacheInput(shopDepositDtoList);
-        simpleExcelSheetList.add(new SimpleExcelSheet("押金明细", shopDepositDtoList, shopDepositColumnList));
+        SimpleExcelSheet sheet2 = new SimpleExcelSheet("押金明细", shopDepositDtoList, shopDepositColumnList);
+        ExcelUtils.doWrite(workbook, sheet2);
+        simpleExcelSheetList.add(sheet2);
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"押金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-                return null;
-
+        return new SimpleExcelBook(workbook,"押金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
 }

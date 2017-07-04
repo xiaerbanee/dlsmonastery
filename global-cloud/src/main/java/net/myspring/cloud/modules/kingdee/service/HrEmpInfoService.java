@@ -5,8 +5,8 @@ import net.myspring.cloud.modules.kingdee.domain.HrEmpInfo;
 import net.myspring.cloud.modules.kingdee.repository.HrEmpInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class HrEmpInfoService {
     @Autowired
     private HrEmpInfoRepository hrEmpInfoRepository;

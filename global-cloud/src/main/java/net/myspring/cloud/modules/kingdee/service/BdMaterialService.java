@@ -6,18 +6,17 @@ import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/5/12.
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class BdMaterialService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;

@@ -56,4 +56,9 @@ public class VivoController {
         return ObjectMapperUtils.writeValueAsString(vivoPlantSendimeiList);
     }
 
+    @RequestMapping(value="factoryOrder")
+    public String factoryOrder(String factoryCode, String factoryPassword){
+        vivoService.factoryOrder(factoryCode,factoryPassword);
+        return "";
+    }
 }

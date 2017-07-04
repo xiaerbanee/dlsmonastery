@@ -6,6 +6,9 @@ server:
   http:
     port : 1200
 
+logging:
+  file: summer-gateway.log
+
 spring:
   redis:
     host: localhost
@@ -73,6 +76,3 @@ security:
 
 setting:
     adminIdList:  1
-
-logging:
-  file: summer-gateway.log

@@ -9,6 +9,7 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdGoodsOrderDetailService {
 
     @Autowired
@@ -37,7 +38,7 @@ public class AdGoodsOrderDetailService {
         return page;
     }
 
-    public String export(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
+    public SimpleExcelBook export(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
 
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
@@ -58,11 +59,11 @@ public class AdGoodsOrderDetailService {
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderRemarks", "备注"));
 
         List<AdGoodsOrderDetailDto> adGoodsOrderDetailDtoList = findPage(new PageRequest(0,10000), adGoodsOrderDetailQuery).getContent();
+        cacheUtils.initCacheInput(adGoodsOrderDetailDtoList);
         simpleExcelSheetList.add(new SimpleExcelSheet("柜台订货详情", adGoodsOrderDetailDtoList, adGoodsOrderDetailColumnList));
 
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"柜台订货详情"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
-        ByteArrayInputStream byteArrayInputStream= ExcelUtils.doWrite(simpleExcelBook.getWorkbook(),simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"柜台订货详情"+ LocalDateUtils.format(LocalDate.now())+".xlsx",simpleExcelSheetList);
 
     }
 }

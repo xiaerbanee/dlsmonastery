@@ -21,8 +21,8 @@
               <el-form-item :label="$t('productList.code')" :label-width="formLabelWidth">
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('productList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('productList.allowBill')" :label-width="formLabelWidth">
-                <bool-select v-model="formData.allowBill" ></bool-select>
+              <el-form-item :label="$t('productList.visible')" :label-width="formLabelWidth">
+                <bool-select v-model="formData.visible" ></bool-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -67,9 +67,9 @@
             <el-tag :type="scope.row.allowOrder ? 'primary' : 'danger'">{{scope.row.allowOrder | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="allowBill" :label="$t('productList.allowBill')" sortable>
+        <el-table-column prop="visible" :label="$t('productList.visible')" sortable>
           <template scope="scope">
-            <el-tag :type="scope.row.allowBill ? 'primary' : 'danger'">{{scope.row.allowBill | bool2str}}</el-tag>
+            <el-tag :type="scope.row.visible ? 'primary' : 'danger'">{{scope.row.visible | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="image" :label="$t('productList.image')" sortable></el-table-column>

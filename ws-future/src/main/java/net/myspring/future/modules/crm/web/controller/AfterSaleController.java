@@ -177,7 +177,7 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value = "toCompanyForm")
-    public String toCompanyForm(String imeStr) {
+    public Map<String, Object> toCompanyForm(String imeStr) {
         Map<String,Object> map=Maps.newHashMap();
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
@@ -207,7 +207,7 @@ public class AfterSaleController {
             map.put("list",afterSales);
             map.put("toCompanyDate",LocalDate.now());
         }
-        return ObjectMapperUtils.writeValueAsString(map);
+        return map;
     }
 
 

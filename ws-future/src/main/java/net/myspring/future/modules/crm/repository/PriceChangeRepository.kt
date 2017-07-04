@@ -63,7 +63,7 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
         FROM crm_price_change t1
         ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
         limit 0,1
-                """, HashMap<String, Object>(), MyBeanPropertyRowMapper(PriceChange::class.java))
+                """, HashMap<String, Any>(), MyBeanPropertyRowMapper(PriceChange::class.java))
     }
 
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {

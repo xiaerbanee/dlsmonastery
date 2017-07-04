@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = false)
 public class OppoPlantAgentProductSelService {
 
     @Autowired

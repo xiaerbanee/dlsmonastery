@@ -1,6 +1,7 @@
 package net.myspring.future.modules.third.web;
 
 
+import net.myspring.future.common.utils.ScheduleUtils;
 import net.myspring.future.modules.third.domain.*;
 import net.myspring.future.modules.third.service.OppoService;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -17,10 +18,12 @@ import java.util.List;
 public class OppoController {
     @Autowired
     private OppoService oppoService;
+    @Autowired
+    private ScheduleUtils scheduleUtils;
 
     @RequestMapping(value="synIme")
     public String synIme(String date){
-        return oppoService.synIme(date);
+        return scheduleUtils.synOppo(date);
     }
 
     @RequestMapping(value="findOppoCustomerAllots")

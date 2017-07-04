@@ -19,9 +19,7 @@ import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillDetailForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderBillForm;
-import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -163,5 +161,40 @@ public class GoodsOrderController {
     public RestResponse delete(String id) {
         goodsOrderService.delete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
+    }
+
+
+    @RequestMapping(value = "batchAdd")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
+    public RestResponse batchAdd(GoodsOrderBatchAddForm goodsOrderBatchAddForm){
+        if(CollectionUtil.isEmpty(goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList())){
+            throw new ServiceException("请录入需要添加的订货信息");
+        }
+
+        for(GoodsOrderBatchAddDetailForm goodsOrderBatchAddDetailForm : goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList()){
+            if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getShopName())){
+                throw new ServiceException("门店不可以为空");
+            }
+            if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getNetType())){
+                throw new ServiceException("网络制式不可以为空");
+            }
+            if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getProductName())){
+                throw new ServiceException("型号不可以为空");
+            }
+            if(goodsOrderBatchAddDetailForm.getQty() == null || goodsOrderBatchAddDetailForm.getQty()<0){
+                throw new ServiceException("数量不可以小于0");
+            }
+            if(goodsOrderBatchAddDetailForm.getPrice() == null || goodsOrderBatchAddDetailForm.getPrice().compareTo(BigDecimal.ZERO)<0){
+                throw new ServiceException("单价不可以小于0");
+            }
+            if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getShipType())){
+                throw new ServiceException("发货类型不可以为空");
+            }
+
+        }
+
+        goodsOrderService.batchAdd(goodsOrderBatchAddForm);
+
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 }

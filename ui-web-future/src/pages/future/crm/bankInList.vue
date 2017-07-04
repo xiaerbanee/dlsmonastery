@@ -58,20 +58,18 @@
       </search-dialog>
       <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('bankInList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column prop="formatId" column-key="id"  :label="$t('bankInList.id')" sortable></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('bankInList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopClientName"  :label="$t('bankInList.shopClientName')"></el-table-column>
         <el-table-column prop="bankName" column-key="bankId"  :label="$t('bankInList.bankName')" sortable></el-table-column>
         <el-table-column prop="amount" :label="$t('bankInList.amount')" ></el-table-column>
         <el-table-column prop="serialNumber" :label="$t('bankInList.serialNumber')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('bankInList.billDate')" sortable></el-table-column>
-        <el-table-column prop="inputDate" :label="$t('bankInList.inputDate')" sortable></el-table-column>
         <el-table-column prop="createdByName" :label="$t('bankInList.createdBy')" ></el-table-column>
         <el-table-column prop="createdDate" :label="$t('bankInList.createdDate')" ></el-table-column>
         <el-table-column prop="outCode" :label="$t('bankInList.outCode')" sortable></el-table-column>
         <el-table-column prop="processStatus" :label="$t('bankInList.processStatus')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankInList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('bankInList.operation')" width="140">
+        <el-table-column :label="$t('bankInList.operation')" width="140">
           <template scope="scope" >
             <div class="action" v-permit="'crm:bankIn:view'"><el-button size="small" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable" v-permit="'crm:bankIn:audit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button></div>
