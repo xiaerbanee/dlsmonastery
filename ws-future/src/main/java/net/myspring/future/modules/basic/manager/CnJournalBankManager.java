@@ -50,7 +50,7 @@ public class CnJournalBankManager {
         entityForBankDto.setDepartmentNumber(departMentNumber);
         entityForBankDto.setBankAccountNumber(bank.getCode());
         entityForBankDto.setAccountNumber("2241");//其他应付款
-        entityForBankDto.setSettleTypeNumber("JSFS04_SYS");//电汇
+        entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
         entityForBankDto.setEmpInfoNumber("0001");//员工
         entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
         entityForBankDto.setExpenseTypeNumber("6602.000");//无
