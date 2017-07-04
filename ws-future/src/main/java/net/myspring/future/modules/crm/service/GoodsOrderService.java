@@ -157,7 +157,7 @@ public class GoodsOrderService {
     }
 
     //保存及修改订单
-    @Transactional(readOnly = false)
+    @Transactional
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
         Boolean isCreate = goodsOrderForm.isCreate();
         GoodsOrder goodsOrder;
