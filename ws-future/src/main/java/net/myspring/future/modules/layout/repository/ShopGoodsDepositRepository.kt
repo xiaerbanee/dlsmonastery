@@ -79,12 +79,11 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             crm_depot t2
         WHERE
             t1.enabled = 1
-            AND t1.company_id = :companyId
             AND t1.status='已通过'
             AND t1.shop_id = t2.id
         GROUP BY
             t2.id,  t2.area_id
-          """, Collections.singletonMap("companyId", companyId), BeanPropertyRowMapper(ShopGoodsDepositSumDto::class.java))
+          """, HashMap<String, Any>(), BeanPropertyRowMapper(ShopGoodsDepositSumDto::class.java))
     }
 
     override fun findPage(pageable: Pageable, shopGoodsDepositQuery: ShopGoodsDepositQuery): Page<ShopGoodsDepositDto> {
@@ -103,7 +102,6 @@ class ShopGoodsDepositRepositoryImpl @Autowired constructor(val namedParameterJd
             LEFT JOIN crm_bank bank ON t1.bank_id = bank.id
         WHERE
             t1.enabled = 1
-            AND t1.company_id = :companyId
         """)
         if(StringUtils.isNotBlank(shopGoodsDepositQuery.remarks)){
             sb.append("""  and t1.remarks like concat('%',:remarks,'%')  """)
