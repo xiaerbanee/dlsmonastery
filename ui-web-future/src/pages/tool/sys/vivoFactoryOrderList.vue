@@ -1,182 +1,75 @@
 <template>
   <div>
-    <head-tab active="oppoPlantAgentProductSelList"></head-tab>
+    <head-tab active="vivoFactoryOrderList"></head-tab>
     <div>
-      <el-row>
-        <div style="float:left">
-          <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
-        </div>
-        <div style="float: left;margin-left: 10px">
-          <date-picker v-model="date"></date-picker>
-        </div>
-        <span v-html="searchText"></span>
-      </el-row>
-      <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
-        <el-form :model="formData"  ref="inputForm" >
-          <el-row :gutter="8">
-            <el-col :span="12">
-              <el-form-item :label="$t('物料描述')" :label-width="formLabelWidth">
-                <el-input v-model="formData.itemDesc" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
-              </el-form-item>
-              <el-form-item :label="$t('物料编号')" :label-width="formLabelWidth">
-                <el-input type="textarea" v-model="formData.itemNumberStr" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item :label="$t('型号')" :label-width="formLabelWidth">
-                <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('模糊查询')"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">{{$t('确定')}}</el-button>
-        </div>
-      </search-dialog>
-      <div ref="handsontable" style="height:1200px;overflow:hidden;margin-top:20px"></div>
+      <el-form :inline="true" :model="inputForm" ref="inputForm"  :rules="rules"  class="form input-form">
+        <el-form-item label="账户">
+          <el-select v-model="inputForm.factoryCode" filterable clearable placeholder="请选择账户">
+            <el-option v-for="(key,value) in inputForm.extra.factoryCodeMap" :key="value" :label="value+'_'+key" :value="value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="inputForm.factoryPassword" type="password" placeholder="请选择账户"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="formSubmit">登陆</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div>
+        <ul v-if="this.showList">
+          <li><a @click="itemAction('GCDD')" href="#">工厂订单</a></li>
+          <li><a @click="itemAction('YDDHD')" href="#">一代调货单</a></li>
+          <li><a @click="itemAction('GCFHD')" href="#">工厂发货单</a></li>
+          <li><a @click="itemAction('GCFHDPJ')" href="#">工厂发货单(配件)</a></li>
+          <li><a @click="itemAction('YDCGSQPJ')" href="#">一代采购申请(配件)</a></li>
+        </ul>
     </div>
   </div>
 </template>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-
-</style>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
-  import ElCol from "element-ui/packages/col/src/col";
-  import util from "../../../utils/util";
-  var table = null;
   export default {
-    components: {ElCol},
     data(){
       return this.getData()
-    },mounted() {
-      axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/form').then((response) => {
-        this.inputForm = response.data;
-        if(this.inputForm.lx){
-          this.settings.colHeaders.push("LX对应货品");
-          this.settings.columns.push({data:'lxProductName',type: "autocomplete",allowEmpty: true,strict: true,productNames:[],source:this.productNames})
-          this.settings.colHeaders.push("货品型号");
-          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = this.inputForm.extra.productNames;
-          this.settings.columns[7].source = this.inputForm.extra.productNames;
-        }else{
-          this.settings.colHeaders.push("货品型号");
-          this.settings.columns.push({data:'typeName',strict: true,readOnly: true});
-          this.settings.columns[6].source = this.inputForm.extra.productNames;
-        }
-        //Handsontable初始化操作
-        this.search();
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-      });
     },methods: {
-      setSearchText() {
-        this.$nextTick(function () {
-          this.searchText = util.getSearchText(this.$refs.searchDialog);
-        })
-      },getData() {
+      getData() {
         return {
-          formData:{
-          },
+          showList:false,
           inputForm:{
             extra:{}
           },
-          searchText:'',
-          productNames:[],
-          settings: {
-            rowHeaders: true,
-            autoColumnSize: true,
-            stretchH: 'all',
-            height: 650,
-            startCols: 5,
-            colHeaders: ['ID', '颜色Id', '颜色', '类型', '物料描述', '物料编码', 'TD对应货品'],
-            columns: [
-              {data:'id',strict: true,readOnly: true},
-              {data:'colorId',strict: true,readOnly: true},
-              {data:'colorName',strict: true,readOnly: true},
-              {data:'brandType',strict: true,readOnly: true},
-              {data:'itemDesc',strict: true,readOnly: true},
-              {data:'itemNumber',strict: true,readOnly: true},
-              {data:'productName',type: "autocomplete",allowEmpty: true,productNames:[],source:this.productNames}
-            ],
-            contextMenu: ['row_above', 'row_below', 'remove_row'],
-          },
-          date:util.currentDate(),
           rules: {},
-          submitDisabled: false,
-          formLabelWidth: '120px',
-          formVisible: false,
         };
       },formSubmit(){
-        this.submitDisabled = true;
-        let form = this.$refs["inputForm"];
+        var form = this.$refs["inputForm"];
         form.validate((valid) => {
-          if (valid) {
-            this.inputForm.dataList = new Array();
-            let tableData = [];
-            let list = table.getData();
-            for (let item in list) {
-              if (!table.isEmptyRow(item)) {
-                let row = list[item];
-                let createForm = {};
-                if(this.inputForm.lx){
-                  createForm.id = row[0];
-                  createForm.productName = row[6];
-                  createForm.lxProductName = row[7];
-                }else{
-                  createForm.id = row[0];
-                  createForm.productName = row[6];
-                }
-                tableData.push(createForm);
-              }
-            }
-            console.log(tableData.length);
-            this.inputForm.dataList = JSON.stringify(tableData);
-            axios.post('/api/global/tool/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
-              this.$message(response.data.message);
-              this.submitDisabled = false;
-              if(response.data.success){
-                Object.assign(this.$data, this.getData());
-                this.initPage();
-              }
-            }).catch( () => {
-              this.submitDisabled = false;
-            });
-          }else{
-            this.submitDisabled = false;
-          }
+          axios.post('api/global/tool/vivo/factoryOrder?', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=>{
+            this.inputForm = response.data;
+            this.showList = true;
+          })
         })
-      },getTableData(){
-        let submitData = util.deleteExtra(this.formData);
-        util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
-          this.settings.data = response.data;
-          console.log(response.data.length);
-          table.loadData(this.settings.data);
-        });
-      },search() {
-        this.formVisible = false;
-        this.setSearchText();
-        this.getTableData();
-      },synData(){
-        if(this.date){
-          axios.get('/api/global/tool/oppo/syn?date='+this.date).then((response)=>{
-            this.$message(response.data);
-          }).catch(function () {
-            this.$message({message:"同步失败",type:'error'});
-          });
+      },itemAction:function(action){
+        if(action == "GCDD"){
+          window.open("http://esaleweb.vivo.cn:8888/PLANTESALEWEB/Product/Index?NESAD="+this.inputForm.code+"&NESBU="+this.inputForm.password);
+        }else if(action == "YDDHD"){
+          window.open("http://esaleweb.vivo.cn:8888/PLANTESALEWEB/Transfer/Index?NESAD="+this.inputForm.code+"&NESBU="+this.inputForm.password);
+        }else if(action == "GCFHD"){
+          window.open("http://esaleweb.vivo.cn:8888/PLANTESALEWEB/Product/Send?NESAD="+this.inputForm.code+"&NESBU="+this.inputForm.password);
+        }else if(action == "GCFHDPJ"){
+          window.open("http://esaleweb.vivo.cn:8888/PLANTESALEWEB/Product/Send?NESAD="+this.inputForm.code+"&NESBU="+this.inputForm.password);
+        }else if(action == "YDCGSQPJ"){
+          window.open("http://esaleweb.vivo.cn:8888/PLANTESALEWEB/Accessory/Index?NESAD="+this.inputForm.code+"&NESBU="+this.inputForm.password);
         }else{
-          this.$message({message:"请选择同步日期",type:'warning'});
+          this.$message({message:"错误",type:'error'})
         }
-      },initPage(){
-        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
-          this.formData = response.data;
-        })
       }
     },created(){
-      this.initPage();
+      axios.get('api/global/tool/vivo/factoryOrder').then((response)=>{
+        this.inputForm = response.data;
+        console.log(this.inputForm);
+      })
     }
   }
 </script>
