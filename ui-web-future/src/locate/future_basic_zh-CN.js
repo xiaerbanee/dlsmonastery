@@ -533,7 +533,7 @@ export default {
     code: "编码",
     name: "货品名称",
     visible: "是否显示",
-    allowOrder: "允许下单",
+    allowOrder: "允许订货",
     price2: "二级价格",
     expiryDateRemarks: "截止日期备注",
     volume: "体积",
