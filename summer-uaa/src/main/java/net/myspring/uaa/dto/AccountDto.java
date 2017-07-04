@@ -16,7 +16,6 @@ public class AccountDto {
     private String password;
 
     private String positionId;
-    private String companyId;
     private String officeId;
     private String employeeId;
     private String companyName;
@@ -84,14 +83,6 @@ public class AccountDto {
 
     public void setPositionId(String positionId) {
         this.positionId = positionId;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
     }
 
     public boolean getEnabled() {

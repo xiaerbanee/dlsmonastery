@@ -56,7 +56,6 @@ public class ScheduleUtils {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
         }
-        String companyId="1";
         String agentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"", "");
         String lxAgentCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name()).replace("\"", "");
         List<String> lxAgentCodes = Lists.newArrayList();

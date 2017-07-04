@@ -12,19 +12,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_factory")
 public class Factory extends CompanyEntity<Factory> {
-    private String companyId;
     private String name;
     private String url;
     private String username;
     private String password;
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
 
     public String getName() {
         return name;
