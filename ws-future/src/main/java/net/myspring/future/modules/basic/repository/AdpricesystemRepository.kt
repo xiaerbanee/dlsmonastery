@@ -59,7 +59,7 @@ interface AdpricesystemRepositoryCustom{
 
     fun findOfficeById(id: String): MutableList<String>
 
-    fun saveAdpricesystemOffice(adPricesystemId:String,officeId:MutableList<String>):Int
+    fun saveAdpricesystemOffice(adPricesystemId:String,officeIdList:MutableList<String>):Int
 
     fun deleteOfficeId(id: String):Int
 
