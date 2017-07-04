@@ -234,7 +234,6 @@ public class OppoPushSerivce {
     //上抛一代二代库存数据,不包括门店数据
     @LocalDataSource
     public List<OppoCustomerStock> getOppoCustomerStock(LocalDate dateStart, LocalDate dateEnd) {
-        String companyId="1";
         initAreaDepotMap();
         Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
         Map<String, String> productColorMap = getProductColorMap();
