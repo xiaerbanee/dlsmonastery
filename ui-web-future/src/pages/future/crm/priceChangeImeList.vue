@@ -73,6 +73,7 @@
             <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
             <div class="action" v-if="scope.row.status !='已通过'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
             <div class="action" v-permit="'crm:priceChangeIme:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('priceChangeImeList.detail')}}</el-button></div>
+            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('priceChangeImeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +133,18 @@
       },itemAdd(){
         this.$router.push({ name: 'priceChangeImeForm'})
       },itemAction:function(id,action){
-          this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
+          if(action =="delete"){
+            util.confirmBeforeDelRecord(this).then(() => {
+              axios.get('/api/ws/future/crm/priceChangeIme/delete',{params:{id:id}}).then((response) =>{
+                this.$message(response.data.message);
+                this.pageRequest();
+              })
+            }).catch(()=>{
+
+            });
+          }else{
+            this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
+          }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/crm/priceChangeIme/export?'+qs.stringify(util.deleteExtra(this.formData));
