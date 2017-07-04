@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopPrintService {
 
     @Autowired
@@ -58,6 +58,7 @@ public class ShopPrintService {
         return shopPrintDto;
     }
 
+    @Transactional
     public ShopPrint save(ShopPrintForm shopPrintForm) {
         ShopPrint shopPrint;
         if(shopPrintForm.isCreate()){
@@ -82,10 +83,12 @@ public class ShopPrintService {
         return shopPrint;
     }
 
+    @Transactional
     public void logicDelete(String id){
         shopPrintRepository.logicDelete(id);
     }
 
+    @Transactional
     public void audit(ShopPrintAuditForm shopPrintAuditForm) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
 

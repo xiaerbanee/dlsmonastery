@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class AdGoodsOrderService {
     @Autowired
     private AdGoodsOrderRepository adGoodsOrderRepository;
@@ -150,6 +150,7 @@ public class AdGoodsOrderService {
 //        return map;
 //    }
 
+    @Transactional
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
 
         Depot outShop = depotRepository.findOne(adGoodsOrderForm.getOutShopId());
@@ -197,6 +198,7 @@ public class AdGoodsOrderService {
         }
     }
 
+    @Transactional
     private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货", adGoodsOrder.getId(), AdGoodsOrder.class.getSimpleName(), adGoodsOrder.getOutShopId()));
@@ -211,6 +213,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
@@ -243,6 +246,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
 
         List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
@@ -291,6 +295,7 @@ public class AdGoodsOrderService {
         return adGoodsOrderDto;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         adGoodsOrderRepository.logicDelete(id);
     }
@@ -309,6 +314,7 @@ public class AdGoodsOrderService {
         return result;
     }
 
+    @Transactional
     public void audit(AdGoodsOrderAuditForm adGoodsOrderAuditForm) {
 
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
@@ -362,6 +368,7 @@ public class AdGoodsOrderService {
         return result;
     }
 
+    @Transactional
     public void bill(AdGoodsOrderBillForm adGoodsOrderBillForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderBillForm.getId());
@@ -401,6 +408,7 @@ public class AdGoodsOrderService {
         }
     }
 
+    @Transactional
     private List<AdGoodsOrderDetail> saveDetailInfoWhenBill(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderBillDetailForm> detailFormList, Map<String, Product> productMap) {
 
         Map<String, AdPricesystemDetail> priceMap = Maps.newHashMap();
@@ -453,6 +461,7 @@ public class AdGoodsOrderService {
         return toBeSaved;
     }
 
+    @Transactional
     private void splitAdGoodsOrder(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         //开始保存拆分后的newAdGoodsOrder的基本信息
@@ -516,6 +525,7 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(newAdGoodsOrder);
     }
 
+    @Transactional
     private void synWhenBill(AdGoodsOrder adGoodsOrder, ExpressOrder expressOrder) {
         KingdeeSynReturnDto kingdeeSynReturnDto = salOutStockManager.synForAdGoodsOrder(adGoodsOrder);
 
@@ -528,7 +538,7 @@ public class AdGoodsOrderService {
 
     }
 
-
+    @Transactional
     private ExpressOrder saveExpressOrderInfoWhenBill(AdGoodsOrder adGoodsOrder, AdGoodsOrderBillForm adGoodsOrderBillForm, List<AdGoodsOrderDetail> detailList) {
 
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
@@ -562,6 +572,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     public void ship(AdGoodsOrderShipForm adGoodsOrderShipForm) {
 
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(adGoodsOrderShipForm.getId());
@@ -586,6 +597,7 @@ public class AdGoodsOrderService {
 
     }
 
+    @Transactional
     private void saveExpressOrderInfoWhenShip(AdGoodsOrder adGoodsOrder, AdGoodsOrderShipForm adGoodsOrderShipForm) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());
         expressOrder.setExpressCompanyId(adGoodsOrderShipForm.getExpressOrderExpressCompanyId());
@@ -598,6 +610,7 @@ public class AdGoodsOrderService {
         expressOrderManager.save(expressOrder.getExtendType(), expressOrder.getExtendId(), expressOrder.getExpressCodes(), expressOrder.getExpressCompanyId());
     }
 
+    @Transactional
     private boolean saveDetailInfoWhenShip(AdGoodsOrderShipForm adGoodsOrderShipForm) {
         Map<String, AdGoodsOrderShipDetailForm> adGoodsOrderShipFormMap = CollectionUtil.extractToMap(adGoodsOrderShipForm.getAdGoodsOrderDetailList(), "id");
         List<AdGoodsOrderDetail> adGoodsOrderDetailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrderShipForm.getId());
@@ -619,6 +632,7 @@ public class AdGoodsOrderService {
         return isAllShipped;
     }
 
+    @Transactional
     private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, String comment) {
         ActivitiCompleteForm activitiCompleteForm = new ActivitiCompleteForm();
         activitiCompleteForm.setPass(pass);
@@ -634,6 +648,7 @@ public class AdGoodsOrderService {
         adGoodsOrderRepository.save(adGoodsOrder);
     }
 
+    @Transactional
     public void sign(String id) {
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
 
@@ -645,6 +660,7 @@ public class AdGoodsOrderService {
         }
     }
 
+    @Transactional
     public AdGoodsOrderDto print(String id) {
         AdGoodsOrder adGoodsOrder = adGoodsOrderRepository.findOne(id);
         ExpressOrder expressOrder = expressOrderRepository.findOne(adGoodsOrder.getExpressOrderId());

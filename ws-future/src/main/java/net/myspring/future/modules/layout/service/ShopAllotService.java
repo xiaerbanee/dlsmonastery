@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ShopAllotService {
     @Autowired
     private ShopAllotRepository shopAllotRepository;
@@ -90,6 +90,7 @@ public class ShopAllotService {
         return sb.toString();
     }
 
+    @Transactional
     public void logicDelete(String id) {
         shopAllotRepository.logicDelete(id);
     }
@@ -98,6 +99,7 @@ public class ShopAllotService {
         return shopAllotRepository.findShopAllotDto(id);
     }
 
+    @Transactional
     public ShopAllot save(ShopAllotForm shopAllotForm) {
         ShopAllot shopAllot;
         if(shopAllotForm.isCreate()){
@@ -123,6 +125,7 @@ public class ShopAllotService {
         return shopAllot;
     }
 
+    @Transactional
     private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetailFormList, ShopAllot shopAllot) {
 
         Map<String, PricesystemDetail> fromPricesystemMap = CollectionUtil.extractToMap(pricesystemDetailRepository.findByDepotId(shopAllot.getFromShopId()),"productId");
@@ -148,6 +151,7 @@ public class ShopAllotService {
 
     }
 
+    @Transactional
     public void audit(ShopAllotAuditForm shopAllotAuditForm) {
 //        Account account = AccountUtils.getAccount();
 //        if(account.getOutId()==null){
