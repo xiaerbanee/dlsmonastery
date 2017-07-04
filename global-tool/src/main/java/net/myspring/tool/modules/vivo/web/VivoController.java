@@ -8,6 +8,7 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
+import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.service.VivoService;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
@@ -57,8 +58,7 @@ public class VivoController {
     }
 
     @RequestMapping(value="factoryOrder")
-    public String factoryOrder(String factoryCode, String factoryPassword){
-        vivoService.factoryOrder(factoryCode,factoryPassword);
-        return "";
+    public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
+        return vivoService.factoryOrder(factoryOrderDto);
     }
 }
