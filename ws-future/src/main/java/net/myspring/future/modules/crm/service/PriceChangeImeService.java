@@ -86,6 +86,11 @@ public class PriceChangeImeService {
     }
 
     @Transactional
+    public void delete(String id){
+        priceChangeImeRepository.logicDelete(id);
+    }
+
+    @Transactional
     public void imageUpload(PriceChangeImeForm priceChangeImeForm){
         PriceChangeIme priceChangeIme = priceChangeImeRepository.findOne(priceChangeImeForm.getId());
         priceChangeIme.setImage(priceChangeImeForm.getImage());

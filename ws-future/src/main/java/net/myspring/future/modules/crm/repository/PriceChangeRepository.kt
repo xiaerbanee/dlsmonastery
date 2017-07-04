@@ -1,22 +1,15 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.PriceChange
-import net.myspring.future.modules.crm.domain.PriceChangeProduct
 
-import net.myspring.future.modules.crm.domain.PricesystemChange
 import net.myspring.future.modules.crm.dto.PriceChangeDto
-import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
-import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
-import org.apache.poi.ss.formula.functions.T
-import org.bouncycastle.asn1.x500.style.RFC4519Style.name
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -26,9 +19,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDate
 import java.util.*
-import javax.persistence.EntityManager
 
 
 interface PriceChangeRepository : BaseRepository<PriceChange, String>, PriceChangeRepositoryCustom {
@@ -63,7 +54,7 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
         FROM crm_price_change t1
         ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
         limit 0,1
-                """, HashMap<String, Any>(), MyBeanPropertyRowMapper(PriceChange::class.java))
+                """, HashMap<String, Any>(), BeanPropertyRowMapper(PriceChange::class.java))
     }
 
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {

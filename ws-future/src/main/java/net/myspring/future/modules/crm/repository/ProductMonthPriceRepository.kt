@@ -1,11 +1,8 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductMonthPrice
-import net.myspring.future.modules.crm.dto.ProductMonthPriceDetailDto
 import net.myspring.future.modules.crm.dto.ProductMonthPriceDto
-import net.myspring.future.modules.crm.dto.StoreAllotDto
 import net.myspring.future.modules.crm.web.query.ProductMonthPriceQuery
 import net.myspring.util.repository.MySQLDialect
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +42,7 @@ class ProductMonthPriceRepositoryImpl @Autowired constructor(val namedParameterJ
             WHERE
                 t1.id =  :id
 
-                """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ProductMonthPriceDto::class.java))
+                """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ProductMonthPriceDto::class.java))
     }
 
 

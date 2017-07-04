@@ -1,6 +1,5 @@
 package net.myspring.future.modules.layout.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto
@@ -159,7 +158,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         where t1.ad_goods_order_id IN (:adGoodsOrderIdList)
         ORDER BY t1.ad_goods_order_id DESC
         limit 0, :limit
-          """, params, MyBeanPropertyRowMapper(AdGoodsOrderDetailExportDto::class.java))
+          """, params, BeanPropertyRowMapper(AdGoodsOrderDetailExportDto::class.java))
     }
 
 

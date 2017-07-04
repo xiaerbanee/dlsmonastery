@@ -13,7 +13,7 @@ import javax.persistence.PrePersist;
  */
 @MappedSuperclass
 public class CompanyEntity<T> extends DataEntity<T> {
-    private String companyName;
+    private String companyName = RequestUtils.getCompanyName();
 
     public String getCompanyName() {
         return companyName;

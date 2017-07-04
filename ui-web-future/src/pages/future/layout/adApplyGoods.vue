@@ -73,7 +73,7 @@
             for(let index of this.filterShop){
               if(util.isNotBlank(index.applyQty)){
                 tempList.push(index)
-               }
+              }
             }
            let submitData = util.deleteExtra(this.inputForm);
             submitData.depotAdApplyForms = tempList;

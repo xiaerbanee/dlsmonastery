@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductMonthPriceDetail
 import net.myspring.future.modules.crm.dto.ProductMonthPriceDetailDto
@@ -90,7 +89,7 @@ class ProductMonthPriceDetailRepositoryImpl @Autowired constructor(val namedPara
             t1.enabled = 1
             AND t1.score_type = 1
             AND t1.price1 IS NOT NULL
-          """,MyBeanPropertyRowMapper(ProductMonthPriceDetailDto::class.java))
+          """,BeanPropertyRowMapper(ProductMonthPriceDetailDto::class.java))
     }
 
 

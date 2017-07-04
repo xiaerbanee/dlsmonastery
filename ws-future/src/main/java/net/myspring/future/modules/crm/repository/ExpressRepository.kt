@@ -1,6 +1,5 @@
 package net.myspring.future.modules.crm.repository
 
-import net.myspring.future.common.config.MyBeanPropertyRowMapper
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.Express
 import net.myspring.future.modules.crm.dto.ExpressDto
@@ -56,7 +55,7 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         WHERE
             t1.enabled = 1
             AND t1.id = :id
-          """, Collections.singletonMap("id", id), MyBeanPropertyRowMapper(ExpressDto::class.java))
+          """, Collections.singletonMap("id", id), BeanPropertyRowMapper(ExpressDto::class.java))
 
     }
 
