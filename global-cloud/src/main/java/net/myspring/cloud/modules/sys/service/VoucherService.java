@@ -22,6 +22,7 @@ import net.myspring.cloud.modules.sys.repository.VoucherRepository;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
@@ -69,11 +70,11 @@ public class VoucherService {
         return BeanUtil.map(voucher,VoucherDto.class);
     }
 
-    public RestResponse save(VoucherForm voucherForm,VoucherModel voucherModel){
+    public RestResponse save(VoucherForm voucherForm){
         LocalDate date = voucherForm.getFDate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        RestResponse restResponse = check(data,voucherModel);
+        RestResponse restResponse = check(data,voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList());
         if (!restResponse.getSuccess()) {
             return restResponse;
         }else{
@@ -108,9 +109,9 @@ public class VoucherService {
                 }
             }
             voucherRepository.save(voucher);
-            List<String> headers = getHeaders(voucherModel.getBdFlexItemGroupList());
+            List<String> headers = getHeaders(voucherForm.getBdFlexItemGroupList());
             //核算维度分组
-            List<BdFlexItemProperty> bdFlexItemPropertyList = voucherModel.getBdFlexItemPropertyList();
+            List<BdFlexItemProperty> bdFlexItemPropertyList = voucherForm.getBdFlexItemPropertyList();
             Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName,BdFlexItemProperty->BdFlexItemProperty));
 
             for (List<Object> row : data){
@@ -150,13 +151,15 @@ public class VoucherService {
         }
     }
 
+    public Voucher save(Voucher voucher){
+        return voucherRepository.save(voucher);
+    }
 
-
-    public RestResponse check(List<List<Object>> data,VoucherModel voucherModel) {
+    public RestResponse check(List<List<Object>> data,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList) {
         StringBuilder sb = new StringBuilder();
         //所有科目
-        Map<String, List<String>> map = accountNumberNameToFlexGroupNamesMap(voucherModel.getBdAccountList(),voucherModel.getBdFlexItemGroupList());
-        List<String> header = getHeaders(voucherModel.getBdFlexItemGroupList());
+        Map<String, List<String>> map = accountNumberNameToFlexGroupNamesMap(bdAccountList,bdFlexItemGroupList);
+        List<String> header = getHeaders(bdFlexItemGroupList);
         BigDecimal debitAmount = BigDecimal.ZERO;
         BigDecimal creditAmount = BigDecimal.ZERO;
         for (int i = 0; i < data.size(); i++) {
@@ -206,20 +209,20 @@ public class VoucherService {
     }
 
     @Transactional(readOnly =true)
-    public List<List<String>>  initData(VoucherDto voucherDto, VoucherModel voucherModel) {
-        if (voucherDto.getId() != null) {
+    public List<List<String>>  initData(VoucherForm voucherForm) {
+        if (voucherForm.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
             //所有科目
-            Map<String, BdAccount> accountNumberMap = voucherModel.getBdAccountList().stream().collect(Collectors.toMap(BdAccount::getFNumber, BdAccount -> BdAccount));
+            Map<String, BdAccount> accountNumberMap = voucherForm.getBdAccountList().stream().collect(Collectors.toMap(BdAccount::getFNumber, BdAccount -> BdAccount));
             //所有核算维度
-            Map<String, BdFlexItemProperty> flexItemPropertyNameMap = voucherModel.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty -> BdFlexItemProperty));
-            Map<String, BdFlexItemProperty> flexItemPropertyFlexNumberMap = voucherModel.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFFlexNumber, BdFlexItemProperty -> BdFlexItemProperty));
+            Map<String, BdFlexItemProperty> flexItemPropertyNameMap = voucherForm.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty -> BdFlexItemProperty));
+            Map<String, BdFlexItemProperty> flexItemPropertyFlexNumberMap = voucherForm.getBdFlexItemPropertyList().stream().collect(Collectors.toMap(BdFlexItemProperty::getFFlexNumber, BdFlexItemProperty -> BdFlexItemProperty));
             //所有使用的核算维度组
             List<String> headers = Lists.newLinkedList();
-            for (String header : getFlexItemGroupAllName(voucherModel.getBdFlexItemGroupList())) {
+            for (String header : getFlexItemGroupAllName(voucherForm.getBdFlexItemGroupList())) {
                 headers.add("FDetailID__" + flexItemPropertyNameMap.get(header).getFFlexNumber());
             }
-            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucherDto.getId());
+            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucherForm.getId());
             for (VoucherEntry voucherEntry : voucherEntryList) {
                 List<String> list = Lists.newArrayList();
                 list.add(voucherEntry.getFExplanation());//摘要
@@ -254,6 +257,26 @@ public class VoucherService {
             return datas;
         }
         return null;
+    }
+
+    public Voucher audit(VoucherForm voucherForm){
+        String data = HtmlUtils.htmlUnescape(voucherForm.getJson());
+        List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
+        RestResponse restResponse = check(datas,voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList());
+        if (!restResponse.getSuccess()) {
+            throw new ServiceException(restResponse.getMessage());
+        }else {
+            Voucher voucher = voucherRepository.findOne(voucherForm.getId());
+            voucher.setFDate(voucherForm.getFDate());
+            save(voucherForm);
+            if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
+                voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
+            } else {
+                voucher.setStatus(VoucherStatusEnum.已完成.name());
+            }
+            voucher = voucherRepository.save(voucher);
+            return voucher;
+        }
     }
 
     //获取所有科目名称及其对应的核算维度
