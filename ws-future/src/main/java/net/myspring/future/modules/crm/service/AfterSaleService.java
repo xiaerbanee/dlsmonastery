@@ -3,12 +3,14 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
@@ -57,6 +59,8 @@ public class AfterSaleService {
     private AfterSaleStoreAllotRepository afterSaleStoreAllotRepository;
     @Autowired
     private AfterSaleProductAllotRepository afterSaleProductAllotRepository;
+    @Autowired
+    private StkTransferDirectManager stkTransferDirectManager;
 
     public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
         Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
@@ -434,12 +438,10 @@ public class AfterSaleService {
                 allotMap.get(key).setQty(allotMap.get(key).getQty()+1);
             }
             //同步到金蝶
-//            K3CloudSyn k3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(),afterSaleManager.getTransferDirect(Lists.newArrayList(allotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
-//            k3cloudManager.save(k3CloudSyn);
-//            k3CloudSynRepository.save(k3CloudSyn);
-//            String outCode = k3CloudSyn.getBillNo();
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForAfterSale(Lists.newArrayList(allotMap.values()));
+            String outCode = kingdeeSynReturnDto.getBillNo();
             for(AfterSaleStoreAllot afterSaleStoreAllot:afterSaleStoreAllots) {
-//                afterSaleStoreAllot.setOutCode(outCode);
+                afterSaleStoreAllot.setOutCode(outCode);
             }
             afterSaleStoreAllotRepository.save(afterSaleStoreAllots);
         }

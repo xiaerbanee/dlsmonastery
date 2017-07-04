@@ -28,14 +28,8 @@ public class StkMisDeliveryDto {
     private LocalDate billDate;
     //部门编码
     private String departmentNumber;
-    //物料编码
-    private String materialNumber;
-    //仓库编码
-    private String stockNumber;
-    //数量
-    private Integer qty;
-   //备注
-    private String FEntryNote;
+
+    private List<StkMisDeliveryFEntityDto> stkMisDeliveryFEntityDtoList = Lists.newArrayList();
 
     public String getExtendId() {
         return extendId;
@@ -85,36 +79,12 @@ public class StkMisDeliveryDto {
         this.departmentNumber = departmentNumber;
     }
 
-    public String getMaterialNumber() {
-        return materialNumber;
+    public List<StkMisDeliveryFEntityDto> getStkMisDeliveryFEntityDtoList() {
+        return stkMisDeliveryFEntityDtoList;
     }
 
-    public void setMaterialNumber(String materialNumber) {
-        this.materialNumber = materialNumber;
-    }
-
-    public String getStockNumber() {
-        return stockNumber;
-    }
-
-    public void setStockNumber(String stockNumber) {
-        this.stockNumber = stockNumber;
-    }
-
-    public Integer getQty() {
-        return qty;
-    }
-
-    public void setQty(Integer qty) {
-        this.qty = qty;
-    }
-
-    public String getFEntryNote() {
-        return FEntryNote;
-    }
-
-    public void setFEntryNote(String FEntryNote) {
-        this.FEntryNote = FEntryNote;
+    public void setStkMisDeliveryFEntityDtoList(List<StkMisDeliveryFEntityDto> stkMisDeliveryFEntityDtoList) {
+        this.stkMisDeliveryFEntityDtoList = stkMisDeliveryFEntityDtoList;
     }
 
     @JsonIgnore
@@ -129,7 +99,6 @@ public class StkMisDeliveryDto {
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
-
         model.put("FDeptId", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         //库存方向
         if (StkMisDeliveryTypeEnum.出库.name().equals(getMisDeliveryType())) {
@@ -140,14 +109,16 @@ public class StkMisDeliveryDto {
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
         model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();
-        Map<String, Object> detail = Maps.newLinkedHashMap();
-        detail.put("FMaterialId", CollectionUtil.getMap("FNumber", getMaterialNumber()));
-        detail.put("FStockId", CollectionUtil.getMap("FNumber", getStockNumber()));
-        detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
-        detail.put("FBaseUnitId", CollectionUtil.getMap("FNumber", "Pcs"));
-        detail.put("FQty", getQty());
-        detail.put("FEntryNote", getFEntryNote());
-        entity.add(detail);
+        for (StkMisDeliveryFEntityDto entityDto : getStkMisDeliveryFEntityDtoList()) {
+            Map<String, Object> detail = Maps.newLinkedHashMap();
+            detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entityDto.getMaterialNumber()));
+            detail.put("FStockId", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
+            detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
+            detail.put("FBaseUnitId", CollectionUtil.getMap("FNumber", "Pcs"));
+            detail.put("FQty", entityDto.getQty());
+            detail.put("FEntryNote", entityDto.getFEntryNote());
+            entity.add(detail);
+        }
         model.put("FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
