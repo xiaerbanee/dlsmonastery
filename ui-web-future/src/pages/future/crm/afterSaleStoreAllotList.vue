@@ -3,7 +3,7 @@
     <head-tab active="afterSaleStoreAllotList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleStoreAllotList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <el-dialog :title="$t('afterSaleStoreAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -32,6 +32,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData()">导出</el-button>
           <el-button type="primary" @click="search()">{{$t('afterSaleStoreAllotList.sure')}}</el-button>
         </div>
       </el-dialog>
@@ -84,6 +85,12 @@
         this.formData.pageNumber = pageNumber;
         this.formData.pageSize = pageSize;
         this.pageRequest();
+      },exportData(){
+        this.formVisible = false;
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/crm/afterSaleStoreAllot/export?'+qs.stringify(util.deleteExtra(this.formData));
+          this.pageRequest();
+        }).catch(()=>{});
       },sortChange(column) {
         this.formData.order=util.getSort(column);
         this.formData.pageNumber=0;
