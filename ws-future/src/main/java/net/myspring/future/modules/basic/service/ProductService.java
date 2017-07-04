@@ -53,8 +53,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private DepotRepository depotRepository;
-    @Autowired
     private CloudClient cloudClient;
     @Autowired
     private CacheUtils cacheUtils;
@@ -83,9 +81,8 @@ public class ProductService {
     public Product findByName(String name){
         return productRepository.findByName(name);
     }
-
-    public List<ProductDto> findByOutName(){
-        return BeanUtil.map(productRepository.findByOutName(),ProductDto.class);
+    public List<ProductDto> findByNameOrCodeAndOutGroupName(String nameOrCode,String outGroupName){
+        return productRepository.findByNameOrCodeAndOutGroupName(nameOrCode,outGroupName);
     }
 
     public List<ProductDto> findByNameLikeHasIme(String name){
