@@ -710,6 +710,7 @@ public class AdGoodsOrderService {
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderOutCode", "财务编号"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderOutShopName", "财务门店"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderShopName", "门店"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderOfficeName", "办事处"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderDepotShopAreaType", "区域类型"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderShopAddress", "门店地址"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillAddress", "目的地"));

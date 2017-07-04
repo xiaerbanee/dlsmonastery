@@ -7,12 +7,14 @@ import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.service.AdGoodsOrderDetailService;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping(value = "layout/adGoodsOrderDetail")
@@ -37,8 +39,8 @@ public class AdGoodsOrderDetailController {
 
 
     @RequestMapping(value="export")
-    public String export(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
-        return adGoodsOrderDetailService.export(adGoodsOrderDetailQuery);
+    public ModelAndView export(AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",adGoodsOrderDetailService.export(adGoodsOrderDetailQuery));
     }
 
 

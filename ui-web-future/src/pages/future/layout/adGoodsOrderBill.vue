@@ -161,7 +161,6 @@
          for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
            if (util.isNotBlank(adGoodsOrderDetail.billQty)) {
              tempList.push(adGoodsOrderDetail);
-             adGoodsOrderDetail.billQty = adGoodsOrderDetail.confirmQty;
            }
          }
          for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
