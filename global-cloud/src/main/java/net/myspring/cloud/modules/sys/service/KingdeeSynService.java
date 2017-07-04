@@ -1,8 +1,6 @@
 package net.myspring.cloud.modules.sys.service;
 
-import com.sun.org.apache.regexp.internal.RE;
 import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
-import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
@@ -13,14 +11,13 @@ import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
-import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -29,7 +26,7 @@ import java.util.List;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class KingdeeSynService {
     @Autowired
     private KingdeeSynRepository kingdeeSynRepository;
@@ -47,6 +44,7 @@ public class KingdeeSynService {
         return page;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         kingdeeSynRepository.logicDelete(id);
     }
@@ -59,6 +57,7 @@ public class KingdeeSynService {
         return kingdeeSynRepository.findByExtendIdAndExtendType(extendId,extendType);
     }
 
+    @Transactional
     public KingdeeSynDto syn(String id){
         KingdeeSynDto kingdeeSynDto;
         KingdeeSyn kingdeeSyn = kingdeeSynRepository.findOne(id);

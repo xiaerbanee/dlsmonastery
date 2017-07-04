@@ -14,18 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by lihx on 2017/4/5.
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class KingdeeBookService {
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
@@ -58,10 +57,12 @@ public class KingdeeBookService {
         return kingdeeBookForm;
     }
 
+    @Transactional
     public void logicDelete(String id) {
         kingdeeBookRepository.logicDelete(id);
     }
 
+    @Transactional
     public KingdeeBook save(KingdeeBookForm kingdeeBookForm){
         KingdeeBook kingdeeBook;
         if (kingdeeBookForm.isCreate()){

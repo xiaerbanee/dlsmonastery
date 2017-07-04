@@ -14,7 +14,6 @@ import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.domain.VoucherEntry;
 import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
-import net.myspring.cloud.modules.sys.dto.VoucherModel;
 import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.VoucherEntryFlowRepository;
 import net.myspring.cloud.modules.sys.repository.VoucherEntryRepository;
@@ -23,7 +22,6 @@ import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -49,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @LocalDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
@@ -70,6 +68,7 @@ public class VoucherService {
         return BeanUtil.map(voucher,VoucherDto.class);
     }
 
+    @Transactional
     public RestResponse save(VoucherForm voucherForm){
         LocalDate date = voucherForm.getFDate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
@@ -151,6 +150,7 @@ public class VoucherService {
         }
     }
 
+    @Transactional
     public Voucher save(Voucher voucher){
         return voucherRepository.save(voucher);
     }
@@ -208,7 +208,6 @@ public class VoucherService {
         }
     }
 
-    @Transactional(readOnly =true)
     public List<List<String>>  initData(VoucherForm voucherForm) {
         if (voucherForm.getId() != null) {
             List<List<String>> datas = Lists.newArrayList();
@@ -259,6 +258,7 @@ public class VoucherService {
         return null;
     }
 
+    @Transactional
     public Voucher audit(VoucherForm voucherForm){
         String data = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
