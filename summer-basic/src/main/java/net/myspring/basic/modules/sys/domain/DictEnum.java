@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.sys.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="sys_dict_enum")
 @Where(clause = "enabled=true")
-public class DictEnum extends CompanyEntity<DictEnum> {
+public class DictEnum extends DataEntity<DictEnum> {
     private Integer sort;
     private String category;
     private String value;
