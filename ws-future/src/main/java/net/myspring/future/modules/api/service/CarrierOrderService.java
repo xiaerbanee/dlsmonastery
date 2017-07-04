@@ -75,6 +75,12 @@ public class CarrierOrderService {
         return page;
     }
 
+    public  void updateStatusAndRemarks(CarrierOrderFrom carrierOrderFrom){
+        CarrierOrder carrierOrder=carrierOrderRepository.findOne(carrierOrderFrom.getId());
+        carrierOrder.setStatus(carrierOrderFrom.getStatus());
+        carrierOrder.setRemarks(carrierOrderFrom.getRemarks());
+        carrierOrderRepository.save(carrierOrder);
+    }
     public CarrierOrderDto findDto(String id) {
         CarrierOrderDto result = carrierOrderRepository.findDto(id);
         cacheUtils.initCacheInput(result);
