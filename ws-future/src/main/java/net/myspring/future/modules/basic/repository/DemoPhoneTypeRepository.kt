@@ -84,12 +84,15 @@ class DemoPhoneTypeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
                 t1.*, GROUP_CONCAT(DISTINCT t2. NAME) AS productTypeNames
             FROM
                 crm_demo_phone_type t1
-            LEFT JOIN crm_product_type t2 ON t1.id = t2.demo_phone_type_id
+                LEFT JOIN crm_product_type t2 ON t1.id = t2.demo_phone_type_id
             WHERE
                 t1.enabled = 1
         """)
         if (StringUtils.isNotEmpty(demoPhoneTypeQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(demoPhoneTypeQuery.productTypeName)) {
+            sb.append("""  and t2.name LIKE CONCAT('%',:productTypeName,'%') """)
         }
         sb.append(""" GROUP BY t1.id """)
 

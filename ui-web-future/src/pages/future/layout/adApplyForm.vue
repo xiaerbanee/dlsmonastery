@@ -131,7 +131,7 @@
              }
           }
          for(let index of this.inputForm.productAdForms){
-           if(util.contains(index.name,val)&&util.isBlank(index.applyQty)){
+           if((util.contains(index.name,val)||util.contains(index.code,val))&&util.isBlank(index.applyQty)){
              tempList.push(index);
            }
          }
