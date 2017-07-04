@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "hr_employee")
-public class Employee extends CompanyEntity<Employee> {
+public class Employee extends DataEntity<Employee> {
     private String code;
     private String mobilePhone;
     private String image;

@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -10,17 +11,15 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.crm.domain.AfterSale;
-import net.myspring.future.modules.crm.domain.AfterSaleDetail;
-import net.myspring.future.modules.crm.domain.AfterSaleImeAllot;
-import net.myspring.future.modules.crm.domain.ProductIme;
+import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
-import net.myspring.future.modules.crm.repository.AfterSaleImeAllotRepository;
-import net.myspring.future.modules.crm.repository.AfterSaleRepository;
-import net.myspring.future.modules.crm.repository.ProductImeRepository;
+import net.myspring.future.modules.crm.repository.*;
+import net.myspring.future.modules.crm.web.form.AfterSaleProductAllotForm;
+import net.myspring.future.modules.crm.web.form.AfterSaleStoreAllotForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.elasticsearch.xpack.notification.hipchat.V1Account;
@@ -32,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +53,10 @@ public class AfterSaleService {
     private AfterSaleImeAllotRepository afterSaleImeAllotRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private AfterSaleStoreAllotRepository afterSaleStoreAllotRepository;
+    @Autowired
+    private AfterSaleProductAllotRepository afterSaleProductAllotRepository;
 
     public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
         Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
@@ -331,6 +335,151 @@ public class AfterSaleService {
                 }
             }
             afterSaleRepository.logicDelete(afterSale.getId());
+        }
+    }
+
+    @Transactional
+    public void synToFinance(){
+        LocalDateTime date = LocalDateTime.now();
+        
+        String goodStoreId =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.GOOD_STORE_ID.name()).getValue();
+        String badStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.BAD_STORE_ID.name()).getValue();
+        String depositStoreId =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEPOSIT_STORE_ID.name()).getValue();
+        String disuseStoreId =CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DISUSE_STORE_ID.name()).getValue();
+        Depot goodStore = depotRepository.findOne(goodStoreId);
+        Depot badStore = depotRepository.findOne(badStoreId);
+        Depot depositStore = depotRepository.findOne(depositStoreId);
+        Depot disuseStore = depotRepository.findOne(disuseStoreId);
+        List<AfterSale> afterSales = afterSaleRepository.findByToFinanceDateIsNull();
+        List<AfterSaleStoreAllot> afterSaleStoreAllots = Lists.newArrayList();
+        List<AfterSaleProductAllot> afterSaleProductAllots = Lists.newArrayList();
+        List<String> imeList=Lists.newArrayList();
+        imeList.addAll(CollectionUtil.extractToList(afterSales,"badProductImeId"));
+        imeList.addAll(CollectionUtil.extractToList(afterSales,"toAreaProductImeId"));
+        Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(afterSales,"imeList"));
+        Map<String,Product> productMap=productRepository.findMap(CollectionUtil.extractToList(productImeMap.values(),"productId"));
+        for(AfterSale afterSale:afterSales) {
+            ProductIme badProductIme = productImeMap.get(afterSale.getBadProductImeId());
+            ProductIme toAreaIme=productImeMap.get(afterSale.getToAreaProductImeId());
+            if((badProductIme!=null&&StringUtils.isBlank(productMap.get(badProductIme.getProductId()).getCode()))||(toAreaIme!=null&&StringUtils.isBlank(productMap.get(toAreaIme.getProductId()).getCode()))){
+                afterSale.setRemarks("淘汰机不需要步金蝶");
+                continue;
+            }
+            //地区->仓库未同步
+            if(!afterSale.getFromAreaToFinance()) {
+                //如果没有返还机器,客户寄存机库->坏机库
+                if(StringUtils.isBlank(afterSale.getToAreaProductImeId())) {
+                    AfterSaleStoreAllot afterSaleStoreAllot = new AfterSaleStoreAllot(afterSale.getId(),badProductIme.getProductId(),depositStore.getId(),badStore.getId());
+                    afterSaleStoreAllots.add(afterSaleStoreAllot);
+                } else {
+                    ProductIme toAreaProductIme = productImeMap.get(afterSale.getToAreaProductImeId());
+                    //返还机型和坏机机型不一致，做盘点单
+                    if(!toAreaProductIme.getProductId().equals(badProductIme.getProductId())) {
+                        AfterSaleProductAllot afterSaleProductAllot = new AfterSaleProductAllot(afterSale.getId(),goodStore.getId(),toAreaProductIme.getProductId(),badProductIme.getProductId());
+                        afterSaleProductAllots.add(afterSaleProductAllot);
+                    }
+                    //好机库->坏机库
+                    AfterSaleStoreAllot afterSaleStoreAllot = new AfterSaleStoreAllot(afterSale.getId(),badProductIme.getProductId(),goodStore.getId(),badStore.getId());
+                    afterSaleStoreAllots.add(afterSaleStoreAllot);
+                    afterSale.setToAreaToFinance(true);
+                }
+                afterSale.setFromAreaToFinance(true);
+            }
+            if(!afterSale.getToAreaToFinance() && StringUtils.isNotBlank(afterSale.getToAreaProductImeId())) {
+                ProductIme toAreaProductIme = productImeMap.get(afterSale.getToAreaProductImeId());;
+                //返还机型和坏机机型不一致，做盘点单
+                if(!toAreaProductIme.getProductId().equals(badProductIme.getProductId())) {
+                    AfterSaleProductAllot afterSaleProductAllot = new AfterSaleProductAllot(afterSale.getId(),goodStore.getId(),toAreaProductIme.getProductId(),badProductIme.getProductId());
+                    afterSaleProductAllots.add(afterSaleProductAllot);
+                }
+                //好机库->客户寄存机库
+                AfterSaleStoreAllot afterSaleStoreAllot = new AfterSaleStoreAllot(afterSale.getId(),badProductIme.getProductId(),goodStore.getId(),depositStore.getId());
+                afterSaleStoreAllots.add(afterSaleStoreAllot);
+                afterSale.setToAreaToFinance(true);
+            }
+            if(!afterSale.getToCompanyToFinance() && afterSale.getToCompanyDate() !=null) {
+                //坏机库->淘汰机库
+                AfterSaleStoreAllot afterSaleStoreAllot = new AfterSaleStoreAllot(afterSale.getId(),badProductIme.getProductId(),badStore.getId(),disuseStore.getId());
+                afterSaleStoreAllots.add(afterSaleStoreAllot);
+                afterSale.setToCompanyToFinance(true);
+            }
+            if(!afterSale.getFromCompanyToFinance() && StringUtils.isNotBlank(afterSale.getFromCompanyProductId())) {
+                //返还机型和坏机机型不一致，做盘点单
+                if(!afterSale.getFromCompanyProductId().equals(badProductIme.getProductId())) {
+                    AfterSaleProductAllot afterSaleProductAllot = new AfterSaleProductAllot(afterSale.getId(),disuseStore.getId(),badProductIme.getProductId(),afterSale.getFromCompanyProductId());
+                    afterSaleProductAllots.add(afterSaleProductAllot);
+                }
+                //淘汰机库>到好机库
+                AfterSaleStoreAllot afterSaleStoreAllot = new AfterSaleStoreAllot(afterSale.getId(),afterSale.getFromCompanyProductId(),disuseStore.getId(),goodStore.getId());
+                afterSaleStoreAllots.add(afterSaleStoreAllot);
+                afterSale.setFromCompanyToFinance(true);
+            }
+            if(afterSale.getFromAreaToFinance() && afterSale.getToAreaToFinance() && afterSale.getFromCompanyToFinance() && afterSale.getToCompanyToFinance()) {
+                afterSale.setToFinanceDate(date);
+            } else {
+                afterSale.setToFinanceDate(null);
+            }
+        }
+        afterSaleRepository.save(afterSales);
+        //仓库调拨单
+        if(CollectionUtil.isNotEmpty(afterSaleStoreAllots)) {
+            Map<String,AfterSaleStoreAllotForm> allotMap = Maps.newHashMap();
+            for(AfterSaleStoreAllot afterSaleStoreAllot:afterSaleStoreAllots) {
+                AfterSaleStoreAllotForm afterSaleStoreAllotForm= BeanUtil.map(afterSaleStoreAllot,AfterSaleStoreAllotForm.class);
+                String key =afterSaleStoreAllot.getProductId() + CharConstant.ENTER + afterSaleStoreAllot.getFromStoreId() + CharConstant.ENTER + afterSaleStoreAllot.getToStoreId();
+                if(!allotMap.containsKey(key)) {
+                    afterSaleStoreAllotForm.setQty(0);
+                    allotMap.put(key,afterSaleStoreAllotForm);
+                }
+                allotMap.get(key).setQty(allotMap.get(key).getQty()+1);
+            }
+            //同步到金蝶
+//            K3CloudSyn k3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_TransferDirect.name(),afterSaleManager.getTransferDirect(Lists.newArrayList(allotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
+//            k3cloudManager.save(k3CloudSyn);
+//            k3CloudSynRepository.save(k3CloudSyn);
+//            String outCode = k3CloudSyn.getBillNo();
+            for(AfterSaleStoreAllot afterSaleStoreAllot:afterSaleStoreAllots) {
+//                afterSaleStoreAllot.setOutCode(outCode);
+            }
+            afterSaleStoreAllotRepository.save(afterSaleStoreAllots);
+        }
+        //盘点单
+        if(CollectionUtil.isNotEmpty(afterSaleProductAllots)) {
+            //盘亏单
+            Map<String,AfterSaleProductAllotForm> fromAllotMap = Maps.newHashMap();
+            //盘盈单
+            Map<String,AfterSaleProductAllotForm> toAllotMap = Maps.newHashMap();
+            for(AfterSaleProductAllot afterSaleProductAllot:afterSaleProductAllots) {
+                AfterSaleProductAllotForm afterSaleProductAllotForm=BeanUtil.map(afterSaleProductAllot,AfterSaleProductAllotForm.class);
+                String fromKey =afterSaleProductAllot.getStoreId() + CharConstant.ENTER + afterSaleProductAllot.getFromProductId();
+                if(!fromAllotMap.containsKey(fromKey)) {
+                    afterSaleProductAllotForm.setFromQty(0);
+                    fromAllotMap.put(fromKey, afterSaleProductAllotForm);
+                }
+                fromAllotMap.get(fromKey).setFromQty(fromAllotMap.get(fromKey).getFromQty()+1);
+
+                String toKey =afterSaleProductAllot.getStoreId() + CharConstant.ENTER + afterSaleProductAllot.getToProductId();
+                if(!toAllotMap.containsKey(toKey)) {
+                    afterSaleProductAllotForm.setToQty(0);
+                    toAllotMap.put(toKey, afterSaleProductAllotForm);
+                }
+                toAllotMap.get(toKey).setToQty(toAllotMap.get(toKey).getToQty()+1);
+            }
+
+//            K3CloudSyn fromK3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_MisDelivery.name(),afterSaleManager.getMisDeliveryGeneral(Lists.newArrayList(fromAllotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
+//            k3cloudManager.save(fromK3CloudSyn);
+//            k3CloudSynRepository.save(fromK3CloudSyn);
+
+//            K3CloudSyn toK3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_MisDelivery.name(),afterSaleManager.getMisDeliveryReturn(Lists.newArrayList(toAllotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
+//            k3cloudManager.save(toK3CloudSyn);
+//            k3CloudSynRepository.save(toK3CloudSyn);
+//            String fromOutCode =fromK3CloudSyn.getBillNo();
+//            String toOutCode = toK3CloudSyn.getBillNo();
+            for(AfterSaleProductAllot afterSaleProductAllot:afterSaleProductAllots) {
+//                afterSaleProductAllot.setFromOutCode(fromOutCode);
+//                afterSaleProductAllot.setToOutCode(toOutCode);
+            }
+            afterSaleProductAllotRepository.save(afterSaleProductAllots);
         }
     }
 

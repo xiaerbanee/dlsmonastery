@@ -1,19 +1,16 @@
 package net.myspring.basic.modules.hr.domain;
 
 
-import com.google.common.collect.Lists;
-import net.myspring.basic.common.domain.CompanyEntity;
 import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Entity
 @Table(name="hr_duty_worktime")
-public class DutyWorktime extends CompanyEntity<DutyWorktime> {
+public class DutyWorktime extends DataEntity<DutyWorktime> {
     private String type;
     private LocalDate dutyDate;
     private LocalTime dutyTime;

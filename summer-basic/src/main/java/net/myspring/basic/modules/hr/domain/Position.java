@@ -1,6 +1,6 @@
 package net.myspring.basic.modules.hr.domain;
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -8,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hr_position")
-public class Position extends CompanyEntity<Position> {
+public class Position extends DataEntity<Position> {
     private String name;
     private Integer version = 0;
     private String permission;

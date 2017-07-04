@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_depot_shop")
-public class DepotShop extends CompanyEntity<DepotShop> {
+public class DepotShop extends DataEntity<DepotShop> {
     private String depotId;
     // 地区属性
     private String areaType;

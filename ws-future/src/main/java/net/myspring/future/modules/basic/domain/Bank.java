@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -11,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_bank")
-public class Bank extends CompanyEntity<Bank> {
+public class Bank extends DataEntity<Bank> {
     private String name;
     private String code;
     private String outId;

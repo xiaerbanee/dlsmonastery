@@ -1,7 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -9,7 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_shop_attribute")
-public class ShopAttribute extends CompanyEntity<ShopAttribute> {
+public class ShopAttribute extends DataEntity<ShopAttribute> {
     private String shopId;
     private String typeName;
     private Double typeValue;

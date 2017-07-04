@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_lottery_rule")
-public class LotteryRule extends CompanyEntity<LotteryRule> {
+public class LotteryRule extends DataEntity<LotteryRule> {
     private String name;
     private String type;
     private LocalDate dateStart;

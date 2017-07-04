@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
 import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
@@ -10,7 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_employee_deposit")
-public class EmployeeDeposit extends CompanyEntity<EmployeeDeposit> {
+public class EmployeeDeposit extends DataEntity<EmployeeDeposit> {
     private BigDecimal depositAmount;
     private BigDecimal reconditionAmount;
     private String status;

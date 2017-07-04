@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name="crm_after_sale_detail")
-public class AfterSaleDetail extends CompanyEntity<AfterSaleDetail>{
+public class AfterSaleDetail extends DataEntity<AfterSaleDetail> {
     //售后节点：地区录入，总部录入，工厂录入(坏机返厂，好机返库)
     private String type;
     //坏机来源

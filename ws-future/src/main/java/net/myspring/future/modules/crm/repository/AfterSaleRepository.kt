@@ -32,6 +32,8 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
         """)
     fun findByBadProductImeIn(imeList: MutableList<String>): MutableList<AfterSale>
 
+    fun findByToFinanceDateIsNull():MutableList<AfterSale>
+
     fun findByBadProductImeIdIn(badProductImeId:MutableList<String>):MutableList<AfterSale>
 
 }

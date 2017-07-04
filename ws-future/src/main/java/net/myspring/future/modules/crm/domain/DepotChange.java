@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_depot_change")
-public class DepotChange extends CompanyEntity<DepotChange> {
+public class DepotChange extends DataEntity<DepotChange> {
     private String type;
     private LocalDate expiryDate;
     private String oldValue;

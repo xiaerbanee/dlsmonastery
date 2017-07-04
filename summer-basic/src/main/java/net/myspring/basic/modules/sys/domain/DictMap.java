@@ -1,14 +1,14 @@
 package net.myspring.basic.modules.sys.domain;
 
 
-import net.myspring.basic.common.domain.CompanyEntity;
+import net.myspring.basic.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="sys_dict_map")
-public class DictMap extends CompanyEntity<DictMap> {
+public class DictMap extends DataEntity<DictMap> {
     private String category;
     private String name;
     private String value;
