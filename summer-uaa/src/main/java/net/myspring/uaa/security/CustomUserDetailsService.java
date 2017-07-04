@@ -85,7 +85,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
             authList.add(new SimpleGrantedAuthority(accountDto.getPositionId()));
-            permissionManager.permissionCachePut(accountDto.getId(),accountDto.getRoleId());
+            //将用户权限设置到缓存中
+            permissionManager.getPermissionList(accountDto.getId(),accountDto.getRoleId());
             Boolean admin = StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountDto.getId());
             OfficeDto officeDto = officeManager.findOne(accountDto.getOfficeId());
             Boolean allDataScope = officeDto.getAllDataScope();
