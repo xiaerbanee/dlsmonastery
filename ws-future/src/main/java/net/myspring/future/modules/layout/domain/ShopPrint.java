@@ -1,14 +1,14 @@
 package net.myspring.future.modules.layout.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="crm_shop_print")
-public class ShopPrint extends CompanyEntity<ShopPrint> {
+public class ShopPrint extends DataEntity<ShopPrint> {
     private String printType;
     private Integer qty;
     private String contator;

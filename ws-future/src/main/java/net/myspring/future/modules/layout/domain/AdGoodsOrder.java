@@ -1,6 +1,6 @@
 package net.myspring.future.modules.layout.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_ad_goods_order")
-public class AdGoodsOrder extends CompanyEntity<AdGoodsOrder> {
+public class AdGoodsOrder extends DataEntity<AdGoodsOrder> {
     private String storeId;
     private String outShopId;
     private String shopId;

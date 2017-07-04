@@ -1,6 +1,6 @@
 package net.myspring.future.modules.basic.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_depot")
-public class Depot extends CompanyEntity<Depot> {
+public class Depot extends DataEntity<Depot> {
     private String clientId;
     //寄售对应
     private String delegateDepotId;

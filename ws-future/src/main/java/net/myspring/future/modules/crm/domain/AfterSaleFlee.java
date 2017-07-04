@@ -1,6 +1,6 @@
 package net.myspring.future.modules.crm.domain;
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name="crm_after_sale_flee")
-public class AfterSaleFlee extends CompanyEntity<AfterSaleFlee> {
+public class AfterSaleFlee extends DataEntity<AfterSaleFlee> {
     private String ime;
     private String fleeShopName;
     private String contact;

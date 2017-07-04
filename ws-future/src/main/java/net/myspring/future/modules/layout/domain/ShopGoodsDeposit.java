@@ -1,7 +1,7 @@
 package net.myspring.future.modules.layout.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="crm_shop_goods_deposit")
-public class ShopGoodsDeposit extends CompanyEntity<ShopGoodsDeposit> {
+public class ShopGoodsDeposit extends DataEntity<ShopGoodsDeposit> {
     private String shopId;
     private String type;
     private BigDecimal amount;

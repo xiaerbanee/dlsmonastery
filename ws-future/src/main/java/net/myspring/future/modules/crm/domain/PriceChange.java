@@ -1,7 +1,7 @@
 package net.myspring.future.modules.crm.domain;
 
 
-import net.myspring.future.common.domain.CompanyEntity;
+import net.myspring.future.common.domain.DataEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name="crm_price_change")
-public class PriceChange extends CompanyEntity<PriceChange> {
+public class PriceChange extends DataEntity<PriceChange> {
     private String name;
     private LocalDate priceChangeDate;
     private LocalDate uploadEndDate;
