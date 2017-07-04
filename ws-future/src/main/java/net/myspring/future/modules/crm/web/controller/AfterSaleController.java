@@ -77,13 +77,13 @@ public class AfterSaleController {
 
     @RequestMapping(value = "formData", method = RequestMethod.GET)
     public Map<String, Object> formData(String imeStr) {
-        List<ProductIme> list = Lists.newArrayList();
+        List<ProductImeDto> list = Lists.newArrayList();
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
             List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
-            Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
-            Map<String, AfterSale> afterSaleMap = afterSaleService.findAfterSale(imeList);
+            Map<String,ProductImeDto> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
+            Map<String, AfterSaleDto> afterSaleMap = afterSaleService.findDtoByImeList(imeList);
             for(String ime:imeList){
                 if(!productImeMap.containsKey(ime)){
                     stringBuilder.append("串码" + ime + "在系统中不存在\n");
@@ -102,13 +102,13 @@ public class AfterSaleController {
 
     @RequestMapping(value = "editFormData", method = RequestMethod.GET)
     public Map<String, Object> editFormData(String imeStr) {
-        List<AfterSale> list = Lists.newArrayList();
+        List<AfterSaleDto> list = Lists.newArrayList();
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
             List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
             List<ProductImeDto> productImeList=productImeService.findByImeList(imeList);
             Map<String,ProductIme> productImeMap=CollectionUtil.extractToMap(productImeList,"ime");
-            Map<String, AfterSale> afterSaleMap = afterSaleService.findAfterSale(imeList);
+            Map<String, AfterSaleDto> afterSaleMap = afterSaleService.findDtoByImeList(imeList);
             for(String ime:imeList){
                 if(!productImeMap.containsKey(ime)){
                     stringBuilder.append("串码" + ime + "在系统中不存在\n");
@@ -126,13 +126,13 @@ public class AfterSaleController {
     }
 
     @RequestMapping(value="searchImeMap" ,method=RequestMethod.GET)
-    public String searchImeMap(String imeStr){
-        Map<String,AfterSale> list = Maps.newHashMap();
+    public Map<String,AfterSaleDto> searchImeMap(String imeStr){
+        Map<String,AfterSaleDto> map = Maps.newHashMap();
         if(StringUtils.isNotBlank(imeStr)) {
             List<String> imeList=StringUtils.getSplitList(imeStr,CharConstant.ENTER);
-            list=afterSaleService.findAfterSale(imeList);
+            map=afterSaleService.findDtoByImeList(imeList);
         }
-        return ObjectMapperUtils.writeValueAsString(list);
+        return map;
     }
 
 
@@ -182,8 +182,8 @@ public class AfterSaleController {
         StringBuilder stringBuilder=new StringBuilder();
         if(StringUtils.isNotBlank(imeStr)) {
             final List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-            Map<String,AfterSale> afterSaleMap =afterSaleService.findAfterSale(imeList);
-            List<AfterSale> afterSales = Lists.newArrayList();
+            Map<String,AfterSaleDto> afterSaleMap =afterSaleService.findDtoByImeList(imeList);
+            List<AfterSaleDto> afterSales = Lists.newArrayList();
             for(String ime:imeList) {
                 if(!afterSaleMap.containsKey(ime)) {
                     stringBuilder.append("串码" + ime + "没有找到售后单据\n");
@@ -196,7 +196,7 @@ public class AfterSaleController {
             //显示串码数量
             if(CollectionUtil.isNotEmpty(afterSales)) {
                 List<String> productImeIdList = Lists.newArrayList();
-                for(AfterSale afterSale:afterSales) {
+                for(AfterSaleDto afterSale:afterSales) {
                     productImeIdList.add(afterSale.getBadProductImeId());
                 }
                 List<ProductIme> productImeList=productImeService.findByIds(productImeIdList);

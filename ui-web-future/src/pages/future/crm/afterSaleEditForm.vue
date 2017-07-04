@@ -57,9 +57,9 @@
           rowHeaders:true,
           maxRows:1000,
           columns: [
-            {data: "ime",strict:true, readOnly: true,width:120},
-            {data: "productName",strict:true, readOnly: true,width:120},
-            {data: "retailShopName",strict:true, readOnly: true,width:120},
+            {data: "badProductIme",strict:true, readOnly: true,width:120},
+            {data: "badProductName",strict:true, readOnly: true,width:120},
+            {data: "retailDepotName",strict:true, readOnly: true,width:120},
             {data:"toAreaProductIme",type: "autocomplete",strict:true, allowEmpty:true,
               imes:[],
               source:function (query, process) {
@@ -88,7 +88,7 @@
                 }
               } , width:150},
             {data:"toAreaProductName",strict:true, width:150},
-            {data:"areaDepot",type: "autocomplete",strict:true,
+            {data:"areaDepotName",type: "autocomplete",strict:true,
               tempShopNames: [],
               source: function (query, process) {
                 var that = this;
@@ -147,7 +147,7 @@
               },
               width:150
             },
-            {data: "remarks",width:150}
+            {data: "toStoreRemarks",width:150}
           ]
         },
       }
@@ -181,14 +181,10 @@
             axios.post('/api/ws/future/crm/afterSale/update', qs.stringify(this.inputForm, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               if (response.data.success) {
+                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
                 Object.assign(this.$data, this.getData());
               }
               this.submitDisabled = false;
-              if (this.isCreate) {
-                this.submitDisabled = false;
-              } else {
-                this.$router.push({name: 'afterSaleList', query: util.getQuery("afterSaleList"),params:{_closeFrom:true}})
-              }
             });
           } else {
             this.submitDisabled = false;
