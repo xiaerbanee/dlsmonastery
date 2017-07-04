@@ -69,7 +69,7 @@
         <el-table-column prop="outCode" :label="$t('bankInList.outCode')" sortable></el-table-column>
         <el-table-column prop="processStatus" :label="$t('bankInList.processStatus')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('bankInList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('bankInList.operation')" width="140">
+        <el-table-column :label="$t('bankInList.operation')" width="140">
           <template scope="scope" >
             <div class="action" v-permit="'crm:bankIn:view'"><el-button size="small" @click.native="itemAction(scope.row.id, 'detail')">{{$t('bankInList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable" v-permit="'crm:bankIn:audit'"><el-button size="small" @click.native="itemAction(scope.row.id, 'audit')">{{$t('bankInList.audit')}}</el-button></div>
