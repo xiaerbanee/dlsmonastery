@@ -60,9 +60,6 @@ public class AccountService {
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    @Value("${setting.adminIdList}")
-    private String adminIdList;
-
     public Account findOne(String id) {
         Account account = accountRepository.findOne(id);
         return account;
@@ -91,7 +88,6 @@ public class AccountService {
     }
 
     public List<AccountDto> findByFilter(AccountQuery accountQuery) {
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountList);
@@ -140,7 +136,7 @@ public class AccountService {
         String roleId = roleManager.findIdByAccountId(accountId);
         List<String> authorityList;
         List<Permission> permissionList;
-        if(StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(RequestUtils.getAccountId())){
+        if(RequestUtils.getAdmin()){
             permissionList=permissionRepository.findAllEnabled();
         }else {
             List<String> accountPermissions=accountPermissionRepository.findPermissionIdByAccountId(accountId);
@@ -163,7 +159,6 @@ public class AccountService {
 
     public SimpleExcelBook findSimpleExcelSheet(AccountQuery accountQuery) throws IOException {
         Workbook workbook = new SXSSFWorkbook(10000);
-        accountQuery.setOfficeIds(officeManager.officeFilter(RequestUtils.getOfficeId()));
         List<Account> accountList = accountRepository.findByFilter(accountQuery);
         List<AccountDto> accountDtoList = BeanUtil.map(accountList, AccountDto.class);
         cacheUtils.initCacheInput(accountDtoList);

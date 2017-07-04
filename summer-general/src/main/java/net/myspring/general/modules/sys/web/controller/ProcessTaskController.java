@@ -24,8 +24,6 @@ public class ProcessTaskController {
 
     @Autowired
     private ProcessTaskService processTaskService;
-    @Value("${setting.adminIdList}")
-    private String adminIdList;
 
     @RequestMapping(value = "getQuery")
     public ProcessTaskQuery getQuery(ProcessTaskQuery processTaskQuery) {
@@ -33,7 +31,7 @@ public class ProcessTaskController {
     }
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProcessTaskDto> list(ProcessTaskQuery processTaskQuery, Pageable pageable) {
-        if(!adminIdList.contains(RequestUtils.getAccountId())){
+        if(!RequestUtils.getAdmin()){
             processTaskQuery.setPositionId(RequestUtils.getPositionId());
         }
         Page<ProcessTaskDto> page=processTaskService.findPage(pageable,processTaskQuery);

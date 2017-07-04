@@ -14,6 +14,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery{
+    private String companyName = RequestUtils.getCompanyName();
 
     @JsonIgnore
     private List<String> officeIdList= Lists.newArrayList();
@@ -25,6 +26,14 @@ public class BaseQuery{
     private String sort = "id,DESC";
 
     private Map<String,Object> extra = Maps.newHashMap();
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public List<String> getOfficeIdList() {
         if(CollectionUtil.isEmpty(officeIdList)){

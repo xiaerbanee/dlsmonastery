@@ -21,6 +21,14 @@ public class RequestUtils {
         return (String) getSecurityMap().get("companyName");
     }
 
+    public static Boolean getAdmin() {
+        return (Boolean) getSecurityMap().get("admin");
+    }
+
+    public static Boolean getAllDataScope() {
+        return (Boolean) getSecurityMap().get("allDataScope");
+    }
+
     public static String getPositionId() {
         return (String) getSecurityMap().get("positionId");
     }

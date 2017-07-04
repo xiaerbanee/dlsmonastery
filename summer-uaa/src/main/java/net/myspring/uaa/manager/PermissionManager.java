@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 public class PermissionManager {
     @Value("${setting.adminIdList}")
     private String adminIdList;
-
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -29,8 +28,8 @@ public class PermissionManager {
     @Autowired
     private AccountPermissionRepository accountPermissionRepository;
 
-    public void permissionCachePut(String companyName,String accountId,String roleId){
-        String key = "authorityCache:" + companyName+accountId;
+    public void permissionCachePut(String accountId,String roleId){
+        String key = "authorityCache:" + accountId;
         redisTemplate.expire(key,24, TimeUnit.HOURS);
         List<PermissionDto> permissionList;
         if(net.myspring.util.text.StringUtils.getSplitList(adminIdList, CharConstant.COMMA).contains(accountId)){
