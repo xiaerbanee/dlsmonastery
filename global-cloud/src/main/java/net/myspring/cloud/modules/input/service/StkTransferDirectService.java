@@ -4,16 +4,14 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
-import net.myspring.cloud.modules.input.dto.StkTransferDirectFBillEntryDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.List;
 
 /**
  * 直接调拨单
@@ -21,11 +19,12 @@ import java.util.List;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class StkTransferDirectService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
+    @Transactional
     private KingdeeSynDto save(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 stkTransferDirectDto.getExtendId(),
@@ -40,6 +39,7 @@ public class StkTransferDirectService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto save(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         KingdeeSynDto kingdeeSynDto = null;
         if (stkTransferDirectDto != null) {
@@ -53,6 +53,7 @@ public class StkTransferDirectService {
         return kingdeeSynDto;
     }
 
+    @Transactional
     public KingdeeSynDto saveForWS(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         stkTransferDirectDto.setCreator(accountKingdeeBook.getUsername());
         return save(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);

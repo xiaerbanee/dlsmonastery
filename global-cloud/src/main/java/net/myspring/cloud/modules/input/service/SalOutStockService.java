@@ -6,7 +6,6 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
-import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
@@ -27,12 +26,11 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,7 +44,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @KingdeeDataSource
-@Transactional
+@Transactional(readOnly = true)
 public class SalOutStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
@@ -59,6 +57,7 @@ public class SalOutStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
+    @Transactional
     private KingdeeSynExtendDto save(SalOutStockDto salOutStockDto,KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salOutStockDto.getExtendId(),
@@ -97,6 +96,7 @@ public class SalOutStockService {
         return kingdeeSynExtendDto;
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String stockNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
@@ -152,6 +152,7 @@ public class SalOutStockService {
         return save(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
@@ -172,6 +173,7 @@ public class SalOutStockService {
         return kingdeeSynExtendDtoList;
     }
 
+    @Transactional
     public List<KingdeeSynExtendDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList,KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
