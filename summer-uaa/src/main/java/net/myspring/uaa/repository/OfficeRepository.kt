@@ -12,9 +12,8 @@ import java.util.*
 
 @Component
 class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
-    fun findDtoById(id: String): OfficeDto {
-        var sb = StringBuilder();
-        sb.append("""
+    fun findOne(id: String): OfficeDto {
+        var sql = """
              SELECT
                 t1.*
                 FROM
@@ -22,23 +21,18 @@ class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
                 WHERE
                 t1.enabled=1
                 and t1.id= :id
-        """)
-        var paramMap = Maps.newHashMap<String, String>();
-        paramMap.put("id",id)
-        return namedParameterJdbcTemplate.queryForObject(sb.toString(), paramMap, BeanPropertyRowMapper(OfficeDto::class.java))
+        """;
+        return namedParameterJdbcTemplate.queryForObject(sql, Collections.singletonMap("id",id), BeanPropertyRowMapper(OfficeDto::class.java))
     }
 
     fun findByParentIdsLike(parentId:String):MutableList<OfficeDto>{
-        var sb = StringBuilder();
-        sb.append("""
+        var sql = """
             SELECT t1.*
             FROM  sys_office t1
             where t1.enabled=1
             and t1.parent_ids like :parentId
-        """)
-        var paramMap = Maps.newHashMap<String, String>();
-        paramMap.put("parentId",parentId)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(OfficeDto::class.java))
+        """;
+        return namedParameterJdbcTemplate.query(sql, Collections.singletonMap("parentId",parentId),BeanPropertyRowMapper(OfficeDto::class.java))
     }
 
     fun findByParentIdsListLike(parentIdList: MutableList<String>): MutableList<OfficeDto> {
@@ -60,8 +54,6 @@ class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
         for ((index, value) in parentIdList.withIndex()) {
             paramMap.put("parentId" + index, "%,$value,%");
         }
-        print(sb.toString())
-        print(paramMap)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(OfficeDto::class.java))
     }
 }

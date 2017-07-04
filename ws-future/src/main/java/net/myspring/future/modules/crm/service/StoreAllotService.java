@@ -139,7 +139,6 @@ public class StoreAllotService {
         productImeShipQuery.setDepotId(fromStoreId);
         productImeShipQuery.setBoxImeList(boxImeList);
         productImeShipQuery.setImeList(imeList);
-        productImeShipQuery.setCompanyId(RequestUtils.getCompanyId());
 
         List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
         Set<String> boxImeSet = Sets.newHashSet();

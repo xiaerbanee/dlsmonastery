@@ -10,7 +10,38 @@ public class CarrierOrderFrom extends BaseForm<CarrierOrder>{
     private String detailJson;
     private String businessId;
     private String formatId;
+    private String carrierShopId;
+    private String goodsOrderId;
     private boolean checkColor=false;
+    private String status;
+
+    public boolean isCheckColor() {
+        return checkColor;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGoodsOrderId() {
+        return goodsOrderId;
+    }
+
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
+    }
+
+    public String getCarrierShopId() {
+        return carrierShopId;
+    }
+
+    public void setCarrierShopId(String carrierShopId) {
+        this.carrierShopId = carrierShopId;
+    }
 
     public boolean getCheckColor() {
         return checkColor;
