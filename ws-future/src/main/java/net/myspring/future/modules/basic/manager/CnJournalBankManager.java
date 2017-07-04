@@ -31,7 +31,7 @@ public class CnJournalBankManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departMentNumber){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         Bank bank = bankRepository.findOne(shopDeposit.getBankId());
         Depot depot = depotRepository.findOne(shopDeposit.getShopId());
@@ -44,7 +44,7 @@ public class CnJournalBankManager {
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         entityForBankDto.setDebitAmount(shopDeposit.getAmount());
         entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-        entityForBankDto.setDepartmentNumber(departmentNumber);
+        entityForBankDto.setDepartmentNumber(departMentNumber);
         entityForBankDto.setBankAccountNumber(bank.getCode());
         entityForBankDto.setComment(depot.getName()+shopDeposit.getRemarks());
         cnJournalEntityForBankDtoList.add(entityForBankDto);
