@@ -28,6 +28,8 @@ interface CarrierOrderRepository : BaseRepository<CarrierOrder, String>, Carrier
 
     fun findByGoodsOrderIdIn(goodsOrderIdList:MutableList<String>):MutableList<CarrierOrder>
 
+    fun findByEnabledIsTrueAndGoodsOrderIdIn(goodsOrderIdList:MutableList<String>):MutableList<CarrierOrder>
+
     fun findByCodeIn(codeList:MutableList<String>):MutableList<CarrierOrder>
 
     @Query("""

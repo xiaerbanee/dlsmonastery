@@ -23,7 +23,9 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
+import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -35,6 +37,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -204,5 +207,10 @@ public class GoodsOrderController {
         goodsOrderService.batchAdd(goodsOrderBatchAddForm);
 
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
+    @RequestMapping(value="export")
+    public ModelAndView export(GoodsOrderQuery goodsOrderQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", goodsOrderService.export(goodsOrderQuery));
     }
 }

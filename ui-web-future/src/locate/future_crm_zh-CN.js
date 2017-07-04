@@ -722,6 +722,11 @@ export default {
     print: "出库单",
     ship: "发货",
     lxMallOrder: "天翼购订货",
+    mallAdd: "商城订单",
+    carrierOrder: "商城相关",
+    exportData: "导出",
+    goodsOrderImeList: "串码",
+    more: "更多",
   },
   goodsOrderForm: {
     goodsOrderForm: "货品订货编辑",

@@ -1,12 +1,12 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
-import net.myspring.future.modules.crm.domain.GoodsOrder;
+import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
 
-public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
+public class GoodsOrderDetailDto extends DataDto<GoodsOrderDetail> {
 
     private String productId;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
@@ -33,6 +33,15 @@ public class GoodsOrderDetailDto extends DataDto<GoodsOrder> {
     private Integer realBillQty;
 
     private Integer storeQty;
+    private String goodsOrderId;
+
+    public String getGoodsOrderId() {
+        return goodsOrderId;
+    }
+
+    public void setGoodsOrderId(String goodsOrderId) {
+        this.goodsOrderId = goodsOrderId;
+    }
 
     public Boolean getVisible() {
         return visible;
