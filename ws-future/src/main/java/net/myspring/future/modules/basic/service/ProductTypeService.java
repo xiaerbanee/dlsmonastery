@@ -47,7 +47,7 @@ public class ProductTypeService {
 
         ProductType productType;
         if (productTypeForm.isCreate()) {
-            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            ProductType sameNameRecord = productTypeRepository.findByName(productTypeForm.getName());
             if(sameNameRecord != null){
                 throw new ServiceException("名称已经存在，不能新增");
             }
@@ -56,7 +56,7 @@ public class ProductTypeService {
             productTypeRepository.save(productType);
 
         } else {
-            ProductType sameNameRecord = productTypeRepository.findByNameAndCompanyId(productTypeForm.getName(), RequestUtils.getCompanyId());
+            ProductType sameNameRecord = productTypeRepository.findByName(productTypeForm.getName());
             if(sameNameRecord != null && !sameNameRecord.getId().equals(productTypeForm.getId())){
                 throw new ServiceException("名称已经存在，不能修改");
             }

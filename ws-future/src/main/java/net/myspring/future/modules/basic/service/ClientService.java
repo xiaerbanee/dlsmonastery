@@ -116,7 +116,6 @@ public class ClientService {
             if(outClient==null){
                 outClient=new Client();
             }
-            outClient.setCompanyId(RequestUtils.getCompanyId());
             outClient.setName(bdCustomer.getFName().trim());
             outClient.setOutId(bdCustomer.getFCustId());
             outClient.setOutGroupId(bdCustomer.getFPrimaryGroup());

@@ -44,7 +44,6 @@ public class FolderService {
         if (folder == null) {
             folder = new Folder();
             folder.setName(accountId);
-            folder.setCompanyId(RequestUtils.getCompanyId());
             folder.setParentIds(TreeConstant.ROOT_PARENT_IDS);
             folderRepository.save(folder);
         }

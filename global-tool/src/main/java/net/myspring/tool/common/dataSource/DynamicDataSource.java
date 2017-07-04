@@ -16,7 +16,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
             return dataSourceType;
         } else {
-            return dataSourceType + "_" + RequestUtils.getCompanyId();
+            return dataSourceType + "_" + RequestUtils.getCompanyName();
         }
     }
 }

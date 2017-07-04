@@ -38,7 +38,7 @@ public class KingdeeSynService {
     private KingdeeManager kingdeeManager;
 
     public Page<KingdeeSyn> findPage(Pageable pageable, KingdeeSynQuery kingdeeSynQuery){
-        KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyId(RequestUtils.getCompanyId());
+        KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
         kingdeeSynQuery.setKingdeeBookId(kingdeeBook.getId());
         Page<KingdeeSyn> page = kingdeeSynRepository.findPage(pageable,kingdeeSynQuery);
         return page;
@@ -63,7 +63,7 @@ public class KingdeeSynService {
         KingdeeSyn kingdeeSyn = kingdeeSynRepository.findOne(id);
         kingdeeSynDto = BeanUtil.map(kingdeeSyn,KingdeeSynDto.class);
         if (kingdeeSynDto != null) {
-            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyId(RequestUtils.getCompanyId());
+            KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {

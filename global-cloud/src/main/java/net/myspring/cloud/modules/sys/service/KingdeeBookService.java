@@ -80,7 +80,7 @@ public class KingdeeBookService {
         return kingdeeBookRepository.findByAccountId(accountId);
     }
 
-    public KingdeeBook findByCompanyId(String companyId) {
-        return kingdeeBookRepository.findByCompanyId(companyId);
+    public KingdeeBook findByCompanyName(String companyName) {
+        return kingdeeBookRepository.findByCompanyName(companyName);
     }
 }
