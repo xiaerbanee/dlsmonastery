@@ -17,10 +17,6 @@ public class RequestUtils {
         return (String) getSecurityMap().get("accountId");
     }
 
-    public static String getCompanyId() {
-        return (String) getSecurityMap().get("companyId");
-    }
-
     public static String getCompanyName() {
         return (String) getSecurityMap().get("companyName");
     }

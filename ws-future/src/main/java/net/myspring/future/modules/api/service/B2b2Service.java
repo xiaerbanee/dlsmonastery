@@ -358,7 +358,7 @@ public class B2b2Service {
         String totalQtyKey = "oppoTotalQty";
         String clickStatusKey = "oppoClickStatus";
         List<String> proxyAreaIdList=Lists.newArrayList( "599");
-        String storeId= CompanyConfigUtil.findByCode(redisTemplate, RequestUtils.getCompanyId(), CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+        String storeId= CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
         if (b2b2Form.isVivo()) {
             qtyKey = "vivoQty";
             clickStatusKey = "vivoClickStatus";

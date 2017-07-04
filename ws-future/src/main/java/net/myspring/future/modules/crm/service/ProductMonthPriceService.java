@@ -63,7 +63,7 @@ public class ProductMonthPriceService {
 
     public String checkMonth(String id, String month) {
 
-        ProductMonthPrice productMonthPrice = productMonthPriceRepository.findByCompanyIdAndMonthAndEnabledIsTrue(RequestUtils.getCompanyId(), month);
+        ProductMonthPrice productMonthPrice = productMonthPriceRepository.findByMonthAndEnabledIsTrue(month);
         if(productMonthPrice == null ){
             return null;
         }else if(StringUtils.isBlank(id)){
@@ -82,7 +82,7 @@ public class ProductMonthPriceService {
 
     public List<ProductMonthPriceDetailDto> findDetailListForNew() {
 
-        List<ProductMonthPriceDetailDto> result = productMonthPriceDetailRepository.findDetailListForNew(RequestUtils.getCompanyId());
+        List<ProductMonthPriceDetailDto> result = productMonthPriceDetailRepository.findDetailListForNew();
 
         cacheUtils.initCacheInput(result);
 
@@ -91,7 +91,7 @@ public class ProductMonthPriceService {
     }
 
     public List<ProductMonthPriceDetailDto> findDetailListForEdit(String productMonthPriceId) {
-        List<ProductMonthPriceDetailDto> result = productMonthPriceDetailRepository.findDetailListForEdit(RequestUtils.getCompanyId(), productMonthPriceId);
+        List<ProductMonthPriceDetailDto> result = productMonthPriceDetailRepository.findDetailListForEdit(productMonthPriceId);
 
         cacheUtils.initCacheInput(result);
 

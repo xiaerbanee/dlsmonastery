@@ -17,9 +17,9 @@ interface ProductRepository : BaseRepository<Product,String>{
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND  t1.companyId = :companyId
+        AND  t1.companyName = :companyName
      """)
-    fun findNameByCompanyId(@Param("companyId")companyId:String): MutableList<String>
+    fun findNameByCompanyName(@Param("companyName")companyName:String): MutableList<String>
 
     @Query("""
         SELECT
@@ -27,10 +27,10 @@ interface ProductRepository : BaseRepository<Product,String>{
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND  t1.companyId = :companyId
+        AND  t1.companyName = :companyName
         and t1.name = :name
     """)
-    fun findByNameAndCompanyId(@Param("companyId")companyId: String,@Param("name")name: String): Product?
+    fun findByNameAndCompanyName(@Param("companyName")companyName: String,@Param("name")name: String): Product?
 
     @Query("""
         SELECT
@@ -38,10 +38,10 @@ interface ProductRepository : BaseRepository<Product,String>{
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND  t1.companyId = :companyId
+        AND  t1.companyName = :companyName
         and t1.code = :code
     """)
-    fun findByCodeAndCompanyId(@Param("companyId")companyId: String,@Param("code")code: String): Product?
+    fun findByCodeAndCompanyName(@Param("companyName")companyName: String,@Param("code")code: String): Product?
 
     @Query("""
         SELECT
@@ -49,21 +49,21 @@ interface ProductRepository : BaseRepository<Product,String>{
         FROM  #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND  t1.companyId = :companyId
+        AND  t1.companyName = :companyName
     """)
-    fun findByCompanyId(@Param("companyId")companyId: String): MutableList<Product>
+    fun findByCompanyName(@Param("companyName")companyName: String): MutableList<Product>
 
     @Query("""
         SELECT max(t1.outDate)
         FROM  #{#entityName} t1
-        WHERE t1.companyId = :companyId
+        WHERE t1.companyName = :companyName
      """)
-    fun findMaxOutDate(@Param("companyId")companyId:String): LocalDateTime
+    fun findMaxOutDate(@Param("companyName")companyName:String): LocalDateTime
 
     @Query("""
         SELECT DISTINCT(t1.returnOutId)
         FROM  #{#entityName} t1
-        WHERE  t1.companyId = :companyId
+        WHERE  t1.companyName = :companyName
      """)
-    fun findReturnOutId(@Param("companyId")companyId:String):String
+    fun findReturnOutId(@Param("companyName")companyName:String):String
 }

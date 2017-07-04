@@ -73,7 +73,7 @@ public class ProductImeUploadService {
     public String checkForUpload(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         Map<String, ProductImeDto> imeMap = CollectionUtil.extractToMap(productImeDtoList, "ime");
 
@@ -106,7 +106,7 @@ public class ProductImeUploadService {
 
         String employeeId = RequestUtils.getEmployeeId();
 
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         for (ProductIme productIme : productImeList) {
             if(productIme.getProductImeUploadId()!=null){
                 continue;
@@ -144,7 +144,7 @@ public class ProductImeUploadService {
     public String checkForUploadBack(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
-        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList, RequestUtils.getCompanyId());
+        List<ProductImeDto> productImeDtoList = productImeRepository.findDtoListByImeList(imeList);
         cacheUtils.initCacheInput(productImeDtoList);
         Map<String, ProductImeDto> imeMap = CollectionUtil.extractToMap(productImeDtoList, "ime");
 
@@ -175,7 +175,7 @@ public class ProductImeUploadService {
             throw new ServiceException(errMsg);
         }
 
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(RequestUtils.getCompanyId(), imeList);
+        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
         Map<String, ProductImeUpload> productImeUploadMap = productImeUploadRepository.findMap(CollectionUtil.extractToList(productImeList, "productImeUploadId"));
 
         for (ProductIme productIme : productImeList) {

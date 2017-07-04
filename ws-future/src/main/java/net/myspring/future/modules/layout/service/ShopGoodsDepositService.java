@@ -110,7 +110,7 @@ public class ShopGoodsDepositService {
         shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         shopGoodsDepositSumColumnList.add(new SimpleExcelColumn(workbook, "totalAmount", "剩余订金"));
 
-        List<ShopGoodsDepositSumDto> shopGoodsDepositSumDtoList = findShopGoodsDepositSumDtoList(RequestUtils.getCompanyId());
+        List<ShopGoodsDepositSumDto> shopGoodsDepositSumDtoList = findShopGoodsDepositSumDtoList();
         SimpleExcelSheet sheet2 = new SimpleExcelSheet("订金汇总", shopGoodsDepositSumDtoList, shopGoodsDepositSumColumnList);
         ExcelUtils.doWrite(workbook, sheet2);
         simpleExcelSheetList.add(sheet2);
@@ -118,8 +118,8 @@ public class ShopGoodsDepositService {
         return new SimpleExcelBook(workbook,"订金列表"+ LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
-    private List<ShopGoodsDepositSumDto> findShopGoodsDepositSumDtoList(String companyId) {
-        List<ShopGoodsDepositSumDto> result = shopGoodsDepositRepository.findShopGoodsDepositSumDtoList(companyId);
+    private List<ShopGoodsDepositSumDto> findShopGoodsDepositSumDtoList() {
+        List<ShopGoodsDepositSumDto> result = shopGoodsDepositRepository.findShopGoodsDepositSumDtoList();
         cacheUtils.initCacheInput(result);
         return result;
     }

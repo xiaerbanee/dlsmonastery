@@ -37,7 +37,7 @@ public class JdbcConfig {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
         List<Factory> factoryList = getFactoryList();
         for (Factory factory:factoryList) {
-            targetDataSources.put(DataSourceTypeEnum.FACTORY.name() + "_" + factory.getCompanyId(),getFactoryDataSource(factory));
+            targetDataSources.put(DataSourceTypeEnum.FACTORY.name() + "_" + factory.getName(),getFactoryDataSource(factory));
         }
         targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getLocalDataSource());
         DynamicDataSource dataSource = new DynamicDataSource();

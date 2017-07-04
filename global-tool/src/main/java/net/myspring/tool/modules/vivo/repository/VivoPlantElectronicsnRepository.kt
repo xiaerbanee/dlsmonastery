@@ -13,11 +13,10 @@ import java.time.LocalDate;
 @Component
 class VivoPlantElectronicsnRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    fun updateProductImeRetailDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("companyId") companyId: String): Int{
+    fun updateProductImeRetailDate(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate): Int{
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);
-        paramMap.put("companyId", companyId);
 
         return namedParameterJdbcTemplate.update("""
             update crm_product_ime t1,#{#entityName} t2
@@ -25,7 +24,6 @@ class VivoPlantElectronicsnRepository @Autowired constructor(val namedParameterJ
             where t1.ime=t2.sn_imei
             and t2.retail_date >= :dateStart
             and t2.retail_date <= :dateEnd
-            and t1.company_id = :companyId
         """,paramMap);
     }
 

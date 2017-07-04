@@ -108,7 +108,7 @@ interface ProductRepository : BaseRepository<Product,String>,ProductRepositoryCu
 
     fun findByName(name: String): Product
 
-    fun findByEnabledIsTrueAndCompanyIdAndName(companyId : String, name: String): Product?
+    fun findByEnabledIsTrueAndName(name: String): Product?
 
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Product>
 
@@ -178,7 +178,7 @@ WHERE
 
     fun findByNameIn(nameList: MutableList<String>): MutableList<Product>
 
-    fun findByEnabledIsTrueAndCompanyId(companyId: String): List<Product>
+    fun findByEnabledIsTrue(): List<Product>
 }
 
 interface ProductRepositoryCustom{

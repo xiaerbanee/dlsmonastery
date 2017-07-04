@@ -80,7 +80,7 @@ public class ScheduleUtils {
         //同步串码
         if(CollectionUtil.isNotEmpty(oppoPlantSendImeiPpsels)){
             List<String> imeList = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
-            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId,imeList);
+            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
             List<String>  localImeList=CollectionUtil.extractToList(productImeList, "ime");
             Set<String> itemNumberSet = Sets.newHashSet();
             for (OppoPlantSendImeiPpsel oppoPlantSendImeiPpsel : oppoPlantSendImeiPpsels) {
@@ -129,7 +129,6 @@ public class ScheduleUtils {
                     productIme.setMeid(oppoPlantSendImeiPpsel.getMeid());
                     productIme.setBoxIme(oppoPlantSendImeiPpsel.getRemark());
                     productIme.setInputType("工厂入库");
-                    productIme.setCompanyId(RequestUtils.getCompanyId());
                     productIme.setBillId(oppoPlantSendImeiPpsel.getBillId());
                     productIme.setImeReverse(StringUtils.reverse(oppoPlantSendImeiPpsel.getImei()));
                     productIme.setCreatedBy(RequestUtils.getAccountId());
@@ -153,7 +152,7 @@ public class ScheduleUtils {
                 productItemelectronSelMap.put(oppoPlantProductItemelectronSel.getProductNo(),oppoPlantProductItemelectronSel);
             }
             List<String> productNoList= CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
-            localProductImeList=productImeRepository.findByEnabledIsTrueAndCompanyIdAndImeIn(companyId,productNoList);
+            localProductImeList=productImeRepository.findByEnabledIsTrueAndImeIn(productNoList);
             for(ProductIme productIme:localProductImeList){
                 productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
             }

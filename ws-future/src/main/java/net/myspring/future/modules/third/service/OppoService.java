@@ -145,7 +145,6 @@ public class OppoService {
                 productIme.setMeid(oppoPlantSendImeiPpsel.getMeid());
                 productIme.setBoxIme(oppoPlantSendImeiPpsel.getRemark());
                 productIme.setInputType("工厂入库");
-                productIme.setCompanyId(RequestUtils.getCompanyId());
                 productIme.setBillId(oppoPlantSendImeiPpsel.getBillId());
                 productIme.setImeReverse(StringUtils.reverse(oppoPlantSendImeiPpsel.getImei()));
                 productImeMap.put(imei,productIme);
@@ -184,42 +183,42 @@ public class OppoService {
 
 
     public List<OppoCustomerAllot> findOppoCustomerAllots(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoCustomerAllotRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerAllots;
     }
 
     public List<OppoCustomerStock> findOppoCustomerStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerStocks;
     }
 
     public List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoCustomerImeiStockRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerImeiStocks;
     }
 
     public List<OppoCustomerSale> findOppoCustomerSales(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSale> oppoCustomerSales=oppoCustomerSaleRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerSales;
     }
 
     public List<OppoCustomerSaleImei> findOppoCustomerSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoCustomerSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerSaleImeis;
     }
 
     public List<OppoCustomerSaleCount>  findOppoCustomerSaleCounts(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoCustomerSaleCountRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerSaleCounts;
     }
 
     public List<OppoCustomerAfterSaleImei> findOppoCustomerAfterSaleImeis(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoCustomerAfterSaleImeiRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerAfterSaleImeis;
     }
 
     public List<OppoCustomerDemoPhone> findOppoCustomerDemoPhones(LocalDate dateStart, LocalDate dateEnd, String companyId){
-        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd),companyId);
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerDemoPhones;
     }
 

@@ -80,15 +80,6 @@ public class CarrierOrderController {
         return restResponse;
     }
 
-    @RequestMapping(value="findDto")
-    public CarrierOrderDto findDto(String id){
-        if(StringUtils.isBlank(id)){
-            return new CarrierOrderDto();
-        }
-        return carrierOrderService.findDto(id);
-
-    }
-
     @RequestMapping(value = "save")
     public RestResponse save(CarrierOrderFrom carrierOrderFrom) {
         RestResponse restResponse=new RestResponse("保存成功",null);

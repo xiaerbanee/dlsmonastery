@@ -12,9 +12,7 @@ import java.util.Map;
  * Created by liuj on 2017/5/9.
  */
 public class BaseQuery {
-    @JsonIgnore
-    private String companyId= RequestUtils.getCompanyId();
-
+    private String companyName;
     private  Integer page = 0;
 
     private Integer size = 50;
@@ -23,12 +21,13 @@ public class BaseQuery {
 
     private Map<String,Object> extra = Maps.newHashMap();
 
-    public String getCompanyId() {
-        return companyId;
+
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public Integer getPage() {

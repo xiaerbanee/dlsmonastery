@@ -2,7 +2,6 @@ package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductImeSale
-import net.myspring.future.modules.crm.dto.ProductImeDto
 import net.myspring.future.modules.crm.dto.ProductImeForSaleDto
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery
@@ -52,18 +51,17 @@ interface ProductImeSaleRepositoryCustom{
 
     fun findForBatchUpload(dateStart: LocalDateTime, dateEnd: LocalDateTime, officeIds: List<String>): List<ProductImeSaleDto>
 
-    fun findProductImeForSaleDto(imeList: List<String>, companyId: String): List<ProductImeForSaleDto>
+    fun findProductImeForSaleDto(imeList: List<String>): List<ProductImeForSaleDto>
 }
 
 class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): ProductImeSaleRepositoryCustom {
-    override fun findProductImeForSaleDto(imeList: List<String>, companyId: String): List<ProductImeForSaleDto> {
+    override fun findProductImeForSaleDto(imeList: List<String>): List<ProductImeForSaleDto> {
         if(imeList.isEmpty()){
             return ArrayList()
         }
 
         val params = HashMap<String, Any>()
         params.put("imeList", imeList)
-        params.put("companyId", companyId)
         return namedParameterJdbcTemplate.query("""
         SELECT
             sale.created_date productImeSaleCreatedDate,
@@ -84,7 +82,6 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
                 t1.enabled = 1
                 AND t1.depot_id = depot.id
                 AND depot.enabled = 1
-                AND t1.company_id =  :companyId
                 AND t1.product_id =  product.id
                 AND product.enabled =  1
                 AND t1.ime in (:imeList)
