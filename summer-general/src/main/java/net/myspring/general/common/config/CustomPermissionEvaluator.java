@@ -16,15 +16,12 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Autowired
     private RedisTemplate redisTemplate;
-    @Value("${setting.adminIdList}")
-    private String adminIdList;
 
     @Override
     public boolean hasPermission(Authentication authentication, Object o, Object permission) {
         String accountId = RequestUtils.getAccountId();
-        String companyName = RequestUtils.getCompanyName();
-        if (!adminIdList.contains(RequestUtils.getAccountId())) {
-            String key = "authorityCache:" + companyName + accountId;
+        if (!RequestUtils.getAdmin()) {
+            String key = "authorityCache:" + accountId;
             List<String> permissionList = (List<String>) redisTemplate.opsForValue().get(key);
             if (!permissionList.contains(permission)) {
                 return false;
