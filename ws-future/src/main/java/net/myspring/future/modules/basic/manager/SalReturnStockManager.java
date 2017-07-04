@@ -78,28 +78,6 @@ public class SalReturnStockManager {
         return cloudClient.synSalReturnStock(salReturnStockDtoList);
     }
 
-    //销售退货单成功示例
-    private List<KingdeeSynReturnDto> synSalReturnStockTest(ShopAllotDto shopAllotDto){
-        List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
-        SalReturnStockDto returnStockDto = new SalReturnStockDto();
-        returnStockDto.setExtendId("1");
-        returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
-        returnStockDto.setDate(LocalDate.now());
-        returnStockDto.setCustomerNumber("00001");
-        returnStockDto.setNote("模拟测试");
-        List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
-        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
-        entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
-        entityDto.setQty(1);
-        entityDto.setPrice(BigDecimal.TEN);
-        entityDto.setEntryNote("模拟测试");
-        entityDto.setStockNumber("CK002");
-        entityDtoList.add(entityDto);
-        returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
-        salReturnStockDtoList.add(returnStockDto);
-        return cloudClient.synSalReturnStock(salReturnStockDtoList);
-    }
-
     private List<KingdeeSynReturnDto> synForShopAllot(ShopAllotDto shopAllotDto){
         List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
         SalReturnStockDto returnStockDto = new SalReturnStockDto();

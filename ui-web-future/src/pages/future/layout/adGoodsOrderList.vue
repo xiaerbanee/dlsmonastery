@@ -44,7 +44,7 @@
                 <depot-select v-model="formData.storeId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.shopName')">
-                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.billDate')">
                 <date-range-picker v-model="formData.billDateRange"></date-range-picker>

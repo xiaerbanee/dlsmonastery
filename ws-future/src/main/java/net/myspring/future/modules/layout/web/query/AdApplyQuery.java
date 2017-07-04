@@ -12,7 +12,7 @@ import java.time.LocalDate;
  */
 public class AdApplyQuery extends BaseQuery {
 
-    private String shopId;
+    private String shopName;
     private String productCode;
     private String createdBy;
     private String createdDate = LocalDate.now().plusMonths(-1)+CharConstant.DATE_RANGE_SPLITTER+LocalDate.now();
@@ -27,12 +27,12 @@ public class AdApplyQuery extends BaseQuery {
         this.isBilled = isBilled;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public String getProductCode() {

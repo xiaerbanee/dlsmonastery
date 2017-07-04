@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
-import javax.persistence.EntityManager
 
 
 @CacheConfig(cacheNames = arrayOf("depots"))
@@ -314,6 +313,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         }
         if(StringUtils.isNotBlank(depotAccountQuery.officeId)){
             sb.append("""  and t1.office_id = :officeId  """)
+        }
+        if(StringUtils.isNotBlank(depotAccountQuery.areaId)){
+            sb.append("""  and t1.area_id = :areaId  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

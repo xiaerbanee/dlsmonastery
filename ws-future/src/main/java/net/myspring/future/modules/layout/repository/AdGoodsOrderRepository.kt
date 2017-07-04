@@ -134,8 +134,8 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (StringUtils.isNotBlank(adGoodsOrderQuery.storeId)) {
             sb.append("""  and t1.store_id = :storeId """)
         }
-        if (StringUtils.isNotBlank(adGoodsOrderQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotBlank(adGoodsOrderQuery.shopName)) {
+            sb.append("""  and shop.name like CONCAT('%', :shopName,'%') """)
         }
         if (adGoodsOrderQuery.billDateStart != null) {
             sb.append("""  and t1.bill_date  >= :billDateStart """)

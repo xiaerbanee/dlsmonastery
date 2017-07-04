@@ -588,6 +588,7 @@ public class GoodsOrderService {
         return result;
     }
 
+    @Transactional
     public void batchAdd(GoodsOrderBatchAddForm goodsOrderBatchAddForm) {
         for(GoodsOrderBatchAddDetailForm goodsOrderBatchAddDetailForm : goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList()){
 
