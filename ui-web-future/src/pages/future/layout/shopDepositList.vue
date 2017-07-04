@@ -38,7 +38,6 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopDepositList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column prop="id" :label="$t('shopDepositList.billCode')" sortable></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('shopDepositList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopAreaName" :label="$t('shopDepositList.areaName')" ></el-table-column>
         <el-table-column prop="shopOfficeName" :label="$t('shopDepositList.officeName')" ></el-table-column>

@@ -5,7 +5,9 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
@@ -39,6 +41,8 @@ public class DepotController {
     private DepotService depotService;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private OfficeClient officeClient;
 
     //直营门店查询(POP申请开单类型为配件赠品用这个)
     @RequestMapping(value = "directShop")
@@ -106,6 +110,7 @@ public class DepotController {
         LocalDate now = LocalDate.now();
         LocalDate dutyDateStart = now.minusDays(30);
         depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(now));
+        depotAccountQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
 
         return depotAccountQuery;
     }

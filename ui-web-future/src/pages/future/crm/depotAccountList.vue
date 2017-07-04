@@ -22,6 +22,11 @@
               <el-form-item :label="$t('depotAccountList.officeName')">
                 <office-select v-model="formData.officeId" @afterInit="setSearchText" ></office-select>
               </el-form-item>
+              <el-form-item :label="$t('depotAccountList.areaName')">
+                <el-select v-model="formData.areaId" @afterInit="setSearchText" >
+                  <el-option v-for="area in formData.extra.areaList" :key="area.id" :label="area.name" :value="area.id"></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item :label="$t('depotAccountList.isSpecialityStore')">
                 <bool-select v-model="formData.specialityStore" ></bool-select>
               </el-form-item>
@@ -33,15 +38,14 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotAccountList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="officeName" column-key="officeId" :label="$t('depotAccountList.officeName')" sortable></el-table-column>
+        <el-table-column prop="officeName" column-key="officeId" :label="$t('depotAccountList.officeName')" sortable></el-table-column>
         <el-table-column prop="areaName" column-key="areaId" :label="$t('depotAccountList.areaName')" sortable></el-table-column>
-        <el-table-column  prop="name" :label="$t('depotAccountList.name')" width="250px" sortable></el-table-column>
+        <el-table-column prop="name" :label="$t('depotAccountList.name')" sortable></el-table-column>
         <el-table-column prop="qcys" :label="$t('depotAccountList.qcys')"></el-table-column>
         <el-table-column prop="qmys" :label="$t('depotAccountList.qmys')" ></el-table-column>
         <el-table-column prop="xxbzj" :label="$t('depotAccountList.xxbzj')"></el-table-column>
         <el-table-column prop="scbzj" :label="$t('depotAccountList.scbzj')"></el-table-column>
-        <el-table-column prop="ysjyj" :label="$t('depotAccountList.ysjyj')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('depotAccountList.operation')" >
+        <el-table-column :label="$t('depotAccountList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'crm:depot:depotAccountData'"><el-button size="small"  @click.native="itemDetail(scope.row.clientOutId)">{{$t('depotAccountList.detail')}}</el-button></div>
           </template>
