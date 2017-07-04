@@ -72,9 +72,6 @@
         <el-form-item label="是否隐藏" prop="isHidden">
           <bool-radio-group v-model="inputForm.isHidden"></bool-radio-group>
         </el-form-item>
-        <el-form-item label="公司分组" prop="companyGroup">
-          <el-input v-model="inputForm.companyGroup" />
-        </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
@@ -108,7 +105,6 @@
         },
         remoteLoading:false,
         rules: {
-          clientId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           code: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
@@ -123,11 +119,9 @@
           expressCompanyId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           printPrice: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           rebate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          taxName: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           adShop: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           isHidden:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           popShop:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          companyGroup:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           districtId:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }

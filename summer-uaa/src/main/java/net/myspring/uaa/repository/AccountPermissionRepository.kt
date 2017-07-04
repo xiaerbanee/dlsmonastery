@@ -14,15 +14,12 @@ import java.util.*
 @Component
 class AccountPermissionRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     fun findPermissionIdByAccountId(accountId:String): MutableList<String> {
-        var sb = StringBuilder();
-        sb.append("""
+        var sql = """
             SELECT t.permission_id
             FROM  hr_account_permission t
             where t.enabled=1
             and t.account_id=:accountId
-        """)
-        var paramMap = Maps.newHashMap<String, String>();
-        paramMap.put("accountId",accountId)
-        return namedParameterJdbcTemplate.query(sb.toString(), paramMap,BeanPropertyRowMapper(String::class.java))
+        """;
+        return namedParameterJdbcTemplate.query(sql, Collections.singletonMap("accountId",accountId),BeanPropertyRowMapper(String::class.java))
     }
 }

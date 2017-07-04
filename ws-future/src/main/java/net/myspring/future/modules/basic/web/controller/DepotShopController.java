@@ -25,16 +25,22 @@ import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.basic.web.query.DepotStoreQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
+import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
+import net.myspring.util.excel.ExcelView;
+import net.myspring.util.excel.SimpleExcelBook;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -160,6 +166,14 @@ public class DepotShopController {
     public DepotReportDetailDto depotReportDetail(ReportQuery reportQuery){
         DepotReportDetailDto depotReportDetailDto=depotShopService.getReportDataDetail(reportQuery);
         return depotReportDetailDto;
+    }
+
+    @RequestMapping(value="export",method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:depotShop:view')")
+    public ModelAndView export(DepotShopQuery depotShopQuery) throws IOException {
+        SimpleExcelBook simpleExcelBook = depotShopService.findSimpleExcelSheet(depotShopQuery);
+        ExcelView excelView = new ExcelView();
+        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
     private void setOperationStatus(DepotShopDto depotShopDto) {
