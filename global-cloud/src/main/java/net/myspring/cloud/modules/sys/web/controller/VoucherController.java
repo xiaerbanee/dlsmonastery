@@ -13,33 +13,22 @@ import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
-import net.myspring.cloud.modules.sys.dto.VoucherModel;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
-import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.service.VoucherService;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.HtmlUtils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 凭证
@@ -90,6 +79,9 @@ public class VoucherController {
     @RequestMapping(value = "form")
     public VoucherForm form (VoucherForm voucherForm) {
         Map<String,Object> map = Maps.newHashMap();
+        voucherForm.setBdAccountList(bdAccountService.findAll());
+        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
         List<String> flexItemNameList = voucherService.getHeaders(voucherForm.getBdFlexItemGroupList());
         map.put("headerList", flexItemNameList);
         map.put("accountNumberNameToFlexGroupNamesMap",voucherService.accountNumberNameToFlexGroupNamesMap(voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList()));
@@ -154,6 +146,9 @@ public class VoucherController {
 
     @RequestMapping(value = "save")
     public RestResponse save(VoucherForm voucherForm) {
+        voucherForm.setBdAccountList(bdAccountService.findAll());
+        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
         return voucherService.save(voucherForm);
     }
 
