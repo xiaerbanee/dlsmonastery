@@ -8,16 +8,19 @@
             <el-form-item :label="$t('officeForm.parentId')" prop="parentId">
               <office-select v-model="inputForm.parentId" ></office-select>
             </el-form-item>
-            <el-form-item label="部门管理人" prop="leaderIdList">
-              <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
+            <el-form-item :label="$t('officeForm.officeName')" prop="name">
+              <el-input v-model="inputForm.name"></el-input>
             </el-form-item>
             <el-form-item label="类型" prop="type">
               <el-select v-model="inputForm.type" filterable @change="typeChange">
                 <el-option v-for="item in inputForm.extra.officeTypeList" :key="item" :label="item"  :value="item"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item :label="$t('officeForm.officeName')" prop="name">
-              <el-input v-model="inputForm.name"></el-input>
+            <el-form-item label="所有数据权限" prop="allDataScope" v-show="!isBusiness">
+              <bool-radio-group v-model="inputForm.allDataScope"></bool-radio-group>
+            </el-form-item>
+            <el-form-item label="部门管理人" prop="leaderIdList">
+              <account-select v-model="inputForm.leaderIdList" :multiple="true"></account-select>
             </el-form-item>
             <el-form-item label="业务类型" prop="officeRuleId" v-show="isBusiness">
               <el-select v-model="inputForm.officeRuleId" filterable >

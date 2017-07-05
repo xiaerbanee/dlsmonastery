@@ -40,17 +40,17 @@ public class OfficeForm extends BaseForm<Office> {
     private Office parent;
     private String areaId;
     private String jointLevel;
-    private String allDataScope;
+    private boolean allDataScope;
     @CacheInput(inputKey = "offices",inputInstance = "parentId",outputInstance = "name")
     private String parentName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderIdList",outputInstance = "loginName")
     private List<String> leaderNameList=Lists.newArrayList();
 
-    public String getAllDataScope() {
+    public boolean getAllDataScope() {
         return allDataScope;
     }
 
-    public void setAllDataScope(String allDataScope) {
+    public void setAllDataScope(boolean allDataScope) {
         this.allDataScope = allDataScope;
     }
 
