@@ -67,6 +67,7 @@ public class  AdGoodsOrderController {
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
         adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
+        adGoodsOrderQuery.getExtra().put("adStoreList",depotService.findAdStoreDtoList());
         return adGoodsOrderQuery;
     }
 
@@ -187,13 +188,13 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
-    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:edit')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
     }
 
     @RequestMapping(value = "findDetailListForBill")
-    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
     }
