@@ -20,15 +20,15 @@ public class StkMisDeliveryDto {
     //附加-单据类型
     private String extendType;
     //创建人
-    private String creatorK3;
+    private String creator;
     //单据类型
     private String misDeliveryType;
     //做单日期
     private LocalDate date;
-    //部门编码
-    private String departmentNumber;
     //库存方向
-    private String stockDirectK3;
+    private String FStockDirect;
+    //领料部门
+    private String FDeptIdNumber;
 
     private List<StkMisDeliveryFEntityDto> stkMisDeliveryFEntityDtoList = Lists.newArrayList();
 
@@ -48,12 +48,12 @@ public class StkMisDeliveryDto {
         this.extendType = extendType;
     }
 
-    public String getCreatorK3() {
-        return creatorK3;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setCreatorK3(String creatorK3) {
-        this.creatorK3 = creatorK3;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getMisDeliveryType() {
@@ -72,20 +72,20 @@ public class StkMisDeliveryDto {
         this.date = date;
     }
 
-    public String getDepartmentNumber() {
-        return departmentNumber;
+    public String getFStockDirect() {
+        return FStockDirect;
     }
 
-    public void setDepartmentNumber(String departmentNumber) {
-        this.departmentNumber = departmentNumber;
+    public void setFStockDirect(String FStockDirect) {
+        this.FStockDirect = FStockDirect;
     }
 
-    public String getStockDirectK3() {
-        return stockDirectK3;
+    public String getFDeptIdNumber() {
+        return FDeptIdNumber;
     }
 
-    public void setStockDirectK3(String stockDirectK3) {
-        this.stockDirectK3 = stockDirectK3;
+    public void setFDeptIdNumber(String FDeptIdNumber) {
+        this.FDeptIdNumber = FDeptIdNumber;
     }
 
     public List<StkMisDeliveryFEntityDto> getStkMisDeliveryFEntityDtoList() {
@@ -99,7 +99,7 @@ public class StkMisDeliveryDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreatorK3());
+        root.put("Creator", getCreator());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
@@ -108,9 +108,10 @@ public class StkMisDeliveryDto {
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
-        model.put("FDeptId", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
+        //领料部门
+        model.put("FDeptId", CollectionUtil.getMap("FNumber", getFDeptIdNumber()));
         //库存方向
-        model.put("FStockDirect", getStockDirectK3());
+        model.put("FStockDirect", getFStockDirect());
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
         model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();

@@ -63,7 +63,7 @@ public class StkMisDeliveryController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         KingdeeSynDto kingdeeSynDto;
         if (accountKingdeeBook != null) {
-            kingdeeSynDto = stkMisDeliveryService.save(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
+            kingdeeSynDto = stkMisDeliveryService.saveForWS(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
         }else {
             throw new ServiceException("您没有金蝶账号，不能开单");
         }

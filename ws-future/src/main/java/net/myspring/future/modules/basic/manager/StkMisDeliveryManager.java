@@ -42,7 +42,6 @@ public class StkMisDeliveryManager {
         stkMisDeliveryDto.setExtendId("--");
         stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
         stkMisDeliveryDto.setDate(LocalDate.now());
-        stkMisDeliveryDto.setDepartmentNumber("0001");//待定
         stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.退货.name());
         List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
         List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getToProductId).collect(Collectors.toList());
@@ -78,7 +77,6 @@ public class StkMisDeliveryManager {
         stkMisDeliveryDto.setExtendId("--");
         stkMisDeliveryDto.setExtendType(ExtendTypeEnum.售后调拨.name());
         stkMisDeliveryDto.setDate(LocalDate.now());
-        stkMisDeliveryDto.setDepartmentNumber("0001");//待定
         stkMisDeliveryDto.setMisDeliveryType(StkMisDeliveryTypeEnum.出库.name());
         List<StkMisDeliveryFEntityDto> entityDtoList = Lists.newArrayList();
         List<String> materialIdList = afterSaleProductAllotFormList.stream().map(AfterSaleProductAllotForm::getFromProductId).collect(Collectors.toList());
