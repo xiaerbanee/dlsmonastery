@@ -175,7 +175,7 @@
           }
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-          if (response.data[0].jointType === '代理') {
+          if (response.data[0].jointType === '代理' || response.data[0].depotStoreId !=null) {
             this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
@@ -231,22 +231,16 @@
       },
       searchDetail(){
         let val = this.productName;
-        if(!val){
-          this.filterAdGoodsOrderDetailList = this.inputForm.adGoodsOrderDetailList;
-          return;
-        }
         let tempList = [];
+        let tempPostList = [];
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
           if (util.isNotBlank(adGoodsOrderDetail.qty)) {
             tempList.push(adGoodsOrderDetail)
+          }else if (util.isNotBlank(val)&&(util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val))) {
+            tempPostList.push(adGoodsOrderDetail)
           }
         }
-        for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-          if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.qty)) {
-            tempList.push(adGoodsOrderDetail)
-          }
-        }
-        this.filterAdGoodsOrderDetailList = tempList;
+        this.filterAdGoodsOrderDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
       }, refreshSummary(){
         let tmpTotalQty = 0;
         let tmpTotalPrice = 0;
