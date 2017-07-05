@@ -54,7 +54,7 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "getEditForm",method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'crm:adApply:edit')")
+    @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyEditForm getEditForm(AdApplyEditForm adApplyEditForm){
         return adApplyEditForm;
     }
@@ -88,13 +88,13 @@ public class AdApplyController {
 
 
     @RequestMapping(value = "getBillForm", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'crm:adApply:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyBillForm getBillForm(AdApplyBillForm adApplyBillForm){
         return adApplyService.getBillForm(adApplyBillForm);
     }
 
     @RequestMapping(value = "findAdApplyList", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'crm:adApply:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyBillTypeChangeForm findAdApplyList(String billType){
         if(StringUtils.isBlank(billType)){
             throw new ServiceException("未选中开单类型");
@@ -103,7 +103,7 @@ public class AdApplyController {
     }
 
     @RequestMapping(value = "getAdApplyGoodsList")
-    @PreAuthorize("hasPermission(null,'crm:adApply:goods')")
+    @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
         return adApplyService.getAdApplyGoodsList(adApplyGoodsForm);
     }
