@@ -31,11 +31,6 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('carrierProductList.enabled')" width="120">
-          <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
         <el-table-column fixed="right" :label="$t('carrierProductList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'api:carrierProduct:edit'">{{$t('carrierProductList.edit')}}</el-button>

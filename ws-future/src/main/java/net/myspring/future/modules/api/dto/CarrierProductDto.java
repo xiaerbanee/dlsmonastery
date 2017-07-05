@@ -13,6 +13,15 @@ public class CarrierProductDto extends DataDto<CarrierProduct>{
     private String mallProductTypeName;
     @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
     private String productName;
+    private boolean locked;
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 
     public String getProductName() {
         return productName;

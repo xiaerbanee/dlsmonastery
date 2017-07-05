@@ -31,11 +31,6 @@
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="enabled" :label="$t('carrierShopList.enabled')" width="120">
-          <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
         <el-table-column fixed="right" :label="$t('carrierShopList.operation')" width="140">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'api:carrierShop:edit'">{{$t('carrierShopList.edit')}}</el-button>
@@ -97,7 +92,7 @@
             axios.get('/api/ws/future/api/carrierShop/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
-            }); 
+            });
           }).catch(()=>{});
         }
       }

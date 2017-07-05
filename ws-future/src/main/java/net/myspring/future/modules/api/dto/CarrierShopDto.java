@@ -10,8 +10,7 @@ public class CarrierShopDto extends DataDto<CarrierShop>{
     private String name;
     private String code;
     private String type;
-    private String enabled;
-    private String locked;
+    private boolean locked;
 
     public String getName() {
         return name;
@@ -37,19 +36,11 @@ public class CarrierShopDto extends DataDto<CarrierShop>{
         this.type = type;
     }
 
-    public String getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(String enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getLocked() {
+    public boolean getLocked() {
         return locked;
     }
 
-    public void setLocked(String locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 }
