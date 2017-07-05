@@ -50,6 +50,22 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
+    fun findAllIncludeForbid(): MutableList<BdDepartment> {
+        return namedParameterJdbcTemplate.query("""
+            select
+                t1.FDEPTID,
+                t1.FNUMBER,
+                t2.FFULLNAME,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            from
+                T_BD_DEPARTMENT t1,
+                T_BD_DEPARTMENT_L t2
+            where
+                t1.FDEPTID = t2.FDEPTID
+        """, BeanPropertyRowMapper(BdDepartment::class.java))
+    }
+
     fun findByNameLike(name: String): MutableList<BdDepartment> {
         return namedParameterJdbcTemplate.query("""
             select

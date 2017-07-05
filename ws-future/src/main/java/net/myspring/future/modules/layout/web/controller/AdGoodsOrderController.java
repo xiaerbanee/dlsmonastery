@@ -67,6 +67,7 @@ public class  AdGoodsOrderController {
     public AdGoodsOrderQuery getQuery(AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.getExtra().put("billTypeList",BillTypeEnum.getList());
         adGoodsOrderQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
+        adGoodsOrderQuery.getExtra().put("adStoreList",depotService.findAdStoreDtoList());
         return adGoodsOrderQuery;
     }
 

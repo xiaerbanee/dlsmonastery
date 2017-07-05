@@ -75,7 +75,6 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
 
     }
 
-
     fun findByNumberList(numberList: MutableList<String>): MutableList<BdCustomer> {
         return namedParameterJdbcTemplate.query("""
             SELECT

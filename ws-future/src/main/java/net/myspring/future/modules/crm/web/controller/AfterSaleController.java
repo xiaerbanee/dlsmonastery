@@ -224,6 +224,7 @@ public class AfterSaleController {
 
     @RequestMapping(value = "synToFinance")
     public RestResponse synToFinance() {
+        afterSaleService.synToFinance();
         return new RestResponse("同步成功",null);
     }
 
