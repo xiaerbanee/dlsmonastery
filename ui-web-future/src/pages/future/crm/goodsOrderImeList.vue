@@ -28,8 +28,8 @@
               <el-form-item :label="$t('goodsOrderImeList.remarks')">
                 <el-input v-model="formData.remarks" :placeholder="$t('goodsOrderImeList.likeSearch')" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderImeList.businessId')">
-                <el-input type="textarea" v-model="formData.businessIds" :placeholder="$t('goodsOrderImeList.multiEnterOrComma')"></el-input>
+              <el-form-item :label="$t('goodsOrderImeList.imes')">
+                <el-input type="textarea" v-model="formData.imes" :placeholder="$t('goodsOrderImeList.multiEnter')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -46,7 +46,7 @@
                 <el-input v-model="formData.productName" :placeholder="$t('goodsOrderImeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderImeList.formatId')">
-                <el-input v-model="formData.formatId" :placeholder="$t('goodsOrderImeList.likeSearch')"></el-input>
+                <el-input v-model="formData.businessId" :placeholder="$t('goodsOrderImeList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderImeList.lxMallOrder')">
                 <bool-select v-model="formData.lxMallOrder"></bool-select>
