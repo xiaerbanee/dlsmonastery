@@ -16,15 +16,19 @@
           <span  id="credit"></span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
-          <el-button type="primary" @click="formSubmitAndAudit" icon="check">保存且审核</el-button>
+          <el-button type="primary" :disabled="submitAuditDisabled" @click="formSubmit" icon="check">保存</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmitAndAudit" icon="check">保存且审核</el-button>
         </el-form-item>
         <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;"></div>
       </el-form>
     </div>
   </div>
 </template>
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
 <script>
+  import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
   var accountNumberNameToFlexGroupNamesMap = {};
   var headers = [];
@@ -101,6 +105,7 @@
           fdate: [{ required: true, message: '必填项'}],
         },
         submitDisabled:false,
+        submitAuditDisabled:false,
         remoteLoading:false
       };
     },
@@ -166,8 +171,10 @@
               }else {
                 this.$message.error(response.data.message);
                 this.submitDisabled = false;
+                this.submitAuditDisabled = false;
               }
-            }).catch(function () {
+            })
+              .catch(function () {
               this.submitDisabled = false;
             });
           }else{
@@ -176,6 +183,35 @@
         })
       },
       formSubmitAndAudit() {
+        this.submitAuditDisabled = true;
+        var form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            this.formData.json = new Array();
+            let list = table.getData();
+            for(let item in list){
+              if(!table.isEmptyRow(item)){
+                this.formData.json.push(list[item]);
+              }
+            }
+            this.formData.json = JSON.stringify(this.formData.json);
+            this.formData.fdate = util.formatLocalDate(this.formData.fdate);
+            axios.post('/api/global/cloud/sys/voucher/audit', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+              if(response.data.success === true){
+                this.$message(response.data.message);
+                this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
+              }else {
+                this.$message.error(response.data.message);
+                this.submitDisabled = false;
+                this.submitAuditDisabled = false;
+              }
+            }).catch(function () {
+              this.submitAuditDisabled = false;
+            });
+          }else{
+            this.submitAuditDisabled = false;
+          }
+        })
       },initPage(){
         if (this.$route.query.id){
           axios.get('/api/global/cloud/sys/voucher/findOne',{params: {id:this.$route.query.id}}).then((response)=>{

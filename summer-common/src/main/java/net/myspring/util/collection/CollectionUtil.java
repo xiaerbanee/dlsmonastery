@@ -2,7 +2,6 @@ package net.myspring.util.collection;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.util.text.StringUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 
 import java.util.*;
@@ -107,6 +106,20 @@ public class CollectionUtil extends org.springside.modules.utils.collection.Coll
         Map<String, Object> map = Maps.newHashMap();
         map.put(key, value);
         return map;
+    }
+
+    public static <E> List<List<E>> splitList(final List<E> list, int len) {
+        if (isEmpty(list)) {
+            return null;
+        }
+        List<List<E>> result = new ArrayList<List<E>>();
+        int size = list.size();
+        int count = (size + len - 1) / len;
+        for (int i = 0; i < count; i++) {
+            List<E> subList = list.subList(i * len, ((i + 1) * len > size ? size : len * (i + 1)));
+            result.add(subList);
+        }
+        return result;
     }
 
 }

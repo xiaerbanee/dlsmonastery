@@ -21,7 +21,11 @@
 <style>
 
 </style>
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
 <script>
+  import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table = null;
   export default {
     data(){

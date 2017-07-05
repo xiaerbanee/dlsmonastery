@@ -60,7 +60,7 @@ public class OppoService {
 
     //获取颜色编码
     @LocalDataSource
-    public String pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
+    public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
             oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
         }
@@ -87,12 +87,11 @@ public class OppoService {
                 oppoPlantProductSelRepository.save(list);
             }
         }
-        return "颜色编码同步成功，共" + list.size() + "条";
     }
 
     //获取物料编码
     @LocalDataSource
-    public String pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
+    public void pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
             List<String> itemNumbers = CollectionUtil.extractToList(oppoPlantAgentProductSels, "itemNumber");
@@ -110,12 +109,11 @@ public class OppoService {
                 oppoPlantAgentProductSelRepository.save(list);
             }
         }
-        return "物料编码同步成功，共"+list.size()+"条";
     }
 
     //获取发货串码信息
     @LocalDataSource
-    public String pullPlantSendImeiPpsels(List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels, String agentCode) {
+    public void pullPlantSendImeiPpsels(List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels, String agentCode) {
         List<OppoPlantSendImeiPpsel> list = Lists.newArrayList();
         List<String> imeis = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
         List<OppoPlantSendImeiPpsel> plantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findByimeis(imeis);
@@ -129,17 +127,14 @@ public class OppoService {
                 list.add(oppoPlantSendImeiPpsel);
             }
         }
-        logger.info("开始同步串码");
         if (CollectionUtil.isNotEmpty(list)) {
             oppoPlantSendImeiPpselRepository.save(list);
         }
-        logger.info("串码同步成功");
-        return "发货串码同步成功，共"+list.size()+"条";
     }
 
     // 获取电子保卡信息
     @LocalDataSource
-    public String pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
+    public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
             List<String> productNos = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
@@ -160,14 +155,12 @@ public class OppoService {
             }
             logger.info("电子保卡同步成功");
         }
-        return "电子保卡同步成功，共"+list.size()+"条";
     }
 
 
     @LocalDataSource
     public  List<OppoPlantSendImeiPpselDto>  synIme(String date,String agentCode) {
-        LocalDate nowDate= LocalDateUtils.parse(date);
-        String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
+        String dateStart =date;
         String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         List<OppoPlantSendImeiPpselDto> oppoPlantSendImeiPpselDtos = oppoPlantSendImeiPpselRepository.findSynList(dateStart, dateEnd, mainCodes);
@@ -176,9 +169,8 @@ public class OppoService {
 
     @LocalDataSource
     public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
-        LocalDate nowDate= LocalDateUtils.parse(date);
         String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
-        String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        String dateEnd =date;
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findSynList(dateStart, dateEnd, mainCodes);
         return oppoPlantProductItemelectronSels;
