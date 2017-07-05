@@ -96,20 +96,20 @@ public class GlVoucherDto {
             //核算维度
             Map<String, Object> FDetailID = Maps.newLinkedHashMap();
             for(NameValueDto nameValueDto :entityDto.getNameValueDtoList()){
-                FDetailID.put(nameValueDto.getName(),  nameValueDto.getValue());
+                FDetailID.put(nameValueDto.getName(),  CollectionUtil.getMap("FNumber", nameValueDto.getValue()));
             }
-//            FDetailID.put("FDETAILID__FF100002","");//其他类
-//            FDetailID.put("FDETAILID__FF100003","");//管理费用
-//            FDetailID.put("FDETAILID__FF100004","");//银行账号
-//            FDetailID.put("FDETAILID__FFLEX4","");//供应商
-//            FDetailID.put("FDETAILID__FFLEX5","");//供应商
-//            FDetailID.put("FDETAILID__FFLEX6","");//客户
-//            FDetailID.put("FDETAILID__FFLEX7","");//员工
-//            FDetailID.put("FDETAILID__FFLEX8","");//物料
-//            FDetailID.put("FDETAILID__FFLEX9","");//费用项目
-//            FDetailID.put("FDETAILID__FFLEX10","");//资产类别
-//            FDetailID.put("FDETAILID__FFLEX11","");//组织机构
-//            FDetailID.put("FDETAILID__FOPCODE","");//
+//            FDetailID.put("FDETAILID__FF100002",{"FNumber",""});//其他类
+//            FDetailID.put("FDETAILID__FF100003",{"FNumber",""});//管理费用
+//            FDetailID.put("FDETAILID__FF100004",{"FNumber",""});//银行账号
+//            FDetailID.put("FDETAILID__FFLEX4",{"FNumber",""});//供应商
+//            FDetailID.put("FDETAILID__FFLEX5",{"FNumber",""});//部门
+//            FDetailID.put("FDETAILID__FFLEX6",{"FNumber",""});//客户
+//            FDetailID.put("FDETAILID__FFLEX7",{"FNumber",""});//员工
+//            FDetailID.put("FDETAILID__FFLEX8",{"FNumber",""});//物料
+//            FDetailID.put("FDETAILID__FFLEX9",{"FNumber",""});//费用项目
+//            FDetailID.put("FDETAILID__FFLEX10",{"FNumber",""});//资产类别
+//            FDetailID.put("FDETAILID__FFLEX11",{"FNumber",""});//组织机构
+//            FDetailID.put("FDETAILID__FOPCODE",{"FNumber",""});//
             detail.put("FDetailID", FDetailID);
             //贷方总金额
             detail.put("FCREDIT", entityDto.getCredit());
@@ -120,6 +120,7 @@ public class GlVoucherDto {
         model.put("FEntity", entity);
         root.put("Model", model);
         String result = ObjectMapperUtils.writeValueAsString(root);
+        //System.out.println(result);
         return result;
     }
 }
