@@ -41,7 +41,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.storeName')">
-                <el-select v-model="formData.storeId" clearable filterable @input="refreshCloudQty">
+                <el-select v-model="formData.storeId" clearable filterable>
                   <el-option v-for="item in formData.extra.adStoreList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
