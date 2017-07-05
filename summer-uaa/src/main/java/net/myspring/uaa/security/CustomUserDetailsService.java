@@ -14,6 +14,7 @@ import net.myspring.uaa.manager.PermissionManager;
 import net.myspring.uaa.manager.WeixinManager;
 import net.myspring.uaa.repository.AccountDtoRepository;
 import net.myspring.uaa.repository.AccountWeixinDtoRepository;
+import net.myspring.uaa.repository.CompanyConfigRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -52,6 +53,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private PermissionManager permissionManager;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private CompanyConfigRepository companyConfigRepository;
 
     @Override
     public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -81,7 +84,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             accountDto = accountDtoRepository.findByLoginName(username);
         }
         if(accountDto != null) {
-            accountDto.setCompanyName(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.COMPANY_NAME.name()).getValue());
+            accountDto.setCompanyName(companyConfigRepository.findByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()));
             LocalDate leaveDate = accountDto.getLeaveDate();
             boolean accountNoExpired = leaveDate == null || leaveDate.isAfter(LocalDate.now());
             Set<SimpleGrantedAuthority> authList = Sets.newHashSet();
