@@ -4,6 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderShipList.filter') }}</el-button>
+        <el-button v-permit="'crm:goodsOrderShip:ship'" type="primary" @click="itemShip(null)">{{ $t('goodsOrderShipList.ship') }}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">

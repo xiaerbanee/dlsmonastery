@@ -236,6 +236,7 @@ export default {
       goodsOrderDetail: "货品订货详细",
       goodsOrderForm: "pengiriman barang",
       goodsOrderList: "pengiriman barang",
+      goodsOrderImeList: "货品订货串码列表",
       goodsOrderShip: "pengiriman barnag",
       goodsOrderSign: "订单签收",
       goodsOrderSreturn: "销售退货",

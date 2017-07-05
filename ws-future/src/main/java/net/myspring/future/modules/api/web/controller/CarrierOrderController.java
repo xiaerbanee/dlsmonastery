@@ -48,6 +48,7 @@ public class CarrierOrderController {
     private GoodsOrderShipService goodsOrderShipService;
 
     @RequestMapping
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:view')")
     public Page<CarrierOrderDto> list(Pageable pageable,CarrierOrderQuery carrierOrderQuery) {
         Page<CarrierOrderDto> carrierOrderDtoPage=carrierOrderService.findPage(pageable,carrierOrderQuery);
         return carrierOrderDtoPage;
@@ -55,6 +56,7 @@ public class CarrierOrderController {
 
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:view')")
     public CarrierOrderQuery getQuery(CarrierOrderQuery carrierOrderQuery) {
         carrierOrderQuery.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
         carrierOrderQuery.getExtra().put("goodsOrderStatusList", Lists.newArrayList(GoodsOrderStatusEnum.待签收.name(),GoodsOrderStatusEnum.已完成.name()));
@@ -62,6 +64,7 @@ public class CarrierOrderController {
     }
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:edit')")
     public CarrierOrderFrom getForm(CarrierOrderFrom carrierOrderFrom) {
         carrierOrderFrom.getExtra().put("carrierOrderStatusList",CarrierOrderStatusEnum.getList());
         return carrierOrderFrom;
@@ -85,6 +88,7 @@ public class CarrierOrderController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:edit')")
     public RestResponse save(CarrierOrderFrom carrierOrderFrom) {
         RestResponse restResponse=new RestResponse("保存成功",null);
         Map<String, Object> map =carrierOrderService.checkDetailJsons(carrierOrderFrom);
@@ -98,6 +102,7 @@ public class CarrierOrderController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:delete')")
     public RestResponse delete(String id) {
         carrierOrderService.delete(id);
         return new RestResponse("删除成功",null);
@@ -142,6 +147,7 @@ public class CarrierOrderController {
         return restResponse;
     }
 
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:view')")
     @RequestMapping(value="export",method = RequestMethod.GET)
     public ModelAndView export(CarrierOrderQuery carrierOrderQuery){
         SimpleExcelBook simpleExcelSheet = carrierOrderService.findSimpleExcelSheet(carrierOrderQuery);
@@ -150,12 +156,14 @@ public class CarrierOrderController {
     }
 
     @RequestMapping(value = "batchStatus")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:edit')")
     public RestResponse batchStatus(CarrierOrderQuery carrierOrderQuery){
         carrierOrderService.updateStatus(carrierOrderQuery);
         return new RestResponse("保存成功",null);
     }
 
     @RequestMapping(value = "updateStatusAndRemarks")
+    @PreAuthorize("hasPermission(null,'api:carrierOrder:edit')")
     public RestResponse updateStatusAndRemarks(CarrierOrderFrom carrierOrderFrom){
         carrierOrderService.updateStatusAndRemarks(carrierOrderFrom);
         return new RestResponse("保存成功",null);
