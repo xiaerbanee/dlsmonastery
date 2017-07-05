@@ -187,13 +187,13 @@ public class  AdGoodsOrderController {
     }
 
     @RequestMapping(value = "findDetailListForNewOrEdit")
-    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:edit')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForNewOrEdit(String adGoodsOrderId, boolean includeNotAllowOrderProduct) {
         return adGoodsOrderService.findDetailListForNewOrEdit(adGoodsOrderId, includeNotAllowOrderProduct);
     }
 
     @RequestMapping(value = "findDetailListForBill")
-    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:bill')")
+    @PreAuthorize("hasPermission(null,'crm:adGoodsOrder:view')")
     public List<AdGoodsOrderDetailSimpleDto> findDetailListForBill(String adGoodsOrderId) {
         return adGoodsOrderService.findDetailListForBill(adGoodsOrderId);
     }
