@@ -19,21 +19,20 @@
               <el-form-item :label="$t('afterSaleProductAllotList.afterSaleBill')" >
                 <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('afterSaleProductAllotList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('afterSaleProductAllotList.toOutCode')">
-                <el-input type="textarea" v-model="formData.toOutCode" auto-complete="off" :placeholder="$t('afterSaleProductAllotList.blankOrComma')"></el-input>
-              </el-form-item>
-
-            </el-col>
-              <el-col :span="12">
               <el-form-item :label="$t('afterSaleProductAllotList.createdDate')" >
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
+            </el-col>
+              <el-col :span="12">
                 <el-form-item :label="$t('afterSaleProductAllotList.storeName')">
                   <el-input v-model="formData.storeName" auto-complete="off" :placeholder="$t('afterSaleProductAllotList.likeSearch')"></el-input>
                 </el-form-item>
               <el-form-item :label="$t('afterSaleProductAllotList.fromOutCode')" >
                 <el-input type="textarea" v-model="formData.fromOutCode" auto-complete="off" :placeholder="$t('afterSaleProductAllotList.blankOrComma')"></el-input>
               </el-form-item>
+                <el-form-item :label="$t('afterSaleProductAllotList.toOutCode')">
+                  <el-input type="textarea" v-model="formData.toOutCode" auto-complete="off" :placeholder="$t('afterSaleProductAllotList.blankOrComma')"></el-input>
+                </el-form-item>
             </el-col>
           </el-row>
         </el-form>

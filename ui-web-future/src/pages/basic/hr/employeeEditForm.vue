@@ -51,7 +51,7 @@
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.education')" prop="education">
               <el-select v-model="employeeForm.education"  clearable >
-                <el-option v-for="item in formProperty.educationsList" :key="item" :label="item" :value="item"></el-option>
+                <el-option v-for="item in formData.extra.educationList" :key="item" :label="item" :value="item"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('employeeEditForm.image')" prop="image">
@@ -91,7 +91,7 @@
           isInit:false,
           isCreate:this.$route.query.id==null,
           submitDisabled:false,
-          formProperty:{},
+          formData:{extra:{}},
           employeeForm:{
             id:"",
             bankName:'',
@@ -143,8 +143,8 @@
           }
         })
       },getForm(){
-          axios.get('/api/basic/hr/employee/editForm').then((response)=>{
-              this.formProperty=response.data
+          axios.get('/api/basic/hr/employee/getForm').then((response)=>{
+              this.formData=response.data
           })
       },handlePreview(file) {
         window.open(file.url);
@@ -157,12 +157,12 @@
       if(!this.$route.query.headClick || this.isInit) {
         this.getForm();
         if(!this.isCreate){
-          axios.get('/api/basic/hr/employee/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/basic/hr/employee/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.employeeForm);
             util.copyValue(response.data.account,this.accountForm);
             this.employeeForm.sexLabel=response.data.sex=="男"?1:0;
             if(this.employeeForm.image !=null) {
-              axios.get('/api/basic/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.employeeForm.image}}).then((response)=>{
                 this.fileList= response.data;
               });
             }

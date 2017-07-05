@@ -31,13 +31,13 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('afterSaleList.bill')" >
-                <el-input type="textarea" v-model="formData.businessIdList" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                <el-input type="textarea" v-model="formData.businessIdStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.toAreaProductIme')" >
-                <el-input type="textarea" v-model="formData.toAreaImeList" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                <el-input type="textarea" v-model="formData.toAreaImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
               </el-form-item>
               <el-form-item :label="$t('afterSaleList.badProductIme')" >
-                <el-input type="textarea" v-model="formData.imeList" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 4, maxRows: 10}"></el-input>
+                <el-input type="textarea" v-model="formData.badImeStr" auto-complete="off" :placeholder="$t('afterSaleList.blankOrComma')"  :autosize="{ minRows: 2, maxRows: 5}"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

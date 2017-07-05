@@ -4,8 +4,8 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-form-item :label="$t('adApplyGoods.productName')" prop="productId">
-          <el-select v-model="inputForm.productId" filterable remote :placeholder="$t('adApplyGoods.inputWord')" :remote-method="remoteProduct" :loading="remoteLoading" :clearable=true >
-            <el-option v-for="product in productList" :key="product.id" :label="product.name+'('+product.code+')'" :value="product.id"></el-option>
+          <el-select v-model="inputForm.productId" filterable :placeholder="$t('adApplyGoods.inputWord')" clearable>
+            <el-option v-for="product in inputForm.extra.popProductList" :key="product.id" :label="product.name+'('+product.code+')'" :value="product.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('adApplyGoods.remarks')" prop="remarks">
@@ -45,15 +45,12 @@
             submitDisabled:false,
             depotName:'',
             filterShop:[],
-            productList:[],
-            remoteLoading:false,
             inputForm:{
                 extra:{}
             },
             rules: {
               productId: [{ required: true, message: this.$t('adApplyGoods.prerequisiteMessage')}]
             },
-            remoteLoading:false,
             totalApplyQty:0,
           }
         },
@@ -73,7 +70,7 @@
             for(let index of this.filterShop){
               if(util.isNotBlank(index.applyQty)){
                 tempList.push(index)
-              }
+               }
             }
            let submitData = util.deleteExtra(this.inputForm);
             submitData.depotAdApplyForms = tempList;
@@ -90,14 +87,6 @@
             this.submitDisabled = false;
           }
         })
-      },remoteProduct(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('api/ws/future/basic/product/searchByNameOrCode',{params:{nameOrCode:query}}).then((response)=>{
-            this.productList=response.data;
-            this.remoteLoading = false;
-          })
-        }
       },customValidate(){
         let totalQty = 0;
         for(let index of this.filterShop){

@@ -158,7 +158,6 @@ public class AdGoodsOrderService {
         if (clientDto == null || StringUtils.isBlank(clientDto.getOutId())) {
             throw new ServiceException(outShop.getName() + " 没有关联财务账号，不能申请");
         }
-
         AdGoodsOrder adGoodsOrder;
         if (adGoodsOrderForm.isCreate()) {
             adGoodsOrder = new AdGoodsOrder();

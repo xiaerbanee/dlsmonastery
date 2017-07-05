@@ -3,9 +3,7 @@ package net.myspring.cloud.modules.input.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
-import net.myspring.cloud.common.enums.StkMisDeliveryTypeEnum;
+import net.myspring.cloud.common.enums.*;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.StkMisDeliveryDto;
@@ -70,10 +68,11 @@ public class StkMisDeliveryService {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 for (StkMisDeliveryDto misDelivery : stkMisDeliveryDtoList) {
+                    //库存方向
                     if (StkMisDeliveryTypeEnum.出库.name().equals(misDelivery.getMisDeliveryType())) {
-                        misDelivery.setStockDirectK3("GENERAL");
+                        misDelivery.setFStockDirect("GENERAL");
                     } else if(StkMisDeliveryTypeEnum.退货.name().equals(misDelivery.getMisDeliveryType())){
-                        misDelivery.setStockDirectK3("RETURN");
+                        misDelivery.setFStockDirect("RETURN");
                     }
                     KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
                     kingdeeSynDtoList.add(kingdeeSynDto);
@@ -91,16 +90,36 @@ public class StkMisDeliveryService {
             KingdeeSynDto kingdeeSynDto;
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
-                stkMisDeliveryDto.setCreatorK3(accountKingdeeBook.getUsername());
+                stkMisDeliveryDto.setCreator(accountKingdeeBook.getUsername());
+                //库存方向
                 if (StkMisDeliveryTypeEnum.出库.name().equals(stkMisDeliveryDto.getMisDeliveryType())) {
-                    stkMisDeliveryDto.setStockDirectK3("GENERAL");
-                } else if(StkMisDeliveryTypeEnum.退货.name().equals(stkMisDeliveryDto.getMisDeliveryType())){
-                    stkMisDeliveryDto.setStockDirectK3("RETURN");
+                    stkMisDeliveryDto.setFStockDirect("GENERAL");
+                }else if(StkMisDeliveryTypeEnum.退货.name().equals(stkMisDeliveryDto.getMisDeliveryType())){
+                    stkMisDeliveryDto.setFStockDirect("RETURN");
                 }
                 kingdeeSynDto = save(stkMisDeliveryDto, kingdeeBook);
             }else{
                 kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
             }
+            return kingdeeSynDto;
+        }
+        return null;
+    }
+
+    @Transactional
+    public KingdeeSynDto saveForWS(StkMisDeliveryDto stkMisDeliveryDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        if (stkMisDeliveryDto != null) {
+            KingdeeSynDto kingdeeSynDto;
+            stkMisDeliveryDto.setCreator(accountKingdeeBook.getUsername());
+            //领料部门
+            if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())) {
+                stkMisDeliveryDto.setFDeptIdNumber("300");
+            }else if(KingdeeNameEnum.JXDJ.name().equals(kingdeeBook.getName())){
+                stkMisDeliveryDto.setFDeptIdNumber("101");
+            }else {
+                stkMisDeliveryDto.setFDeptIdNumber("0001");
+            }
+            kingdeeSynDto = save(stkMisDeliveryDto, kingdeeBook,accountKingdeeBook);
             return kingdeeSynDto;
         }
         return null;
@@ -129,9 +148,9 @@ public class StkMisDeliveryService {
             String remarks = HandsontableUtils.getValue(row, 5);
             StkMisDeliveryDto misDelivery = new StkMisDeliveryDto();
             misDelivery.setExtendType(ExtendTypeEnum.其他出库单_K3.name());
-            misDelivery.setCreatorK3(accountKingdeeBook.getUsername());
+            misDelivery.setCreator(accountKingdeeBook.getUsername());
             misDelivery.setDate(billDate);
-            misDelivery.setDepartmentNumber(departmentNumber);
+            misDelivery.setFDeptIdNumber(departmentNumber);
             String billKey = materialNumber + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
                 StkMisDeliveryFEntityDto misDeliveryFEntityDto = new StkMisDeliveryFEntityDto();
