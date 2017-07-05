@@ -92,9 +92,9 @@ public class GlVoucherService {
             List<String> headers = getFlexItemGroupAllName(bdFlexItemGroupList);
             //核算维度明细
             List<NameValueDto> nameValueDtoList = Lists.newArrayList();
-            for (int i=0; i<row.size()-4; i++){
+            for (int i=2; i<row.size()-2; i++){
                 String numberValue = HandsontableUtils.getValue(row,i);
-                String header = headers.get(i);
+                String header = headers.get(i-2);
                 if (StringUtils.isNotBlank(numberValue)){
                     NameValueDto nameValue = new NameValueDto();
                     String name = "FDetailID__"+bdFlexItemPropertyNameMap.get(header).getFFlexNumber();
