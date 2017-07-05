@@ -58,7 +58,6 @@
           <el-button type="primary" @click="search()">{{ $t('goodsOrderImeList.sure') }}</el-button>
         </div>
       </search-dialog>
-
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderImeList.loading')" @sort-change="sortChange" stripe border >
         <el-table-column prop="goodsOrderFormatId" :label="$t('goodsOrderImeList.formatId')"></el-table-column>
         <el-table-column prop="goodsOrderCreatedDate" :label="$t('goodsOrderImeList.createdDate')"></el-table-column>
@@ -73,12 +72,10 @@
   </div>
 </template>
 <script>
-  import depotSelect from 'components/future/depot-select'
   import boolSelect from 'components/common/bool-select'
   import accountSelect from 'components/basic/account-select'
   export default{
     components:{
-      depotSelect,
       boolSelect,
       accountSelect,
     },
