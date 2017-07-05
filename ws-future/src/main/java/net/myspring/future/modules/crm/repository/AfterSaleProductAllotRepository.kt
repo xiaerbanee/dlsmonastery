@@ -62,8 +62,8 @@ class AfterSaleProductAllotRepositoryImpl @Autowired constructor(val namedParame
         if (afterSaleProductAllotQuery.businessId != null) {
             sb.append(" AND t5.business_id=:businessId ")
         }
-        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.toOutCode)) {
-            sb.append(" AND t1.to_out_code in (:toOutCode)")
+        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.toOutCodeList)) {
+            sb.append(" AND t1.to_out_code in (:toOutCodeList)")
         }
         if (afterSaleProductAllotQuery.fromProductName != null) {
             sb.append(" AND t2.name LIKE CONCAT('%',:fromProductName,'%')")
@@ -74,8 +74,8 @@ class AfterSaleProductAllotRepositoryImpl @Autowired constructor(val namedParame
         if (afterSaleProductAllotQuery.storeName != null) {
             sb.append(" AND t3.name LIKE CONCAT('%',:storeName,'%')")
         }
-        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.fromOutCode)) {
-            sb.append(" AND t1.from_out_code in (:fromOutCode) ")
+        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.fromOutCodeList)) {
+            sb.append(" AND t1.from_out_code in (:fromOutCodeList) ")
         }
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
