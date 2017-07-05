@@ -70,11 +70,13 @@
 </template>
 <script>
   import accountSelect from 'components/basic/account-select'
+  import boolRadioGroup from 'components/common/bool-radio-group'
   import officeSelect from 'components/basic/office-select'
   export default{
     components:{
       officeSelect,
-      accountSelect
+      accountSelect,
+      boolRadioGroup
     },
     data:function () {
       return this.getData();
