@@ -41,7 +41,9 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.storeName')">
-                <depot-select v-model="formData.storeId" category="store" @afterInit="setSearchText"></depot-select>
+                <el-select v-model="formData.storeId" clearable filterable @input="refreshCloudQty">
+                  <el-option v-for="item in formData.extra.adStoreList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.shopName')">
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('adGoodsOrderList.likeSearch')"></el-input>
