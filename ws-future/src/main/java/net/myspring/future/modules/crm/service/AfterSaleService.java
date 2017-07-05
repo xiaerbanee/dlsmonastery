@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
@@ -357,13 +358,14 @@ public class AfterSaleService {
         Depot badStore = depotRepository.findOne(badStoreId);
         Depot depositStore = depotRepository.findOne(depositStoreId);
         Depot disuseStore = depotRepository.findOne(disuseStoreId);
-        List<AfterSale> afterSales = afterSaleRepository.findByToFinanceDateIsNull();
+        List<AfterSale> afterSales = afterSaleRepository.findByToFinanceDateIsNullAndEnabledIsTrue();
         List<AfterSaleStoreAllot> afterSaleStoreAllots = Lists.newArrayList();
         List<AfterSaleProductAllot> afterSaleProductAllots = Lists.newArrayList();
-        List<String> imeList=Lists.newArrayList();
-        imeList.addAll(CollectionUtil.extractToList(afterSales,"badProductImeId"));
-        imeList.addAll(CollectionUtil.extractToList(afterSales,"toAreaProductImeId"));
-        Map<String,ProductIme> productImeMap=productImeRepository.findMap(CollectionUtil.extractToList(afterSales,"imeList"));
+        List<String> productImeIdList=Lists.newArrayList();
+        productImeIdList.addAll(CollectionUtil.extractToList(afterSales,"badProductImeId"));
+        productImeIdList.addAll(CollectionUtil.extractToList(afterSales,"toAreaProductImeId"));
+        productImeIdList=Lists.newArrayList(Sets.newHashSet(productImeIdList));
+        Map<String,ProductIme> productImeMap=productImeRepository.findMap(productImeIdList);
         Map<String,Product> productMap=productRepository.findMap(CollectionUtil.extractToList(productImeMap.values(),"productId"));
         for(AfterSale afterSale:afterSales) {
             ProductIme badProductIme = productImeMap.get(afterSale.getBadProductImeId());

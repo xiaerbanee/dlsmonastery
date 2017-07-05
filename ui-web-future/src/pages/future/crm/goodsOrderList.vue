@@ -10,11 +10,11 @@
             {{$t('goodsOrderList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="mallAdd">{{$t('goodsOrderList.mallAdd')}}</el-dropdown-item>
-            <el-dropdown-item command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
-            <el-dropdown-item command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
-            <el-dropdown-item command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
-            <el-dropdown-item command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="mallAdd">{{$t('goodsOrderList.mallAdd')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrder:batchAdd'" command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <span  v-html="searchText"></span>
@@ -51,7 +51,7 @@
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.store')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.storeId"  type="store" category="store" @afterInit="setSearchText"></depot-select>
+                <depot-select v-model="formData.storeIdList" category="store" multiple @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.createdBy')" :label-width="formLabelWidth">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText"  ></account-select>
@@ -104,7 +104,7 @@
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
-        <el-table-column fixed="right" :label="$t('goodsOrderList.operate')" width="160">
+        <el-table-column :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
