@@ -42,7 +42,6 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   var table = null;
   export default{
     data(){
@@ -184,7 +183,6 @@
   }
 </script>
 <style>
-  @import "~handsontable/dist/handsontable.full.css";
   .button{
     margin-bottom:20px;
   }

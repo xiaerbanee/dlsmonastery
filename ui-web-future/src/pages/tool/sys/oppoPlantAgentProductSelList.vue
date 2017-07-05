@@ -6,10 +6,12 @@
         <div style="float:left">
           <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
           <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
-          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
         </div>
         <div style="float: left;margin-left: 10px">
           <date-picker v-model="date"></date-picker>
+        </div>
+        <div style="float: left;margin-left: 10px">
+          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
         </div>
         <span v-html="searchText"></span>
       </el-row>
@@ -39,12 +41,7 @@
     </div>
   </div>
 </template>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-
-</style>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   import ElCol from "element-ui/packages/col/src/col";
   import util from "../../../utils/util";
   var table = null;

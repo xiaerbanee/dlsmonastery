@@ -19,8 +19,7 @@
     <div ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top:20px"></div>
   </div>
 </template>
-<script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js';
+<script>;
   import productSelect from 'components/future/product-select';
   var table = null;
 
@@ -139,8 +138,5 @@
   }
 </script>
 
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 
 

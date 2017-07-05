@@ -22,8 +22,7 @@
     </div>
   </div>
 </template>
-<script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js';
+<script>;
   var table = null;
   export default {
     data(){
@@ -82,9 +81,6 @@
     }
   }
 </script>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 <style>
   .outer{
     width: 800px;

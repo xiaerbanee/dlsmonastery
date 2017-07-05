@@ -1,5 +1,4 @@
 <style>
-  @import "~handsontable/dist/handsontable.full.css";
 </style>
 <template>
   <div>
@@ -28,7 +27,6 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   export default {
     data() {
       return {

@@ -26,7 +26,6 @@
   </div>
 </template>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
   import productSelect from 'components/future/product-select'
   var table = null;
   export default{
@@ -121,6 +120,3 @@
     }
   }
 </script>
-<style>
-@import "~handsontable/dist/handsontable.full.css";
-</style>

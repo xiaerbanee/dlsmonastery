@@ -48,8 +48,7 @@
 <style>
 
 </style>
-<script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js';
+<script>;
   import ProductTypeSelect from "components/future/product-type-select"
   var table=null;
   export default{
@@ -189,6 +188,3 @@
       }
     }
 </script>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
