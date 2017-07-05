@@ -60,7 +60,7 @@ class AfterSaleProductAllotRepositoryImpl @Autowired constructor(val namedParame
             sb.append(" AND t1.created_date  < :createdDateEnd ")
         }
         if (afterSaleProductAllotQuery.businessId != null) {
-            sb.append(" AND t5.businessId=:businessId'")
+            sb.append(" AND t5.business_id=:businessId ")
         }
         if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.toOutCode)) {
             sb.append(" AND t1.to_out_code in (:toOutCode)")
