@@ -194,9 +194,6 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             if (afterSaleQuery.fromCompanyDateEnd!= null) {
                 sb.append("""  and t1.from_company_date  < :fromCompanyDateEnd """)
             }
-            if (StringUtils.isNotBlank(afterSaleQuery.badProductName)) {
-                sb.append("""  and t3.name like concat('%',:badProductName,'%') """)
-            }
             if (StringUtils.isNotBlank(afterSaleQuery.depotName)) {
                 sb.append("""  and t4.name like concat('%',:depotName,'%') """)
             }
