@@ -193,6 +193,7 @@ public class AdApplyService {
         if(!adApplyEditForm.isCreate()){
             AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
             adApply.setConfirmQty(adApplyEditForm.getConfirmQty());
+            adApply.setLeftQty(adApplyEditForm.getConfirmQty()-adApply.getBilledQty());
             adApply.setRemarks(adApplyEditForm.getRemarks());
             adApplyRepository.save(adApply);
         }
