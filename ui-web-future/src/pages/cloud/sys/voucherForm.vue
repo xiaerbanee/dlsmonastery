@@ -25,9 +25,6 @@
   </div>
 </template>
 <script>
-  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input";
-  import ElInputNumber from "../../../../node_modules/element-ui/packages/input-number/src/input-number";
-  import ElFormItem from "../../../../node_modules/element-ui/packages/form/src/form-item";
   var table = null;
   var accountNumberNameToFlexGroupNamesMap = {};
   var headers = [];
