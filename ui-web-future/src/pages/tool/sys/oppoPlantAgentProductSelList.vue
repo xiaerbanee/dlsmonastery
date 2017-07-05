@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-tab active="oppoPlantAgentProductSelList"></head-tab>
-    <div>
+    <div  v-loading="loading" element-loading-text="正在同步工厂数据..." >
       <el-row>
         <div style="float:left">
           <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
@@ -11,7 +11,7 @@
           <date-picker v-model="date"></date-picker>
         </div>
         <div style="float: left;margin-left: 10px">
-          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
+          <el-button  type="primary" @click="synData" icon="plus">工厂同步</el-button>
         </div>
         <span v-html="searchText"></span>
       </el-row>
@@ -78,6 +78,7 @@
           inputForm:{
             extra:{}
           },
+          loading:false,
           searchText:'',
           productNames:[],
           settings: {
@@ -157,9 +158,12 @@
         this.getTableData();
       },synData(){
         if(this.date){
+          this.loading = true;
           axios.get('/api/ws/future/third/factory/oppo/synIme?date='+this.date).then((response)=>{
+            this.loading = false;
             this.$message(response.data);
           }).catch(function () {
+            this.loading = false;
             this.$message({message:"同步失败",type:'error'});
           });
         }else{
