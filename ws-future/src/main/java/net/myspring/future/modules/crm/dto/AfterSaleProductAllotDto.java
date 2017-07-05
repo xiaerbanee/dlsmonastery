@@ -14,7 +14,15 @@ public class AfterSaleProductAllotDto extends DataDto<AfterSaleProductAllot> {
     private String toProductName;
     private String toOutCode;
     private String fromOutCode;
+    private String businessId;
 
+    public String getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
+    }
 
     public String getAfterSaleId() {
         return afterSaleId;

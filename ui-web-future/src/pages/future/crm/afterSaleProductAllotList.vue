@@ -6,7 +6,7 @@
         <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleProductAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleProductAllotList.filter')" v-model="formVisible" size="small" class="search-form">
+      <search-dialog :title="$t('afterSaleProductAllotList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData"  :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -40,7 +40,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleProductAllotList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleProductAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('afterSaleProductAllotList.bill')" sortable ></el-table-column>
         <el-table-column prop="businessId" :label="$t('afterSaleProductAllotList.afterSaleBill')" sortable></el-table-column>
