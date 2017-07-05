@@ -45,7 +45,6 @@
   import util from "../../../utils/util";
   var table = null;
   export default {
-    components: {ElCol},
     data(){
       return this.getData()
     },mounted() {
