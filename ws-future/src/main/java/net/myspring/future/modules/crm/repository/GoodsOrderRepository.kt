@@ -183,8 +183,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(goodsOrderQuery.shopName)) {
             sb.append(" and shop.name like concat('%',:shopName,'%')  ")
         }
-        if (StringUtils.isNotBlank(goodsOrderQuery.storeId)) {
-            sb.append(" and t1.store_id = :storeId ")
+        if (CollectionUtil.isNotEmpty(goodsOrderQuery.storeIdList)) {
+            sb.append(" and t1.store_id IN (:storeIdList) ")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.createdBy)) {
             sb.append(" and t1.created_by = :createdBy ")

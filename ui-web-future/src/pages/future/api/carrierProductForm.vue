@@ -10,7 +10,7 @@
           <el-input v-model.number="inputForm.mallProductTypeName"></el-input>
         </el-form-item>
         <el-form-item :label="$t('carrierProductForm.productName')" prop="value">
-          <product-select v-model="inputForm.productName"></product-select>
+          <product-select v-model="inputForm.productId"></product-select>
         </el-form-item>
         <el-form-item :label="$t('carrierProductForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>

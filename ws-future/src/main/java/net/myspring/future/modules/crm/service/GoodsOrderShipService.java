@@ -8,6 +8,7 @@ import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
@@ -255,7 +256,13 @@ public class GoodsOrderShipService {
 
     @Transactional
     public void ship(GoodsOrderShipForm goodsOrderShipForm) {
+        if(StringUtils.isBlank(goodsOrderShipForm.getId())){
+            throw new ServiceException("发货的订单id不能为空");
+        }
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderShipForm.getId());
+        if(!GoodsOrderStatusEnum.待发货.name().equals(goodsOrder.getStatus())){
+            throw new ServiceException("该订单的状态不为待发货，不能发货");
+        }
         Map<String, GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderShipForm.getId());
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderDetailList,"productId"));
