@@ -13,6 +13,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,23 +32,27 @@ public class ShopBuildController {
 
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public Page<ShopBuildDto> list(Pageable pageable, ShopBuildQuery shopBuildQuery) {
         Page<ShopBuildDto> page = shopBuildService.findPage(pageable,shopBuildQuery);
         return page;
     }
 
     @RequestMapping(value = "getQuery")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ShopBuildQuery getQuery(ShopBuildQuery shopBuildQuery) {
         return shopBuildQuery;
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:edit')")
     public RestResponse save(ShopBuildForm shopBuildForm) {
         shopBuildService.save(shopBuildForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "audit")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:edit')")
     public RestResponse audit(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
         String message = shopBuildService.audit(shopBuildDetailOrAuditForm);
         if(message != null){
@@ -58,6 +63,7 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "batchAudit")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:edit')")
     public RestResponse batchAudit(@RequestParam(value = "ids[]")String[] ids, Boolean pass) {
         String message  = shopBuildService.batchAudit(ids,pass);
         if(message != null){
@@ -69,6 +75,7 @@ public class ShopBuildController {
 
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:delete')")
     public RestResponse delete(String id) {
         shopBuildService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
@@ -76,23 +83,27 @@ public class ShopBuildController {
     }
 
     @RequestMapping(value = "findOne")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ShopBuildDto findOne(String id){
         return shopBuildService.findOne(id);
     }
 
 
     @RequestMapping(value = "getAuditForm")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ShopBuildDetailOrAuditForm auditForm(ShopBuildDetailOrAuditForm shopBuildDetailOrAuditForm){
         return shopBuildDetailOrAuditForm;
     }
 
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ModelAndView export(ShopBuildQuery shopBuildQuery) throws IOException{
         return new ModelAndView(new ExcelView(),"simpleExcelBook",shopBuildService.export(shopBuildQuery));
     }
 
     @RequestMapping(value = "getForm")
+    @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ShopBuildForm getForm(ShopBuildForm shopBuildForm){
         return shopBuildForm;
     }
