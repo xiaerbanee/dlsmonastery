@@ -1,6 +1,7 @@
 package net.myspring.future.modules.api.service;
 
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.api.domain.CarrierOrder;
 import net.myspring.future.modules.api.domain.CarrierShop;
 import net.myspring.future.modules.api.dto.CarrierShopDto;
 import net.myspring.future.modules.api.repository.CarrierShopRepository;
@@ -72,5 +73,8 @@ public class CarrierShopService {
         return carrierShopDtoPage;
     }
 
-
+    public CarrierShop findByName(String name){
+        CarrierShop carrierShop=carrierShopRepository.findByName(name);
+        return carrierShop;
+    }
 }

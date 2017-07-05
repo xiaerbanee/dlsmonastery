@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  * Created by wangzm on 2017/7/5.
  */
 interface CarrierShopRepository : BaseRepository<CarrierShop, String>, CarrierShopRepositoryCustom {
-
+    fun  findByName(name:String):CarrierShop
 }
 
 
