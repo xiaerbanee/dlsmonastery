@@ -46,8 +46,8 @@
         <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
+            <el-button size="small" v-if="scope.row.status !== '已完成' " @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
