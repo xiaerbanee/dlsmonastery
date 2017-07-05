@@ -15,7 +15,11 @@
     </div>
   </div>
 </template>
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
 <script>
+  import Handsontable from 'handsontable/dist/handsontable.full.js';
   let table = null;
   export default{
     data(){
