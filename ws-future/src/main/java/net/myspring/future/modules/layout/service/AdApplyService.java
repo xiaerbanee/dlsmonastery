@@ -158,6 +158,8 @@ public class AdApplyService {
     public AdApplyGoodsForm getAdApplyGoodsList(AdApplyGoodsForm adApplyGoodsForm){
         List<DepotAdApplyForm> depotAdApplyForms = BeanUtil.map(depotRepository.findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse(),DepotAdApplyForm.class);
         adApplyGoodsForm.setDepotAdApplyForms(depotAdApplyForms);
+        List<String> outGroupIds = IdUtils.getIdList(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.PRODUCT_POP_GROUP_IDS.name()).getValue());
+        adApplyGoodsForm.getExtra().put("popProductList",productRepository.findByOutGroupIdIn(outGroupIds));
         return adApplyGoodsForm;
     }
 
@@ -191,6 +193,7 @@ public class AdApplyService {
         if(!adApplyEditForm.isCreate()){
             AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
             adApply.setConfirmQty(adApplyEditForm.getConfirmQty());
+            adApply.setLeftQty(adApplyEditForm.getConfirmQty()-adApply.getBilledQty());
             adApply.setRemarks(adApplyEditForm.getRemarks());
             adApplyRepository.save(adApply);
         }
