@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.enums.StkMisDeliveryTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 
@@ -21,13 +20,15 @@ public class StkMisDeliveryDto {
     //附加-单据类型
     private String extendType;
     //创建人
-    private String creator;
+    private String creatorK3;
     //单据类型
     private String misDeliveryType;
-    // 做单日期
-    private LocalDate billDate;
+    //做单日期
+    private LocalDate date;
     //部门编码
     private String departmentNumber;
+    //库存方向
+    private String stockDirectK3;
 
     private List<StkMisDeliveryFEntityDto> stkMisDeliveryFEntityDtoList = Lists.newArrayList();
 
@@ -47,12 +48,12 @@ public class StkMisDeliveryDto {
         this.extendType = extendType;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getCreatorK3() {
+        return creatorK3;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setCreatorK3(String creatorK3) {
+        this.creatorK3 = creatorK3;
     }
 
     public String getMisDeliveryType() {
@@ -63,12 +64,12 @@ public class StkMisDeliveryDto {
         this.misDeliveryType = misDeliveryType;
     }
 
-    public LocalDate getBillDate() {
-        return billDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setBillDate(LocalDate billDate) {
-        this.billDate = billDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public String getDepartmentNumber() {
@@ -77,6 +78,14 @@ public class StkMisDeliveryDto {
 
     public void setDepartmentNumber(String departmentNumber) {
         this.departmentNumber = departmentNumber;
+    }
+
+    public String getStockDirectK3() {
+        return stockDirectK3;
+    }
+
+    public void setStockDirectK3(String stockDirectK3) {
+        this.stockDirectK3 = stockDirectK3;
     }
 
     public List<StkMisDeliveryFEntityDto> getStkMisDeliveryFEntityDtoList() {
@@ -90,22 +99,18 @@ public class StkMisDeliveryDto {
     @JsonIgnore
     public String getJson() {
         Map<String, Object> root = Maps.newLinkedHashMap();
-        root.put("Creator", getCreator());
+        root.put("Creator", getCreatorK3());
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDate", getBillDate());
+        model.put("FDate", getDate());
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "QTCKD01_SYS"));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
         model.put("FDeptId", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         //库存方向
-        if (StkMisDeliveryTypeEnum.出库.name().equals(getMisDeliveryType())) {
-            model.put("FStockDirect", "GENERAL");
-        } else if(StkMisDeliveryTypeEnum.退货.name().equals(getMisDeliveryType())){
-            model.put("FStockDirect", "RETURN");
-        }
+        model.put("FStockDirect", getStockDirectK3());
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
         model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();

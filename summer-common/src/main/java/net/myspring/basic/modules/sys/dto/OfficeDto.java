@@ -32,8 +32,17 @@ public class OfficeDto extends DataDto{
     private BigDecimal point;
     private BigDecimal taskPoint;
     private String sort;
+    private boolean allDataScope;
     private List<String> businessIdList=Lists.newArrayList();
     private List<String> leaderIdList= Lists.newArrayList();
+
+    public boolean getAllDataScope() {
+        return allDataScope;
+    }
+
+    public void setAllDataScope(boolean allDataScope) {
+        this.allDataScope = allDataScope;
+    }
 
     public List<String> getBusinessIdList() {
         return businessIdList;

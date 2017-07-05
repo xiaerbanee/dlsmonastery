@@ -64,6 +64,49 @@ public class StkMisDeliveryService {
     }
 
     @Transactional
+    public List<KingdeeSynDto> save(List<StkMisDeliveryDto> stkMisDeliveryDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
+        if (CollectionUtil.isNotEmpty(stkMisDeliveryDtoList)) {
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (StkMisDeliveryDto misDelivery : stkMisDeliveryDtoList) {
+                    if (StkMisDeliveryTypeEnum.出库.name().equals(misDelivery.getMisDeliveryType())) {
+                        misDelivery.setStockDirectK3("GENERAL");
+                    } else if(StkMisDeliveryTypeEnum.退货.name().equals(misDelivery.getMisDeliveryType())){
+                        misDelivery.setStockDirectK3("RETURN");
+                    }
+                    KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
+                    kingdeeSynDtoList.add(kingdeeSynDto);
+                }
+            }else{
+                kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
+            }
+        }
+        return kingdeeSynDtoList;
+    }
+
+    @Transactional
+    public KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        if (stkMisDeliveryDto != null) {
+            KingdeeSynDto kingdeeSynDto;
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                stkMisDeliveryDto.setCreatorK3(accountKingdeeBook.getUsername());
+                if (StkMisDeliveryTypeEnum.出库.name().equals(stkMisDeliveryDto.getMisDeliveryType())) {
+                    stkMisDeliveryDto.setStockDirectK3("GENERAL");
+                } else if(StkMisDeliveryTypeEnum.退货.name().equals(stkMisDeliveryDto.getMisDeliveryType())){
+                    stkMisDeliveryDto.setStockDirectK3("RETURN");
+                }
+                kingdeeSynDto = save(stkMisDeliveryDto, kingdeeBook);
+            }else{
+                kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+            }
+            return kingdeeSynDto;
+        }
+        return null;
+    }
+
+    @Transactional
     public List<KingdeeSynDto> save(StkMisDeliveryForm stkMisDeliveryForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         Map<String, StkMisDeliveryDto> misDeliveryMap = Maps.newLinkedHashMap();
         String departmentNumber = stkMisDeliveryForm.getDepartmentNumber();
@@ -86,8 +129,8 @@ public class StkMisDeliveryService {
             String remarks = HandsontableUtils.getValue(row, 5);
             StkMisDeliveryDto misDelivery = new StkMisDeliveryDto();
             misDelivery.setExtendType(ExtendTypeEnum.其他出库单_K3.name());
-            misDelivery.setCreator(accountKingdeeBook.getUsername());
-            misDelivery.setBillDate(billDate);
+            misDelivery.setCreatorK3(accountKingdeeBook.getUsername());
+            misDelivery.setDate(billDate);
             misDelivery.setDepartmentNumber(departmentNumber);
             String billKey = materialNumber + CharConstant.COMMA + stockName + CharConstant.COMMA + qty + CharConstant.COMMA + remarks + CharConstant.COMMA + type;
             if (!misDeliveryMap.containsKey(billKey)) {
@@ -105,23 +148,6 @@ public class StkMisDeliveryService {
         }
         List<StkMisDeliveryDto> billList = Lists.newArrayList(misDeliveryMap.values());
         return save(billList,kingdeeBook,accountKingdeeBook);
-    }
-
-    @Transactional
-    public List<KingdeeSynDto> save(List<StkMisDeliveryDto> billList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
-        if (CollectionUtil.isNotEmpty(billList)) {
-            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-            if(isLogin) {
-                for (StkMisDeliveryDto misDelivery : billList) {
-                    KingdeeSynDto kingdeeSynDto = save(misDelivery, kingdeeBook);
-                    kingdeeSynDtoList.add(kingdeeSynDto);
-                }
-            }else{
-                kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
-            }
-        }
-        return kingdeeSynDtoList;
     }
 
     public StkMisDeliveryForm getForm(){
