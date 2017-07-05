@@ -300,7 +300,7 @@ public class OfficeService {
     public TreeNode getOfficeTree() {
         Office topOffice = officeRepository.findParentIdIsNull();
         TreeNode treeNode = new TreeNode("t"+topOffice.getId(), topOffice.getName());
-        List<Office> officeList = officeRepository.findAllEnabled();
+        List<Office> officeList = officeRepository.findByEnabledIsTrueAndType(OfficeTypeEnum.业务部门.name());
         getTreeNodeList(officeList, treeNode.getChildren(), TreeConstant.ROOT_PARENT_IDS+topOffice.getId()+CharConstant.COMMA);
         return treeNode;
     }

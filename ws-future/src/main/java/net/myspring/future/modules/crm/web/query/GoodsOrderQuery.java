@@ -4,6 +4,7 @@ import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsOrderQuery extends BaseQuery {
@@ -33,7 +34,7 @@ public class GoodsOrderQuery extends BaseQuery {
 
     private String shopId;
     private String shopName;
-    private String storeId;
+    private List<String> storeIdList = new ArrayList<>();
     private String createdBy;
 
     private String outCode;
@@ -191,12 +192,12 @@ public class GoodsOrderQuery extends BaseQuery {
         this.shopName = shopName;
     }
 
-    public String getStoreId() {
-        return storeId;
+    public List<String> getStoreIdList() {
+        return storeIdList;
     }
 
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
+    public void setStoreIdList(List<String> storeIdList) {
+        this.storeIdList = storeIdList;
     }
 
     public String getCreatedBy() {

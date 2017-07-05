@@ -130,8 +130,8 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         if(expressOrderQuery.expressPrint !=null && !expressOrderQuery.expressPrint ){
             sb.append("""  and t1.express_print_date is  null  """)
         }
-        if(StringUtils.isNotBlank(expressOrderQuery.fromDepotName)){
-            sb.append("""  and fromDepot.name like concat('%',:fromDepotName,'%') """)
+        if(CollectionUtil.isNotEmpty(expressOrderQuery.fromDepotIdList)){
+            sb.append("""  and fromDepot.id IN (:fromDepotIdList) """)
         }
         if(StringUtils.isNotBlank(expressOrderQuery.toDepotName)){
             sb.append("""  and toDepot.name like concat('%', :toDepotName,'%')   """)

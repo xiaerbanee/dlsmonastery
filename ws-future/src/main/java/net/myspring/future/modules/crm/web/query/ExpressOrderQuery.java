@@ -4,11 +4,12 @@ import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.time.LocalDateTimeUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpressOrderQuery extends BaseQuery {
 
-    private String fromDepotName;
+    private List<String> fromDepotIdList = new ArrayList<>();
     private String toDepotName;
     private String expressCompanyName;
     private String extendBusinessId;
@@ -30,12 +31,12 @@ public class ExpressOrderQuery extends BaseQuery {
         this.extendBusinessIdStart = extendBusinessIdStart;
     }
 
-    public String getFromDepotName() {
-        return fromDepotName;
+    public List<String> getFromDepotIdList() {
+        return fromDepotIdList;
     }
 
-    public void setFromDepotName(String fromDepotName) {
-        this.fromDepotName = fromDepotName;
+    public void setFromDepotIdList(List<String> fromDepotIdList) {
+        this.fromDepotIdList = fromDepotIdList;
     }
 
     public String getToDepotName() {

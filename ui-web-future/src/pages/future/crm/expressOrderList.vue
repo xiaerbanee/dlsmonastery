@@ -13,7 +13,7 @@
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item :label="$t('expressOrderList.fromDepotName')">
-                <el-input v-model="formData.fromDepotName" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
+                <depot-select v-model="formData.fromDepotIdList" category="store" multiple @afterInit="setSearchText"></depot-select>
               </el-form-item>
               <el-form-item :label="$t('expressOrderList.toDepotName')">
                 <el-input v-model="formData.toDepotName" :placeholder="$t('expressOrderList.likeSearch')"></el-input>
@@ -113,10 +113,12 @@
 </style>
 <script>
   import boolSelect from 'components/common/bool-select'
+  import depotSelect from 'components/future/depot-select'
 
   export default{
     components:{
       boolSelect,
+      depotSelect,
     },
 
     data() {

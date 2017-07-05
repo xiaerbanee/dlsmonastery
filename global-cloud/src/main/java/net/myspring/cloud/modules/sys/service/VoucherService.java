@@ -69,83 +69,75 @@ public class VoucherService {
     }
 
     @Transactional
-    public RestResponse save(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
+    public Voucher save(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
         LocalDate date = voucherForm.getFdate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        RestResponse restResponse = check(data,bdAccountList,bdFlexItemGroupList);
-        if (!restResponse.getSuccess()) {
-            return restResponse;
-        }else{
-            Boolean isCreate = StringUtils.isBlank(voucherForm.getId());
-            Voucher voucher;
-            if (isCreate){
-                voucher = new Voucher();
-                voucher.setFDate(date);
-                voucher.setCompanyName(RequestUtils.getCompanyName());
-                AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
-                voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
-                if (accountKingdeeBook != null){
-                    voucher.setCreatedName(accountKingdeeBook.getUsername());
-                    voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
-                }else{
-                    voucher.setCreatedName(RequestUtils.getAccountId());
-                    voucher.setStatus(VoucherStatusEnum.地区财务审核.name());
-                }
+        Boolean isCreate = StringUtils.isBlank(voucherForm.getId());
+        Voucher voucher;
+        if (isCreate){
+            voucher = new Voucher();
+            voucher.setFDate(date);
+            voucher.setCompanyName(RequestUtils.getCompanyName());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+            voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
+            if (accountKingdeeBook != null){
+                voucher.setCreatedName(accountKingdeeBook.getUsername());
+                voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
             }else{
-                voucher = voucherRepository.findOne(voucherForm.getId());
-                voucher.setFDate(date);
-                //删除原有数据
-                List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucher.getId());
-                if (CollectionUtil.isNotEmpty(voucherEntryList)){
-                    for (VoucherEntry voucherEntry : voucherEntryList){
-                        List<VoucherEntryFlow> voucherEntryFlowList = voucherEntryFlowRepository.findByVoucherEntryId(voucherEntry.getId());
-                        if (CollectionUtil.isNotEmpty(voucherEntryFlowList)){
-                            voucherEntryFlowRepository.deleteInBatch(voucherEntryFlowList);
-                        }
-                    }
-                    voucherEntryRepository.deleteInBatch(voucherEntryList);
-                }
+                voucher.setCreatedName(RequestUtils.getAccountId());
+                voucher.setStatus(VoucherStatusEnum.地区财务审核.name());
             }
-            voucherRepository.save(voucher);
-            List<String> headers = getHeaders(bdFlexItemGroupList);
-            Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName,BdFlexItemProperty->BdFlexItemProperty));
-
-            for (List<Object> row : data){
-                VoucherEntry voucherEntry = new VoucherEntry();
-                voucherEntry.setFExplanation(HandsontableUtils.getValue(row,0));
-                String accountNumberName = HandsontableUtils.getValue(row,1);
-                voucherEntry.setFAccountid(accountNumberName.split(CharConstant.SLASH_LINE)[0]);
-                String debitStr = HandsontableUtils.getValue(row,row.size()-2);
-                String creditStr = HandsontableUtils.getValue(row,row.size()-1);
-                if (StringUtils.isNoneEmpty(debitStr)){
-                    voucherEntry.setFDebit(new BigDecimal(debitStr));
-                }else {
-                    voucherEntry.setFCredit(new BigDecimal(creditStr));
-                }
-                voucherEntry.setGlVoucherId(voucher.getId());
-                voucherEntryRepository.save(voucherEntry);
-                //核算维度明细
-                List<VoucherEntryFlow> voucherEntryFlowList = Lists.newArrayList();
-                for (int i=2; i<row.size()-2; i++){
-                    String value = HandsontableUtils.getValue(row,i);
-                    String header = headers.get(i);
-                    if (StringUtils.isNotBlank(value)){
-                        String name = "FDetailID__"+bdFlexItemPropertyNameMap.get(header).getFFlexNumber();
-                        VoucherEntryFlow voucherEntryFlow = new VoucherEntryFlow();
-                        voucherEntryFlow.setName(name);
-                        voucherEntryFlow.setValue(value.split(CharConstant.SLASH_LINE)[1]);//科目名称
-                        voucherEntryFlow.setCode(value.split(CharConstant.SLASH_LINE)[0]);//科目编码
-                        voucherEntryFlow.setGlVoucherEntryId(voucherEntry.getId());
-                        voucherEntryFlowList.add(voucherEntryFlow);
-                        voucherEntryFlowRepository.save(voucherEntryFlow);
+        }else{
+            voucher = voucherRepository.findOne(voucherForm.getId());
+            voucher.setFDate(date);
+            //删除原有数据
+            List<VoucherEntry> voucherEntryList = voucherEntryRepository.findByVoucherId(voucher.getId());
+            if (CollectionUtil.isNotEmpty(voucherEntryList)){
+                for (VoucherEntry voucherEntry : voucherEntryList){
+                    List<VoucherEntryFlow> voucherEntryFlowList = voucherEntryFlowRepository.findByVoucherEntryId(voucherEntry.getId());
+                    if (CollectionUtil.isNotEmpty(voucherEntryFlowList)){
+                        voucherEntryFlowRepository.deleteInBatch(voucherEntryFlowList);
                     }
                 }
+                voucherEntryRepository.deleteInBatch(voucherEntryList);
             }
-            restResponse.setMessage("凭证保存成功");
-            restResponse.setSuccess(true);
-            return restResponse;
         }
+        voucher = voucherRepository.save(voucher);
+        List<String> headers = getHeaders(bdFlexItemGroupList);
+        Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName,BdFlexItemProperty->BdFlexItemProperty));
+        for (List<Object> row : data){
+            VoucherEntry voucherEntry = new VoucherEntry();
+            voucherEntry.setFExplanation(HandsontableUtils.getValue(row,0));
+            String accountNumberName = HandsontableUtils.getValue(row,1);
+            voucherEntry.setFAccountid(accountNumberName.split(CharConstant.SLASH_LINE)[0]);
+            String debitStr = HandsontableUtils.getValue(row,row.size()-2);
+            String creditStr = HandsontableUtils.getValue(row,row.size()-1);
+            if (StringUtils.isNoneEmpty(debitStr)){
+                voucherEntry.setFDebit(new BigDecimal(debitStr));
+            }else {
+                voucherEntry.setFCredit(new BigDecimal(creditStr));
+            }
+            voucherEntry.setGlVoucherId(voucher.getId());
+            voucherEntryRepository.save(voucherEntry);
+            //核算维度明细
+            List<VoucherEntryFlow> voucherEntryFlowList = Lists.newArrayList();
+            for (int i=2; i<row.size()-2; i++){
+                String value = HandsontableUtils.getValue(row,i);
+                String header = headers.get(i);
+                if (StringUtils.isNotBlank(value)){
+                    String name = "FDetailID__"+bdFlexItemPropertyNameMap.get(header).getFFlexNumber();
+                    VoucherEntryFlow voucherEntryFlow = new VoucherEntryFlow();
+                    voucherEntryFlow.setName(name);
+                    voucherEntryFlow.setValue(value.split(CharConstant.SLASH_LINE)[1]);//科目名称
+                    voucherEntryFlow.setCode(value.split(CharConstant.SLASH_LINE)[0]);//科目编码
+                    voucherEntryFlow.setGlVoucherEntryId(voucherEntry.getId());
+                    voucherEntryFlowList.add(voucherEntryFlow);
+                    voucherEntryFlowRepository.save(voucherEntryFlow);
+                }
+            }
+        }
+        return voucher;
     }
 
     @Transactional
@@ -153,7 +145,9 @@ public class VoucherService {
         return voucherRepository.save(voucher);
     }
 
-    public RestResponse check(List<List<Object>> data,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList) {
+    public RestResponse check(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList) {
+        String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
+        List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
         StringBuilder sb = new StringBuilder();
         //所有科目
         Map<String, List<String>> map = accountNumberNameToFlexGroupNamesMap(bdAccountList,bdFlexItemGroupList);
@@ -169,9 +163,9 @@ public class VoucherService {
                 //科目对应核算维度
                 List<String> FlexGroupNames = map.get(accountNumberName);
                 for (int j = 2; j < row.size() - 2; j++) {
-                    Object FlexGroupNameToElement = row.get(j);
+                    String FlexGroupNameToElement = HandsontableUtils.getValue(row,j);
                     String FlexGroupName = header.get(j);
-                    if (StringUtils.isBlank(FlexGroupNameToElement.toString())) {
+                    if (StringUtils.isBlank(FlexGroupNameToElement)) {
                         if (FlexGroupNames.contains(FlexGroupName)) {
                             sb.append("第" + index + "行，" + FlexGroupName + "为必填<br/>");
                         }
@@ -183,12 +177,12 @@ public class VoucherService {
                 }
             }
             //借方金额
-            String debitStr = StringUtils.toString(row.get(header.size() - 2)).trim();
+            String debitStr = HandsontableUtils.getValue(row,header.size() - 2);
             if(StringUtils.isNotEmpty(debitStr)){
                 debitAmount = debitAmount.add(new BigDecimal(debitStr));
             }
             //贷方金额
-            String creditStr = StringUtils.toString(row.get(header.size() - 1)).trim();
+            String creditStr = HandsontableUtils.getValue(row,header.size() - 1);
             if(StringUtils.isNotEmpty(creditStr)){
                 creditAmount = creditAmount.add(new BigDecimal(creditStr));
             }
@@ -257,16 +251,19 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher audit(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
-        String data = HtmlUtils.htmlUnescape(voucherForm.getJson());
-        List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        RestResponse restResponse = check(datas,bdAccountList,bdFlexItemGroupList);
-        if (!restResponse.getSuccess()) {
-            throw new ServiceException(restResponse.getMessage());
-        }else {
+    public Voucher audit(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
+        if (StringUtils.isNotBlank(voucherForm.getId())){
             Voucher voucher = voucherRepository.findOne(voucherForm.getId());
             voucher.setFDate(voucherForm.getFdate());
-            save(voucherForm,bdAccountList,bdFlexItemGroupList,bdFlexItemPropertyList);
+            if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
+                voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
+            } else {
+                voucher.setStatus(VoucherStatusEnum.已完成.name());
+            }
+            return voucherRepository.save(voucher);
+        }else {
+            Voucher voucher = save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList);
+            voucher.setFDate(voucherForm.getFdate());
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
             } else {

@@ -173,7 +173,7 @@ export default {
   }
   .td{
     height:20px;
-    padding:10px 5px;
+    padding:20px 5px;
   }
 </style>
 
