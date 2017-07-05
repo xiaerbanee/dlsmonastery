@@ -14,7 +14,7 @@ FROM
 WHERE
 	t1.enabled = 1;
 
-UPDATE sys_menu_category SET enabled=1;
+UPDATE sys_menu_category SET enabled=0;
 INSERT INTo sys_menu_category(
 id,
 name,
@@ -109,42 +109,6 @@ update sys_menu set code="clientList" where name="客户管理";
 
 update sys_menu set code="depotStoreList" where name="仓库管理";
 
-update sys_permission set url='/api/ws/future/crm/goodsOrder',method='GET' where permission='crm:goodsOrder:view';
-update sys_permission set url='/api/ws/future/crm/goodsOrder/save',method='POST' where permission='crm:goodsOrder:edit';
-update sys_permission set url='/api/ws/future/crm/goodsOrder/delete',method='GET' where permission='crm:goodsOrder:delete';
-update sys_permission set url='/api/ws/future/crm/goodsOrder/bill',method='POST' where permission='crm:goodsOrder:bill';
-update sys_permission set url='/api/ws/future/crm/goodsOrderShip/print',method='GET' where permission='crm:goodsOrder:ship';
-update sys_permission set url='/api/ws/future/crm/goodsOrderShip/shipPrint',method='GET' where permission='crm:goodsOrder:print';
-update sys_permission set url='/api/ws/future/crm/expressOrder/batchAdd',method='POST' where permission='crm:goodsOrder:batchAdd';
-update sys_permission set url='/api/ws/future/crm/expressOrder/shipBack',method='POST' where permission='crm:goodsOrder:shipBack';
-update sys_permission set url='/api/ws/future/crm/expressOrder/delete',method='GET' where permission='crm:expressOrder:delete';
-update sys_permission set url='/api/ws/future/crm/expressOrder/save,/api/ws/future/crm/expressOrder/resetPrintStatus',method='POST' where permission='crm:expressOrder:edit';
-update sys_permission set url='/api/ws/future/crm/expressOrder',method='GET' where permission='crm:expressOrder:view';
-update sys_permission set url='/api/ws/future/crm/bankIn/audit',method='POST' where permission='crm:bankIn:audit';
-update sys_permission set url='/api/ws/future/crm/bankIn/delete',method='GET' where permission='crm:bankIn:delete';
-update sys_permission set url='/api/ws/future/crm/bankIn/save',method='POST' where permission='crm:bankIn:edit';
-update sys_permission set url='/api/ws/future/crm/bankIn',method='GET' where permission='crm:bankIn:view';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/bill',method='POST' where permission='crm:adGoodsOrder:bill';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/delete',method='GET' where permission='crm:adGoodsOrder:delete';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/save',method='POST' where permission='crm:adGoodsOrder:edit';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/print',method='GET' where permission='crm:adGoodsOrder:print';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/ship',method='POST' where permission='crm:adGoodsOrder:ship';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder/sign',method='POST' where permission='crm:adGoodsOrder:sign';
-update sys_permission set url='/api/ws/future/layout/adGoodsOrder',method='GET' where permission='crm:adGoodsOrder:view';
-update sys_permission set url='/api/ws/future/layout/adApply/bill',method='POST' where permission='crm:adApply:bill';
-update sys_permission set url='/api/ws/future/layout/adApply/delete',method='GET' where permission='crm:adApply:delete';
-update sys_permission set url='/api/ws/future/layout/adApply/save,/api/ws/future/layout/adApply/billSave',method='POST' where permission='crm:adApply:edit';
-update sys_permission set url='/api/ws/future/layout/adApply/goodsSave',method='POST' where permission='crm:adApply:goods';
-update sys_permission set url='/api/ws/future/layout/adApply',method='GET' where permission='crm:adApply:view';
-update sys_permission set url='/api/ws/future/crm/storeAllot/delete',method='GET' where permission='crm:storeAllot:delete';
-update sys_permission set url='/api/ws/future/crm/storeAllot/save',method='POST' where permission='crm:storeAllot:edit';
-update sys_permission set url='/api/ws/future/crm/storeAllot/ship',method='POST' where permission='crm:storeAllot:ship';
-update sys_permission set url='/api/ws/future/crm/storeAllot',method='GET' where permission='crm:storeAllot:view';
-update sys_permission set url='/api/ws/future/crm/shopAllot/audit',method='POST' where permission='crm:shopAllot:audit';
-update sys_permission set url='/api/ws/future/crm/shopAllot/logicDelete',method='GET' where permission='crm:shopAllot:delete';
-update sys_permission set url='/api/ws/future/crm/shopAllot/save',method='POST' where permission='crm:shopAllot:edit';
-update sys_permission set url='/api/ws/future/crm/shopAllot',method='GET' where permission='crm:shopAllot:view';
-
 update sys_menu set enabled=false where name='国际化设置';
 update sys_menu set enabled=false where code='goodsOrderShip';
 update sys_menu set enabled=false where name='报表监控';
@@ -184,13 +148,15 @@ update sys_menu set enabled=false where name='仓库调整';
 update sys_menu set enabled=false where name='门店报表';
 update sys_menu set enabled=false where name='坏机返厂';
 update sys_menu set enabled=false where name='好机返库';
+update sys_menu set enabled=false where name='商城门店';
+update sys_menu set enabled=false where name='商城货品';
+update sys_menu set enabled=false where name='移动订货';
 
 
 
 update sys_menu_category set enabled=false where name='客服中心';
 update sys_menu_category set enabled=false where name='数据管理';
 update sys_menu_category set enabled=false where name='工资管理';
-update sys_menu_category set enabled=false where name='移动商城';
 update sys_menu_category set enabled=false where name='任务政策';
 update sys_menu_category set enabled=false where name='提成基准';
 update sys_menu_category set enabled=false where name='K3Cloud';
@@ -334,6 +300,18 @@ INSERT into sys_permission(name,permission,created_by,created_date,last_modified
 INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('商城订单','crm:goodsOrderShip:mallOrder',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169');
 INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('销售退回','crm:goodsOrderShip:sreturn',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169');
 INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('打印','crm:goodsOrderShip:print',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'169');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('商城相关','api:carrierOrder:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'46');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('商城相关添加','api:carrierOrder:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'46');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('商城相关发货','api:carrierOrder:ship',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'46');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('商城相关状态修改','api:carrierOrder:updateStatusAndRemarks',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'46');
+
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('查看','crm:materialPriceManager:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'222');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('修改','crm:materialPriceManager:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'222');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('删除','crm:materialPriceManager:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'222');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('查看','crm:vivoFactoryOrderList:view',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('修改','crm:vivoFactoryOrderList:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('删除','crm:vivoFactoryOrderList:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
+
 
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司内销部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司财务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
