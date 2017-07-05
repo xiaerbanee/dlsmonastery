@@ -22,8 +22,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('carrierProductList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" label="商城名称" sortable width="150"></el-table-column>
-        <el-table-column prop="code" label="系统名称"></el-table-column>
+        <el-table-column fixed prop="name" label="商城名称" sortable width="200"></el-table-column>
+        <el-table-column prop="productName" label="系统名称"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('carrierProductList.createdBy')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('carrierProductList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('carrierProductList.locked')" width="120">
