@@ -9,13 +9,13 @@
             {{$t('productImeList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="sale">{{$t('productImeList.sale')}}</el-dropdown-item>
-            <el-dropdown-item command="saleBack">{{$t('productImeList.saleBack')}}</el-dropdown-item>
-            <el-dropdown-item command="allot">{{$t('productImeList.allot')}}</el-dropdown-item>
-            <el-dropdown-item command="change">{{$t('productImeList.change')}}</el-dropdown-item>
-            <el-dropdown-item command="batchAllot">{{$t('productImeList.batchAllot')}}</el-dropdown-item>
-            <el-dropdown-item command="upload">{{$t('productImeList.upload')}}</el-dropdown-item>
-            <el-dropdown-item command="uploadBack">{{$t('productImeList.uploadBack')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:productImeSale:edit'" command="sale">{{$t('productImeList.sale')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:productImeSale:back'" command="saleBack">{{$t('productImeList.saleBack')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:imeAllot:edit'" command="allot">{{$t('productImeList.allot')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:productIme:adjust'" command="change">{{$t('productImeList.change')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:imeAllot:batchSave'" command="batchAllot">{{$t('productImeList.batchAllot')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:productImeUpload:edit'" command="upload">{{$t('productImeList.upload')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'crm:productImeUpload:edit'" command="uploadBack">{{$t('productImeList.uploadBack')}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
