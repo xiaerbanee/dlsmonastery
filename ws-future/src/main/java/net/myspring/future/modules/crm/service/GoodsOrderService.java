@@ -827,6 +827,9 @@ public class GoodsOrderService {
     }
 
     private String summarizeProductInfo(List<GoodsOrderDetailDto> goodsOrderDetailDtos) {
+        if(CollectionUtil.isEmpty(goodsOrderDetailDtos)){
+            return "";
+        }
         StringBuilder summary = new StringBuilder();
         for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtos) {
             summary.append(goodsOrderDetailDto.getProductName()).append(":数量").append(goodsOrderDetailDto.getRealBillQty()).append(CharConstant.ENTER);
