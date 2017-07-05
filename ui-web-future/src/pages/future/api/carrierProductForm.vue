@@ -40,9 +40,9 @@
             extra:{}
           },
           rules: {
-            category: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}],
-            sort: [{ type: 'number',required:true, message: this.$t('carrierProductForm.inputLegalValue'),trigger:"blur"}],
-            value: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}]
+            name: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}],
+            mallProductTypeName: [{ type: 'number',required:true, message: this.$t('carrierProductForm.inputLegalValue'),trigger:"blur"}],
+            productName: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}]
           }
         }
       },
@@ -52,13 +52,13 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/sys/dictEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/ws/future/api/carrierProduct/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList"), params:{_closeFrom:true}})
+                this.$router.push({name:'carrierProductList',query:util.getQuery("carrierProductList"), params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -68,9 +68,9 @@
           }
         })
       },initPage(){
-        axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
+        axios.get('/api/ws/future/api/carrierProduct/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/api/carrierProduct/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           });
         });

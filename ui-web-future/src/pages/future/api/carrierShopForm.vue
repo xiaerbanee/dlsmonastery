@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
         <el-form-item :label="$t('carrierShopForm.code')" prop="sort">
-          <el-input v-model.number="inputForm.mallProductTypeName"></el-input>
+          <el-input v-model.number="inputForm.code"></el-input>
         </el-form-item>
         <el-form-item :label="$t('carrierShopForm.type')" prop="value">
           <el-select v-model="inputForm.type" clearable filterable :placeholder="$t('carrierShopForm.selectGroup')">
@@ -42,9 +42,7 @@
             extra:{}
           },
           rules: {
-            category: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage'),trigger:"blur"}],
-            sort: [{ type: 'number',required:true, message: this.$t('carrierShopForm.inputLegalValue'),trigger:"blur"}],
-            value: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage'),trigger:"blur"}]
+            name: [{ required: true, message: this.$t('carrierShopForm.prerequisiteMessage'),trigger:"blur"}],
           }
         }
       },
@@ -54,13 +52,13 @@
         var form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/sys/dictEnum/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/ws/future/api/carrierShop/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               if(this.isCreate){
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }else{
-                this.$router.push({name:'dictEnumList',query:util.getQuery("dictEnumList"), params:{_closeFrom:true}})
+                this.$router.push({name:'carrierShopList',query:util.getQuery("carrierShopList"), params:{_closeFrom:true}})
               }
             }).catch(function () {
               that.submitDisabled = false;
@@ -70,9 +68,9 @@
           }
         })
       },initPage(){
-        axios.get('/api/basic/sys/dictEnum/getForm').then((response)=>{
+        axios.get('/api/ws/future/api/carrierShop/getForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/basic/sys/dictEnum/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/api/carrierShop/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
           });
         });
