@@ -6,7 +6,7 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
-              <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="adShop" @input="outShopChanged"></depot-select>
+              <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="shop" @input="outShopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isDelegateShop">
               <depot-select :disabled="afterBill" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>

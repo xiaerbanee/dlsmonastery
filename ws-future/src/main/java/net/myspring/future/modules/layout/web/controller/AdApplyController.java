@@ -1,5 +1,6 @@
 package net.myspring.future.modules.layout.web.controller;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -9,6 +10,7 @@ import net.myspring.future.modules.layout.web.form.*;
 import net.myspring.future.modules.layout.web.query.AdApplyQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 
 @RestController
@@ -38,6 +41,9 @@ public class AdApplyController {
     @RequestMapping(value = "getQuery", method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:adApply:view')")
     public AdApplyQuery getQuery(AdApplyQuery adApplyQuery) {
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
+        adApplyQuery.setCreatedDate(firstDayOfMonth.toString()+ CharConstant.DATE_RANGE_SPLITTER+today.toString());
         return adApplyQuery;
     }
 
