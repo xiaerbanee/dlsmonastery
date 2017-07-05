@@ -3,10 +3,10 @@
     <head-tab active="carrierOrderList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('productTypeList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'api:carrierOrder:edit'">{{$t('productTypeList.add')}}</el-button>
         <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('productTypeList.filter')}}</el-button>
-        <el-button type="primary" @click="exportData" >{{$t('productTypeList.export')}}</el-button>
-        <el-button type="primary" @click="carrierShip" >商城发货</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'api:carrierOrder:view'">{{$t('productTypeList.export')}}</el-button>
+        <el-button type="primary" @click="carrierShip" v-permit="'api:carrierOrder:ship'">商城发货</el-button>
         <el-dropdown split-button type="primary"  @command="handleCommand">
           {{command?command:'没有选中任何选项'}}
           <el-dropdown-menu slot="dropdown">
@@ -114,7 +114,7 @@
         <el-table-column prop="remarks" label="订单备注"></el-table-column>
         <el-table-column fixed="right" :label="$t('productTypeList.operation')" >
           <template scope="scope">
-            <div class="action" v-permit="'api:carrierOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'detail')">详细</el-button></div>
+            <div class="action" v-permit="'api:carrierOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'detail')">详细</el-button></div>
             <div class="action" v-permit="'api:carrierOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'edit')">修改</el-button></div>
           </template>
         </el-table-column>

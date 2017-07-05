@@ -169,10 +169,10 @@ public class VoucherController {
 
     @RequestMapping(value = "save")
     public RestResponse save(VoucherForm voucherForm) {
-        voucherForm.setBdAccountList(bdAccountService.findAll());
-        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
-        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
-        return voucherService.save(voucherForm);
+        List<BdAccount> bdAccountList = bdAccountService.findAll();
+        List<BdFlexItemGroup> bdFlexItemGroupList = bdFlexItemGroupService.findAll();
+        List<BdFlexItemProperty> bdFlexItemPropertyList = bdFlexItemPropertyService.findAll();
+        return voucherService.save(voucherForm,bdAccountList,bdFlexItemGroupList,bdFlexItemPropertyList);
     }
 
     @RequestMapping(value="findOne")
@@ -182,15 +182,15 @@ public class VoucherController {
 
     @RequestMapping(value = "audit")
     public RestResponse audit(VoucherForm voucherForm){
-        voucherForm.setBdAccountList(bdAccountService.findAll());
-        voucherForm.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
-        voucherForm.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
-        Voucher voucher = voucherService.audit(voucherForm);
+        List<BdAccount> bdAccountList = bdAccountService.findAll();
+        List<BdFlexItemGroup> bdFlexItemGroupList = bdFlexItemGroupService.findAll();
+        List<BdFlexItemProperty> bdFlexItemPropertyList = bdFlexItemPropertyService.findAll();
+        Voucher voucher = voucherService.audit(voucherForm,bdAccountList,bdFlexItemGroupList,bdFlexItemPropertyList);
         RestResponse restResponse = new RestResponse("凭证审核成功",null,true);
         if (VoucherStatusEnum.已完成.name().equals(voucher.getStatus())) {
             KingdeeBook kingdeeBook = kingdeeBookService.findByCompanyName(RequestUtils.getCompanyName());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-            KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm,kingdeeBook,accountKingdeeBook);
+            KingdeeSynDto kingdeeSynDto = glVoucherService.save(voucherForm,bdFlexItemGroupList,bdFlexItemPropertyList,kingdeeBook,accountKingdeeBook);
             String outCode ="序号："+kingdeeSynDto.getBillNo()+"  凭证号："+ glVoucherService.findByBillNo(kingdeeSynDto.getBillNo());
             voucher.setOutCode(outCode);
             voucherService.save(voucher);

@@ -78,12 +78,10 @@ public class GlVoucherService {
     }
 
     @Transactional
-    public KingdeeSynDto save(VoucherForm voucherForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        LocalDate date = voucherForm.getFDate();
+    public KingdeeSynDto save(VoucherForm voucherForm,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        LocalDate date = voucherForm.getFdate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        //核算维度分组
-        List<BdFlexItemProperty> bdFlexItemPropertyList = voucherForm.getBdFlexItemPropertyList();
         Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName, BdFlexItemProperty->BdFlexItemProperty));
         List<GlVoucherFEntityDto> glVoucherFEntityDtoList = Lists.newArrayList();
         for (List<Object> row : data){
@@ -91,7 +89,7 @@ public class GlVoucherService {
             String accountNumberName = HandsontableUtils.getValue(row,1);
             String debitStr = HandsontableUtils.getValue(row,row.size()-2);
             String creditStr = HandsontableUtils.getValue(row,row.size()-1);
-            List<String> headers = getFlexItemGroupAllName(voucherForm.getBdFlexItemGroupList());
+            List<String> headers = getFlexItemGroupAllName(bdFlexItemGroupList);
             //核算维度明细
             List<NameValueDto> nameValueDtoList = Lists.newArrayList();
             for (int i=0; i<row.size()-4; i++){
