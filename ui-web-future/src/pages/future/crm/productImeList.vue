@@ -89,7 +89,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="ime" :label="$t('productImeList.ime')"  width="160" sortable></el-table-column>
+        <el-table-column prop="ime" :label="$t('productImeList.ime')" sortable></el-table-column>
         <el-table-column prop="ime2"  :label="$t('productImeList.ime2')" sortable ></el-table-column>
         <el-table-column prop="meid" :label="$t('productImeList.meid')" sortable></el-table-column>
         <el-table-column prop="retailDate" :label="$t('productImeList.retailDate')"></el-table-column>
