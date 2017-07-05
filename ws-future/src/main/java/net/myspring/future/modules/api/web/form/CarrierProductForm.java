@@ -1,9 +1,12 @@
 package net.myspring.future.modules.api.web.form;
 
+import net.myspring.common.form.BaseForm;
+import net.myspring.future.modules.api.domain.CarrierProduct;
+
 /**
  * Created by wangzm on 2017/7/5.
  */
-public class CarrierProductForm {
+public class CarrierProductForm extends BaseForm<CarrierProduct>{
     private String name;
     private String productId;
 

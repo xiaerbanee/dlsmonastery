@@ -4,11 +4,13 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.CarrierShopTypeEnum;
 import net.myspring.future.modules.api.domain.CarrierProduct;
-import net.myspring.future.modules.api.domain.CarrierShop;
+import net.myspring.future.modules.api.dto.CarrierProductDto;
 import net.myspring.future.modules.api.dto.CarrierShopDto;
+import net.myspring.future.modules.api.service.CarrierProductService;
 import net.myspring.future.modules.api.service.CarrierShopService;
 import net.myspring.future.modules.api.web.form.CarrierProductForm;
 import net.myspring.future.modules.api.web.form.CarrierShopForm;
+import net.myspring.future.modules.api.web.query.CarrierProductQuery;
 import net.myspring.future.modules.api.web.query.CarrierShopQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,52 +24,49 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by zhucc on 2017/7/5.
  */
 @RestController
-@RequestMapping(value = "api/carrierShop")
-public class CarrierShopController {
+@RequestMapping(value = "api/carrierProduct")
+public class CarrierProductController {
 
     @Autowired
-    private CarrierShopService carrierShopService;
+    private CarrierProductService carrierProductService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<CarrierShopDto> list(Pageable pageable, CarrierShopQuery carrierShopQuery){
-        Page<CarrierShopDto> page = carrierShopService.findPage(pageable,carrierShopQuery);
+    public Page<CarrierProductDto> list(Pageable pageable, CarrierProductQuery carrierProductQuery){
+        Page<CarrierProductDto> page = carrierProductService.findPage(pageable,carrierProductQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
     public RestResponse delete(String id) {
-        carrierShopService.logicDelete(id);
+        carrierProductService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(CarrierShopForm carrierShopForm) {
-        carrierShopService.save(carrierShopForm);
+    public RestResponse save(CarrierProductForm carrierProductForm) {
+        carrierProductService.save(carrierProductForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
-    public CarrierShopDto findOne(String id){
-        return carrierShopService.findOne(id);
+    public CarrierProductDto findOne(String id){
+        return carrierProductService.findOne(id);
     }
 
     @RequestMapping(value = "getForm")
-    public CarrierShopForm getForm(CarrierShopForm carrierShopForm){
-        carrierShopForm.getExtra().put("typeList",CarrierShopTypeEnum.getTypes());
-        return carrierShopForm;
+    public CarrierProductForm getForm(CarrierProductForm carrierProductForm){
+        return carrierProductForm;
     }
 
-
     @RequestMapping(value="getQuery")
-    public  CarrierShopQuery getQuery(CarrierShopQuery carrierShopQuery){
-        carrierShopQuery.getExtra().put("typeList", CarrierShopTypeEnum.getTypes());
-        return carrierShopQuery;
+    public  CarrierProductQuery getQuery(CarrierProductQuery carrierProductQuery){
+        return carrierProductQuery;
     }
 
     @RequestMapping(value = "checkName")
-    public boolean checkName(CarrierShopForm carrierShopForm) {
-        CarrierShop carrierShop = carrierShopService.findByName(carrierShopForm.getName());
-        return carrierShop == null ||carrierShop.getId().equals(carrierShopForm.getId());
+    public boolean checkName(CarrierProductForm carrierProductForm) {
+        CarrierProduct carrierProduct = carrierProductService.findByName(carrierProductForm.getName());
+        return carrierProduct == null ||carrierProduct.getId().equals(carrierProductForm.getId());
     }
 }

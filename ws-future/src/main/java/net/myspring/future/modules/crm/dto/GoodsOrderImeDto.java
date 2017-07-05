@@ -1,7 +1,9 @@
 package net.myspring.future.modules.crm.dto;
 
 import net.myspring.common.dto.DataDto;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.modules.crm.domain.GoodsOrderIme;
+import net.myspring.util.text.IdUtils;
 
 public class GoodsOrderImeDto extends DataDto<GoodsOrderIme> {
 
@@ -11,6 +13,55 @@ public class GoodsOrderImeDto extends DataDto<GoodsOrderIme> {
     private String productImeIme2;
     private String productImeMeid;
     private String goodsOrderId;
+    private String goodsOrderStatus;
+    private String goodsOrderStoreName;
+    private String goodsOrderShopName;
+    private String goodsOrderBusinessId;
+    private String goodsOrderCreatedDate;
+
+    public String getGoodsOrderFormatId(){
+        return IdUtils.getFormatId(goodsOrderBusinessId, FormatterConstant.GOODS_ORDER);
+    }
+
+    public String getGoodsOrderStatus() {
+        return goodsOrderStatus;
+    }
+
+    public void setGoodsOrderStatus(String goodsOrderStatus) {
+        this.goodsOrderStatus = goodsOrderStatus;
+    }
+
+    public String getGoodsOrderStoreName() {
+        return goodsOrderStoreName;
+    }
+
+    public void setGoodsOrderStoreName(String goodsOrderStoreName) {
+        this.goodsOrderStoreName = goodsOrderStoreName;
+    }
+
+    public String getGoodsOrderShopName() {
+        return goodsOrderShopName;
+    }
+
+    public void setGoodsOrderShopName(String goodsOrderShopName) {
+        this.goodsOrderShopName = goodsOrderShopName;
+    }
+
+    public String getGoodsOrderBusinessId() {
+        return goodsOrderBusinessId;
+    }
+
+    public void setGoodsOrderBusinessId(String goodsOrderBusinessId) {
+        this.goodsOrderBusinessId = goodsOrderBusinessId;
+    }
+
+    public String getGoodsOrderCreatedDate() {
+        return goodsOrderCreatedDate;
+    }
+
+    public void setGoodsOrderCreatedDate(String goodsOrderCreatedDate) {
+        this.goodsOrderCreatedDate = goodsOrderCreatedDate;
+    }
 
     public String getGoodsOrderId() {
         return goodsOrderId;
