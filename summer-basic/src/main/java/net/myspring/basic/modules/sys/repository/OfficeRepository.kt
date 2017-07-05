@@ -97,14 +97,7 @@ interface OfficeRepository :BaseRepository<Office,String>,OfficeRepositoryCustom
      """)
     fun findSameAreaByOfficeId(officeId: String): MutableList<Office>
 
-
-
-    @Query("""
-        SELECT t
-        FROM  #{#entityName} t
-        WHERE t.enabled=1
-     """)
-    fun findAllEnabled():MutableList<Office>
+    fun findByEnabledIsTrueAndType(type:String):MutableList<Office>
 }
 
 interface OfficeRepositoryCustom {
