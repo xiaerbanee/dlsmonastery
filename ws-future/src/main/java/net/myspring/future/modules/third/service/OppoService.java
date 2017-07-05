@@ -221,5 +221,4 @@ public class OppoService {
         List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoCustomerDemoPhoneRepository.findAll(LocalDateUtils.format(dateStart),LocalDateUtils.format(dateEnd));
         return oppoCustomerDemoPhones;
     }
-
 }

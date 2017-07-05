@@ -15,6 +15,7 @@ import net.myspring.future.modules.third.repository.*;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +44,18 @@ public class ScheduleUtils {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Transactional(readOnly = false)
     public void synOppo() {
-        logger.info("工厂自动同步开始");
-        String date= LocalDateUtils.format(LocalDate.now());
-        String message=synOppo(date);
-        logger.info(message);
-        logger.info("工厂自动同步成功");
+        if(StringUtils.isNotBlank(RequestUtils.getCompanyName())){
+            logger.info("工厂自动同步开始");
+            String date= LocalDateUtils.format(LocalDate.now());
+            String message=synOppo(date);
+            logger.info(message);
+            logger.info("工厂自动同步成功");
+        }
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public String synOppo(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");
@@ -76,10 +80,13 @@ public class ScheduleUtils {
         String lxDefaultStoreId = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).replace("\"", "");
         List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.findSynImeList(date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
+        List<ProductIme> productImeList=Lists.newArrayList();
         //同步串码
         if(CollectionUtil.isNotEmpty(oppoPlantSendImeiPpsels)){
             List<String> imeList = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
-            List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
+            for(List<String> imes:CollectionUtil.splitList(imeList,1000)){
+                productImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(imes));
+            }
             List<String>  localImeList=CollectionUtil.extractToList(productImeList, "ime");
             Set<String> itemNumberSet = Sets.newHashSet();
             for (OppoPlantSendImeiPpsel oppoPlantSendImeiPpsel : oppoPlantSendImeiPpsels) {
@@ -140,7 +147,9 @@ public class ScheduleUtils {
                     productImes.add(productIme);
                 }
             }
-            productImeRepository.batchSave(productImes);
+            if(CollectionUtil.isNotEmpty(productImes)){
+                productImeRepository.batchSave(productImes);
+            }
         }
         //同步电子保卡
         List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.synProductItemelectronSel(date,agentCode);

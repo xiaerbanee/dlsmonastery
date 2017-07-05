@@ -206,6 +206,7 @@ export default {
       bankForm: "formulir bank",
       bankInDetail: "kredit penjualan",
       bankInForm: "tambah kredit penjualan",
+      bankInBatchForm: "销售收款批量添加",
       bankInList: "kredit penjualan",
       bankList: "daftar bank",
       chainForm: "Sistem rantai editing",

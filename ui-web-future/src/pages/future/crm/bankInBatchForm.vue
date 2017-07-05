@@ -15,18 +15,11 @@
     </div>
   </div>
 </template>
-<style>
-  @import "~handsontable/dist/handsontable.full.css";
-</style>
 <script>
-  import Handsontable from 'handsontable/dist/handsontable.full.js'
-  var table = null;
+  let table = null;
   export default{
     data(){
       return this.getData()
-    },
-    mounted () {
-      table = new Handsontable(this.$refs["handsontable"], this.settings);
     },
     methods: {
       getData() {
@@ -40,7 +33,7 @@
             minSpareRows: 100,
             startRows: 100,
             startCols: 6,
-            colHeaders: [ '门店', '银行', '开单日期',  '到账金额','类型','备注'],
+            colHeaders: [ '门店', '银行', '到账日期',  '到账金额','类型','备注'],
             columns: [{
               data:"depotName",
               type: 'text',
@@ -52,31 +45,7 @@
               type: "autocomplete",
               allowEmpty: false,
               strict: true,
-              tempBankNames:[],
-              source:function (query, process) {
-                var that = this;
-                if(that.tempBankNames.indexOf(query)>=0) {
-                  process(that.tempBankNames);
-                } else {
-                  var bankNames = new Array();
-                  if(query.length>=2) {
-                    axios.get('/api/ws/future/basic/bank/search?key='+query).then((response)=>{
-                      if(response.data.length>0) {
-                        for(var index in response.data) {
-                          var bankName = response.data[index].name;
-                          bankNames.push(bankName);
-                          if(that.tempBankNames.indexOf(bankName)<0) {
-                            that.tempBankNames.push(bankName);
-                          }
-                        }
-                      }
-                      process(bankNames);
-                    });
-                  } else {
-                    process(bankNames);
-                  }
-                }
-              },
+              source: [],
               width:200
             }, {
               data:'billDate',
@@ -103,7 +72,6 @@
               width: 200
             }],
           },
-
         };
       },
       formSubmit(){
@@ -111,30 +79,39 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            this.inputForm.data = new Array();
+            let tableData = [];
+
             let list = table.getData();
-            for (var item in list) {
+            for (let item in list) {
               if (!table.isEmptyRow(item)) {
-                this.inputForm.data.push(list[item]);
+                let row = list[item];
+                let bankInBatchDetailForm = {};
+                bankInBatchDetailForm.shopName = row[0];
+                bankInBatchDetailForm.bankName = row[1];
+                bankInBatchDetailForm.inputDate = row[2];
+                bankInBatchDetailForm.amount = row[3];
+                bankInBatchDetailForm.type = row[4];
+                bankInBatchDetailForm.remarks = row[5];
+                tableData.push(bankInBatchDetailForm);
               }
             }
-            this.inputForm.data = JSON.stringify(this.inputForm.data);
-            axios.post('/api/ws/future/crm/bankIn/batchAllot', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            this.inputForm.bankInBatchDetailFormList = tableData;
+
+            axios.post('/api/ws/future/crm/bankIn/batchAdd', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-              if (response.data.success) {
-                Object.assign(this.$data, this.getData());
-              }
-              this.submitDisabled = false;
+              Object.assign(this.$data, this.getData());
+              this.initPage();
+
             }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
+
           }
         })
       },initPage(){
-        axios.get('/api/ws/future/crm/bankIn/getForm').then((response)=>{
+        axios.get('/api/ws/future/crm/bankIn/getBatchForm').then((response)=>{
           this.inputForm = response.data;
+          this.settings.columns[1].source=response.data.extra.bankNameList;
           this.settings.columns[4].source=response.data.extra.typeList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
         });

@@ -100,7 +100,7 @@ class GoodsOrderImeRepositoryImpl @Autowired constructor(val namedParameterJdbcT
             sb.append(" and product.name like concat('%',:productName,'%')  ")
         }
         if (StringUtils.isNotBlank(goodsOrderImeQuery.businessId)) {
-            sb.append(" and t2.business_id = :businessId ")
+            sb.append(" and t2.business_id like concat('%',:businessId,'%') ")
         }
         if (goodsOrderImeQuery.lxMallOrder != null && goodsOrderImeQuery.lxMallOrder) {
             sb.append(" and t2.lx_mall_order = 1  ")
