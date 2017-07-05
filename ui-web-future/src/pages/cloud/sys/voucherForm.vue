@@ -165,7 +165,7 @@
                 this.$router.push({name:'voucherList',query:util.getQuery("voucherList"), params:{_closeFrom:true}})
               }else {
                 this.$message.error(response.data.message);
-                this.submitDisabled = true;
+                this.submitDisabled = false;
               }
             }).catch(function () {
               this.submitDisabled = false;
