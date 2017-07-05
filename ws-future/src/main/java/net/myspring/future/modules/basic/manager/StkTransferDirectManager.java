@@ -115,7 +115,7 @@ public class StkTransferDirectManager {
 
     public KingdeeSynReturnDto synForAfterSale(List<AfterSaleStoreAllotForm> afterSaleStoreAllotFormList){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId(null);
+        transferDirectDto.setExtendId("--");
         transferDirectDto.setExtendType(ExtendTypeEnum.售后调拨.name());
         transferDirectDto.setNote("");
         transferDirectDto.setDate(LocalDate.now());

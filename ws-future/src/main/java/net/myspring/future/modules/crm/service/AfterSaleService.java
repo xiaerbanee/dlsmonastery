@@ -10,6 +10,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.StkMisDeliveryManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
@@ -61,6 +62,8 @@ public class AfterSaleService {
     private AfterSaleProductAllotRepository afterSaleProductAllotRepository;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
+    @Autowired
+    private StkMisDeliveryManager stkMisDeliveryManager;
 
     public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
         Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
@@ -468,18 +471,13 @@ public class AfterSaleService {
                 toAllotMap.get(toKey).setToQty(toAllotMap.get(toKey).getToQty()+1);
             }
 
-//            K3CloudSyn fromK3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_MisDelivery.name(),afterSaleManager.getMisDeliveryGeneral(Lists.newArrayList(fromAllotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
-//            k3cloudManager.save(fromK3CloudSyn);
-//            k3CloudSynRepository.save(fromK3CloudSyn);
-
-//            K3CloudSyn toK3CloudSyn= new K3CloudSyn(K3CloudBillTypeEnum.STK_MisDelivery.name(),afterSaleManager.getMisDeliveryReturn(Lists.newArrayList(toAllotMap.values())),null,null, CloudSynExtendTypeEnum.售后调拨.name());
-//            k3cloudManager.save(toK3CloudSyn);
-//            k3CloudSynRepository.save(toK3CloudSyn);
-//            String fromOutCode =fromK3CloudSyn.getBillNo();
-//            String toOutCode = toK3CloudSyn.getBillNo();
+            KingdeeSynReturnDto fromK3CloudSyn = stkMisDeliveryManager.synCKForAfterSale(Lists.newArrayList(fromAllotMap.values()));
+            KingdeeSynReturnDto toK3CloudSyn = stkMisDeliveryManager.synTHForAfterSale(Lists.newArrayList(toAllotMap.values()));
+            String toOutCode = toK3CloudSyn.getBillNo();
+            String fromOutCode = fromK3CloudSyn.getBillNo();
             for(AfterSaleProductAllot afterSaleProductAllot:afterSaleProductAllots) {
-//                afterSaleProductAllot.setFromOutCode(fromOutCode);
-//                afterSaleProductAllot.setToOutCode(toOutCode);
+                afterSaleProductAllot.setFromOutCode(fromOutCode);
+                afterSaleProductAllot.setToOutCode(toOutCode);
             }
             afterSaleProductAllotRepository.save(afterSaleProductAllots);
         }
