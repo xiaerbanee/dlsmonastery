@@ -143,8 +143,8 @@ public class BankInController {
             if(StringUtils.isBlank(bankInBatchDetailForm.getType())){
                 throw new ServiceException("类型不可以为空");
             }
-            if(bankInBatchDetailForm.getAmount() == null || bankInBatchDetailForm.getAmount().compareTo(BigDecimal.ZERO)<0){
-                throw new ServiceException("金额不可以小于0");
+            if(bankInBatchDetailForm.getAmount() == null || bankInBatchDetailForm.getAmount().compareTo(BigDecimal.ZERO)<=0){
+                throw new ServiceException("到账金额必须大于0");
             }
             if(bankInBatchDetailForm.getInputDate() == null){
                 throw new ServiceException("到账日期不能为空");
