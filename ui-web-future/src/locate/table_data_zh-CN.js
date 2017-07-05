@@ -219,6 +219,7 @@ export default {
       bankForm: "银行列表编辑",
       bankInDetail: "销售收款编辑",
       bankInForm: "销售收款编辑",
+      bankInBatchForm: "销售收款批量添加",
       bankInList: "销售收款",
       bankList: "银行列表",
       chainForm: "连锁体系编辑",
