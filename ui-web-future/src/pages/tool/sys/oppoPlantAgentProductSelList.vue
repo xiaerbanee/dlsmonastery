@@ -158,7 +158,7 @@
         this.getTableData();
       },synData(){
         if(this.date){
-          axios.get('/api/global/tool/oppo/syn?date='+this.date).then((response)=>{
+          axios.get('/api/ws/future/third/factory/oppo/synIme?date='+this.date).then((response)=>{
             this.$message(response.data);
           }).catch(function () {
             this.$message({message:"同步失败",type:'error'});

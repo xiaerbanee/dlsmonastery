@@ -64,6 +64,7 @@ public class CarrierShopService {
     public void logicDelete(String id) {
         CarrierShop carrierShop=carrierShopRepository.findOne(id);
         carrierShop.setName(carrierShop.getName()+"废弃"+ LocalDateUtils.format(LocalDate.now()));
+        carrierShop.setEnabled(false);
         carrierShopRepository.save(carrierShop);
     }
 

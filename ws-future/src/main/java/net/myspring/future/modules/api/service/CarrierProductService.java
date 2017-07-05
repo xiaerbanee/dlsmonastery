@@ -65,6 +65,7 @@ public class CarrierProductService {
     public void logicDelete(String id) {
         CarrierProduct carrierProduct=carrierProductRepository.findOne(id);
         carrierProduct.setName(carrierProduct.getName()+"废弃"+ LocalDateUtils.format(LocalDate.now()));
+        carrierProduct.setEnabled(false);
         carrierProductRepository.save(carrierProduct);
     }
 

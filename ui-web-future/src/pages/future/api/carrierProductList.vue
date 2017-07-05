@@ -11,7 +11,7 @@
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item label="$t('carrierProductList.name')" >
+              <el-form-item :label="$t('carrierProductList.name')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('carrierShopList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -22,18 +22,13 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('carrierProductList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" label="商城名称" sortable width="150"></el-table-column>
-        <el-table-column prop="code" label="系统名称"></el-table-column>
+        <el-table-column fixed prop="name" label="商城名称" sortable width="200"></el-table-column>
+        <el-table-column prop="productName" label="系统名称"></el-table-column>
         <el-table-column prop="createdByName" :label="$t('carrierProductList.createdBy')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('carrierProductList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('carrierProductList.locked')" width="120">
           <template scope="scope">
             <el-tag :type="scope.row.locked ? 'primary' : 'danger'">{{scope.row.locked | bool2str}}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="enabled" :label="$t('carrierProductList.enabled')" width="120">
-          <template scope="scope">
-            <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" :label="$t('carrierProductList.operation')" width="140">
