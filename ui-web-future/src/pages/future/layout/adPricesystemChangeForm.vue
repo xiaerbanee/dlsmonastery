@@ -8,9 +8,13 @@
     </el-row>
     <search-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
       <el-form :model="formData">
-        <el-form-item :label="$t('adPricesystemChangeForm.productName')">
-          <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
-        </el-form-item>
+        <el-row :gutter="4">
+          <el-col :span="24">
+            <el-form-item :label="$t('adPricesystemChangeForm.productName')" :label-width="formLabelWidth">
+              <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('adPricesystemChangeForm.sure')}}</el-button>
@@ -47,6 +51,7 @@
           productTypes: [],
           adPricesystem: {},
           formVisible: false,
+          formLabelWidth:'120px',
           submitDisabled: false,
           settings: {
             colHeaders: [this.$t('adPricesystemChangeForm.id'), this.$t('adPricesystemChangeForm.productCode'), this.$t('adPricesystemChangeForm.productName'), this.$t('adPricesystemChangeForm.volume'), this.$t('adPricesystemChangeForm.shouldGet')],

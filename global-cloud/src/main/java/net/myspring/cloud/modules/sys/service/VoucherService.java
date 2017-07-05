@@ -69,11 +69,11 @@ public class VoucherService {
     }
 
     @Transactional
-    public RestResponse save(VoucherForm voucherForm){
-        LocalDate date = voucherForm.getFDate();
+    public RestResponse save(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
+        LocalDate date = voucherForm.getFdate();
         String json = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
-        RestResponse restResponse = check(data,voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList());
+        RestResponse restResponse = check(data,bdAccountList,bdFlexItemGroupList);
         if (!restResponse.getSuccess()) {
             return restResponse;
         }else{
@@ -108,9 +108,7 @@ public class VoucherService {
                 }
             }
             voucherRepository.save(voucher);
-            List<String> headers = getHeaders(voucherForm.getBdFlexItemGroupList());
-            //核算维度分组
-            List<BdFlexItemProperty> bdFlexItemPropertyList = voucherForm.getBdFlexItemPropertyList();
+            List<String> headers = getHeaders(bdFlexItemGroupList);
             Map<String,BdFlexItemProperty> bdFlexItemPropertyNameMap = bdFlexItemPropertyList.stream().collect(Collectors.toMap(BdFlexItemProperty::getFName,BdFlexItemProperty->BdFlexItemProperty));
 
             for (List<Object> row : data){
@@ -201,10 +199,10 @@ public class VoucherService {
         if (debitAmount.compareTo(creditAmount) != 0) {
             sb.append("借贷方金额必须相等");
         }
-        if (sb != null){
+        if (StringUtils.isNotBlank(sb)){
            return new RestResponse(sb.toString(),null,false);
         }else {
-            return new RestResponse("",null,true);
+            return new RestResponse("检测合符条件",null,true);
         }
     }
 
@@ -259,16 +257,16 @@ public class VoucherService {
     }
 
     @Transactional
-    public Voucher audit(VoucherForm voucherForm){
+    public Voucher audit(VoucherForm voucherForm,List<BdAccount> bdAccountList,List<BdFlexItemGroup> bdFlexItemGroupList,List<BdFlexItemProperty> bdFlexItemPropertyList){
         String data = HtmlUtils.htmlUnescape(voucherForm.getJson());
         List<List<Object>> datas = ObjectMapperUtils.readValue(data, ArrayList.class);
-        RestResponse restResponse = check(datas,voucherForm.getBdAccountList(),voucherForm.getBdFlexItemGroupList());
+        RestResponse restResponse = check(datas,bdAccountList,bdFlexItemGroupList);
         if (!restResponse.getSuccess()) {
             throw new ServiceException(restResponse.getMessage());
         }else {
             Voucher voucher = voucherRepository.findOne(voucherForm.getId());
-            voucher.setFDate(voucherForm.getFDate());
-            save(voucherForm);
+            voucher.setFDate(voucherForm.getFdate());
+            save(voucherForm,bdAccountList,bdFlexItemGroupList,bdFlexItemPropertyList);
             if (VoucherStatusEnum.地区财务审核.name().equals(voucher.getStatus())) {
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
             } else {

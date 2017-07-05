@@ -42,7 +42,6 @@
   </div>
 </template>
 <script>
-  import ElCol from "element-ui/packages/col/src/col";
   import util from "../../../utils/util";
   var table = null;
   export default {

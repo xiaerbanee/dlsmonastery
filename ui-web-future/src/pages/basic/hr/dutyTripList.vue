@@ -31,10 +31,7 @@
   </div>
 </template>
 <script>
-  import SearchDialog from "../../../components/common/search-dialog.vue";
-
   export default {
-    components: {SearchDialog},
     data() {
       return {
         page:{},

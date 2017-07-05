@@ -46,9 +46,30 @@ interface GoodsOrderRepositoryCustom {
 
     fun findB2bTask(pageable: Pageable,b2b2Query: B2b2Query):Page<GoodsOrder>
 
+    fun findDtoListByIdList(goodsOrderIdList: List<String>): List<GoodsOrderDto>
+
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+    override fun findDtoListByIdList(goodsOrderIdList: List<String>): List<GoodsOrderDto> {
+        if(CollectionUtil.isEmpty(goodsOrderIdList)){
+            return ArrayList()
+        }
+        return namedParameterJdbcTemplate.query("""
+            SELECT
+              t2.express_codes as expressOrderExpressCodes,
+              shop.client_id clientId,
+              shop.office_id shopOfficeId,
+              shop.area_id shopAreaId,
+              depotShop.area_type shopDepotShopAreaType,
+              t1.*
+            FROM crm_goods_order t1
+                      LEFT JOIN crm_express_order t2 ON t1.express_order_id = t2.id
+                      LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
+                      LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
+            where  t1.id IN (:goodsOrderIdList)
+                """, Collections.singletonMap("goodsOrderIdList", goodsOrderIdList), BeanPropertyRowMapper(GoodsOrderDto::class.java))
+    }
 
     override fun findB2bTask(pageable: Pageable,b2b2Query: B2b2Query): Page<GoodsOrder> {
         val sb = StringBuilder("""

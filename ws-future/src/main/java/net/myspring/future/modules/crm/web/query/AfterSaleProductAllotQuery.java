@@ -1,7 +1,9 @@
 package net.myspring.future.modules.crm.web.query;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 
@@ -15,10 +17,12 @@ public class AfterSaleProductAllotQuery extends BaseQuery{
 
     private String createdDate;
     private String businessId;
-    private List<String> toOutCode;
+    private String toOutCode;
+    private String fromOutCode;
     private String fromProductName;
     private String storeName;
-    private List<String> fromOutCode;
+    private List<String> toOutCodeList;
+    private List<String> fromOutCodeList;
     private String toProductName;
 
     public String getCreatedDate() {
@@ -65,20 +69,42 @@ public class AfterSaleProductAllotQuery extends BaseQuery{
         this.toProductName = toProductName;
     }
 
-    public List<String> getToOutCode() {
+    public String getToOutCode() {
         return toOutCode;
     }
 
-    public void setToOutCode(List<String> toOutCode) {
+    public void setToOutCode(String toOutCode) {
         this.toOutCode = toOutCode;
     }
 
-    public List<String> getFromOutCode() {
+    public String getFromOutCode() {
         return fromOutCode;
     }
 
-    public void setFromOutCode(List<String> fromOutCode) {
+    public void setFromOutCode(String fromOutCode) {
         this.fromOutCode = fromOutCode;
+    }
+
+    public List<String> getToOutCodeList() {
+        if(CollectionUtil.isEmpty(toOutCodeList)&&StringUtils.isNotBlank(toOutCode)){
+            this.toOutCodeList=StringUtils.getFilterList(toOutCode);
+        }
+        return toOutCodeList;
+    }
+
+    public void setToOutCodeList(List<String> toOutCodeList) {
+        this.toOutCodeList = toOutCodeList;
+    }
+
+    public List<String> getFromOutCodeList() {
+        if(CollectionUtil.isEmpty(fromOutCodeList)&&StringUtils.isNotBlank(fromOutCode)){
+            this.fromOutCodeList=StringUtils.getFilterList(fromOutCode);
+        }
+        return fromOutCodeList;
+    }
+
+    public void setFromOutCodeList(List<String> fromOutCodeList) {
+        this.fromOutCodeList = fromOutCodeList;
     }
 
     public LocalDate getCreatedDateStart() {

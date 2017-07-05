@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.input.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.myspring.cloud.common.enums.StkMisDeliveryTypeEnum;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 
@@ -24,10 +23,12 @@ public class StkMisDeliveryDto {
     private String creator;
     //单据类型
     private String misDeliveryType;
-    // 做单日期
-    private LocalDate billDate;
-    //部门编码
-    private String departmentNumber;
+    //做单日期
+    private LocalDate date;
+    //库存方向
+    private String FStockDirect;
+    //领料部门
+    private String FDeptIdNumber;
 
     private List<StkMisDeliveryFEntityDto> stkMisDeliveryFEntityDtoList = Lists.newArrayList();
 
@@ -63,20 +64,28 @@ public class StkMisDeliveryDto {
         this.misDeliveryType = misDeliveryType;
     }
 
-    public LocalDate getBillDate() {
-        return billDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setBillDate(LocalDate billDate) {
-        this.billDate = billDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getDepartmentNumber() {
-        return departmentNumber;
+    public String getFStockDirect() {
+        return FStockDirect;
     }
 
-    public void setDepartmentNumber(String departmentNumber) {
-        this.departmentNumber = departmentNumber;
+    public void setFStockDirect(String FStockDirect) {
+        this.FStockDirect = FStockDirect;
+    }
+
+    public String getFDeptIdNumber() {
+        return FDeptIdNumber;
+    }
+
+    public void setFDeptIdNumber(String FDeptIdNumber) {
+        this.FDeptIdNumber = FDeptIdNumber;
     }
 
     public List<StkMisDeliveryFEntityDto> getStkMisDeliveryFEntityDtoList() {
@@ -94,18 +103,15 @@ public class StkMisDeliveryDto {
         root.put("NeedUpDateFields", Lists.newArrayList());
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
-        model.put("FDate", getBillDate());
+        model.put("FDate", getDate());
         model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "QTCKD01_SYS"));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FPickOrgId", CollectionUtil.getMap("FNumber", "100"));
         model.put("FOwnerIdHead", CollectionUtil.getMap("FNumber", "100"));
-        model.put("FDeptId", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
+        //领料部门
+        model.put("FDeptId", CollectionUtil.getMap("FNumber", getFDeptIdNumber()));
         //库存方向
-        if (StkMisDeliveryTypeEnum.出库.name().equals(getMisDeliveryType())) {
-            model.put("FStockDirect", "GENERAL");
-        } else if(StkMisDeliveryTypeEnum.退货.name().equals(getMisDeliveryType())){
-            model.put("FStockDirect", "RETURN");
-        }
+        model.put("FStockDirect", getFStockDirect());
         model.put("FOwnerTypeIdHead", "BD_OwnerOrg");
         model.put("FBaseCurrId", CollectionUtil.getMap("FNumber", "PRE001"));
         List<Object> entity = Lists.newArrayList();

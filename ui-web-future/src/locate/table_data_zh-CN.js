@@ -249,6 +249,7 @@ export default {
       goodsOrderDetail: "货品订货详细",
       goodsOrderForm: "货品订货编辑",
       goodsOrderList: "货品订货",
+      goodsOrderImeList: "货品订货串码列表",
       goodsOrderShip: "货品订货发货",
       goodsOrderShipList: "货品发货",
       goodsOrderSign: "订单签收",
