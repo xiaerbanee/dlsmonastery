@@ -11,7 +11,7 @@
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item label="$t('carrierShopList.name')" >
+              <el-form-item :label="$t('carrierShopList.name')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('carrierShopList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -22,8 +22,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('carrierShopList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="name" :label="$t('carrierShopList.name')" sortable width="150"></el-table-column>
-        <el-table-column prop="code" :label="$t('carrierShopList.code')"></el-table-column>
+        <el-table-column fixed prop="name" :label="$t('carrierShopList.name')" sortable width="300"></el-table-column>
+        <el-table-column prop="code" :label="$t('carrierShopList.code')" sortable></el-table-column>
         <el-table-column prop="createdByName" :label="$t('carrierShopList.createdBy')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('carrierShopList.remarks')"></el-table-column>
         <el-table-column prop="locked" :label="$t('carrierShopList.locked')" width="120">
@@ -97,14 +97,14 @@
             axios.get('/api/ws/future/api/carrierShop/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);
               this.pageRequest();
-            });
+            }); 
           }).catch(()=>{});
         }
       }
     },created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      this.initPromise = axios.get('/api/ws/future/api/carrierShop/getQuery').then((response) =>{
+      that.initPromise = axios.get('/api/ws/future/api/carrierShop/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);
       });

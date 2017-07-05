@@ -11,7 +11,7 @@
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item label="$t('carrierProductList.name')" >
+              <el-form-item :label="$t('carrierProductList.name')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('carrierShopList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
