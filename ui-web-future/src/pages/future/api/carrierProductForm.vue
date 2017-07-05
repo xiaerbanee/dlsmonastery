@@ -1,31 +1,33 @@
 <template>
   <div>
-    <head-tab active="carrierShopForm"></head-tab>
+    <head-tab active="carrierProductForm"></head-tab>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
-        <el-form-item :label="$t('dictEnumForm.category')" prop="category">
-          <el-select v-model="inputForm.category" filterable :placeholder="$t('dictEnumForm.selectGroup')">
-            <el-option v-for="category in inputForm.extra.categoryList" :key="category" :label="category" :value="category"></el-option>
-          </el-select>
+        <el-form-item :label="$t('carrierProductForm.name')" prop="category">
+          <el-input v-model="inputForm.name"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('dictEnumForm.sort')" prop="sort">
-          <el-input v-model.number="inputForm.sort"></el-input>
+        <el-form-item :label="$t('carrierProductForm.mallProductTypeName')" prop="sort">
+          <el-input v-model.number="inputForm.mallProductTypeName"></el-input>
         </el-form-item>
-        <el-form-item :label="$t('dictEnumForm.value')" prop="value">
-          <el-input v-model="inputForm.value"></el-input>
+        <el-form-item :label="$t('carrierProductForm.productName')" prop="value">
+          <product-select v-model="inputForm.productName"></product-select>
         </el-form-item>
-        <el-form-item :label="$t('dictEnumForm.remarks')" prop="remarks">
+        <el-form-item :label="$t('carrierProductForm.remarks')" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('dictEnumForm.save')}}</el-button>
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('carrierProductForm.save')}}</el-button>
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
+  import ProductSelect from "components/future/product-select.vue"
   export default{
+    components:{
+      ProductSelect
+    },
     data(){
       return this.getData()
     },
@@ -38,9 +40,9 @@
             extra:{}
           },
           rules: {
-            category: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}],
-            sort: [{ type: 'number',required:true, message: this.$t('dictEnumForm.inputLegalValue'),trigger:"blur"}],
-            value: [{ required: true, message: this.$t('dictEnumForm.prerequisiteMessage'),trigger:"blur"}]
+            category: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}],
+            sort: [{ type: 'number',required:true, message: this.$t('carrierProductForm.inputLegalValue'),trigger:"blur"}],
+            value: [{ required: true, message: this.$t('carrierProductForm.prerequisiteMessage'),trigger:"blur"}]
           }
         }
       },

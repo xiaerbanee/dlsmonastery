@@ -16,6 +16,15 @@ export default {
     delete: "hapus",
     loading: "memuat",
   },
+  carrierShopForm:{
+    name: "nama",
+    code: "kode",
+    type: "jenis",
+    remarks: "keterangan / komen",
+    save: "simpan",
+    selectGroup:"pilih grup",
+    prerequisiteMessage:"Informasi yang diperlukan"
+  },
   carrierProductList:{
     name: "nama",
     code: "kode",
@@ -32,5 +41,13 @@ export default {
     edit: "ubah",
     delete: "hapus",
     loading: "memuat",
-  }
+  },
+  carrierProductForm:{
+    name: "nama",
+    productName: "nama produk",
+    mallProductTypeName:"商城机型名称",
+    remarks: "keterangan / komen",
+    save: "simpan",
+    prerequisiteMessage:"Informasi yang diperlukan"
+  },
 }

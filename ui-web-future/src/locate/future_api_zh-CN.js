@@ -16,6 +16,15 @@ export default {
     delete: "删除",
     loading: "拼命加载中",
   },
+  carrierShopForm:{
+    name: "名称",
+    code: "编码",
+    type: "类型",
+    remarks: "备注",
+    save: "保存",
+    selectGroup:"请选择分组",
+    prerequisiteMessage:"必填信息"
+  },
   carrierProductList:{
     name: "名称",
     code: "编码",
@@ -32,5 +41,13 @@ export default {
     edit: "修改",
     delete: "删除",
     loading: "拼命加载中",
-  }
+  },
+  carrierProductForm:{
+    name: "名称",
+    productName: "货品",
+    mallProductTypeName:"商城机型名称",
+    remarks: "备注",
+    save: "保存",
+    prerequisiteMessage:"必填信息"
+  },
 }
