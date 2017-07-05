@@ -3,6 +3,7 @@ package net.myspring.future.modules.crm.web.controller;
 
 import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -10,12 +11,9 @@ import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
-import net.myspring.future.modules.basic.dto.DepotDto;
-import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
@@ -23,7 +21,6 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
 import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
-import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -117,7 +114,10 @@ public class GoodsOrderController {
         depotQuery.setShipType(goodsOrderDto.getShipType());
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
         goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
-        goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name()).getValue(), List.class));
+        CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name());
+        if(companyConfigCacheDto !=null && StringUtils.isNotBlank(companyConfigCacheDto.getValue())){
+            goodsOrderBillForm.getExtra().put("expressRuleList", ObjectMapperUtils.readValue(companyConfigCacheDto.getValue(), List.class));
+        }
         return goodsOrderBillForm;
     }
 
@@ -210,6 +210,7 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value="export")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public ModelAndView export(GoodsOrderQuery goodsOrderQuery) {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", goodsOrderService.export(goodsOrderQuery));
     }

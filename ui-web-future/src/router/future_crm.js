@@ -29,6 +29,7 @@ const expressOrderForm = r => require.ensure([], () => r(require('pages/future/c
 
 
 const goodsOrderList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderList.vue')));
+const goodsOrderImeList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderImeList.vue')));
 const goodsOrderShipList = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderShipList.vue')));
 const goodsOrderForm = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderForm.vue')));
 const goodsOrderBatchAdd = r => require.ensure([], () => r(require('pages/future/crm/goodsOrderBatchAdd.vue')));
@@ -120,6 +121,7 @@ let routes = [
 
 
   {path: '/future/crm/goodsOrderList',component: goodsOrderList,name:"goodsOrderList"},
+  {path: '/future/crm/goodsOrderImeList',component: goodsOrderImeList,name:"goodsOrderImeList"},
   {path: '/future/crm/goodsOrderShipList',component: goodsOrderShipList,name:"goodsOrderShipList"},
   {path:'/future/crm/goodsOrderForm',component:goodsOrderForm,name:'goodsOrderForm',meta: {menu:"goodsOrderList",keepAlive:true}},
   {path:'/future/crm/goodsOrderBatchAdd',component:goodsOrderBatchAdd,name:'goodsOrderBatchAdd',meta: {menu:"goodsOrderList",keepAlive:true}},
