@@ -2228,4 +2228,27 @@ export default {
     delete: "删除",
     audit: "审核",
   },
+  shopOrder:{
+    orderCode:"订单号",
+    shipDepot:"发货仓库",
+    areaDepot: "门店",
+    shipDate:"开单日期",
+    outerBill:"外部单号",
+    mallDepot:"商城门店",
+    mallShipInfo:"商城订单信息",
+    remarks:"备注",
+    creator:"创建人",
+    createdTime:"创建时间",
+    ifETicket:"使用电子券",
+    expressCode:"快递单号",
+    shipTpe:"发货类型",
+    mallGoodsInfo:"专卖店货品信息",
+    save:"保存",
+    billDetail:"开单详情",
+    goodsName:"货品名称",
+    orderNum:"订货数",
+    billInfact:"实际开单数",
+    shippedNum:"已发货数",
+    price:"单价"
+  }
 }
