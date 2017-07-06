@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:storeAllot:edit'">{{$t('storeAllotList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -125,7 +125,7 @@
         this.$router.push({ name: 'storeAllotForm'})
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/ws/future/crm/storeAllot/export?"+{params:this.submitData};
+          window.location.href="/api/ws/future/crm/storeAllot/export?"+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       },itemAction:function(id,action){
         if(action==="edit") {
