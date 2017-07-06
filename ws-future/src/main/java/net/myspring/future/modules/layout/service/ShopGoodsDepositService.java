@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.cloud.common.enums.BillTypeEnum;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
@@ -11,6 +12,8 @@ import net.myspring.future.common.enums.ShopGoodsDepositStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
+import net.myspring.future.modules.basic.manager.CnJournalBankManager;
 import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositDto;
 import net.myspring.future.modules.layout.dto.ShopGoodsDepositSumDto;
@@ -47,7 +50,9 @@ public class ShopGoodsDepositService {
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
-    private CloudClient cloudClient;
+    private CnJournalBankManager cnJournalBankManager;
+    @Autowired
+    private ArOtherRecAbleManager arOtherRecAbleManager;
 
     public Page<ShopGoodsDepositDto> findPage(Pageable pageable, ShopGoodsDepositQuery shopGoodsDepositQuery) {
 
@@ -146,13 +151,33 @@ public class ShopGoodsDepositService {
             throw new ServiceException(String.format("订金（门店：%s，金额：%.2f）已经同步金蝶，outCode为 %s ；", shopGoodsDepositDto.getShopName(), shopGoodsDepositDto.getAmount(), shopGoodsDepositDto.getOutCode()) );
         }
 
-        //TODO 同步金蝶
         ShopGoodsDeposit  shopGoodsDeposit = shopGoodsDepositRepository.findOne(id);
         shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
         shopGoodsDeposit.setLocked(true);
         shopGoodsDeposit.setBillDate(LocalDateTime.now());
-
         shopGoodsDepositRepository.save(shopGoodsDeposit);
+
+        if(StringUtils.isBlank(shopGoodsDeposit.getOutCode())){
+            syn(shopGoodsDeposit);
+        }
+    }
+
+    @Transactional
+    private void syn(ShopGoodsDeposit shopGoodsDeposit) {
+        //TODO 同步金蝶
+        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
+            KingdeeSynReturnDto kingdeeSynReturnDto = cnJournalBankManager.synForShopGoodsDeposit(shopGoodsDeposit,shopGoodsDeposit.getDepartMent());
+            shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
+            shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
+        }
+        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
+            KingdeeSynReturnDto kingdeeSynReturnDto = arOtherRecAbleManager.synForShopGoodsDeposit(shopGoodsDeposit);
+            shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
+            shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
+        }
+
     }
 
 }

@@ -57,7 +57,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('productImeList.productType')" :label-width="formLabelWidth">
-                <product-select v-model="formData.productId"  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productId" hasIme=true  @afterInit="setSearchText"></product-select>
               </el-form-item>
               <el-form-item :label="$t('productImeList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>

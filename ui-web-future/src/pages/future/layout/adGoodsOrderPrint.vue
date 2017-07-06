@@ -28,16 +28,16 @@
     <table class="table table-bordered">
       <tbody class="list">
       <tr>
-        <td class="span3">编码</td>
+        <td class="span4">编码</td>
         <td class="span4">货品名称</td>
-        <td class="span1">数量</td>
+        <td class="span2">数量</td>
         <td class="span1">单价</td>
         <td class="span2">货款</td>
       </tr>
       <tr v-for="item in adGoodsOrderDetailList">
-        <td class="span3">{{item.productCode}}</td>
+        <td class="span4">{{item.productCode}}</td>
         <td class="span4">{{item.productName}}</td>
-        <td class="span1">{{item.billQty}}</td>
+        <td class="span2">{{item.billQty}}</td>
         <td class="span1">{{item.productPrice2}}</td>
         <td class="span2">{{item.billQty * item.productPrice2}}</td>
       </tr>
