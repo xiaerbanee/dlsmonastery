@@ -42,7 +42,7 @@
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" border>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')" sortable></el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('adApplyList.createdBy')" sortable></el-table-column>
@@ -65,6 +65,11 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table .reminder_row {
+    background: #ebcccc !important;
+  }
+</style>
 <script>
   import accountSelect from 'components/basic/account-select';
   import depotSelect from 'components/future/depot-select';
@@ -99,6 +104,13 @@
         this.$nextTick(function () {
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
+      },
+      tableRowClassName(row, index) {
+        if (row.leftQty > 0) {
+          return 'reminder_row';
+        }else{
+          return '';
+        }
       },
       pageRequest() {
         this.pageLoading = true;

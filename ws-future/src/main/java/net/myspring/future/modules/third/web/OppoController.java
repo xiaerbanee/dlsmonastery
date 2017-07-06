@@ -42,7 +42,6 @@ public class OppoController {
     @RequestMapping(value="findOppoCustomerImeiStocks")
     public  List<OppoCustomerImeiStock> findOppoCustomerImeiStocks(String dateStart,String dateEnd){
         List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoService.findOppoCustomerImeiStocks(LocalDateUtils.parse(dateStart),LocalDateUtils.parse(dateEnd));
-        System.err.println("oppoCustomerImeiStocks==="+oppoCustomerImeiStocks.toString());
         return oppoCustomerImeiStocks;
     }
 

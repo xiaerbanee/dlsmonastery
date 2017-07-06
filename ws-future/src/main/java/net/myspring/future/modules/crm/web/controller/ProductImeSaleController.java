@@ -87,7 +87,7 @@ public class ProductImeSaleController {
         if(bindResult.hasFieldErrors()){
             return new RestResponse(bindResult,"保存失败", null);
         }
-        //TODO 核銷門店權限檢查，這個在核銷退回，上報及上報退回應該都要
+
         List<String> imeList = productImeSaleForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
             new RestResponse("没有输入任何有效的串码", null);

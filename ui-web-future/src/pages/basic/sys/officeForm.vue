@@ -51,7 +51,7 @@
               </el-button>
             </el-form-item>
           </el-col>
-          <el-col :span = "10" v-show="treeData.length>0">
+          <el-col :span = "10" v-show="!isBusiness">
             <el-form-item  label="授权" prop="officeIdList">
               <el-tree
                 :data="treeData"
@@ -151,13 +151,7 @@
       },typeChange(evl){
           if(evl!=null&&evl=="职能部门"){
             this.isBusiness=false;
-            axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
-              this.treeData =new Array(response.data);
-              this.inputForm.officeIdList=this.checked
-            })
           }else {
-            this.treeData =new Array();
-            this.inputForm.officeIdList=new Array();
             this.isBusiness=true;
           }
       },initPage(){
@@ -176,6 +170,9 @@
         })
       }
     },created () {
+      axios.get('/api/basic/sys/office/getOfficeTree', {params: {id: this.inputForm.id}}).then((response) => {
+        this.treeData =new Array(response.data);
+      })
       this.initPage();
     }
   }

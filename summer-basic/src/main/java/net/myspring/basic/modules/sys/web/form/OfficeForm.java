@@ -140,6 +140,9 @@ public class OfficeForm extends BaseForm<Office> {
     }
 
     public List<String> getOfficeIdList() {
+        if(OfficeTypeEnum.业务部门.name().equals(type)){
+            this.officeIdList=Lists.newArrayList();
+        }
         return officeIdList;
     }
 

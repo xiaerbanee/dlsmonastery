@@ -54,10 +54,6 @@ public class StoreAllotController {
     @PreAuthorize("hasPermission(null,'crm:storeAllot:edit')")
     public RestResponse save(StoreAllotForm storeAllotForm) {
 
-        //TODO 需要完善金蝶的控制
-//        if(AccountUtils.getAccount().getOutId()==null) {
-//            return new Message("message_store_allot_no_bind_finance",Message.Type.danger);
-//        }
         if(!storeAllotForm.isCreate()){
             throw new ServiceException("大库调拨不可修改");
         }

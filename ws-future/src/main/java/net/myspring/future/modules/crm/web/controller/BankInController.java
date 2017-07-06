@@ -5,11 +5,14 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.BankInTypeEnum;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.dto.BankDto;
+import net.myspring.future.modules.basic.service.BankService;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.service.BankInService;
-import net.myspring.future.modules.crm.web.form.BankInAuditForm;
-import net.myspring.future.modules.crm.web.form.BankInForm;
+import net.myspring.future.modules.crm.web.form.*;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
@@ -34,6 +37,8 @@ public class BankInController {
 
     @Autowired
     private BankInService bankInService;
+    @Autowired
+    private BankService bankService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
@@ -108,6 +113,46 @@ public class BankInController {
     public BankInForm getForm(BankInForm bankInForm ){
         bankInForm.getExtra().put("typeList",BankInTypeEnum.getList());
         return bankInForm;
+    }
+
+    @RequestMapping(value = "getBatchForm")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:edit')")
+    public BankInBatchForm getBatchForm(BankInBatchForm bankInBatchForm ){
+        bankInBatchForm.getExtra().put("typeList",BankInTypeEnum.getList());
+
+        List<BankDto> bankDtoList = bankService.findByAccountId(RequestUtils.getAccountId());
+        bankInBatchForm.getExtra().put("bankNameList", CollectionUtil.extractToList(bankDtoList, "name"));
+        return bankInBatchForm;
+    }
+
+    @RequestMapping(value = "batchAdd")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:edit')")
+    public RestResponse batchAdd(BankInBatchForm bankInBatchForm) {
+
+        if(CollectionUtil.isEmpty(bankInBatchForm.getBankInBatchDetailFormList())){
+            throw new ServiceException("请录入需要添加的销售收款信息");
+        }
+
+        for(BankInBatchDetailForm bankInBatchDetailForm : bankInBatchForm.getBankInBatchDetailFormList()){
+            if(StringUtils.isBlank(bankInBatchDetailForm.getShopName())){
+                throw new ServiceException("门店不可以为空");
+            }
+            if(StringUtils.isBlank(bankInBatchDetailForm.getBankName())){
+                throw new ServiceException("银行不可以为空");
+            }
+            if(StringUtils.isBlank(bankInBatchDetailForm.getType())){
+                throw new ServiceException("类型不可以为空");
+            }
+            if(bankInBatchDetailForm.getAmount() == null || bankInBatchDetailForm.getAmount().compareTo(BigDecimal.ZERO)<=0){
+                throw new ServiceException("到账金额必须大于0");
+            }
+            if(bankInBatchDetailForm.getInputDate() == null){
+                throw new ServiceException("到账日期不能为空");
+            }
+        }
+
+        bankInService.batchAdd(bankInBatchForm);
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getAuditForm")

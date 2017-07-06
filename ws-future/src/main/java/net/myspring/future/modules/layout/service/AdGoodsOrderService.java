@@ -180,7 +180,6 @@ public class AdGoodsOrderService {
         adGoodsOrder.setOutShopId(outShop.getId());
         adGoodsOrder.setInvestInCause(adGoodsOrderForm.getInvestInCause());
         adGoodsOrder.setEmployeeId(adGoodsOrderForm.getEmployeeId());
-        //TODO 确认下面的billAddress赋值语句是否正确
         adGoodsOrder.setBillAddress(adGoodsOrderForm.getExpressOrderAddress());
         adGoodsOrder.setRemarks(adGoodsOrderForm.getRemarks());
         adGoodsOrderRepository.save(adGoodsOrder);

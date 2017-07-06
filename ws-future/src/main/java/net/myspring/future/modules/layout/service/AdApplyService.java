@@ -337,7 +337,6 @@ public class AdApplyService {
         }
         adApplyRepository.save(newAdApplys);
 
-        //TODO 调用金蝶接口
        List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salOutStockManager.synForAdApply(adGoodsOrders);
         if(kingdeeSynReturnDtos.size()!=adGoodsOrders.size()){
             throw new ServiceException("同步金蝶开单数据有误");
