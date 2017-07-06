@@ -42,33 +42,34 @@
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <search-dialog title = "确认数修改" v-model="leftQtyVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+      <el-dialog :title = "$t('adApplyList.editLeftQty')" v-model="leftQtyVisible" size="tiny" class="search-form"  z-index="1500">
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('adApplyEditForm.shopName')">{{inputForm.shopName}}
+              <el-form-item :label="$t('adApplyList.shopName')">{{inputForm.shopName}}
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.productName')">{{inputForm.productName}}
+              <el-form-item :label="$t('adApplyList.productName')">{{inputForm.productName}}
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.applyQty')">{{inputForm.applyQty}}
+              <el-form-item :label="$t('adApplyList.applyQty')">{{inputForm.applyQty}}
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.confirmQty')" prop="confirmQty">
+              <el-form-item :label="$t('adApplyList.confirmQty')" prop="confirmQty">
                 <el-input v-model.number="inputForm.confirmQty" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.billedQty')">{{inputForm.billedQty}}
+              <el-form-item :label="$t('adApplyList.billedQty')">{{inputForm.billedQty}}
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.leftQty')">{{inputForm.leftQty}}
+              <el-form-item :label="$t('adApplyList.leftQty')">{{inputForm.leftQty}}
               </el-form-item>
-              <el-form-item :label="$t('adApplyEditForm.remarks')" prop="remarks">
+              <el-form-item :label="$t('adApplyList.remarks')" prop="remarks">
                 <el-input v-model="inputForm.remarks" type="textarea"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary"  @click="formSubmit()">{{$t('adApplyEditForm.save')}}</el-button>
+          <el-button @click="leftQtyVisible = false">{{$t('adApplyList.cancel')}}</el-button>
+          <el-button type="primary"  @click="formSubmit()">{{$t('adApplyList.save')}}</el-button>
         </div>
-      </search-dialog>
+      </el-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" border>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')" sortable></el-table-column>

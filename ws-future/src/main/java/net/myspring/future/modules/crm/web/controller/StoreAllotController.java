@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
+import com.google.common.collect.Maps;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -8,12 +9,13 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.enums.StoreAllotTypeEnum;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
-import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
+import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.service.StoreAllotDetailService;
 import net.myspring.future.modules.crm.service.StoreAllotService;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
+import net.myspring.future.modules.crm.web.form.StoreAllotShipForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
@@ -47,7 +49,6 @@ public class StoreAllotController {
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public Page<StoreAllotDto> list(Pageable pageable, StoreAllotQuery storeAllotQuery){
         return storeAllotService.findPage(pageable, storeAllotQuery);
-
     }
 
     @RequestMapping(value = "save")
@@ -69,11 +70,9 @@ public class StoreAllotController {
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotForm getForm(StoreAllotForm storeAllotForm) {
-
         storeAllotForm.getExtra().put("allotTypeList",StoreAllotTypeEnum.getList());
         storeAllotForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         storeAllotForm.getExtra().put("showAllotType", storeAllotService.getShowAllotType());
-
         return storeAllotForm;
     }
 
@@ -98,27 +97,21 @@ public class StoreAllotController {
     @RequestMapping(value = "findDetailListForFastAllot")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public List<StoreAllotDetailSimpleDto> findDetailListForFastAllot() {
-
         return storeAllotService.findDetailListForFastAllot();
-
     }
 
     @RequestMapping(value = "findDto")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public StoreAllotDto findDto(String id) {
-
         if(StringUtils.isBlank(id)){
             return new StoreAllotDto();
         }
-
         return storeAllotService.findDto(id);
-
     }
 
     @RequestMapping(value = "print")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:print')")
     public StoreAllotDto print(String id) {
-
         if(StringUtils.isBlank(id)){
             throw new ServiceException("不存在对应的大库调拨记录");
         }
@@ -135,22 +128,13 @@ public class StoreAllotController {
 
     @RequestMapping(value = "findStoreAllotForFastAllot")
     public StoreAllotDto findStoreAllotForFastAllot() {
-
         StoreAllotDto storeAllotDto = new StoreAllotDto();
-
         List<String> storeIds = storeAllotService.getMergeStoreIds();
         storeAllotDto.setFromStoreId(storeIds.get(0));
         storeAllotDto.setToStoreId(storeIds.get(1));
         storeAllotDto.setExpressCompanyId(expressCompanyService.getDefaultExpressCompanyId());
         storeAllotDto.setShipType(ShipTypeEnum.总部自提.name());
-
         return storeAllotDto;
-    }
-
-    @RequestMapping(value = "getStoreAllotData")
-    @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
-    public String getStoreAllotData() {
-        return null;
     }
 
     @RequestMapping(value = "getCloudQty")
@@ -166,22 +150,27 @@ public class StoreAllotController {
         return storeAllotQuery;
     }
 
-    @RequestMapping(value = "ship", method=RequestMethod.GET)
+    @RequestMapping(value = "getShipForm")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
-    public String shipForm() {
-        return null;
+    public StoreAllotShipForm getShipForm(StoreAllotShipForm storeAllotShipForm) {
+        return storeAllotShipForm;
     }
 
-    @RequestMapping(value = "shipBoxAndIme", method = RequestMethod.GET)
+    @RequestMapping(value = "ship")
     @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
-    public Map<String, Object> shipBoxAndIme(String id, String boxImeStr, String imeStr) {
-        return storeAllotService.shipBoxAndIme(id, boxImeStr, imeStr);
+    public RestResponse ship(StoreAllotShipForm storeAllotShipForm) {
+        storeAllotService.ship(storeAllotShipForm);
+        return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
+
     }
 
-    @RequestMapping(value = "ship", method=RequestMethod.POST)
-    @PreAuthorize("hasPermission(null,'crm:storeAllot:ship')")
-    public RestResponse ship() {
-        return null;
+    @RequestMapping(value = "shipCheck")
+    public  Map<String,Object> shipCheck(StoreAllotShipForm storeAllotShipForm) {
+        Map<String,Object> map= Maps.newHashMap();
+        if(StringUtils.isNotBlank(storeAllotShipForm.getBoxImeStr())||StringUtils.isNotBlank(storeAllotShipForm.getImeStr())){
+            map=storeAllotService.shipCheck(storeAllotShipForm);
+        }
+        return map;
     }
 
     @RequestMapping(value = "delete")
