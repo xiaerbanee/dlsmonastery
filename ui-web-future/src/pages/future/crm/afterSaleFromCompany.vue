@@ -3,10 +3,10 @@
       <head-tab active="afterSaleFromCompany"></head-tab>
       <el-row>
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleFromCompany.save')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleFromCompany.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleFromCompany.filter')" v-model="formVisible"  size="tiny" class="search-form">
+      <search-dialog :title="$t('afterSaleFromCompany.filter')" @hide="formVisible = false" :show="formVisible" v-model="formVisible"  size="tiny" class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-form-item :label="$t('afterSaleFromCompany.badProductName')" >
             <el-input v-model="formData.badProductName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
@@ -24,7 +24,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleFromCompany.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <div>
         <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
           <el-row>
@@ -87,7 +87,6 @@
                 strict: true,
                 tempProductNames:[],
                 source:function (query, process) {
-                    console.log("111")
                   var that = this;
                   if(that.tempProductNames.indexOf(query)>=0) {
                     process(that.tempProductNames);

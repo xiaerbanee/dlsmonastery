@@ -4,15 +4,15 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="share">{{$t('reportScoreOfficeList.officeRank')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('reportScoreOfficeList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('reportScoreOfficeList.filter')"  v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('reportScoreOfficeList.scoreDate')" :label-width="formLabelWidth">
-                <date-picker v-model="formData.scoreDate"></date-picker>
+                <date-range-picker v-model="formData.scoreDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('reportScoreOfficeList.officeName')" :label-width="formLabelWidth">
                  <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
@@ -37,7 +37,6 @@
         <el-table-column prop="recentMonthSaleQty" :label="$t('reportScoreOfficeList.recentMonthSaleQty')"></el-table-column>
         <el-table-column prop="officePoint" :label="$t('reportScoreOfficeList.point')"></el-table-column>
         <el-table-column prop="monthSaleMoney"  :label="$t('reportScoreOfficeList.monthSaleMoney')"></el-table-column>
-        <el-table-column prop="pointMonthSaleMoney" :label="$t('reportScoreOfficeList.pointMonthSaleMoney')" width="180"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>

@@ -3,11 +3,11 @@
     <head-tab active="goodsOrderShipList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderShipList.filter') }}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{ $t('goodsOrderShipList.filter') }}</el-button>
         <el-button v-permit="'crm:goodsOrderShip:ship'" type="primary" @click="itemShip(null)">{{ $t('goodsOrderShipList.ship') }}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="8">
