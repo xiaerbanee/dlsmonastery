@@ -282,18 +282,21 @@ public class ProductImeService {
         Workbook workbook = new SXSSFWorkbook(10000);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "考核区域"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "机构"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "depotName", "门店名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
         if ("按数量".equals(reportQuery.getExportType())) {
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
         } else if ("按串码".equals(reportQuery.getExportType())) {
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域属性"));
             simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productTypeName", "产品型号"));
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "productName", "产品名称"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "ime", "串码"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "核销人"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "saleDate", "核销时间"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "retailDate", "工厂注册时间"));
         } else if ("按合计".equals(reportQuery.getExportType())) {
-            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "chainName", "连锁体系"));
             List<ProductType> productTypeList = productTypeRepository.findByScoreType(reportQuery.getScoreType());
             for (ProductType productType : productTypeList) {
                 simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "extra", productType.getName(), productType.getName()));

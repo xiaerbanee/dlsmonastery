@@ -24,6 +24,7 @@
         <el-table-column prop="outGroupId" label="财务分组编号"></el-table-column>
         <el-table-column prop="outGroupName" label="财务分组名称"></el-table-column>
         <el-table-column prop="outDate" label="财务同步日期"></el-table-column>
+        <el-table-column prop="depotNameStr" label="OA门店"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
