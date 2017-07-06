@@ -178,7 +178,7 @@
           });
         })
       }else if(action == "mallOrder"){
-        //todo
+        this.$router.push({name:'shopOrder',query:{id:id}})
       }else if(action =="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }else if(action =="delete"){

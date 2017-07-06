@@ -104,7 +104,9 @@
           submitDisabled:false,
           inputForm:{},
           formatId:'',
-          goodsOrder:{},
+          goodsOrder:{
+            goodsOrderDetailDtoList:[],
+          },
           shipResult:{},
           rules: {}
         }
@@ -136,6 +138,16 @@
             this.submitDisabled = false;
           }
           this.shipResult.errorMsg ="";
+
+          for(let item of this.goodsOrder.goodsOrderDetailDtoList) {
+            if(item.hasIme) {
+              item.shipQty = 0;
+              item.leftQty = item.realBillQty - item.shippedQty;
+            } else {
+              item.shipQty = item.realBillQty-item.shippedQty;
+              item.leftQty = 0;
+            }
+          }
           return;
         }
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
