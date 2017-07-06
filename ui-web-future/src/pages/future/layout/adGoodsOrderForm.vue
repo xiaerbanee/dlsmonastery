@@ -58,7 +58,11 @@
       <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderForm.loading')" stripe border >
         <el-table-column  prop="productCode" :label="$t('adGoodsOrderForm.code')" >
           <template scope="scope">
-            <div class="action" v-if="scope.row.productImage !== null" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" @click.native="itemAction(scope.row.productId,'showImage')">{{scope.row.productCode}}</el-button></div>
+            <div class="action" v-if="scope.row.productImage !== null" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" @click="itemAction(scope.row.productImage,'showImage')">{{scope.row.productCode}}</el-button>
+              <el-dialog v-model="dialogVisible" size="tiny">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
+            </div>
             <div v-if="scope.row.productImage === null" v-permit="'crm:adGoodsOrder:view'">{{scope.row.productCode}}</div>
           </template>
         </el-table-column>
@@ -138,6 +142,8 @@
           },
           totalQty: 0,
           totalPrice: 0,
+          dialogImageUrl:'',
+          dialogVisible:false,
         }
       },
       formSubmit(){
@@ -191,9 +197,16 @@
             this.refreshRecentMonthSaleAmount();
           }
         });
-      },  shopChanged(){
+      },shopChanged(){
         this.refreshRecentMonthSaleAmount();
-      } ,
+      },itemAction:function(productImage,action){
+          if(action=="showImage"){
+              this.dialogVisible = true;
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:productImage}}).then((response)=>{
+                this.dialogImageUrl= response.data[0].url;
+              });
+          }
+      },
       refreshRecentMonthSaleAmount(){
         if(util.isBlank(this.inputForm.shopId)){
           this.recentSaleDescription='';
@@ -233,10 +246,6 @@
           return "总订货数要大于0";
         }
         return null;
-      },itemAction: function (id, action) {
-        if (action === "detail") {
-          this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
-        }
       },searchDetail(){
         let val = this.productName;
         if(!val){
