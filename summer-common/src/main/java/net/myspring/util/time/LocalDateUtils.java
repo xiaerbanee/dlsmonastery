@@ -5,6 +5,7 @@ import net.myspring.util.text.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
@@ -27,6 +28,18 @@ public class LocalDateUtils {
         String result = "";
         if(localDate != null) {
             result = localDate.format(DateTimeFormatter.ofPattern(formatter));
+        }
+        return result;
+    }
+
+    public static String format(YearMonth yearMonth) {
+        return format(yearMonth,FORMATTER_MONTH_SINGLE);
+    }
+
+    public static String format(YearMonth yearMonth,String formatter) {
+        String result = "";
+        if(yearMonth != null) {
+            result = yearMonth.format(DateTimeFormatter.ofPattern(formatter));
         }
         return result;
     }
