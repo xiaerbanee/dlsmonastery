@@ -24,10 +24,19 @@ public class CarrierOrderQuery extends BaseQuery{
     private String remarks;
     private String businessIdStr;
     private String status;
+    private boolean isExport;
     private List<String> businessIdList=Lists.newArrayList();
     private List<String> notEqualStatusList=Lists.newArrayList();
     private List<String> notEqualStoreIdList=Lists.newArrayList();
     private List<String> goodsOrderStatusList=Lists.newArrayList();
+
+    public boolean getIsExport() {
+        return isExport;
+    }
+
+    public void setIsExport(boolean export) {
+        isExport = export;
+    }
 
     public String getStatus() {
         return status;

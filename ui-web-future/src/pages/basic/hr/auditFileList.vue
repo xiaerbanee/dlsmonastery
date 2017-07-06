@@ -67,9 +67,9 @@
         <el-table-column prop="memo":label="$t('auditFileList.memo')"></el-table-column>
         <el-table-column :label="$t('auditFileList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" >审核</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action" >详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'">删除</el-button>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" >审核</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action" >详细</el-button></div>
+              <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>
