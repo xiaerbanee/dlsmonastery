@@ -23,6 +23,7 @@ interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPps
 interface OppoPlantSendImeiPpselRepositoryCustom{
     fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto>
     fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
+    fun findListByCreatedDate(dateTimeStart: LocalDate,dateTimeEnd: LocalDate):MutableList<OppoPlantSendImeiPpselDto>
 }
 
 
@@ -58,5 +59,21 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
         paramMap.put("dta",dateTime);
         val simpleJdbcCall= SimpleJdbcCall(jdbcTemplate);
         return simpleJdbcCall.withProcedureName("plantSendImeiPPSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantSendImeiPpsel>
+    }
+
+    override fun findListByCreatedDate(dateTimeStart: LocalDate, dateTimeEnd: LocalDate): MutableList<OppoPlantSendImeiPpselDto> {
+        val map = Maps.newHashMap<String,LocalDate>();
+        map.put("dateTimeStart",dateTimeStart)
+        map.put("dateTimeEnd",dateTimeEnd)
+        return namedParameterJdbcTemplate.query("""
+            SELECT im.*, agent.product_id,agent.lx_product_id
+            FROM
+                oppo_plant_send_imei_ppsel im,
+                oppo_plant_agent_product_sel agent
+            WHERE
+                im.dls_product_id = agent.item_number
+                AND im.created_time >= :dateTimeStart
+                AND im.created_time < :dateTimeEnd
+            """,map,BeanPropertyRowMapper(OppoPlantSendImeiPpselDto::class.java))
     }
 }
