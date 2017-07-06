@@ -9,6 +9,7 @@ import java.math.BigDecimal;
  */
 public class ProductImeReportDto {
     private String id;
+    private String ime;
     private String officeId;
     private String productTypeId;
     private Integer qty;
@@ -16,6 +17,14 @@ public class ProductImeReportDto {
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
     private String productTypeName;
+
+    public String getIme() {
+        return ime;
+    }
+
+    public void setIme(String ime) {
+        this.ime = ime;
+    }
 
     public ProductImeReportDto(){}
 
