@@ -318,9 +318,9 @@ public class GoodsOrderService {
             }
         }
         if (StringUtils.isNotBlank(shop.getDelegateDepotId())) {
-            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
-            DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
-            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
+            DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(shop.getDelegateDepotId());
+            DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
+            KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrderReturn(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
             goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
 
         } else {
