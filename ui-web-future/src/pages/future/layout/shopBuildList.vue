@@ -6,11 +6,11 @@
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchPass')}}</el-button>
         <el-button type="primary" @click="batchBack" icon="check" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.batchBlack')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopBuild:edit'">{{$t('shopBuildList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.filter')}}</el-button>
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopBuild:view'">{{$t('shopBuildList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('shopBuildList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopBuildList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -78,7 +78,7 @@
           <template scope="scope">
             <div class="action" v-permit="'crm:shopBuild:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
-            <div class="action" v-if="scope.row.isEditable&&!scope.row.locked" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
+            <div class="action" v-if="(scope.row.isEditable&&!scope.row.locked)||scope.row.isAuditable" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopBuildList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.isEditable&&!scope.row.locked" v-permit="'crm:shopBuild:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopBuildList.delete')}}</el-button></div>
           </template>
         </el-table-column>

@@ -5,7 +5,7 @@
       <el-row>
         <div style="float:left">
           <el-button type="primary" @click="formSubmit" icon="check">保存</el-button>
-          <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+          <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
         </div>
         <div style="float: left;margin-left: 10px">
           <date-picker v-model="date"></date-picker>
@@ -15,7 +15,7 @@
         </div>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('过滤')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('过滤')" v-model="formVisible"  size="medium" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData"  ref="inputForm" >
           <el-row :gutter="8">
             <el-col :span="12">
@@ -46,7 +46,6 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
-  import util from "../../../utils/util";
   var table = null;
   export default {
     data(){

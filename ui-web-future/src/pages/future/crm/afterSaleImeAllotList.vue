@@ -3,10 +3,10 @@
     <head-tab :active="$t('afterSaleImeAllotList.afterSaleImeAllotList') "></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleImeAllotList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleImeAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleImeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleImeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData"  :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -31,7 +31,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('afterSaleImeAllotList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleImeAllotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('afterSaleImeAllotList.bill')"sortable ></el-table-column>
         <el-table-column prop="afterSale.id" :label="$t('afterSaleImeAllotList.afterSaleBill')" sortable></el-table-column>

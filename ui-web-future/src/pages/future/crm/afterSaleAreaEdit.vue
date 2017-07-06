@@ -3,10 +3,10 @@
     <head-tab active="afterSaleAreaEdit"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit" icon="check" v-permit="'crm:afterSale:areaEdit:edit'">{{$t('afterSaleAreaEdit.save')}}</el-button>
-      <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleAreaEdit.filter')}}</el-button>
+      <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleAreaEdit.filter')}}</el-button>
       <span v-html="searchText"></span>
     </el-row>
-    <el-dialog :title="$t('afterSaleAreaEdit.filter')" v-model="formVisible"  size="tiny" class="search-form">
+    <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleAreaEdit.filter')" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
         <el-form-item :label="$t('afterSaleAreaEdit.badProductName')">
           <product-type-select v-model="formData.productTypeId" ></product-type-select>
@@ -24,7 +24,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="search()">{{$t('afterSaleAreaEdit.sure')}}</el-button>
       </div>
-    </el-dialog>
+    </search-dialog>
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row>

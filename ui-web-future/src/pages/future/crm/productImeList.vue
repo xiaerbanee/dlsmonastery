@@ -20,11 +20,11 @@
         </el-dropdown>
         <el-button type="primary" @click="exportData" v-permit="'crm:productIme:view'">{{$t('productImeList.export')}}</el-button>
         <el-button type="primary" @click="batchQuery"  >{{$t('productImeList.batchQuery')}}</el-button>
-        <el-button type="primary" v-permit="'crm:productIme:view'" @click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
+        <el-button type="primary" v-permit="'crm:productIme:view'"@click="formVisible = true" icon="search">{{$t('productImeList.filter')}}</el-button>
 
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('productImeList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productImeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -57,7 +57,7 @@
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('productImeList.productType')" :label-width="formLabelWidth">
-                <product-select v-model="formData.productId"  @afterInit="setSearchText"></product-select>
+                <product-select v-model="formData.productId" hasIme=true  @afterInit="setSearchText"></product-select>
               </el-form-item>
               <el-form-item :label="$t('productImeList.createdDate')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>

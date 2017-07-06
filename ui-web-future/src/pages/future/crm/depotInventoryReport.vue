@@ -3,7 +3,7 @@
     <head-tab active="depotInventoryReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <el-dropdown  @command="exportData">
           <el-button type="primary">导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
           <el-dropdown-menu slot="dropdown">
@@ -15,7 +15,7 @@
         <el-button type="primary" @click="saleReportGrid()" icon="document">明细</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">

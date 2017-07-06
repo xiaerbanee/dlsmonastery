@@ -5,10 +5,10 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:pricesystemChange:edit'">{{$t('pricesystemChangeList.add')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:pricesystemChange:edit'">{{$t('pricesystemChangeList.batchPass')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:pricesystemChange:view'">{{$t('pricesystemChangeList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:pricesystemChange:view'">{{$t('pricesystemChangeList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('pricesystemChangeList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('pricesystemChangeList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">

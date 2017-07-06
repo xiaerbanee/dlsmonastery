@@ -3,10 +3,10 @@
     <head-tab active="storeInventoryReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:bank:view'">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -26,8 +26,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="storeDetail" stripe border>
-        <el-table-column  prop="depotName" label="仓库" ></el-table-column>
-        <el-table-column prop="qty" label="数量"  sortable></el-table-column>
+        <el-table-column  prop="depotName" label="仓库" sortable></el-table-column>
+        <el-table-column prop="qty" label="数量" ></el-table-column>
         <el-table-column prop="percentage" label="占比(%)"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>

@@ -3,11 +3,11 @@
     <head-tab active="clientList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('clientList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('clientList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus">{{$t('depotList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-form-item :label="$t('clientList.name')" :label-width="formLabelWidth">
             <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('clientList.likeSearch')"></el-input>

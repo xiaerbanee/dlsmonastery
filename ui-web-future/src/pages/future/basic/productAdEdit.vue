@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="formSubmit()" icon="check">{{$t('productAdEdit.save')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('productAdEdit.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('productAdEdit.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('productAdEdit.filter')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productAdEdit.filter')" v-model="formVisible"  size="small" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData"  ref="inputForm" >
           <el-row :gutter="8">
             <el-col :span="12">
@@ -109,7 +109,7 @@
               productList:[],
             },
             formLabelWidth: '120px',
-            formVisible: false
+            formVisible: false,
           };
         },
       search() {

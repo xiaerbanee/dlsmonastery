@@ -91,10 +91,10 @@ public class SalOutStockManager {
                     entityDto.setPrice(detail.getPrice());
                     entityDto.setEntryNote(goodsOrder.getRemarks());
                     entityDtoList.add(entityDto);
-                    salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-                    salOutStockDtoList.add(salOutStockDto);
                 }
             }
+            salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+            salOutStockDtoList.add(salOutStockDto);
             return cloudClient.synSalOutStock(salOutStockDtoList).get(0);
         }
         return null;

@@ -124,7 +124,7 @@ public class StkTransferDirectManager {
         List<String> fromStoreIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getFromStoreId).collect(Collectors.toList());
         Map<String, DepotStore> fromDepotStoreIdMap = depotStoreRepository.findByIds(fromStoreIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
         List<String> toStoreIdList = afterSaleStoreAllotFormList.stream().map(AfterSaleStoreAllotForm::getToStoreId).collect(Collectors.toList());
-        Map<String, DepotStore> toDepotStoreIdMap = depotStoreRepository.findByIds(toStoreIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
+        Map<String, DepotStore> toDepotStoreMap = depotStoreRepository.findByIds(toStoreIdList).stream().collect(Collectors.toMap(DepotStore::getId, DepotStore->DepotStore));
         for (AfterSaleStoreAllotForm afterSaleStoreAllot : afterSaleStoreAllotFormList) {
             if (afterSaleStoreAllot.getQty() != null && afterSaleStoreAllot.getQty() > 0) {
                 StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
@@ -141,7 +141,7 @@ public class StkTransferDirectManager {
                 } else {
                     throw new ServiceException(fromDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
                 }
-                DepotStore toDepotStore = toDepotStoreIdMap.get(afterSaleStoreAllot.getFromStoreId());
+                DepotStore toDepotStore = toDepotStoreMap.get(afterSaleStoreAllot.getToStoreId());
                 if (toDepotStore.getOutCode() != null) {
                     entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
                 } else {

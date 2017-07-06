@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
         <el-dropdown @command="handleCommand">
           <el-button type="primary">
             {{$t('goodsOrderList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
@@ -19,7 +19,7 @@
         </el-dropdown>
         <span  v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="8">

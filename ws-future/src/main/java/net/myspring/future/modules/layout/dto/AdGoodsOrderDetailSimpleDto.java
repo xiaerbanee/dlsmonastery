@@ -11,6 +11,7 @@ public class AdGoodsOrderDetailSimpleDto extends IdDto<AdGoodsOrderDetail> {
     private String productId;
     private String productOutId;
     private String productName;
+    private String productImage;
     private String productCode;
     private String productRemarks;
     private BigDecimal productPrice2;
@@ -19,6 +20,14 @@ public class AdGoodsOrderDetailSimpleDto extends IdDto<AdGoodsOrderDetail> {
     private Integer billQty;
     private Integer cloudQty;
     private Integer shippedQty;
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
 
     public String getProductOutId() {
         return productOutId;
