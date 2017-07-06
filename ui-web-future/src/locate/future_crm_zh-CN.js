@@ -328,6 +328,7 @@ export default {
     save: "保存",
     remarks:"备注",
     toKingdeeSynList:'查看同步信息',
+    transferType:'转账类型',
   },
   demoPhoneForm: {
     demoPhoneForm: "演示用机编辑",

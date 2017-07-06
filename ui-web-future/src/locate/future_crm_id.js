@@ -259,6 +259,7 @@ export default {
     save: "simpan",
     remarks: "备注",
     toKingdeeSynList:'查看同步信息',
+    transferType:'转账类型',
   },
   bankInForm: {
     bankInForm: "tambah kredit penjualan",
