@@ -28,7 +28,7 @@
           </el-col>
           <el-col :span="16" :offset="2">
             <el-form-item  :label="$t('auditFileForm.content')"  prop="content">
-                <quill-editor :content="inputForm.content"></quill-editor>
+                <quill-editor v-model="inputForm.content"></quill-editor>
             </el-form-item>
           </el-col>
         </el-row>
@@ -65,9 +65,7 @@
         this.inputForm.attachment = util.getFolderFileIdStr(this.fileList);
           if (valid) {
             axios.post('/api/basic/hr/auditFile/save', qs.stringify(this.inputForm)).then((response)=> {
-              if(response.data.message){
-                this.$message(response.data.message);
-              }
+              this.$message(response.data.message);
               if(!this.isCreate){
                 this.submitDisabled = false;
                 this.$router.push({name:'auditFileList',query:util.getQuery("auditFileList")})

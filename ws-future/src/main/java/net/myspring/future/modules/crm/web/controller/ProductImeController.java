@@ -69,8 +69,6 @@ public class ProductImeController {
     private DepotShopService depotShopService;
     @Autowired
     private OfficeClient officeClient;
-    @Autowired
-    private DepotManager depotManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page list(Pageable pageable,ProductImeQuery productImeQuery){

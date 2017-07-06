@@ -90,6 +90,9 @@ class CarrierOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             and t1.goods_order_id=t3.id
             and t3.shop_id =t2.id
         """)
+        if (carrierOrderQuery.isExport) {
+            sb.append("""  and t3.ship_date is not null  """)
+        }
         if (StringUtils.isNotBlank(carrierOrderQuery.businessId)) {
             sb.append("""  and t3.business_id=:businessId  """)
         }

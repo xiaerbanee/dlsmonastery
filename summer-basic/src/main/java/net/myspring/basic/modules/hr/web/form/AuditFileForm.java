@@ -7,6 +7,8 @@ import net.myspring.basic.modules.hr.domain.AuditFile;
 import net.myspring.common.form.BaseForm;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,6 +116,9 @@ public class AuditFileForm extends BaseForm<AuditFile> {
     }
 
     public String getContent() {
+        if(StringUtils.isNotBlank(content)){
+            this.content= HtmlUtils.htmlUnescape(content);
+        }
         return content;
     }
 

@@ -131,7 +131,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t3.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
-            sb.append(""" select t3.office_id,t1.id """)
+            sb.append(""" select t3.office_id,t1.id,t1.ime """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
@@ -198,7 +198,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t6.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeReportQuery.officeId) && productImeReportQuery.sumType == "区域") {
-            sb.append(""" select t6.office_id,t1.id """)
+            sb.append(""" select t6.office_id,t1.id ,t1.ime""")
         }
         if (StringUtils.isNotBlank(productImeReportQuery.sumType) && productImeReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty' ,t5.name as 'productTypeName'""")
@@ -270,7 +270,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
-            sb.append(""" select t2.office_id,t1.id """)
+            sb.append(""" select t2.office_id,t1.id ,t1.ime""")
         }
         if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" select t5.id as 'productTypeId',count(t1.id) as 'qty',t5.name as 'productTypeName' """)
@@ -330,7 +330,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(""" select t2.area_id as 'officeId',count(t1.id) as 'qty' """)
         }
         if (StringUtils.isNotBlank(productImeSaleReportQuery.officeId) && productImeSaleReportQuery.sumType == "区域") {
-            sb.append(""" select t2.office_id,t1.id """)
+            sb.append(""" select t2.office_id,t1.id,t1.ime """)
         }
         if (StringUtils.isNotBlank(productImeSaleReportQuery.sumType) && productImeSaleReportQuery.sumType == "型号") {
             sb.append(""" select t4.id  as 'productTypeId',count(t1.id) as 'qty',t4.name as 'productTypeName' """)
@@ -492,7 +492,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND t1.product_id =  product.id
                 AND product.enabled =  1
                 AND t1.ime in (:imeList)
-            ) validProductIme left join crm_depot retailDepot on validProductIme.retail_depot_id=retailDepot.id
+            ) validProductIme left join crm_depot retailDepot on validProductIme.retail_shop_id=retailDepot.id
             LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
             LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
                 """, params, BeanPropertyRowMapper(ProductImeDto::class.java))
