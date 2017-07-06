@@ -91,7 +91,7 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
                 LEFT JOIN crm_depot shop ON t1.shop_id = shop.id
                 LEFT JOIN crm_depot_shop depotShop ON shop.depot_shop_id = depotShop.id
                 LEFT JOIN crm_express_order expressOrder ON t1.express_order_id = expressOrder.id
-                LEFT JOIN crm_shop_deposit deposit ON shop.id = deposit.shop_id
+                LEFT JOIN crm_shop_deposit deposit ON shop.id = deposit.shop_id AND deposit.locked = 0 AND deposit.enabled = 1 AND deposit.type='形象保证金'
             WHERE
                 t1.enabled = 1
 
@@ -103,7 +103,7 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             sb.append("""  and t1.created_date  >= :createdDateStart """)
         }
         if (adGoodsOrderQuery.createdDateEnd != null) {
-            sb.append("""  and t1.created_date  < :createdDateStart """)
+            sb.append("""  and t1.created_date  < :createdDateEnd """)
         }
         if (StringUtils.isNotBlank(adGoodsOrderQuery.billType)) {
             sb.append("""  and t1.bill_type = :billType """)
@@ -118,9 +118,6 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
             sb.append("""  and t1.parent_id = :parentId """)
         }
         if(adGoodsOrderQuery.hasDeposit!=null){
-            sb.append(""" and deposit.enabled = 1
-                          and deposit.locked = 0
-                          and deposit.type = '形象保证金' """)
             if(adGoodsOrderQuery.hasDeposit){
                 sb.append(""" and deposit.left_amount > 0 """)
             }else{
@@ -151,7 +148,6 @@ class AdGoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         if (CollectionUtil.isNotEmpty(adGoodsOrderQuery.officeIdList)) {
             sb.append("""  and shop.office_id in (:officeIdList)  """)
         }
-
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(adGoodsOrderQuery)

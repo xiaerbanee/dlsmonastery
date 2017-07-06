@@ -56,7 +56,12 @@
       </el-form>
       <el-input v-model="productName" @input="searchDetail" :placeholder="$t('adGoodsOrderForm.inputTwoKey')" style="width:200px;"></el-input>
       <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderForm.loading')" stripe border >
-        <el-table-column  prop="productCode" :label="$t('adGoodsOrderForm.code')" ></el-table-column>
+        <el-table-column  prop="productCode" :label="$t('adGoodsOrderForm.code')" >
+          <template scope="scope">
+            <div class="action" v-if="scope.row.productImage !== null" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" @click.native="itemAction(scope.row.productId,'showImage')">{{scope.row.productCode}}</el-button></div>
+            <div v-if="scope.row.productImage === null" v-permit="'crm:adGoodsOrder:view'">{{scope.row.productCode}}</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="qty" :label="$t('adGoodsOrderForm.qty')">
           <template scope="scope">
             <div v-if="afterBill">{{scope.row.qty}}</div>
@@ -228,19 +233,28 @@
           return "总订货数要大于0";
         }
         return null;
-      },
-      searchDetail(){
+      },itemAction: function (id, action) {
+        if (action === "detail") {
+          this.$router.push({name: 'adGoodsOrderDetail', query: {id: id, action: "detail"}})
+        }
+      },searchDetail(){
         let val = this.productName;
+        if(!val){
+          this.filterAdGoodsOrderDetailList = this.inputForm.adGoodsOrderDetailList;
+          return;
+        }
         let tempList = [];
-        let tempPostList = [];
         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
           if (util.isNotBlank(adGoodsOrderDetail.qty)) {
             tempList.push(adGoodsOrderDetail)
-          }else if (util.isNotBlank(val)&&(util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val))) {
-            tempPostList.push(adGoodsOrderDetail)
           }
         }
-        this.filterAdGoodsOrderDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
+        for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
+          if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.qty)) {
+            tempList.push(adGoodsOrderDetail)
+          }
+        }
+        this.filterAdGoodsOrderDetailList = tempList;
       }, refreshSummary(){
         let tmpTotalQty = 0;
         let tmpTotalPrice = 0;
@@ -269,7 +283,7 @@
 
         axios.get('/api/ws/future/layout/adGoodsOrder/getForm').then((response) => {
           this.inputForm = response.data;
-          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {adGoodsOrderId: this.$route.query.id, includeNotAllowOrderProduct: util.isPermit("crm:adGoodsOrder:bill")}}).then((response) => {
+          axios.get('/api/ws/future/layout/adGoodsOrder/findDetailListForNewOrEdit', {params: {adGoodsOrderId: this.$route.query.id, includeNotAllowOrderProduct: false}}).then((response) => {
             this.setAdGoodsOrderDetailList(response.data);
           });
           if(!this.isCreate){

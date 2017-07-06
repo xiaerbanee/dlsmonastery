@@ -162,11 +162,10 @@ public class ShopBuildService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "店名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "fixtureType", "装修类别"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "装修规格说明"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "oldContents", "原始尺寸"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "newContents", "最新尺寸"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "processStatus", "状态"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "content", "装修规格说明"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "lastModifiedDate", "更新日期"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "accountNameAndAccountPhone", "项目对接人"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
