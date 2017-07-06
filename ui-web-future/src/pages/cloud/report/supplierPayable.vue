@@ -18,7 +18,7 @@
               </el-form-item>
               <el-form-item label="供应商名称" :label-width="formLabelWidth">
                 <el-select v-model="formData.supplierIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
-                  <el-option v-for="item in suppliers" :key="item.fsupplierid" :label="item.fname" :value="item.fsupplierid"></el-option>
+                  <el-option v-for="item in suppliers" :key="item.fsupplierId" :label="item.fname" :value="item.fsupplierId"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -82,7 +82,7 @@
       return {
         page:{},
         summary:[],
-        suppliers:{},
+        suppliers:[],
         detail:[],
         formData: {
           extra:{}
@@ -165,6 +165,7 @@
           if (query !== '') {
             this.remoteLoading = true;
             axios.get('/api/global/cloud/kingdee/bdSupplier/findByNameLike',{params:{name:query}}).then((response)=>{
+                console.log(response.data)
               this.suppliers = response.data;
               this.remoteLoading = false;
             })
