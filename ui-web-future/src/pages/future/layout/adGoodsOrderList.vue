@@ -4,12 +4,13 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adGoodsOrder:edit'">{{$t('adGoodsOrderList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
         <el-button type="primary" @click="itemDetailList"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.itemDetailList')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false"
+         :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="12">
             <el-col :span="12">
@@ -119,6 +120,7 @@
         formData:{
             extra:{},
         },
+        show:false,
         initPromise:{},
         formVisible: false,
         pageHeight:600,

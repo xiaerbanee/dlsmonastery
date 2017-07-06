@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'api:carrierProduct:edit'">{{$t('carrierProductList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'api:carrierProduct:view'">{{$t('carrierProductList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'api:carrierProduct:view'">{{$t('carrierProductList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('carrierShopList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('carrierShopList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">

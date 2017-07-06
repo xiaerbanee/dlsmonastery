@@ -3,12 +3,12 @@
     <head-tab active="productMonthPriceSum"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
         <el-button type="primary" @click="  " icon="upload" >导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
 
-     <el-dialog :title="$t('productMonthPriceSum.filter')"  v-model="formVisible" size="tiny" class="search-form">
+     <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('productMonthPriceSum.filter')"  v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">
@@ -31,7 +31,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')" stripe border>
         <el-table-column prop="" label="办事处" ></el-table-column>

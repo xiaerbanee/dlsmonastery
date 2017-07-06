@@ -4,11 +4,11 @@
     <div>
       <el-row>
         <el-button type="primary" @click="productEdit" icon="edit" v-permit="'crm:product:edit'">{{$t('productList.productEdit')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:product:view'">{{$t('productList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:product:view'">{{$t('productList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('productList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('productList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="8">
             <el-col :span="12">

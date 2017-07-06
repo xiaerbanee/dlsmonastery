@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  >{{$t('officeRuleList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('officeRuleList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('officeRuleList.filter')}}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('officeRuleList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('officeRuleList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -56,7 +56,7 @@
         },
         initPromise:{},
         formLabelWidth: '120px',
-        formVisible: false
+        formVisible: false,
       };
     },
     methods: {

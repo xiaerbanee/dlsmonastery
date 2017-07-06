@@ -5,11 +5,11 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" >添加基础属性</el-button>
         <el-button type="primary" @click="itemAddDepot" icon="plus" >添加业务属性</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
         <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyTripList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -74,7 +74,7 @@
           <el-button type="primary" @click="search()">过滤</el-button>
         </div>
       </search-dialog>
-      <search-dialog title="过滤" v-model="synArea"  size="tiny" class="search-form" z-index="1500">
+      <search-dialog :show="synArea" @hide="synArea=false" title="过滤" v-model="synArea"  size="tiny" class="search-form" z-index="1500">
         <el-form :model="formData">
           <el-form-item label="门店名称" :label-width="formLabelWidth">
             <el-input v-model="synData.depotName" auto-complete="off"></el-input>

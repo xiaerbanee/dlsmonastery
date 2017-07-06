@@ -198,7 +198,6 @@ export default {
       afterSaleEditForm: "formulir service center",
       afterSaleForm: "formulir service center",
       afterSaleFromCompany: "gudang barang bagus",
-      afterSaleImeAllotList: "daftar alokasi",
       afterSaleList: "tabel service center",
       afterSaleProductAllotList: "service center",
       afterSaleStoreAllotList: "service center",

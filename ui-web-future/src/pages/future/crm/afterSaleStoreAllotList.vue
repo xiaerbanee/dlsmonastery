@@ -3,10 +3,10 @@
     <head-tab active="afterSaleStoreAllotList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤或导出</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('afterSaleStoreAllotList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleStoreAllotList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">

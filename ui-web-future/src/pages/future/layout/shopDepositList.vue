@@ -5,11 +5,11 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">{{$t('shopDepositList.add')}}</el-button>
         <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:shopDeposit:edit'">批量添加</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.filter')}}</el-button>
         <el-button type="primary" @click="exportLatest"  v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.exportLatest')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">
