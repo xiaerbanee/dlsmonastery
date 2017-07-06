@@ -284,6 +284,7 @@ export default {
     prerequisiteMessage: "Informasi yang diperlukan",
     inputLegalValue: "silahkan masukkan angka yang valid,",
     prerequisiteAndPositiveNumberMessage: "请输入一个大于0的数值",
+    transferType: "转账类型",
   },
   bankInList: {
     bankInList: "kredit penjualan",
