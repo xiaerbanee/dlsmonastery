@@ -58,7 +58,7 @@
         </div>
       </search-dialog>
       <div>
-      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="nextLevel" stripe border>
+      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-dblclick="nextLevel" stripe border>
         <el-table-column  prop="depotName" label="门店" sortable width="300" v-if="nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
