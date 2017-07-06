@@ -116,6 +116,11 @@ public class ProductImeController {
         return productImeService.productImeReport(productImeSaleReportQuery);
     }
 
+    @RequestMapping(value = "getProductImeReportDetail")
+    public List<ProductImeDto> getProductImeReportDetail(ReportQuery productImeSaleReportQuery){
+        return productImeService.getProductImeReportDetail(productImeSaleReportQuery);
+    }
+
     @RequestMapping(value = "getReportQuery")
     public ReportQuery getReportQuery(ReportQuery reportQuery){
         reportQuery.getExtra().put("sumTypeList",SumTypeEnum.getList());

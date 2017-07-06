@@ -248,6 +248,7 @@ export default {
       goodsOrderBill: "货品订货开单",
       goodsOrderDetail: "货品订货详细",
       goodsOrderForm: "货品订货编辑",
+      goodsOrderBatchAdd: "货品批量订货",
       goodsOrderList: "货品订货",
       goodsOrderImeList: "货品订货串码列表",
       goodsOrderShip: "货品订货发货",
