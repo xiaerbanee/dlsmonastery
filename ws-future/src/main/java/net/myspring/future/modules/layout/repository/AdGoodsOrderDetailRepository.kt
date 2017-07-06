@@ -325,6 +325,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
           t1.name productName,
           t1.price2 productPrice2,
           t1.remarks productRemarks,
+          t1.image productImage,
           NULL qty
         FROM
           crm_product t1
