@@ -165,7 +165,6 @@
           if (query !== '') {
             this.remoteLoading = true;
             axios.get('/api/global/cloud/kingdee/bdSupplier/findByNameLike',{params:{name:query}}).then((response)=>{
-                console.log(response.data)
               this.suppliers = response.data;
               this.remoteLoading = false;
             })
