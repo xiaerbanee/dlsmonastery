@@ -1,17 +1,13 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
-import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
-import net.myspring.common.enums.SettleTypeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
-import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.ArReceiveBillManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
@@ -22,6 +18,8 @@ import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
+import net.myspring.future.modules.crm.web.form.BankInBatchDetailForm;
+import net.myspring.future.modules.crm.web.form.BankInBatchForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -32,6 +30,7 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -43,7 +42,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -57,6 +55,8 @@ public class BankInService {
     private DepotRepository depotRepository;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private BankRepository bankRepository;
     @Autowired
     private ArReceiveBillManager arReceiveBillManager;
     @Autowired
@@ -164,5 +164,28 @@ public class BankInService {
         BankInDto bankInDto = bankInRepository.findDto(id);
         cacheUtils.initCacheInput(bankInDto);
         return bankInDto;
+    }
+
+    @Transactional
+    public void batchAdd(BankInBatchForm bankInBatchForm) {
+        for(BankInBatchDetailForm bankInBatchDetailForm : bankInBatchForm.getBankInBatchDetailFormList()){
+            Depot depot = depotRepository.findByEnabledIsTrueAndName(bankInBatchDetailForm.getShopName());
+            if(depot == null || StringUtils.isBlank(depot.getClientId())){
+                throw new ServiceException("门店："+bankInBatchDetailForm.getShopName()+"不存在，或者未绑定财务门店");
+            }
+            Bank bank = bankRepository.findByName(bankInBatchDetailForm.getBankName());
+            if(bank == null){
+                throw new ServiceException("银行："+bankInBatchDetailForm.getBankName()+"不存在");
+            }
+            BankInForm bankInForm = new BankInForm();
+            bankInForm.setShopId(depot.getId());
+            bankInForm.setBankId(bank.getId());
+            bankInForm.setAmount(bankInBatchDetailForm.getAmount());
+            bankInForm.setInputDate(bankInBatchDetailForm.getInputDate());
+            bankInForm.setType(bankInBatchDetailForm.getType());
+            bankInForm.setRemarks(bankInBatchDetailForm.getRemarks());
+
+            save(bankInForm);
+        }
     }
 }

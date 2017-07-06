@@ -34,7 +34,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
     """)
     fun findAllEnabled(): MutableList<Bank>
 
-    fun findByName(name: String): Bank
+    fun findByName(name: String): Bank?
 
     fun findByNameContaining(name: String): MutableList<Bank>
 

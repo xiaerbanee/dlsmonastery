@@ -52,9 +52,13 @@
     </div>
   </div>
 </template>
+<style>
+  @import "~handsontable/dist/handsontable.full.css";
+</style>
 <script>
-  import boolSelect from 'components/common/bool-select'
-  import productTypeSelect from 'components/future/product-type-select'
+  import Handsontable from 'handsontable/dist/handsontable.full.js';
+  import boolSelect from 'components/common/bool-select';
+  import productTypeSelect from 'components/future/product-type-select';
   var table = null;
 
   export default {

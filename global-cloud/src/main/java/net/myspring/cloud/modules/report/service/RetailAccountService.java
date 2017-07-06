@@ -12,6 +12,8 @@ import net.myspring.cloud.modules.kingdee.repository.GlcxViewRepository;
 import net.myspring.cloud.modules.kingdee.repository.SalOutStockRepository;
 import net.myspring.cloud.modules.kingdee.repository.SalReturnStockRepository;
 import net.myspring.cloud.modules.report.dto.RetailAccountDto;
+import net.myspring.cloud.modules.report.manager.RetailAccountManager;
+import net.myspring.cloud.modules.report.repository.RetailAccountRepository;
 import net.myspring.cloud.modules.report.web.query.RetailAccountQuery;
 import net.myspring.common.constant.CharConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +42,11 @@ public class RetailAccountService {
     @Autowired
     private GlcxViewRepository glcxViewRepository;
     @Autowired
-    private SalOutStockRepository salOutStockRepository;
-    @Autowired
-    private SalReturnStockRepository salReturnStockRepository;
+    private RetailAccountRepository retailAccountRepository;
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
-
-    //"合计"部门
-    public BdDepartment getAddDepartment() {
-        BdDepartment department = new BdDepartment();
-        department.setFNumber(DOUBLE_ZERO);
-        department.setFFullName(TOTAL_DEPARTMENT);
-        return department;
-    }
+    @Autowired
+    private RetailAccountManager retailAccountManager;
 
     //页面导出纵向显示数据
     public List<RetailAccountDto> getRetailReport2(RetailAccountQuery retailAccountQuery){
@@ -65,14 +59,15 @@ public class RetailAccountService {
         retailOrWholeSaleReports.addAll(findSumAmountAndSumPercentForDepartments(start, end));
         return retailOrWholeSaleReports;
     }
+
     //页面显示数据
     public List<List<Object>> getRetailReport(RetailAccountQuery retailAccountQuery) {
         List<List<Object>> retailReportModels = Lists.newArrayList();
         YearMonth start = retailAccountQuery.getMonthStart();
         YearMonth end = retailAccountQuery.getMonthEnd();
         List<BdDepartment> departmentList = Lists.newArrayList();
-        departmentList.add(getAddDepartment());
-        departmentList.addAll(bdDepartmentRepository.findAll());
+        departmentList.add(retailAccountManager.getAddDepartment());
+        departmentList.addAll(bdDepartmentRepository.findAllIncludeForbid());
         List<RetailAccountDto> itemDataList = findAmountAndPercentForAddDepartment(retailAccountQuery);
         itemDataList.addAll(findAmountAndPercentForDepartments(start, end));
         Map<String, RetailAccountDto> retailReportItemMap = Maps.newHashMap();
@@ -126,7 +121,6 @@ public class RetailAccountService {
         return retailReportModels;
     }
 
-
     //"合计" (金额+占比)
     private List<RetailAccountDto> findAmountAndPercentForAddDepartment(RetailAccountQuery retailAccountQuery) {
         List<RetailAccountDto> itemDataList = Lists.newArrayList();
@@ -144,9 +138,8 @@ public class RetailAccountService {
             List<RetailAccountDto> costForAddDepartmentList = glcxViewRepository.findEntityByPeriodForTotalDepartment(year,month,accNameForCostList,fyNumForCostList);
 
             List<RetailAccountDto> managementFeeForAddDepartmentList = glcxViewRepository.findEntityByPeriodForTotalDepartment(year,month,"管理费用");
-            List<RetailAccountDto> xsckdQtyForAddDepartmentList =  salOutStockRepository.findByPeriodForTotalDepartment(year, month);
-            List<RetailAccountDto> xsthdQtyForAddDepartmentList =  salReturnStockRepository.findByPeriodForTotalDepartment(year, month);
-            itemDataList.addAll(getSalesProductQtyList(xsckdQtyForAddDepartmentList,xsthdQtyForAddDepartmentList));
+            //销售数量
+            itemDataList.addAll(retailAccountRepository.findSalesMobileQtyByPeriodForTotalDepartment(year,month));
             itemDataList.addAll(getSubjectFeeEntityItem(incomeForAddDepartmentList,costForAddDepartmentList,managementFeeForAddDepartmentList));
             dateStart = dateStart.plusMonths(1);
         }
@@ -167,10 +160,8 @@ public class RetailAccountService {
         List<RetailAccountDto> costForAddDepartmentList = glcxViewRepository.findEntityBySumPeriodForTotalDepartment(startDate,endDate,accNameForCostList,fyNumForCostList);
 
         List<RetailAccountDto> managementFeeForAddDepartmentList = glcxViewRepository.findEntityBySumPeriodForTotalDepartment(startDate,endDate,"管理费用");
-        List<RetailAccountDto> xsckdQtyForAddDepartmentList =  salOutStockRepository.findBySumPeriodForTotalDepartment(startDate, endDate);
-        List<RetailAccountDto> xsthdQtyForAddDepartmentList =  salReturnStockRepository.findBySumPeriodForTotalDepartment(startDate, endDate);
-
-        List<RetailAccountDto> list = Lists.newArrayList(getSalesProductQtyList(xsckdQtyForAddDepartmentList,xsthdQtyForAddDepartmentList));
+        //销售数量
+        List<RetailAccountDto> list = retailAccountRepository.findSalesMobileQtyBySumPeriodForTotalDepartment(startDate,endDate);
         list.addAll(getSubjectFeeEntityItem(incomeForAddDepartmentList,costForAddDepartmentList,managementFeeForAddDepartmentList));
         return list;
     }
@@ -190,9 +181,8 @@ public class RetailAccountService {
             List<RetailAccountDto> costList = glcxViewRepository.findEntityByPeriod(year,month,accNameForCostList,fyNumForCostList);
 
             List<RetailAccountDto> managementFeeList = glcxViewRepository.findEntityByPeriod(year,month,"管理费用");
-            List<RetailAccountDto> xsckdQuantity =  salOutStockRepository.findByPeriod(year, month);
-            List<RetailAccountDto> xsthdQuantity =  salReturnStockRepository.findByPeriod(year, month);
-            itemDataList.addAll(getSalesProductQtyList(xsckdQuantity,xsthdQuantity));
+            //销售数量
+            itemDataList.addAll(retailAccountRepository.findSalesMobileQtyByPeriod(year,month));
             itemDataList.addAll(getSubjectFeeEntityItem(incomeList,costList,managementFeeList));
             dateStart = dateStart.plusMonths(1);
         }
@@ -212,9 +202,8 @@ public class RetailAccountService {
         List<RetailAccountDto> costList = glcxViewRepository.findEntityByPeriod(startDate,endDate,accNameForCostList,fyNumForCostList);
 
         List<RetailAccountDto> managementFeeList = glcxViewRepository.findEntityBySumPeriod(startDate,endDate,"管理费用");
-        List<RetailAccountDto> xsckdQuantity =  salOutStockRepository.findBySumPeriod(startDate, endDate);
-        List<RetailAccountDto> xsthdQuantity =  salReturnStockRepository.findBySumPeriod(startDate, endDate);
-        List<RetailAccountDto> list = Lists.newArrayList(getSalesProductQtyList(xsckdQuantity,xsthdQuantity));
+        //销售数量
+        List<RetailAccountDto> list = retailAccountRepository.findSalesMobileQtyBySumPeriod(startDate, endDate);
         list.addAll(getSubjectFeeEntityItem(incomeList, costList,managementFeeList));
         return list;
     }
@@ -262,53 +251,6 @@ public class RetailAccountService {
         List<RetailAccountDto> netProfitForSumList = getNetProfitForSumList(netProfitForFirstList,netProfitForSecondList);
         itemDataList.addAll(netProfitForSumList);
 
-        return itemDataList;
-    }
-    /**
-     * 销售数量
-     */
-    private List<RetailAccountDto> getSalesProductQtyList(List<RetailAccountDto> xsckdQtyList, List<RetailAccountDto> xsthdQtyList){
-        List<RetailAccountDto> itemDataList = Lists.newArrayList();
-        List<String> deptNumList = xsckdQtyList.stream().map(RetailAccountDto::getDeptNum).collect(Collectors.toList());
-        deptNumList.addAll(xsthdQtyList.stream().map(RetailAccountDto::getDeptNum).collect(Collectors.toList()));
-        HashSet<String> deptNumSet = new HashSet<String>(deptNumList);
-        for(String  deptNum : deptNumSet) {
-            boolean flag = true;
-            boolean flag2 = true;
-            BigDecimal qty = BigDecimal.ZERO;
-            RetailAccountDto tempItemData = new RetailAccountDto();
-            tempItemData.setFyName(RetailAccountReportEnum.sales_mobile_qty.getFyName());
-            tempItemData.setFyNum(RetailAccountReportEnum.sales_mobile_qty.getFyNum());
-            tempItemData.setAccName(RetailAccountReportEnum.sales_mobile_qty.getAccName());
-            for (RetailAccountDto xsthd : xsthdQtyList) {
-                if (xsthd.getDeptNum().equals(deptNum)) {
-                    flag2 = false;
-                    tempItemData.setYear(xsthd.getYear());
-                    tempItemData.setMonth(xsthd.getMonth());
-                    tempItemData.setDeptNum(xsthd.getDeptNum());
-                    tempItemData.setDeptName(xsthd.getDeptName());
-                    qty = xsthd.getAmount();
-                    break;
-                }
-            }
-            for (RetailAccountDto xsckd : xsckdQtyList) {
-                if (xsckd.getDeptNum().equals(deptNum)) {
-                    flag = false;
-                    if (flag2) {
-                        tempItemData.setYear(xsckd.getYear());
-                        tempItemData.setMonth(xsckd.getMonth());
-                        tempItemData.setDeptNum(xsckd.getDeptNum());
-                        tempItemData.setDeptName(xsckd.getDeptName());
-                    }
-                    qty = xsckd.getAmount().subtract(qty);
-                }
-            }
-            if (flag) {
-                qty = BigDecimal.ZERO.subtract(qty);
-            }
-            tempItemData.setAmount(qty);
-            itemDataList.add(tempItemData);
-        }
         return itemDataList;
     }
     /**

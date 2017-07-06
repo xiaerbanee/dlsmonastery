@@ -28,6 +28,10 @@
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
+            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='audit'">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              </el-upload>
+            </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.pass')" prop="pass" v-if="action=='audit'">
               <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
             </el-form-item>

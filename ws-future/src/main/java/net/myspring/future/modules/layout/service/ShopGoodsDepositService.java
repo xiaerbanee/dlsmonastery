@@ -146,13 +146,31 @@ public class ShopGoodsDepositService {
             throw new ServiceException(String.format("订金（门店：%s，金额：%.2f）已经同步金蝶，outCode为 %s ；", shopGoodsDepositDto.getShopName(), shopGoodsDepositDto.getAmount(), shopGoodsDepositDto.getOutCode()) );
         }
 
-        //TODO 同步金蝶
         ShopGoodsDeposit  shopGoodsDeposit = shopGoodsDepositRepository.findOne(id);
         shopGoodsDeposit.setStatus(ShopGoodsDepositStatusEnum.已通过.name());
         shopGoodsDeposit.setLocked(true);
         shopGoodsDeposit.setBillDate(LocalDateTime.now());
-
         shopGoodsDepositRepository.save(shopGoodsDeposit);
+
+        if(StringUtils.isBlank(shopGoodsDeposit.getOutCode())){
+            syn(shopGoodsDeposit);
+        }
+    }
+
+    private void syn(ShopGoodsDeposit shopGoodsDeposit) {
+        //TODO 同步金蝶
+        String otherTypes="其他应付款-订货会订金";
+//        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType())&&ShopGoodsDeposit.OutBillType.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
+//            K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.CN_JOURNAL.name(),shopGoodsDeposit.getBankJournal(otherTypes),shopGoodsDeposit.getId(),shopGoodsDeposit.getFormatId(), K3CloudSynEntity.ExtendType.定金收款.name());
+//            k3cloudSynDao.save(k3CloudSynEntity);
+//            shopGoodsDeposit.setK3CloudSynEntity(k3CloudSynEntity);
+//        }
+//        if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType())&&ShopGoodsDeposit.OutBillType.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
+//            K3CloudSynEntity k3CloudSynEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.AR_OtherRecAble.name(),shopGoodsDeposit.getAROtherRecAbleImage(otherTypes),shopGoodsDeposit.getId(),shopGoodsDeposit.getFormatId(), K3CloudSynEntity.ExtendType.定金收款.name());
+//            k3cloudSynDao.save(k3CloudSynEntity);
+//            shopGoodsDeposit.setK3CloudSynEntity(k3CloudSynEntity);
+//        }
+
     }
 
 }

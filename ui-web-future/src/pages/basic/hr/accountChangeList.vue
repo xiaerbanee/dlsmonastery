@@ -4,12 +4,14 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{$t('accountChangeList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('accountChangeList.filter')}}</el-button>
+        <el-button type="primary" @click="show = true" icon="search">{{$t('accountChangeList.filter')}}</el-button>
         <el-button type="primary" @click="batchPass" icon="check" >批量通过</el-button>
         <el-button type="primary" @click="batchNoPass" icon="close" >批量打回</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialogs
+        :show="show" :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog"
+        @hide="show = false">
         <el-form :model="formData">
           <el-form-item :label="$t('accountChangeList.createdDate')" :label-width="formLabelWidth">
             <date-range-picker v-model="formData.createdDate"></date-range-picker>
@@ -31,7 +33,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('accountChangeList.sure')}}</el-button>
         </div>
-      </search-dialog>
+      </search-dialogs>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('accountChangeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed prop="id" :label="$t('accountChangeList.id')" sortable></el-table-column>
@@ -67,7 +69,8 @@
         selects:[],
         formLabelWidth: '120px',
         formVisible: false,
-        pageLoading: false
+        pageLoading: false,
+        show:false
       };
     },
     methods: {
@@ -95,6 +98,7 @@
         this.pageRequest();
       },search() {
         this.formVisible = false;
+        this.show = false;
         this.pageRequest();
       },itemAdd(){
         this.$router.push({ name: 'accountChangeForm'})
