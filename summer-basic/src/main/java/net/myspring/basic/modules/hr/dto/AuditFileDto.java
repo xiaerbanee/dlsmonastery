@@ -18,6 +18,7 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String processTypeId;
     private String areaId;
     private String officeId;
+    private String content;
     private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
     private String attachment;
 
@@ -27,6 +28,14 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String officeName;
     @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
     private String processTypeName;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getAttachment() {
         return attachment;

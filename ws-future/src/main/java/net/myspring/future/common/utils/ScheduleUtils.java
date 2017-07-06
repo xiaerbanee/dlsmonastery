@@ -45,14 +45,14 @@ public class ScheduleUtils {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = false)
+    @Scheduled(cron = "*/20 * * * * ?")
     public void synOppo() {
-        if(StringUtils.isNotBlank(RequestUtils.getCompanyName())){
+
             logger.info("工厂自动同步开始");
             String date= LocalDateUtils.format(LocalDate.now());
             String message=synOppo(date);
             logger.info(message);
             logger.info("工厂自动同步成功");
-        }
     }
 
     @Transactional(readOnly = false)
@@ -81,22 +81,17 @@ public class ScheduleUtils {
         List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels = oppoClient.findSynImeList(date, agentCode);
         List<ProductIme> productImes=Lists.newArrayList();
         List<ProductIme> productImeList=Lists.newArrayList();
-        //同步串码
+        //判断绑定货品是否为空
+        Set<String> itemNumberSet = Sets.newHashSet();
         if(CollectionUtil.isNotEmpty(oppoPlantSendImeiPpsels)){
-            List<String> imeList = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
-            for(List<String> imes:CollectionUtil.splitList(imeList,1000)){
-                productImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(imes));
-            }
-            List<String>  localImeList=CollectionUtil.extractToList(productImeList, "ime");
-            Set<String> itemNumberSet = Sets.newHashSet();
             for (OppoPlantSendImeiPpsel oppoPlantSendImeiPpsel : oppoPlantSendImeiPpsels) {
                 if (CollectionUtil.isNotEmpty(lxAgentCodes) && lxAgentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())) {
-                    if (StringUtils.isBlank(oppoPlantSendImeiPpsel.getLxProductId())) {
+                    if (StringUtils.isEmpty(oppoPlantSendImeiPpsel.getLxProductId())) {
                         itemNumberSet.add(oppoPlantSendImeiPpsel.getDlsProductId());
                     }
                 } else {
                     if (CollectionUtil.isNotEmpty(agentCodes) && agentCodes.contains(oppoPlantSendImeiPpsel.getCompanyId())) {
-                        if (StringUtils.isBlank(oppoPlantSendImeiPpsel.getProductId())) {
+                        if (StringUtils.isEmpty(oppoPlantSendImeiPpsel.getProductId())) {
                             itemNumberSet.add(oppoPlantSendImeiPpsel.getDlsProductId());
                         }
                     }
@@ -108,6 +103,12 @@ public class ScheduleUtils {
             if (CollectionUtil.isNotEmpty(lxAgentCodes) && StringUtils.isBlank(lxDefaultStoreId)) {
                 return "联信没有绑定默认仓库";
             }
+            //同步串码
+            List<String> imeList = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
+            for(List<String> imes:CollectionUtil.splitList(imeList,1000)){
+                productImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(imes));
+            }
+            List<String>  localImeList=CollectionUtil.extractToList(productImeList, "ime");
             for (OppoPlantSendImeiPpsel oppoPlantSendImeiPpsel : oppoPlantSendImeiPpsels) {
                 String imei = oppoPlantSendImeiPpsel.getImei();
                 if (!localImeList.contains(imei)) {
@@ -152,17 +153,19 @@ public class ScheduleUtils {
             }
         }
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.synProductItemelectronSel(date,agentCode);
         List<ProductIme> localProductImeList=Lists.newArrayList();
+        List<OppoPlantProductItemelectronSel>  oppoPlantProductItemelectronSels=oppoClient.synProductItemelectronSel(date,agentCode);
         if(CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)){
             Map<String,OppoPlantProductItemelectronSel> productItemelectronSelMap=Maps.newHashMap();
             for(OppoPlantProductItemelectronSel oppoPlantProductItemelectronSel:oppoPlantProductItemelectronSels){
                 productItemelectronSelMap.put(oppoPlantProductItemelectronSel.getProductNo(),oppoPlantProductItemelectronSel);
             }
             List<String> productNoList= CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
-            localProductImeList=productImeRepository.findByEnabledIsTrueAndImeIn(productNoList);
+            for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
+                localProductImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(productNos));
+            }
             for(ProductIme productIme:localProductImeList){
-                productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
+                    productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
             }
         }
         if(CollectionUtil.isNotEmpty(localProductImeList)){

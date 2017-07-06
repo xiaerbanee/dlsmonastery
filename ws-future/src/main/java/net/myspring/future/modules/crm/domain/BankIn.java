@@ -28,6 +28,15 @@ public class BankIn extends DataEntity<BankIn> {
     private String bankId;
     private String cloudSynId;
     private String positionId;
+    private String transferType;
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
     public String getPositionId() {
         return positionId;
