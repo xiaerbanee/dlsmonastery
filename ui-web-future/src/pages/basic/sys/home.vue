@@ -172,8 +172,8 @@ export default {
     border-bottom:1px solid #f2f2f2;
   }
   .td{
-    height:20px;
-    padding:20px 5px;
+    height:10px;
+    padding:12px 5px;
   }
 </style>
 
