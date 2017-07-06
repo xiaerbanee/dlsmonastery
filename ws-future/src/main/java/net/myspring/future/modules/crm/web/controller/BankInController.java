@@ -4,6 +4,7 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.BankInTransferTypeEnum;
 import net.myspring.future.common.enums.BankInTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.dto.BankDto;
@@ -51,7 +52,8 @@ public class BankInController {
     public BankInQuery getQuery(BankInQuery bankInQuery){
         LocalDate today = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDateTimeUtils.getFirstDayOfMonth(today.atStartOfDay()).toLocalDate();
-        bankInQuery.setCreatedDateRange(firstDayOfMonth.toString() + " - " + today.toString()  );
+        bankInQuery.setCreatedDateRange(firstDayOfMonth.toString() + " - " + today.toString());
+        bankInQuery.getExtra().put("transferTypeList", BankInTransferTypeEnum.getList());
         return bankInQuery;
     }
 
@@ -112,6 +114,7 @@ public class BankInController {
     @PreAuthorize("hasPermission(null,'crm:bankIn:view')")
     public BankInForm getForm(BankInForm bankInForm ){
         bankInForm.getExtra().put("typeList",BankInTypeEnum.getList());
+        bankInForm.getExtra().put("transferTypeList", BankInTransferTypeEnum.getList());
         return bankInForm;
     }
 
@@ -119,6 +122,7 @@ public class BankInController {
     @PreAuthorize("hasPermission(null,'crm:bankIn:edit')")
     public BankInBatchForm getBatchForm(BankInBatchForm bankInBatchForm ){
         bankInBatchForm.getExtra().put("typeList",BankInTypeEnum.getList());
+        bankInBatchForm.getExtra().put("transferTypeList",BankInTransferTypeEnum.getList());
 
         List<BankDto> bankDtoList = bankService.findByAccountId(RequestUtils.getAccountId());
         bankInBatchForm.getExtra().put("bankNameList", CollectionUtil.extractToList(bankDtoList, "name"));
@@ -152,6 +156,13 @@ public class BankInController {
             if(bankInBatchDetailForm.getInputDate() == null){
                 throw new ServiceException("到账日期不能为空");
             }
+            if(StringUtils.isBlank(bankInBatchDetailForm.getTransferType())){
+                throw new ServiceException("转账类型不可以为空");
+            }
+            if(!BankInTransferTypeEnum.getList().contains(bankInBatchDetailForm.getTransferType())){
+                throw new ServiceException("转账类型不合法");
+            }
+
         }
 
         bankInService.batchAdd(bankInBatchForm);

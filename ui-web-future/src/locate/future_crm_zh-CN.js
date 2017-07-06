@@ -259,6 +259,7 @@ export default {
     prerequisiteMessage: "必填信息",
     inputLegalValue: "请输入合法的数值",
     prerequisiteAndPositiveNumberMessage: "请输入一个大于0的数值",
+    transferType: "转账类型",
 
   },
   bankInList: {
@@ -301,6 +302,7 @@ export default {
     delete: "删除",
     audit: "审核",
     noSelectionFound:"没有选中任何记录",
+    transferType:"转账类型",
   },
   bankInDetail: {
     bankInDetail: "销售收款编辑",

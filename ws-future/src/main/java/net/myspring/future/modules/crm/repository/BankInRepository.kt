@@ -101,6 +101,9 @@ class BankInRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if(StringUtils.isNotBlank(bankInQuery.serialNumber)){
             sb.append("""  and t1.serial_number like concat('%',:serialNumber,'%')  """)
         }
+        if(StringUtils.isNotBlank(bankInQuery.transferType)){
+            sb.append("""  and t1.transfer_type = :transferType  """)
+        }
         if(CollectionUtil.isNotEmpty(bankInQuery.depotIdList)){
             sb.append("""  and t1.shop_id in (:depotIdList)  """)
         }
