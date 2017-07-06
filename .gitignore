@@ -8,3 +8,5 @@ summer-*/build/
 .gradle/
 /summer.iml
 /**/*.log
+/ui-web-future/dist/
+/summer-webapp/src/main/resources/static/
