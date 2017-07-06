@@ -10,12 +10,15 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
+import net.myspring.common.response.RestErrorField;
+import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
@@ -24,17 +27,16 @@ import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
-import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.domain.StoreAllot;
-import net.myspring.future.modules.crm.domain.StoreAllotDetail;
+import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
+import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
+import net.myspring.future.modules.crm.web.form.StoreAllotShipForm;
 import net.myspring.future.modules.crm.web.query.ProductImeShipQuery;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
@@ -42,6 +44,7 @@ import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -60,8 +63,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional(readOnly = true)
@@ -93,6 +94,8 @@ public class StoreAllotService {
     private DepotStoreRepository depotStoreRepository;
     @Autowired
     private StkTransferDirectManager stkTransferDirectManager;
+    @Autowired
+    private ExpressOrderManager expressOrderManager;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -100,102 +103,82 @@ public class StoreAllotService {
         return storeAllotDto;
     }
 
-    public Map<String, Object> shipBoxAndIme(String storeAllotId, String boxImeStr, String imeStr) {
+    public void ship(StoreAllotShipForm storeAllotShipForm) {
+        if(StringUtils.isBlank(storeAllotShipForm.getId())){
+            throw new ServiceException("发货的调拨单id不能为空");
+        }
+        StoreAllot storeAllot = storeAllotRepository.findOne(storeAllotShipForm.getId());
+        if(!GoodsOrderStatusEnum.待发货.name().equals(storeAllot.getStatus())){
+            throw new ServiceException("该调拨单的状态不为待发货，不能发货");
+        }
+        Map<String, StoreAllotDetail> storeAllotDetailMap = Maps.newHashMap();
+        List<StoreAllotDetail> storeAllotDetailList = storeAllotDetailRepository.findByStoreAllotIdIn(Lists.newArrayList(storeAllotShipForm.getId()));
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(storeAllotDetailList,"productId"));
+        for (StoreAllotDetail storeAllotDetail : storeAllotDetailList) {
+            if (storeAllotDetail.getBillQty() > 0 && !storeAllotDetail.getBillQty().equals( storeAllotDetail.getShippedQty())) {
+                storeAllotDetailMap.put(storeAllotDetail.getProductId(), storeAllotDetail);
+            }
+            //对没有串码的货品全部发货
+            Product product = productMap.get(storeAllotDetail.getProductId());
+            if (!product.getHasIme() && storeAllotDetail.getShippedQty() == 0) {
+                storeAllotDetail.setShippedQty(storeAllotDetail.getBillQty());
+                storeAllotDetailRepository.save(storeAllotDetail);
+            }
+        }
+        //搜索串码
+        if (StringUtils.isNotBlank(storeAllotShipForm.getBoxImeStr()) || StringUtils.isNotBlank(storeAllotShipForm.getImeStr())) {
+            ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
+            productImeShipQuery.setBoxImeList(storeAllotShipForm.getBoxImeList());
+            productImeShipQuery.setImeList(storeAllotShipForm.getImeList());
+            productImeShipQuery.setDepotId(storeAllot.getFromStoreId());
 
-        StringBuilder sb = new StringBuilder();
-        Integer totalShouldShipQty = 0;
-        Integer totalShippedQty=0;
-        StoreAllotDto storeAllotDto = storeAllotRepository.findDto(storeAllotId);
-        cacheUtils.initCacheInput(storeAllotDto);
-        final List<String> boxImeList = StringUtils.getSplitList(boxImeStr, CharConstant.ENTER);
-        final List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        String regex="^\\d*";
-        for(int i=0;i<imeList.size();i++){
-            String ime=imeList.get(i);
-            if(ime.startsWith("86")){
-                Pattern pattern=Pattern.compile(regex);
-                Matcher matcher=pattern.matcher(ime);
-                while(matcher.find()){
-                    String newStr=matcher.group();
-                    imeList.set(i,newStr);
+            List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
+            if (CollectionUtil.isNotEmpty(productImeList)) {
+                for (ProductIme productIme : productImeList) {
+                    String productId = productIme.getProductId();
+                    StoreAllotDetail storeAllotDetail = storeAllotDetailMap.get(productId);
+                    if (storeAllotDetail != null) {
+                        storeAllotDetail.setShippedQty(storeAllotDetail.getShippedQty() == null ? 0 : storeAllotDetail.getShippedQty() + 1);
+                        StoreAllotIme storeAllotIme = new StoreAllotIme();
+                        storeAllotIme.setStoreAllotId(storeAllot.getId());
+                        storeAllotIme.setProductImeId(productIme.getId());
+                        storeAllotIme.setProductId(productIme.getProductId());
+                        storeAllotIme.setRemarks(storeAllotShipForm.getShipRemarks());
+                        storeAllotImeRepository.save(storeAllotIme);
+                        //串码调拨
+                        productIme.setDepotId(storeAllot.getToStoreId());
+                        productIme.setRetailShopId(storeAllot.getToStoreId());
+                        productImeRepository.save(productIme);
+                    }
                 }
             }
         }
+        storeAllotDetailRepository.save(storeAllotDetailMap.values());
 
-        final String fromStoreId = storeAllotDto.getFromStoreId();
-        Map<String, StoreAllotDetailDto> storeAllotDetailMap = Maps.newHashMap();
-        List<StoreAllotDetailDto> storeAllotDetailDtoList = storeAllotDetailRepository.findByStoreAllotIds(Lists.newArrayList(storeAllotId));
-        cacheUtils.initCacheInput(storeAllotDetailDtoList);
-        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailDtoList) {
-            if(storeAllotDetailDto.getBillQty()>0 && storeAllotDetailDto.getProductHasIme()){
-                storeAllotDetailDto.setShipQty(0);
-                storeAllotDetailMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto);
+        //如果所有发货完成，修改订单状态
+        boolean isAllShipped = true;
+        for (StoreAllotDetail storeAllotDetail : storeAllotDetailMap.values()) {
+            if (!storeAllotDetail.getShippedQty().equals(storeAllotDetail.getBillQty())) {
+                isAllShipped = false;
+                break;
             }
         }
-        ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
-        productImeShipQuery.setDepotId(fromStoreId);
-        productImeShipQuery.setBoxImeList(boxImeList);
-        productImeShipQuery.setImeList(imeList);
-
-        List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
-        Set<String> boxImeSet = Sets.newHashSet();
-        Set<String> imeSet = Sets.newHashSet();
-
-        for(ProductIme productIme : productImeList) {
-            boxImeSet.add(productIme.getBoxIme());
-            imeSet.add(productIme.getIme());
-            if(!storeAllotDetailMap.containsKey(productIme.getProductId())) {
-                sb.append("箱号  ").append(productIme.getBoxIme()).append(",串码  ").append(productIme.getIme()).append(" 不属于此次要调拨的产品；");
-            } else {
-                storeAllotDetailMap.get(productIme.getProductId()).setShipQty(storeAllotDetailMap.get(productIme.getProductId()).getShipQty()+1);
-            }
+        if (isAllShipped) {
+            storeAllot.setStatus(StoreAllotStatusEnum.已完成.name());
+        } else {
+            storeAllot.setStatus(StoreAllotStatusEnum.发货中.name());
         }
-        for(String boxIme:boxImeList) {
-            if(!boxImeSet.contains(boxIme)) {
-                sb.append("箱号  ").append(boxIme).append(" 不在选定的仓库  ").append(storeAllotDto.getFromStoreName()).append("；");
-            }
-        }
-        for(String ime : imeList){
-            if(!imeSet.contains(ime)) {
-                sb.append("串码  ").append(ime).append(" 不在选定的仓库  ").append(storeAllotDto.getFromStoreName()).append("；");
-            }
-        }
-        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
-            totalShouldShipQty = totalShouldShipQty + storeAllotDetailDto.getBillQty();
-            totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
-            Integer qty = storeAllotDetailDto.getShippedQty()+storeAllotDetailDto.getShipQty();
-            if(qty > storeAllotDetailDto.getBillQty()){
-                sb.append("产品 ").append(storeAllotDetailDto.getProductName()).append(" 已经发货 ").append(qty.toString()).append(" 台，超过该产品的调拨量  ").append(storeAllotDetailDto.getBillQty().toString()).append(" 台；");
-            }
-        }
-        Map<String,Object> result = Maps.newHashMap();
-        if(!totalShouldShipQty.equals(totalShippedQty)) {
-            result.put("warnMsg", "货品总开单数为" + totalShouldShipQty + "，与总实际发货数为"+totalShippedQty + "不一致；");
-        }
-        Map<String, Integer> shipQtyMap = Maps.newHashMap();
-        for(StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
-            shipQtyMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto.getShipQty());
-        }
-        result.put("errMsg", sb.toString());
-        result.put("shipQtyMap", shipQtyMap);
-        result.put("totalQty", productImeList.size());
-
-        return result;
-    }
-
-    public void ship(StoreAllot storeAllot) {
-
-    }
-
-    public Integer getCloudQty(String productId,String fromStoreId){
-        return null;
+        storeAllot.setShipDate(LocalDateTime.now());
+        storeAllotRepository.save(storeAllot);
+        //设置快递单
+        ExpressOrder expressOrder = expressOrderRepository.findOne(storeAllot.getExpressOrderId());
+        expressOrderManager.save(ExpressOrderTypeEnum.大库调拨.name(),storeAllot.getId(), storeAllotShipForm.getExpressOrderExpressCodes(), expressOrder.getExpressCompanyId());
     }
 
     public Page<StoreAllotDto> findPage(Pageable pageable, StoreAllotQuery storeAllotQuery) {
         Page<StoreAllotDto> page = storeAllotRepository.findPage(pageable,storeAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
-
     }
 
     public SimpleExcelBook export(StoreAllotQuery storeAllotQuery) {
@@ -231,9 +214,7 @@ public class StoreAllotService {
         simpleExcelSheetList.add(new SimpleExcelSheet("串码", storeAllotImeDtoList, storeAllotImeColumnList));
 
         ExcelUtils.doWrite(workbook,simpleExcelSheetList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
-        return simpleExcelBook;
-
+        return new SimpleExcelBook(workbook,"大库调拨"+LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
     @Transactional
@@ -448,5 +429,83 @@ public class StoreAllotService {
         }
 
         return findDto(id);
+    }
+
+    public Map<String,Object> shipCheck(StoreAllotShipForm storeAllotShipForm) {
+        RestResponse restResponse =  new RestResponse("valid", ResponseCodeEnum.valid.name());
+        Integer totalShouldShipQty = 0;
+        Integer totalShippedQty = 0;
+        StoreAllot storeAllot = storeAllotRepository.findOne(storeAllotShipForm.getId());
+        List<StoreAllotDetail> storeAllotDetailList  = storeAllotDetailRepository.findByStoreAllotIdIn(Lists.newArrayList(storeAllot.getId()));
+        List<StoreAllotDetailDto> storeAllotDetailDtoList = BeanUtil.map(storeAllotDetailList,StoreAllotDetailDto.class);
+        Map<String,StoreAllotDetailDto> storeAllotDetailMap  = CollectionUtil.extractToMap(storeAllotDetailDtoList,"productId");
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(storeAllotDetailList,"productId"));
+        for (StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailDtoList) {
+            if (storeAllotDetailDto.getBillQty() > 0 && productMap.get(storeAllotDetailDto.getProductId()).getHasIme()) {
+                storeAllotDetailDto.setShipQty(0);
+            }
+        }
+        ProductImeShipQuery productImeShipQuery = new ProductImeShipQuery();
+        productImeShipQuery.setDepotId(storeAllot.getFromStoreId());
+        productImeShipQuery.setImeList(storeAllotShipForm.getImeList());
+        productImeShipQuery.setBoxImeList(storeAllotShipForm.getBoxImeList());
+        List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
+        Set<String> boxImeSet = Sets.newHashSet();
+        Set<String> imeSet = Sets.newHashSet();
+        for (ProductIme productIme : productImeList) {
+            boxImeSet.add(productIme.getBoxIme());
+            imeSet.add(productIme.getIme());
+            if (StringUtils.isNotBlank(productIme.getMeid())) {
+                imeSet.add(productIme.getMeid());
+            }
+            if (StringUtils.isNotBlank(productIme.getIme2())) {
+                imeSet.add(productIme.getIme2());
+            }
+            Product product = productMap.get(productIme.getProductId());
+            if(product!=null){
+                if (!storeAllotDetailMap.containsKey(product.getId())) {
+                    restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在调拨范围内","ime_error","imeStr"));
+                } else {
+                    storeAllotDetailMap.get(product.getId()).setShipQty(storeAllotDetailMap.get(product.getId()).getShipQty() + 1);
+                }
+            }
+        }
+        for (String boxIme : storeAllotShipForm.getBoxImeList()) {
+            if (!boxImeSet.contains(boxIme)) {
+                restResponse.getErrors().add(new RestErrorField("箱号：" + boxIme  + "，在仓库不存在","box_ime_error","boxIme"));
+            }
+        }
+        for (String ime : storeAllotShipForm.getImeList()) {
+            if (!imeSet.contains(ime)) {
+                restResponse.getErrors().add(new RestErrorField("串码：" + ime + "，在仓库不存在","ime_error","ime"));
+            }
+        }
+        for (StoreAllotDetailDto storeAllotDetailDto: storeAllotDetailDtoList) {
+            totalShouldShipQty = totalShouldShipQty +storeAllotDetailDto.getBillQty();
+            totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
+            Integer qty = storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
+            if (qty > storeAllotDetailDto.getBillQty()) {
+                StringBuilder errorMessage = new StringBuilder("货品:"+ productMap.get(storeAllotDetailDto.getProductId()).getName() +"总发货数："+ qty+ "大于实际调拨数："  + storeAllotDetailDto.getBillQty() + "串码：");
+                //显示发货不对的串码
+                for (ProductIme productIme : productImeList) {
+                    if (productIme.getProductId().equals(storeAllotDetailDto.getProductId())) {
+                        errorMessage.append(productIme.getIme()).append(CharConstant.TAB);
+                    }
+                }
+                restResponse.getErrors().add(new RestErrorField(errorMessage.toString(),"qty_error","ime"));
+            }
+        }
+        Map<String, Object> result = Maps.newHashMap();
+        if (!totalShouldShipQty.equals(totalShippedQty)) {
+            result.put("warnMsg", "货品总调拨数"+totalShouldShipQty+ ",和实际发货数"+totalShippedQty + "不一致");
+        }
+        Map<String, Integer> shipQtyMap = Maps.newHashMap();
+        for (StoreAllotDetailDto storeAllotDetailDto : storeAllotDetailMap.values()) {
+            shipQtyMap.put(storeAllotDetailDto.getProductId(), storeAllotDetailDto.getShipQty());
+        }
+        result.put("restResponse", restResponse);
+        result.put("shipQtyMap", shipQtyMap);
+        result.put("totalQty", productImeList.size());
+        return result;
     }
 }

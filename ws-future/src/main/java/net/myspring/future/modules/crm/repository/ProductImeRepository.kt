@@ -492,7 +492,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 AND t1.product_id =  product.id
                 AND product.enabled =  1
                 AND t1.ime in (:imeList)
-            ) validProductIme left join crm_depot retailDepot on validProductIme.retail_depot_id=retailDepot.id
+            ) validProductIme left join crm_depot retailDepot on validProductIme.retail_shop_id=retailDepot.id
             LEFT JOIN crm_product_ime_sale sale ON validProductIme.product_ime_sale_id = sale.id AND sale.enabled = 1
             LEFT JOIN crm_product_ime_upload upload ON validProductIme.product_ime_upload_id = upload.id AND upload.enabled = 1
                 """, params, BeanPropertyRowMapper(ProductImeDto::class.java))

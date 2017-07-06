@@ -67,7 +67,7 @@
         </el-table>
       </div>
       <div>
-        <el-dialog title="详细" :visible.sync="detailVisible">
+        <el-dialog title="详细" :visible.sync="detailVisible" >
           <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
           <el-table :data="productTypeDetail">
             <el-table-column property="productName" label="货品" width="400"></el-table-column>

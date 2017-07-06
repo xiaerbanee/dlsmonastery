@@ -259,6 +259,7 @@ export default {
     save: "simpan",
     remarks: "备注",
     toKingdeeSynList:'查看同步信息',
+    transferType:'转账类型',
   },
   bankInForm: {
     bankInForm: "tambah kredit penjualan",
@@ -284,6 +285,7 @@ export default {
     prerequisiteMessage: "Informasi yang diperlukan",
     inputLegalValue: "silahkan masukkan angka yang valid,",
     prerequisiteAndPositiveNumberMessage: "请输入一个大于0的数值",
+    transferType: "转账类型",
   },
   bankInList: {
     bankInList: "kredit penjualan",
@@ -325,6 +327,7 @@ export default {
     delete: "hapus",
     audit: "ubah",
     noSelectionFound:"没有选中任何记录",
+    transferType:"转账类型",
   },
   dataReportList: {
     dataReportList: "daftar data",

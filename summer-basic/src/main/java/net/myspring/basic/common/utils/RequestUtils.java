@@ -49,7 +49,10 @@ public class RequestUtils {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
         LinkedHashMap<String,Object> principal = Maps.newLinkedHashMap();
         if(auth !=  null) {
-            principal= (LinkedHashMap) ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+            Object object = ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+            if(object instanceof Map){
+                principal= (LinkedHashMap)object;
+            }
         }
         return principal;
     }

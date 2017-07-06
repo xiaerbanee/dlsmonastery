@@ -11,8 +11,17 @@ public class BankInBatchDetailForm extends BaseForm<BankIn> {
     private String shopName;
     private String type;
     private String bankName;
+    private String transferType;
     private LocalDate inputDate;
     private BigDecimal amount;
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
     public LocalDate getInputDate() {
         return inputDate;

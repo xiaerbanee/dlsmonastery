@@ -36,8 +36,8 @@
             rowHeaders: true,
             minSpareRows: 100,
             startRows: 100,
-            startCols: 6,
-            colHeaders: [ '门店', '银行', '到账日期',  '到账金额','类型','备注'],
+            startCols: 7,
+            colHeaders: [ '门店', '银行', '到账日期',  '到账金额','类型','备注', '转账类型'],
             columns: [{
               data:"depotName",
               type: 'text',
@@ -74,6 +74,12 @@
               data:"remarks",
               type:"text",
               width: 200
+            }, {
+              data:"transferType",
+              type: 'autocomplete',
+              strict: true,
+              allowEmpty:false,
+              width: 200
             }],
           },
         };
@@ -96,6 +102,7 @@
                 bankInBatchDetailForm.amount = row[3];
                 bankInBatchDetailForm.type = row[4];
                 bankInBatchDetailForm.remarks = row[5];
+                bankInBatchDetailForm.transferType = row[6];
                 tableData.push(bankInBatchDetailForm);
               }
             }
@@ -117,6 +124,7 @@
           this.inputForm = response.data;
           this.settings.columns[1].source=response.data.extra.bankNameList;
           this.settings.columns[4].source=response.data.extra.typeList;
+          this.settings.columns[6].source=response.data.extra.transferTypeList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }

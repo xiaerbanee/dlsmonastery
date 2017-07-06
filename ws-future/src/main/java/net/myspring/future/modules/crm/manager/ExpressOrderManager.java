@@ -24,6 +24,7 @@ public class ExpressOrderManager {
         ExpressOrder expressOrder = expressOrderRepository.findByExtendIdAndExtendType(extendId, extendType);
         expressOrder.setExpressCompanyId(expressCompanyId);
         expressOrder.setExpressCodes(expressCodes);
+        expressOrderRepository.save(expressOrder);
 
         List<String> expressCodeList = StringUtils.getSplitList(expressCodes, CharConstant.ENTER);
         List<Express> expresses = expressRepository.findByEnabledIsTrueAndExpressOrderId(expressOrder.getId());

@@ -108,7 +108,10 @@ export default {
     loading: "拼命加载中",
     lastModifiedBy: "最后修改人",
     lastModifiedDate: "最后修改时间",
-    operation:"操作"
+    operation:"操作",
+    editLeftQty:"确认数修改",
+    save:"保存",
+    cancel:"取消",
   },
   adGoodsOrderBill: {
     adGoodsOrderBill: "buka nota bahan",

@@ -69,8 +69,6 @@ public class ProductImeController {
     private DepotShopService depotShopService;
     @Autowired
     private OfficeClient officeClient;
-    @Autowired
-    private DepotManager depotManager;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page list(Pageable pageable,ProductImeQuery productImeQuery){
@@ -114,11 +112,6 @@ public class ProductImeController {
     @RequestMapping(value = "productImeReport")
     public List<ProductImeReportDto> productImeReport(ReportQuery productImeSaleReportQuery){
         return productImeService.productImeReport(productImeSaleReportQuery);
-    }
-
-    @RequestMapping(value = "getProductImeReportDetail")
-    public List<ProductImeDto> getProductImeReportDetail(ReportQuery productImeSaleReportQuery){
-        return productImeService.getProductImeReportDetail(productImeSaleReportQuery);
     }
 
     @RequestMapping(value = "getReportQuery")

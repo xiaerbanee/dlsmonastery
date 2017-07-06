@@ -27,15 +27,6 @@
               <el-upload  action="/api/general/sys/folderFile/upload?uploadPath=/文件审批" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
-              <bool-radio-group v-model="submitData.pass"></bool-radio-group>
-            </el-form-item>
-            <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
-              <el-input v-model="submitData.comment"></el-input>
-            </el-form-item>
-            <el-form-item v-if="isAudit">
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>
-            </el-form-item>
           </el-col>
           <el-col :span="10" :offset="2">
             <span v-html="inputForm.content"></span>
@@ -45,6 +36,15 @@
               <el-table-column prop="auditDate" :label="$t('auditFileDetail.auditDate')"></el-table-column>
               <el-table-column prop="comment" :label="$t('auditFileDetail.auditRemarks')"></el-table-column>
             </el-table>
+            <el-form-item :label="$t('auditFileDetail.isPass')" prop="pass" v-if="isAudit">
+              <bool-radio-group v-model="submitData.pass"></bool-radio-group>
+            </el-form-item>
+            <el-form-item :label="$t('auditFileDetail.comment')" prop="comment" v-if="isAudit">
+              <el-input v-model="submitData.comment"></el-input>
+            </el-form-item>
+            <el-form-item v-if="isAudit">
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" >{{$t('auditFileDetail.save')}}</el-button>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
