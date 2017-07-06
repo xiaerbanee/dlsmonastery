@@ -29,8 +29,17 @@ public class BankInQuery extends BaseQuery {
     private LocalDateTime createdDateStart;
     private LocalDateTime createdDateEnd;
     private String serialNumber;
+    private String transferType;
 
     private List<String> processStatusList;
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
     public String getCreatedBy() {
         return createdBy;

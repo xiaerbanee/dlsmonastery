@@ -733,8 +733,11 @@ public class AdGoodsOrderService {
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderCreatedByName", "创建人"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderCreatedDate", "创建时间"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillDate", "开单时间"));
-        List<AdGoodsOrderDetailExportDto> adGoodsOrderDetailExportDtoList = adGoodsOrderDetailRepository.findDtoListForExport(CollectionUtil.extractToList(adGoodsOrderDtoList, "id"), 10000);
-        cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
+        List<AdGoodsOrderDetailExportDto> adGoodsOrderDetailExportDtoList = Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(adGoodsOrderDtoList)){
+            adGoodsOrderDetailExportDtoList = adGoodsOrderDetailRepository.findDtoListForExport(CollectionUtil.extractToList(adGoodsOrderDtoList, "id"), 10000);
+            cacheUtils.initCacheInput(adGoodsOrderDetailExportDtoList);
+        }
         simpleExcelSheetList.add(new SimpleExcelSheet("订单明细", adGoodsOrderDetailExportDtoList, adGoodsOrderDetailColumnList));
 
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);

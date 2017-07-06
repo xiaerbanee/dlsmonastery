@@ -90,8 +90,7 @@
           </div>
           <table class="table">
             <tbody >
-                <date-picker v-model="synDate"></date-picker>
-                <el-button type="primary"  @click="synFactory">{{$t('home.synFactory')}}</el-button>
+                <el-button type="primary"  @click="synFlush">{{$t('home.synFactory')}}</el-button>
             </tbody>
           </table>
         </el-card>
@@ -107,7 +106,6 @@ export default {
   data () {
     return {
       fcEvents: [],
-      synDate:new Date().toDateString(),
       account:{
           employeeId:'',
           employee:{name:'',regularDate:''},
@@ -138,7 +136,7 @@ export default {
           console.log(response.data.account);
           this.labelData=response.data;
       })
-    },synFactory(){
+    },synFlush(){
       axios.get('/api/basic/sys/cache/init').then((response) =>{
         this.$message(response.data.message);
       })
@@ -173,7 +171,7 @@ export default {
   }
   .td{
     height:10px;
-    padding:12px 5px;
+    padding:10px 5px;
   }
 </style>
 

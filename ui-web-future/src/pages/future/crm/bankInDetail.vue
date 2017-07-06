@@ -11,6 +11,9 @@
             <el-form-item :label="$t('bankInDetail.bankName')">
               {{bankIn.bankName}}
             </el-form-item>
+            <el-form-item :label="$t('bankInDetail.transferType')">
+              {{bankIn.transferType}}
+            </el-form-item>
             <el-form-item :label="$t('bankInDetail.amount')" >
               {{bankIn.amount}}
             </el-form-item>

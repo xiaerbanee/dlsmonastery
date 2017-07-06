@@ -13,6 +13,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">返回</el-button>
+        <el-button type="primary" @click="detail()"v-show="nextIsShop&&'区域'==formData.sumType">明细</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -67,7 +68,7 @@
       </el-table>
       </div>
       <div>
-        <el-dialog title="详细" :visible.sync="detailVisible">
+        <el-dialog title="详细" :visible.sync="detailVisible" size="large">
           <div style="width:100%;height:50px;text-align:center;font-size:20px">汇总</div>
           <el-table :data="productTypeDetail">
           <el-table-column property="productName" label="货品" width="400"></el-table-column>
@@ -97,6 +98,7 @@
     data() {
       return {
         page:[],
+        imePage:[],
         searchText:"",
         nextIsShop:false,
         formData:{
@@ -186,6 +188,23 @@
         window.location.href="/api/ws/future/crm/productIme/exportReport?"+qs.stringify(util.deleteExtra(this.formData));
         this.formData.exportType=null;
       },saleReportGrid(){
+
+      },detail(){
+          this.detailVisible=true;
+        this.formData.depotId=null;
+        var submitData = util.deleteExtra(this.formData);
+        util.setQuery("productImeSaleReport",submitData);
+        submitData.isDetail=true;
+        axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(submitData)).then((response) => {
+          let productQtyMap = response.data.productQtyMap;
+          let productQtyArr=[];
+          for(var item in productQtyMap){
+            productQtyArr.push({productName:item,qty:productQtyMap[item]})
+            }
+          this.productTypeDetail=productQtyArr;
+          this.depotReportList=response.data.depotReportList;
+          this.pageLoading = false;
+        })
 
       }
     },created () {

@@ -21,6 +21,7 @@ public class BankInDto extends DataDto<BankIn> {
     @CacheInput(inputKey = "banks",inputInstance = "bankId",outputInstance = "name")
     private String bankName;
     private String bankId;
+    private String transferType;
     private String type;
 
     private BigDecimal amount;
@@ -31,6 +32,14 @@ public class BankInDto extends DataDto<BankIn> {
     private String processStatus;
     private Boolean locked;
     private String processInstanceId;
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
     public String getType() {
         return type;

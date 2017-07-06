@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by guolm on 2017/5/9.
@@ -96,7 +93,10 @@ public class OppoService {
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
             List<String> itemNumbers = CollectionUtil.extractToList(oppoPlantAgentProductSels, "itemNumber");
             List<String> localItemNumbers=Lists.newArrayList();
-            List<OppoPlantAgentProductSel> plantAgentProductSels= oppoPlantAgentProductSelRepository.findItemNumbers(itemNumbers);
+            List<OppoPlantAgentProductSel> plantAgentProductSels=Lists.newArrayList();
+            for(List<String> stringList:CollectionUtil.splitList(itemNumbers,500)){
+                plantAgentProductSels.addAll(oppoPlantAgentProductSelRepository.findItemNumbers(stringList));
+            }
             if(CollectionUtil.isNotEmpty(plantAgentProductSels)){
                 localItemNumbers=CollectionUtil.extractToList(plantAgentProductSels, "itemNumber");
             }
@@ -115,8 +115,11 @@ public class OppoService {
     @LocalDataSource
     public void pullPlantSendImeiPpsels(List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels, String agentCode) {
         List<OppoPlantSendImeiPpsel> list = Lists.newArrayList();
-        List<String> imeis = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
-        List<OppoPlantSendImeiPpsel> plantSendImeiPpsels = oppoPlantSendImeiPpselRepository.findByimeis(imeis);
+        List<String> imeiList = CollectionUtil.extractToList(oppoPlantSendImeiPpsels, "imei");
+        List<OppoPlantSendImeiPpsel> plantSendImeiPpsels=Lists.newArrayList();
+        for(List<String> imeis:CollectionUtil.splitList(imeiList,1000)){
+            plantSendImeiPpsels.addAll(oppoPlantSendImeiPpselRepository.findByimeis(imeis));
+        }
         List<String> localImeis=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(plantSendImeiPpsels)){
             localImeis=CollectionUtil.extractToList(plantSendImeiPpsels, "imei");
@@ -128,7 +131,7 @@ public class OppoService {
             }
         }
         if (CollectionUtil.isNotEmpty(list)) {
-            oppoPlantSendImeiPpselRepository.save(list);
+            oppoPlantSendImeiPpselRepository.batchSave(list);
         }
     }
 
@@ -137,9 +140,12 @@ public class OppoService {
     public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
-            List<String> productNos = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
+            List<String> productNoList = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
             List<String> localProductNos=Lists.newArrayList();
-            List<OppoPlantProductItemelectronSel> plantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findProductNos(productNos);
+            List<OppoPlantProductItemelectronSel> plantProductItemelectronSels=Lists.newArrayList();
+            for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
+                plantProductItemelectronSels.addAll(oppoPlantProductItemelectronSelRepository.findProductNos(productNos));
+            }
             if(CollectionUtil.isNotEmpty(plantProductItemelectronSels)){
                 localProductNos=CollectionUtil.extractToList(plantProductItemelectronSels, "productNo");
             }
@@ -151,7 +157,7 @@ public class OppoService {
             }
             logger.info("开始同步电子保卡");
             if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantProductItemelectronSelRepository.save(list);
+                oppoPlantProductItemelectronSelRepository.batchSave(list);
             }
             logger.info("电子保卡同步成功");
         }

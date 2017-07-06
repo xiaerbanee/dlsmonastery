@@ -356,10 +356,12 @@ public class GoodsOrderShipService {
 
                 KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
+                goodsOrderRepository.save(goodsOrder);
             } else {
                 List<KingdeeSynReturnDto> kingdeeSynReturnDtos = salReturnStockManager.synForGoodsOrderShip(goodsOrder);
                 if(CollectionUtil.isNotEmpty(kingdeeSynReturnDtos)){
                     goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDtos.get(0).getBillNo(),CharConstant.COMMA));
+                    goodsOrderRepository.save(goodsOrder);
                 }
             }
 

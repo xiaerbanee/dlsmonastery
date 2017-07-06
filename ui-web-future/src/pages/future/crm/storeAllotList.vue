@@ -49,17 +49,17 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('storeAllotList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
+        <el-table-column prop="formatId" column-key="businessId"   :label="$t('storeAllotList.businessId')" sortable ></el-table-column>
         <el-table-column prop="fromStoreName" column-key="fromStoreId"  :label="$t('storeAllotList.fromStore')" sortable ></el-table-column>
         <el-table-column prop="toStoreName" column-key="toStoreId" :label="$t('storeAllotList.toStore')" sortable ></el-table-column>
-        <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" width="120" sortable></el-table-column>
+        <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" sortable></el-table-column>
         <el-table-column prop="status" :label="$t('storeAllotList.status')" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('storeAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('storeAllotList.createdDate')"  sortable></el-table-column>
         <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('storeAllotList.lastModifiedBy')"  sortable></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('storeAllotList.lastModifiedDate')" sortable ></el-table-column>
         <el-table-column prop="remarks" :label="$t('storeAllotList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('storeAllotList.operation')">
+        <el-table-column :label="$t('storeAllotList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:storeAllot:view'"><el-button   size="small"  @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.status === '待发货' || scope.row.status === '发货中'" v-permit="'crm:storeAllot:ship'" ><el-button size="small" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button></div>
