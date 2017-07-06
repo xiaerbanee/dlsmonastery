@@ -57,14 +57,17 @@ public class OppoController {
         logger.info("开始同步发货串码");
         //同步发货串吗
         for (int i = 0; i < agentCodes.length; i++) {
-            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(agentCodes[i], passWords[i], date);
+            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(agentCodes[i], passWords[i],date);
             if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
                 oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, agentCodes[i]);
             }
         }
+        logger.info("发货串码同步成功");
+        logger.info("开始同步电子保卡");
         //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], date);
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1)));
         oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
+        logger.info("电子保卡同步成功");
         return "OPPO同步成功";
     }
 

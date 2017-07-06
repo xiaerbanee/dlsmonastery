@@ -29,7 +29,6 @@ import java.util.Map;
 
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
 public class OppoPlantAgentProductSelService {
 
     @Autowired
@@ -58,6 +57,7 @@ public class OppoPlantAgentProductSelService {
         return oppoPlantAgentProductSqlForm;
     }
 
+    @Transactional(readOnly = false)
     public void save(String data){
         String lxAgentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.LX_FACTORY_AGENT_CODES.name());
         List<Map<String,String>> list = ObjectMapperUtils.readValue(data, ArrayList.class);
