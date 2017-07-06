@@ -14,6 +14,11 @@
         <el-form-item :label="$t('bankInForm.bankName')" prop="bankId">
           <bank-select v-model="inputForm.bankId" includeCashIn=true ></bank-select>
         </el-form-item>
+        <el-form-item :label="$t('bankInForm.transferType')" prop="transferType">
+          <el-select v-model="inputForm.transferType"  clearable>
+            <el-option v-for="item in inputForm.extra.transferTypeList" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item :label="$t('bankInForm.cash')" prop="inputDate">
           <date-picker  v-model="inputForm.inputDate"></date-picker>
         </el-form-item>
@@ -56,6 +61,7 @@
             shopId: [{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
             type:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
             inputDate:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
+            transferType:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}],
             amount:[{ required: true, type:"number", message: this.$t('bankInForm.prerequisiteAndPositiveNumberMessage')}],
             serialNumber:[{ required: true, message: this.$t('bankInForm.prerequisiteMessage')}]
           }
@@ -92,6 +98,7 @@
               this.inputForm.shopId = response.data.shopId;
               this.inputForm.type = response.data.type;
               this.inputForm.bankId = response.data.bankId;
+              this.inputForm.transferType = response.data.transferType;
               this.inputForm.inputDate = response.data.inputDate;
               this.inputForm.amount = response.data.amount;
               this.inputForm.serialNumber = response.data.serialNumber;
