@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:shopPrint:edit'">{{$t('shopPrintList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:shopPrint:view'">{{$t('shopPrintList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:shopPrint:view'">{{$t('shopPrintList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopPrintList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">

@@ -17,9 +17,6 @@ public class ShopPrintQuery extends BaseQuery {
     private String printType;
     private String processStatus;
     private String createdBy;
-    private List<OfficeDto> officeIdList = Lists.newArrayList();
-    private List<NameValueDto> printTypeList = Lists.newArrayList();
-    private List<String> processStatusList = Lists.newArrayList();
 
     public String getOfficeId() {
         return officeId;
@@ -51,21 +48,5 @@ public class ShopPrintQuery extends BaseQuery {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public List<NameValueDto> getPrintTypeList() {
-        return printTypeList;
-    }
-
-    public void setPrintTypeList(List<NameValueDto> printTypeList) {
-        this.printTypeList = printTypeList;
-    }
-
-    public List<String> getProcessStatusList() {
-        return processStatusList;
-    }
-
-    public void setProcessStatusList(List<String> processStatusList) {
-        this.processStatusList = processStatusList;
     }
 }
