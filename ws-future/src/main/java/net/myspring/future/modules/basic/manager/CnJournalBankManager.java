@@ -13,6 +13,7 @@ import net.myspring.future.modules.basic.domain.EmployeePhoneDeposit;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
+import net.myspring.future.modules.layout.domain.ShopGoodsDeposit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ public class CnJournalBankManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departMentNumber){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         Bank bank = bankRepository.findOne(shopDeposit.getBankId());
         Depot depot = depotRepository.findOne(shopDeposit.getShopId());
@@ -47,7 +48,7 @@ public class CnJournalBankManager {
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         entityForBankDto.setDebitAmount(shopDeposit.getAmount());
         entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-        entityForBankDto.setDepartmentNumber(departMentNumber);
+        entityForBankDto.setDepartmentNumber(departmentNumber);
         entityForBankDto.setBankAccountNumber(bank.getCode());
         entityForBankDto.setAccountNumber("2241");//其他应付款
         entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
@@ -93,4 +94,33 @@ public class CnJournalBankManager {
         return cloudClient.synJournalBank(cnJournalForBankDtoList);
     }
 
+    public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit, String departmentNumber){
+        List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
+        Bank bank = bankRepository.findOne(shopGoodsDeposit.getBankId());
+        Depot depot = depotRepository.findOne(shopGoodsDeposit.getShopId());
+        CnJournalForBankDto cnJournalForBankDto = new CnJournalForBankDto();
+        cnJournalForBankDto.setExtendId(shopGoodsDeposit.getId());
+        cnJournalForBankDto.setExtendType(ExtendTypeEnum.定金收款.name());
+        cnJournalForBankDto.setDate(LocalDate.now());
+        cnJournalForBankDto.setAccountNumberForBank("1002");//银行存款
+        List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
+
+        CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
+        entityForBankDto.setDebitAmount(shopGoodsDeposit.getAmount());
+        entityForBankDto.setCreditAmount(shopGoodsDeposit.getAmount().multiply(new BigDecimal(-1)));
+        entityForBankDto.setDepartmentNumber(departmentNumber);
+        entityForBankDto.setBankAccountNumber(bank.getCode());
+        entityForBankDto.setAccountNumber("2241");//其他应付款
+        entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
+        entityForBankDto.setEmpInfoNumber("0001");//员工
+        entityForBankDto.setOtherTypeNumber("2241.00028");//其他应付款-订货会订金
+        entityForBankDto.setExpenseTypeNumber("6602.000");//无
+        entityForBankDto.setCustomerNumber(null);
+        entityForBankDto.setComment(depot.getName()+shopGoodsDeposit.getRemarks());
+        cnJournalEntityForBankDtoList.add(entityForBankDto);
+        cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
+        cnJournalForBankDtoList.add(cnJournalForBankDto);
+
+        return cloudClient.synJournalBank(cnJournalForBankDtoList).get(0);
+    }
 }
