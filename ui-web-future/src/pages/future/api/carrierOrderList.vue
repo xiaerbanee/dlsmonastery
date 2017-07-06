@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'api:carrierOrder:edit'">{{$t('productTypeList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" >{{$t('productTypeList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('productTypeList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'api:carrierOrder:view'">{{$t('productTypeList.export')}}</el-button>
         <el-button type="primary" @click="carrierShip" v-permit="'api:carrierOrder:ship'">商城发货</el-button>
         <el-dropdown split-button type="primary"  @command="handleCommand">
@@ -21,7 +21,7 @@
         </el-dropdown>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('productTypeList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productTypeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -62,45 +62,7 @@
           <el-button type="primary" @click="search()">{{$t('productTypeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <search-dialog title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="detailData" label-width="120px">
-          <el-row :gutter="4">
-            <el-col :span="12">
-              <el-form-item label="货品订货单号" prop="category">
-                {{inputForm.formatId}}
-              </el-form-item>
-              <el-form-item label="办事处" prop="sort">
-                {{inputForm.areaName}}
-              </el-form-item>
-              <el-form-item label="门店" prop="value">
-                {{inputForm.depotName}}
-              </el-form-item>
-              <el-form-item label="商城门店" prop="remarks">
-                {{inputForm.carrierShopName}}
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="发货时间" prop="category">
-                {{inputForm.shipDate}}
-              </el-form-item>
-              <el-form-item label="商城单号" prop="sort">
-                {{inputForm.code}}
-              </el-form-item>
-              <el-form-item label="状态" prop="value">
-                <el-select v-model="inputForm.status" filterable clearable placeholder="请选择">
-                  <el-option v-for="status in formData.extra.carrierOrderStatusList" :key="status" :label="status" :value="status"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="订单备注" prop="remarks">
-                <el-input v-model="inputForm.remarks"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="formSubmit()">确定</el-button>
-        </div>
-      </search-dialog>
+
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('productTypeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="goodsOrderStatus" label="状态" ></el-table-column>
         <el-table-column prop="formatId" label="货品订货单号" width="150" ></el-table-column>

@@ -4,10 +4,10 @@
     <div class="form input-form ">
       <el-row class="button">
         <el-button type="primary" @click="formSubmit" icon="check">{{$t('afterSaleForm.save')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('afterSaleForm.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleForm.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('afterSaleForm.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleForm.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
@@ -20,7 +20,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="getImeStr(formData.imeStr)">{{$t('afterSaleForm.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-alert :title="$t('afterSaleForm.alertSearchAfterSaleIme')" type="error"  :closable="false" v-if="formData.imeStr =='' "></el-alert>
       <el-alert :title="message" type="error"  :closable="false" v-if="message !==''"></el-alert>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px">

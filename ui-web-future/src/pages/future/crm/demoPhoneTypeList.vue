@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhoneType:edit'">{{$t('demoPhoneTypeList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:demoPhoneType:view'">{{$t('demoPhoneTypeList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:demoPhoneType:view'">{{$t('demoPhoneTypeList.filter')}}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('demoPhoneTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog" >
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('demoPhoneTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog" >
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -67,7 +67,7 @@
         },
         initPromise:{},
         formLabelWidth: '120px',
-        formVisible: false
+        formVisible: false,
       };
     },
     methods: {

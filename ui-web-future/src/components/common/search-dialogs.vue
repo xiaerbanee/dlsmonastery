@@ -1,19 +1,18 @@
 <template>
-  <transition name="vodal-fade">
+  <transition >
     <div
       v-show="show"
-      tabindex="-1"
-      :style="style"
+      tabindex="2"
       :class="['vodal',sizeClass, className]"
       @keyup.esc="onEsc"
     >
       <div class="vodal-mask" v-if="mask" @click="$emit('hide')" />
-      <transition name="vodal-zoom">
-        <div class="vodal-dialog" :style="dialogStyle" v-show="show">
+      <transition >
+        <div class="vodal-dialog"  v-show="show">
           <div class="header">{{title}}</div>
           <span class="vodal-close" v-if="closeButton" @click="$emit('hide')" />
           <slot></slot>
-          <div class="el-dialog__footer" v-show="show && $slots.footer">
+          <div class="el-dialog__footer" >
             <slot name="footer"></slot>
           </div>
         </div>
@@ -34,10 +33,6 @@
         type: String,
         default: ''
       },
-      duration: {
-        type: Number,
-        default: 300
-      },
       measure: {
         type: String,
         default: 'px'
@@ -45,10 +40,6 @@
       height: {
         type:String,
         default: 'auto'
-      },
-      animation: {
-        type: String,
-        default: 'zoom'
       },
       mask: {
         type: Boolean,
@@ -71,15 +62,8 @@
       sizeClass(){
         return `vodal-dialog-${this.size}`;
       },
-      style() {
-        return {
-          animationDuration: `${this.duration}ms`,
-          webkitAnimationDuration: `${this.duration}ms`
-        };
-      },
       dialogStyle() {
         return {
-          ...this.style,
           height: `${this.height + this.measure}`
         }
       }
@@ -111,7 +95,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 100;
+    z-index: 1400;
   }
 
   .vodal {
@@ -121,6 +105,7 @@
   .vodal-mask {
     position: absolute;
     background: rgba(0, 0, 0, .3);
+    z-index: 101;
   }
   .vodal.vodal-dialog-tiny .vodal-dialog{
     width: 25%;
@@ -128,13 +113,16 @@
   .vodal.vodal-dialog-medium .vodal-dialog{
     width: 50%;
   }
+  .vodal.vodal-dialog-large .vodal-dialog{
+    width: 60%;
+  }
   .vodal-dialog {
     position: absolute;
     top: 25%;
     left: 0;
     right: 0;
     margin: auto;
-    z-index: 101;
+    z-index: 9999999;
     padding: 25px;
     background: #fff;
     border-radius: 3px;
@@ -180,76 +168,4 @@
     background: #333;
   }
 
-  /* -- fade -- */
-  @-webkit-keyframes vodal-fade-enter {
-    from {
-      opacity: 0;
-    }
-  }
-
-  @keyframes vodal-fade-enter {
-    from {
-      opacity: 0;
-    }
-  }
-
-  .vodal-fade-enter-active {
-    -webkit-animation: vodal-fade-enter both ease-in;
-    animation: vodal-fade-enter both ease-in;
-  }
-
-  @-webkit-keyframes vodal-fade-leave {
-    to {
-      opacity: 0
-    }
-  }
-
-  @keyframes vodal-fade-leave {
-    to {
-      opacity: 0
-    }
-  }
-
-  .vodal-fade-leave-active {
-    -webkit-animation: vodal-fade-leave both ease-out;
-    animation: vodal-fade-leave both ease-out;
-  }
-  /* -- zoom -- */
-  @-webkit-keyframes vodal-zoom-enter {
-    from {
-      -webkit-transform: scale3d(.3, .3, .3);
-      transform: scale3d(.3, .3, .3);
-    }
-  }
-
-  @keyframes vodal-zoom-enter {
-    from {
-      -webkit-transform: scale3d(.3, .3, .3);
-      transform: scale3d(.3, .3, .3);
-    }
-  }
-
-  .vodal-zoom-enter-active {
-    -webkit-animation: vodal-zoom-enter both cubic-bezier(0.4, 0, 0, 1.5);
-    animation: vodal-zoom-enter both cubic-bezier(0.4, 0, 0, 1.5);
-  }
-
-  @-webkit-keyframes vodal-zoom-leave {
-    to {
-      -webkit-transform: scale3d(.3, .3, .3);
-      transform: scale3d(.3, .3, .3);
-    }
-  }
-
-  @keyframes vodal-zoom-leave {
-    to {
-      -webkit-transform: scale3d(.3, .3, .3);
-      transform: scale3d(.3, .3, .3);
-    }
-  }
-
-  .vodal-zoom-leave-active {
-    -webkit-animation: vodal-zoom-leave both;
-    animation: vodal-zoom-leave both;
-  }
 </style>
