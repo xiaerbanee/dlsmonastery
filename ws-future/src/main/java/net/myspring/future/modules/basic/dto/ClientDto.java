@@ -22,6 +22,15 @@ public class ClientDto extends DataDto<Client> {
     //财务同步日期
     private LocalDateTime outDate;
     private String outCode;
+    private String depotNameStr;
+
+    public String getDepotNameStr() {
+        return depotNameStr;
+    }
+
+    public void setDepotNameStr(String depotNameStr) {
+        this.depotNameStr = depotNameStr;
+    }
 
     public String getOutGroupId() {
         return outGroupId;

@@ -28,6 +28,15 @@ public class DepotReportDto {
     private String areaId;
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
+    private String areaType;
+
+    public String getAreaType() {
+        return areaType;
+    }
+
+    public void setAreaType(String areaType) {
+        this.areaType = areaType;
+    }
 
     public String getOfficeId() {
         return officeId;

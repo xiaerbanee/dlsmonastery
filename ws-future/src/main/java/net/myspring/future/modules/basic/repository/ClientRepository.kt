@@ -76,15 +76,17 @@ class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         val sb = StringBuffer()
         sb.append("""
             SELECT
-                t1.*
+                t1.*,GROUP_CONCAT(DISTINCT t2.name) as depotNameStr
             FROM
-                crm_client t1
+                crm_client t1,crm_depot t2
             WHERE
                 t1.enabled=1
+                and t2.client_id=t1.id
         """)
         if (StringUtils.isNotEmpty(clientQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
+        sb.append("""  group by t1.id """)
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(clientQuery), BeanPropertyRowMapper(ClientDto::class.java))
