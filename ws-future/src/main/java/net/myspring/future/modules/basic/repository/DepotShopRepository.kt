@@ -303,7 +303,7 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }else if(reportQuery.isDetail){
             sb.append("""
                SELECT t2.id as 'productId',t2.name as 'productName',t1.ime,t1.retail_date,t6.employee_id,t4.office_id as 'officeId',t4.area_id as 'areaId',
-               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName'
+               t6.created_date as 'saleDate',t4.id as 'depotId',t4.name as 'depotName',t3.name as 'productTypeName',t7.name as 'chainName',t4.area_type
             """)
         }
         sb.append("""
