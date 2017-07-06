@@ -145,6 +145,7 @@ public class BankInService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "formatId", "编号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "bankName", "银行"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "transferType", "转账类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "amount", "金额"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "serialNumber", "流水号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "billDate", "开单日期"));
