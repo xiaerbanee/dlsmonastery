@@ -42,6 +42,33 @@
           <el-button type="primary" @click="search()">{{$t('adApplyList.sure')}}</el-button>
         </div>
       </search-dialog>
+      <search-dialog title = "确认数修改" v-model="leftQtyVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+        <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
+          <el-row :gutter="4">
+            <el-col :span="24">
+              <el-form-item :label="$t('adApplyEditForm.shopName')">{{inputForm.shopName}}
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.productName')">{{inputForm.productName}}
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.applyQty')">{{inputForm.applyQty}}
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.confirmQty')" prop="confirmQty">
+                <el-input v-model.number="inputForm.confirmQty" ></el-input>
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.billedQty')">{{inputForm.billedQty}}
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.leftQty')">{{inputForm.leftQty}}
+              </el-form-item>
+              <el-form-item :label="$t('adApplyEditForm.remarks')" prop="remarks">
+                <el-input v-model="inputForm.remarks" type="textarea"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary"  @click="formSubmit()">{{$t('adApplyEditForm.save')}}</el-button>
+        </div>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('adApplyList.loading')" @sort-change="sortChange" border>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('adApplyList.shopName')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adApplyList.createdDate')" sortable></el-table-column>
@@ -86,17 +113,24 @@
         formData:{
             extra:{}
         },
+        inputForm:{
+
+        },
         initPromise:{},
         pageHeight:600,
         formLabelWidth: '120px',
         formVisible: false,
+        leftQtyVisible:false,
         pageLoading: false,
         remoteLoading: false,
         totalApplyQty:"0",
         totalConfirmQty:"0",
         totalBilledQty:"0",
         totalLeftQty:"0",
-        productCode:''
+        productCode:'',
+        rules: {
+          confirmQty: [{ required: true, message: this.$t('adApplyEditForm.prerequisiteMessage')},{type:"number",message:this.$t('adApplyEditForm.inputLegalValue')}],
+        },
       };
     },
     methods: {
@@ -151,8 +185,25 @@
           });
       },itemAction:function(id,action){
         if(action=="edit") {
-          this.$router.push({ name: 'adApplyEditForm', query: { id: id }})
+          this.leftQtyVisible=true;
+          let page=this.page.content;
+          for(let item in page){
+            if(id==page[item].id){
+              this.inputForm=page[item];
+            }
+          }
         }
+      },formSubmit(){
+        let form = this.$refs["inputForm"];
+        form.validate((valid) => {
+          if (valid) {
+            axios.post('/api/ws/future/layout/adApply/saveConfirmQty', qs.stringify(this.inputForm)).then((response) => {
+              this.$message(response.data.message);
+              this.leftQtyVisible = false;
+              this.pageRequest();
+            })
+          }
+        })
       },getTotalQty(content){
           if(content == null){
               return;
