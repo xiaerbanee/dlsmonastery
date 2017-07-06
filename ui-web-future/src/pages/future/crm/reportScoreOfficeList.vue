@@ -12,7 +12,7 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('reportScoreOfficeList.scoreDate')" :label-width="formLabelWidth">
-                <date-picker v-model="formData.scoreDate"></date-picker>
+                <date-range-picker v-model="formData.scoreDateRange"></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('reportScoreOfficeList.officeName')" :label-width="formLabelWidth">
                  <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
@@ -37,7 +37,6 @@
         <el-table-column prop="recentMonthSaleQty" :label="$t('reportScoreOfficeList.recentMonthSaleQty')"></el-table-column>
         <el-table-column prop="officePoint" :label="$t('reportScoreOfficeList.point')"></el-table-column>
         <el-table-column prop="monthSaleMoney"  :label="$t('reportScoreOfficeList.monthSaleMoney')"></el-table-column>
-        <el-table-column prop="pointMonthSaleMoney" :label="$t('reportScoreOfficeList.pointMonthSaleMoney')" width="180"></el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>

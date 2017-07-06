@@ -78,7 +78,6 @@
             <el-table-column property="productName" label="货品" width="300"></el-table-column>
             <el-table-column property="ime" label="串码" width="200"></el-table-column>
             <el-table-column property="employeeName" label="促销员"></el-table-column>
-            <el-table-column property="depotName" label="门店"></el-table-column>
             <el-table-column property="saleDate" label="核销时间"></el-table-column>
             <el-table-column property="retailDate" label="保卡注册时间"></el-table-column>
           </el-table>
