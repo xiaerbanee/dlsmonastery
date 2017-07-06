@@ -169,11 +169,13 @@ public class ShopGoodsDepositService {
             KingdeeSynReturnDto kingdeeSynReturnDto = cnJournalBankManager.synForShopGoodsDeposit(shopGoodsDeposit,shopGoodsDeposit.getDepartMent());
             shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
             shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
         if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.其他应收单.name().equals(shopGoodsDeposit.getOutBillType())){
             KingdeeSynReturnDto kingdeeSynReturnDto = arOtherRecAbleManager.synForShopGoodsDeposit(shopGoodsDeposit);
             shopGoodsDeposit.setCloudSynId(kingdeeSynReturnDto.getId());
             shopGoodsDeposit.setOutCode(kingdeeSynReturnDto.getBillNo());
+            shopGoodsDepositRepository.save(shopGoodsDeposit);
         }
 
     }
