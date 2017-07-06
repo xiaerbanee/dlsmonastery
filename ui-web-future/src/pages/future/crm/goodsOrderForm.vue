@@ -145,7 +145,7 @@
         for(let goodsOrderDetail of this.goodsOrderDetailList){
           if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
-          }else if(util.isNotBlank(filterVal) && util.contains(goodsOrderDetail.productName, filterVal)){
+          }else if(util.contains(goodsOrderDetail.productName, filterVal)){
             tempPostList.push(goodsOrderDetail);
           }
         }

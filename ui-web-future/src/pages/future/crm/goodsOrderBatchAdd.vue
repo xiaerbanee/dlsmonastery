@@ -162,8 +162,8 @@
               temData.remarks = row[5];
               temData.netType = row[6];
               temData.productName = row[7];
-              temData.qty = Number.parseInt(row[8]);
-              temData.price = Number.parseInt(row[9]);
+              temData.qty = row[8];
+              temData.price = row[9];
               temData.shipType = row[10];
               this.formData.goodsOrderBatchAddDetailFormList.push(temData);
               }
@@ -176,7 +176,7 @@
             this.submitDisabled = false;
           });
         },initPage(){
-          axios.get('/api/ws/future/crm/goodsOrder/getForm').then((response)=>{
+          axios.get('/api/ws/future/crm/goodsOrder/getBatchAddForm').then((response)=>{
           this.settings.columns[6].source=response.data.extra.netTypeList;
           this.settings.columns[10].source=response.data.extra.shipTypeList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
