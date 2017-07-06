@@ -42,7 +42,6 @@ Vue.component('search-tag', searchTag);
 Vue.component('date-picker',datePicker);
 Vue.component('date-range-picker', dateRangePicker);
 Vue.component('search-dialog', searchDialog);
-/*Vue.component('search-dialogs', searchDialogs);*/
 Vue.component('su-alert', suAlert);
 
 // progressBar

@@ -599,37 +599,91 @@ public class GoodsOrderService {
 
     @Transactional
     public void batchAdd(GoodsOrderBatchAddForm goodsOrderBatchAddForm) {
-        for(GoodsOrderBatchAddDetailForm goodsOrderBatchAddDetailForm : goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList()){
 
-            GoodsOrderForm goodsOrderForm = new GoodsOrderForm();
-            goodsOrderForm.setShipType(goodsOrderBatchAddDetailForm.getShipType());
-            goodsOrderForm.setNetType(goodsOrderBatchAddDetailForm.getNetType());
-            Depot depot = depotRepository.findByEnabledIsTrueAndName(goodsOrderBatchAddDetailForm.getShopName());
-            if(depot == null){
-                throw new ServiceException("门店："+goodsOrderBatchAddDetailForm.getShopName()+"不存在");
+        String defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+
+        Map<String, List<GoodsOrderBatchAddDetailForm>> orderMap = CollectionUtil.extractToMapList(goodsOrderBatchAddForm.getGoodsOrderBatchAddDetailFormList(), "carrierOrderId");
+        for(List<GoodsOrderBatchAddDetailForm> each : orderMap.values()){
+            GoodsOrderBatchAddDetailForm firstDetailForm = each.get(0);
+            Depot shop = depotRepository.findByEnabledIsTrueAndName(firstDetailForm.getShopName());
+            if(shop == null){
+                throw new ServiceException("门店："+firstDetailForm.getShopName()+"不存在");
+            }else if(StringUtils.isBlank(shop.getPricesystemId())){
+                throw new ServiceException("门店："+firstDetailForm.getShopName()+"没有绑定价格体系");
+            }else if(StringUtils.isBlank(shop.getDepotShopId())){
+                throw new ServiceException("门店："+firstDetailForm.getShopName()+"没有关联的DepotShop记录");
             }
-            goodsOrderForm.setShopId(depot.getId());
-            goodsOrderForm.setRemarks(goodsOrderBatchAddDetailForm.getRemarks());
 
-            GoodsOrderDetailForm goodsOrderDetailForm = new GoodsOrderDetailForm();
-            Product product = productRepository.findByEnabledIsTrueAndName(goodsOrderBatchAddDetailForm.getProductName());
-            if(product == null){
-                throw new ServiceException("型号："+goodsOrderBatchAddDetailForm.getProductName()+"不存在");
-            }
-            goodsOrderDetailForm.setProductId(product.getId());
-            goodsOrderDetailForm.setPrice(goodsOrderBatchAddDetailForm.getPrice());
-            goodsOrderDetailForm.setQty(goodsOrderBatchAddDetailForm.getQty());
-            goodsOrderForm.setGoodsOrderDetailFormList(Collections.singletonList(goodsOrderDetailForm));
+            GoodsOrder goodsOrder = new GoodsOrder();
+            goodsOrder.setUseTicket(false);
+            goodsOrder.setStoreId(defaultStoreId);
+            goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
+            goodsOrder.setShopId(shop.getId());
+            goodsOrder.setNetType(firstDetailForm.getNetType());
+            goodsOrder.setShipType(firstDetailForm.getShipType());
+            goodsOrder.setRemarks(firstDetailForm.getRemarks());
+            goodsOrderRepository.save(goodsOrder);
 
-            GoodsOrder goodsOrder = save(goodsOrderForm);
+            CarrierOrder carrierOrder=new CarrierOrder();
+            carrierOrder.setGoodsOrderId(goodsOrder.getId());
+            carrierOrder.setCode(firstDetailForm.getCarrierOrderId());
+            carrierOrderRepository.save(carrierOrder);
 
-            ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-            expressOrder.setContator(goodsOrderBatchAddDetailForm.getContator());
-            expressOrder.setAddress(goodsOrderBatchAddDetailForm.getAddress());
-            expressOrder.setMobilePhone(goodsOrderBatchAddDetailForm.getMobilePhone());
-            expressOrderRepository.save(expressOrder);
+            saveExpressOrderInfoWhenBatchAdd(goodsOrder, firstDetailForm, shop);
+
+            saveGoodsOrderDetailInfoWhenBatchAdd(goodsOrder, each);
 
         }
+    }
+
+    @Transactional
+    private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
+        ExpressOrder expressOrder=new ExpressOrder();
+
+        expressOrder.setExpressPrintQty(0);
+        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
+        expressOrder.setContator(firstDetailForm.getContator());
+        expressOrder.setAddress(firstDetailForm.getAddress());
+        expressOrder.setMobilePhone(firstDetailForm.getMobilePhone());
+        expressOrder.setToDepotId(toDepot.getId());
+        expressOrder.setShipType(firstDetailForm.getShipType());
+        expressOrderRepository.save(expressOrder);
+
+        goodsOrder.setExpressOrderId(expressOrder.getId());
+        goodsOrderRepository.save(goodsOrder);
+    }
+
+    @Transactional
+    private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
+
+        Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");
+        BigDecimal amount = BigDecimal.ZERO;
+        List<GoodsOrderDetail> toBeSaved = new ArrayList<>();
+        for(List<GoodsOrderBatchAddDetailForm> goodsOrderDetailGroup : detailMap.values()){
+            GoodsOrderBatchAddDetailForm  firstDetailForm = goodsOrderDetailGroup.get(0);
+            Product product = productRepository.findByEnabledIsTrueAndName(firstDetailForm.getProductName());
+            if(product == null){
+                throw new ServiceException("型号："+firstDetailForm.getProductName()+"不存在");
+            }else if(!netTypeMatch(product.getNetType(), firstDetailForm.getNetType())){
+                throw new ServiceException("型号："+firstDetailForm.getProductName()+"的网络制式和订货的网络制式不匹配");
+            }
+
+            GoodsOrderDetail goodsOrderDetail = new GoodsOrderDetail();
+            goodsOrderDetail.setShippedQty(0);
+            goodsOrderDetail.setProductId(product.getId());
+            goodsOrderDetail.setPrice(firstDetailForm.getPrice());
+            goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
+            int goodsOrderDetailQty = goodsOrderDetailGroup.stream().mapToInt(GoodsOrderBatchAddDetailForm::getQty).sum();
+            goodsOrderDetail.setQty(goodsOrderDetailQty);
+            goodsOrderDetail.setBillQty(goodsOrderDetailQty);
+            toBeSaved.add(goodsOrderDetail);
+
+            amount=amount.add(goodsOrderDetail.getPrice().multiply(new BigDecimal(goodsOrderDetail.getQty())));
+        }
+        goodsOrderDetailRepository.save(toBeSaved);
+
+        goodsOrder.setAmount(amount);
+        goodsOrderRepository.save(goodsOrder);
     }
 
     public SimpleExcelBook export(GoodsOrderQuery goodsOrderQuery) {
@@ -649,8 +703,13 @@ public class GoodsOrderService {
         cacheUtils.initCacheInput(goodsOrderDtoList);
 
         List<String> goodsOrderIdList = CollectionUtil.extractToList(goodsOrderDtoList, "id");
-        Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap = getGoodsOrderDetailMap(goodsOrderIdList);
-        Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap = getGoodsOrderImeMap(goodsOrderIdList);
+
+        List<GoodsOrderDetailDto> goodsOrderDetailDtos = goodsOrderDetailRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
+        Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap = CollectionUtil.extractToMapList(goodsOrderDetailDtos, "goodsOrderId");
+
+        List<GoodsOrderImeDto> goodsOrderImeDtos = goodsOrderImeRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
+        Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap = CollectionUtil.extractToMapList(goodsOrderImeDtos, "goodsOrderId");
+
         Map<String, String> carrierOrderMap = getCarrierOrderCodeMap(goodsOrderIdList);
 
         List<SimpleExcelSheet> sheetList = new ArrayList<>();
@@ -850,29 +909,4 @@ public class GoodsOrderService {
         return carrierOrderMap;
     }
 
-    private Map<String, List<GoodsOrderImeDto>> getGoodsOrderImeMap(List<String> goodsOrderIdList) {
-        List<GoodsOrderImeDto> goodsOrderImeDtos = goodsOrderImeRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
-        Map<String, List<GoodsOrderImeDto>> goodsOrderImeMap = Maps.newHashMap();
-        for (GoodsOrderImeDto goodsOrderImeDto : goodsOrderImeDtos) {
-            String key = goodsOrderImeDto.getGoodsOrderId();
-            if (!goodsOrderImeMap.containsKey(key)) {
-                goodsOrderImeMap.put(key, new ArrayList<>());
-            }
-            goodsOrderImeMap.get(key).add(goodsOrderImeDto);
-        }
-        return goodsOrderImeMap;
-    }
-
-    private Map<String, List<GoodsOrderDetailDto>> getGoodsOrderDetailMap(List<String> goodsOrderIdList) {
-        List<GoodsOrderDetailDto> goodsOrderDetailDtos = goodsOrderDetailRepository.findDtoListByGoodsOrderIdList(goodsOrderIdList);
-        Map<String, List<GoodsOrderDetailDto>> goodsOrderDetailMap = Maps.newHashMap();
-        for (GoodsOrderDetailDto goodsOrderDetailDto : goodsOrderDetailDtos) {
-            String key = goodsOrderDetailDto.getGoodsOrderId();
-            if (!goodsOrderDetailMap.containsKey(key)) {
-                goodsOrderDetailMap.put(key, new ArrayList<>());
-            }
-            goodsOrderDetailMap.get(key).add(goodsOrderDetailDto);
-        }
-        return goodsOrderDetailMap;
-    }
 }

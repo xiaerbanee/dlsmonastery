@@ -46,7 +46,6 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
-  import util from "../../../utils/util";
   var table = null;
   export default {
     data(){

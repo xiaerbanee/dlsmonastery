@@ -73,7 +73,6 @@ public class GoodsOrderController {
         return goodsOrderQuery;
     }
 
-
     @RequestMapping(value = "getForm")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public GoodsOrderForm getForm(GoodsOrderForm goodsOrderForm){
@@ -174,6 +173,13 @@ public class GoodsOrderController {
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
+    @RequestMapping(value = "getBatchAddForm")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:batchAdd')")
+    public GoodsOrderBatchAddForm getBatchAddForm(GoodsOrderBatchAddForm goodsOrderBatchAddForm){
+        goodsOrderBatchAddForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
+        goodsOrderBatchAddForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
+        return goodsOrderBatchAddForm;
+    }
 
     @RequestMapping(value = "batchAdd")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
@@ -189,6 +195,9 @@ public class GoodsOrderController {
             if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getNetType())){
                 throw new ServiceException("网络制式不可以为空");
             }
+            if(!NetTypeEnum.getList().contains(goodsOrderBatchAddDetailForm.getNetType())){
+                throw new ServiceException("网络制式不合法");
+            }
             if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getProductName())){
                 throw new ServiceException("型号不可以为空");
             }
@@ -200,6 +209,9 @@ public class GoodsOrderController {
             }
             if(StringUtils.isBlank(goodsOrderBatchAddDetailForm.getShipType())){
                 throw new ServiceException("发货类型不可以为空");
+            }
+            if(!ShipTypeEnum.getList().contains(goodsOrderBatchAddDetailForm.getShipType())){
+                throw new ServiceException("发货类型不合法");
             }
 
         }
