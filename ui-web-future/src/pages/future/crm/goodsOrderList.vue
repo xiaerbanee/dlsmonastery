@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
         <el-dropdown @command="handleCommand">
           <el-button type="primary">
             {{$t('goodsOrderList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
