@@ -1,5 +1,6 @@
 package net.myspring.cloud.modules.kingdee.repository
 
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment
 import net.myspring.cloud.modules.report.dto.RetailAccountDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -270,6 +271,19 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
             Ffynum,
             Ffynamee
         """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
+    }
+
+    fun findAllDepartment():MutableList<BdDepartment>{
+        return namedParameterJdbcTemplate.query("""
+            SELECT DISTINCT
+                fdeptnum AS FNumber,
+                fdeptname AS FFullName
+            FROM
+                glcx
+            WHERE
+                fdeptnum NOT IN ('')
+            ORDER BY Fdeptnum
+        """,BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
 }

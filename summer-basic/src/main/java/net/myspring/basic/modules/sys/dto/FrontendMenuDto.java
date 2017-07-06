@@ -8,6 +8,15 @@ public class FrontendMenuDto {
     private String id;
     private String name;
     private String code;
+    private Integer sort;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public String getId() {
         return id;

@@ -1,6 +1,7 @@
 package net.myspring.cloud.modules.report.web.controller;
 
-import com.google.common.collect.Lists;
+import net.myspring.cloud.modules.report.dto.NestedHeaderCellDto;
+import net.myspring.cloud.modules.report.manager.RetailAccountManager;
 import net.myspring.cloud.modules.report.service.RetailAccountService;
 import net.myspring.cloud.modules.report.web.query.RetailAccountQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -20,13 +20,17 @@ import java.util.List;
 public class RetailAccountController {
     @Autowired
     private RetailAccountService retailAccountService;
+    @Autowired
+    private RetailAccountManager retailAccountManager;
 
 
     @RequestMapping(value = "list")
     public  List<List<Object>> list(RetailAccountQuery retailAccountQuery) {
-        List<List<Object>> retailShopReport = Lists.newArrayList();
-//            nestedHeader = retailReportToolsService.getNestedHeaders(start, end);
+        YearMonth start = retailAccountQuery.getMonthStart();
+        YearMonth end = retailAccountQuery.getMonthEnd();
+        List<List<Object>> retailShopReport = retailAccountService.getRetailReport(retailAccountQuery);
+        List<List<NestedHeaderCellDto>>  nestedHeader = retailAccountManager.getNestedHeaders(start, end);
 
-        return  retailAccountService.getRetailReport(retailAccountQuery);
+        return  null;
     }
 }

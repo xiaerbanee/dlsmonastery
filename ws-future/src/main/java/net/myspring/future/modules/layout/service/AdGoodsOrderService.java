@@ -180,7 +180,7 @@ public class AdGoodsOrderService {
         adGoodsOrder.setOutShopId(outShop.getId());
         adGoodsOrder.setInvestInCause(adGoodsOrderForm.getInvestInCause());
         adGoodsOrder.setEmployeeId(adGoodsOrderForm.getEmployeeId());
-        adGoodsOrder.setBillAddress(adGoodsOrderForm.getExpressOrderAddress());
+        //adGoodsOrder.setBillAddress(adGoodsOrderForm.getExpressOrderAddress());
         adGoodsOrder.setRemarks(adGoodsOrderForm.getRemarks());
         adGoodsOrderRepository.save(adGoodsOrder);
 

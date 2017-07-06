@@ -39,7 +39,7 @@
               <el-input v-model="inputForm.expressOrderContator"></el-input>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.address')" prop="expressOrderAddress">
-              <el-input v-model="inputForm.expressOrderAddress"></el-input>
+              {{inputForm.expressOrderAddress}}
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderBill.billAddress')" prop="billAddress">
               <el-input v-model="inputForm.billAddress"></el-input>
@@ -260,7 +260,7 @@
           }
           this.inputForm.expressOrderContator = this.adGoodsOrder.expressOrderContator;
           this.inputForm.expressOrderAddress = this.adGoodsOrder.expressOrderAddress;
-          this.inputForm.billAddress = this.adGoodsOrder.billAddress;
+          this.inputForm.billAddress = this.adGoodsOrder.expressOrderAddress;
           this.inputForm.expressOrderMobilePhone = this.adGoodsOrder.expressOrderMobilePhone;
           this.inputForm.splitBill = this.adGoodsOrder.splitBill;
           this.inputForm.syn = true;
