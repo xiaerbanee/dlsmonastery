@@ -180,7 +180,7 @@
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty) || detail.productId === this.formProperty.expressProductId){
             tempList.push(detail);
-          }else if(util.isNotBlank(filterVal) && util.contains(detail.productName, filterVal) ){
+          }else if(util.contains(detail.productName, filterVal) ){
             tempPostList.push(detail);
           }
         }

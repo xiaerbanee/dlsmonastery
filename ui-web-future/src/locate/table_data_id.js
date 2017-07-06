@@ -236,6 +236,7 @@ export default {
       goodsOrderBill: "pengiriman barang",
       goodsOrderDetail: "货品订货详细",
       goodsOrderForm: "pengiriman barang",
+      goodsOrderBatchAdd: "货品批量订货",
       goodsOrderList: "pengiriman barang",
       goodsOrderImeList: "货品订货串码列表",
       goodsOrderShip: "pengiriman barnag",
