@@ -301,6 +301,7 @@ export default {
     delete: "删除",
     audit: "审核",
     noSelectionFound:"没有选中任何记录",
+    transferType:"转账类型",
   },
   bankInDetail: {
     bankInDetail: "销售收款编辑",

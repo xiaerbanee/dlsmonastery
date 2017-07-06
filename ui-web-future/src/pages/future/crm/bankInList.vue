@@ -29,6 +29,11 @@
               <el-form-item :label="$t('bankInList.inputDate')">
                 <date-range-picker  v-model="formData.inputDateRange"></date-range-picker>
               </el-form-item>
+              <el-form-item :label="$t('bankInList.transferType')">
+                <el-select v-model="formData.transferType"  clearable>
+                  <el-option v-for="item in formData.extra.transferTypeList" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('bankInList.outCode')">
@@ -61,6 +66,7 @@
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('bankInList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopClientName"  :label="$t('bankInList.shopClientName')"></el-table-column>
         <el-table-column prop="bankName" column-key="bankId"  :label="$t('bankInList.bankName')" sortable></el-table-column>
+        <el-table-column prop="transferType" :label="$t('bankInList.transferType')" sortable></el-table-column>
         <el-table-column prop="amount" :label="$t('bankInList.amount')" ></el-table-column>
         <el-table-column prop="serialNumber" :label="$t('bankInList.serialNumber')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('bankInList.billDate')" sortable></el-table-column>

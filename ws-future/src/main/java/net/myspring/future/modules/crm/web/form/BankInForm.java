@@ -13,9 +13,18 @@ public class BankInForm extends BaseForm<BankIn> {
     private String shopId;
     private String type;
     private String bankId;
+    private String transferType;
     private LocalDate inputDate;
     private BigDecimal amount;
     private String serialNumber;
+
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferType(String transferType) {
+        this.transferType = transferType;
+    }
 
     public String getShopId() {
         return shopId;

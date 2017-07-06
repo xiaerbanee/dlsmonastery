@@ -325,6 +325,7 @@ export default {
     delete: "hapus",
     audit: "ubah",
     noSelectionFound:"没有选中任何记录",
+    transferType:"转账类型",
   },
   dataReportList: {
     dataReportList: "daftar data",

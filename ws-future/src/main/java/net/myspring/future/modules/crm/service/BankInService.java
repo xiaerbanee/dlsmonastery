@@ -114,6 +114,7 @@ public class BankInService {
         bankIn.setShopId(bankInForm.getShopId());
         bankIn.setType(bankInForm.getType());
         bankIn.setBankId(bankInForm.getBankId());
+        bankIn.setTransferType(bankInForm.getTransferType());
         bankIn.setInputDate(bankInForm.getInputDate());
         bankIn.setAmount(bankInForm.getAmount());
         bankIn.setSerialNumber(bankInForm.getSerialNumber());
@@ -180,6 +181,7 @@ public class BankInService {
             BankInForm bankInForm = new BankInForm();
             bankInForm.setShopId(depot.getId());
             bankInForm.setBankId(bank.getId());
+            bankInForm.setTransferType(bankInBatchDetailForm.getTransferType());
             bankInForm.setAmount(bankInBatchDetailForm.getAmount());
             bankInForm.setInputDate(bankInBatchDetailForm.getInputDate());
             bankInForm.setType(bankInBatchDetailForm.getType());
