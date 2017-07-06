@@ -351,10 +351,10 @@ public class GoodsOrderShipService {
             Depot depot=depotRepository.findOne(goodsOrder.getShopId());
 
             if (StringUtils.isNotBlank(depot.getDelegateDepotId())) {
-                DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
-                DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(depot.getDelegateDepotId());
+                DepotStore allotFromStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(depot.getDelegateDepotId());
+                DepotStore allotToStock = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
 
-                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrder(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
+                KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForGoodsOrderReturn(goodsOrder,allotFromStock.getOutCode(),allotToStock.getOutCode());
                 goodsOrder.setOutCode(StringUtils.appendString(goodsOrder.getOutCode(),kingdeeSynReturnDto.getBillNo(),CharConstant.COMMA));
                 goodsOrderRepository.save(goodsOrder);
             } else {
