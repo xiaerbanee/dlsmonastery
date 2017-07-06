@@ -77,7 +77,8 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     t3.code as 'categoryCode',
                     t4.id as 'menuId',
                     t4.name as 'menuName',
-                    t4.code as 'menuCode'
+                    t4.code as 'menuCode',
+                    t4.sort as 'menuSort'
                     FROM
                     sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4,sys_role_module t5
                     where
@@ -106,6 +107,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             var menuId = StringUtils.toString(item["menuId"]);
             var menuName = item["menuName"] as String;
             var menuCode = item["menuCode"] as String;
+            var menuSort = item["menuSort"] as Int;
             if(!backendMenuDtoMap.containsKey(id)) {
                 var backendMenuDto = BackendMenuDto();
                 backendMenuDto.id = id;
@@ -131,6 +133,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             frontendMenuDto.id = menuId;
             frontendMenuDto.name = menuName;
             frontendMenuDto.code = menuCode;
+            frontendMenuDto.sort = menuSort;
             backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
         }
         return Lists.newArrayList(backendMenuDtoMap.values);
@@ -150,7 +153,8 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                         t3.code as 'categoryCode',
                         t4.id as 'menuId',
                         t4.name as 'menuName',
-                        t4.code as 'menuCode'
+                        t4.code as 'menuCode',
+                        t5.sort as 'menuSort'
                         FROM
                         sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4,sys_role_module t5,sys_role_permission t6,sys_permission t7
                         where
@@ -183,6 +187,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             var menuId = StringUtils.toString(item["menuId"]);
             var menuName = item["menuName"] as String;
             var menuCode = item["menuCode"] as String;
+            var menuSort = item["menuSort"] as Int;
             if(!backendMenuDtoMap.containsKey(id)) {
                 var backendMenuDto = BackendMenuDto();
                 backendMenuDto.id = id;
@@ -208,6 +213,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             frontendMenuDto.id = menuId;
             frontendMenuDto.name = menuName;
             frontendMenuDto.code = menuCode;
+            frontendMenuDto.sort = menuSort;
             backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
         }
         return Lists.newArrayList(backendMenuDtoMap.values);
@@ -229,7 +235,8 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
                     t3.code as 'categoryCode',
                     t4.id as 'menuId',
                     t4.name as 'menuName',
-                    t4.code as 'menuCode'
+                    t4.code as 'menuCode',
+                    t4.sort as 'menuSort'
                 FROM
                     sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4
                 where
@@ -258,6 +265,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             var menuId = StringUtils.toString(item["menuId"]);
             var menuName = item["menuName"] as String;
             var menuCode = item["menuCode"] as String;
+            var menuSort = item["menuSort"] as Int;
             if(!backendMenuDtoMap.containsKey(id)) {
                 var backendMenuDto = BackendMenuDto();
                 backendMenuDto.id = id;
@@ -284,6 +292,7 @@ class BackendRepositoryImpl @Autowired constructor(val jdbcTemplate:JdbcTemplate
             frontendMenuDto.id = menuId;
             frontendMenuDto.name = menuName;
             frontendMenuDto.code = menuCode;
+            frontendMenuDto.sort=menuSort;
             backendMenuDtoMap[id]!!.backendModuleMenuDtoMap[moduleId]!!.menuCategoryMenuDtoMap[categoryId]!!.frontendMenuDtoMap.put(menuId,frontendMenuDto);
         }
         return Lists.newArrayList(backendMenuDtoMap.values);
