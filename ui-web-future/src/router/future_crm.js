@@ -2,7 +2,6 @@ const afterSaleAreaEdit= r => require.ensure([], () => r(require('pages/future/c
 const afterSaleEditForm = r => require.ensure([], () => r(require('pages/future/crm/afterSaleEditForm.vue')));
 const afterSaleForm = r => require.ensure([], () => r(require('pages/future/crm/afterSaleForm.vue')));
 const afterSaleFromCompany = r => require.ensure([], () => r(require('pages/future/crm/afterSaleFromCompany.vue')));
-const afterSaleImeAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleImeAllotList.vue')));
 const afterSaleList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleList.vue')));
 const afterSaleProductAllotList = r => require.ensure([], () => r(require('pages/future/crm/afterSaleProductAllotList.vue')));
 
@@ -94,7 +93,6 @@ let routes = [
   {path:'/future/crm/afterSaleEditForm',component:afterSaleEditForm,name:'afterSaleEditForm'},
   {path:'/future/crm/afterSaleForm',component:afterSaleForm,name:'afterSaleForm'},
   {path:'/future/crm/afterSaleFromCompany',component:afterSaleFromCompany,name:'afterSaleFromCompany'},
-  {path:'/future/crm/afterSaleImeAllotList',component:afterSaleImeAllotList,name:'afterSaleImeAllotList'},
   {path:'/future/crm/afterSaleList',component:afterSaleList,name:'afterSaleList'},
   {path:'/future/crm/afterSaleProductAllotList',component:afterSaleProductAllotList,name:'afterSaleProductAllotList'},
   {path:'/future/crm/afterSaleStoreAllotList',component:afterSaleStoreAllotList,name:'afterSaleStoreAllotList'},

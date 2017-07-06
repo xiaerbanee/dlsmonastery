@@ -211,7 +211,6 @@ export default {
       afterSaleEditForm: "售后申请编辑",
       afterSaleForm: "售后申请",
       afterSaleFromCompany: "好机返库",
-      afterSaleImeAllotList: "调拨列表",
       afterSaleList: "售后列表",
       afterSaleProductAllotList: "售后盘点",
       afterSaleStoreAllotList: "售后调拨",
