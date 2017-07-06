@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class OppoPlantSendImeiPpselDto  {
     private String id;
+    private String companyId;
     private String billId;
     private String imei;
     private String meid;
@@ -45,6 +46,14 @@ public class OppoPlantSendImeiPpselDto  {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     public String getBillId() {

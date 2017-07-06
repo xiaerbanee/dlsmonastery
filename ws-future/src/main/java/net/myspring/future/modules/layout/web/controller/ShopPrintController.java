@@ -43,7 +43,7 @@ public class ShopPrintController {
     @RequestMapping(value="getQuery",method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:shopPrint:view')")
     public ShopPrintQuery getQuery(ShopPrintQuery shopPrintQuery) {
-        return shopPrintService.findQuery(shopPrintQuery);
+        return shopPrintService.getQuery(shopPrintQuery);
     }
 
     @RequestMapping(value="getForm",method = RequestMethod.GET)

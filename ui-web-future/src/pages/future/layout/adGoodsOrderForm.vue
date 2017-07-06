@@ -58,12 +58,12 @@
       <el-table :data="filterAdGoodsOrderDetailList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderForm.loading')" stripe border >
         <el-table-column  prop="productCode" :label="$t('adGoodsOrderForm.code')" >
           <template scope="scope">
-            <div class="action" v-if="scope.row.productImage !== null" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" @click="itemAction(scope.row.productImage,'showImage')">{{scope.row.productCode}}</el-button>
+            <div class="action" v-if="scope.row.productImage !== null&&scope.row.productImage !==''" v-permit="'crm:adGoodsOrder:view'"><el-button type="text" @click="itemAction(scope.row.productImage,'showImage')">{{scope.row.productCode}}</el-button>
               <el-dialog v-model="dialogVisible" size="tiny">
                 <img width="100%" :src="dialogImageUrl" alt="">
               </el-dialog>
             </div>
-            <div v-if="scope.row.productImage === null" v-permit="'crm:adGoodsOrder:view'">{{scope.row.productCode}}</div>
+            <div v-if="scope.row.productImage === null||scope.row.productImage ===''" v-permit="'crm:adGoodsOrder:view'">{{scope.row.productCode}}</div>
           </template>
         </el-table-column>
         <el-table-column prop="qty" :label="$t('adGoodsOrderForm.qty')">
@@ -201,9 +201,13 @@
         this.refreshRecentMonthSaleAmount();
       },itemAction:function(productImage,action){
           if(action=="showImage"){
-              this.dialogVisible = true;
               axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:productImage}}).then((response)=>{
-                this.dialogImageUrl= response.data[0].url;
+                if(response.data == ""){
+                  this.$message("未找到该货品的图片");
+                }else{
+                  this.dialogVisible = true;
+                  this.dialogImageUrl = response.data[0].url;
+                }
               });
           }
       },

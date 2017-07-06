@@ -108,10 +108,8 @@ public class ShopPrintService {
         }
     }
 
-    public ShopPrintQuery findQuery(ShopPrintQuery shopPrintQuery){
+    public ShopPrintQuery getQuery(ShopPrintQuery shopPrintQuery){
         return shopPrintQuery;
     }
 
-    public void notify(ShopPrint shopPrint) {
-    }
 }

@@ -201,6 +201,13 @@ public class ProductImeService {
         return productImeDtos;
     }
 
+    public  List<ProductImeDto> getProductImeReportDetail(ReportQuery reportQuery){
+        List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
+        List<String> imeList=CollectionUtil.extractToList(productImeSaleReportList,"ime");
+        List<ProductImeDto> productImeDtoList=productImeRepository.findDtoListByImeList(imeList);
+        return productImeDtoList;
+    }
+
     public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
