@@ -3,10 +3,10 @@
     <head-tab active="adPricesystemChangeForm"></head-tab>
     <el-row>
       <el-button type="primary" @click="formSubmit()" icon="check">{{$t('adPricesystemChangeForm.save')}}</el-button>
-      <el-button type="primary" @click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
+      <el-button type="primary"@click="formVisible = true" icon="search">{{$t('adPricesystemChangeForm.filter')}}</el-button>
       <span v-html="searchText"></span>
     </el-row>
-    <search-dialog :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+    <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('adPricesystemChangeForm.filter')"  v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
       <el-form :model="formData">
         <el-row :gutter="4">
           <el-col :span="24">

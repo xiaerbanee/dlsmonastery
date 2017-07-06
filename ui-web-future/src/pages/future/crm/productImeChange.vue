@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-tab active="productImeChange"></head-tab>
-    <search-dialog :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
+    <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productImeChange.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
       <el-form  label-width="120px">
         <el-row :gutter="4">
           <el-col :span="12">

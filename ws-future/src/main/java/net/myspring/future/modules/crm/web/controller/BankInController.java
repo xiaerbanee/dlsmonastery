@@ -143,6 +143,9 @@ public class BankInController {
             if(StringUtils.isBlank(bankInBatchDetailForm.getType())){
                 throw new ServiceException("类型不可以为空");
             }
+            if(!BankInTypeEnum.getList().contains(bankInBatchDetailForm.getType())){
+                throw new ServiceException("类型不合法");
+            }
             if(bankInBatchDetailForm.getAmount() == null || bankInBatchDetailForm.getAmount().compareTo(BigDecimal.ZERO)<=0){
                 throw new ServiceException("到账金额必须大于0");
             }

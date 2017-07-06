@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:position:edit'">{{$t('positionList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'hr:position:view'">{{$t('positionList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:position:view'">{{$t('positionList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('positionList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('positionList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">

@@ -4,11 +4,11 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:storeAllot:edit'">{{$t('storeAllotList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:storeAllot:view'">{{$t('storeAllotList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('storeAllotList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('storeAllotList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">

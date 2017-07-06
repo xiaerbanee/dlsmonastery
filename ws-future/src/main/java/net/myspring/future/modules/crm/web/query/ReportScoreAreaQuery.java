@@ -1,21 +1,24 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 
 public class ReportScoreAreaQuery extends BaseQuery{
-    private LocalDate scoreDate;
+    private String scoreDateRange;
     private String areaId;
     private String sort = "month_rank,ASC";
 
 
-    public LocalDate getScoreDate() {
-        return scoreDate;
+    public String getScoreDateRange() {
+        return scoreDateRange;
     }
 
-    public void setScoreDate(LocalDate scoreDate) {
-        this.scoreDate = scoreDate;
+    public void setScoreDateRange(String scoreDateRange) {
+        this.scoreDateRange = scoreDateRange;
     }
 
     public String getAreaId() {
@@ -34,5 +37,21 @@ public class ReportScoreAreaQuery extends BaseQuery{
     @Override
     public String getSort() {
         return sort;
+    }
+
+    public LocalDate getScoreDateStart() {
+        if(StringUtils.isNotBlank(scoreDateRange)) {
+            return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getScoreDateEnd() {
+        if(StringUtils.isNotBlank(scoreDateRange)) {
+            return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }

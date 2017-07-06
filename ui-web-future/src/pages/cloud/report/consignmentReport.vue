@@ -5,10 +5,10 @@
     <head-tab active="consignmentReport"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <el-dialog title="过滤" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog  :show="formVisible" @hide="formVisible = false" title="过滤" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="12">
@@ -21,7 +21,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">搜索</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <div id="grid" ref="handsontable" style="width:100%;height:600px;overflow:hidden;margin-top: 20px;"></div>
     </div>
   </div>
@@ -73,7 +73,7 @@
           dateRange:{label:"日期"},
         },
         formLabelWidth: '120px',
-        formVisible: false
+        formVisible: false,
       };
     },
     mounted () {

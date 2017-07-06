@@ -3,13 +3,13 @@
     <head-tab active="depotAccountList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="formVisible = true" icon="search">{{$t('depotAccountList.filter')}}</el-button>
+        <el-button type="primary" v-permit="'crm:depot:depotAccountData'" @click="formVisible = true" icon="search">{{$t('depotAccountList.filter')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportDetail"  >{{$t('depotAccountList.exportDetail')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportConfirmation" >{{$t('depotAccountList.exportConfirmation')}}</el-button>
         <el-button type="primary" v-permit="'crm:depot:depotAccountData'"  @click="exportAllDepots"  >{{$t('depotAccountList.exportAllDepots')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('depotAccountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="24">

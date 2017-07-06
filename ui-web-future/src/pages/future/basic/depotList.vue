@@ -4,11 +4,11 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:depot:edit'">{{$t('depotList.add')}}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:depot:view'">{{$t('depotList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:depot:view'">{{$t('depotList.filter')}}</el-button>
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('depotList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <el-dialog :title="$t('bankList.filter')" v-model="formVisible" size="large" class="search-form">
+      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('bankList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="8">
@@ -82,7 +82,7 @@
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('depotList.sure')}}</el-button>
         </div>
-      </el-dialog>
+      </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('depotList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="name" :label="$t('depotList.name')" ></el-table-column>
         <el-table-column prop="officeName" :label="$t('depotList.officeName')" ></el-table-column>

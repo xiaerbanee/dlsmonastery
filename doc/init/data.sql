@@ -326,3 +326,12 @@ update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.
 
 update sys_dict_enum set remarks=concat(remarks,"(内藏卡布灯箱,必须在原始基础尺寸上扩宽20公分)","") where `value`="室内四面包柱（2面装发光字2面内藏卡布灯箱）" and category="装修类别";
 update sys_dict_enum set remarks=concat(remarks,"(门头宽度必须≥2m)","") where `value`="门头" and category="装修类别";
+
+update sys_office set enabled=false where name like "%废弃%" or name like "%作废%";
+
+update sys_menu set name='渠道库存' where name='库存报表';
+update sys_menu set sort=10 where name='销售报表';
+update sys_menu set sort=20 where name='渠道库存';
+update sys_menu set sort=30 where name='仓库报表';
+update sys_menu set sort=40 where name='每日打分';
+update sys_menu set sort=50 where name='每日排名';

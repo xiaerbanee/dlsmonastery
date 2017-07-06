@@ -1,146 +1,171 @@
 <template>
-  <transition name="dialog-fade" v-show="visible">
-    <div class="el-dialog__wrapper" v-show="visible" @click.self="handleWrapperClick" >
-      <div
-        class="el-dialog"
-        :class="[sizeClass, customClass]"
-        ref="dialog"
-        :style="style">
-        <div class="el-dialog__header">
-          <slot name="title">
-            <span class="el-dialog__title">{{title}}</span>
-          </slot>
-          <div class="el-dialog__headerbtn">
-            <i v-show="visible && showClose" class="el-dialog__close el-icon el-icon-close" @click='handleClose'></i>
+  <transition >
+    <div
+      v-show="show"
+      tabindex="2"
+      :class="['vodal',sizeClass, className]"
+      @keyup.esc="onEsc"
+    >
+      <div class="vodal-mask" v-if="mask" @click="$emit('hide')" />
+      <transition >
+        <div class="vodal-dialog"  v-show="show">
+          <div class="header">{{title}}</div>
+          <span class="vodal-close" v-if="closeButton" @click="$emit('hide')" />
+          <slot></slot>
+          <div class="el-dialog__footer" >
+            <slot name="footer"></slot>
           </div>
         </div>
-        <div class="el-dialog__body" v-show="visible"><slot></slot></div>
-        <div class="el-dialog__footer" v-show="visible && $slots.footer">
-          <slot name="footer"></slot>
-        </div>
-      </div>
+      </transition>
     </div>
   </transition>
 </template>
 
 <script>
-  import Popup from 'element-ui/src/utils/popup';
-  import emitter from 'element-ui/src/mixins/emitter';
-
   export default {
-    name: 'SearchDialog',
-
-    mixins: [Popup, emitter],
-
+    name: 'vodal',
     props: {
+      show: {
+        type: Boolean,
+        required: true
+      },
       title: {
         type: String,
         default: ''
       },
-
-      modal: {
-        type: Boolean,
-        default: true
-      },
-
-      modalAppendToBody: {
-        type: Boolean,
-        default: true
-      },
-
-      lockScroll: {
-        type: Boolean,
-        default: true
-      },
-
-      closeOnClickModal: {
-        type: Boolean,
-        default: true
-      },
-
-      closeOnPressEscape: {
-        type: Boolean,
-        default: true
-      },
-
-      showClose: {
-        type: Boolean,
-        default: true
-      },
-
-      size: {
+      measure: {
         type: String,
-        default: 'small'
+        default: 'px'
       },
-
-      customClass: {
+      height: {
+        type:String,
+        default: 'auto'
+      },
+      mask: {
+        type: Boolean,
+        default: true
+      },
+      size:{
+        type:String,
+        default:'tiny'
+      },
+      closeButton: {
+        type: Boolean,
+        default: true
+      },
+      className: {
         type: String,
         default: ''
-      },
-
-      top: {
-        type: String,
-        default: '15%'
-      },
-      beforeClose: Function
-    },
-
-    watch: {
-      visible(val) {
-        this.$emit('update:visible', val);
-
-        if (val) {
-          this.$emit('open');
-          this.$el.addEventListener('scroll', this.updatePopper);
-          this.$nextTick(() => {
-            this.$refs.dialog.scrollTop = 0;
-          });
-        } else {
-          this.$el.removeEventListener('scroll', this.updatePopper);
-          this.$emit('close');
-        }
       }
     },
-
     computed: {
-      sizeClass() {
-        return `el-dialog--${ this.size }`;
+      sizeClass(){
+        return `vodal-dialog-${this.size}`;
       },
-      style() {
-        return this.size === 'full' ? {} : { 'top': this.top };
+      dialogStyle() {
+        return {
+          height: `${this.height + this.measure}`
+        }
       }
     },
-
     methods: {
-      handleWrapperClick() {
-        if (!this.closeOnClickModal) return;
-        this.handleClose();
-      },
-      handleClose() {
-        if (typeof this.beforeClose === 'function') {
-          this.beforeClose(this.hide);
-        } else {
-          this.hide();
-        }
-      },
-      hide(cancel) {
-        if (cancel !== false) {
-          this.$emit('update:visible', false);
-          this.$emit('visible-change', false);
-        }
-      },
-      updatePopper() {
-        this.broadcast('ElSelectDropdown', 'updatePopper');
-        this.broadcast('ElDropdownMenu', 'updatePopper');
+      onEsc() {
+        this.show && this.$emit('hide');
       }
     },
-
-    mounted() {
-
-      if (this.visible) {
-        this.rendered = true;
-        this.open();
+    watch: {
+      show(show) {
+        show && this.$nextTick(() => {
+          this.$el.focus();
+        })
       }
     }
-  };
+  }
 </script>
+<style>
+  .header {
+    font-size: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+    margin-bottom: 10px;
+  }
+  .vodal,
+  .vodal-mask {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1400;
+  }
+
+  .vodal {
+    position: fixed;
+  }
+
+  .vodal-mask {
+    position: absolute;
+    background: rgba(0, 0, 0, .3);
+    z-index: 101;
+  }
+  .vodal.vodal-dialog-tiny .vodal-dialog{
+    width: 25%;
+  }
+  .vodal.vodal-dialog-medium .vodal-dialog{
+    width: 50%;
+  }
+  .vodal.vodal-dialog-large .vodal-dialog{
+    width: 60%;
+  }
+  .vodal-dialog {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 9999999;
+    padding: 25px;
+    background: #fff;
+    border-radius: 3px;
+    box-sizing: content-box;
+    box-shadow: 0 0 10px 7px rgba(0, 0, 0, .4);
+  }
+  .vodal-close {
+    position: absolute;
+    cursor: pointer;
+    top: 16px;
+    right: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .vodal-close:before,
+  .vodal-close:after {
+    position: absolute;
+    content: '';
+    height: 2px;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    margin-top: -1px;
+    background: #999;
+    border-radius: 100%;
+    -webkit-transition: background .2s;
+    transition: background .2s;
+  }
+
+  .vodal-close:before {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .vodal-close:after {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+
+  .vodal-close:hover:before,
+  .vodal-close:hover:after {
+    background: #333;
+  }
+
+</style>

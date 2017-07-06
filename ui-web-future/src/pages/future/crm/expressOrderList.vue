@@ -3,12 +3,12 @@
     <head-tab active="expressOrderList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('expressOrderList.filter') }}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{ $t('expressOrderList.filter') }}</el-button>
         <el-button  type="primary" @click="exportData">{{$t('expressOrderList.export')}}</el-button>
         <el-button  type="primary" @click="exportEMSData">{{$t('expressOrderList.EMSExportData')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('expressOrderList.filter')" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('expressOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">

@@ -4,10 +4,10 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus">添加</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('chainList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('chainList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">

@@ -3,10 +3,10 @@
     <head-tab active="supplierPayable"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search" >过滤</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >过滤</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog title="过滤" v-model="formVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="7">
             <el-col :span="24">
@@ -18,7 +18,7 @@
               </el-form-item>
               <el-form-item label="供应商名称" :label-width="formLabelWidth">
                 <el-select v-model="formData.supplierIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
-                  <el-option v-for="item in suppliers" :key="item.fsupplierid" :label="item.fname" :value="item.fsupplierid"></el-option>
+                  <el-option v-for="item in suppliers" :key="item.fsupplierId" :label="item.fname" :value="item.fsupplierId"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -82,7 +82,7 @@
       return {
         page:{},
         summary:[],
-        suppliers:{},
+        suppliers:[],
         detail:[],
         formData: {
           extra:{}

@@ -3,10 +3,10 @@
     <head-tab active="dutyTripList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{$t('dutyTripList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('dutyTripList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyTripList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
               <el-form-item :label="$t('dutyTripList.date')" :label-width="formLabelWidth">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>

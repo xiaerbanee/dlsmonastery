@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,12 @@ public class MenuCategoryMenuDto {
     public List<FrontendMenuDto> getMenuList() {
         if(frontendMenuDtoMap.size()>0) {
             menuList =  Lists.newArrayList(frontendMenuDtoMap.values());
+            Collections.sort(menuList,new Comparator<FrontendMenuDto>() {
+                @Override
+                public int compare(FrontendMenuDto ap1, FrontendMenuDto ap2) {
+                    return ap1.getSort().compareTo(ap2.getSort());
+                }
+            }) ;
         }
         return menuList;
     }
