@@ -1,7 +1,10 @@
 package net.myspring.future.modules.crm.web.query;
 
+import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.util.cahe.annotation.CacheInput;
+import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 
@@ -10,18 +13,11 @@ import java.time.LocalDate;
  */
 public class ReportScoreOfficeQuery extends BaseQuery {
 
-    private LocalDate scoreDate;
+    private String scoreDateRange;
     private String officeId;
     private String areaId;
     private String sort = "month_rank,ASC";
 
-    public LocalDate getScoreDate() {
-        return scoreDate;
-    }
-
-    public void setScoreDate(LocalDate scoreDate) {
-        this.scoreDate = scoreDate;
-    }
 
     public String getOfficeId() {
         return officeId;
@@ -47,5 +43,30 @@ public class ReportScoreOfficeQuery extends BaseQuery {
     @Override
     public String getSort() {
         return sort;
+    }
+
+
+    public LocalDate getScoreDateStart() {
+        if(StringUtils.isNotBlank(scoreDateRange)) {
+            return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public String getScoreDateRange() {
+        return scoreDateRange;
+    }
+
+    public void setScoreDateRange(String scoreDateRange) {
+        this.scoreDateRange = scoreDateRange;
+    }
+
+    public LocalDate getScoreDateEnd() {
+        if(StringUtils.isNotBlank(scoreDateRange)) {
+            return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 }
