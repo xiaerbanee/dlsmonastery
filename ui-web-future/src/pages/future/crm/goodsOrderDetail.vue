@@ -60,10 +60,11 @@
         </el-row>
       </el-form>
       <div style="width:100%;height:50px;text-align:center;font-size:20px">{{$t('goodsOrderDetail.billDetail')}}</div>
-      <el-table :data="goodsOrderDetailList" style="margin-top:5px;" border stripe border>
+      <el-table :data="goodsOrderDetailList" style="margin-top:5px;" stripe border>
         <el-table-column prop="productName" :label="$t('goodsOrderDetail.productName')" width="200"></el-table-column>
         <el-table-column prop="qty" :label="$t('goodsOrderDetail.qty')"></el-table-column>
-        <el-table-column prop="billQty" :label="$t('goodsOrderDetail.billQty')"></el-table-column>
+        <el-table-column prop="realBillQty" :label="$t('goodsOrderDetail.billQty')"></el-table-column>
+        <el-table-column prop="shippedQty" :label="$t('goodsOrderDetail.shippedQty')"></el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>
         <el-table-column :label="$t('goodsOrderDetail.operate')" :render-header="renderAction">
           <template scope="scope">
@@ -78,7 +79,7 @@
       <div style="width:100%;height:50px;text-align:center;font-size:20px" v-if="!carrierEdit">
         {{$t('goodsOrderDetail.shipDetail')}}
       </div>
-      <el-table :data="goodsOrderImeList" style="margin-top:5px;" border stripe border v-if="!carrierEdit">
+      <el-table :data="goodsOrderImeList" style="margin-top:5px;" stripe border v-if="!carrierEdit">
         <el-table-column prop="productName" :label="$t('goodsOrderDetail.productName')" width="200"></el-table-column>
         <el-table-column prop="productImeIme" :label="$t('goodsOrderDetail.productIme')"></el-table-column>
         <el-table-column prop="productImeMeid" :label="$t('goodsOrderDetail.meid')"></el-table-column>

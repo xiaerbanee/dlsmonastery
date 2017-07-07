@@ -806,6 +806,7 @@ export default {
     createdByName: "发货人",
     shipDate: "发货日期",
     copy: "复制",
+    shippedQty: "已发货数",
   },
   goodsOrderForm: {
     goodsOrderForm: "pengiriman barang",
