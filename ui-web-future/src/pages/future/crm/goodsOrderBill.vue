@@ -176,7 +176,7 @@
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
-          if(util.isNotBlank(detail.billQty) || detail.productId === this.formProperty.expressProductId){
+          if(util.isNotBlank(detail.billQty) || util.isNotBlank(detail.id) || detail.productId === this.formProperty.expressProductId){
             tempList.push(detail);
           }else if(filterValNotBlank && util.contains(detail.productName, filterVal) ){
             tempPostList.push(detail);

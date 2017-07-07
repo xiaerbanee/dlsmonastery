@@ -11,7 +11,8 @@
           <date-picker v-model="date"></date-picker>
         </div>
         <div style="float: left;margin-left: 10px">
-          <el-button  type="primary" @click="synData" icon="plus">工厂同步</el-button>
+          <el-button type="primary" @click="synData" icon="plus">工厂同步</el-button>
+          <el-button type="primary" @click="exportData" >发货串码导出<i class="el-icon-caret-bottom el-icon--right"></i></el-button>
         </div>
         <span v-html="searchText"></span>
       </el-row>
@@ -171,6 +172,12 @@
           });
         }else{
           this.$message({message:"请选择同步日期",type:'warning'});
+        }
+      },exportData(){
+        if(this.date){
+          window.location.href='/api/global/tool/oppo/oppoPlantSendImeiPpsel/export?date='+this.date;
+        }else{
+          this.$message({message:"请选择发货串码导出日期",type:'warning'})
         }
       },initPage(){
         axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{

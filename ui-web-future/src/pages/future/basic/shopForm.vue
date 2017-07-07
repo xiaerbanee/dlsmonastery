@@ -13,9 +13,9 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="inputForm.name" />
         </el-form-item>
-        <el-form-item label="Code" prop="code">
-          <el-input v-model="inputForm.code" />
-        </el-form-item>
+            <el-form-item label="总店" prop="parentId" >
+              <depot-select v-model="inputForm.parentId" category="shop"></depot-select>
+            </el-form-item>
         <el-form-item label="机构" prop="officeId">
           <office-select v-model="inputForm.officeId"></office-select>
         </el-form-item>
@@ -89,8 +89,9 @@
   import districtSelect from 'components/general/district-select'
   import boolRadioGroup from 'components/common/bool-radio-group'
   import expressCompanySelect from 'components/future/express-company-select'
+  import depotSelect from 'components/future/depot-select'
   export default {
-    components:{officeSelect,districtSelect,boolRadioGroup,expressCompanySelect},
+    components:{depotSelect,officeSelect,districtSelect,boolRadioGroup,expressCompanySelect},
     data(){
       return this.getData()
     },
@@ -105,24 +106,6 @@
         },
         remoteLoading:false,
         rules: {
-          code: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          officeId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          address: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          districtId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          pricesystemId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          credit:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          adPricesystemId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          expressCompanyId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          printPrice: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          rebate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          adShop: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          isHidden:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          popShop:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          districtId:[{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
     },

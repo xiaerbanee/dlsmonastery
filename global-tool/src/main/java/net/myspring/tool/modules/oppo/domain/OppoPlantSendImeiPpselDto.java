@@ -1,5 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
+import net.myspring.util.cahe.annotation.CacheInput;
+
 import java.time.LocalDateTime;
 
 public class OppoPlantSendImeiPpselDto  {
@@ -14,8 +16,29 @@ public class OppoPlantSendImeiPpselDto  {
     private String remark;
     private String imei2;
     private String colorId;
-    private String lxProductId;
     private String productId;
+    private String lxProductId;
+    @CacheInput(inputKey = "products",inputInstance = "productId",outputInstance = "name")
+    private String productName;
+    @CacheInput(inputKey = "products",inputInstance = "lxProductId",outputInstance = "name")
+    private String lxProductName;
+
+
+    public String getLxProductName() {
+        return lxProductName;
+    }
+
+    public void setLxProductName(String lxProductName) {
+        this.lxProductName = lxProductName;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getId() {
         return id;
