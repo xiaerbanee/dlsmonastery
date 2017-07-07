@@ -55,15 +55,6 @@ public class ShopAttributeService {
         return list;
     }
 
-    public Page<DepotDto> findPage(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
-        DepotQuery depotQuery=new DepotQuery();
-        ReflectionUtil.copyProperties(shopAttributeQuery,depotQuery);
-        Page<DepotDto> page = depotRepository.findPage(pageable, depotQuery);
-        cacheUtils.initCacheInput(page.getContent());
-        return page;
-    }
-
-
     public ShopAttributeForm getForm(ShopAttributeForm shopAttributeForm){
         if(StringUtils.isNotBlank(shopAttributeForm.getShopId())){
             shopAttributeForm.setShop(depotRepository.findOne(shopAttributeForm.getShopId()));
