@@ -1,6 +1,7 @@
 package net.myspring.cloud.common.dataSource;
 
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
+import net.myspring.cloud.common.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class DbContextHolder {
@@ -22,6 +23,10 @@ public class DbContextHolder {
     }
 
     public String getKingdeeName() {
+        //如果没有设置当前金蝶帐套，默认为当前登录者的公司名字
+        if(StringUtils.isBlank(kingdeeName) && StringUtils.isNotBlank(RequestUtils.getCompanyName())) {
+            kingdeeName = RequestUtils.getCompanyName();
+        }
         return kingdeeName;
     }
 
