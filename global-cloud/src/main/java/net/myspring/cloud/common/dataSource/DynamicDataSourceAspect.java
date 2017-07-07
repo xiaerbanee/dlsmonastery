@@ -47,6 +47,6 @@ public class DynamicDataSourceAspect {
                 }
             }
         }
-        RequestUtils.getSecurityMap().put("dataSourceType",dataSourceType);
+        DbContextHolder.get().setDataSourceType(dataSourceType);
     }
 }

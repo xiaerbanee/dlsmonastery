@@ -1,6 +1,7 @@
 package net.myspring.future.modules.layout.web.query;
 
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.enums.ShopBuildAuditEnum;
 import net.myspring.future.common.query.BaseQuery;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.util.text.StringUtils;
@@ -14,9 +15,9 @@ import java.util.List;
  * Created by zhangyf on 2017/5/6.
  */
 public class ShopBuildQuery extends BaseQuery {
-    private String officeId;
+    private String areaId;
     private String idStr;
-    private String auditType;
+    private String auditType = ShopBuildAuditEnum.待批需要我审核.name();
     private String shopId;
     private String processStatus;
     private String fixtureType;
@@ -65,18 +66,17 @@ public class ShopBuildQuery extends BaseQuery {
         return auditType;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public String getAreaId() {
+        return areaId;
     }
 
-    public String getOfficeId() {
-        return officeId;
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
-
 
     public String getPositionId() {
         if(StringUtils.isNotBlank(auditType)){
-            if(auditType.equalsIgnoreCase("1")){
+            if(ShopBuildAuditEnum.待批需要我审核.name().equalsIgnoreCase(auditType)){
                 return RequestUtils.getPositionId();
             }
         }

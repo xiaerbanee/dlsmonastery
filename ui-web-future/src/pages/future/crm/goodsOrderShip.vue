@@ -51,7 +51,7 @@
           </el-col>
         </el-row>
         <div v-if="goodsOrder.id">
-          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;"  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
             <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
             <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
               <template scope="scope">
@@ -177,7 +177,6 @@
               item.leftQty = 0;
             }
           }
-
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {

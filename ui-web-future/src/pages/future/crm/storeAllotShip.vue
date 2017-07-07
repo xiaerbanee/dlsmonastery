@@ -161,10 +161,8 @@
           axios.get('/api/ws/future/crm/storeAllot/findDto' ,{params: {id:this.$route.query.id}}).then((response)=>{
             this.storeAllot = response.data;
             util.copyValue(response.data,this.inputForm);
-
           });
         });
-
       }
     },created(){
       this.initPage();
