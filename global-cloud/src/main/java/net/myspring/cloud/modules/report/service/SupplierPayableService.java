@@ -17,6 +17,11 @@ import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.*;
+import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -180,8 +186,18 @@ public class SupplierPayableService {
                 materialIdList.add(supplierPayableDetailDto.getMaterialId());
             }
         }
-        Map<String,BdSupplier> bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
-        Map<String,BdDepartment> bdDepartmentIdMap = bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
+        Map<String,BdSupplier> bdSupplierIdMap;
+        if (CollectionUtil.isNotEmpty(supplierIdList)){
+            bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+        }else {
+            bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
+        }
+        Map<String,BdDepartment> bdDepartmentIdMap;
+        if (CollectionUtil.isNotEmpty(departmentIdList)) {
+            bdDepartmentIdMap =  bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
+        }else {
+            bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
+        }
         Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
         if (materialIdList.size()>0){
             materialIdMap = bdMaterialRepository.findByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
@@ -282,5 +298,44 @@ public class SupplierPayableService {
 
     public SupplierPayableQuery getQuery(){
         return null;
+    }
+
+    //excel报错
+    public SimpleExcelBook export(SupplierPayableQuery supplierPayableQuery){
+        supplierPayableQuery.setQueryDetail(true);
+        List<SupplierPayableDto> supplierPayableDtoList = findSupplierPayableDtoList(supplierPayableQuery);
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"supplierName", "供应商名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"departmentName", "门店名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"beginAmount", "期初应付"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"payableAmount", "应付金额"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "实付金额"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"endAmount", "期末应付"));
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应付汇总", supplierPayableDtoList, simpleExcelColumnList);
+        simpleExcelSheetList.add(simpleExcelSheet);
+        for(SupplierPayableDto supplierPayableDto : supplierPayableDtoList){
+            List<SupplierPayableDetailDto> supplierPayableDetailDtoList = supplierPayableDto.getSupplierPayableDetailDtoList();
+            if (CollectionUtil.isNotEmpty(supplierPayableDetailDtoList)){
+                List<SimpleExcelColumn> columnList = Lists.newArrayList();
+                CellStyle cellStyleRed = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.RED.name());
+                columnList.add(new SimpleExcelColumn(workbook,"billType", "业务类型"));
+                columnList.add(new SimpleExcelColumn(workbook,"billNo", "单据编号"));
+                columnList.add(new SimpleExcelColumn(workbook,"date", "单据日期"));
+                columnList.add(new SimpleExcelColumn(workbook,"quantity", "商品名称"));
+                columnList.add(new SimpleExcelColumn(workbook,"price", "数量"));
+                columnList.add(new SimpleExcelColumn(workbook,"amount", "单价"));
+                columnList.add(new SimpleExcelColumn(workbook,"payableAmount", "金额"));
+                columnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "应付"));
+                columnList.add(new SimpleExcelColumn(workbook,"endAmount", "实付"));
+                columnList.add(new SimpleExcelColumn(workbook,"note", "期末"));
+                SupplierPayableDetailDto supplierPayableDetailDto = supplierPayableDetailDtoList.get(0);
+                SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType()+"("+supplierPayableDetailDto.getBillNo()+")", supplierPayableDetailDtoList, columnList);
+                simpleExcelSheetList.add(excelSheet);
+            }
+        }
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 }
