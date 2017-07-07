@@ -10,8 +10,8 @@
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-form-item label="公司ID" :label-width="formLabelWidth">
-              <el-input v-model="formData.companyId" auto-complete="off" placeholder="请输入"></el-input>
+            <el-form-item label="公司名称" :label-width="formLabelWidth">
+              <el-input v-model="formData.companyName" auto-complete="off" placeholder="请输入"></el-input>
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
@@ -36,12 +36,12 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="companyId" label="公司ID" sortable width="100"></el-table-column>
+        <el-table-column fixed prop="id" label="ID" sortable width="100"></el-table-column>
         <el-table-column prop="name" label="账套"></el-table-column>
         <el-table-column prop="type" label="账套类型"></el-table-column>
-        <el-table-column prop="kingdeeUrl" label="URL"></el-table-column>
-        <el-table-column prop="kingdeePostUrl" label="POST-URL"></el-table-column>
-        <el-table-column prop="kingdeeDbid" label="DBID"></el-table-column>
+        <el-table-column prop="companyName" label="公司名称"></el-table-column>
+        <el-table-column prop="lastModifiedBy" label="修改人"></el-table-column>
+        <el-table-column prop="lastModifiedDate" label="修改时间"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>

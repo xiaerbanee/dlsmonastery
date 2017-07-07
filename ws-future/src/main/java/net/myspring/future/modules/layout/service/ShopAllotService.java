@@ -107,7 +107,8 @@ public class ShopAllotService {
             shopAllot.setFromShopId(shopAllotForm.getFromShopId());
             shopAllot.setToShopId(shopAllotForm.getToShopId());
             shopAllot.setRemarks(shopAllotForm.getRemarks());
-            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotRepository.findMaxBusinessId(LocalDate.now().atStartOfDay())));
+            LocalDate now = LocalDate.now();
+            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotRepository.findMaxBusinessId(now.atStartOfDay()), now));
             shopAllot.setStatus(AuditStatusEnum.申请中.name());
 
             shopAllotRepository.save(shopAllot);

@@ -41,8 +41,9 @@ public class ShopPromotionService {
         ShopPromotion shopPromotion;
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
-            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(LocalDate.now().atStartOfDay());
-            shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+            LocalDate now = LocalDate.now();
+            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(now.atStartOfDay());
+            shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, now));
             shopPromotionRepository.save(shopPromotion);
         }else{
             shopPromotion = shopPromotionRepository.findOne(shopPromotionForm.getId());

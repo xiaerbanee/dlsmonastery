@@ -24,13 +24,14 @@
         }
       }
     },
-    mounted() {
-      setTimeout("window.print()",500);
-    },
     methods:{
       findOne(){
         axios.get('/api/ws/future/crm/goodsOrderShip/shipPrint',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
           this.goodsOrderStore=response.data;
+          this.$nextTick(()=>{
+            window.print();
+            this.$router.push({ name: 'adGoodsOrderList'});
+          });
         })
       }
     },created(){
