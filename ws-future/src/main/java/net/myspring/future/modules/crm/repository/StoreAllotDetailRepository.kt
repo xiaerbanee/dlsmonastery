@@ -67,6 +67,7 @@ class StoreAllotDetailRepositoryImpl @Autowired constructor(val namedParameterJd
                 ( SELECT  ime.product_id productId, COUNT(*) billQty
                   FROM crm_goods_order_ime ime
                   WHERE  ime.goods_order_id IN ( SELECT t2.id FROM  crm_goods_order t2 WHERE t2.bill_date = :billDate AND t2.store_id = :toStoreId AND t2. STATUS = :status AND t2.enabled = 1 )
+                               AND ime.enabled = 1
                   GROUP BY ime.product_id )
                 UNION ALL
                 ( SELECT  t1.id productId, 0 billQty
