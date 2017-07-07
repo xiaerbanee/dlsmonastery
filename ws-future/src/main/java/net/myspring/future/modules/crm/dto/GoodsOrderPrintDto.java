@@ -19,6 +19,15 @@ public class GoodsOrderPrintDto {
     private String contator;
     private String mobilePhone;
     private String address;
+    private Boolean lxMallOrder;
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public String getShopClientName() {
         return shopClientName;
