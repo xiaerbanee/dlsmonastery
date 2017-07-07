@@ -72,12 +72,12 @@ public class AccountKingdeeBookService {
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
             KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
-            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
+//            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }else{
             accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
             ReflectionUtil.copyProperties(accountKingdeeBookForm,accountKingdeeBook);
-            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
+//            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }
         return accountKingdeeBook;
