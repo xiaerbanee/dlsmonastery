@@ -12,11 +12,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="sys_product")
 public class Product extends CompanyEntity<Product> {
+    //物料名称
     private String name;
+    //物料编码
     private String code;
+    //维护的价格
     private BigDecimal price1;
+    //物料ID
     private String outId;
+    //
     private String returnOutId;
+    //ModifyDate
     private LocalDateTime outDate;
     private Integer version = 0;
     private String kingdeeBookId;
