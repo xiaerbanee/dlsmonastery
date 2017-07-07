@@ -47,11 +47,11 @@ public class ScheduleUtils {
     @Transactional(readOnly = false)
     public void synOppo() {
 
-            logger.info("工厂自动同步开始");
-            String date= LocalDateUtils.format(LocalDate.now());
-            String message=synOppo(date);
-            logger.info(message);
-            logger.info("工厂自动同步成功");
+        logger.info("工厂自动同步开始");
+        String date= LocalDateUtils.format(LocalDate.now());
+        String message=synOppo(date);
+        logger.info(message);
+        logger.info("工厂自动同步成功");
     }
 
     @Transactional(readOnly = false)
@@ -164,7 +164,7 @@ public class ScheduleUtils {
                 localProductImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(productNos));
             }
             for(ProductIme productIme:localProductImeList){
-                    productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
+                productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
             }
         }
         if(CollectionUtil.isNotEmpty(localProductImeList)){

@@ -10,7 +10,7 @@ function getUrl(url) {
 }
 
 function getUaaUrl(url) {
-    var baseUrl = "https://hi.ncoppo.com/";
+  var baseUrl = "https://hi.ncoppo.com/";
     var result = baseUrl + url;
     if (url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";

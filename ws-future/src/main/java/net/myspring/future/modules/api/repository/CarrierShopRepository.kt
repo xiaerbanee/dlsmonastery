@@ -21,6 +21,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
  */
 interface CarrierShopRepository : BaseRepository<CarrierShop, String>, CarrierShopRepositoryCustom {
     fun  findByName(name:String):CarrierShop
+
+    fun  findByNameLike(name:String):CarrierShop
 }
 
 

@@ -3,7 +3,7 @@
     <br/>
     <h2 style="text-align: center;">{{adGoodsOrder.expressCompanyName}}物料库出库单({{adGoodsOrder.id}})</h2>
     <div class="row">
-      <div class="span4">
+      <div class="span3">
       财务单号{{adGoodsOrder.outCode}}
       </div>
       <div class="span3">
@@ -18,11 +18,10 @@
         收货单位：{{adGoodsOrder.shopName}}
       </div>
       <div class="span10">
-        摘要：{{adGoodsOrder.expressCompanyName}}，{{adGoodsOrder.expressOrderAddress}}，{{adGoodsOrder.expressOrderMobilePhone}}
+        摘要：{{adGoodsOrder.expressOrderExpressCompanyName}}，{{adGoodsOrder.expressOrderAddress}}，{{adGoodsOrder.expressOrderMobilePhone}}
         <b style="font-size: 18px;font-family: '楷体';">&nbsp;{{adGoodsOrder.billRemarks}}</b><br/>
-        联系人：&nbsp;{{adGoodsOrder.expressOrderContator}}，{{adGoodsOrder.expressOrderMobilePhone}}，{{adGoodsOrder.billAddress }}， 业务：{{adGoodsOrder.employeeName }}&nbsp;{{adGoodsOrder.employeeMobilePhone}}
+        收货人：&nbsp;{{adGoodsOrder.expressOrderContator}}，{{adGoodsOrder.expressOrderMobilePhone}}，{{adGoodsOrder.expressOrderAddress }}， 业务：{{adGoodsOrder.employeeName }}&nbsp;{{adGoodsOrder.employeeMobilePhone}}
         &nbsp;地址 ：{{adGoodsOrder.shopAddress}}
-
       </div>
     </div>
     <table class="table table-bordered">
@@ -80,9 +79,6 @@
       }
     },
 
-    mounted(){
-      setTimeout("window.print()",2000);
-    },
     created(){
 
       axios.all([this.findDetailList(), this.print()])
