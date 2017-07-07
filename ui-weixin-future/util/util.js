@@ -1,5 +1,5 @@
 function getUrl(url) {
-    var baseUrl = "https://hi.ncoppo.com/api/";
+    var baseUrl = "https://xcx.sjls.shop/api/";
     var result = baseUrl + url;
     if (url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";
@@ -10,7 +10,7 @@ function getUrl(url) {
 }
 
 function getUaaUrl(url) {
-    var baseUrl = "https://hi.ncoppo.com/";
+    var baseUrl = "https://xcx.sjls.shop/";
     var result = baseUrl + url;
     if (url.indexOf("?") > 0) {
         result = result + "&requestClient=weixin";

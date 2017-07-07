@@ -48,7 +48,16 @@ public class DepotShopDto extends DataDto<DepotShop>{
     private String pricesystemName;
     private String chainName;
     private String clientName;
+    private String parentName;
     private Map<String,Object> depositMap= Maps.newHashMap();
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
     public String getChainName() {
         return chainName;

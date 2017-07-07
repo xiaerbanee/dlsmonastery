@@ -85,8 +85,8 @@ Page({
     var images = that.data.formProperty.images;
     wx.chooseImage({
       count: 9,
-      sizeType: ['compressed'],
-      sourceType: ['camera'],
+      sizeType: ['compressed','original'],
+      sourceType: ['album','camera'],
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
         for (let i in tempFilePaths) {

@@ -13,6 +13,7 @@ import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,4 +79,11 @@ public class CarrierShopService {
         CarrierShop carrierShop=carrierShopRepository.findByName(name);
         return carrierShop;
     }
+
+    public CarrierShopDto findByNameLike(String name){
+        CarrierShop carrierShop=carrierShopRepository.findByNameLike("%"+name+"%");
+        CarrierShopDto carrierShopDto= BeanUtil.map(carrierShop,CarrierShopDto.class);
+        return carrierShopDto;
+    }
+
 }

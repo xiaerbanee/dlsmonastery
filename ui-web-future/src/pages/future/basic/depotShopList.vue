@@ -91,6 +91,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="数据加载中" @sort-change="sortChange" stripe border>
         <el-table-column  prop="depotName" label="门店名称" sortable ></el-table-column>
+        <el-table-column prop="parentName" label="总店名称"  />
         <el-table-column prop="clientName" label="金蝶名称"  />
         <el-table-column prop="areaName" label="办事处"  />
         <el-table-column prop="officeName" label="机构"  />
