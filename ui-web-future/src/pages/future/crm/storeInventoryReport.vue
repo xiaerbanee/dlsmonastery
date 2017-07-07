@@ -25,14 +25,13 @@
           <el-button type="primary" @click="search()">确定</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="storeDetail" stripe border>
+      <el-table :data="depotStoreList"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中"  @row-click="storeDetail" stripe border>
         <el-table-column column-key="areaId" prop="areaName" label="办事处" sortable></el-table-column>
         <el-table-column column-key="t1.officeId" prop="officeName" label="业务单元" sortable></el-table-column>
         <el-table-column column-key="t1.name" prop="depotName" label="仓库" sortable></el-table-column>
         <el-table-column prop="qty" label="数量" sortable></el-table-column>
         <el-table-column prop="percentage" label="占比(%)"></el-table-column>
       </el-table>
-      <pageable :page="page" v-on:pageChange="pageChange"></pageable>
     </div>
     <div>
       <el-dialog title="详细" :visible.sync="detailVisible">
@@ -54,7 +53,7 @@
     },
     data() {
       return {
-        page:[],
+        depotStoreList:[],
         searchText:"",
         formData:{
           extra:{},
@@ -72,30 +71,18 @@
           this.searchText = util.getSearchText(this.$refs.searchDialog);
         })
       },
-      pageRequest() {
+      initPage() {
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("storeInventoryReport",submitData);
         axios.get('/api/ws/future/basic/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
-          this.page = response.data;
+          this.depotStoreList = response.data;
           this.pageLoading = false;
         })
-      },pageChange(pageNumber,pageSize) {
-        this.formData.page = pageNumber;
-        this.formData.size = pageSize;
-        this.pageRequest();
-      },sortChange(column) {
-        if(column.prop == "qty"){
-          this.pageRequest();
-          return;
-        }
-        this.formData.sort=util.getSort(column);
-        this.formData.page=0;
-        this.pageRequest();
       },search() {
         this.formVisible = false;
-        this.pageRequest();
+        this.initPage();
       },storeDetail(row, event, column){
         this.detailVisible=true;
         this.formData.isDetail=true;
@@ -117,7 +104,7 @@
         this.formData = response.data;
         this.formData.scoreType=this.formData.scoreType?"1":"0";
         util.copyValue(this.$route.query, this.formData);
-        this.pageRequest();
+        this.initPage();
       })
     }
   };
