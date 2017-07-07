@@ -104,6 +104,17 @@ public class GoodsOrderController {
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
+    @RequestMapping(value = "updateCarrierOrderDetail")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
+    public RestResponse updateCarrierOrderDetail(GoodsOrderForm goodsOrderForm) {
+        if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
+            CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);
+            carrierOrderFrom.setGoodsOrderId(goodsOrderForm.getId());
+            carrierOrderService.save(carrierOrderFrom);
+        }
+        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+    }
+
     @RequestMapping(value = "getBillForm")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:bill')")
     public GoodsOrderBillForm getBillForm(GoodsOrderBillForm goodsOrderBillForm){

@@ -8,7 +8,6 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.Express;
@@ -36,7 +35,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -75,7 +73,7 @@ public class ExpressService {
 
         ExpressOrder eo = saveExpressOrderWithoutSettingExpressCodes(expressForm);
 
-        Express  express = null;
+        Express  express;
         if(expressForm.isCreate()){
             express = new Express();
         }else{
@@ -138,11 +136,7 @@ public class ExpressService {
         }
 
         Optional<Map<String, Object>> optionalMatchingRule = list.stream().filter(s -> (weight.compareTo(new BigDecimal(String.valueOf(s.get("min")))) >= 0 && weight.compareTo(new BigDecimal(String.valueOf(s.get("max")))) <= 0)).limit(1).findFirst();
-        if(optionalMatchingRule.isPresent()){
-            return optionalMatchingRule.get();
-        }else {
-            return null;
-        }
+        return optionalMatchingRule.orElse(null);
 
     }
 
@@ -153,7 +147,7 @@ public class ExpressService {
             throw new ServiceException("errorToDepotIdCantBeNull");
         }
 
-        ExpressOrder expressOrder = null;
+        ExpressOrder expressOrder;
         if (expressForm.getExpressOrderId() == null) {
             Depot toDepot = depotRepository.findOne(expressForm.getExpressOrderToDepotId());
             expressOrder = new ExpressOrder();
@@ -208,8 +202,7 @@ public class ExpressService {
         simpleExcelSheetList.add(new SimpleExcelSheet("快递单列表", expressDtoList, expressColumnList));
 
         ExcelUtils.doWrite(workbook,simpleExcelSheetList);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook,"快递单列表"+LocalDate.now()+".xlsx", simpleExcelSheetList);
-        return simpleExcelBook;
+        return new SimpleExcelBook(workbook,"快递单列表"+LocalDate.now()+".xlsx", simpleExcelSheetList);
     }
 
     public ExpressDto findDto(String id) {

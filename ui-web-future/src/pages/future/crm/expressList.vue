@@ -131,7 +131,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/ws/future/crm/express/export?"+{params:this.submitData};
+          window.location.href="/api/ws/future/crm/express/export?"+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }
     },created () {
