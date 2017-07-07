@@ -3,14 +3,14 @@
     <head-tab active="goodsOrderList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
-        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
+        <el-button v-permit="'crm:goodsOrder:edit'" type="primary" @click="itemAdd" icon="plus">{{ $t('goodsOrderList.add') }}</el-button>
+        <el-button v-permit="'crm:goodsOrderShip:mallOrder'" type="primary" @click="mallAdd" icon="plus">{{ $t('goodsOrderList.mallAdd') }}</el-button>
+        <el-button v-permit="'crm:goodsOrder:view'" type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderList.filter') }}</el-button>
         <el-dropdown @command="handleCommand">
           <el-button type="primary">
             {{$t('goodsOrderList.more')}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="mallAdd">{{$t('goodsOrderList.mallAdd')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:batchAdd'" command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
@@ -93,6 +93,7 @@
       </search-dialog>
 
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :row-class-name="tableRowClassName" :element-loading-text="$t('goodsOrderList.loading')" @sort-change="sortChange" stripe border >
+        <el-table-column column-key="id" prop="formatId" :label="$t('goodsOrderList.businessId')" sortable></el-table-column>
         <el-table-column prop="createdDate" sortable :label="$t('goodsOrderList.createdDate')"></el-table-column>
         <el-table-column prop="billDate" :label="$t('goodsOrderList.billDate')"></el-table-column>
         <el-table-column prop="status" :label="$t('goodsOrderList.status')"></el-table-column>
@@ -103,7 +104,6 @@
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
-        <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
@@ -186,7 +186,9 @@
       this.formVisible = false;
       this.pageRequest();
     },itemAdd(){
-      this.$router.push({ name: 'goodsOrderForm'})
+      this.$router.push({ name: 'goodsOrderForm'});
+    },mallAdd(){
+      this.$router.push({ name: 'goodsOrderMallForm'});
     },itemAction:function(id,action){
       if(action=="edit") {
         this.$router.push({ name: 'goodsOrderForm', query: { id: id }})
@@ -210,9 +212,7 @@
       }
     },
     handleCommand(command) {
-      if(command==="mallAdd") {
-        this.$router.push({ name: 'goodsOrderMallForm'});
-      }else if(command==="batchAdd"){
+      if(command==="batchAdd"){
         this.$router.push({ name: 'goodsOrderBatchAdd'});
       }else if(command==="carrierOrder"){
         this.$router.push({name:'carrierOrderList'});

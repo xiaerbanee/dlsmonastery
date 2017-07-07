@@ -51,7 +51,7 @@
           </el-col>
         </el-row>
         <div v-if="goodsOrder.id">
-          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;"  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
             <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
             <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
               <template scope="scope">
@@ -104,7 +104,9 @@
           submitDisabled:false,
           inputForm:{},
           formatId:'',
-          goodsOrder:{},
+          goodsOrder:{
+            goodsOrderDetailDtoList:[],
+          },
           shipResult:{},
           rules: {}
         }
@@ -136,6 +138,16 @@
             this.submitDisabled = false;
           }
           this.shipResult.errorMsg ="";
+
+          for(let item of this.goodsOrder.goodsOrderDetailDtoList) {
+            if(item.hasIme) {
+              item.shipQty = 0;
+              item.leftQty = item.realBillQty - item.shippedQty;
+            } else {
+              item.shipQty = item.realBillQty-item.shippedQty;
+              item.leftQty = 0;
+            }
+          }
           return;
         }
         axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
@@ -165,7 +177,6 @@
               item.leftQty = 0;
             }
           }
-
           //如果提交表单
           if(isSubmit) {
             if(util.isBlank(errorMsg)) {

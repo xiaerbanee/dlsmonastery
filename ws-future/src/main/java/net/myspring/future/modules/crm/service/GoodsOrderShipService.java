@@ -151,7 +151,10 @@ public class GoodsOrderShipService {
             }
         }
         for (GoodsOrderDetailDto goodsOrderDetailDto: goodsOrderDetailDtoList) {
-            totalShouldShipQty = totalShouldShipQty +goodsOrderDetailDto.getRealBillQty();
+            if(productMap.get(goodsOrderDetailDto.getProductId()).getHasIme()){
+                totalShouldShipQty = totalShouldShipQty +goodsOrderDetailDto.getRealBillQty();
+            }
+
             totalShippedQty = totalShippedQty + goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
             Integer qty = goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
             Integer realBillQty=goodsOrderDetailDto.getRealBillQty();
@@ -386,13 +389,12 @@ public class GoodsOrderShipService {
         Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
         //串码调拨
         if (CollectionUtil.isNotEmpty(goodsOrderImeList)) {
-            List<ProductIme> productImes = Lists.newArrayList();
+
             for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
                 ProductIme productIme = productImeMap.get(goodsOrderIme.getProductImeId());
                 productIme.setDepotId(goodsOrder.getStoreId());
                 productIme.setRetailShopId(goodsOrder.getStoreId());
                 productImeRepository.save(productIme);
-                productImes.add(productIme);
             }
         }
         goodsOrderImeRepository.delete(goodsOrderImeList);
@@ -438,10 +440,12 @@ public class GoodsOrderShipService {
         GoodsOrderDto goodsOrderDto=getShip(id);
         Depot depot=depotRepository.findOne(goodsOrderDto.getShopId());
         goodsOrderDto.setShopCredit(depot.getCredit());
-        Client client=clientRepository.findOne(depot.getClientId());
-        CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(LocalDate.now(),LocalDate.now(),client.getOutId());
-        List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-        goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getEndShouldGet());
+        if(StringUtils.isNotBlank(depot.getClientId())){
+            Client client=clientRepository.findOne(depot.getClientId());
+            CustomerReceiveQuery customerReceiveQuery=new CustomerReceiveQuery(LocalDate.now(),LocalDate.now(),client.getOutId());
+            List<CustomerReceiveDto> customerReceiveList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+            goodsOrderDto.setShopShouldGet(customerReceiveList.get(0).getEndShouldGet());
+        }
         return goodsOrderDto;
     }
 

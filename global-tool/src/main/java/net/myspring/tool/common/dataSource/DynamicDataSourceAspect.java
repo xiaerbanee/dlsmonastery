@@ -5,6 +5,7 @@ package net.myspring.tool.common.dataSource;
  */
 
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
+import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
 import net.myspring.tool.common.utils.RequestUtils;
@@ -36,21 +37,25 @@ public class DynamicDataSourceAspect {
         Object target = point.getTarget();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         String dataSourceType =  DataSourceTypeEnum.LOCAL.name();
-        if(method.isAnnotationPresent(LocalDataSource.class)|| method.isAnnotationPresent(FactoryDataSource.class)) {
+        if(method.isAnnotationPresent(LocalDataSource.class)|| method.isAnnotationPresent(FactoryDataSource.class) || method.isAnnotationPresent(FutureDataSource.class)) {
             if(method.isAnnotationPresent(LocalDataSource.class)) {
                 dataSourceType = DataSourceTypeEnum.LOCAL.name();
             } else if (method.isAnnotationPresent(FactoryDataSource.class)) {
                 dataSourceType =  DataSourceTypeEnum.FACTORY.name();
+            } else if (method.isAnnotationPresent(FutureDataSource.class)) {
+                dataSourceType =  DataSourceTypeEnum.FUTURE.name();
             }
         } else {
-            if(target.getClass().isAnnotationPresent(LocalDataSource.class) || target.getClass().isAnnotationPresent(FactoryDataSource.class)) {
+            if(target.getClass().isAnnotationPresent(LocalDataSource.class) || target.getClass().isAnnotationPresent(FactoryDataSource.class) || target.getClass().isAnnotationPresent(FutureDataSource.class)) {
                 if(target.getClass().isAnnotationPresent(LocalDataSource.class)) {
                     dataSourceType = DataSourceTypeEnum.LOCAL.name();
                 } else if (target.getClass().isAnnotationPresent(FactoryDataSource.class)) {
                     dataSourceType = DataSourceTypeEnum.FACTORY.name();
+                } else if (target.getClass().isAnnotationPresent(FutureDataSource.class)) {
+                    dataSourceType = DataSourceTypeEnum.FUTURE.name();
                 }
             }
         }
-        RequestUtils.getSecurityMap().put("dataSourceType",dataSourceType);
+        DbContextHolder.get().setDataSourceType(dataSourceType);
     }
 }

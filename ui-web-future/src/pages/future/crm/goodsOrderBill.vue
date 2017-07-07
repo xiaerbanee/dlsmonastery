@@ -51,9 +51,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('goodsOrderBill.shopCredit')">
-              {{shopAccount.credit}}
-            </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.shouldGet')">
               {{shopAccount.qmys}}
             </el-form-item>
@@ -64,7 +61,7 @@
               {{shopAccount.credit}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.summary')" >
-              总开单数{{summaryInfo.totalBillQty }}, 总开单金额{{summaryInfo.totalBillAmount.toFixed(2)}}, 总货品数{{summaryInfo.totalProductBillQty }}, 总货品金额{{summaryInfo.totalProductBillAmount.toFixed(2)}}
+              总开单数{{summaryInfo.totalBillQty }}, 总开单金额{{summaryInfo.totalBillAmount.toFixed(2)}}, 总货品数{{summaryInfo.totalProductBillQty }}, 总货品金额{{summaryInfo.totalProductBillAmount.toFixed(2)}}, 开单后应收{{(summaryInfo.totalBillAmount+shopAccount.qmys).toFixed(2)}}
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('goodsOrderBill.save')}}</el-button>
@@ -175,12 +172,13 @@
       },filterProducts(){
 
         let filterVal = _.trim(this.filterValue);
+        let filterValNotBlank = util.isNotBlank(filterVal);
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty) || detail.productId === this.formProperty.expressProductId){
             tempList.push(detail);
-          }else if(util.contains(detail.productName, filterVal) ){
+          }else if(filterValNotBlank && util.contains(detail.productName, filterVal) ){
             tempPostList.push(detail);
           }
         }
