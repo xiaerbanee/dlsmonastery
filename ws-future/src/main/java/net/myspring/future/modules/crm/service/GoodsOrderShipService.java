@@ -204,6 +204,11 @@ public class GoodsOrderShipService {
         Depot shop=depotMap.get(goodsOrder.getShopId());
         goodsOrderPrintDto.setStoreName(depotMap.get(goodsOrder.getStoreId()).getName());
         goodsOrderPrintDto.setShopName(shop.getName());
+        if(StringUtils.isNotBlank(shop.getClientId())){
+            Client shopClient = clientRepository.findOne(shop.getClientId());
+            goodsOrderPrintDto.setShopClientName(shopClient.getName());
+        }
+
         goodsOrderPrintDto.setExpressOrderCode(expressOrder.getOutCode());
         goodsOrderPrintDto.setRemarks(shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress());
         List<GoodsOrderDetail> goodsOrderDetailList=goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
@@ -328,7 +333,7 @@ public class GoodsOrderShipService {
         goodsOrderRepository.save(goodsOrder);
         //设置快递单
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-        expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(),goodsOrder.getId(),goodsOrderShipForm.getExpressStr(),expressOrder.getExpressCompanyId());
+        expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(),goodsOrder.getId(),goodsOrderShipForm.getExpressCodes(),expressOrder.getExpressCompanyId());
     }
 
     @Transactional
