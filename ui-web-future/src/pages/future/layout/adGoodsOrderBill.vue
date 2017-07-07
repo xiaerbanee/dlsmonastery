@@ -158,17 +158,15 @@
            return;
          }
          let tempList = [];
+         let tempPostList = [];
          for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-           if (util.isNotBlank(adGoodsOrderDetail.billQty)) {
+           if (util.isNotBlank(adGoodsOrderDetail.billQty) || util.isNotBlank(adGoodsOrderDetail.id)) {
              tempList.push(adGoodsOrderDetail);
+           }else if (util.contains(adGoodsOrderDetail.productName, val) || util.contains(adGoodsOrderDetail.productCode, val)) {
+             tempPostList.push(adGoodsOrderDetail);
            }
          }
-         for (let adGoodsOrderDetail of this.inputForm.adGoodsOrderDetailList) {
-           if ((util.contains(adGoodsOrderDetail.productName, val)||util.contains(adGoodsOrderDetail.productCode, val)) && util.isBlank(adGoodsOrderDetail.billQty)) {
-             tempList.push(adGoodsOrderDetail)
-           }
-         }
-         this.filterAdGoodsOrderDetailList = tempList;
+         this.filterAdGoodsOrderDetailList = tempList.concat(tempPostList);
 
        },setAdGoodsOrderDetailList(list){
         this.inputForm.adGoodsOrderDetailList = list;
