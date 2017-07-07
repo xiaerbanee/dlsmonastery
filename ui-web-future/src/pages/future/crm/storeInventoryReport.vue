@@ -26,6 +26,8 @@
         </div>
       </search-dialog>
       <el-table :data="page.content"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-click="storeDetail" stripe border>
+        <el-table-column  prop="areaName" label="办事处" sortable></el-table-column>
+        <el-table-column  prop="officeName" label="业务单元" sortable></el-table-column>
         <el-table-column  prop="depotName" label="仓库" sortable></el-table-column>
         <el-table-column prop="qty" label="数量" ></el-table-column>
         <el-table-column prop="percentage" label="占比(%)"></el-table-column>

@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="sale" icon="plus" v-permit="'crm:productImeSale:edit'">{{$t('productImeSaleList.sale')}}</el-button>
         <el-button type="primary" @click="saleBack" icon="minus"  v-permit="'crm:productImeSale:back'">{{$t('productImeSaleList.saleBack')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:productImeSale:view'">{{$t('productImeSaleList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:productImeSale:view'">{{$t('productImeSaleList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:productImeSale:view'">{{$t('productImeSaleList.export')}}</el-button>
 
         <span v-html="searchText"></span>

@@ -191,8 +191,7 @@
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          util.copyValue(this.formData,this.submitData);
-          window.location.href="/api/ws/future/crm/productIme/export?"+qs.stringify(this.submitData);
+          window.location.href="/api/ws/future/crm/productIme/export?"+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }
     },created () {
