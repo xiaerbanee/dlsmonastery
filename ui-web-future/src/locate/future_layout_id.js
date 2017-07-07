@@ -576,6 +576,7 @@ export default {
     office: "daerah",
     shopName: "toko",
     monthSaleQty: "门店近三个月销量",
+    imageDeposit:"形象押金",
     shopType: "kuantitas penjualan 3 bulan",
     address: "alamat",
     applyAccount: "sales",

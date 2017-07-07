@@ -581,6 +581,7 @@ export default {
     office: "所属机构",
     shopName: "门店",
     monthSaleQty: "门店近三个月销量",
+    imageDeposit:"形象押金",
     shopType: "店面类型",
     address:"店面地址",
     applyAccount: "业务对接人",
