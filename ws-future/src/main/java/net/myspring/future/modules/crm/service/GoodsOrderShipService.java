@@ -132,12 +132,10 @@ public class GoodsOrderShipService {
                 imeSet.add(productIme.getIme2());
             }
             Product product = productMap.get(productIme.getProductId());
-            if(product!=null){
-                if (!goodsOrderDetailMap.containsKey(product.getId())) {
-                    restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
-                } else {
-                    goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
-                }
+            if(product==null || !goodsOrderDetailMap.containsKey(product.getId())){
+                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
+            } else {
+                goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
             }
         }
         for (String boxIme : goodsOrderShipForm.getBoxImeList()) {
