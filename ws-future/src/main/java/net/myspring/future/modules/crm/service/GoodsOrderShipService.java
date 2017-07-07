@@ -132,12 +132,10 @@ public class GoodsOrderShipService {
                 imeSet.add(productIme.getIme2());
             }
             Product product = productMap.get(productIme.getProductId());
-            if(product!=null){
-                if (!goodsOrderDetailMap.containsKey(product.getId())) {
-                    restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在订货范围内","ime_error","imeStr"));
-                } else {
-                    goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
-                }
+            if(product==null || !goodsOrderDetailMap.containsKey(product.getId())){
+                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "的货品不在订货范围内","ime_error","imeStr"));
+            } else {
+                goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
             }
         }
         for (String boxIme : goodsOrderShipForm.getBoxImeList()) {
@@ -230,8 +228,8 @@ public class GoodsOrderShipService {
                 Product product=productMap.get(goodsOrderDetail.getProductId());
                 productPrintDto.setProductName(product.getName());
                 if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
-                    productPrintDto.setPrice(product.getRetailPrice());
-                    productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
+                    productPrintDto.setPrice(goodsOrderDetail.getPrice());
+                    productPrintDto.setTotal(goodsOrderDetail.getPrice().multiply(new BigDecimal(productPrintDto.getQty())));
                     total=total.add(productPrintDto.getTotal());
                 }
                 productPrintDtoList.add(productPrintDto);
@@ -351,6 +349,11 @@ public class GoodsOrderShipService {
         BigDecimal amount = BigDecimal.ZERO;
         for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailFormList()) {
             GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
+
+            if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() < 0) {
+                throw new ServiceException("退货数不能小于0");
+            }
+
             if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() >=0) {
                 goodsOrderDetail.setReturnQty(goodsOrderDetailForm.getReturnQty());
                 goodsOrderDetailRepository.save(goodsOrderDetail);

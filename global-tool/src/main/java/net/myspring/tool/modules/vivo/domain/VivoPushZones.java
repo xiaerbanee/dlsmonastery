@@ -7,18 +7,18 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="vivo_zones")
-public class VivoZones {
+@Table(name="vivo_push_zones")
+public class VivoPushZones {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected String id;
-    private String zoneID;
+    private String zoneId;
     private String zoneName;
     private String shortCut;
     private Integer zoneDepth;
     private String zonePath;
-    private String fatherID;
+    private String fatherId;
     private Integer subCount;
     private String zoneTypes;
     @JsonIgnore
@@ -32,13 +32,6 @@ public class VivoZones {
         this.id = id;
     }
 
-    public String getZoneID() {
-        return zoneID;
-    }
-
-    public void setZoneID(String zoneID) {
-        this.zoneID = zoneID;
-    }
 
     public String getZoneName() {
         return zoneName;
@@ -72,14 +65,6 @@ public class VivoZones {
         this.zonePath = zonePath;
     }
 
-    public String getFatherID() {
-        return fatherID;
-    }
-
-    public void setFatherID(String fatherID) {
-        this.fatherID = fatherID;
-    }
-
     public Integer getSubCount() {
         return subCount;
     }
@@ -102,5 +87,21 @@ public class VivoZones {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getZoneId() {
+        return zoneId;
+    }
+
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
+    }
+
+    public String getFatherId() {
+        return fatherId;
+    }
+
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
     }
 }

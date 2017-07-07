@@ -82,6 +82,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
         } else {
             accountDto = accountDtoRepository.findByLoginName(username);
+            String password = request.getParameter("password");
+            //密码不正确
+            if(accountDto==null || !StringUtils.validatePassword(password,accountDto.getPassword())){
+                return null;
+            }
         }
         if(accountDto != null) {
             accountDto.setCompanyName(companyConfigRepository.findByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()));

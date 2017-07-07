@@ -103,6 +103,7 @@ public class StoreAllotService {
         return storeAllotDto;
     }
 
+    @Transactional
     public void ship(StoreAllotShipForm storeAllotShipForm) {
         if(StringUtils.isBlank(storeAllotShipForm.getId())){
             throw new ServiceException("发货的调拨单id不能为空");
@@ -463,13 +464,12 @@ public class StoreAllotService {
                 imeSet.add(productIme.getIme2());
             }
             Product product = productMap.get(productIme.getProductId());
-            if(product!=null){
-                if (!storeAllotDetailMap.containsKey(product.getId())) {
-                    restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品为：" + product.getName() + "，不在调拨范围内","ime_error","imeStr"));
-                } else {
-                    storeAllotDetailMap.get(product.getId()).setShipQty(storeAllotDetailMap.get(product.getId()).getShipQty() + 1);
-                }
+            if(product==null || !storeAllotDetailMap.containsKey(product.getId()) ){
+                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "的货品不在调拨范围内","ime_error","imeStr"));
+            } else {
+                storeAllotDetailMap.get(product.getId()).setShipQty(storeAllotDetailMap.get(product.getId()).getShipQty() + 1);
             }
+
         }
         for (String boxIme : storeAllotShipForm.getBoxImeList()) {
             if (!boxImeSet.contains(boxIme)) {
@@ -482,7 +482,10 @@ public class StoreAllotService {
             }
         }
         for (StoreAllotDetailDto storeAllotDetailDto: storeAllotDetailDtoList) {
-            totalShouldShipQty = totalShouldShipQty +storeAllotDetailDto.getBillQty();
+            if(productMap.get(storeAllotDetailDto.getProductId()).getHasIme()){
+                totalShouldShipQty = totalShouldShipQty +storeAllotDetailDto.getBillQty();
+            }
+
             totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
             Integer qty = storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
             if (qty > storeAllotDetailDto.getBillQty()) {

@@ -806,6 +806,7 @@ export default {
     createdByName: "发货人",
     shipDate: "发货日期",
     copy: "复制",
+    shippedQty: "已发货数",
   },
   goodsOrderForm: {
     goodsOrderForm: "pengiriman barang",
@@ -2185,6 +2186,7 @@ export default {
     print:"出库单",
     shipPrint:"快递单",
 
+
   },
   storeAllotShip: {
     storeAllotShip: "alokasi gudang besar",
@@ -2203,5 +2205,6 @@ export default {
     shippedQty: "jumlah pengiriman barang",
     leftQty: "待发货数",
     shipQty: "发货数",
+    finish:"发送完成",
   }
 }
