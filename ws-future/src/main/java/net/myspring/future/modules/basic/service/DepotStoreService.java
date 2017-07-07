@@ -54,6 +54,12 @@ public class DepotStoreService {
         return page;
     }
 
+    public List<DepotStoreDto> findFilter(DepotStoreQuery depotStoreQuery){
+        List<DepotStoreDto> list=depotStoreRepository.findFilter(depotStoreQuery);
+        cacheUtils.initCacheInput(list);
+        return list;
+    }
+
     public DepotStoreDto findOne(DepotStoreDto depotStoreDto) {
         if(!depotStoreDto.isCreate()) {
             DepotStore depotStore =depotStoreRepository.findOne(depotStoreDto.getId());
