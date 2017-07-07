@@ -77,7 +77,7 @@ public class AuditFileController {
     }
 
     @RequestMapping(value = "audit")
-    @PreAuthorize("hasPermission(null,'hr:auditFile:audit')")
+    @PreAuthorize("hasPermission(null,'hr:auditFile:edit')")
     public RestResponse audit(String id, boolean pass, String comment) {
         RestResponse restResponse = new RestResponse("文件审核成功",null);
         auditFileService.audit(id, pass, comment);
