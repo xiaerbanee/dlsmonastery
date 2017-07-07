@@ -17,6 +17,7 @@ public class AuditorContextHolder {
     }
 
     public void remove() {
+        this.accountId=null;
         threadLocal.remove();
     }
 

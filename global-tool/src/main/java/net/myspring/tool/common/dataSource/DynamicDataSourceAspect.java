@@ -33,7 +33,7 @@ public class DynamicDataSourceAspect {
     }
 
     @Before("serviceExecution()")
-    public void setDynamicDataSource(JoinPoint point) {
+    public void setDbContextHolder(JoinPoint point) {
         Object target = point.getTarget();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         String dataSourceType =  DataSourceTypeEnum.LOCAL.name();
@@ -57,5 +57,11 @@ public class DynamicDataSourceAspect {
             }
         }
         DbContextHolder.get().setDataSourceType(dataSourceType);
+    }
+
+
+    @After("serviceExecution()")
+    public void removeDbContextHolder(JoinPoint point) {
+        DbContextHolder.get().remove();
     }
 }

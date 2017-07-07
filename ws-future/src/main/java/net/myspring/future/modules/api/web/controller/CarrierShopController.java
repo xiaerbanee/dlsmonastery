@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by zhucc on 2017/7/5.
  */
@@ -66,9 +68,9 @@ public class CarrierShopController {
     }
 
     @RequestMapping(value="search")
-    public  CarrierShopDto getQuery(String name){
-        CarrierShopDto carrierShopDto=carrierShopService.findByNameLike(name);
-        return carrierShopDto;
+    public List<CarrierShopDto> getQuery(String name){
+        List<CarrierShopDto> carrierShopDtoList=carrierShopService.findByNameLike(name);
+        return carrierShopDtoList;
     }
 
     @RequestMapping(value = "checkName")

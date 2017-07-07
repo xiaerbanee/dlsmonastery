@@ -265,7 +265,6 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             sb.append("""  and t1.office_id  in (:officeIdList) """)
         }
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotStoreQuery), BeanPropertyRowMapper(DepotDto::class.java))
-
     }
 
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{

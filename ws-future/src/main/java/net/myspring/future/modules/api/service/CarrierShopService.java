@@ -80,10 +80,10 @@ public class CarrierShopService {
         return carrierShop;
     }
 
-    public CarrierShopDto findByNameLike(String name){
-        CarrierShop carrierShop=carrierShopRepository.findByNameLike("%"+name+"%");
-        CarrierShopDto carrierShopDto= BeanUtil.map(carrierShop,CarrierShopDto.class);
-        return carrierShopDto;
+    public List<CarrierShopDto> findByNameLike(String name){
+        List<CarrierShop> carrierShopList=carrierShopRepository.findByNameLikeAndEnabledIsTrue("%"+name+"%");
+        List<CarrierShopDto> carrierShopDtoList= BeanUtil.map(carrierShopList,CarrierShopDto.class);
+        return carrierShopDtoList;
     }
 
 }
