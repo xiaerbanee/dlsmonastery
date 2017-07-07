@@ -79,7 +79,6 @@ public class OppoPushSerivce {
     private static Map<String,String> areaDepotMap=Maps.newHashMap();
     private static Map<String,CustomerDto> customerDtoMap=Maps.newHashMap();
 
-
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
     public List<OppoCustomer> getOppoCustomers(String agentCode) {
