@@ -1,8 +1,8 @@
 server:
   port: 443
   ssl:
-    key-store: classpath:hi.ncoppo.com.jks
-    key-store-password: 77vvq065nl43
+    key-store: classpath:xcx.sjls.shop.jks
+    key-store-password: z9e59b9kmg
   http:
     port : 1200
 
