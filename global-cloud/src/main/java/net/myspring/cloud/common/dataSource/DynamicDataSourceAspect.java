@@ -9,6 +9,7 @@ import net.myspring.cloud.common.dataSource.annotation.LocalDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -28,7 +29,7 @@ public class DynamicDataSourceAspect {
     }
 
     @Before("serviceExecution()")
-    public void setDynamicDataSource(JoinPoint point) {
+    public void setDbContextHolder(JoinPoint point) {
         Object target = point.getTarget();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         String dataSourceType =  DataSourceTypeEnum.KINGDEE.name();
@@ -49,4 +50,11 @@ public class DynamicDataSourceAspect {
         }
         DbContextHolder.get().setDataSourceType(dataSourceType);
     }
+
+
+    @After("serviceExecution()")
+    public void removeDbContextHolder(JoinPoint point) {
+        DbContextHolder.get().remove();
+    }
+
 }

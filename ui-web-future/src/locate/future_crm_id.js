@@ -2185,6 +2185,7 @@ export default {
     print:"出库单",
     shipPrint:"快递单",
 
+
   },
   storeAllotShip: {
     storeAllotShip: "alokasi gudang besar",
@@ -2203,5 +2204,6 @@ export default {
     shippedQty: "jumlah pengiriman barang",
     leftQty: "待发货数",
     shipQty: "发货数",
+    finish:"发送完成",
   }
 }

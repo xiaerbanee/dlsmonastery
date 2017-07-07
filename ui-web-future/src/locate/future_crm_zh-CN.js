@@ -822,6 +822,7 @@ export default {
     outCode: "外部单号",
     carrierCodes: "商城单号",
     carrierDetails: "商城订单信息",
+    mallDepotName: "商城门店",
     remarks: "备注",
     createdLoginName: "创建人",
     createdDate: "创建时间",
@@ -844,6 +845,7 @@ export default {
     createdByName: "发货人",
     shipDate: "发货日期",
     copy: "复制",
+    save: "保存",
   },
   goodsOrderBill: {
     goodsOrderBill: "货品订货开单",
@@ -2096,6 +2098,7 @@ export default {
     audit: "审核",
     print:"出库单",
     shipPrint:"快递单",
+
   },
   storeAllotDetail: {
     storeAllotDetail: "大库调拨详细",
@@ -2133,6 +2136,7 @@ export default {
     shippedQty: "已发货数",
     leftQty: "待发货数",
     shipQty: "发货数",
+    finish:"发送完成",
   },
   dataReportList: {
     dataReportList: "合计报表",

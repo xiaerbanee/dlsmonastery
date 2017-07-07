@@ -48,6 +48,11 @@
           <el-table-column prop="shippedQty" :label="$t('storeAllotShip.shippedQty')"></el-table-column>
           <el-table-column prop="leftQty" :label="$t('storeAllotShip.leftQty')" ></el-table-column>
           <el-table-column prop="shipQty" :label="$t('storeAllotShip.shipQty')"></el-table-column>
+          <el-table-column prop="finish" :label="$t('storeAllotShip.finish')" >
+            <template scope="scope">
+              <el-tag :type="scope.row.leftQty==0 ? 'primary' : 'danger'">{{scope.row.leftQty==0 | bool2str}}</el-tag>
+            </template>
+          </el-table-column>
         </el-table>
       </el-form>
     </div>
@@ -126,7 +131,7 @@
           var shipQtyMap = this.shipResult.shipQtyMap;
           for(var index in this.storeAllotDetailList) {
             var item = this.storeAllotDetailList[index];
-            if(item.hasIme) {
+            if(item.productHasIme) {
               item.shipQty = shipQtyMap[item.productId];
               item.leftQty = item.billQty - item.shippedQty - item.shipQty;
             } else {

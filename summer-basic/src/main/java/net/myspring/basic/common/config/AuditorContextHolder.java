@@ -17,11 +17,12 @@ public class AuditorContextHolder {
     }
 
     public void remove() {
+        this.accountId=null;
         threadLocal.remove();
     }
 
     public String getAccountId() {
-        if(StringUtils.isBlank(accountId)) {
+        if(StringUtils.isNotBlank(RequestUtils.getAccountId())) {
             accountId = RequestUtils.getAccountId();
         }
         return accountId;

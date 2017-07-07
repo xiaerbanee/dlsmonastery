@@ -18,7 +18,7 @@ public class StoreAllotDetailDto extends IdDto<StoreAllotDetail> {
     private String storeAllotId;
     private String outId;
     private Boolean productHasIme;
-    private Integer shipQty;
+    private Integer shipQty=0;
 
     public Integer getShipQty() {
         return shipQty;
