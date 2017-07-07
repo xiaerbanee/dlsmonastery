@@ -253,8 +253,9 @@ public class StoreAllotService {
         storeAllot.setToStoreId(storeAllotForm.getToStoreId());
         storeAllot.setShipType(storeAllotForm.getShipType());
         storeAllot.setRemarks(storeAllotForm.getRemarks());
-        String maxBusinessId = storeAllotRepository.findMaxBusinessId(LocalDate.now().atStartOfDay());
-        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+        LocalDate now = LocalDate.now();
+        String maxBusinessId = storeAllotRepository.findMaxBusinessId(now.atStartOfDay());
+        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, now));
         storeAllot.setBillDate(LocalDate.now());
         storeAllot.setStatus(StoreAllotStatusEnum.待发货.name());
 

@@ -60,13 +60,14 @@
         activityEntity:{},
       }
     },
-    mounted() {
-      setTimeout("window.print()",1000);
-    },
     methods:{
       findOne(){
         axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
           this.goodsOrder=response.data;
+          this.$nextTick(()=>{
+            window.print();
+            this.$router.push({ name: 'adGoodsOrderList'});
+          });
         })
       }
     },created(){
