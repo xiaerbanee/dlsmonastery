@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 
 /**
  * Created by wangzm on 2017/7/5.
@@ -22,15 +23,33 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 interface CarrierShopRepository : BaseRepository<CarrierShop, String>, CarrierShopRepositoryCustom {
     fun  findByName(name:String):CarrierShop
 
-    fun  findByNameLike(name:String):CarrierShop
 }
 
 
 interface CarrierShopRepositoryCustom {
     fun findPage(pageable: Pageable, carrierShopQuery: CarrierShopQuery):Page<CarrierShopDto>
+
+    fun  findByNameLikeAndEnabledIsTrue(name:String):MutableList<CarrierShop>
 }
 
 class CarrierShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : CarrierShopRepositoryCustom {
+    override fun findByNameLikeAndEnabledIsTrue(name: String): MutableList<CarrierShop> {
+        val sb = StringBuffer()
+        sb.append("""
+         SELECT
+            t1.*
+        FROM
+            api_carrier_shop t1
+        WHERE
+            t1.enabled = 1
+        """)
+        if (StringUtils.isNotBlank(name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%')   """)
+        }
+        sb.append("""  limit 50  """)
+        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("name", name), BeanPropertyRowMapper(CarrierShop::class.java))
+    }
+
     override fun findPage(pageable: Pageable, carrierShopQuery: CarrierShopQuery):Page<CarrierShopDto> {
         val sb = StringBuffer()
         sb.append("""

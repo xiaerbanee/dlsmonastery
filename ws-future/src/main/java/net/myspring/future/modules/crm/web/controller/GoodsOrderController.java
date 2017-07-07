@@ -38,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/goodsOrder")
@@ -107,12 +108,21 @@ public class GoodsOrderController {
     @RequestMapping(value = "updateCarrierOrderDetail")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse updateCarrierOrderDetail(GoodsOrderForm goodsOrderForm) {
+        RestResponse restResponse=new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
             CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);
-            carrierOrderFrom.setGoodsOrderId(goodsOrderForm.getId());
-            carrierOrderService.save(carrierOrderFrom);
+            Map<String, Object> map =carrierOrderService.checkDetailJsons(carrierOrderFrom);
+            if (StringUtils.isNotBlank(map.get("message").toString())) {
+                String message = map.get("message").toString();
+                restResponse=new RestResponse(message,null,false);
+            } else {
+                carrierOrderFrom.setGoodsOrderId(goodsOrderForm.getId());
+                carrierOrderService.save(carrierOrderFrom);
+            }
+        }else {
+            restResponse=new RestResponse("输入商城信息",null,false);
         }
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        return restResponse;
     }
 
     @RequestMapping(value = "getBillForm")

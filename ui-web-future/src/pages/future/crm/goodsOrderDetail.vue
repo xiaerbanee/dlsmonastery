@@ -20,6 +20,14 @@
             <el-form-item :label="$t('goodsOrderDetail.outCode')+' : '" prop="outCode">
               {{goodsOrder.outCode}}
             </el-form-item>
+            <el-form-item v-if="carrierEdit"  :label="$t('goodsOrderDetail.mallDepotName')+' : '" prop="outCode">
+              <el-select v-model="formData.carrierShopId" filterable remote :remote-method="search" :loading="loading">
+                  <el-option v-for="item in shopList" :value="item.id" :key="item.id" :label="item.name"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item v-if="carrierEdit" :label="$t('goodsOrderDetail.carrierDetails')+' : '" prop="outCode">
+              <el-input type="textarea" v-model="formData.detailJson" :rows="4"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('goodsOrderDetail.remarks')+' : '" prop="remarks">
               {{goodsOrder.remarks}}
             </el-form-item>
@@ -44,6 +52,9 @@
               {{goodsOrder.purchaseInfo}}
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row v-if="carrierEdit" >
+          <el-button  type="primary" class="saveBtn" icon="check" @click="formSubmit" :disable="submitDisabled">{{$t('goodsOrderDetail.save')}}</el-button>
         </el-row>
       </el-form>
       <div style="width:100%;height:50px;text-align:center;font-size:20px">{{$t('goodsOrderDetail.billDetail')}}</div>
@@ -73,20 +84,32 @@
 <script>
   export default{
     data(){
-      return{
-        carrierEdit:this.$route.query.carrierEdit,
-        goodsOrder:{},
-        expressOrder:{},
-        goodsOrderDetailList:[],
-        goodsOrderImeList:[],
-        imeMap:[],
-        meidMap:[],
-        rules: {},
-        activityEntity:{},
-        fileList:[]
-      }
+      return this.getData();
     },
     methods:{
+      getData(){
+        return {
+          carrierEdit:this.$route.query.carrierEdit,
+          isCreate:this.$route.query.id==null,
+          goodsOrder:{},
+          expressOrder:{},
+          goodsOrderDetailList:[],
+          goodsOrderImeList:[],
+          imeMap:[],
+          meidMap:[],
+          rules: {},
+          activityEntity:{},
+          fileList:[],
+          formData:{
+            carrierShopId:"",
+            detailJson:"",
+
+          },
+          loading:false,
+          shopList:[],
+          submitDisabled : false
+        }
+      },
       renderAction(createElement) {
           return createElement(
             'a',{
@@ -97,7 +120,50 @@
               }
             }
           );
+        },
+      search(query){
+        if(query.length>=2){
+            this.loading = true;
+            axios.get('/api/ws/future/api/carrierShop/search',{params:{name:query}})
+              .then((res)=>{
+                  this.shopList = res.data;
+                  this.loading = false;
+              })
+              .catch((err)=>{
+                  console.log(err);
+              })
         }
+      },
+      formSubmit(){
+        this.submitDisabled = true;
+        let form = this.$refs.inputForm;
+        form.validate((isValidate)=>{
+          if(isValidate){
+            axios.post('/api/ws/future/crm/goodsOrder/updateCarrierOrderDetail',qs.stringify(util.deleteExtra(this.formData)))
+              .then((res)=>{
+                if(response.data.success){
+                  this.$message(response.data.message);
+                  if (this.isCreate) {
+                    Object.assign(this.$data,this.getData());
+                    this.initPage();
+                  }else {
+                    this.$router.push({name: 'goodsOrderShipList', query: util.getQuery("goodsOrderShipList"),params:{_closeFrom:true}})
+                  }
+                }else {
+                  this.submitDisabled = false;
+                  this.$message({
+                    showClose: true,
+                    message: response.data.message,
+                    type: 'error'
+                  });
+                }
+            })
+              .catch((err)=>{
+                this.submitDisabled = false;
+              })
+          }
+        })
+      }
     },created(){
       axios.get('/api/ws/future/crm/goodsOrder/detail',{params: {id:this.$route.query.id}}).then((response)=>{
         this.goodsOrder = response.data;
@@ -110,3 +176,8 @@
     }
   }
 </script>
+<style>
+  .el-button.saveBtn{
+    margin: 0 815px;
+  }
+</style>
