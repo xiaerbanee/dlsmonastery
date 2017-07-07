@@ -1,6 +1,5 @@
 package net.myspring.cloud.common.config;
 
-import net.myspring.cloud.common.dataSource.DbContextHolder;
 import net.myspring.cloud.common.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -22,7 +21,7 @@ public class AuditorContextHolder {
     }
 
     public String getAccountId() {
-        if(StringUtils.isBlank(accountId)) {
+        if(StringUtils.isNotBlank(RequestUtils.getAccountId())) {
             accountId = RequestUtils.getAccountId();
         }
         return accountId;
