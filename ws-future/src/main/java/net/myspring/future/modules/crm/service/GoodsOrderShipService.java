@@ -230,8 +230,8 @@ public class GoodsOrderShipService {
                 Product product=productMap.get(goodsOrderDetail.getProductId());
                 productPrintDto.setProductName(product.getName());
                 if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
-                    productPrintDto.setPrice(product.getRetailPrice());
-                    productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
+                    productPrintDto.setPrice(goodsOrderDetail.getPrice());
+                    productPrintDto.setTotal(goodsOrderDetail.getPrice().multiply(new BigDecimal(productPrintDto.getQty())));
                     total=total.add(productPrintDto.getTotal());
                 }
                 productPrintDtoList.add(productPrintDto);
