@@ -50,7 +50,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')"  @selection-change="handleSelectionChange" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
         <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.adCode')" sortable width=120></el-table-column>
-        <el-table-column column-key="officeId" prop="officeName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
+        <el-table-column column-key="areaId" prop="areaName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
           <template scope="scope">
@@ -62,11 +62,7 @@
         <el-table-column prop="area" :label="$t('shopAdList.totalArea')"></el-table-column>
         <el-table-column prop="price" :label="$t('shopAdList.price')" sortable></el-table-column>
         <el-table-column prop="content" :label="$t('shopAdList.content')" width="120"></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')" width="160" sortable>
-          <template scope="scope">
-            <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
-          </template>
-        </el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopAdList.processStatus')" sortable></el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('expressOrderList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('expressOrderList.createdDate')" width="100" sortable></el-table-column>
         <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('expressOrderList.lastModifiedBy' )" sortable></el-table-column>

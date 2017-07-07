@@ -3,7 +3,9 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.repository.ShopBuildRepository;
@@ -47,9 +49,12 @@ public class ShopBuildService {
     private CacheUtils cacheUtils;
     @Autowired
     private ActivitiClient activitiClient;
+    @Autowired
+    private DepotManager depotManager;
 
 
     public Page<ShopBuildDto> findPage(Pageable pageable, ShopBuildQuery shopBuildQuery) {
+        shopBuildQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ShopBuildDto> page = shopBuildRepository.findPage(pageable, shopBuildQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

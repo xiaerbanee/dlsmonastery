@@ -280,4 +280,13 @@ public class DepotService {
         return customerDtos;
     }
 
+    public List<DepotDto> findByClientId(String clientId){
+        List<DepotDto> depotDtos = Lists.newArrayList();
+        if(clientId == null){
+            return depotDtos;
+        }
+        depotDtos = BeanUtil.map(depotRepository.findByClientId(clientId),DepotDto.class);
+        return depotDtos;
+    }
+
 }
