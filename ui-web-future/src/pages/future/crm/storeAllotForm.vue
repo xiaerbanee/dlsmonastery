@@ -189,25 +189,20 @@
           this.filterStoreAllotDetailList = [];
           return;
         }
-        if(!this.productName){
-          this.filterStoreAllotDetailList = this.inputForm.storeAllotDetailList;
-          return;
-        }
-        let val=this.productName;
+
+        let filterVal = _.trim(this.productName);
+        let filterValNotBlank = util.isNotBlank(filterVal);
+
         let tempList=[];
-
+        let tempPostList=[];
         for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
-
           if(util.isNotBlank(storeAllotDetail.billQty)){
             tempList.push(storeAllotDetail);
+          }else if(filterValNotBlank && util.contains(storeAllotDetail.productName, filterVal)){
+            tempPostList.push(storeAllotDetail);
           }
         }
-        for(let storeAllotDetail of this.inputForm.storeAllotDetailList){
-          if(util.contains(storeAllotDetail.productName, val) && util.isBlank(storeAllotDetail.billQty)){
-            tempList.push(storeAllotDetail);
-          }
-        }
-        this.filterStoreAllotDetailList = tempList;
+        this.filterStoreAllotDetailList = tempList.concat(tempPostList).slice(0, util.MAX_DETAIL_ROW);
       },initPage(){
         axios.get('/api/ws/future/crm/storeAllot/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm= response.data;
