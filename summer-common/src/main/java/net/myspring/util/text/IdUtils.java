@@ -66,7 +66,7 @@ public class IdUtils {
 
 	public static String getNextBusinessId(String maxBusinessId, LocalDate date) {
 		if(maxBusinessId==null) {
-			String businessId = LocalDateUtils.formatLocalDate(date,"yyMMdd") + "00000";
+			String businessId = LocalDateUtils.formatLocalDate(date,"yyMMdd") + "000000";
 			maxBusinessId = String.valueOf(businessId);
 		}
 		return String.valueOf(Long.valueOf(maxBusinessId)+1);
