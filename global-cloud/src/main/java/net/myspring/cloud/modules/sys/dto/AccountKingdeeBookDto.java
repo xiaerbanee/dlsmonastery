@@ -11,6 +11,7 @@ public class AccountKingdeeBookDto extends DataDto<AccountKingdeeBook> {
     private String username;
     private String kingdeeBookName;
     private String kingdeeBookType;
+    private String companyName;
     private String remarks;
 
     public String getKingdeeBookType() {
@@ -43,6 +44,14 @@ public class AccountKingdeeBookDto extends DataDto<AccountKingdeeBook> {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getRemarks() {
