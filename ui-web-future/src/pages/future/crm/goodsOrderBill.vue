@@ -172,12 +172,13 @@
       },filterProducts(){
 
         let filterVal = _.trim(this.filterValue);
+        let filterValNotBlank = util.isNotBlank(filterVal);
         let tempList=[];
         let tempPostList=[];
         for(let detail of this.inputForm.goodsOrderBillDetailFormList){
           if(util.isNotBlank(detail.billQty) || detail.productId === this.formProperty.expressProductId){
             tempList.push(detail);
-          }else if(util.contains(detail.productName, filterVal) ){
+          }else if(filterValNotBlank && util.contains(detail.productName, filterVal) ){
             tempPostList.push(detail);
           }
         }

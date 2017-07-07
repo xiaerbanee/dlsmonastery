@@ -140,12 +140,13 @@
         }
 
         let filterVal = _.trim(this.filterValue);
+        let filterValNotBlank = util.isNotBlank(filterVal);
         let tempList=[];
         let tempPostList=[];
         for(let goodsOrderDetail of this.goodsOrderDetailList){
           if(util.isNotBlank(goodsOrderDetail.qty)){
             tempList.push(goodsOrderDetail);
-          }else if(util.contains(goodsOrderDetail.productName, filterVal)){
+          }else if(filterValNotBlank && util.contains(goodsOrderDetail.productName, filterVal)){
             tempPostList.push(goodsOrderDetail);
           }
         }
