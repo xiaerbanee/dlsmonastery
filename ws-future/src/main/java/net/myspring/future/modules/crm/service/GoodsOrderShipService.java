@@ -389,13 +389,12 @@ public class GoodsOrderShipService {
         Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
         //串码调拨
         if (CollectionUtil.isNotEmpty(goodsOrderImeList)) {
-            List<ProductIme> productImes = Lists.newArrayList();
+
             for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
                 ProductIme productIme = productImeMap.get(goodsOrderIme.getProductImeId());
                 productIme.setDepotId(goodsOrder.getStoreId());
                 productIme.setRetailShopId(goodsOrder.getStoreId());
                 productImeRepository.save(productIme);
-                productImes.add(productIme);
             }
         }
         goodsOrderImeRepository.delete(goodsOrderImeList);
