@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.repository;
 import com.google.common.collect.Maps
+import net.myspring.tool.common.dataSource.DbContextHolder
 import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel
 import org.springframework.beans.factory.annotation.Autowired

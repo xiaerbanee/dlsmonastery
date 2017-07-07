@@ -16,13 +16,13 @@
         <div v-if="printType === 'returnPrint'">
           <div class="span4">退货类型：</div>
           <div class="span4">
-            发票类型{{shopAllot.createdDate}}
+            发票类型：{{shopAllot.createdDate}}
           </div>
         </div>
         <div class="span4">
           开单日期：{{shopAllot.createdDate}}
         </div>
-        <div class="span4">
+        <div class="span5">
           <div v-if="printType === 'salePrint'">
             销售开单单号：{{shopAllot.outSaleCode}}
           </div>
@@ -169,10 +169,6 @@
         return axios.get('/api/ws/future/crm/shopAllot/findTotalPrice', {params: {id: this.$route.query.id}});
       }
     },
-    mounted(){
-      setTimeout("window.print()",2000);
-    },
-
     created(){
 
       axios.all([this.findDetailList(), this.findDto(), this.findTotalPrice()])
