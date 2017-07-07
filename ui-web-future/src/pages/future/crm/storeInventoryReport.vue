@@ -86,6 +86,9 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
+        if(column.prop=="areaName") {
+          column.sort = "areaId";
+        }
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();

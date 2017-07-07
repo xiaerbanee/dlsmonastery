@@ -630,6 +630,7 @@ export default {
     batchPass: "konfirmasi",
     batchBlack: "kembali",
     code: "kode",
+    areaName:"办事处",
     officeName: "nama kantor",
     shopName: "toko",
     fixtureType: "tipe fitur",

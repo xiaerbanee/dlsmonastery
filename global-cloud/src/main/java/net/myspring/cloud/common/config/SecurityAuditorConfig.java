@@ -10,6 +10,6 @@ public class SecurityAuditorConfig implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
-        return RequestUtils.getAccountId();
+        return AuditorContextHolder.get().getAccountId();
     }
 }

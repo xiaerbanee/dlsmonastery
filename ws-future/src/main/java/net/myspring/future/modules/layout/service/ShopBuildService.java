@@ -58,8 +58,7 @@ public class ShopBuildService {
     public ShopBuildDto findOne(String id){
         ShopBuildDto shopBuildDto = new ShopBuildDto();
         if(StringUtils.isNotBlank(id)){
-            ShopBuild shopBuild = shopBuildRepository.findOne(id);
-            shopBuildDto = BeanUtil.map(shopBuild,ShopBuildDto.class);
+            shopBuildDto = shopBuildRepository.findShopBuildDto(id);
             cacheUtils.initCacheInput(shopBuildDto);
             cacheUtils.initCacheInput(shopBuildDto);
         }

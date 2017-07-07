@@ -2,6 +2,9 @@ package net.myspring.future.modules.layout.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.OfficeRuleEnum;
+import net.myspring.future.common.enums.ShopBuildAuditEnum;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.layout.dto.ShopBuildDto;
 import net.myspring.future.modules.layout.service.ShopBuildService;
 import net.myspring.future.modules.layout.web.form.ShopBuildDetailOrAuditForm;
@@ -29,6 +32,8 @@ public class ShopBuildController {
 
     @Autowired
     private ShopBuildService shopBuildService;
+    @Autowired
+    private OfficeClient officeClient;
 
 
     @RequestMapping(method = RequestMethod.GET)
@@ -41,6 +46,8 @@ public class ShopBuildController {
     @RequestMapping(value = "getQuery")
     @PreAuthorize("hasPermission(null,'crm:shopBuild:view')")
     public ShopBuildQuery getQuery(ShopBuildQuery shopBuildQuery) {
+        shopBuildQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
+        shopBuildQuery.getExtra().put("auditTypes", ShopBuildAuditEnum.getList());
         return shopBuildQuery;
     }
 
