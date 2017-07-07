@@ -20,6 +20,9 @@
             <el-form-item :label="$t('shopBuildDetail.investInCause')" prop="investInCause">
               {{inputForm.investInCause}}
             </el-form-item>
+            <el-form-item :label="$t('shopBuildDetail.imageDeposit')">
+              {{imageDeposit}}
+            </el-form-item>
             <el-form-item :label="$t('shopBuildDetail.shopType')" prop="shopType">
               {{inputForm.shopType}}
             </el-form-item>
@@ -102,6 +105,7 @@
             formData:{
               extra:{}
             },
+            imageDeposit:'',
             recentSaleDescription:'',
             fileList1:[],
             fileList2:[],
@@ -167,6 +171,9 @@
               this.fileList3= response.data;
             });
           }
+          axios.get('/api/ws/future/layout/shopDeposit/findLeftAmount', {params: {type: '形象保证金', depotId: this.inputForm.shopId}}).then((response) => {
+            this.imageDeposit = response.data;
+          });
         });
         axios.get('/api/ws/future/layout/shopBuild/getAuditForm',{params: {id:this.$route.query.id}}).then((response)=>{
           this.formData = response.data;
