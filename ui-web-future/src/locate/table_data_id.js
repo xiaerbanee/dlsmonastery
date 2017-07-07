@@ -19,6 +19,7 @@ export default {
       factoryBasicModule:"基础",
     },
     menuCategory:{
+      goodsOrderMallForm:"商城订单",
       hrCategory:"人事管理",
       sysCategory:"系统设置",
       saleCategory:"销售管理",
