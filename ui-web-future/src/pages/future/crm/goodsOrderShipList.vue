@@ -178,7 +178,7 @@
           });
         })
       }else if(action == "mallOrder"){
-        this.$router.push({name:'shopOrder',query:{id:id}})
+        this.$router.push({name:'goodsOrderDetail',query:{id:id,carrierEdit:true}})
       }else if(action =="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }else if(action =="delete"){

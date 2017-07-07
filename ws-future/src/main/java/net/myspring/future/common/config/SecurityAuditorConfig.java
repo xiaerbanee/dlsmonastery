@@ -1,6 +1,5 @@
 package net.myspring.future.common.config;
 
-import net.myspring.future.common.utils.RequestUtils;
 import org.springframework.data.domain.AuditorAware;
 
 /**
@@ -10,6 +9,6 @@ public class SecurityAuditorConfig implements AuditorAware<String> {
 
     @Override
     public String getCurrentAuditor() {
-        return RequestUtils.getAccountId();
+        return AuditorContextHolder.get().getAccountId();
     }
 }
