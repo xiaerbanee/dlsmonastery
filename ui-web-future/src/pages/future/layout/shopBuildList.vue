@@ -14,15 +14,17 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('shopBuildList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+              <el-form-item :label="$t('shopBuildList.areaName')" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.idStr')" :label-width="formLabelWidth">
                 <el-input v-model="formData.idStr" auto-complete="off" :placeholder="$t('shopBuildList.idStrByComma')" type="textarea"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.auditType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('shopBuildList.inputKey')">
-                  <el-option v-for="(value,key) in auditTypes" :key="key" :label="value" :value="key"></el-option>
+                  <el-option v-for="item in formData.extra.auditTypes" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.shopName')" :label-width="formLabelWidth">
@@ -58,16 +60,16 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column fixed column-key="id" prop="formatId" :label="$t('shopBuildList.code')" sortable></el-table-column>
+        <el-table-column column-key="areaId" prop="areaName" :label="$t('shopBuildList.areaName')" sortable></el-table-column>
         <el-table-column column-key="officeId" prop="officeName" :label="$t('shopBuildList.officeName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('shopBuildList.shopName')" sortable></el-table-column>
         <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" sortable></el-table-column>
         <el-table-column prop="content" :label="$t('shopBuildList.content')" width="150" sortable></el-table-column>
-        <el-table-column prop="oldContents"  :label="$t('shopBuildList.oldContents')" sortable></el-table-column>
         <el-table-column prop="newContents" :label="$t('shopBuildList.newContents')" sortable></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" width="150" sortable>
-          <template scope="scope">
+        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" sortable>
+          <!--<template scope="scope">
             <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
-          </template>
+          </template>-->
         </el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopBuildList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopBuildList.createdDate')" sortable ></el-table-column>
@@ -102,13 +104,9 @@
         pageLoading: false,
         page:{},
         formData:{
-          auditType:1,
+            extra:{},
         },
         initPromise:{},
-        auditTypes:{
-          0:this.$t('shopBuildList.all'),
-          1:this.$t('shopBuildList.waitAudit')
-        },
         multipleSelection:[],
         formLabelWidth: '120px',
         formVisible: false,
@@ -197,7 +195,7 @@
     created () {
       var that = this;
       that.pageHeight = window.outerHeight -320;
-      this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery',{params:this.formData}).then((response) =>{
+      this.initPromise = axios.get('/api/ws/future/layout/shopBuild/getQuery').then((response) =>{
         this.formData = response.data;
          util.copyValue(this.$route.query,this.formData);
       });

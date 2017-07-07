@@ -635,6 +635,7 @@ export default {
     batchPass: "批量通过",
     batchBlack: "批量打回",
     code: "编号",
+    areaName:"办事处",
     officeName: "所属机构",
     shopName: "门店",
     fixtureType: "装修类别",
