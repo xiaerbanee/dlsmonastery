@@ -59,8 +59,8 @@
           </template>
         </el-table-column>
       </el-table>
-      <div style="width:100%;height:50px;text-align:center;font-size:20px">{{$t('goodsOrderDetail.shipDetail')}}</div>
-      <el-table :data="goodsOrderImeList" style="margin-top:5px;" border stripe border>
+      <div style="width:100%;height:50px;text-align:center;font-size:20px" v-if="!carrierEdit">{{$t('goodsOrderDetail.shipDetail')}}</div>
+      <el-table :data="goodsOrderImeList" style="margin-top:5px;" border stripe border v-if="!carrierEdit">
         <el-table-column  prop="productName" :label="$t('goodsOrderDetail.productName')"    width="200"></el-table-column>
         <el-table-column prop="productImeIme"  :label="$t('goodsOrderDetail.productIme')"  ></el-table-column>
         <el-table-column prop="productImeMeid" :label="$t('goodsOrderDetail.meid')"  ></el-table-column>
@@ -74,6 +74,7 @@
   export default{
     data(){
       return{
+        carrierEdit:this.$route.query.carrierEdit,
         goodsOrder:{},
         expressOrder:{},
         goodsOrderDetailList:[],
