@@ -63,6 +63,16 @@ public class Depot extends DataEntity<Depot> {
     //公司分组（imoo，电玩，oppo不写）
     private String companyGroup;
 
+    private String parentId;
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
     public String getAreaType() {
         return areaType;
     }
