@@ -37,7 +37,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="storeAllotDetailList" style="margin-top:5px;"  v-loading="pageLoading" :element-loading-text="$t('storeAllotShip.loading')" stripe border >
+        <el-table :data="storeAllotDetailList" style="margin-top:5px;"  v-loading="pageLoading" :row-class-name="tableRowClassName"  :element-loading-text="$t('storeAllotShip.loading')" border >
           <el-table-column  prop="productName" :label="$t('storeAllotShip.productName')" sortable width="200"></el-table-column>
           <el-table-column prop="productHasIme" :label="$t('storeAllotShip.hasIme')" >
             <template scope="scope">
@@ -53,6 +53,14 @@
     </div>
   </div>
 </template>
+<style>
+  .el-table .danger-row {
+    background: red !important;
+  }
+  .el-table .success-row {
+    background: green !important;
+  }
+</style>
 <script>
   import mediaNotify from "assets/media/notify.mp3"
   import mediaSuccess from "assets/media/success.mp3"
@@ -90,6 +98,15 @@
         }).catch(()=> {
           this.submitDisabled = false;
         });
+      },
+      tableRowClassName(row, index) {
+        if (row.leftQty < 0) {
+          return "danger-row";
+        }else if(row.leftQty === 0){
+          return "success-row";
+        }else{
+          return "";
+        }
       },
       summary(isSubmit){
         if(isSubmit) {
@@ -161,10 +178,8 @@
           axios.get('/api/ws/future/crm/storeAllot/findDto' ,{params: {id:this.$route.query.id}}).then((response)=>{
             this.storeAllot = response.data;
             util.copyValue(response.data,this.inputForm);
-
           });
         });
-
       }
     },created(){
       this.initPage();
