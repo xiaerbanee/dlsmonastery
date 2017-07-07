@@ -21,7 +21,7 @@ public class AuditorContextHolder {
     }
 
     public String getAccountId() {
-        if(StringUtils.isBlank(accountId)) {
+        if(StringUtils.isNotBlank(RequestUtils.getAccountId())) {
             accountId = RequestUtils.getAccountId();
         }
         return accountId;
