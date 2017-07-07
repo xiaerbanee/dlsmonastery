@@ -10,7 +10,7 @@
         开单日期：{{goodsOrder.billDate}}
       </div>
       <div class="span3">
-        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.businessId}}
+        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.formatId}}
       </div>
     </div>
     <div class="row">
