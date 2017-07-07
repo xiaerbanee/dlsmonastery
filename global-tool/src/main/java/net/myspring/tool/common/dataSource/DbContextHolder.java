@@ -19,6 +19,8 @@ public class DbContextHolder {
     }
 
     public void remove() {
+        this.companyName=null;
+        this.dataSourceType=null;
         threadLocal.remove();
     }
 
