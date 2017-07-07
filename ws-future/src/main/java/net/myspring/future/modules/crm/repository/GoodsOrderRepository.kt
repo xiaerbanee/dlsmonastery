@@ -7,8 +7,8 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
+import net.myspring.util.text.IdUtils
 import net.myspring.util.text.StringUtils
-import net.myspring.util.time.LocalDateUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -124,12 +124,9 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     }
 
     override fun findNextBusinessId(date: LocalDate): String {
-        var sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date";
-        var maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),Long::class.java);
-        if (maxBusinessId == null) {
-            maxBusinessId =(LocalDateUtils.format(date,"yyyyMMdd") + "00000").toLong();
-        }
-        return (maxBusinessId + 1).toString();
+        val sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date"
+        val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),String::class.java)
+        return IdUtils.getNextBusinessId(maxBusinessId)
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {
