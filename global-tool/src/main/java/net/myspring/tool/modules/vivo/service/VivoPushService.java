@@ -52,7 +52,7 @@ public class VivoPushService {
             vivoPushZones.setZonePath(zonePath.toString());
             vivoPushZones.setFatherId(getZoneId(mainCode,officeEntity.getParentId()));
             vivoPushZones.setSubCount(map.get(officeEntity.getId()));
-            vivoPushZones.setZoneTypes("");
+            vivoPushZones.setZoneTypes(CharConstant.EMPTY);
             vivoPushZones.setCreatedDate(LocalDateTime.now());
             vivoPushZonesList.add(vivoPushZones);
         }
