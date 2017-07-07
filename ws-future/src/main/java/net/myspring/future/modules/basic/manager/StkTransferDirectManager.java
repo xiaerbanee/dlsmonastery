@@ -76,6 +76,36 @@ public class StkTransferDirectManager {
         return null;
     }
 
+    public KingdeeSynReturnDto synForGoodsOrderReturn(GoodsOrder goodsOrder, String allotFormStockCode,String allotToStokeCode){
+        if (StringUtils.isNotBlank(goodsOrder.getId())) {
+            StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
+            transferDirectDto.setExtendId(goodsOrder.getId());
+            transferDirectDto.setExtendType(ExtendTypeEnum.货品订货.name());
+            transferDirectDto.setNote(null);
+            transferDirectDto.setDate(null);
+            List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+            List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
+            Map<String, Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
+            for (GoodsOrderDetail detail : goodsOrderDetailList) {
+                if (detail.getReturnQty() != null && detail.getReturnQty() >0) {
+                    StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                    entryDto.setQty(detail.getReturnQty());
+                    Product product = productIdToOutCodeMap.get(detail.getProductId());
+                    if (product.getCode() != null) {
+                        entryDto.setMaterialNumber(product.getCode());
+                    } else {
+                        throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                    }
+                    entryDto.setSrcStockNumber(allotFormStockCode);
+                    entryDto.setDestStockNumber(allotToStokeCode);
+                    transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
+                }
+            }
+            return cloudClient.synStkTransferDirect(transferDirectDto);
+        }
+        return null;
+    }
+
     public String getOutCode(String extendId,String extendType){
         List<KingdeeSynReturnDto> kingdeeSynReturnDtos = cloudClient.findByExtendIdAndExtendType(extendId, extendType);
         String result="";

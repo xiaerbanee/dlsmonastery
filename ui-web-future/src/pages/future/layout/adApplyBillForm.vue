@@ -143,6 +143,7 @@
           }
         }
         this.totalNowBilledQty = tempTotalNowBilledQty;
+        //this.billGoodsSortQty = tempTotalNowBilledQty;
       },billGoodsSort(){
           let val = this.billGoodsSortQty;
           if(!val){

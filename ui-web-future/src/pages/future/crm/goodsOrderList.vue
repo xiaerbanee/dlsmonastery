@@ -112,8 +112,6 @@
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:sreturn'" ><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderList.sreturn')}}</el-button></div>
-
           </template>
 
         </el-table-column>
@@ -209,8 +207,6 @@
         var newWindow=window.open('/#/future/crm/goodsOrderPrint?id=' + id);
       }else if(action=="expressPrint"){
          window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
-      }else if(action =="sreturn"){
-        this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
       }
     },
     handleCommand(command) {

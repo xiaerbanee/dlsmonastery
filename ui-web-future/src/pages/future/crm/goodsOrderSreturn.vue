@@ -40,17 +40,17 @@
           </el-col>
         </el-row>
         <el-table :data="formProperty.goodsOrderDetailDtoList" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('goodsOrderSreturn.loading')" stripe border >
-          <el-table-column  prop="productName" :label="$t('goodsOrderSreturn.productName')"></el-table-column>
+          <el-table-column  prop="productName" :label="$t('goodsOrderSreturn.productName')" width="260"></el-table-column>
           <el-table-column  prop="qty" :label="$t('goodsOrderSreturn.qty')"></el-table-column>
           <el-table-column  prop="billQty" :label="$t('goodsOrderSreturn.billQty')"></el-table-column>
           <el-table-column  prop="shippedQty" label="已发货数"></el-table-column>
-          <el-table-column prop="returnQty" :label="$t('goodsOrderSreturn.returnQty')">
+          <el-table-column prop="returnQty" :label="$t('goodsOrderSreturn.returnQty')" width="240">
             <template scope="scope">
               <el-input  v-model="scope.row.returnQty" @blur="checkReturnQty(scope.row)"></el-input>
             </template>
           </el-table-column>
           <el-table-column prop="price" :label="$t('goodsOrderSreturn.price')"></el-table-column>
-          <el-table-column prop="hasIme" :label="$t('goodsOrderSreturn.hasIme')" width="120">
+          <el-table-column prop="hasIme" :label="$t('goodsOrderSreturn.hasIme')" width="70">
             <template scope="scope">
               <el-tag :type="scope.row.hasIme ? 'primary' : 'danger'">{{scope.row.hasIme | bool2str}}</el-tag>
             </template>
@@ -95,7 +95,7 @@
              submitData.goodsOrderDetailFormList = goodsOrderDetailFormList;
              axios.post('/api/ws/future/crm/goodsOrderShip/sreturn',qs.stringify(submitData, {allowDots:true})).then((response)=> {
                this.$message(response.data.message);
-               this.$router.push({name:'goodsOrderShip',query:util.getQuery("goodsOrderShip"), params:{_closeFrom:true}})
+               this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}})
              }).catch(() => {
                this.submitDisabled = false;
              });

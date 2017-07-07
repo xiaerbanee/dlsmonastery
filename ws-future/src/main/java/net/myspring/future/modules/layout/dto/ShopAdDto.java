@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -29,6 +30,8 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String shopAdTypeName;
     @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "price")
     private BigDecimal shopAdTypePrice;
+    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "totalPriceType")
+    private String totalPriceType;
     private BigDecimal length;
     private BigDecimal width;
     private Integer qty;
@@ -40,6 +43,14 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String processInstanceId;
     private Boolean locked;
 
+
+    public String getTotalPriceType() {
+        return totalPriceType;
+    }
+
+    public void setTotalPriceType(String totalPriceType) {
+        this.totalPriceType = totalPriceType;
+    }
 
     public BigDecimal getShopAdTypePrice() {
         return shopAdTypePrice;
@@ -146,7 +157,14 @@ public class ShopAdDto extends DataDto<ShopAd>{
     }
 
     public BigDecimal getPrice() {
-        return price;
+        BigDecimal price=BigDecimal.ZERO;
+        if(TotalPriceTypeEnum.按数量.toString().equals(getTotalPriceType())){
+            price=shopAdTypePrice.multiply(new BigDecimal(getQty()));
+        }
+        if(TotalPriceTypeEnum.按面积.toString().equals(getTotalPriceType())){
+            price=getLength().multiply(getWidth()).multiply(shopAdTypePrice).multiply(new BigDecimal(getQty()));
+        }
+        return price.setScale(0,BigDecimal.ROUND_HALF_UP);
     }
 
     public void setPrice(BigDecimal price) {
