@@ -290,7 +290,7 @@ public class AdApplyService {
 
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
 
-            adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId));
+            adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, adApplyBillForm.getBillDate()));
             BigDecimal amount = BigDecimal.ZERO;
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){

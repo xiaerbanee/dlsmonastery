@@ -10,12 +10,12 @@
         开单日期：{{goodsOrder.billDate}}
       </div>
       <div class="span3">
-        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.businessId}}
+        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.formatId}}
       </div>
     </div>
     <div class="row">
       <div class="span10">
-        收货单位：{{goodsOrder.shopName}}&nbsp;总店：	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}
+        收货单位：{{goodsOrder.shopName}}&nbsp;客户：{{goodsOrder.shopClientName}}	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}，{{goodsOrder.lxMallOrder?'天翼购订货':''}}
       </div>
     </div>
     <table class="table table-bordered">
@@ -50,28 +50,17 @@
   export default{
     data(){
       return{
-        isCreate:this.$route.query.id==null,
-        submitDisabled:false,
         account:{},
         goodsOrder:{},
-        rules: {
-          pass: [{ required: true, message: this.$t('expressOrderList.prerequisiteMessage')}],
-        },
-        activityEntity:{},
-      }
-    },
-    mounted() {
-     setTimeout(function(){window.print()},1000);
-    },
-    methods:{
-      findOne(){
-        axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
-          this.goodsOrder=response.data;
-        })
       }
     },created(){
-      this.findOne();
       this.account=JSON.parse(window.localStorage.getItem("account"));
+      axios.get('/api/ws/future/crm/goodsOrderShip/print',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
+        this.goodsOrder=response.data;
+        this.$nextTick(()=>{
+          window.print();
+        });
+      });
     }
   }
 </script>

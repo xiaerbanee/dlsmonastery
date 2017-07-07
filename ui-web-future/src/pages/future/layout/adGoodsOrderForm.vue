@@ -6,10 +6,10 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('adGoodsOrderForm.outShopId')" prop="outShopId">
-              <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="shop" @input="outShopChanged"></depot-select>
+              <depot-select :disabled="afterBill" v-model="inputForm.outShopId" category="directShop" @input="outShopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.shopId')" prop="shopId" v-if="isDelegateShop">
-              <depot-select :disabled="afterBill" v-model="inputForm.shopId" category="delegateShop" @input="shopChanged"></depot-select>
+              <depot-select :disabled="afterBill" v-model="inputForm.shopId" category="shop" @input="shopChanged"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('adGoodsOrderForm.recentSaleQty')" >
               {{recentSaleDescription}}
@@ -186,7 +186,26 @@
           }
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-          if (response.data[0].jointType === '代理' || response.data[0].depotStoreId !=null) {
+              if(response.data[0].jointType === '代理'){
+                this.isDelegateShop = true;
+                this.inputForm.shopId = null;
+                this.recentSaleDescription='';
+                this.imageDeposit =0;
+              }else{
+                axios.get('/api/ws/future/basic/depot/findByClientId' + '?clientId=' + response.data[0].clientId).then((response) => {
+                    if(response.data.length > 1){
+                      this.isDelegateShop = true;
+                      this.inputForm.shopId = null;
+                      this.recentSaleDescription='';
+                      this.imageDeposit =0;
+                    }else{
+                      this.isDelegateShop = false;
+                      this.inputForm.shopId = this.inputForm.outShopId;
+                      this.refreshRecentMonthSaleAmount();
+                    }
+                });
+              }
+          /*if (response.data[0].jointType === '代理') {
             this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
@@ -195,7 +214,7 @@
             this.isDelegateShop = false;
             this.inputForm.shopId = this.inputForm.outShopId;
             this.refreshRecentMonthSaleAmount();
-          }
+          }*/
         });
       },shopChanged(){
         this.refreshRecentMonthSaleAmount();

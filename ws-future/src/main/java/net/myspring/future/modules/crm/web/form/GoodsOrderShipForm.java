@@ -11,7 +11,7 @@ import java.util.List;
 public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
     private String boxImeStr;
     private String imeStr;
-    private String expressStr;
+    private String expressCodes;
     private String shipRemarks;
 
     public String getBoxImeStr() {
@@ -30,12 +30,12 @@ public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
         this.imeStr = imeStr;
     }
 
-    public String getExpressStr() {
-        return expressStr;
+    public String getExpressCodes() {
+        return expressCodes;
     }
 
-    public void setExpressStr(String expressStr) {
-        this.expressStr = expressStr;
+    public void setExpressCodes(String expressCodes) {
+        this.expressCodes = expressCodes;
     }
 
     public String getShipRemarks() {
@@ -64,7 +64,7 @@ public class GoodsOrderShipForm extends BaseForm<GoodsOrder> {
     }
 
     public List<String> getExpressList() {
-        return StringUtils.getSplitList(expressStr, CharConstant.ENTER);
+        return StringUtils.getSplitList(expressCodes, CharConstant.ENTER);
     }
 
 }

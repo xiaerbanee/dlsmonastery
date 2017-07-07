@@ -375,7 +375,7 @@ public class AdGoodsOrderService {
             throw new ServiceException("该订单状态不为：" + AdGoodsOrderStatusEnum.待开单.name() + "，不能开单");
         }
 
-        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate())));
+        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate()), adGoodsOrderBillForm.getBillDate()));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
         adGoodsOrder.setBillAddress(adGoodsOrderBillForm.getBillAddress());

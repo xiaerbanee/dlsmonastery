@@ -4,7 +4,7 @@
     <h2 style="text-align: center;">{{storeAllot.fromStoreName}}大库调拨单</h2>
     <div class="row">
       <div class="span4">
-      出货单号{{storeAllot.formatId}}
+      出货单号：{{storeAllot.formatId}}
       </div>
       <div class="span3">
         财务单号 ：{{storeAllot.outCode}}

@@ -20,12 +20,6 @@ public class ShopAttributeController {
     @Autowired
     private ShopAttributeService shopAttributeService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public Page<DepotDto> list(Pageable pageable, ShopAttributeQuery shopAttributeQuery){
-        Page<DepotDto> page = shopAttributeService.findPage(pageable, shopAttributeQuery);
-        return page;
-    }
-
     @RequestMapping(value="getQuery")
     public ShopAttributeQuery getQuery(ShopAttributeQuery shopAttributeQuery){
         return shopAttributeQuery;
