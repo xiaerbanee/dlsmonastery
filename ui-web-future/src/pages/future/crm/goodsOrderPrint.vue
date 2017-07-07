@@ -10,12 +10,12 @@
         开单日期：{{goodsOrder.billDate}}
       </div>
       <div class="span3">
-        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.businessId}}
+        出货仓：{{goodsOrder.storeName}}，出货单号：{{goodsOrder.formatId}}
       </div>
     </div>
     <div class="row">
       <div class="span10">
-        收货单位：{{goodsOrder.shopName}}&nbsp;客户：{{goodsOrder.shopClientName}}	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}
+        收货单位：{{goodsOrder.shopName}}&nbsp;客户：{{goodsOrder.shopClientName}}	&nbsp;&nbsp;备注摘要：{{goodsOrder.contator }}，{{goodsOrder.mobilePhone}}，{{goodsOrder.address}}，{{goodsOrder.remarks}}，{{goodsOrder.lxMallOrder?'天翼购订货':''}}
       </div>
     </div>
     <table class="table table-bordered">

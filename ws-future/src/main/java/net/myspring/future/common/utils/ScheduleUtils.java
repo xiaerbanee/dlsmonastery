@@ -45,7 +45,6 @@ public class ScheduleUtils {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @Transactional(readOnly = false)
-    @Scheduled(cron = "*/20 * * * * ?")
     public void synOppo() {
 
         logger.info("工厂自动同步开始");

@@ -20,8 +20,8 @@
               </el-form-item>
             </el-row>
             <el-row :gutter="4">
-              <el-form-item label="公司ID" :label-width="formLabelWidth">
-                <el-input v-model="formData.companyId" placeholder="请输入"></el-input>
+              <el-form-item label="公司名称" :label-width="formLabelWidth">
+                <el-input v-model="formData.companyName" placeholder="请输入"></el-input>
               </el-form-item>
             </el-row>
             <el-row :gutter="4">
@@ -48,7 +48,7 @@
         <el-table-column prop="username" label="账套登入名"></el-table-column>
         <el-table-column prop="kingdeeBookName" label="账套名称"></el-table-column>
         <el-table-column prop="kingdeeBookType" label="账套类型"></el-table-column>
-        <el-table-column prop="companyId" label="公司Id"></el-table-column>
+        <el-table-column prop="companyName" label="公司名称"></el-table-column>
         <el-table-column prop="remarks" label="备注"></el-table-column>
         <el-table-column fixed="right" label="操作" width="150">
           <template scope="scope">

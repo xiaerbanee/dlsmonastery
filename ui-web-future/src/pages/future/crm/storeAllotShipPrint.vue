@@ -24,9 +24,6 @@
         storeAllot : {},
       }
     },
-    mounted(){
-      setTimeout("window.print()",2000);
-    },
     created(){
       axios.get('/api/ws/future/crm/storeAllot/shipPrint', {params: {id: this.$route.query.id}}).then((response)=>{
         this.storeAllot = response.data;

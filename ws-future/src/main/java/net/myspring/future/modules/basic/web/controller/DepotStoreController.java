@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,12 +94,12 @@ public class DepotStoreController {
     }
 
     @RequestMapping(value = "storeReport")
-    public Page<DepotStoreDto> storeReport(Pageable pageable,ReportQuery reportQuery){
+    public List<DepotStoreDto> storeReport(ReportQuery reportQuery){
         reportQuery.setDepotIdList(depotService.filterDepotIds());
         DepotStoreQuery depotStoreQuery = BeanUtil.map(reportQuery, DepotStoreQuery.class);
-        Page<DepotStoreDto> page = depotStoreService.findPage(pageable,depotStoreQuery);
-        depotStoreService.setReportData(page.getContent(),reportQuery);
-        return page;
+        List<DepotStoreDto> list = depotStoreService.findFilter(depotStoreQuery);
+        depotStoreService.setReportData(list,reportQuery);
+        return list;
     }
 
     @RequestMapping(value = "storeReportDetail")

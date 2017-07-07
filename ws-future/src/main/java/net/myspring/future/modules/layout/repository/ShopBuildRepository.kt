@@ -101,6 +101,12 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (shopBuildQuery.lastModifiedDateEnd != null) {
             sb.append("""  and t1.last_modified_date < :lastModifiedDateEnd """)
         }
+        if (CollectionUtil.isNotEmpty(shopBuildQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(shopBuildQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(shopBuildQuery), BeanPropertyRowMapper(ShopBuildDto::class.java))

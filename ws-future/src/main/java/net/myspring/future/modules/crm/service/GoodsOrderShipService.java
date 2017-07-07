@@ -204,13 +204,17 @@ public class GoodsOrderShipService {
         Depot shop=depotMap.get(goodsOrder.getShopId());
         goodsOrderPrintDto.setStoreName(depotMap.get(goodsOrder.getStoreId()).getName());
         goodsOrderPrintDto.setShopName(shop.getName());
+        goodsOrderPrintDto.setContator(shop.getContator());
+        goodsOrderPrintDto.setAddress(shop.getAddress());
+        goodsOrderPrintDto.setMobilePhone(shop.getMobilePhone());
         if(StringUtils.isNotBlank(shop.getClientId())){
             Client shopClient = clientRepository.findOne(shop.getClientId());
             goodsOrderPrintDto.setShopClientName(shopClient.getName());
         }
 
         goodsOrderPrintDto.setExpressOrderCode(expressOrder.getOutCode());
-        goodsOrderPrintDto.setRemarks(shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress());
+        goodsOrderPrintDto.setRemarks(goodsOrder.getRemarks());
+        goodsOrderPrintDto.setLxMallOrder(goodsOrder.getLxMallOrder());
         List<GoodsOrderDetail> goodsOrderDetailList=goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
         List<String> productIdList=CollectionUtil.extractToList(goodsOrderDetailList,"productId");
         Map<String,Product> productMap=productRepository.findMap(productIdList);
@@ -226,8 +230,8 @@ public class GoodsOrderShipService {
                 Product product=productMap.get(goodsOrderDetail.getProductId());
                 productPrintDto.setProductName(product.getName());
                 if(shop.getPrintPrice()!=null&&shop.getPrintPrice()){
-                    productPrintDto.setPrice(product.getRetailPrice());
-                    productPrintDto.setTotal(product.getRetailPrice().multiply(new BigDecimal(productPrintDto.getQty())));
+                    productPrintDto.setPrice(goodsOrderDetail.getPrice());
+                    productPrintDto.setTotal(goodsOrderDetail.getPrice().multiply(new BigDecimal(productPrintDto.getQty())));
                     total=total.add(productPrintDto.getTotal());
                 }
                 productPrintDtoList.add(productPrintDto);

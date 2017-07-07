@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.dto;
 
 import com.google.common.collect.Lists;
+import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.util.text.IdUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +21,19 @@ public class GoodsOrderPrintDto {
     private String contator;
     private String mobilePhone;
     private String address;
+    private Boolean lxMallOrder;
+
+    public String getFormatId(){
+        return IdUtils.getFormatId(businessId, FormatterConstant.GOODS_ORDER);
+    }
+
+    public Boolean getLxMallOrder() {
+        return lxMallOrder;
+    }
+
+    public void setLxMallOrder(Boolean lxMallOrder) {
+        this.lxMallOrder = lxMallOrder;
+    }
 
     public String getShopClientName() {
         return shopClientName;

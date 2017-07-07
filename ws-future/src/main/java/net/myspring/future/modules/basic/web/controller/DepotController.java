@@ -219,4 +219,9 @@ public class DepotController {
         return oppoCustomers;
     }
 
+    @RequestMapping(value = "findByClientId")
+    public List<DepotDto> findByClientId(String clientId){
+        List<DepotDto> depotDtos = depotService.findByClientId(clientId);
+        return depotDtos;
+    }
 }

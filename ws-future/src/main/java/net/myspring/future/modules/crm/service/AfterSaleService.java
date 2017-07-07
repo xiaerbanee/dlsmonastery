@@ -167,8 +167,9 @@ public class AfterSaleService {
                             break;
                     }
                 }
-                List<String> maxBusinessIdList = afterSaleRepository.findMaxBusinessId(LocalDate.now());
-                afterSale.setBusinessId(IdUtils.getNextBusinessId(CollectionUtil.isEmpty(maxBusinessIdList)?null:maxBusinessIdList.get(0)));
+                LocalDate now = LocalDate.now();
+                List<String> maxBusinessIdList = afterSaleRepository.findMaxBusinessId(now);
+                afterSale.setBusinessId(IdUtils.getNextBusinessId(CollectionUtil.isEmpty(maxBusinessIdList)?null:maxBusinessIdList.get(0), now));
                 afterSale.setToStoreDate(toStoreDate);
                 afterSaleRepository.save(afterSale);
                 AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), badProductIme.getId(), badProductIme.getDepotId(), badStore.getId(), "坏机录入");

@@ -64,10 +64,50 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
 interface DepotStoreRepositoryCustom{
     fun findPage(pageable: Pageable, depotStoreQuery: DepotStoreQuery): Page<DepotStoreDto>
 
+    fun findFilter(depotStoreQuery: DepotStoreQuery): MutableList<DepotStoreDto>
+
     fun findStoreReport(reportQuery:ReportQuery):MutableList<DepotReportDto>
 }
 
 class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotStoreRepositoryCustom{
+    override fun findFilter(depotStoreQuery: DepotStoreQuery): MutableList<DepotStoreDto> {
+        val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t2.*, t1.id AS 'depotId',
+                t1.name as 'depotName',
+                t1.office_id AS 'officeId',
+                t1.tax_name AS 'taxName',
+                t1.delegate_depot_id AS 'delegateDepotId',
+                depot.name as 'delegateDepotName',
+                t1.pop_shop AS 'popShop',
+                t1.area_id,t1.contator,t1.mobile_phone
+            FROM
+                crm_depot t1 left join crm_depot depot on t1.delegate_depot_id=depot.id,
+                crm_depot_store t2
+            WHERE
+                t1.enabled = 1
+            AND t2.enabled = 1
+            AND t2.depot_id = t1.id
+        """)
+        if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.contator)) {
+            sb.append("""  and t1.contator LIKE CONCAT('%',:contator,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.mobilePhone)) {
+            sb.append("""  and t1.mobile_phone LIKE CONCAT('%',:mobilePhone,'%') """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.officeId)) {
+            sb.append("""  and t1.office_id =:officeId """)
+        }
+        if (StringUtils.isNotEmpty(depotStoreQuery.areaId)) {
+            sb.append("""  and t1.area_id =:areaId """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotStoreQuery), BeanPropertyRowMapper(DepotStoreDto::class.java))
+    }
+
     override fun findStoreReport(reportQuery: ReportQuery): MutableList<DepotReportDto> {
         val sb = StringBuffer()
         if(reportQuery.isDetail==null||!reportQuery.isDetail){

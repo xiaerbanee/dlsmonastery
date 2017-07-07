@@ -1,11 +1,8 @@
 package net.myspring.cloud.common.query;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.util.collection.CollectionUtil;
 
-import java.util.List;
 import java.util.Map;
 
 /**

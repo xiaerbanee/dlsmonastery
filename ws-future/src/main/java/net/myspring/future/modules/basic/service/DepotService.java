@@ -70,10 +70,7 @@ public class DepotService {
 
 
     public List<DepotDto> findShopList(DepotQuery depotQuery) {
-        List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
-        if(CollectionUtil.isNotEmpty(depotList)) {
-            depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
-        }
+        depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         return depotRepository.findShopList(depotQuery);
     }
 
@@ -82,10 +79,7 @@ public class DepotService {
     }
 
     public List<DepotDto> findStoreList(DepotQuery depotQuery) {
-        List<Depot> depotList = depotRepository.findByAccountId(RequestUtils.getAccountId());
-        if(CollectionUtil.isNotEmpty(depotList)) {
-            depotQuery.setDepotIdList(CollectionUtil.extractToList(depotList,"id"));
-        }
+        depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         return depotRepository.findStoreList(depotQuery);
     }
 
@@ -278,6 +272,15 @@ public class DepotService {
     public List<CustomerDto>  findOppoCustomers(){
         List<CustomerDto> customerDtos=depotRepository.findOppoCustomers();
         return customerDtos;
+    }
+
+    public List<DepotDto> findByClientId(String clientId){
+        List<DepotDto> depotDtos = Lists.newArrayList();
+        if(clientId == null){
+            return depotDtos;
+        }
+        depotDtos = BeanUtil.map(depotRepository.findByClientId(clientId),DepotDto.class);
+        return depotDtos;
     }
 
 }
