@@ -165,4 +165,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 		return result;
 	}
+
+
+	public static String getFormatId(String id, String prefix) {
+		return getFormatId(id, prefix, "000000000000");
+	}
+
+	public static String getFormatId(String id, String prefix, String format) {
+		if (StringUtils.isBlank(id)) {
+			return "";
+		} else {
+			DecimalFormat decimalFormat = new DecimalFormat(format);
+			return prefix + decimalFormat.format(Long.valueOf(id));
+		}
+	}
+
 }

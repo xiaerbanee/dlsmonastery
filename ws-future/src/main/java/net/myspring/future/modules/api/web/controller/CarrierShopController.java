@@ -65,6 +65,12 @@ public class CarrierShopController {
         return carrierShopQuery;
     }
 
+    @RequestMapping(value="search")
+    public  CarrierShopDto getQuery(String name){
+        CarrierShopDto carrierShopDto=carrierShopService.findByNameLike(name);
+        return carrierShopDto;
+    }
+
     @RequestMapping(value = "checkName")
     public boolean checkName(CarrierShopForm carrierShopForm) {
         CarrierShop carrierShop = carrierShopService.findByName(carrierShopForm.getName());

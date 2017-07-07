@@ -40,7 +40,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('accountList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="id" :label="$t('accountList.id')" sortable width="150"></el-table-column>
         <el-table-column prop="type" :label="$t('accountList.type')"></el-table-column>
-        <el-table-column prop="loginName" :label="$t('accountList.loginName')"></el-table-column>
+        <el-table-column column-key="leaderId" prop="loginName" :label="$t('accountList.loginName')"></el-table-column>
         <el-table-column prop="employeeName" :label="$t('accountList.employeeName')"></el-table-column>
         <el-table-column prop="leaderName" sortable :label="$t('accountList.leader')" width="120"></el-table-column>
         <el-table-column prop="officeName" :label="$t('accountList.officeName')"></el-table-column>
@@ -97,9 +97,6 @@
         this.formData.size = pageSize;
         this.pageRequest();
       },sortChange(column) {
-        if(column.prop=="leader.loginName") {
-          column.sort = "leaderId";
-        }
         this.formData.order=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
