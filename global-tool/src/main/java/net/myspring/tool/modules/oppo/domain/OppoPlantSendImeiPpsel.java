@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.oppo.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
@@ -45,6 +46,7 @@ public class OppoPlantSendImeiPpsel extends IdEntity<OppoPlantSendImeiPpsel> {
         this.meid = meid;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     public LocalDateTime getCreatedTime() {
         return createdTime;
     }
