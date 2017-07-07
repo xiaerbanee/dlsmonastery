@@ -55,6 +55,7 @@ export default {
       goodsOrderCategory:"订货管理",
     },
     menu:{
+      goodsOrderMallForm:"商城订单",
       roleList:"角色管理",
       storeInventoryReport:"仓库报表",
       depotShopList:"门店管理",
