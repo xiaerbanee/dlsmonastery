@@ -35,14 +35,14 @@ public class JdbcConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSouce("spring.datasource.local"));
-        targetDataSources.put("KINGDEE_JXOPPO",getDataSouce("spring.datasource.kingdee.JXOPPO"));
+        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSource("spring.datasource.local"));
+        targetDataSources.put("KINGDEE_JXOPPO",getDataSource("spring.datasource.kingdee.JXOPPO"));
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         return dataSource;
     }
 
-    private DataSource getDataSouce(String prefix) {
+    private DataSource getDataSource(String prefix) {
         Properties props = new Properties();
         props.put("driverClassName", environment.getProperty(prefix + ".driver-class-name"));
         props.put("url", environment.getProperty(prefix + ".url"));
