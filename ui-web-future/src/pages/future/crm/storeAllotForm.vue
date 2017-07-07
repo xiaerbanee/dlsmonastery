@@ -19,7 +19,7 @@
             <el-option v-for="item in inputForm.extra.shipTypeList" :key="item" :label="item" :value="item"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('storeAllotForm.expressCompany')" prop="expressCompany">
+        <el-form-item :label="$t('storeAllotForm.expressCompany')" prop="expressCompanyId">
           <express-company-select v-model="inputForm.expressCompanyId"></express-company-select>
         </el-form-item>
         <el-form-item :label="$t('storeAllotForm.syn')" prop="syn">
