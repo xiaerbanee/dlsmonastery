@@ -349,6 +349,11 @@ public class GoodsOrderShipService {
         BigDecimal amount = BigDecimal.ZERO;
         for (GoodsOrderDetailForm goodsOrderDetailForm:goodsOrderForm.getGoodsOrderDetailFormList()) {
             GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
+
+            if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() < 0) {
+                throw new ServiceException("退货数不能小于0");
+            }
+
             if (goodsOrderDetailForm.getReturnQty() != null && goodsOrderDetailForm.getReturnQty() >=0) {
                 goodsOrderDetail.setReturnQty(goodsOrderDetailForm.getReturnQty());
                 goodsOrderDetailRepository.save(goodsOrderDetail);

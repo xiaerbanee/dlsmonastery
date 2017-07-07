@@ -103,6 +103,7 @@ public class StoreAllotService {
         return storeAllotDto;
     }
 
+    @Transactional
     public void ship(StoreAllotShipForm storeAllotShipForm) {
         if(StringUtils.isBlank(storeAllotShipForm.getId())){
             throw new ServiceException("发货的调拨单id不能为空");
