@@ -63,12 +63,12 @@ public class SalOutStockController {
     public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList;
+        List<KingdeeSynReturnDto> kingdeeSynExtendDtoList;
         if (accountKingdeeBook != null) {
              kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList, kingdeeBook, accountKingdeeBook);
         }else{
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
+        return kingdeeSynExtendDtoList;
     }
 }

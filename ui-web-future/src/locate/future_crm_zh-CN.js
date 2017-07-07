@@ -846,6 +846,7 @@ export default {
     shipDate: "发货日期",
     copy: "复制",
     save: "保存",
+    shippedQty: "已发货数",
   },
   goodsOrderBill: {
     goodsOrderBill: "货品订货开单",

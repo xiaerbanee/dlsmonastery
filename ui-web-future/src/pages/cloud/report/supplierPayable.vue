@@ -3,7 +3,7 @@
     <head-tab active="supplierPayable"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search" >过滤</el-button>
+        <el-button type="primary" @click="formVisible = true">过滤&导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -25,7 +25,8 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="search()" icon="search">搜索</el-button>
+          <el-button type="primary" @click="exportData()" icon="upload">导出</el-button>
         </div>
       </search-dialog>
       <el-dialog v-model="detailVisible" size="large">
@@ -135,6 +136,10 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },detailAction:function(supplierId,departmentId){
         this.detailLoading = true;
         if(supplierId !== null) {

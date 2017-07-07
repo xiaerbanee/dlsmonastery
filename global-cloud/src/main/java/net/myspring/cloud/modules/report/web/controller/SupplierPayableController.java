@@ -5,10 +5,12 @@ import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
 import net.myspring.cloud.modules.report.service.SupplierPayableService;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -38,6 +40,11 @@ public class SupplierPayableController {
     @RequestMapping(value = "getQuery")
     public SupplierPayableQuery getQuery() {
         return supplierPayableService.getQuery();
+    }
+
+    @RequestMapping(value = "export")
+    public ModelAndView export(SupplierPayableQuery supplierPayableQuery) {
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", supplierPayableService.export(supplierPayableQuery));
     }
 
 }

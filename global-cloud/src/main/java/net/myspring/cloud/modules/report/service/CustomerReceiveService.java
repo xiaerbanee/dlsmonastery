@@ -169,6 +169,7 @@ public class CustomerReceiveService {
                 list.add(customerReceiveDetailDto);
 
                 BigDecimal totalShouldGet = BigDecimal.ZERO;
+                BigDecimal realGet = BigDecimal.ZERO;
                 for (int i = 0; i < mainList.size(); i++) {
                     CustomerReceiveDetailDto main = mainList.get(i);
                     customerReceiveDetailDto = new CustomerReceiveDetailDto();
