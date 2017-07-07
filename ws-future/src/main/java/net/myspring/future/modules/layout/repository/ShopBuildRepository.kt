@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.util.*
 import javax.persistence.EntityManager
 
 /**
@@ -28,6 +29,8 @@ interface ShopBuildRepository : BaseRepository<ShopBuild,String>,ShopBuildReposi
 }
 
 interface ShopBuildRepositoryCustom{
+    fun findShopBuildDto(id: String):ShopBuildDto
+
     fun findPage(pageable: Pageable, shopBuildQuery: ShopBuildQuery): Page<ShopBuildDto>
 
     fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto>
@@ -35,17 +38,32 @@ interface ShopBuildRepositoryCustom{
 
 class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ShopBuildRepositoryCustom{
 
+    override fun findShopBuildDto(id: String):ShopBuildDto{
+        return namedParameterJdbcTemplate.queryForObject("""
+            Select depot.name shopName,depot.area_type areaType,
+                  depot.address address,depot.office_id officeId,depot.area_id areaId,
+                  t.*
+            From crm_shop_build t
+            Left Join crm_depot depot ON depot.id = t.shop_id
+            where t.enabled = 1
+            and t.id = :id
+        """,Collections.singletonMap("id",id),BeanPropertyRowMapper(ShopBuildDto::class.java))
+    }
+
     override fun findPage(pageable: Pageable, shopBuildQuery: ShopBuildQuery): Page<ShopBuildDto> {
         val sb = StringBuilder("""
             SELECT
+                depot.name shopName,
+                depot.address address,
+                depot.area_type areaType,
                 depot.office_id officeId,
+                depot.area_id areaId,
                 t1.*
             FROM
-                crm_shop_build t1,
-                crm_depot depot
+                crm_shop_build t1
+                LEFT JOIN crm_depot depot ON depot.id = t1.shop_id
             WHERE
                 t1.enabled = 1
-            AND t1.shop_id = depot.id
         """)
         if (StringUtils.isNotEmpty(shopBuildQuery.fixtureType)) {
             sb.append("""  and t1.fixture_type = :fixtureType """)
@@ -68,8 +86,8 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.lastModifiedBy)) {
             sb.append("""  and t1.last_modified_by = :lastModifiedBy """)
         }
-        if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
-            sb.append("""  and depot.office_id = :officeId """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.areaId)) {
+            sb.append("""  and depot.area_id = :areaId """)
         }
         if (shopBuildQuery.createdDateStart != null) {
             sb.append("""  and t1.created_date >= :createdDateStart """)
@@ -114,8 +132,8 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
-        if (StringUtils.isNotEmpty(shopBuildQuery.officeId)) {
-            sb.append("""  and depot.office_id = :officeId """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.areaId)) {
+            sb.append("""  and depot.area_id = :areaId """)
         }
         if (StringUtils.isNotEmpty(shopBuildQuery.processStatus)) {
             sb.append("""  and t1.process_status = :processStatus """)
