@@ -1,6 +1,5 @@
 package net.myspring.cloud.common.config;
 
-import net.myspring.cloud.common.dataSource.DbContextHolder;
 import net.myspring.cloud.common.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
 
