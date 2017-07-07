@@ -126,7 +126,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
     override fun findNextBusinessId(date: LocalDate): String {
         val sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date"
         val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),String::class.java)
-        return IdUtils.getNextBusinessId(maxBusinessId)
+        return IdUtils.getNextBusinessId(maxBusinessId, date)
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {
