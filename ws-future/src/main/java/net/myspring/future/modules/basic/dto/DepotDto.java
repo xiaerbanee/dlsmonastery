@@ -47,7 +47,15 @@ public class DepotDto extends DataDto<Depot> {
     private BigDecimal credit;
     private String areaType;
     private Boolean rebate;
+    private String parentId;
 
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
 
     public String getDelegateDepotId() {
         return delegateDepotId;
