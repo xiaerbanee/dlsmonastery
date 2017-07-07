@@ -62,8 +62,6 @@ interface DepotRepositoryCustom{
 
     fun findStoreList(depotStoreQuery: DepotQuery): MutableList<DepotDto>
 
-    fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto>
-
     fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>
 
     fun findDepotAccount(depotId: String): DepotAccountDto
@@ -224,6 +222,12 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotEmpty(depotShopQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
+        if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList)""")
+        }
+        if (CollectionUtil.isNotEmpty(depotShopQuery.officeIdList)) {
+            sb.append("""  and t1.office_id  in (:officeIdList) """)
+        }
         sb.append(" limit 0,20")
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotDto::class.java))
 
@@ -252,28 +256,14 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
             sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
         }
-
-
+        if (CollectionUtil.isNotEmpty(depotStoreQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList)""")
+        }
+        if (CollectionUtil.isNotEmpty(depotStoreQuery.officeIdList)) {
+            sb.append("""  and t1.office_id  in (:officeIdList) """)
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotStoreQuery), BeanPropertyRowMapper(DepotDto::class.java))
 
-    }
-
-    override fun findPage(pageable: Pageable, depotQuery: DepotQuery): Page<DepotDto> {
-        val sb = StringBuffer()
-        sb.append("""
-            SELECT
-                t1.*
-            FROM
-                crm_depot t1
-            WHERE
-                t1.enabled=1
-        """)
-
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
-        var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(DepotDto::class.java));
-        var count = namedParameterJdbcTemplate.queryForObject(countSql,BeanPropertySqlParameterSource(depotQuery),Long::class.java);
-        return PageImpl(list,pageable,count);
     }
 
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{
