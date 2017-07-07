@@ -76,7 +76,7 @@ public class VivoPushService {
             String id = officeEntity.getId();
             int subCount = 0 ;
             for(OfficeEntity officeEntity1:officeEntityList){
-                if (officeEntity1.getParentIds().contains(","+id+",")){
+                if (officeEntity1.getParentIds().contains(CharConstant.COMMA+id+CharConstant.COMMA)){
                     subCount++;
                 }
             }
