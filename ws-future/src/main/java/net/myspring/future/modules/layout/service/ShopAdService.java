@@ -4,8 +4,10 @@ import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.domain.ShopAdType;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
 import net.myspring.future.modules.layout.domain.ShopAd;
 import net.myspring.future.modules.layout.dto.ShopAdDto;
@@ -53,9 +55,12 @@ public class ShopAdService {
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
+    private DepotManager depotManager;
+    @Autowired
     private CacheUtils cacheUtils;
 
     public Page<ShopAdDto> findPage(Pageable pageable, ShopAdQuery shopAdQuery) {
+        shopAdQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ShopAdDto> page = shopAdRepository.findPage(pageable, shopAdQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

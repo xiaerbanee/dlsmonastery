@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.layout.domain.ShopAd
 import net.myspring.future.modules.layout.dto.ShopAdDto
 import net.myspring.future.modules.layout.web.query.ShopAdQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -70,7 +71,12 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (shopAdQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd""")
         }
-
+        if (CollectionUtil.isNotEmpty(shopAdQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(shopAdQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(shopAdQuery), BeanPropertyRowMapper(ShopAdDto::class.java))

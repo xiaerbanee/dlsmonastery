@@ -186,7 +186,26 @@
           }
 
         axios.get('/api/ws/future/basic/depot/findByIds' + '?idStr=' + this.inputForm.outShopId).then((response) => {
-          if (response.data[0].jointType === '代理') {
+              if(response.data[0].jointType === '代理'){
+                this.isDelegateShop = true;
+                this.inputForm.shopId = null;
+                this.recentSaleDescription='';
+                this.imageDeposit =0;
+              }else{
+                axios.get('/api/ws/future/basic/depot/findByClientId' + '?clientId=' + response.data[0].clientId).then((response) => {
+                    if(response.data.length > 1){
+                      this.isDelegateShop = true;
+                      this.inputForm.shopId = null;
+                      this.recentSaleDescription='';
+                      this.imageDeposit =0;
+                    }else{
+                      this.isDelegateShop = false;
+                      this.inputForm.shopId = this.inputForm.outShopId;
+                      this.refreshRecentMonthSaleAmount();
+                    }
+                });
+              }
+          /*if (response.data[0].jointType === '代理') {
             this.isDelegateShop = true;
             this.inputForm.shopId = null;
             this.recentSaleDescription='';
@@ -195,7 +214,7 @@
             this.isDelegateShop = false;
             this.inputForm.shopId = this.inputForm.outShopId;
             this.refreshRecentMonthSaleAmount();
-          }
+          }*/
         });
       },shopChanged(){
         this.refreshRecentMonthSaleAmount();

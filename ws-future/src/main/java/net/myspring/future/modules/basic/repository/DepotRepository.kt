@@ -41,6 +41,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByChainId(chainId: String): MutableList<Depot>
 
+    fun findByClientId(clientId: String): MutableList<Depot>
+
     fun findByEnabledIsTrueAndNameIn(nameList: MutableList<String>): MutableList<Depot>
 
     fun findByName(name: String): Depot
