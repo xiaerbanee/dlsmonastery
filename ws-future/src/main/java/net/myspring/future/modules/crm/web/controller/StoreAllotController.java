@@ -19,7 +19,6 @@ import net.myspring.future.modules.crm.web.form.StoreAllotShipForm;
 import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
-import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -183,9 +182,7 @@ public class StoreAllotController {
     @RequestMapping(value="export",method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:storeAllot:view')")
     public ModelAndView export(StoreAllotQuery storeAllotQuery) throws IOException {
-        SimpleExcelBook simpleExcelBook = storeAllotService.export(storeAllotQuery);
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",storeAllotService.export(storeAllotQuery));
     }
 
 }

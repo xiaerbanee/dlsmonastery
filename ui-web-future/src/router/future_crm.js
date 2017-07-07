@@ -86,7 +86,7 @@ const storeAllotShipPrint= r => require.ensure([], () => r(require('pages/future
 const storeAllotDetail = r => require.ensure([], () => r(require('pages/future/crm/storeAllotDetail.vue')));
 const storeInventoryReport = r => require.ensure([], () => r(require('pages/future/crm/storeInventoryReport.vue')));
 
-
+const shopOrder = r => require.ensure([], () => r(require('pages/future/crm/shopOrder.vue')));
 
 let routes = [
   {path:'/future/crm/afterSaleAreaEdit',component:afterSaleAreaEdit,name:'afterSaleAreaEdit'},
@@ -176,7 +176,7 @@ let routes = [
   {path:'/future/crm/storeAllotShipPrint',component:storeAllotShipPrint,name:'storeAllotShipPrint',meta: {hidden: true}},
   {path:'/future/crm/storeAllotDetail',component:storeAllotDetail,name:'storeAllotDetail',meta: {menu:"storeAllotList"}},
   {path:'/future/crm/storeInventoryReport',component:storeInventoryReport,name:'storeInventoryReport'},
-
+  {path:'/future/crm/shopOrder',component:shopOrder,name:'shopOrder'},
 
 ];
 
