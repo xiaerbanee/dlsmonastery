@@ -101,16 +101,6 @@
           extra:{}
         },
         rules: {
-          depotId: [{ required: true, message: "必填信息,门店不存在,请联系省公司文员添加"}],
-          areaType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          carrierType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          turnoverType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          salePointType: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          bussinessCenter: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          doorHead: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          enableDate: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          specialityStore: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
-          shopArea: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
       },formSubmit(){
