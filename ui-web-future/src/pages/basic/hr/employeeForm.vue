@@ -115,7 +115,7 @@
           if (!value) {
             return callback(new Error('必填信息'));
           }else {
-            axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.$route.query.id).then((response)=>{
+            axios.get('/api/basic/hr/account/checkLoginName?loginName='+value+"&id="+this.accountForm.id).then((response)=>{
               if(response.data.success){
                 return callback();
               }else {
