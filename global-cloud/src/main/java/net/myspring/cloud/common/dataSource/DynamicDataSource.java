@@ -8,14 +8,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        String dataSourceType = DataSourceTypeEnum.LOCAL.name();
-        if(StringUtils.isNotBlank(RequestUtils.getDataSourceType())) {
-            dataSourceType = RequestUtils.getDataSourceType();
-        };
-        if(DataSourceTypeEnum.LOCAL.name().equals(dataSourceType)) {
-            return dataSourceType;
-        } else {
-            return dataSourceType + "_" + RequestUtils.getCompanyName();
-        }
+        return DbContextHolder.get().getCurrentLookupKey();
     }
 }

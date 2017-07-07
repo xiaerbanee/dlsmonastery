@@ -51,7 +51,7 @@
           </el-col>
         </el-row>
         <div v-if="goodsOrder.id">
-          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :row-class-name="tableRowClassName"  :element-loading-text="$t('goodsOrderShip.loading')" border >
+          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
             <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
             <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
               <template scope="scope">
@@ -74,14 +74,6 @@
     </div>
   </div>
 </template>
-<style>
-  .el-table .danger-row {
-    background: red !important;
-  }
-  .el-table .success-row {
-    background: green !important;
-  }
-</style>
 <script>
   import mediaNotify from "assets/media/notify.mp3"
   import mediaSuccess from "assets/media/success.mp3"
@@ -131,15 +123,6 @@
         }).catch(()=> {
           this.submitDisabled = false;
         });
-      },
-      tableRowClassName(row, index) {
-        if (row.leftQty < 0) {
-          return "danger-row";
-        }else if(row.leftQty === 0){
-          return "success-row";
-        }else{
-            return "";
-        }
       },
       summary(isSubmit){
         if(isSubmit) {
