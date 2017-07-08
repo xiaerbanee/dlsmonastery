@@ -14,7 +14,7 @@
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'审核',scope.row.dutyType)">审核</el-button>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'audit',scope.row.dutyType)">{{$t('dutyTaskList.audit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -27,7 +27,6 @@
       return {
         page:[],
         multipleSelection:[],
-        formLabelWidth: '120px',
         pageLoading: false
       };
     },
@@ -54,7 +53,7 @@
         }).catch(()=>{});
 
       },itemAction:function(id,action,dutyType){
-        if(action=="审核") {
+        if(action=="audit") {
           this.$router.push({ name: 'dutyTaskForm', query: { id: id, dutyType: dutyType}})
         }
       },handleSelectionChange(selection) {

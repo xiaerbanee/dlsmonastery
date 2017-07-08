@@ -64,7 +64,7 @@ class DutyPublicFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: Jdbc
         paramMap.put("dateStart", dateStart)
         return namedParameterJdbcTemplate.query("""
             SELECT
-            '公休' as dutyType,t1.free_date AS dutyDate,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,'GX' AS 'prefix',t1.id
+            '公休' as dutyType,t1.free_date AS dutyDate,t1.remarks,t2.login_name as 'accountName',t2.leader_id AS 'account.leaderId' ,'GX' AS 'prefix',t1.id
             FROM
             hr_duty_public_free t1 , hr_account t2 ,hr_employee t3
             WHERE

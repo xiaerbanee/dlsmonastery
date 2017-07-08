@@ -92,8 +92,8 @@
       this.pageHeight = window.outerHeight -325;
       axios.get('/api/ws/future/crm/reportScoreArea/getQuery').then((response)=>{
         this.formData = response.data;
+        this.pageRequest();
       });
-      this.pageRequest();
     }
   };
 </script>

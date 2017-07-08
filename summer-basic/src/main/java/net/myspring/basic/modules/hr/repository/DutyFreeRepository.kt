@@ -80,7 +80,7 @@ class DutyFreeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             '免打卡' as dutyType,
             t1.free_date AS dutyDate,
             t1.remarks,
-            t2.login_name as 'account.loginName',
+            t2.login_name as 'accountName',
             t2.leader_id AS 'account.leaderId' ,
             'MDK' AS 'prefix',
             t1.id
