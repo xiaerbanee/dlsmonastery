@@ -11,7 +11,7 @@ import java.util.List;
 public class ShopPromotionQuery extends BaseQuery {
     private String businessId;
     private String activityType;
-    private String shopId;
+    private String shopName;
 
     public String getBusinessId() {
         return businessId;
@@ -29,11 +29,11 @@ public class ShopPromotionQuery extends BaseQuery {
         this.activityType = activityType;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

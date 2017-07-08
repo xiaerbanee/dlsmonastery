@@ -20,7 +20,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopPromotionList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopPromotionList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -57,9 +57,7 @@
   </div>
 </template>
 <script>
-  import depotSelect from 'components/future/depot-select'
   export default {
-    components:{depotSelect},
     data() {
       return {
         searchText:"",
