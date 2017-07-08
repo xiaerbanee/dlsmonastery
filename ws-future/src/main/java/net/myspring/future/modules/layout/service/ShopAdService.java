@@ -2,10 +2,12 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.enums.TotalPriceTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.ShopAdType;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.ShopAdTypeRepository;
@@ -55,6 +57,8 @@ public class ShopAdService {
     @Autowired
     private ActivitiClient activitiClient;
     @Autowired
+    private OfficeClient officeClient;
+    @Autowired
     private DepotManager depotManager;
     @Autowired
     private CacheUtils cacheUtils;
@@ -102,6 +106,7 @@ public class ShopAdService {
     }
 
     public ShopAdQuery getQuery(ShopAdQuery shopAdQuery) {
+        shopAdQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         shopAdQuery.getExtra().put("shopAdTypes",shopAdTypeRepository.findAllByEnabled());
         return shopAdQuery;
     }
@@ -158,8 +163,7 @@ public class ShopAdService {
     public ShopAdDto findOne(String id) {
         ShopAdDto shopAdDto = new ShopAdDto();
         if(StringUtils.isNotBlank(id)){
-            ShopAd shopAd = shopAdRepository.findOne(id);
-            shopAdDto = BeanUtil.map(shopAd,ShopAdDto.class);
+            shopAdDto = shopAdRepository.findShopAdDto(id);
             cacheUtils.initCacheInput(shopAdDto);
         }
         return shopAdDto;

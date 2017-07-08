@@ -123,6 +123,12 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (depotShopQuery.hidden !=null) {
             sb.append("""  and t1.is_hidden =:hidden """)
         }
+        if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
+            sb.append("""  and t1.id  in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(depotShopQuery.officeIdList)) {
+            sb.append("""  and t1.office_id  in (:officeIdList) """)
+        }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotShopQuery), BeanPropertyRowMapper(DepotShopDto::class.java))
     }
 
@@ -500,7 +506,12 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (depotShopQuery.hidden !=null) {
             sb.append("""  and t1.is_hidden =:hidden """)
         }
-
+        if (CollectionUtil.isNotEmpty(depotShopQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(depotShopQuery.officeIdList)) {
+            sb.append("""  and t1.office_id in (:officeIdList) """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(depotShopQuery)

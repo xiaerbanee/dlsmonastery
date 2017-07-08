@@ -18,7 +18,7 @@ public class ShopBuildQuery extends BaseQuery {
     private String areaId;
     private String idStr;
     private String auditType = ShopBuildAuditEnum.待批需要我审核.name();
-    private String shopId;
+    private String shopName;
     private String processStatus;
     private String fixtureType;
     private String createdBy;
@@ -83,12 +83,12 @@ public class ShopBuildQuery extends BaseQuery {
         return null;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public String getFixtureType() {

@@ -3,6 +3,7 @@ package net.myspring.tool.modules.oppo.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -19,7 +20,7 @@ public class OppoCustomerOperatortype {
     private String customername;
     private String operatortype;
     @JsonIgnore
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     public String getId() {
         return id;
@@ -53,11 +54,11 @@ public class OppoCustomerOperatortype {
         this.operatortype = operatortype;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }

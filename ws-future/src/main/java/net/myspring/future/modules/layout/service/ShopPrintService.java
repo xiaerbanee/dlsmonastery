@@ -109,6 +109,7 @@ public class ShopPrintService {
     }
 
     public ShopPrintQuery getQuery(ShopPrintQuery shopPrintQuery){
+        shopPrintQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return shopPrintQuery;
     }
 

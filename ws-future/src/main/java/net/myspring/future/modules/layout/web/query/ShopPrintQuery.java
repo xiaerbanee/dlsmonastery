@@ -13,17 +13,17 @@ import java.util.List;
  */
 public class ShopPrintQuery extends BaseQuery {
 
-    private String officeId;
+    private String areaId;
     private String printType;
     private String processStatus;
     private String createdBy;
 
-    public String getOfficeId() {
-        return officeId;
+    public String getAreaId() {
+        return areaId;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
 
     public String getPrintType() {

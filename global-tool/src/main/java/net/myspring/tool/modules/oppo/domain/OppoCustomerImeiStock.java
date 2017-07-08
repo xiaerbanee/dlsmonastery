@@ -22,7 +22,7 @@ public class OppoCustomerImeiStock {
     private String productcode;
     private String transType;
     @JsonIgnore
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     public String getId() {
         return id;
@@ -72,11 +72,11 @@ public class OppoCustomerImeiStock {
         this.transType = transType;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }
