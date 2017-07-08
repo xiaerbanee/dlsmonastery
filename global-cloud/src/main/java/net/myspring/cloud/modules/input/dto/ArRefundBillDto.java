@@ -129,14 +129,8 @@ public class ArRefundBillDto {
         List<Object> entity = Lists.newArrayList();
         for (ArRefundBillEntityDto entityDto : getArRefundBillEntityDtoList()){
             Map<String, Object> detail = Maps.newLinkedHashMap();
-            //结算方式--现金
-            if ("JSFS01_SYS".equals(entityDto.getSettleTypeNumber())){
-                detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS01_SYS"));
-                //结算方式--电汇
-            }else if ("JSFS04_SYS".equals(entityDto.getSettleTypeNumber())){
-                detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", "JSFS04_SYS"));
-                detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
-            }
+            detail.put("FSETTLETYPEID", CollectionUtil.getMap("FNumber", entityDto.getFSettleTypeIdNumber()));
+            detail.put("FACCOUNTID", CollectionUtil.getMap("FNumber", entityDto.getBankAcntNumber()));
             detail.put("FPURPOSEID", CollectionUtil.getMap("FNumber", "SFKYT01_SYS"));
             if (KingdeeNameEnum.WZOPPO.name().equals(getKingdeeName())) {
                 detail.put("F_YLG_Base", CollectionUtil.getMap("FNumber", entityDto.getAccountNumber()));
