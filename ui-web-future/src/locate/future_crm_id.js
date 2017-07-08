@@ -1088,7 +1088,9 @@ export default {
     returnQty: "jumlah returan",
     shippedQty: "jumlah pengiriman",
     waitShipQty: "menunggu pengiriman",
-    shipQty: "jumlah pengiriman barang"
+    shipQty: "jumlah pengiriman barang",
+    formatId: "订单号",
+    searchBusinessId:"搜索订单",
   },
   goodsOrderSign: {
     goodsOrderSign: "订单签收",
