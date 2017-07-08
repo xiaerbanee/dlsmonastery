@@ -43,14 +43,16 @@ class ShopPromotionRepositoryImpl @Autowired constructor(val namedParameterJdbcT
 
         val sb = StringBuilder("""
             SELECT
+                depot.name shopName,
                 t1.*
             FROM
                 crm_shop_promotion t1
+                LEFT JOIN crm_depot depot ON depot.id = t1.shop_id
             WHERE
                 t1.enabled = 1
         """)
-        if (StringUtils.isNotEmpty(shopPromotionQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(shopPromotionQuery.shopName)) {
+            sb.append("""  and depot.name LIKE CONCAT('%',:shopName,'%') """)
         }
         if (StringUtils.isNotEmpty(shopPromotionQuery.businessId)) {
             sb.append("""  and t1.business_id LIKE CONCAT('%',:businessId,'%') """)

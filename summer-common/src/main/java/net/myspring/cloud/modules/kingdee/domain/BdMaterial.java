@@ -15,7 +15,9 @@ public class BdMaterial {
     private String FMaterialGroupName;
     //物料分组编码
     private String FMaterialGroupNumber;
-
+    //物料属性
+    private Integer FERPCLSID;
+    //
     private LocalDateTime FModifyDate;
     //审核状态
     private String FDocumentStatus;
@@ -68,6 +70,14 @@ public class BdMaterial {
 
     public void setFMaterialGroupNumber(String FMaterialGroupNumber) {
         this.FMaterialGroupNumber = FMaterialGroupNumber;
+    }
+
+    public Integer getFERPCLSID() {
+        return FERPCLSID;
+    }
+
+    public void setFERPCLSID(Integer FERPCLSID) {
+        this.FERPCLSID = FERPCLSID;
     }
 
     public LocalDateTime getFModifyDate() {

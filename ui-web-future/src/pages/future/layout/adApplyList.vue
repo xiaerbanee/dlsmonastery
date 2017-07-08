@@ -85,7 +85,7 @@
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('adApplyList.operation')">
           <template scope="scope">
-            <div class="action" v-if="scope.row.leftQty > 0" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -100,12 +100,11 @@
 </style>
 <script>
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
   import suAlert from 'components/common/su-alert';
   export default {
     components:{
-      accountSelect,depotSelect,boolSelect,suAlert
+      accountSelect,boolSelect,suAlert
     },
     data() {
       return {

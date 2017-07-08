@@ -62,6 +62,16 @@ public class AccountKingdeeBookService {
         return accountKingdeeBookForm;
     }
 
+    public AccountKingdeeBook getCurrentOne(){
+        String accountId = RequestUtils.getAccountId();
+        if (StringUtils.isNotBlank(accountId)){
+            AccountKingdeeBook accountKingdeeBook =  accountKingdeeBookRepository.findByAccountId(accountId);
+            return accountKingdeeBook;
+        }
+        return null;
+    }
+
+
     @Transactional
     public AccountKingdeeBook save(AccountKingdeeBookForm accountKingdeeBookForm){
         AccountKingdeeBook accountKingdeeBook;
@@ -69,12 +79,10 @@ public class AccountKingdeeBookService {
             accountKingdeeBook = BeanUtil.map(accountKingdeeBookForm,AccountKingdeeBook.class);
             KingdeeBook kingdeeBook = kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName());
             accountKingdeeBook.setKingdeeBookId(kingdeeBook.getId());
-//            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }else{
             accountKingdeeBook = accountKingdeeBookRepository.findOne(accountKingdeeBookForm.getId());
             ReflectionUtil.copyProperties(accountKingdeeBookForm,accountKingdeeBook);
-//            accountKingdeeBook.setPassword(passwordEncoder.encode(accountKingdeeBook.getPassword()));
             accountKingdeeBookRepository.save(accountKingdeeBook);
         }
         return accountKingdeeBook;

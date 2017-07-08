@@ -12,7 +12,6 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -149,11 +148,12 @@ public class GoodsOrderShipService {
             }
         }
         for (GoodsOrderDetailDto goodsOrderDetailDto: goodsOrderDetailDtoList) {
+            //仅比对包含串码的产品的发货数量，不包含串码的产品，默认全部发货
             if(productMap.get(goodsOrderDetailDto.getProductId()).getHasIme()){
                 totalShouldShipQty = totalShouldShipQty +goodsOrderDetailDto.getRealBillQty();
+                totalShippedQty = totalShippedQty + goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
             }
 
-            totalShippedQty = totalShippedQty + goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
             Integer qty = goodsOrderDetailDto.getShippedQty() + goodsOrderDetailDto.getShipQty();
             Integer realBillQty=goodsOrderDetailDto.getRealBillQty();
             if (qty > realBillQty) {
@@ -433,6 +433,10 @@ public class GoodsOrderShipService {
             goodsOrderDto = BeanUtil.map(goodsOrder,GoodsOrderDto.class);
             Depot shop=depotRepository.findOne(goodsOrder.getShopId());
             goodsOrderDto.setShopAreaId(shop.getAreaId());
+            if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
+                ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+                goodsOrderDto.setExpressOrderExpressCodes(expressOrder.getExpressCodes());
+            }
             cacheUtils.initCacheInput(goodsOrderDto);
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
             List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
@@ -461,8 +465,8 @@ public class GoodsOrderShipService {
         return goodsOrderDto;
     }
 
-    public GoodsOrderDto getShipByFormatId(String formatId) {
-        String businessId = formatId.replaceAll(FormatterConstant.GOODS_ORDER, "");
+    public GoodsOrderDto getShipByBusinessId(String businessId) {
+
         List<GoodsOrder> goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList(businessId));
         if(CollectionUtil.isEmpty(goodsOrderList)){
             return new GoodsOrderDto();
