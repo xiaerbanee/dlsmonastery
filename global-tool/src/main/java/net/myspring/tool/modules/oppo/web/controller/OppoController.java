@@ -16,12 +16,16 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +105,8 @@ public class OppoController {
 
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
-    public String pullOppoCustomers(String key, String createdDate) {
+    @ResponseBody
+    public String pullOppoCustomers(String key, String createdDate,HttpServletResponse response) throws IOException {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
@@ -114,7 +119,9 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        String message=ObjectMapperUtils.writeValueAsString(responseMessage);
+        logger.info("message==="+message);
+        return message;
     }
 
     //运营商属性上抛

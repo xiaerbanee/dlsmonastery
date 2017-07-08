@@ -2,7 +2,7 @@
   <div>
     <head-tab active="bankInDetail"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('bankInDetail.shopName')" >
@@ -90,6 +90,11 @@
             },
             action:this.$route.query.action,
             submitDisabled:false,
+            rules: {
+              syn: [{ required: true, message: this.$t('bankInDetail.prerequisiteMessage')}],
+              billDate:[{ required: true, message: this.$t('bankInDetail.prerequisiteMessage')}],
+              pass:[{ required: true, message: this.$t('bankInDetail.prerequisiteMessage')}],
+            }
           }
       },methods:{
           formSubmit(){
@@ -120,7 +125,7 @@
               this.inputForm = response.data;
               this.inputForm.id = this.bankIn.id;
               this.inputForm.syn = true;
-              this.inputForm.pass = false;
+              this.inputForm.pass = null;
               this.inputForm.billDate = this.bankIn.billDate;
               if(!this.inputForm.billDate){
                 this.inputForm.billDate = this.inputForm.extra.defaultBillDate;

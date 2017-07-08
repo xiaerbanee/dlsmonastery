@@ -9,13 +9,16 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="150px"  class="form input-form" style="margin-top: 10px;">
         <el-row >
           <el-col :span="12">
-            <el-form-item :label="$t('goodsOrderShip.businessId')">
+            <el-form-item :label="$t('goodsOrderShip.searchBusinessId')">
               <input class="el-input__inner" ref="businessIdInput" v-model="businessId" @input="initPage(businessId, false)"
-                     @keyup.enter="initPage(businessId, true)"/>
+                     @keyup.enter="initPage(businessId, true)" placeholder="请输入订单号末6位加回车或12位订单号"/>
             </el-form-item>
-            <div v-show="goodsOrder.id">
+            <div v-show="inputForm.id">
               <el-form-item :label="$t('goodsOrderShip.storeName')">
                 {{goodsOrder.storeName}}
+              </el-form-item>
+              <el-form-item :label="$t('goodsOrderShip.formatId')">
+                {{goodsOrder.formatId}}
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
                 <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
@@ -27,7 +30,7 @@
 
           </el-col>
           <el-col :span="12">
-            <div v-show="goodsOrder.id">
+            <div v-show="inputForm.id">
               <el-form-item :label="$t('goodsOrderShip.shopName')">
                 {{goodsOrder.shopName}}
               </el-form-item>
@@ -49,7 +52,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-show="goodsOrder.id">
+        <div v-show="inputForm.id">
           <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
             <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
             <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >

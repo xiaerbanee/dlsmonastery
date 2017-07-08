@@ -1006,6 +1006,8 @@ export default {
     shippedQty: "已发货数",
     leftQty: "待发货数",
     shipQty: "发货数",
+    formatId: "订单号",
+    searchBusinessId:"搜索订单",
   },
   goodsOrderSign: {
     goodsOrderSign: "订单签收",

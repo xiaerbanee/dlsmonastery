@@ -4,25 +4,16 @@ import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
-import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,9 +46,12 @@ public class JdbcConfig {
         }
     }
 
+
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dynamicDataSource());
+        JpaTransactionManager jpaTransactionManager =  new JpaTransactionManager();
+        jpaTransactionManager.setDataSource(dynamicDataSource());
+        return jpaTransactionManager;
     }
 
     @Bean

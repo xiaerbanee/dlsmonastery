@@ -12,21 +12,22 @@ interface OppoCustomerStockRepository : BaseRepository<OppoCustomerStock, String
 
 }
 interface OppoCustomerStockRepositoryCustom{
-    fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerStock>
+    fun findAll(dateStart: String,dateEnd: String,date:String): MutableList<OppoCustomerStock>
     fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerStock>
 
 }
 class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerStockRepositoryCustom{
-    override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerStock> {
+    override fun findAll(dateStart: String, dateEnd: String,date:String): MutableList<OppoCustomerStock> {
         val paramMap = Maps.newHashMap<String, Any>();
         paramMap.put("dateStart", dateStart);
         paramMap.put("dateEnd", dateEnd);
+        paramMap.put("date", date);
         return namedParameterJdbcTemplate.query("""
              select
                   de.id as customerid,
                   pro.id as productcode ,
                   count(*) as qty,
-                 :dateEnd as date
+                 :date as date
               from
                 crm_product_ime im left join crm_product_ime_upload up on im.product_ime_upload_id = up.id,crm_depot de,crm_product pro
                 where

@@ -49,7 +49,7 @@ feign:
     enabled: true
 
 ribbon:
-  ReadTimeout: 600000
-  ConnectTimeout: 600000
+  ReadTimeout: 180000
+  ConnectTimeout: 180000
 logging:
   file: global-cloud.log

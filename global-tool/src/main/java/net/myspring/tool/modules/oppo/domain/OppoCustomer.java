@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,12 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name="oppo_push_customer")
-public class OppoCustomer extends IdEntity<OppoCustomer> {
+public class OppoCustomer implements Serializable {
+    private static final long serialVersionUID = -864662154371775680L;
+    @JsonIgnore
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected String id;
     private String customerid;
     private String customername;
     private String agentid;
@@ -41,6 +47,14 @@ public class OppoCustomer extends IdEntity<OppoCustomer> {
     private String cabinetnum;
     @JsonIgnore
     private LocalDate createdDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getAgentid() {
         return agentid;
