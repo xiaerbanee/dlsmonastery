@@ -15,13 +15,15 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopAdList.areaName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId"></office-select>
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.adCode')" :label-width="formLabelWidth">
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('shopAdList.inputNotZeroPart')" type="textarea"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopAdList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.specialArea')" :label-width="formLabelWidth">
                 <bool-select v-model="formData.specialArea"></bool-select>

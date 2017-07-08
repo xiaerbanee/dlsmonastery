@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class ShopAdQuery extends BaseQuery{
     private String id;
-    private String shopId;
-    private String officeId;
+    private String shopName;
+    private String areaId;
     private String shopAdTypeId;
     private Boolean specialArea;
     private String createdBy;
@@ -33,20 +33,20 @@ public class ShopAdQuery extends BaseQuery{
         this.id = id;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getShopName() {
+        return shopName;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
-    public String getOfficeId() {
-        return officeId;
+    public String getAreaId() {
+        return areaId;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
 
     public String getShopAdTypeId() {
