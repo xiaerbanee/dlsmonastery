@@ -217,6 +217,8 @@
               this.inputForm.storeId = response.data.storeId;
             this.setProductList(response.data.adApplyDtoList);
           });
+          this.billGoodsSortQty = '';
+          this.totalNowBilledQty = 0;
       },
       initPage(){
         this.pageHeight = window.outerHeight -320;
