@@ -27,7 +27,7 @@
         <el-table-column prop="lastModifiedDate" :label="$t('accountTaskList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,scope.row.name,'audit')">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.extendId,scope.row.name,'audit')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -96,6 +96,8 @@
             this.$router.push({ name: 'shopBuildForm', query: { id: id }})
           }else if("销售收款"==name){
             this.$router.push({ name: 'bankInForm', query: { id: id }})
+          }else if("柜台订货"==name){
+            this.$router.push({ name: 'adGoodsOrderDetail', query: { id: id }})
           }
         }
       }
