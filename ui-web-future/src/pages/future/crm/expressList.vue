@@ -9,28 +9,28 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('expressList.code')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.code')" >
                 <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressList.toDepotName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.toDepotName')" >
                 <depot-select v-model="formData.expressOrderToDepotId" category="shop" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('expressOrderList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressOrderList.createdDate')" >
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('expressList.extendBusinessId')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.extendBusinessId')">
                 <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressList.fromDepotName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.fromDepotName')">
                 <depot-select v-model="formData.expressOrderFromDepotId" category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('expressList.expressCompanyName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.expressCompanyName')">
                 <express-company-select v-model="formData.expressOrderExpressCompanyId" @afterInit="setSearchText"></express-company-select>
               </el-form-item>
-              <el-form-item :label="$t('expressList.extendType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressList.extendType')" >
                 <el-select v-model="formData.expressOrderExtendType" filterable clearable :placeholder="$t('expressList.inputKey')">
                   <el-option v-for="item in formData.extra.expressOrderExtendTypeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -84,7 +84,7 @@
             extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false,
         pageHeight: 600,

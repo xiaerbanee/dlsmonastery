@@ -12,7 +12,7 @@
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="10">
+            <el-col :span="11">
               <el-form-item :label="$t('afterSaleList.areaDepot')" >
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('afterSaleList.likeSearch')"></el-input>
               </el-form-item>
@@ -84,7 +84,7 @@
         page:{},
         initPromise:{},
         formData:{extra:{}},
-        formLabelWidth:"120px",
+        formLabelWidth:"25%",
         formVisible: false,
         pageLoading: false,
       };

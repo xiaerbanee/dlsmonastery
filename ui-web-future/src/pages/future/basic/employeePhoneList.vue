@@ -8,13 +8,13 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('employeePhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('employeePhoneList.depotName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeePhoneList.depotName')" >
                 <el-input v-model="formData.depotName" auto-complete="off" :placeholder="$t('employeePhoneList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('employeePhoneList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeePhoneList.status')">
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('employeePhoneList.selectStatus')">
                   <el-option  v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -61,7 +61,7 @@
         },
         initPromise:{},
         searchText:"",
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false
       };
