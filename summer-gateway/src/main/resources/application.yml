@@ -48,7 +48,7 @@ zuul:
     max-total-connections: 200
   add-proxy-headers: true
   semaphore:
-    max-semaphores: 100
+    max-semaphores: 2000
 
 ribbon:
   ReadTimeout: 300000
@@ -63,6 +63,8 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 300000
+      circuitBreaker:
+        forceClosed: true
 
 security:
   oauth2:
