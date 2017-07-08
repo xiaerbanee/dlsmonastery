@@ -127,7 +127,7 @@
       formData:{
           extra:{}
       },
-      formLabelWidth: '120px',
+      formLabelWidth: '80px',
       formVisible: false,
       pageLoading: false
     };

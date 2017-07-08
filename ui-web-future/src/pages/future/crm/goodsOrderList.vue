@@ -21,7 +21,7 @@
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
-          <el-row :gutter="4">
+          <el-row :gutter="2">
             <el-col :span="8">
               <el-form-item :label="$t('goodsOrderList.netType')" :label-width="formLabelWidth">
                 <el-select v-model="formData.netType" clearable filterable :placeholder="$t('goodsOrderList.selectNetType')">
@@ -29,7 +29,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')"  :label-width="formLabelWidth">
-                <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
+                <el-input autofocus v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.billDate')" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
@@ -146,7 +146,7 @@
       initPromise:{},
       pageHeight:600,
       searchText:"",
-      formLabelWidth: '120px',
+      formLabelWidth: '80px',
       formVisible: false,
       pageLoading: false
     };

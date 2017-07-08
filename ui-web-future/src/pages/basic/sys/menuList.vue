@@ -8,15 +8,15 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('menuList.category')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuList.category')" >
                 <el-select v-model="formData.menuCategoryId" filterable clearable :placeholder="$t('menuList.inputKey')">
                   <el-option v-for="item in formData.extra.menuCategoryList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('menuList.name')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('menuList.name')">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('menuList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -71,7 +71,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
       };
     },
