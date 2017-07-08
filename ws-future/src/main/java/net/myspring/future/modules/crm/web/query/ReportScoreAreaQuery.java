@@ -10,6 +10,8 @@ import java.time.LocalDate;
 public class ReportScoreAreaQuery extends BaseQuery{
     private String scoreDateRange;
     private String areaId;
+    private LocalDate scoreDateStart;
+    private LocalDate scoreDateEnd;
     private String sort = "month_rank,ASC";
 
 
@@ -42,16 +44,26 @@ public class ReportScoreAreaQuery extends BaseQuery{
     public LocalDate getScoreDateStart() {
         if(StringUtils.isNotBlank(scoreDateRange)) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+        } else if(scoreDateStart!=null){
+            return scoreDateStart;
         }
+        return null;
+    }
+
+    public void setScoreDateStart(LocalDate scoreDateStart) {
+        this.scoreDateStart = scoreDateStart;
     }
 
     public LocalDate getScoreDateEnd() {
         if(StringUtils.isNotBlank(scoreDateRange)) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
+        } else if(scoreDateEnd!=null){
+            return scoreDateEnd.plusDays(1);
         }
+        return null;
+    }
+
+    public void setScoreDateEnd(LocalDate scoreDateEnd) {
+        this.scoreDateEnd = scoreDateEnd;
     }
 }

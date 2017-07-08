@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
+import com.google.common.collect.Maps;
 import com.netflix.discovery.converters.Auto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "oppo")
@@ -34,15 +36,31 @@ public class OppoController {
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
     private CompanyConfigClient companyConfigClient;
-    @Autowired
-    private OppoPullScheduleUtils oppoPullScheduleUtils;
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "pullFactoryData")
     public String pullFactoryData(String date) {
-        oppoPullScheduleUtils.synOppo(date);
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String[] agentCodes=agentCode.split(CharConstant.COMMA);
+        String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
+        String[] passWords=passWord.split(CharConstant.COMMA);
+        //同步颜色编码
+        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
+        oppoService.pullPlantProductSels(oppoPlantProductSels);
+        //同步物料编码
+        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels=oppoService.getOppoPlantAgentProductSels(agentCodes[0],passWords[0]);
+        oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
+        //同步发货串码
+        Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap= Maps.newHashMap();
+        for (int i = 0; i < agentCodes.length; i++) {
+            oppoPlantSendImeiPpselMap.put(agentCodes[i],oppoService.getOppoPlantSendImeiPpsels(agentCodes[i],passWords[i],date)) ;
+        }
+        oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselMap);
+        //同步电子保卡
+        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels=oppoService.getOppoPlantProductItemelectronSels(agentCodes[0],passWords[0],date);
+        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
         return "OPPO同步成功";
     }
 

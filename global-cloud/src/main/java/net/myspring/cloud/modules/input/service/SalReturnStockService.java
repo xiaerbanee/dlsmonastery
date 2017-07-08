@@ -148,8 +148,8 @@ public class SalReturnStockService {
             String priceStr = HandsontableUtils.getValue(row, 3);
             BigDecimal price = StringUtils.isEmpty(priceStr) ? BigDecimal.ZERO : new BigDecimal(priceStr);
             Integer qty = Integer.valueOf(HandsontableUtils.getValue(row,4));
-            String billType = HandsontableUtils.getValue(row,5);
-            String remarks = HandsontableUtils.getValue(row,6);
+            String remarks = HandsontableUtils.getValue(row,5);
+            String billType = HandsontableUtils.getValue(row,6);
 
             SalReturnStockFEntityDto salReturnStockFEntityDto = new SalReturnStockFEntityDto();
             salReturnStockFEntityDto.setMaterialNumber(materialNumber);
