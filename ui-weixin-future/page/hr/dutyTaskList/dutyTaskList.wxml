@@ -7,7 +7,7 @@
             <view class="weui-media-box weui-media-box_text" wx:for="{{page}}" wx:key="id" data-id="{{item.id}}" data-duty-type="{{item.dutyType}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
               <view class="weui-media-box__title weui-media-box__title_in-text">{{item.dutyDate}}</view>
               <view class="weui-media-box__desc item_style">编号:{{item.formatId}}</view>
-              <view class="weui-media-box__desc item_style">申请人:{{item.account.loginName}}</view>
+              <view class="weui-media-box__desc item_style">申请人:{{item.accountName}}</view>
               <view class="weui-media-box__desc item_style">类型:{{item.dutyType}}</view>
               <view class="weui-media-box__desc item_style">备注:{{item.remarks}}</view>
               <view class="weui-media-box__info">

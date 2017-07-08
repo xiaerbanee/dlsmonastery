@@ -64,7 +64,7 @@ class DutyRestRepositoryImpl  @Autowired constructor(val jdbcTemplate: JdbcTempl
         paramMap.put("dateStart", dateStart)
         return namedParameterJdbcTemplate.query("""
             SELECT
-            '调休' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,'TX' AS 'prefix',t1.id
+            '调休' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'accountName',t2.leader_id AS 'account.leaderId' ,'TX' AS 'prefix',t1.id
             FROM
             hr_duty_rest t1 , hr_account t2 ,hr_employee t3
             WHERE
