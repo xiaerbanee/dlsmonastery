@@ -8,14 +8,10 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('positionList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item :label="$t('positionList.positionName')" :label-width="formLabelWidth">
+        <el-form :model="formData"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('positionList.positionName')">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('positionList.likeSearch')"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('positionList.sure')}}</el-button>
@@ -51,7 +47,7 @@
         },
         searchText:"",
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false
       };

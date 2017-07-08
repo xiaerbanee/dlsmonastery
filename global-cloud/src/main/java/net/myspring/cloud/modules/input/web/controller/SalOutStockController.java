@@ -47,8 +47,8 @@ public class SalOutStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
-            List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
-            for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
+            List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
+            for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                 if (kingdeeSynExtendDto.getSuccess()) {
                     restResponse = new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
                 }

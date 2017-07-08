@@ -8,14 +8,10 @@
         <span  v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('officeRuleList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item :label="$t('officeRuleList.name')" :label-width="formLabelWidth">
+        <el-form :model="formData"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('officeRuleList.name')">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('officeRuleList.likeSearch')"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('officeRuleList.sure')}}</el-button>
@@ -47,15 +43,14 @@
   export default {
     data() {
       return {
-        pageLoading: false,
-        pageHeight:600,
         page:{},
         searchText:"",
         formData:{
             extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
+        pageLoading: false,
         formVisible: false,
       };
     },
