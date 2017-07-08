@@ -29,7 +29,6 @@ interface OppoPlantAgentProductSelRepository : BaseRepository<OppoPlantAgentProd
 }
 interface OppoPlantAgentProductSelRepositoryCustom{
     fun plantAgentProductSel(companyId: String, password: String, branchId: String): MutableList<OppoPlantAgentProductSel>
-
     fun findFilter(oppoPlantAgentProductSelQuery : OppoPlantAgentProductSelQuery):MutableList<OppoPlantAgentProductSelDto>
 }
 class OppoPlantAgentProductSelRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) : OppoPlantAgentProductSelRepositoryCustom{

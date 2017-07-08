@@ -17,7 +17,7 @@ public class OppoCustomerSale {
     private LocalDateTime date;
     private Long totalSaleQty;
     @JsonIgnore
-    private LocalDateTime createdDate;
+    private LocalDate createdDate;
 
     public String getId() {
         return id;
@@ -51,11 +51,11 @@ public class OppoCustomerSale {
         this.totalSaleQty = totalSaleQty;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 }
