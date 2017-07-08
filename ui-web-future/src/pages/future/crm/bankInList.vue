@@ -187,7 +187,7 @@
           window.location.href='/api/ws/future/crm/bankIn/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       }, canEdit(row){
-          if(row.status !== '省公司审核'){
+          if(row.processStatus !== '省公司审核'){
               return false;
           }
         if(row.editable || util.isPermit('crm:bankIn:audit')) {
