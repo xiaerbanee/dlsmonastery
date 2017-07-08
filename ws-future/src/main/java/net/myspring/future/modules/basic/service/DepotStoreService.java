@@ -49,6 +49,7 @@ public class DepotStoreService {
     private CloudClient cloudClient;
 
     public Page<DepotStoreDto> findPage(Pageable pageable, DepotStoreQuery depotStoreQuery){
+        depotStoreQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<DepotStoreDto> page=depotStoreRepository.findPage(pageable,depotStoreQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
