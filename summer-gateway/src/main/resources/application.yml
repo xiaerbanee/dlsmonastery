@@ -48,7 +48,7 @@ zuul:
     max-total-connections: 200
   add-proxy-headers: true
   semaphore:
-    max-semaphores: 2000
+    max-semaphores: 100
 
 ribbon:
   ReadTimeout: 300000

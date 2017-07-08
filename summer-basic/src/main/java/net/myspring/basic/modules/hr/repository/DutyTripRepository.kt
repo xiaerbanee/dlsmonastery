@@ -75,7 +75,7 @@ class DutyTripRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
             '出差' as dutyType,
             CONCAT(t1.date_start,'~',t1.date_end) as dutyDate,
             t1.remarks,
-            t2.login_name as 'account.loginName',
+            t2.login_name as 'accountName',
             t2.leader_id AS 'account.leaderId' ,
             'CC' AS 'prefix',
             t1.id
