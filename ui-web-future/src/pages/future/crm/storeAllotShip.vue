@@ -136,9 +136,9 @@
       for(let item of this.storeAllotDetailList) {
         if(item.productHasIme) {
           item.shipQty = (shipQtyMap[item.productId] ? shipQtyMap[item.productId] : 0);
-          item.leftQty = item.realBillQty - item.shippedQty - item.shipQty;
+          item.leftQty = item.billQty - item.shippedQty - item.shipQty;
         } else {
-          item.shipQty = item.realBillQty-item.shippedQty;
+          item.shipQty = item.billQty-item.shippedQty;
           item.leftQty = 0;
         }
       }
