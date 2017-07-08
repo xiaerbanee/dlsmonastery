@@ -259,7 +259,8 @@ public class OppoPushSerivce {
         for(OppoCustomerStock oppoCustomerStock:oppoCustomerStocks){
             String customerId=getDepotId(customerDtoMap.get(oppoCustomerStock.getCustomerid()));
             String colorId=productColorMap.get(oppoCustomerStock.getProductcode());
-            if(StringUtils.isNotEmpty(colorId)){
+            String jointLevel=customerDtoMap.get(oppoCustomerStock.getCustomerid()).getJointLeavel();
+            if(StringUtils.isNotEmpty(jointLevel)&&StringUtils.isNotEmpty(colorId)){
                 String key=customerId+ CharConstant.UNDER_LINE+productColorMap.get(oppoCustomerStock.getProductcode());
                 if(!oppoCustomerStockHashMap.containsKey(key)){
                     OppoCustomerStock customerStock = new OppoCustomerStock();
@@ -546,7 +547,7 @@ public class OppoPushSerivce {
         }
         String dateStart= LocalDateUtils.format(LocalDateUtils.parse(date).plusMonths(-12));
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(dateStart,dateEnd);
+        List<OppoCustomerStock> oppoCustomerStocks=oppoCustomerStockRepository.findAll(dateStart,dateEnd,date);
         return oppoCustomerStocks;
     }
 

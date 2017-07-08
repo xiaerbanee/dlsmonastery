@@ -40,6 +40,7 @@ public class OppoPushScheduleUtils {
 	@Autowired
 	private OppoController oppoController;
 
+//	@Scheduled(cron = "*/20* * * * ?")
 	public void synFactory() {
 		String date=LocalDateUtils.format(LocalDate.now());
 		oppoController.pushFactoryData(date);

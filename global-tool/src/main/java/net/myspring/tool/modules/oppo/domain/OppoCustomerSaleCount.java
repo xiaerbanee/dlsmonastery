@@ -16,7 +16,7 @@ public class OppoCustomerSaleCount {
     private String shopCode;
     private String agentCode;
     private String productCode;
-    private String saleTime;
+    private LocalDateTime saleTime;
     private Long qty;
     @JsonIgnore
     private LocalDate createdDate;
@@ -53,11 +53,11 @@ public class OppoCustomerSaleCount {
         this.qty = qty;
     }
 
-    public String getSaleTime() {
+    public LocalDateTime getSaleTime() {
         return saleTime;
     }
 
-    public void setSaleTime(String saleTime) {
+    public void setSaleTime(LocalDateTime saleTime) {
         this.saleTime = saleTime;
     }
 
