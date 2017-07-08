@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
+import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
@@ -105,6 +107,11 @@ public class SalOutStockService {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
+                    if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(salOutStockDto.getBillType())) {
+                        salOutStockDto.setFBillTypeIdNumber("XSCKD01_SYS");//标准销售出库单
+                    }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(salOutStockDto.getBillType())){
+                        salOutStockDto.setFBillTypeIdNumber("XSCKD06_SYS");//现销出库单
+                    }
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
@@ -196,10 +203,14 @@ public class SalOutStockService {
         return save(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
-    public SalStockForm getForm(){
+    public SalStockForm getForm(KingdeeBook kingdeeBook){
         SalStockForm salStockForm = new SalStockForm();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("outStockBillTypeEnums",SalOutStockBillTypeEnum.values());
+        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())){
+            map.put("outStockBillTypeEnums",SalOutStockBillTypeEnum.values());
+        }else{
+            map.put("outStockBillTypeEnums",SalOutStockBillTypeEnum.标准销售出库单);
+        }
         map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         salStockForm.setExtra(map);

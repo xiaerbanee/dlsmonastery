@@ -38,7 +38,8 @@ public class SalOutStockController {
 
     @RequestMapping(value = "form")
     public SalStockForm form () {
-        return salOutStockService.getForm();
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        return salOutStockService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")

@@ -58,7 +58,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
       };
     },

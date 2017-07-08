@@ -381,11 +381,8 @@ CREATE TABLE `sys_process_task` (
 
 
 ALTER TABLE `sys_process_type`
-CHANGE COLUMN `view_permission_id` `view_position_ids`  varchar(255) NULL DEFAULT NULL AFTER `name`,
-CHANGE COLUMN `create_permission_id` `created_position_ids`  varchar(255) NULL DEFAULT NULL AFTER `view_position_ids`;
-
-update sys_process_type set view_position_ids=null,create_position_ids=null;
-
+ADD COLUMN `view_position_ids`  varchar(64) NULL AFTER `audit_file_type`,
+ADD COLUMN `created_position_ids`  varchar(64) NULL AFTER `view_position_ids`;
 
 DROP TABLE IF EXISTS `sys_product`;
 CREATE TABLE `sys_product` (
@@ -941,7 +938,7 @@ update crm_depot set pop_shop = 0;
 update crm_depot_shop set door_head=0 where door_head is null;
 update crm_depot_shop set speciality_store=0 where speciality_store is null;
 
-update crm_depot set pop_shop=ad_shop where ad_shop=1
+update crm_depot set pop_shop=ad_shop where ad_shop=1;
 
 # 更新分店client_id
 UPDATE crm_depot t1,
@@ -952,3 +949,7 @@ WHERE
   AND t1.depot_shop_id IS NOT NULL
   and t1.client_id is null
   AND t2.client_id IS NOT NULL;
+
+ALTER TABLE `crm_bank_in`
+ADD COLUMN `transfer_type`  varchar(64) NULL AFTER `position_id`;
+
