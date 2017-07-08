@@ -5,7 +5,7 @@ package net.myspring.cloud.modules.input.dto;
  */
 public class ArRefundBillEntityDto {
     private String BankAcntNumber;
-    private String SettleTypeNumber;
+    private String FSettleTypeIdNumber;
     private String accountNumber;
     private String note;
 
@@ -17,12 +17,12 @@ public class ArRefundBillEntityDto {
         BankAcntNumber = bankAcntNumber;
     }
 
-    public String getSettleTypeNumber() {
-        return SettleTypeNumber;
+    public String getFSettleTypeIdNumber() {
+        return FSettleTypeIdNumber;
     }
 
-    public void setSettleTypeNumber(String settleTypeNumber) {
-        SettleTypeNumber = settleTypeNumber;
+    public void setFSettleTypeIdNumber(String FSettleTypeIdNumber) {
+        this.FSettleTypeIdNumber = FSettleTypeIdNumber;
     }
 
     public String getAccountNumber() {
