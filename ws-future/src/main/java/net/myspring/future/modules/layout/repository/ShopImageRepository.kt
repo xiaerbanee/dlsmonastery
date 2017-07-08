@@ -31,7 +31,9 @@ class ShopImageRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findPage(pageable: Pageable, shopImageQuery: ShopImageQuery): Page<ShopImageDto> {
         val sb = StringBuilder("""
             SELECT
-                depot.office_Id officeId,depot.area_id areaId,
+                depot.name shopName,
+                depot.office_Id officeId,
+                depot.area_id areaId,
                 t1.*
             FROM
                 crm_shop_image t1,
@@ -40,17 +42,11 @@ class ShopImageRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
                 t1.enabled = 1
             AND t1.shop_id = depot.id
         """)
-        if (StringUtils.isNotEmpty(shopImageQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(shopImageQuery.shopName)) {
+            sb.append("""  and depot.name LIKE CONCAT('%',:shopName,'%') """)
         }
-        if (StringUtils.isNotEmpty(shopImageQuery.officeId)) {
-            sb.append("""  and depot.office_id = :officeId """)
-        }
-        if (shopImageQuery.createdDateStart != null) {
-            sb.append(" AND t1.created_date > :createdDateStart ")
-        }
-        if (shopImageQuery.createdDateEnd != null) {
-            sb.append(" AND t1.created_date  < :createdDateEnd ")
+        if (StringUtils.isNotEmpty(shopImageQuery.areaId)) {
+            sb.append("""  and depot.area_id = :areaId """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())

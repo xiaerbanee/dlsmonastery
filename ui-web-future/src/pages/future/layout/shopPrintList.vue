@@ -62,12 +62,11 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import dictMapSelect from 'components/basic/dict-map-select';
   import accountSelect from 'components/basic/account-select'
   import processStatusSelect from 'components/general/process-status-select'
   export default {
-    components:{officeSelect,dictMapSelect,accountSelect,processStatusSelect},
+    components:{dictMapSelect,accountSelect,processStatusSelect},
     data() {
       return {
         searchText:"",
