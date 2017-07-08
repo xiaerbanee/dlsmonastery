@@ -7,16 +7,16 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="7">
             <el-col :span="24">
-              <el-form-item label="开始日期" :label-width="formLabelWidth">
+              <el-form-item label="开始日期" >
                 <date-picker placeholder="选择开始日期" v-model="formData.dateStart"></date-picker>
               </el-form-item>
-              <el-form-item label="截止日期" :label-width="formLabelWidth">
+              <el-form-item label="截止日期" >
                 <date-picker placeholder="选择截止日期" v-model="formData.dateEnd"></date-picker>
               </el-form-item>
-              <el-form-item label="供应商名称" :label-width="formLabelWidth">
+              <el-form-item label="供应商名称" >
                 <el-select v-model="formData.supplierIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
                   <el-option v-for="item in suppliers" :key="item.fsupplierId" :label="item.fname" :value="item.fsupplierId"></el-option>
                 </el-select>
@@ -90,7 +90,7 @@
         },
         searchText:"",
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         remoteLoading:false,
         formVisible: false,
         detailVisible:false,

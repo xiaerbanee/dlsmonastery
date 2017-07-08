@@ -10,7 +10,7 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopGoodsDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
-        <el-form :model="formData" label-width="120px">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopGoodsDepositList.shopName')">
@@ -94,6 +94,7 @@
         selects:[],
         formVisible: false,
         pageHeight: 600,
+        formLabelWidth:"28%"
 
       };
     },

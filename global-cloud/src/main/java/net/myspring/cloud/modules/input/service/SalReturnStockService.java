@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -105,8 +106,13 @@ public class SalReturnStockService {
         if (CollectionUtil.isNotEmpty(salReturnStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
-                for (SalReturnStockDto batchBill : salReturnStockDtoList) {
-                    KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill, kingdeeBook);
+                for (SalReturnStockDto salReturnStockDto : salReturnStockDtoList) {
+                    if (SalReturnStockBillTypeEnum.标准销售退货单.name().equals(salReturnStockDto.getBillType())) {
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD01_SYS");
+                    } else if(SalReturnStockBillTypeEnum.现销退货单.name().equals(salReturnStockDto.getBillType())){
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD06_SYS");
+                    }
+                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salReturnStockDto, kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
             }
@@ -192,10 +198,14 @@ public class SalReturnStockService {
         return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
     }
     
-    public SalStockForm getForm(){
+    public SalStockForm getForm(KingdeeBook kingdeeBook){
         SalStockForm salStockForm = new SalStockForm();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
+        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())){
+            map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
+        }else{
+            map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.标准销售退货单);
+        }
         map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         salStockForm.setExtra(map);

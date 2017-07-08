@@ -8,24 +8,24 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('expressCompanyList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('expressCompanyList.name')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressCompanyList.name')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressCompanyList.expressType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressCompanyList.expressType')" >
                 <el-select v-model="formData.expressType" filterable clearable :placeholder="$t('expressCompanyList.inputKey')">
                   <el-option v-for="expressType in formData.extra.expressTypeList" :key="expressType" :label="expressType" :value="expressType"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('expressCompanyList.reachPlace')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressCompanyList.reachPlace')" >
                 <el-input v-model="formData.reachPlace" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressCompanyList.mobilePhone')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressCompanyList.mobilePhone')" >
                 <el-input v-model="formData.mobilePhone" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('expressCompanyList.contator')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('expressCompanyList.contator')" >
                 <el-input v-model="formData.contator" auto-complete="off" :placeholder="$t('expressCompanyList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -67,7 +67,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         loading:false,
         pageLoading: false
