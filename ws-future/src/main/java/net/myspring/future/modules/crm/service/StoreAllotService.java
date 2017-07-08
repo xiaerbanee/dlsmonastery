@@ -482,11 +482,12 @@ public class StoreAllotService {
             }
         }
         for (StoreAllotDetailDto storeAllotDetailDto: storeAllotDetailDtoList) {
+            //仅比对包含串码的产品的发货数量，不包含串码的产品，默认全部发货
             if(productMap.get(storeAllotDetailDto.getProductId()).getHasIme()){
                 totalShouldShipQty = totalShouldShipQty +storeAllotDetailDto.getBillQty();
+                totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
             }
 
-            totalShippedQty = totalShippedQty + storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
             Integer qty = storeAllotDetailDto.getShippedQty() + storeAllotDetailDto.getShipQty();
             if (qty > storeAllotDetailDto.getBillQty()) {
                 StringBuilder errorMessage = new StringBuilder("货品:"+ productMap.get(storeAllotDetailDto.getProductId()).getName() +"总发货数："+ qty+ "大于实际调拨数："  + storeAllotDetailDto.getBillQty() + "串码：");

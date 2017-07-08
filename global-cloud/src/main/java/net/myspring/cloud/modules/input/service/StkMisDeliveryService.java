@@ -173,7 +173,8 @@ public class StkMisDeliveryService {
         StkMisDeliveryForm stkMisDeliveryForm = new StkMisDeliveryForm();
         Map<String,Object> map = Maps.newHashMap();
         map.put("stockNameList",bdStockRepository.findAll().stream().map(BdStock::getFName).collect(Collectors.toList()));
-        List<BdMaterial> materialList = bdMaterialRepository.findAll();
+        //外购（1）类物料
+        List<BdMaterial> materialList = bdMaterialRepository.findByErpCleId("1");
         map.put("materialNameList",materialList.stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         map.put("materialNumberList",materialList.stream().map(BdMaterial::getFNumber).collect(Collectors.toList()));
         map.put("stkMisDeliveryTypeEnums",StkMisDeliveryTypeEnum.values());

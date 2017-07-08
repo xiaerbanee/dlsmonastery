@@ -41,7 +41,7 @@
             {type: "autocomplete", allowEmpty: false, strict: true, stockName:[],source: this.stockName},
             {type: 'numeric',allowEmpty: false, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, types:[],source: this.types},
-            {type: "text", allowEmpty: true, strict: true }
+            {type: "text", allowEmpty: true}
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
           afterChange: function (changes, source) {
@@ -49,17 +49,7 @@
               for (let i = changes.length - 1; i >= 0; i--) {
                 let row = changes[i][0];
                 let column = changes[i][1];
-                if(column === 1) {
-                  let productName = changes[i][3];
-                  if(util.isNotBlank(productName)){
-                    axios.get('/api/global/cloud/kingdee/bdMaterial/findByName?name=' + productName).then((response) => {
-                      let material = response.data;
-                      table.setDataAtCell(row, 0, material.fnumber);
-                    });
-                  }else {
-                    table.setDataAtCell(row, 0, null);
-                  }
-                }else if(column === 0){
+                if(column === 0){
                   let productNumber = changes[i][3];
                   if(util.isNotBlank(productNumber)){
                     axios.get('/api/global/cloud/kingdee/bdMaterial/findByNumber?number=' + productNumber).then((response) => {

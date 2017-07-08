@@ -165,11 +165,7 @@ public class StoreAllotController {
 
     @RequestMapping(value = "shipCheck")
     public  Map<String,Object> shipCheck(StoreAllotShipForm storeAllotShipForm) {
-        Map<String,Object> map= Maps.newHashMap();
-        if(StringUtils.isNotBlank(storeAllotShipForm.getBoxImeStr())||StringUtils.isNotBlank(storeAllotShipForm.getImeStr())){
-            map=storeAllotService.shipCheck(storeAllotShipForm);
-        }
-        return map;
+        return storeAllotService.shipCheck(storeAllotShipForm);
     }
 
     @RequestMapping(value = "delete")
