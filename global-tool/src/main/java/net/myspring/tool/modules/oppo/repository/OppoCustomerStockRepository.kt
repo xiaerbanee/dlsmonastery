@@ -1,6 +1,7 @@
 package net.myspring.tool.modules.oppo.repository;
 import com.google.common.collect.Maps
 import net.myspring.tool.common.repository.BaseRepository
+import net.myspring.tool.modules.oppo.domain.OppoCustomerSale
 import net.myspring.tool.modules.oppo.domain.OppoCustomerStock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -12,6 +13,8 @@ interface OppoCustomerStockRepository : BaseRepository<OppoCustomerStock, String
 }
 interface OppoCustomerStockRepositoryCustom{
     fun findAll(dateStart: String,dateEnd: String): MutableList<OppoCustomerStock>
+    fun findByDate(dateStart:String,dateEnd:String):MutableList<OppoCustomerStock>
+
 }
 class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : OppoCustomerStockRepositoryCustom{
     override fun findAll(dateStart: String, dateEnd: String): MutableList<OppoCustomerStock> {
@@ -43,5 +46,14 @@ class OppoCustomerStockRepositoryImpl @Autowired constructor(val namedParameterJ
                     and im.product_id = pro.id
                     group by de.id,pro.id asc
             """, paramMap, BeanPropertyRowMapper(OppoCustomerStock::class.java));
+    }
+
+    override fun findByDate(dateStart:String, dateEnd:String): MutableList<OppoCustomerStock> {
+        val paramMap = Maps.newHashMap<String, Any>();
+        paramMap.put("dateStart",dateStart);
+        paramMap.put("dateEnd",dateEnd);
+        return namedParameterJdbcTemplate.query("""
+            select *  from oppo_push_customer_stock where  date >=:dateStart and date <:dateEnd
+         """,paramMap,BeanPropertyRowMapper(OppoCustomerStock::class.java));
     }
 }
