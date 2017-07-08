@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -51,9 +52,7 @@ public class JdbcConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        JpaTransactionManager jpaTransactionManager =  new JpaTransactionManager();
-        jpaTransactionManager.setDataSource(dynamicDataSource());
-        return jpaTransactionManager;
+        return new DataSourceTransactionManager(dynamicDataSource());
     }
 
     @Bean
