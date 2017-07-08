@@ -21,10 +21,12 @@ import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -169,7 +171,7 @@ public class SalReturnStockService {
     }
 
     @Transactional
-    public List<KingdeeSynExtendDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynReturnDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalReturnStockDto salReturnStockDto  : salReturnStockDtoList){
             customerNumberList.add(salReturnStockDto.getCustomerNumber());
@@ -187,7 +189,8 @@ public class SalReturnStockService {
            returnStockDto.setBillType(SalReturnStockBillTypeEnum.标准销售退货单.name());
            returnStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(returnStockDto.getCustomerNumber())).getFNumber());
         }
-        return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
+        return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
     }
     
     public SalStockForm getForm(){

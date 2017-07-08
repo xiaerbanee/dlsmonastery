@@ -25,7 +25,6 @@ interface OppoPlantSendImeiPpselRepository : BaseRepository<OppoPlantSendImeiPps
 interface OppoPlantSendImeiPpselRepositoryCustom{
     fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantSendImeiPpselDto>
     fun plantSendImeiPPSel(companyId: String,  password: String, dateTime: String): MutableList<OppoPlantSendImeiPpsel>
-    fun batchSave(list:MutableList<OppoPlantSendImeiPpsel>):IntArray?
     fun findListByCreatedDate(dateTimeStart: LocalDate,dateTimeEnd: LocalDate):MutableList<OppoPlantSendImeiPpselDto>
 }
 
@@ -62,13 +61,6 @@ class OppoPlantSendImeiPpselRepositoryImpl @Autowired constructor(val namedParam
         paramMap.put("dta",dateTime);
         val simpleJdbcCall= SimpleJdbcCall(jdbcTemplate);
         return simpleJdbcCall.withProcedureName("plantSendImeiPPSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantSendImeiPpsel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantSendImeiPpsel>
-    }
-
-    override fun batchSave(list: MutableList<OppoPlantSendImeiPpsel>): IntArray? {
-        val sb = StringBuilder()
-        sb.append ("insert into oppo_plant_send_imei_ppsel (company_id,bill_id,imei,meid,created_time,dls_product_id,imei_state,remark,imei2) values");
-        sb.append("(:companyId,:billId,:imei,:meid,:createdTime,:dlsProductId,:imeiState,:remark,:imei2)")
-        return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(list.toTypedArray()));
     }
 
     override fun findListByCreatedDate(dateTimeStart: LocalDate, dateTimeEnd: LocalDate): MutableList<OppoPlantSendImeiPpselDto> {

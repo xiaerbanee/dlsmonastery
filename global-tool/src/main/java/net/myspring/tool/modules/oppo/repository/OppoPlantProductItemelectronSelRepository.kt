@@ -28,7 +28,6 @@ interface OppoPlantProductItemelectronSelRepository : BaseRepository<OppoPlantPr
 interface OppoPlantProductItemelectronSelRepositoryCustom{
     fun findSynList(dateStart:String,dateEnd:String,agentCodes:MutableList<String>): MutableList<OppoPlantProductItemelectronSel>
     fun plantProductItemelectronSel(companyId: String, password: String, systemDate: String): MutableList<OppoPlantProductItemelectronSel>
-    fun batchSave(list:MutableList<OppoPlantProductItemelectronSel>):IntArray?
 }
 
 class OppoPlantProductItemelectronSelRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate,val jdbcTemplate: JdbcTemplate) :OppoPlantProductItemelectronSelRepositoryCustom{
@@ -60,10 +59,4 @@ class OppoPlantProductItemelectronSelRepositoryImpl @Autowired constructor(val n
         return simpleJdbcCall.withProcedureName("plantProductItemelectronSel").returningResultSet("returnValue",BeanPropertyRowMapper(OppoPlantProductItemelectronSel::class.java)).execute(paramMap).get("returnValue") as MutableList<OppoPlantProductItemelectronSel>
     }
 
-    override fun batchSave(list: MutableList<OppoPlantProductItemelectronSel>): IntArray? {
-        val sb = StringBuilder()
-        sb.append("insert into oppo_plant_product_itemelectron_sel (created_time,customer_id,date_time,product_no,product_nob,remark,areap,areac,imeib,dls_product_id) values");
-        sb.append("(:createdTime,:customerId,:dateTime,:productNo,:productNob,:remark,:areap,:areac,:imeib,:dlsProductId)");
-        return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(list.toTypedArray()));
-    }
 }

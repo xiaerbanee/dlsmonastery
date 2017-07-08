@@ -16,7 +16,6 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +33,6 @@ public class AccountKingdeeBookService {
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
     @Autowired
     private KingdeeBookRepository kingdeeBookRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public Page<AccountKingdeeBookDto> findPage(Pageable pageable, AccountKingdeeBookQuery accountKingdeeBookQuery){
         Page<AccountKingdeeBookDto> page = accountKingdeeBookRepository.findPage(pageable,accountKingdeeBookQuery);
