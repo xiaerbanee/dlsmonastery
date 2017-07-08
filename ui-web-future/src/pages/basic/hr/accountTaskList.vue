@@ -84,7 +84,7 @@
         if(action=="audit") {
           if("仓库调整"==name){
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
-          }else if("员工信息调整"==name){
+          }else if("员工调整"==name){
             this.$router.push({ name: 'employeeForm', query: { id: id }})
           }else if("广告印刷"==name){
             this.$router.push({ name: 'shopPrintForm', query: { id: id }})
@@ -96,8 +96,10 @@
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
           }else if("机构调整"==name){
             this.$router.push({ name: '机构调整编辑', query: { id: id }})
-          }else if("门店建设申请"==name){
+          }else if("门店建设"==name){
             this.$router.push({ name: 'shopBuildForm', query: { id: id }})
+          }else if("销售收款"==name){
+            this.$router.push({ name: 'bankInForm', query: { id: id }})
           }
         }
       }
