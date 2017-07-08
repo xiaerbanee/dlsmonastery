@@ -264,6 +264,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
             result.productName,
             result.productPrice2,
             result.productRemarks,
+            result.productImage,
             result.qty
         FROM
             (
@@ -275,6 +276,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                         t2.name productName,
                         t2.price2 productPrice2,
                         t2.remarks productRemarks,
+                        t2.image productImage,
                         t1.qty qty
                     FROM
                         crm_ad_goods_order_detail t1,
@@ -292,6 +294,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
                             t1.name productName,
                             t1.price2 productPrice2,
                             t1.remarks productRemarks,
+                            t1.image productImage,
                             NULL qty
                         FROM
                             crm_product t1

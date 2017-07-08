@@ -9,19 +9,19 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('depotDetailList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" >
+        <el-form :model="formData" :label-width="formLabelWidth" >
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('depotDetailList.shopName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.shopName')" >
                 <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('depotDetailList.productName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.productName')" >
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('depotDetailList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('depotDetailList.hasIme')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.hasIme')">
                 <bool-select  v-model="formData.hasIme"></bool-select>
               </el-form-item>
-              <el-form-item :label="$t('depotDetailList.isSame')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('depotDetailList.isSame')" >
                 <bool-select  v-model="formData.isSame"></bool-select>
               </el-form-item>
             </el-col>
@@ -65,7 +65,7 @@
         },
         initPromise:{},
         searchText:"",
-        formLabelWidth: '120px',
+        formLabelWidth: '26%',
         formVisible: false,
         pageLoading: false
       };

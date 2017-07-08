@@ -8,65 +8,65 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderShipList.netType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.netType')" >
                 <el-select v-model="formData.netType" clearable filterable :placeholder="$t('goodsOrderShipList.selectNetType')">
                   <el-option v-for="netType in formData.extra.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.businessId')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.businessId')"  >
                 <el-input v-model.number="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.billDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.billDate')" >
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.shipType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.shipType')" >
                 <el-select v-model="formData.shipType" clearable filterable :placeholder="$t('goodsOrderShipList.selectShopType')">
                   <el-option v-for="shipType in formData.extra.shipTypeList" :key="shipType" :label="shipType" :value="shipType"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.office')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.office')" >
                 <office-select v-model="formData.areaId" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderShipList.shipDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.shipDate')" >
                 <date-range-picker  v-model="formData.shipDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.shop')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.shop')" >
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderShipList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.store')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.store')" >
                 <depot-select v-model="formData.storeIdList" multiple category="store" @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.createdBy')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.createdBy')">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText" ></account-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.outCode')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.outCode')" >
                 <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderShipList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.createdDate')" >
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.expressCodes')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.expressCodes')" >
                 <el-input type="textarea" v-model="formData.expressCodes" auto-complete="off"  :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.businessId')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.businessId')" >
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off"  :placeholder="$t('goodsOrderShipList.multiEnterOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.status')" >
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('goodsOrderShipList.selectStatus')">
                   <el-option v-for="status in formData.extra.statusList" :key="status"  :label="status" :value="status"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.remarks')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.remarks')" >
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderShipList.expressCode')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderShipList.expressCode')" >
                 <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderShipList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
@@ -127,7 +127,7 @@
       formData:{
           extra:{}
       },
-      formLabelWidth: '80px',
+      formLabelWidth: '25%',
       formVisible: false,
       pageLoading: false
     };

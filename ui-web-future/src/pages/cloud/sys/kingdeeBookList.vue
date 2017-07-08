@@ -8,21 +8,21 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-form-item label="公司名称" :label-width="formLabelWidth">
+            <el-form-item label="公司名称" >
               <el-input v-model="formData.companyName" auto-complete="off" placeholder="请输入"></el-input>
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
-            <el-form-item label="账套" :label-width="formLabelWidth">
+            <el-form-item label="账套" >
               <el-select v-model="formData.name" filterable clearable placeholder="请选择">
                 <el-option v-for="name in formData.nameList" :key="name" :label="name" :value="name"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
-            <el-form-item label="账套类型" :label-width="formLabelWidth">
+            <el-form-item label="账套类型" >
               <el-select v-model="formData.type" filterable clearable placeholder="请选择">
                 <el-option v-for="type in formData.typeList" :key="type" :label="type" :value="type"></el-option>
               </el-select>
@@ -63,7 +63,7 @@
         },
         searchText:"",
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false
       };

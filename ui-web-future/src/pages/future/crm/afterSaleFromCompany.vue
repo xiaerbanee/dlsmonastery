@@ -68,7 +68,7 @@
               data:""
             },
             rules:{},
-            formLabelWidth: '120px',
+            formLabelWidth: '28%',
             formVisible: false,
             remoteLoading:false,
 
