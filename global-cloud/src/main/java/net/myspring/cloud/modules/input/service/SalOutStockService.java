@@ -6,6 +6,7 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
+import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
@@ -106,6 +107,11 @@ public class SalOutStockService {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
                 for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
+                    if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(salOutStockDto.getBillType())) {
+                        salOutStockDto.setFBillTypeIdNumber("XSCKD01_SYS");//标准销售出库单
+                    }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(salOutStockDto.getBillType())){
+                        salOutStockDto.setFBillTypeIdNumber("XSCKD06_SYS");//现销出库单
+                    }
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }

@@ -106,8 +106,13 @@ public class SalReturnStockService {
         if (CollectionUtil.isNotEmpty(salReturnStockDtoList)) {
             Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
             if(isLogin) {
-                for (SalReturnStockDto batchBill : salReturnStockDtoList) {
-                    KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill, kingdeeBook);
+                for (SalReturnStockDto salReturnStockDto : salReturnStockDtoList) {
+                    if (SalReturnStockBillTypeEnum.标准销售退货单.name().equals(salReturnStockDto.getBillType())) {
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD01_SYS");
+                    } else if(SalReturnStockBillTypeEnum.现销退货单.name().equals(salReturnStockDto.getBillType())){
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD06_SYS");
+                    }
+                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salReturnStockDto, kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
             }
