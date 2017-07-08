@@ -7,8 +7,8 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyFreeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-              <el-form-item :label="formLabel.dutyDate.label" :label-width="formLabelWidth">
+        <el-form :model="formData" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyFreeList.freeDate')" >
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
         </el-form>
@@ -40,10 +40,7 @@
         },
         initPromise:{},
         searchText:"",
-        formLabel:{
-          dutyDate:{label:this.$t('dutyFreeList.freeDate')},
-        },
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false
       };
