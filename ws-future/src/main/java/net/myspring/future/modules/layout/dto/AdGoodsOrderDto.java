@@ -69,6 +69,15 @@ public class AdGoodsOrderDto extends DataDto<AdGoodsOrder>{
     private String employeeName;
     @CacheInput(inputKey = "employees", inputInstance = "employeeId", outputInstance = "mobilePhone")
     private String employeeMobilePhone;
+    private Boolean locked;
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
 
     public BigDecimal getExpressOrderShouldPay() {
         return expressOrderShouldPay;
