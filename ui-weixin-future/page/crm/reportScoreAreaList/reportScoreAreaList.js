@@ -53,7 +53,7 @@ Page({
       },
       success: function (res) {
         that.setData({ 'fromProperty.areaList': res.data.extra.areaList, formData: res.data });
-        that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+        that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)),"formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         that.pageRequest();
       }
     })
@@ -92,7 +92,13 @@ Page({
     }
   },
   bindDateChange: function (e) {
-    this.setData({ "formData.scoreDate": e.detail.value });
+    var that = this;
+    var name = e.currentTarget.dataset.name;
+    if (name == 'scoreDateStart') {
+      that.setData({ "formData.scoreDateStart": e.detail.value });
+    } else {
+      that.setData({ "formData.scoreDateEnd": e.detail.value });
+    }
   },
   bindArea: function (e) {
     var that = this;
@@ -118,7 +124,7 @@ Page({
     var officeId = e.currentTarget.dataset.officeId;
     var officeName = e.currentTarget.dataset.officeName
     wx.redirectTo({
-      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDate=' + that.data.formData.scoreDate
+      url: '/page/crm/reportScoreOfficeList/reportScoreOfficeList?areaId=' + officeId + '&areaName=' + officeName + '&scoreDateStart=' + that.data.formData.scoreDateStart+'&scoreDateEnd='+that.data.formData.scoreDateEnd
     })
   },
 

@@ -12,12 +12,9 @@ import java.math.BigDecimal;
 public class AdPricesystemChangeDto extends DataDto<AdPricesystemChange> {
 
     private String productId;
-    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "name")
     private String productName;
-    @CacheInput(inputKey = "products", inputInstance = "productId", outputInstance = "code")
     private String productCode;
     private String adPricesystemId;
-    @CacheInput(inputKey = "adPricesystems", inputInstance = "adPricesystemId", outputInstance = "name")
     private String adPricesystemName;
 
     private BigDecimal oldPrice;

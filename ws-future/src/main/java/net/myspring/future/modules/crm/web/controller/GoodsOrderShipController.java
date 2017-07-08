@@ -56,13 +56,8 @@ public class GoodsOrderShipController {
 
     @RequestMapping(value = "shipCheck")
     public  Map<String,Object> shipCheck(GoodsOrderShipForm goodsOrderShipForm) {
-        Map<String,Object> map= Maps.newHashMap();
-        if(StringUtils.isNotBlank(goodsOrderShipForm.getBoxImeStr())||StringUtils.isNotBlank(goodsOrderShipForm.getImeStr())){
-            map=goodsOrderShipService.shipCheck(goodsOrderShipForm);
-        }
-        return map;
+        return goodsOrderShipService.shipCheck(goodsOrderShipForm);
     }
-
 
     @RequestMapping(value = "ship")
     @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
@@ -105,13 +100,13 @@ public class GoodsOrderShipController {
         return goodsOrderShipService.getShip(id);
     }
 
-    @RequestMapping(value = "getShipByFormatId")
+    @RequestMapping(value = "getShipByBusinessId")
     @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
-    public GoodsOrderDto getShipByFormatId(String formatId) {
-        if(StringUtils.isBlank(formatId)){
+    public GoodsOrderDto getShipByBusinessId(String businessId) {
+        if(StringUtils.isBlank(businessId)){
             return new GoodsOrderDto();
         }
-        return goodsOrderShipService.getShipByFormatId(formatId);
+        return goodsOrderShipService.getShipByBusinessId(businessId);
     }
 
     @RequestMapping(value = "print")

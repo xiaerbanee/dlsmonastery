@@ -99,16 +99,12 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select'
   import boolSelect from 'components/common/bool-select'
   export default {
     components:{
-      officeSelect,
       accountSelect,
-      depotSelect,
       processStatusSelect,
       boolSelect
     },

@@ -32,12 +32,16 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParamete
     override fun findPage(pageable: Pageable,adPricesystemChangeQuery: AdPricesystemChangeQuery): Page<AdPricesystemChangeDto>{
         val sb = StringBuilder("""
             SELECT
+                product.name productName,
+                product.code productCode,
+                price.name adPricesystemName,
                 t1.*
             FROM
-                crm_ad_pricesystem_change t1,crm_product product
+                crm_ad_pricesystem_change t1
+                LEFT JOIN crm_product product ON t1.product_id = product.id
+                LEFT JOIN crm_ad_pricesystem price ON t1.ad_pricesystem_id = price.id
             WHERE
                 t1.enabled = 1
-                and t1.product_id = product.id
         """)
         if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productName)) {
             sb.append("""  and product.name like CONCAT('%', :productName,'%')  """)

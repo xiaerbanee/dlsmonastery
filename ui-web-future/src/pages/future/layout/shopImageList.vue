@@ -11,11 +11,13 @@
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('shopImageList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+              <el-form-item :label="$t('shopImageList.areaName')" :label-width="formLabelWidth">
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopImageList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopImageList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -44,10 +46,7 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
-  import depotSelect from 'components/future/depot-select'
   export default {
-    components:{officeSelect,depotSelect},
     data() {
       return {
         searchText:"",

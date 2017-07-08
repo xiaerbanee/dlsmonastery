@@ -19,12 +19,12 @@
               {{storeAllot.toStoreName}}
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.boxImeStr')" prop="boxImeStr">
-              <el-input type="textarea" :autosize="autosize" v-model="inputForm.boxImeStr"></el-input>
+              <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$t('storeAllotShip.imeStr')" prop="imeStr">
-              <el-input type="textarea" :autosize="autosize" v-model="inputForm.imeStr"></el-input>
+              <textarea ref="imeStrTextArea" v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
             </el-form-item>
             <el-form-item :label="$t('storeAllotShip.expressCodes')" prop="expressOrderExpressCodes">
               <el-input type="textarea" :autosize="autosize" v-model="inputForm.expressOrderExpressCodes" ></el-input>
@@ -33,7 +33,7 @@
               <el-input  type="textarea" v-model="inputForm.shipRemarks"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled"  @click="summary(true)">{{$t('storeAllotShip.save')}}</el-button>
+              <el-button type="primary" :disabled="submitDisabled"  @click="formSubmit()">{{$t('storeAllotShip.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -67,106 +67,92 @@
         mediaNotify: mediaNotify,
         mediaSuccess: mediaSuccess,
         submitDisabled:false,
+        rules: {},
+        autosize: { minRows: 5},
+        pageLoading:false,
+
         storeAllot:{},
         shipResult:{},
         storeAllotDetailList:[],
         inputForm:{
-          extra:{},
+          id:null,
+          boxImeStr:null,
+          imeStr:null,
+          expressOrderExpressCodes:null,
+          shipRemarks:null,
         },
-        rules: {},
-        autosize: { minRows: 5},
-        pageLoading:false,
       }
-    }, watch: {
-    "inputForm.imeStr": function (oldVal,newVal) {
-      if(_.trim(oldVal) != _.trim(newVal)) {
-        this.summary(false);
-      }
-    },"inputForm.boxImeStr":function (oldVal,newVal) {
-      if(_.trim(oldVal) != _.trim(newVal)) {
-        this.summary(false);
-      }
-    }
-  }, methods:{
+    }, methods:{
       formSubmit(){
-        axios.post('/api/ws/future/crm/storeAllot/ship', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
-          this.$message(response.data.message);
-          this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
-        }).catch(()=> {
-          this.submitDisabled = false;
-        });
-      },
-      summary(isSubmit){
-        if(isSubmit) {
-          this.submitDisabled = true;
-        }
-        var boxImeStr=this.inputForm.boxImeStr;
-        var imeStr=this.inputForm.imeStr;
-        console.log("boxImeStr"+boxImeStr)
-        console.log("imeStr"+imeStr)
-        if(util.isBlank(imeStr)&&util.isBlank(boxImeStr)){
-          if(isSubmit) {
-            alert("请填入发货串码或箱号");
-            this.submitDisabled = false;
-          }
-          this.shipResult.errorMsg ="";
+
+        if(util.isBlank(this.inputForm.imeStr) && util.isBlank(this.inputForm.boxImeStr)) {
+          this.$alert("请填入发货串码或箱号");
           return;
         }
-        axios.get('/api/ws/future/crm/storeAllot/shipCheck',{params:{id:this.inputForm.id,boxImeStr:boxImeStr,imeStr:imeStr}}).then((response) => {
-          this.shipResult = response.data;
-          //错误信息
-          var errorMsg = "";
-          for(var index in this.shipResult.restResponse.errors) {
-            errorMsg = errorMsg + this.shipResult.restResponse.errors[index].message + "<br/>";
+        this.submitDisabled = true;
+        let checkAndSummaryPromise = this.checkAndSummary();
+        checkAndSummaryPromise.then((checkResult)=>{
+          if(checkResult === "error" ){
+            this.$alert("请先处理错误信息");
+            this.submitDisabled = false;
+            return;
           }
-          this.shipResult.errorMsg = errorMsg;
-          if(util.isNotBlank(errorMsg)) {
-            this.$refs.mediaNotify.play();
-          } else {
-            if(util.isBlank(this.shipResult.warnMsg)) {
-              this.$refs.mediaSuccess.play();
-            }
+
+          if(checkResult === "warning" && !confirm("还有货品未发送完，确认保存？")){
+            this.submitDisabled = false;
+            return;
           }
-          //设置发货数和待发货数
-          var shipQtyMap = this.shipResult.shipQtyMap;
-          for(var index in this.storeAllotDetailList) {
-            var item = this.storeAllotDetailList[index];
-            if(item.productHasIme) {
-              item.shipQty = shipQtyMap[item.productId];
-              item.leftQty = item.billQty - item.shippedQty - item.shipQty;
-            } else {
-              item.shipQty = item.billQty-item.shippedQty;
-              item.leftQty = 0;
-            }
-          }
-          //如果提交表单
-          if(isSubmit) {
-            if(util.isBlank(errorMsg)) {
-              if(util.isBlank(this.shipResult.warnMsg)) {
-                this.formSubmit();
-              } else {
-                if (confirm("还有货品未发送完，确认保存？")) {
-                  this.formSubmit();
-                } else {
-                  this.submitDisabled = false;
-                }
-              }
-            } else {
-              alert("请先处理错误信息");
-              this.submitDisabled = false;
-            }
-          }
+
+          axios.post('/api/ws/future/crm/storeAllot/ship', qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
+            this.$message(response.data.message);
+            this.$router.push({name:'storeAllotList',query:util.getQuery("storeAllotList"), params:{_closeFrom:true}});
+          }).catch(()=> {
+            this.submitDisabled = false;
+          });
         });
-      },initPage(){
-        axios.get('/api/ws/future/crm/storeAllot/getShipForm').then((response)=>{
-          this.inputForm = response.data;
-          axios.get('/api/ws/future/crm/storeAllot/findDetailList' ,{params:{storeAllotId:this.$route.query.id}}).then((response)=>{
-            this.storeAllotDetailList = response.data;
-          });
-          axios.get('/api/ws/future/crm/storeAllot/findDto' ,{params: {id:this.$route.query.id}}).then((response)=>{
-            this.storeAllot = response.data;
-            util.copyValue(response.data,this.inputForm);
-          });
+
+      },checkAndSummary(){
+      return axios.get('/api/ws/future/crm/storeAllot/shipCheck',{params:{id:this.inputForm.id,boxImeStr:this.inputForm.boxImeStr,imeStr:this.inputForm.imeStr}}).then((response) => {
+        this.shipResult = response.data;
+        this.refreshDetailShipInfo(this.shipResult.shipQtyMap);
+
+        let errorMsg = "";
+        for(let eachError of this.shipResult.restResponse.errors) {
+          errorMsg = errorMsg + eachError.message + "<br/>";
+        }
+        this.shipResult.errorMsg = errorMsg;
+
+        if(util.isNotBlank(errorMsg)) {
+          this.$refs.mediaNotify.play();
+          return "error";
+        } else if(util.isNotBlank(this.shipResult.warnMsg)){
+          return "warning";
+        }else{
+          this.$refs.mediaSuccess.play();
+          return "success";
+        }
+      });
+    },refreshDetailShipInfo(shipQtyMap){
+      for(let item of this.storeAllotDetailList) {
+        if(item.productHasIme) {
+          item.shipQty = (shipQtyMap[item.productId] ? shipQtyMap[item.productId] : 0);
+          item.leftQty = item.realBillQty - item.shippedQty - item.shipQty;
+        } else {
+          item.shipQty = item.realBillQty-item.shippedQty;
+          item.leftQty = 0;
+        }
+      }
+    },initPage(){
+        axios.get('/api/ws/future/crm/storeAllot/findDetailList' ,{params:{storeAllotId:this.$route.query.id}}).then((response)=>{
+          this.storeAllotDetailList = response.data;
+        });
+        axios.get('/api/ws/future/crm/storeAllot/findDto' ,{params: {id:this.$route.query.id}}).then((response)=>{
+          this.storeAllot = response.data;
+          this.inputForm.id = this.storeAllot.id;
+          this.inputForm.expressOrderExpressCodes = this.storeAllot.expressOrderExpressCodes;
+        });
+        this.$nextTick(()=>{
+          this.$refs.imeStrTextArea.focus();
         });
       }
     },created(){

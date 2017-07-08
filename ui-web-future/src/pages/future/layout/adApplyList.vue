@@ -100,12 +100,11 @@
 </style>
 <script>
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
   import suAlert from 'components/common/su-alert';
   export default {
     components:{
-      accountSelect,depotSelect,boolSelect,suAlert
+      accountSelect,boolSelect,suAlert
     },
     data() {
       return {
