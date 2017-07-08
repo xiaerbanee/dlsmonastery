@@ -59,10 +59,10 @@ Page({
           that.setData({ "formData.areaId": that.data.options.areaId });
           that.setData({ "formData.areaName": that.data.options.areaName });
         }
-        if (that.data.options.scoreDate) {
-          that.setData({ "formData.scoreDate": that.data.options.scoreDate });
+        if (that.data.options.scoreDateStart || that.data.options.scoreDateEnd) {
+          that.setData({ "formData.scoreDateStart": that.data.options.scoreDateStart, "formData.scoreDateEnd": that.data.options.scoreDateEnd });
         } else {
-          that.setData({ "formData.scoreDate": $util.formatLocalDate($util.addDay(new Date(), -1)) });
+          that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)), "formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         }
         that.pageRequest();
       }
@@ -113,7 +113,13 @@ Page({
     that.setData({ "formData.sort": e.detail.value });
   },
   bindDateChange: function (e) {
-    this.setData({ "formData.scoreDate": e.detail.value });
+    var that = this;
+    var name = e.currentTarget.dataset.name;
+    if (name == 'scoreDateStart') {
+      that.setData({ "formData.scoreDateStart": e.detail.value });
+    } else {
+      that.setData({ "formData.scoreDateEnd": e.detail.value });
+    }
   },
   bindArea: function (e) {
     var that = this;

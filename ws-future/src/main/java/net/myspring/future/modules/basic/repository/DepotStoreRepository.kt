@@ -202,7 +202,12 @@ class DepotStoreRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotEmpty(depotStoreQuery.areaId)) {
             sb.append("""  and t1.area_id =:areaId """)
         }
-
+        if (CollectionUtil.isNotEmpty(depotStoreQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(depotStoreQuery.officeIdList)) {
+            sb.append("""  and t1.office_id in (:officeIdList)  """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(depotStoreQuery)
