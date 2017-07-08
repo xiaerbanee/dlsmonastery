@@ -9,10 +9,10 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('pricesystemList.filter')" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="8">
-              <el-form-item :label="$t('pricesystemList.name')" :label-width="formLabelWidth">
+            <el-col :span="24">
+              <el-form-item :label="$t('pricesystemList.name')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('pricesystemList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -55,7 +55,7 @@
         },
         initPromise:{},
         pickerDateOption:util.pickerDateOption,
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false

@@ -11,9 +11,9 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productImeSaleList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" label-width="120px">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="8">
+            <el-col :span="12">
               <el-form-item :label="$t('productImeSaleList.employeeName')">
                 <employee-select v-model="formData.employeeId" @afterInit="setSearchText"></employee-select>
               </el-form-item>
@@ -24,7 +24,7 @@
                 <bool-select v-model="formData.isBack"></bool-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <el-form-item :label="$t('productImeSaleList.shopName')">
                 <el-input v-model="formData.shopName" :placeholder="$t('productImeSaleList.likeSearch')"></el-input>
               </el-form-item>
@@ -74,6 +74,7 @@
             extra:{}
         },
         formVisible: false,
+        formLabelWidth:"28%"
       };
     },
     methods: {

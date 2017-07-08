@@ -7,26 +7,26 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" size="medium" :title="$t('dutySignList.filter')" v-model="formVisible" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-row :gutter="7">
+        <el-form :model="formData"  :label-width="formLabelWidth">
+          <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('dutySignList.dutyDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutySignList.dutyDate')">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('dutySignList.employeeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutySignList.employeeName')">
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('dutySignList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('dutySignList.address')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutySignList.address')">
                 <el-input v-model="formData.address" auto-complete="off" :placeholder="$t('dutySignList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('dutySignList.officeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutySignList.officeName')">
                 <el-select v-model="formData.officeName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
                   <el-option v-for="office in formData.extra.officeList" :key="office.name" :label="office.name" :value="office.name"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('dutySignList.positionName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutySignList.positionName')">
                 <el-select v-model="formData.positionName" filterable clearable :placeholder="$t('dutySignList.inputKey')">
                   <el-option v-for="position in formData.extra.positionList" :key="position.name" :label="position.name" :value="position.name"></el-option>
                 </el-select>
@@ -72,7 +72,7 @@
         },
         searchText:'',
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false
       };

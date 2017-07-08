@@ -156,7 +156,7 @@
           extra:{}
         },
         offices:[],
-        formLabelWidth: '120px',
+        formLabelWidth: '80px',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false

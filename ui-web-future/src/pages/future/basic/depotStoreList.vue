@@ -10,11 +10,11 @@
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="12">
+            <el-col :span="24">
               <el-form-item label="门店名称" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('productTypeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item label="办事处" :label-width="formLabelWidth">
+              <el-form-item label="办事处" >
                 <el-select v-model="formData.areaId" clearable filterable>
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
@@ -76,7 +76,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false

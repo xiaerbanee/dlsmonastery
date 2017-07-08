@@ -9,10 +9,10 @@
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <search-dialog  :show="formVisible" @hide="formVisible = false" title="过滤" v-model="formVisible" size="tiny" class="search-form">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="7">
-            <el-col :span="12">
-              <el-form-item :label="formLabel.dateRange.label" :label-width="formLabelWidth">
+            <el-col :span="24">
+              <el-form-item :label="formLabel.dateRange.label" >
                 <date-range-picker v-model="formData.dateRange"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -72,7 +72,7 @@
         formLabel:{
           dateRange:{label:"日期"},
         },
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
       };
     },

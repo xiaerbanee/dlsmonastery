@@ -9,7 +9,7 @@
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleStoreAllotList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-            <el-col :span="12">
+            <el-col :span="24">
               <el-form-item :label="$t('afterSaleStoreAllotList.fromStore')" >
                 <el-input v-model="formData.fromStoreName" auto-complete="off" :placeholder="$t('afterSaleStoreAllotList.likeSearch')"></el-input>
               </el-form-item>
@@ -60,7 +60,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false,
         afterSaleStoreAllotList:{}

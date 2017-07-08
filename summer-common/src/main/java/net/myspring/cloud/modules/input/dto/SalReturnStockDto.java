@@ -21,6 +21,8 @@ public class SalReturnStockDto {
     private String extendId;
     //附加-单据类型
     private String extendType;
+    //单据类型
+    private String billType;
     //创建人
     private String creator;
     // 客户编码
@@ -31,8 +33,8 @@ public class SalReturnStockDto {
     private String note;
     //部门名称
     private String departmentNumber;
-    //单据类型
-    private String billType;
+    //单据类型编码
+    private String FBillTypeIdNumber;
 
     private List<SalReturnStockFEntityDto> salReturnStockFEntityDtoList = Lists.newArrayList();
 
@@ -53,6 +55,14 @@ public class SalReturnStockDto {
 
     public void setExtendType(String extendType) {
         this.extendType = extendType;
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
     }
 
     public String getCreator() {
@@ -95,12 +105,12 @@ public class SalReturnStockDto {
         this.departmentNumber = departmentNumber;
     }
 
-    public String getBillType() {
-        return billType;
+    public String getFBillTypeIdNumber() {
+        return FBillTypeIdNumber;
     }
 
-    public void setBillType(String billType) {
-        this.billType = billType;
+    public void setFBillTypeIdNumber(String FBillTypeIdNumber) {
+        this.FBillTypeIdNumber = FBillTypeIdNumber;
     }
 
     public List<SalReturnStockFEntityDto> getSalReturnStockFEntityDtoList() {
@@ -119,11 +129,8 @@ public class SalReturnStockDto {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", getDate());
-        if (SalReturnStockBillTypeEnum.标准销售退货单.name().equals(getBillType())) {
-            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD01_SYS"));
-        } else if(SalReturnStockBillTypeEnum.现销退货单.name().equals(getBillType())){
-            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSTHD06_SYS"));
-        }
+        //单据类型
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", getFBillTypeIdNumber()));
         model.put("FStockDeptId", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaledeptid", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
