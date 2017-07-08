@@ -6,11 +6,21 @@
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">日期</view>
+          <view class="weui-label">开始日期</view>
         </view>
         <view class="weui-cell__bd ">
-          <picker mode="date" name="scoreDate" value="{{formData.scoreDate}}" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.scoreDate?formData.scoreDate:""}}</view>
+          <picker mode="date" name="scoreDateStart" value="{{formData.scoreDateStart}}" data-name="scoreDateStart"  bindchange="bindDateChange">
+            <view class="weui-input">{{formData.scoreDateStart?formData.scoreDateStart:""}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">结束日期</view>
+        </view>
+        <view class="weui-cell__bd ">
+          <picker mode="date" name="scoreDateEnd" value="{{formData.scoreDateEnd}}" data-name="scoreDateEnd" bindchange="bindDateChange">
+            <view class="weui-input">{{formData.scoreDateEnd?formData.scoreDateEnd:""}}</view>
           </picker>
         </view>
       </view>

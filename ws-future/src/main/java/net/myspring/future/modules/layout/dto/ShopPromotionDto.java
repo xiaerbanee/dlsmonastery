@@ -13,7 +13,6 @@ import java.time.LocalDate;
 public class ShopPromotionDto extends DataDto<ShopPromotion>{
     private String businessId;
     private String shopId;
-    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
     private LocalDate activityDate;
     private String activityType;

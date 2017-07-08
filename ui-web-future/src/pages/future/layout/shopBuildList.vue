@@ -86,17 +86,13 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select';
   export default {
     components:{
-      officeSelect,
       dictEnumSelect,
       accountSelect,
-      depotSelect,
       processStatusSelect
     },
     data() {
