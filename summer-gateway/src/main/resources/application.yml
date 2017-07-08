@@ -3,8 +3,6 @@ server:
   ssl:
     key-store: classpath:hi.ncoppo.com.jks
     key-store-password: 882421615w0f
-  http:
-    port : 1200
 
 logging:
   file: summer-gateway.log
@@ -63,8 +61,6 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 180000
-      circuitBreaker:
-        forceClosed: true
 
 security:
   oauth2:
