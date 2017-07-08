@@ -88,8 +88,8 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('开单')>0" v-permit="'crm:adGoodsOrder:bill'"><el-button size="small" @click.native="itemAction(scope.row.id,'bill')">{{$t('adGoodsOrderList.bill')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('发货')>0" v-permit="'crm:adGoodsOrder:ship'"><el-button size="small" @click.native="itemAction(scope.row.id,'ship')">{{$t('adGoodsOrderList.ship')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
-            <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
-            <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
+            <div class="action" v-if="((scope.row.editable&&!scope.row.locked)||scope.row.auditable)&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.editable&&!scope.row.locked" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
             <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
@@ -99,16 +99,12 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select'
   import boolSelect from 'components/common/bool-select'
   export default {
     components:{
-      officeSelect,
       accountSelect,
-      depotSelect,
       processStatusSelect,
       boolSelect
     },

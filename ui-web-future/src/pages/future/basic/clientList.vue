@@ -8,8 +8,8 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('clientList.filter')" v-model="formVisible"  size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-form-item :label="$t('clientList.name')" :label-width="formLabelWidth">
+        <el-form :model="formData" :label-width="formLabelWidth">
+          <el-form-item :label="$t('clientList.name')" >
             <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('clientList.likeSearch')"></el-input>
           </el-form-item>
         </el-form>
@@ -41,7 +41,7 @@
         },
         initPromise:{},
         formProperty:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
       };

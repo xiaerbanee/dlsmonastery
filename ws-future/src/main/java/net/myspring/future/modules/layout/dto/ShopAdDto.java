@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 public class ShopAdDto extends DataDto<ShopAd>{
 
     private String shopId;
-    @CacheInput(inputKey = "depots", inputInstance = "shopId", outputInstance = "name")
     private String shopName;
     private String officeId;
     @CacheInput(inputKey = "offices", inputInstance = "officeId", outputInstance = "name")
@@ -26,11 +25,8 @@ public class ShopAdDto extends DataDto<ShopAd>{
     private String areaName;
     private Boolean specialArea;
     private String shopAdTypeId;
-    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "name")
     private String shopAdTypeName;
-    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "price")
     private BigDecimal shopAdTypePrice;
-    @CacheInput(inputKey = "shopAdTypes", inputInstance = "shopAdTypeId", outputInstance = "totalPriceType")
     private String totalPriceType;
     private BigDecimal length;
     private BigDecimal width;

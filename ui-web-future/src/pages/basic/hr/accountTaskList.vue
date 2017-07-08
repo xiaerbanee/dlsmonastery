@@ -7,17 +7,13 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('accountTaskList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item :label="$t('accountTaskList.name')" :label-width="formLabelWidth">
+        <el-form :model="formData" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountTaskList.name')">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('accountTaskList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('accountTaskList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountTaskList.status')">
                 <el-input v-model="formData.status" auto-complete="off" :placeholder="$t('accountTaskList.likeSearch')"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('accountTaskList.sure')}}</el-button>
@@ -31,7 +27,7 @@
         <el-table-column prop="lastModifiedDate" :label="$t('accountTaskList.lastModifiedDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('accountTaskList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,scope.row.name,'audit')">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.extendId,scope.row.name,'audit')">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -49,7 +45,7 @@
         },
         initPromise:{},
         searchText: '',
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false
       };
@@ -84,7 +80,7 @@
         if(action=="audit") {
           if("仓库调整"==name){
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
-          }else if("员工信息调整"==name){
+          }else if("员工调整"==name){
             this.$router.push({ name: 'employeeForm', query: { id: id }})
           }else if("广告印刷"==name){
             this.$router.push({ name: 'shopPrintForm', query: { id: id }})
@@ -96,8 +92,12 @@
             this.$router.push({ name: 'depotChangeForm', query: { id: id }})
           }else if("机构调整"==name){
             this.$router.push({ name: '机构调整编辑', query: { id: id }})
-          }else if("门店建设申请"==name){
+          }else if("门店建设"==name){
             this.$router.push({ name: 'shopBuildForm', query: { id: id }})
+          }else if("销售收款"==name){
+            this.$router.push({ name: 'bankInForm', query: { id: id }})
+          }else if("柜台订货"==name){
+            this.$router.push({ name: 'adGoodsOrderDetail', query: { id: id }})
           }
         }
       }

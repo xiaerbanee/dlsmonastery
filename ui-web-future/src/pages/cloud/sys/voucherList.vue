@@ -8,26 +8,26 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny"  class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
-              <el-form-item label="编号" :label-width="formLabelWidth">
+              <el-form-item label="编号" >
                 <el-input v-model="formData.id"  placeholder="模糊匹配查询"></el-input>
               </el-form-item>
           </el-row>
           <el-row :gutter="4">
-              <el-form-item label="凭证日期" :label-width="formLabelWidth">
+              <el-form-item label="凭证日期" >
                 <date-picker v-model="formData.fdate"></date-picker>
               </el-form-item>
           </el-row>
           <el-row :gutter="4">
-              <el-form-item label="状态" :label-width="formLabelWidth">
+              <el-form-item label="状态" >
                 <el-select v-model="formData.status" filterable clearable placeholder="请选择">
                   <el-option v-for="status in formData.extra.statusList" :key="status" :label="status" :value="status"></el-option>
                 </el-select>
               </el-form-item>
           </el-row>
           <el-row :gutter="4">
-              <el-form-item label="创建人" :label-width="formLabelWidth">
+              <el-form-item label="创建人" >
                 <el-input v-model="formData.createdBy" placeholder="模糊匹配查询"></el-input>
               </el-form-item>
           </el-row>
@@ -65,7 +65,7 @@
           extra:{}
         },
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false
       };

@@ -12,7 +12,9 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopPrintList.officeId')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.printType')" :label-width="formLabelWidth">
                 <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>
@@ -60,12 +62,11 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import dictMapSelect from 'components/basic/dict-map-select';
   import accountSelect from 'components/basic/account-select'
   import processStatusSelect from 'components/general/process-status-select'
   export default {
-    components:{officeSelect,dictMapSelect,accountSelect,processStatusSelect},
+    components:{dictMapSelect,accountSelect,processStatusSelect},
     data() {
       return {
         searchText:"",

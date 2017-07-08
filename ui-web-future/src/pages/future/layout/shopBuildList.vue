@@ -28,7 +28,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.shopName')" :label-width="formLabelWidth">
-                <depot-select v-model="formData.shopId" category="adShop" @afterInit="setSearchText"></depot-select>
+                <el-input v-model="formData.shopName" auto-complete="off" :placeholder="$t('shopBuildList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('shopBuildList.processFlow')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="ShopBuild" @afterInit="setSearchText"></process-status-select>
@@ -66,11 +66,7 @@
         <el-table-column prop="fixtureType" :label="$t('shopBuildList.fixtureType')" sortable></el-table-column>
         <el-table-column prop="content" :label="$t('shopBuildList.content')" width="150" sortable></el-table-column>
         <el-table-column prop="newContents" :label="$t('shopBuildList.newContents')" sortable></el-table-column>
-        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" sortable>
-          <!--<template scope="scope">
-            <el-tag :type="scope.row.processStatus === '已通过' ? 'primary' : 'danger'"  close-transition>{{scope.row.processStatus}}</el-tag>
-          </template>-->
-        </el-table-column>
+        <el-table-column prop="processStatus" :label="$t('shopBuildList.processFlow')" sortable></el-table-column>
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopBuildList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopBuildList.createdDate')" sortable ></el-table-column>
         <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('shopBuildList.lastModifiedBy')" sortable></el-table-column>
@@ -90,14 +86,15 @@
   </div>
 </template>
 <script>
-  import officeSelect from 'components/basic/office-select';
   import dictEnumSelect from 'components/basic/dict-enum-select';
   import accountSelect from 'components/basic/account-select';
-  import depotSelect from 'components/future/depot-select';
   import processStatusSelect from 'components/general/process-status-select';
   export default {
     components:{
-      officeSelect,dictEnumSelect,accountSelect,depotSelect,processStatusSelect},
+      dictEnumSelect,
+      accountSelect,
+      processStatusSelect
+    },
     data() {
       return {
         searchText:"",
@@ -110,7 +107,6 @@
         multipleSelection:[],
         formLabelWidth: '120px',
         formVisible: false,
-        pickerDateOption:util.pickerDateOption
       };
     },
     methods: {

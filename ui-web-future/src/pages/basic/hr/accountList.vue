@@ -9,28 +9,24 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('accountList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" method="get">
-          <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item :label="$t('accountList.loginName')" :label-width="formLabelWidth">
+        <el-form :model="formData" method="get" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.loginName')">
                 <el-input v-model="formData.loginName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('accountList.employeeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.employeeName')">
                 <el-input v-model="formData.employeeName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('accountList.officeName')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.officeName')">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('accountList.leader')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.leader')">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('accountList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('accountList.positionName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('accountList.positionName')">
                 <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('accountList.selectGroup')">
                   <el-option v-for="position in formData.extra.positionList" :key="position.id" :label="position.name" :value="position.id"></el-option>
                 </el-select>
               </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="exportData()">{{$t('accountList.export')}}</el-button>
@@ -71,7 +67,7 @@
         searchText:"",
         initPromise:{},
         offices:[],
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false

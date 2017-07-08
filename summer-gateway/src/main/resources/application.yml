@@ -45,17 +45,10 @@ zuul:
   host:
     socket-timeout-millis: 1000000
     connect-timeout-millis: 1000000
+    max-total-connections: 200
   add-proxy-headers: true
-
-hystrix:
-  command:
-    default:
-      execution:
-        timeout:
-          enabled: false
-        isolation:
-          thread:
-            timeoutInMilliseconds: 1000000
+  semaphore:
+    max-semaphores: 2000
 
 ribbon:
   ReadTimeout: 600000

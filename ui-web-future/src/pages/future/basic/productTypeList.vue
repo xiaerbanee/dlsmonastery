@@ -9,7 +9,7 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('productTypeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" label-width="120px">
+        <el-form :model="formData" :label-width="fromLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('productTypeList.name')">
@@ -72,7 +72,8 @@
         searchText:'',
         formVisible: false,
         pageHeight: 600,
-        pageLoading: false
+        pageLoading: false,
+        fromLabelWidth:"28%"
       };
     },
     methods: {

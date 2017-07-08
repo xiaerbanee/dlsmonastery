@@ -9,23 +9,23 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('pricesystemChangeList.filter')" v-model="formVisible" size="tiny" class="search-form"  z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">
-              <el-form-item :label="$t('pricesystemChangeList.productName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('pricesystemChangeList.productName')" >
                 <product-select v-model="formData.productId" @afterInit="setSearchText"></product-select>
               </el-form-item>
-              <el-form-item :label="$t('pricesystemChangeList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('pricesystemChangeList.createdDate')">
                 <date-range-picker v-model="formData.createdDate" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('pricesystemChangeList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('pricesystemChangeList.status')" >
                 <el-select v-model="formData.status" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
                   <el-option v-for="item in formData.extra.statusList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('pricesystemChangeList.pricesystemName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('pricesystemChangeList.pricesystemName')" >
                 <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
-                  <el-option v-for="pricesystem in formData.extra.pricesystems" :key="pricesystem.name" :label="pricesystem.name" :value="pricesystem.id"></el-option>
+                  <el-option v-for="pricesystem in formData.extra.pricesystems" :key="pricesystem.name"  :value="pricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -76,7 +76,7 @@
         },
         initPromise:{},
         selects:[],
-        formLabelWidth: '120px',
+        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false,
       };

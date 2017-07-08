@@ -8,40 +8,40 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('employeeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('employeeList.employeeName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.employeeName')" >
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('employeeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.leader')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.leader')">
                 <el-input v-model="formData.leaderName" auto-complete="off" :placeholder="$t('employeeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.mobilePhone')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.mobilePhone')">
                 <el-input v-model="formData.mobilePhone" auto-complete="off" :placeholder="$t('employeeList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.positionName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.positionName')">
                 <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('employeeList.selectGroup')">
                   <el-option v-for="item in formData.extra.positionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item :label="$t('employeeList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.status')">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('employeeList.selectGroup')">
                   <el-option v-for="item in formData.extra.statusList"  :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.officeName')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.officeName')">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.entryDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.entryDate')">
                 <date-range-picker v-model="formData.entryDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.regularDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.regularDate')">
                 <date-range-picker v-model="formData.regularDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('employeeList.leaveDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('employeeList.leaveDate')">
                 <date-range-picker v-model="formData.leaveDate"></date-range-picker>
               </el-form-item>
             </el-col>
@@ -86,7 +86,7 @@
         },
         searchText:"",
         initPromise:{},
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false,

@@ -46,7 +46,6 @@ public class ScheduleUtils {
 
     @Transactional(readOnly = false)
     public void synOppo() {
-
         logger.info("工厂自动同步开始");
         String date= LocalDateUtils.format(LocalDate.now());
         String message=synOppo(date);

@@ -23,7 +23,7 @@
               <el-input v-model.number="inputForm.amount" ></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.salerComment')"prop="salerComment">
-              <el-input v-model="inputForm.salerComment" type="textarea"></el-input>
+              <el-input v-model="inputForm.salerComment" type="textarea" autosize></el-input>
             </el-form-item>
             <el-form-item :label="$t('shopPromotionForm.materialComment')" prop="materialComment">
               <el-input v-model="inputForm.materialComment" type="textarea"></el-input>

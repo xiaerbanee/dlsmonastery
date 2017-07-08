@@ -9,21 +9,20 @@
         <el-button type="primary" @click="batchNoPass" icon="close" >批量打回</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false"
-       :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-form-item :label="$t('accountChangeList.createdDate')" :label-width="formLabelWidth">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="formData"  :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.createdDate')">
             <date-range-picker v-model="formData.createdDate"></date-range-picker>
           </el-form-item>
-          <el-form-item :label="$t('accountChangeList.createdBy')" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.createdBy')">
             <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('accountChangeList.likeSearch')"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('accountChangeList.areaName')" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.areaName')">
             <el-select v-model="formData.officeId" filterable clearable :placeholder="$t('accountChangeList.inputKey')">
               <el-option v-for="area in formData.extra.areaList" :key="area.id" :label="area.name" :value="area.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('accountChangeList.type')" :label-width="formLabelWidth">
+          <el-form-item :label="$t('accountChangeList.type')">
             <el-select v-model="formData.type" clearable filterable :placeholder="$t('accountChangeList.selectGroup')">
               <el-option v-for="type in formData.extra.typeList" :key="type" :label="type" :value="type"></el-option>
             </el-select>
@@ -66,7 +65,7 @@
         initPromise:{},
         searchText:"",
         selects:[],
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         show:false

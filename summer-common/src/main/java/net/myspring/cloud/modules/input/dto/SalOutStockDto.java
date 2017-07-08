@@ -33,8 +33,10 @@ public class SalOutStockDto {
     private String departmentNumber;
     //单据类型
     private String billType;
+    //单据类型编码
+    private String FBillTypeIdNumber;
 
-    private List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
+    private List<SalOutStockFEntityDto> salOutStockFEntityDtoList = Lists.newArrayList();
 
     public String getExtendId() {
         return extendId;
@@ -104,11 +106,19 @@ public class SalOutStockDto {
     }
 
     public List<SalOutStockFEntityDto> getSalOutStockFEntityDtoList() {
-        return entityDtoList;
+        return salOutStockFEntityDtoList;
     }
 
     public void setSalOutStockFEntityDtoList(List<SalOutStockFEntityDto> entityDtoList) {
-        this.entityDtoList = entityDtoList;
+        this.salOutStockFEntityDtoList = entityDtoList;
+    }
+
+    public String getFBillTypeIdNumber() {
+        return FBillTypeIdNumber;
+    }
+
+    public void setFBillTypeIdNumber(String FBillTypeIdNumber) {
+        this.FBillTypeIdNumber = FBillTypeIdNumber;
     }
 
     @JsonIgnore
@@ -119,11 +129,7 @@ public class SalOutStockDto {
         Map<String, Object> model = Maps.newLinkedHashMap();
         model.put("FID", 0);
         model.put("FDate", LocalDateUtils.format(getDate(),"yyyy-M-d"));
-        if(SalOutStockBillTypeEnum.标准销售出库单.name().equals(getBillType())) {
-            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD01_SYS"));
-        }else if (SalOutStockBillTypeEnum.现销出库单.name().equals(getBillType())){
-            model.put("FBillTypeID", CollectionUtil.getMap("FNumber", "XSCKD06_SYS"));
-        }
+        model.put("FBillTypeID", CollectionUtil.getMap("FNumber", getFBillTypeIdNumber()));
         model.put("FDeliveryDeptID", CollectionUtil.getMap("FNumber", getDepartmentNumber()));
         model.put("FSaleOrgId", CollectionUtil.getMap("FNumber", 100));
         model.put("FStockOrgId", CollectionUtil.getMap("FNumber", 100));

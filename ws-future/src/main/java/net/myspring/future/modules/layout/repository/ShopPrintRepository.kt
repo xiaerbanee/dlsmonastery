@@ -38,8 +38,8 @@ class ShopPrintRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             WHERE
                 t1.enabled = 1
         """)
-        if (StringUtils.isNotEmpty(shopPrintQuery.officeId)) {
-            sb.append("""  and t1.office_id = :officeId """)
+        if (StringUtils.isNotEmpty(shopPrintQuery.areaId)) {
+            sb.append("""  and t1.office_id = :areaId """)
         }
         if (StringUtils.isNotEmpty(shopPrintQuery.printType)) {
             sb.append("""  and t1.print_type = :printType """)

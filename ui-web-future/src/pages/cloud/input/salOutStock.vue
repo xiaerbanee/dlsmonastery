@@ -23,6 +23,7 @@
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js';
   var table = null;
+  var outStockBillTypeEnum = null;
   export default {
     data() {
       return {
@@ -34,14 +35,13 @@
           stretchH: 'all',
           height: 650,
           minSpareRows: 1,
-          colHeaders: ["货品编码","门店","货品","价格","数量","类型","备注"],
+          colHeaders: ["货品编码","门店","货品","价格","数量","备注","类型"],
           columns: [
             {type:"text", allowEmpty: false, readOnly: true, strict: true},
             {type: "autocomplete", allowEmpty: false, strict: true, customerNames:[],source:this.customerNames},
             {type: "autocomplete", allowEmpty: true, strict: true,productNames:[],source:this.productNames},
             {type: 'numeric',allowEmpty: false,format:"0,0.00"},
             {type: "numeric", allowEmpty: false},
-            {type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType},
             {type: "text", allowEmpty: true, strict: true }
           ],
           contextMenu: ['row_above', 'row_below', 'remove_row'],
@@ -60,6 +60,9 @@
                   } else {
                     table.setDataAtCell(row,0,null);
                   }
+                }
+                if (column === 1 && outStockBillTypeEnum !== null){
+                  table.setDataAtCell(row,6,outStockBillTypeEnum);
                 }
               }
             }
@@ -81,7 +84,13 @@
         let extra = response.data.extra;
         this.settings.columns[1].source = extra.bdCustomerNameList;
         this.settings.columns[2].source = extra.bdMaterialNameList;
-        this.settings.columns[5].source = extra.outStockBillTypeEnums;
+        if(Object.prototype.toString.call(extra.outStockBillTypeEnums) === "[object String]"){
+          outStockBillTypeEnum = extra.outStockBillTypeEnums;
+          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true, readOnly: true});
+        }else {
+          this.settings.columns.push({type: "autocomplete", allowEmpty: false, strict: true,billType:[], source: this.billType});
+          this.settings.columns[6].source = extra.outStockBillTypeEnums;
+        }
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
     },
