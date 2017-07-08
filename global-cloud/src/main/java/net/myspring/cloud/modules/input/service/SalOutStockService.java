@@ -98,7 +98,28 @@ public class SalOutStockService {
     }
 
     @Transactional
-    public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
+    public List<KingdeeSynReturnDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
+        //财务出库开单
+        if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
+                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
+                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
+                }
+            }else{
+                kingdeeSynExtendDtoList.add(new KingdeeSynExtendDto(false,"未登入金蝶系统") {
+                    @Override
+                    public String getNextBillNo() {return null;}}
+                );
+            }
+        }
+        return BeanUtil.map(kingdeeSynExtendDtoList,KingdeeSynReturnDto.class);
+    }
+
+    @Transactional
+    public List<KingdeeSynReturnDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String stockNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
@@ -154,27 +175,6 @@ public class SalOutStockService {
     }
 
     @Transactional
-    public List<KingdeeSynExtendDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        //财务出库开单
-        if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
-            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-            if(isLogin) {
-                for (SalOutStockDto salOutStockDto : salOutStockDtoList) {
-                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salOutStockDto,kingdeeBook);
-                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
-                }
-            }else{
-                kingdeeSynExtendDtoList.add(new KingdeeSynExtendDto(false,"未登入金蝶系统") {
-                    @Override
-                    public String getNextBillNo() {return null;}}
-                    );
-            }
-        }
-        return kingdeeSynExtendDtoList;
-    }
-
-    @Transactional
     public List<KingdeeSynReturnDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList,KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
@@ -193,7 +193,7 @@ public class SalOutStockService {
             salOutStockDto.setBillType(SalOutStockBillTypeEnum.标准销售出库单.name());
             salOutStockDto.setDepartmentNumber(bdDepartmentMap.get(customerDepartmentMap.get(salOutStockDto.getCustomerNumber())).getFNumber());
         }
-        return BeanUtil.map(save(salOutStockDtoList,kingdeeBook,accountKingdeeBook), KingdeeSynReturnDto.class);
+        return save(salOutStockDtoList,kingdeeBook,accountKingdeeBook);
     }
 
     public SalStockForm getForm(){

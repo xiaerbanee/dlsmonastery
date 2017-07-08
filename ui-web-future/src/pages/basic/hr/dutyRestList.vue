@@ -7,16 +7,16 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyRestList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-              <el-form-item :label="$t('dutyRestList.dutyDate')" :label-width="formLabelWidth">
+        <el-form :model="formData"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.dutyDate')">
                 <date-range-picker v-model="formData.dutyDate"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('dutyRestList.type')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.type')">
                 <el-select v-model="formData.type" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
                   <el-option v-for="item in formData.extra.restList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('dutyRestList.dateType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('dutyRestList.dateType')">
                 <el-select v-model="formData.dateType" filterable clearable :placeholder="$t('dutyRestList.inputKey')">
                   <el-option v-for="item in formData.extra.dateList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -54,7 +54,7 @@
         },
         initPromise:{},
         searchText:"",
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false
       };

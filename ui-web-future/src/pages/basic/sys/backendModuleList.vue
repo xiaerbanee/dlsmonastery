@@ -8,17 +8,13 @@
         <span  v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('backendModuleList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
-          <el-row :gutter="4">
-            <el-col :span="24">
-              <el-form-item :label="$t('backendModuleList.name')" :label-width="formLabelWidth">
+        <el-form :model="formData" :label-width="formLabelWidth">
+              <el-form-item :label="$t('backendModuleList.name')">
                 <el-input v-model="formData.name" auto-complete="off" :placeholder="$t('backendModuleList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('backendModuleList.backendName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('backendModuleList.backendName')">
                 <el-input v-model="formData.backendName" auto-complete="off" :placeholder="$t('backendModuleList.likeSearch')"></el-input>
               </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="search()">{{$t('backendModuleList.sure')}}</el-button>
