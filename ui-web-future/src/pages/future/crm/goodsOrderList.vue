@@ -29,7 +29,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')"  :label-width="formLabelWidth">
-                <el-input v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
+                <el-input autofocus v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.billDate')" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>

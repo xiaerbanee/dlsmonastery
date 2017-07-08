@@ -111,10 +111,10 @@
     width: 25%;
   }
   .vodal.vodal-dialog-medium .vodal-dialog{
-    width: 50%;
+    width: 55%;
   }
   .vodal.vodal-dialog-large .vodal-dialog{
-    width: 60%;
+    width: 65%;
   }
   .vodal-dialog {
     position: absolute;

@@ -11,7 +11,7 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('bankInList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" label-width="150px">
+        <el-form :model="formData" label-width="25%">
           <el-row :gutter="4">
             <el-col :span="10">
               <el-form-item :label="$t('bankInList.id')">
