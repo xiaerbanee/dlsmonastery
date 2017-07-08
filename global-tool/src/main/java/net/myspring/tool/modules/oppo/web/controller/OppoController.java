@@ -1,15 +1,14 @@
 package net.myspring.tool.modules.oppo.web.controller;
 
+import com.netflix.discovery.converters.Auto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
-import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
-import net.myspring.tool.common.utils.RequestUtils;
-import net.myspring.tool.common.utils.ScheduleUtils;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
-import net.myspring.util.collection.CollectionUtil;
+import net.myspring.tool.modules.oppo.utils.OppoPullScheduleUtils;
+import net.myspring.tool.modules.oppo.utils.OppoPushScheduleUtils;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.MD5Utils;
 import net.myspring.util.time.LocalDateUtils;
@@ -35,39 +34,38 @@ public class OppoController {
     private OppoPushSerivce oppoPushSerivce;
     @Autowired
     private CompanyConfigClient companyConfigClient;
+    @Autowired
+    private OppoPullScheduleUtils oppoPullScheduleUtils;
+
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "syn")
-    public String synFactoryOppo(String date) {
-        System.err.println("companyName==="+RequestUtils.getCompanyName());
-        System.err.println("companyName==="+RequestUtils.getAccountId());
-        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
-        String[] agentCodes=agentCode.split(CharConstant.COMMA);
-        String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
-        String[] passWords=passWord.split(CharConstant.COMMA);
-        List<OppoPlantProductSel> oppoPlantProductSels=oppoService.plantProductSel(agentCodes[0], passWords[0], "");
-        //同步颜色编码
-        logger.info("开始同步颜色编码");
-        oppoService.pullPlantProductSels(oppoPlantProductSels);
-        logger.info("开始同步物料编码");
-        // 同步物料编码
-        List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoService.plantAgentProductSel(agentCodes[0], passWords[0], "");
-        oppoService.pullPlantAgentProductSels(oppoPlantAgentProductSels);
-        logger.info("开始同步发货串码");
-        //同步发货串吗
-        for (int i = 0; i < agentCodes.length; i++) {
-            List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList = oppoService.plantSendImeiPPSel(agentCodes[i], passWords[i],date);
-            if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
-                oppoService.pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, agentCodes[i]);
-            }
-        }
-        logger.info("发货串码同步成功");
-        logger.info("开始同步电子保卡");
-        //同步电子保卡
-        List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoService.plantProductItemelectronSel(agentCodes[0],passWords[0], LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1)));
-        oppoService.pullPlantProductItemelectronSels(oppoPlantProductItemelectronSels);
-        logger.info("电子保卡同步成功");
+    @RequestMapping(value = "pullFactoryData")
+    public String pullFactoryData(String date) {
+        oppoPullScheduleUtils.synOppo(date);
+        return "OPPO同步成功";
+    }
+
+    @RequestMapping(value = "pushFactoryData")
+    public String pushFactoryData(String date) {
+        oppoPushSerivce.getOppoCustomers(date);
+        oppoPushSerivce.getOppoCustomerOperatortype(date);
+        List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);
+        oppoPushSerivce.getOppoCustomerAllot(oppoCustomerAllots,date);
+        List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getFutureOppoCustomerStock(date);
+        oppoPushSerivce.getOppoCustomerStock(oppoCustomerStocks,date);
+        List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getFutureOppoCustomerImeiStock(date);
+        oppoPushSerivce.getOppoCustomerImeiStock(oppoCustomerImeiStocks,date);
+        List<OppoCustomerSale> oppoCustomerSales=oppoPushSerivce.getFutureOppoCustomerSale(date);
+        oppoPushSerivce.getOppoCustomerSales(oppoCustomerSales,date);
+        List<OppoCustomerSaleImei> oppoCustomerSaleImeis=oppoPushSerivce.getFutureOppoCustomerSaleImeis(date);
+        oppoPushSerivce.getOppoCustomerSaleImes(oppoCustomerSaleImeis,date);
+        List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getFutureOppoCustomerSaleCounts(date);
+        oppoPushSerivce.getOppoCustomerSaleCounts(oppoCustomerSaleCounts,date);
+        List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis=oppoPushSerivce.getFutureOppoCustomerAfterSaleImeis(date);
+        oppoPushSerivce.getOppoCustomerAfterSaleImeis(oppoCustomerAfterSaleImeis,date);
+        List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getFutureOppoCustomerDemoPhone(date);
+        oppoPushSerivce.getOppoCustomerDemoPhone(oppoCustomerDemoPhones,date);
         return "OPPO同步成功";
     }
 
@@ -94,7 +92,7 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         } else {
-            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomers(factoryAgentName);
+            List<OppoCustomer> oppoCustomers = oppoPushSerivce.getOppoCustomersByDate(createdDate);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
             responseMessage.setResult("success");
         }
@@ -112,7 +110,7 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         } else {
-            List<OppoCustomerOperatortype> oppoCustomerOperatortypes = oppoPushSerivce.getOppoCustomerOperatortype();
+            List<OppoCustomerOperatortype> oppoCustomerOperatortypes = oppoPushSerivce.getOppoCustomerOperatortypesByDate(createdDate);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerOperatortypes));
             responseMessage.setResult("success");
         }
@@ -130,9 +128,9 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
-            LocalDate dateStartTime= LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime=LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getOppoCustomerAllot(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getOppoCustomerAllotsByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAllots));
             responseMessage.setResult("success");
         }
@@ -151,9 +149,9 @@ public class OppoController {
             responseMessage.setResult("false");
         }else{
             logger.info("库存上抛开始："+new Date());
-            LocalDate dateStart= LocalDateUtils.parse(createdDate).plusMonths(-12);
-            LocalDate dateEnd=LocalDateUtils.parse(createdDate).plusDays(1);
-            List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStock(dateStart,dateEnd);
+            String dateStart= LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusMonths(-12));
+            String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(createdDate).plusDays(1));
+            List<OppoCustomerStock> oppoCustomerStocks=oppoPushSerivce.getOppoCustomerStocksByDate(dateStart,dateEnd);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerStocks));
             responseMessage.setResult("success");
         }
@@ -172,9 +170,9 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
-            LocalDate dateStartTime= LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime=LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getOppoCustomerImeiStock(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerImeiStock> oppoCustomerImeiStocks=oppoPushSerivce.getOppoCustomerImeiStocksByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerImeiStocks));
             responseMessage.setResult("success");
         }
@@ -192,9 +190,9 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         } else {
-            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerSale> oppoCustomerSales = oppoPushSerivce.getOppoCustomerSales(dateStartTime, dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSale> oppoCustomerSales = oppoPushSerivce.getOppoCustomerSalesByDate(dateStartTime, dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSales));
             responseMessage.setResult("success");
         }
@@ -212,9 +210,9 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
-            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoPushSerivce.getOppoCustomerSaleImes(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSaleImei> oppoCustomerSaleImes=oppoPushSerivce.getOppoCustomerSaleImeisByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes));
             responseMessage.setResult("success");
         }
@@ -233,9 +231,9 @@ public class OppoController {
             responseMessage.setResult("false");
         }else{
             logger.info("门店销售数据汇总上抛开始");
-            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCounts(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerSaleCount> oppoCustomerSaleCounts=oppoPushSerivce.getOppoCustomerSaleCountsByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleCounts));
             responseMessage.setResult("success");
             logger.info("门店销售数据汇总上抛结束");
@@ -245,7 +243,7 @@ public class OppoController {
 
     //门店售后零售退货条码数据
     @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
-    public String pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+    public String pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -255,9 +253,9 @@ public class OppoController {
             responseMessage.setResult("false");
         }else{
             logger.info("门店店售后退货条码数据上抛开始");
-            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeis(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerAfterSaleImei> oppoCustomerAfterSaleImeis=oppoPushSerivce.getOppoCustomerAfterSaleImeisByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAfterSaleImeis));
             responseMessage.setResult("success");
             logger.info("门店店售后退货条码数据上抛结束");
@@ -267,7 +265,7 @@ public class OppoController {
 
     //演示机条码数据
     @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
-    public String pullCustomerDemoPhone(String key,String dateStart,String dateEnd,HttpServletResponse response, Model model)  {
+    public String pullCustomerDemoPhone(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -276,13 +274,15 @@ public class OppoController {
             responseMessage.setMessage("密钥不正确");
             responseMessage.setResult("false");
         }else{
-            LocalDate dateStartTime = LocalDateUtils.parse(dateStart);
-            LocalDate dateEndTime = LocalDateUtils.parse(dateEnd).plusDays(1);
-            List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhone(dateStartTime,dateEndTime);
+            String dateStartTime= LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+            String dateEndTime=LocalDateUtils.format(LocalDateUtils.parse(dateEnd).plusDays(1));
+            List<OppoCustomerDemoPhone> oppoCustomerDemoPhones=oppoPushSerivce.getOppoCustomerDemoPhonesByDate(dateStartTime,dateEndTime);
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
             responseMessage.setResult("success");
         }
         return ObjectMapperUtils.writeValueAsString(responseMessage);
     }
+
+
 
 }

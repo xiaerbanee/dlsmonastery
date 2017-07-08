@@ -1,5 +1,6 @@
-package net.myspring.tool.common.utils;
+package net.myspring.tool.modules.oppo.utils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
@@ -7,39 +8,36 @@ import net.myspring.tool.common.client.ToolClient;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
-import net.myspring.tool.common.enums.CompanyNameEnum;
+import net.myspring.tool.common.domain.DistrictEntity;
+import net.myspring.tool.common.domain.OfficeEntity;
+import net.myspring.tool.common.dto.CustomerDto;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
-import net.myspring.tool.modules.oppo.domain.OppoPlantAgentProductSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductItemelectronSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantProductSel;
-import net.myspring.tool.modules.oppo.domain.OppoPlantSendImeiPpsel;
+import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.repository.OppoPlantAgentProductSelRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantProductItemelectronSelRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantProductSelRepository;
 import net.myspring.tool.modules.oppo.repository.OppoPlantSendImeiPpselRepository;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(readOnly = false)
-public class ScheduleUtils {
+public class OppoPullScheduleUtils {
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private CompanyConfigClient companyConfigClient;
-	@Autowired
-	private ToolClient toolClient;
 	@Autowired
 	private OppoPlantProductSelRepository oppoPlantProductSelRepository;
 	@Autowired
@@ -49,15 +47,17 @@ public class ScheduleUtils {
 	@Autowired
 	private OppoPlantProductItemelectronSelRepository oppoPlantProductItemelectronSelRepository;
 
-	@Transactional(readOnly = true)
-	@Scheduled(cron = "*/5 * * * * ?")
 	public void syn() {
 		logger.info("工厂自动同步开始");
 		String date= LocalDateUtils.format(LocalDate.now());
+		String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+		DbContextHolder.get().setDataSourceType(DataSourceTypeEnum.FACTORY.name());
+		DbContextHolder.get().setCompanyName(companyName);
 		synOppo(date);
 		logger.info("工厂自动同步成功");
 	}
 
+	@FactoryDataSource
 	@Transactional(readOnly = false)
 	public void synOppo(String date){
 		String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
@@ -72,10 +72,10 @@ public class ScheduleUtils {
 		//获取物料编码
 		List<OppoPlantAgentProductSel> oppoPlantAgentProductSels = oppoPlantAgentProductSelRepository.plantAgentProductSel(agentCodes[0], passWords[0], "");
 		//获取同步串码
-		List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpselList= Lists.newArrayList();
+		Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap= Maps.newHashMap();
 		for (int i = 0; i < agentCodes.length; i++) {
 			List<OppoPlantSendImeiPpsel> plantSendImeiPpsels = oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(agentCodes[i], passWords[i], date);
-			oppoPlantSendImeiPpselList.addAll(plantSendImeiPpsels);
+			oppoPlantSendImeiPpselMap.put(agentCodes[i],plantSendImeiPpsels);
 		}
 		//获取电子保卡
 		List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(agentCodes[0],passWords[0], LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1)));
@@ -87,8 +87,9 @@ public class ScheduleUtils {
 		pullPlantAgentProductSels(oppoPlantAgentProductSels);
 		//同步串码
 		for (int i = 0; i < agentCodes.length; i++) {
-			if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpselList)) {
-				pullPlantSendImeiPpsels(oppoPlantSendImeiPpselList, agentCodes[i]);
+			List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=oppoPlantSendImeiPpselMap.get(agentCodes[i]);
+			if (CollectionUtil.isNotEmpty(oppoPlantSendImeiPpsels)) {
+				pullPlantSendImeiPpsels(oppoPlantSendImeiPpsels, agentCodes[i]);
 			}
 		}
 //		同步电子保卡
@@ -173,7 +174,7 @@ public class ScheduleUtils {
 			}
 		}
 		if (CollectionUtil.isNotEmpty(list)) {
-			oppoPlantSendImeiPpselRepository.batchSave(list);
+			oppoPlantSendImeiPpselRepository.save(list);
 		}
 	}
 
@@ -200,7 +201,7 @@ public class ScheduleUtils {
 			}
 			logger.info("开始同步电子保卡");
 			if (CollectionUtil.isNotEmpty(list)) {
-				oppoPlantProductItemelectronSelRepository.batchSave(list);
+				oppoPlantProductItemelectronSelRepository.save(list);
 			}
 			logger.info("电子保卡同步成功");
 		}

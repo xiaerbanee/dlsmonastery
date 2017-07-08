@@ -38,7 +38,8 @@ public class SalReturnStockController {
 
     @RequestMapping(value = "form")
     public SalStockForm form () {
-        return salReturnStockService.getForm();
+        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+        return salReturnStockService.getForm(kingdeeBook);
     }
 
     @RequestMapping(value = "save")
@@ -47,8 +48,8 @@ public class SalReturnStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
-            List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
-            for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
+            List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salReturnStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
+            for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                 if (kingdeeSynExtendDto.getSuccess()) {
                     restResponse = new RestResponse("开单退货成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
                 }
@@ -63,12 +64,12 @@ public class SalReturnStockController {
     public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalReturnStockDto> salReturnStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList;
+        List<KingdeeSynReturnDto> kingdeeSynExtendDtoList;
         if (accountKingdeeBook != null) {
             kingdeeSynExtendDtoList = salReturnStockService.saveForXSTHD(salReturnStockDtoList, kingdeeBook, accountKingdeeBook);
         }else{
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        return BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSynReturnDto.class);
+        return kingdeeSynExtendDtoList;
     }
 }

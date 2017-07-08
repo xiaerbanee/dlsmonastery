@@ -8,38 +8,38 @@
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('auditFileList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" method="get">
+        <el-form :model="formData" method="get"  :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
-              <el-form-item :label="$t('auditFileList.id')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.id')">
                 <el-input v-model="formData.id" auto-complete="off" :placeholder="$t('auditFileList.notZero')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.auditType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.auditType')">
                 <el-select v-model="formData.auditType" filterable clearable :placeholder="$t('auditFileList.inputKey')">
                   <el-option v-for="item in auditTypes" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.officeName')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.officeName')">
                 <el-input v-model="formData.officeName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.officeId')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.officeId')">
                 <office-select v-model="formData.officeId"></office-select>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.createdDate')">
                 <date-range-picker v-model="formData.createdDate"></date-range-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
-              <el-form-item :label="$t('auditFileList.applyAccount')" :label-width="formLabelWidth">
+            <el-col :span="12">
+              <el-form-item :label="$t('auditFileList.applyAccount')">
                 <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.stageName')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.stageName')">
                 <el-input v-model="formData.stageName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.content')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.content')">
                 <el-input v-model="formData.content" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('auditFileList.title')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('auditFileList.title')">
                 <el-input v-model="formData.title" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
             </el-col>
@@ -94,7 +94,7 @@
           this.$t('auditFileList.all'),
           this.$t('auditFileList.waitAudit')
         ],
-        formLabelWidth: '120px',
+        formLabelWidth: '25%',
         formVisible: false,
         pageLoading: false,
         remoteLoading:false,

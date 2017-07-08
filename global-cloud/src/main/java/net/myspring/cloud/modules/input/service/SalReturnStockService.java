@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
+import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
@@ -21,10 +22,12 @@ import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
+import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -97,7 +100,28 @@ public class SalReturnStockService {
     }
 
     @Transactional
-    public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
+    public List<KingdeeSynReturnDto> save (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
+        //财务出库开单
+        if (CollectionUtil.isNotEmpty(salReturnStockDtoList)) {
+            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+            if(isLogin) {
+                for (SalReturnStockDto salReturnStockDto : salReturnStockDtoList) {
+                    if (SalReturnStockBillTypeEnum.标准销售退货单.name().equals(salReturnStockDto.getBillType())) {
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD01_SYS");
+                    } else if(SalReturnStockBillTypeEnum.现销退货单.name().equals(salReturnStockDto.getBillType())){
+                        salReturnStockDto.setFBillTypeIdNumber("XSTHD06_SYS");
+                    }
+                    KingdeeSynExtendDto kingdeeSynExtendDto = save(salReturnStockDto, kingdeeBook);
+                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
+                }
+            }
+        }
+        return BeanUtil.map(kingdeeSynExtendDtoList,KingdeeSynReturnDto.class);
+    }
+
+    @Transactional
+    public List<KingdeeSynReturnDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String storeNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
@@ -153,23 +177,7 @@ public class SalReturnStockService {
     }
 
     @Transactional
-    public List<KingdeeSynExtendDto> save (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
-        //财务出库开单
-        if (CollectionUtil.isNotEmpty(salReturnStockDtoList)) {
-            Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-            if(isLogin) {
-                for (SalReturnStockDto batchBill : salReturnStockDtoList) {
-                    KingdeeSynExtendDto kingdeeSynExtendDto = save(batchBill, kingdeeBook);
-                    kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
-                }
-            }
-        }
-        return kingdeeSynExtendDtoList;
-    }
-
-    @Transactional
-    public List<KingdeeSynExtendDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynReturnDto> saveForXSTHD (List<SalReturnStockDto> salReturnStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalReturnStockDto salReturnStockDto  : salReturnStockDtoList){
             customerNumberList.add(salReturnStockDto.getCustomerNumber());
@@ -190,10 +198,14 @@ public class SalReturnStockService {
         return save(salReturnStockDtoList,kingdeeBook,accountKingdeeBook);
     }
     
-    public SalStockForm getForm(){
+    public SalStockForm getForm(KingdeeBook kingdeeBook){
         SalStockForm salStockForm = new SalStockForm();
         Map<String,Object> map = Maps.newHashMap();
-        map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
+        if (KingdeeNameEnum.WZOPPO.name().equals(kingdeeBook.getName())){
+            map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.values());
+        }else{
+            map.put("returnStockBillTypeEnums",SalReturnStockBillTypeEnum.标准销售退货单);
+        }
         map.put("bdCustomerNameList",bdCustomerRepository.findAll().stream().map(BdCustomer::getFName).collect(Collectors.toList()));
         map.put("bdMaterialNameList",bdMaterialRepository.findAll().stream().map(BdMaterial::getFName).collect(Collectors.toList()));
         salStockForm.setExtra(map);

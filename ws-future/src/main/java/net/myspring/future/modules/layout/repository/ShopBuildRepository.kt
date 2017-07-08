@@ -71,8 +71,8 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if(CollectionUtil.isNotEmpty(shopBuildQuery.idLists)){
             sb.append("""  and t1.id in (:idLists) """)
         }
-        if (StringUtils.isNotEmpty(shopBuildQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (StringUtils.isNotEmpty(shopBuildQuery.positionId)) {
             sb.append("""  and t1.process_position_id = :positionId """)
@@ -117,11 +117,15 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findByFilter(shopBuildQuery: ShopBuildQuery): MutableList<ShopBuildDto> {
         val sb = StringBuilder("""
             SELECT
+                depot.name shopName,
+                depot.address address,
+                depot.area_type areaType,
                 depot.office_id officeId,
+                depot.area_id areaId,
                 t1.*
             FROM
-                crm_shop_build t1,
-                crm_depot depot
+                crm_shop_build t1
+                LEFT JOIN crm_depot depot ON depot.id = t1.shop_id
             WHERE
                 t1.enabled = 1
             AND t1.shop_id = depot.id
@@ -129,8 +133,8 @@ class ShopBuildRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopBuildQuery.fixtureType)) {
             sb.append("""  and t1.fixture_type = :fixtureType """)
         }
-        if (StringUtils.isNotEmpty(shopBuildQuery.shopId)) {
-            sb.append("""  and t1.shop_id = :shopId """)
+        if (StringUtils.isNotEmpty(shopBuildQuery.shopName)) {
+            sb.append("""  and depot.name like CONCAT('%', :shopName,'%') """)
         }
         if (StringUtils.isNotEmpty(shopBuildQuery.positionId)) {
             sb.append("""  and t1.process_position_id = :positionId """)

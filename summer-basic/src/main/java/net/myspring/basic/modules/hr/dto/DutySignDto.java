@@ -4,9 +4,11 @@ import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.DutySign;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.joda.time.DateTime;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * Created by admin on 2017/4/5.
@@ -15,7 +17,7 @@ public class DutySignDto extends DataDto<DutySign> {
     private String employeeName;
     private LocalDate dutyDate;
     private String week;
-    private LocalDateTime dutyTime;
+    private LocalTime dutyTime;
     private String address;
     private String uuid;
     private String netType;
@@ -59,11 +61,11 @@ public class DutySignDto extends DataDto<DutySign> {
         this.week = week;
     }
 
-    public LocalDateTime getDutyTime() {
+    public LocalTime getDutyTime() {
         return dutyTime;
     }
 
-    public void setDutyTime(LocalDateTime dutyTime) {
+    public void setDutyTime(LocalTime dutyTime) {
         this.dutyTime = dutyTime;
     }
 
