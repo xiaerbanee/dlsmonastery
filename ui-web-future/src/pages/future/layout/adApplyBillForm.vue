@@ -87,21 +87,20 @@
           return;
         }
 
-        let that = this;
-        that.submitDisabled = true;
-        let form = that.$refs["inputForm"];
+        this.submitDisabled = true;
+        let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             let submitData = util.deleteExtra(this.inputForm);
             submitData.adApplyDetailForms = this.getProductForSubmit();
             axios.post('/api/ws/future/layout/adApply/billSave',qs.stringify(submitData,{allowDots:true})).then((response)=> {
-              that.$message(response.data.message);
+              this.$message(response.data.message);
               if(response.data.success){
                 Object.assign(this.$data, this.getData());
                 this.initPage();
               }
-            }).catch(function () {
-              that.submitDisabled = false;
+            }).catch(()=> {
+              this.submitDisabled = false;
             });
           }else{
             this.submitDisabled = false;
@@ -169,19 +168,19 @@
           this.getTotalNowBilledQty();
       },
       searchDetail(){
-        var val=this.productOrShopName;
+        let val=this.productOrShopName;
         if(!val){
           this.filterAdApplyList = this.adApplyList;
           this.getTotalQty(this.filterAdApplyList);
           return;
         }
-        var tempList=new Array();
-        for(var index of this.adApplyList){
+        let tempList=new Array();
+        for(let index of this.adApplyList){
           if(util.isNotBlank(index.nowBilledQty)){
             tempList.push(index)
           }
         }
-        for(var index of this.adApplyList){
+        for(let index of this.adApplyList){
           if((util.contains(index.shopName,val)||util.contains(index.productName,val)||util.contains(index.productCode,val))&&util.isBlank(index.nowBilledQty)){
             tempList.push(index)
           }
@@ -217,6 +216,8 @@
               this.inputForm.storeId = response.data.storeId;
             this.setProductList(response.data.adApplyDtoList);
           });
+          this.billGoodsSortQty = '';
+          this.totalNowBilledQty = 0;
       },
       initPage(){
         this.pageHeight = window.outerHeight -320;

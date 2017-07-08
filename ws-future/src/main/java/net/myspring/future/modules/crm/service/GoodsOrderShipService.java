@@ -42,6 +42,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -466,11 +467,16 @@ public class GoodsOrderShipService {
     }
 
     public GoodsOrderDto getShipByBusinessId(String businessId) {
-
         List<GoodsOrder> goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList(businessId));
-        if(CollectionUtil.isEmpty(goodsOrderList)){
-            return new GoodsOrderDto();
+        if(CollectionUtil.isNotEmpty(goodsOrderList)){
+            return getShip(goodsOrderList.get(0).getId());
         }
-        return getShip(goodsOrderList.get(0).getId());
+
+        goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList( LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + businessId));
+        if(CollectionUtil.isNotEmpty(goodsOrderList)){
+            return getShip(goodsOrderList.get(0).getId());
+        }
+
+        return new GoodsOrderDto();
     }
 }

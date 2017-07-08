@@ -101,7 +101,7 @@ class DutyOvertimeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTe
         paramMap.put("dateStart", dateStart)
         return namedParameterJdbcTemplate.query("""
             SELECT
-            '加班' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'account.loginName',t2.leader_id AS 'account.leaderId' ,'JB' AS 'prefix',t1.id
+            '加班' as dutyType,t1.duty_date,t1.remarks,t2.login_name as 'accountName','JB' AS 'prefix',t1.id
             FROM
             hr_duty_overtime t1 , hr_account t2 ,hr_employee t3
             WHERE

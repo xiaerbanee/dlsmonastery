@@ -157,7 +157,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.business_id like concat('%',:businessId,'%')")
         }
         if (goodsOrderQuery.billDateStart != null) {
-            sb.append(" and t1.bill_date > :billDateStart")
+            sb.append(" and t1.bill_date >= :billDateStart")
         }
         if (goodsOrderQuery.billDateEnd != null) {
             sb.append(" and t1.bill_date < :billDateEnd ")
@@ -169,7 +169,7 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and shop.area_id = :areaId ")
         }
         if (goodsOrderQuery.shipDateStart != null) {
-            sb.append(" and t1.ship_date > :shipDateStart")
+            sb.append(" and t1.ship_date >= :shipDateStart")
         }
         if (goodsOrderQuery.shipDateEnd != null) {
             sb.append(" and t1.ship_date < :shipDateEnd")
@@ -190,10 +190,10 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(" and t1.out_code like concat('%',:outCode,'%')")
         }
         if (goodsOrderQuery.createdDateStart != null) {
-            sb.append(" and t1.created_date > :createdDateStart")
+            sb.append(" and t1.created_date >= :createdDateStart")
         }
         if (goodsOrderQuery.createdDateEnd != null) {
-            sb.append(" and t1.created_date <:createdDateEnd")
+            sb.append(" and t1.created_date < :createdDateEnd")
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.expressCodes)) {
             sb.append("""   and t1.express_order_id in (

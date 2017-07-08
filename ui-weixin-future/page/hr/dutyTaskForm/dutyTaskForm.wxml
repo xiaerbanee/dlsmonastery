@@ -3,13 +3,13 @@
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
       <view wx:if="{{dutyType=='请假'}}">
-       <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -46,13 +46,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='签到'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -79,33 +79,33 @@
             <input name="address" class="weui-input" value="{{formData.address}}" disabled/>
           </view>
         </view>
-            <view class="weui-cells">
-      <view class="weui-cell">
-        <view class="weui-cell__bd">
-          <view class="weui-uploader">
-            <view class="weui-uploader__hd">
-              <view class="weui-uploader__title">附件</view>
-            </view>
-            <view class="weui-uploader__bd" >
-              <view class="weui-uploader__files" id="uploaderFiles">
-                <block wx:for-items="{{formProperty.images}}" wx:for-item="img" wx:key="{{index}}">
-                  <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
-                    <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" bindtap="showImageActionSheet" />
+        <view class="weui-cells">
+          <view class="weui-cell">
+            <view class="weui-cell__bd">
+              <view class="weui-uploader">
+                <view class="weui-uploader__hd">
+                  <view class="weui-uploader__title">附件</view>
+                </view>
+                <view class="weui-uploader__bd">
+                  <view class="weui-uploader__files" id="uploaderFiles">
+                    <block wx:for-items="{{formProperty.images}}" wx:for-item="img" wx:key="{{index}}">
+                      <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
+                        <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" bindtap="showImageActionSheet" />
+                      </view>
+                      <input type="hidden" name="attachment" value="{{img.id}}" class="hidden" />
+                    </block>
                   </view>
-                  <input type="hidden" name="attachment" value="{{img.id}}" class="hidden" />
-                </block>
-              </view>
-              <view class="weui-uploader__input-box">
-                <view class="weui-uploader__input" bindtap="addImage"></view>
-              </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
-                <icon type="warn" class="warn"></icon>
+                  <view class="weui-uploader__input-box">
+                    <view class="weui-uploader__input" bindtap="addImage"></view>
+                  </view>
+                  <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
+                    <icon type="warn" class="warn"></icon>
+                  </view>
+                </view>
               </view>
             </view>
           </view>
         </view>
-      </view>
-    </view>
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">备注</view>
@@ -116,13 +116,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='补卡'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -143,13 +143,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='加班'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -194,13 +194,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='调休'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -257,13 +257,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='出差'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -292,13 +292,13 @@
         </view>
       </view>
       <view wx:if="{{dutyType=='免打卡'}}">
-      <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
+        <input type="hidden" name="dutyType" value="{{dutyType}}" class="hidden" />
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">申请人</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="name" class="weui-input" value="{{formData.created.fullName}}" disabled/>
+            <input name="name" class="weui-input" value="{{formData.createdByName}}" disabled/>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -332,7 +332,7 @@
             <view class="weui-label">是否通过</view>
           </view>
           <view class="weui-cell__bd">
-            <switch name="pass" class="weui-input"/>
+            <switch name="pass" class="weui-input" />
           </view>
         </view>
         <view class="weui-cell weui-cell_input">

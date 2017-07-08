@@ -1,5 +1,7 @@
 package net.myspring.cloud.modules.sys.web.controller;
 
+import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.dto.AccountKingdeeBookDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.web.form.AccountKingdeeBookForm;
@@ -37,6 +39,11 @@ public class AccountKingdeeBookController {
     @RequestMapping(value = "form")
     public AccountKingdeeBookForm getForm(AccountKingdeeBookForm accountKingdeeBookForm){
         return accountKingdeeBookService.getForm(accountKingdeeBookForm);
+    }
+
+    @RequestMapping(value = "getCurrentOne")
+    public AccountKingdeeBook getCurrentOne(){
+        return accountKingdeeBookService.getCurrentOne();
     }
 
     @RequestMapping(value = "save")
