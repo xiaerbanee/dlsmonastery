@@ -85,7 +85,7 @@
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('adApplyList.operation')">
           <template scope="scope">
-            <div class="action" v-if="scope.row.leftQty > 0" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
+            <div class="action" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

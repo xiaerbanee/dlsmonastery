@@ -40,7 +40,7 @@ Page({
           that.setData({ "submitHidden": true });
           var images = new Array();
           that.setData({ formData: res.data })
-          $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 9, function () {
+          $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 1, function () {
             that.setData({ "formProperty.images": images });
           });
         }

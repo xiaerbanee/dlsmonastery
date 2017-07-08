@@ -19,29 +19,25 @@ Page({
   initPage: function () {
     var that = this;
     var options = that.data.options;
-    if (options.action == "audit") {
-      wx.request({
-        url: $util.getUrl("basic/hr/duty/detail"),
-        data: { id: options.id, dutyType: options.dutyType },
-        method: 'GET',
-        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-        success: function (res) {
-          that.setData({
-            dutyType: res.data.dutyType,
-            formData: res.data.item
-          })
-          if (that.data.dutyType == "签到") {
-            var images = new Array();
-            images.push({
-              id: res.data.attachment,
-              preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + '&id=' + res.data.item.attachment),
-              view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + res.data.item.attachment)
-            })
-            that.setData({ 'formProperty.images': images })
-          }
+    wx.request({
+      url: $util.getUrl("basic/hr/duty/getForm"),
+      data: { id: options.id, dutyType: options.dutyType },
+      method: 'GET',
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      success: function (res) {
+        console.log(res.data.item)
+        that.setData({
+          dutyType: res.data.dutyType,
+          formData: res.data.item
+        })
+        if (that.data.dutyType == "签到") {
+          var images = new Array();
+          $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 9, function () {
+            that.setData({ "formProperty.images": images });
+          });
         }
-      })
-    }
+      }
+    })
   },
   showImageActionSheet: function (e) {
     var that = this;
@@ -56,7 +52,7 @@ Page({
               current: that.data.formProperty.images[index].view, // 当前显示图片的http链接
               urls: [that.data.formProperty.images[0].view]
             })
-          } 
+          }
         }
       }
     });
