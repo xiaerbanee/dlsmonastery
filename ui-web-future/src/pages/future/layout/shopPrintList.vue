@@ -12,7 +12,9 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('shopPrintList.officeId')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item :label="$t('shopPrintList.printType')" :label-width="formLabelWidth">
                 <dict-map-select v-model="formData.printType" category="门店_广告印刷"></dict-map-select>

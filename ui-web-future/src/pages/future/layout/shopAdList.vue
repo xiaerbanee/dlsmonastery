@@ -29,7 +29,7 @@
                 <bool-select v-model="formData.specialArea"></bool-select>
               </el-form-item>
               <el-form-item :label="$t('shopAdList.shopAdType')" :label-width="formLabelWidth">
-                <el-select v-model="formData.shopAdTypeId" filterable clearable :placeholder="$t('expressOrderList.inputKey')">
+                <el-select v-model="formData.shopAdTypeId" filterable clearable>
                   <el-option v-for="shopAdType in formData.extra.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
                 </el-select>
               </el-form-item>
