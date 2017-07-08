@@ -3,7 +3,7 @@
     <head-tab active="goodsOrderShipList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search">{{ $t('goodsOrderShipList.filter') }}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search">{{ $t('goodsOrderShipList.filter') }}</el-button>
         <el-button v-permit="'crm:goodsOrderShip:ship'" type="primary" @click="itemShip(null)">{{ $t('goodsOrderShipList.ship') }}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -92,7 +92,7 @@
         <el-table-column fixed="right" :label="$t('goodsOrderShipList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderShipList.detail')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'" v-permit="'crm:goodsOrderShip:ship'" ><el-button size="small" @click.native="itemShip(scope.row.formatId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && scope.row.status=='待发货'" v-permit="'crm:goodsOrderShip:ship'" ><el-button size="small" @click.native="itemShip(scope.row.businessId)">{{$t('goodsOrderShipList.ship')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:sign'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'sign')">{{$t('goodsOrderShipList.sign')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:shipBack'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:mallOrder'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
@@ -193,8 +193,8 @@
       }else if(action=="expressPrint"){
         window.open("/#/future/crm/goodsOrderExpressPrint?id="+id,",");
       }
-    },itemShip(formatId){
-      this.$router.push({name:'goodsOrderShip',query:{formatId:formatId}});
+    },itemShip(businessId){
+      this.$router.push({name:'goodsOrderShip',query:{businessId:businessId}});
     }
  },created () {
     this.pageHeight = window.outerHeight -320;
