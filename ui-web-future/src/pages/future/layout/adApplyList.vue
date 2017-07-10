@@ -83,7 +83,7 @@
         <el-table-column prop="leftQty" :label="$t('adApplyList.leftQty')+'('+totalLeftQty+')'" sortable></el-table-column>
         <el-table-column prop="orderId" :label="$t('adApplyList.orderId')"></el-table-column>
         <el-table-column prop="remarks" :label="$t('adApplyList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('adApplyList.operation')">
+        <el-table-column :label="$t('adApplyList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:adApply:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
           </template>
@@ -95,6 +95,9 @@
 </template>
 <style>
   .el-table .reminder_row {
+    background: #ebcccc !important;
+  }
+  .el-table .reminder_row:hover>td{
     background: #ebcccc !important;
   }
 </style>

@@ -98,8 +98,8 @@ public class BankService {
         }
     }
 
-    public List<BankDto> findByNameContaining(String name){
-        List<Bank> banks = bankRepository.findByNameContaining(name);
+    public List<BankDto> findByEnabledIsTrueAndNameContaining(String name){
+        List<Bank> banks = bankRepository.findByEnabledIsTrueAndNameContaining(name);
         List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
         cacheUtils.initCacheInput(bankDtos);
         return bankDtos;
