@@ -89,13 +89,13 @@ public class ArOtherRecAbleManager {
             entityDto.setEmpInfoNumber("0001");//员工
             entityDto.setExpenseTypeNumber("6602.000");//无
             entityDto.setAmount(shopDeposit.getAmount());
-            if (ShopDepositTypeEnum.市场保证金.name().equals(type)){
+            if (ShopDepositTypeEnum.市场保证金.equals(type)){
                 entityDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
                 entityDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.市场保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
-            }else if (ShopDepositTypeEnum.形象保证金.name().equals(type)){
+            }else if (ShopDepositTypeEnum.形象保证金.equals(type)){
                 entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
                 entityDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.形象保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
-            }else if (ShopDepositTypeEnum.演示机押金.name().equals(type)){
+            }else if (ShopDepositTypeEnum.演示机押金.equals(type)){
                 throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
             }
             entityDtoList.add(entityDto);
