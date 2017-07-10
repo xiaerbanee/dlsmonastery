@@ -3,9 +3,9 @@
     <head-tab active="recruitList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:demoPhone:edit'">{{$t('recruitList.add')}}</el-button>
-        <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'crm:demoPhone:edit'">{{$t('recruitList.batchEdit')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:demoPhone:view'">{{$t('recruitList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:recruit:edit'">{{$t('recruitList.add')}}</el-button>
+        <el-button type="primary" @click="batchEdit" icon="edit" v-permit="'hr:recruit:edit'">{{$t('recruitList.batchEdit')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:recruit:view'">{{$t('recruitList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
@@ -30,7 +30,8 @@
         <el-table-column prop="physicalAppointDate" :label="$t('recruitList.physicalAppointDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')">修改</el-button>             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')">删除</el-button>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'修改')"  v-permit="'hr:recruit:edit'">修改</el-button> </div>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'删除')"  v-permit="'hr:recruit:delete'">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>

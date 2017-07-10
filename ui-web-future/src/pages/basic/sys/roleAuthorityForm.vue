@@ -5,10 +5,14 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter = "20">
           <el-col :span = "7">
-            <el-form-item label="角色" prop="id">
-              <el-select v-model="inputForm.id" filterable :clearable=true remote placeholder="请输入关键字" :remote-method="remoteRole" @change="getTreeNode(inputForm.id)" :loading="remoteLoading">
-                <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="inputForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="权限" prop="permission">
+              <el-input v-model="inputForm.permission"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" prop="remarks">
+              <el-input v-model="inputForm.remarks"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">保存</el-button>
@@ -68,7 +72,7 @@
           if (valid) {
             axios.post('/api/basic/sys/role/saveAuthorityList',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-              Object.assign(this.$data,this.getData())
+              this.$router.push({name: 'roleList', query: util.getQuery("roleList"), params:{_closeFrom:true}})
             }).catch(function () {
                 that.submitDisabled = false;
             });
@@ -85,24 +89,17 @@
           }
         }
         this.inputForm.permissionIdList=permissions;
-      },remoteRole(query){
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/basic/sys/role/search',{params:{name:query}}).then((response)=>{
-            this.roleList=response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.roleList = [];
-        }
       },getTreeNode(id){
         if(id){
           axios.get('/api/basic/sys/role/getTreeNode',{params:{id:id}}).then((response)=>{
+            this.inputForm=response.data
             this.treeData =response.data.extra.treeNode.children;
             this.checked = response.data.permissionIdList;
           })
         }
       }
+    },created(){
+      this.getTreeNode(this.$route.query.id);
     }
   }
 </script>
