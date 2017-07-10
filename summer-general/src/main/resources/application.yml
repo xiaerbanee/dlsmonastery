@@ -52,3 +52,4 @@ upload:
 
 logging:
   file: summer-general.log
+  level: debug

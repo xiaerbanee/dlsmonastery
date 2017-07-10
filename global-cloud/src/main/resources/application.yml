@@ -53,3 +53,4 @@ ribbon:
   ConnectTimeout: 180000
 logging:
   file: global-cloud.log
+  level: debug
