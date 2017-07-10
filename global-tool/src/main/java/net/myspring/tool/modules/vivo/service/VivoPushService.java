@@ -6,8 +6,15 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.OfficeClient;
+import net.myspring.tool.common.dataSource.DbContextHolder;
+import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
+import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
+import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.OfficeEntity;
+import net.myspring.tool.modules.vivo.domain.VivoPushSCustomers;
 import net.myspring.tool.modules.vivo.domain.VivoPushZones;
+import net.myspring.tool.modules.vivo.dto.FutureCustomerDto;
+import net.myspring.tool.modules.vivo.repository.VivoPushSCustomersRepository;
 import net.myspring.tool.modules.vivo.repository.VivoPushZoneRepository;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
@@ -29,7 +36,10 @@ public class VivoPushService {
     private OfficeClient officeClient;
     @Autowired
     private VivoPushZoneRepository vivoPushZoneRepository;
+    @Autowired
+    private VivoPushSCustomersRepository vivoPushSCustomersRepository;
 
+    @LocalDataSource
     @Transactional
     public  List<VivoPushZones> getVivoZones(String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
@@ -59,13 +69,36 @@ public class VivoPushService {
         return vivoPushZonesList;
     }
 
-    public void getVivoCustomers(String date){
-
-
-
-
+    @FutureDataSource
+    @Transactional(readOnly = true)
+    public List<FutureCustomerDto> getFutureVivoCustomers(String date){
+        List<FutureCustomerDto> FutureCustomerDtos=vivoPushSCustomersRepository.findFutureVivoCustomers(LocalDateUtils.parse(date));
+        return vivoPushSCustomersRepository.findFutureVivoCustomers(LocalDateUtils.parse(date));
     }
 
+    @LocalDataSource
+    @Transactional
+    public void saveVivoPushSCustomers(List<FutureCustomerDto> futureCustomerDtoList){
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+        List<VivoPushSCustomers> vivoPushSCustomersList = Lists.newArrayList();
+        for(FutureCustomerDto futureCustomerDto :futureCustomerDtoList){
+            VivoPushSCustomers vivoPushSCustomer = new VivoPushSCustomers();
+            String customerId = futureCustomerDto.getCustomerId();
+            vivoPushSCustomer.setCustomerLevel(futureCustomerDto.getCustomerLevel());
+            if(futureCustomerDto.getCustomerLevel() == 1){
+                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,"D","00000"));
+            }else {
+                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,"C","00000"));
+                vivoPushSCustomer.setCustomerstr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),"D","00000"));
+            }
+            vivoPushSCustomer.setCustomerName(futureCustomerDto.getCustomerName());
+            vivoPushSCustomer.setZoneId(getZoneId(mainCode,futureCustomerDto.getZoneId()));
+            vivoPushSCustomer.setCompanyId(mainCode);
+            vivoPushSCustomer.setRecordDate(futureCustomerDto.getRecordDate());
+            vivoPushSCustomersList.add(vivoPushSCustomer);
+        }
+        vivoPushSCustomersRepository.save(vivoPushSCustomersList);
+    }
 
 
     //上抛组织机构数据
