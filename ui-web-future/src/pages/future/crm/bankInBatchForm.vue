@@ -110,9 +110,10 @@
 
             axios.post('/api/ws/future/crm/bankIn/batchAdd', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
               this.$message(response.data.message);
-              Object.assign(this.$data, this.getData());
-              this.initPage();
-
+              if(response.data.success){
+                Object.assign(this.$data, this.getData());
+                this.initPage();
+              }
             }).catch( () => {
               this.submitDisabled = false;
             });

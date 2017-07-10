@@ -308,6 +308,7 @@ export default {
       shopBuildForm: "门店建设编辑",
       shopBuildList: "门店建设",
       shopDepositForm: "押金列表编辑",
+      shopDepositBatchForm: "押金批量添加",
       shopDepositList: "押金列表",
       shopGoodsDepositForm: "订金收款编辑",
       shopGoodsDepositList: "订金收款",
