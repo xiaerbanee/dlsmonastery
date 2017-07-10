@@ -6,12 +6,9 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.ArReceiveBillManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
-import net.myspring.future.modules.basic.repository.BankRepository;
-import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
@@ -44,16 +41,11 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class BankInService {
-    @Autowired
-    private CloudClient cloudClient;
+
     @Autowired
     private BankInRepository bankInRepository;
    @Autowired
     private DepotRepository depotRepository;
-    @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private BankRepository bankRepository;
     @Autowired
     private ArReceiveBillManager arReceiveBillManager;
     @Autowired
@@ -115,7 +107,11 @@ public class BankInService {
         }
         bankIn.setShopId(bankInForm.getShopId());
         bankIn.setType(bankInForm.getType());
-        bankIn.setBankId(bankInForm.getBankId());
+        if(StringUtils.isBlank(bankInForm.getBankId()) || "0".equals(StringUtils.trim(bankInForm.getBankId()))){
+            bankIn.setBankId(null);
+        }else{
+            bankIn.setBankId(bankInForm.getBankId());
+        }
         bankIn.setTransferType(bankInForm.getTransferType());
         bankIn.setInputDate(bankInForm.getInputDate());
         bankIn.setAmount(bankInForm.getAmount());

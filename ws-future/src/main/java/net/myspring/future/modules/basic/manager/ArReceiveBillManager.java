@@ -15,6 +15,7 @@ import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
+import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +51,7 @@ public class ArReceiveBillManager {
         }
         ArReceiveBillEntryDto entityDto = new ArReceiveBillEntryDto();
         entityDto.setAmount(bankIn.getAmount());
-        if ("0".equals(bankIn.getBankId())) {
+        if (StringUtils.isBlank(bankIn.getBankId())) {
             entityDto.setSettleTypeNumber(SettleTypeEnum.现金.getFNumber());
         } else {
             Bank bank = bankRepository.findOne(bankIn.getBankId());
