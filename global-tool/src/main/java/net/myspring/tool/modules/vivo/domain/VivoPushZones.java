@@ -23,7 +23,7 @@ public class VivoPushZones {
     private Integer subCount;
     private String zoneTypes;
     @JsonIgnore
-    private LocalDate createdDate;
+        private LocalDate createdDate;
 
     public String getId() {
         return id;

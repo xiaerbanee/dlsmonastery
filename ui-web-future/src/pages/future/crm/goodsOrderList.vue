@@ -121,7 +121,7 @@
   </div>
 </template>
 <style>
-  .el-table .danger-row {
+  .el-table .danger-row,.el-table .el-table__row--striped.danger-row>td {
     background: #FF8888 !important;
   }
   .el-table .danger-row:hover>td{

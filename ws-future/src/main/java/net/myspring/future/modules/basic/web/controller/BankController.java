@@ -74,7 +74,7 @@ public class BankController {
 
     @RequestMapping(value = "search")
     public List<BankDto> search(String key) {
-        List<BankDto> bankDtoList =bankService.findByNameContaining(key);
+        List<BankDto> bankDtoList =bankService.findByEnabledIsTrueAndNameContaining(key);
         return bankDtoList;
     }
 
