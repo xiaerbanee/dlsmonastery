@@ -6,9 +6,11 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
+import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.ArReceiveBillManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
+import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
@@ -54,6 +56,8 @@ public class BankInService {
     private ActivitiClient activitiClient;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private BankRepository bankRepository;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         bankInQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -67,8 +71,14 @@ public class BankInService {
 
         BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
         Depot depot = depotRepository.findOne(bankIn.getShopId());
-        if(StringUtils.isBlank(depot.getClientId()) && Boolean.TRUE.equals(bankInAuditForm.getSyn()) ){
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn() && StringUtils.isBlank(depot.getClientId())) ){
             throw new ServiceException("该门店没有绑定财务，不能同步金蝶");
+        }
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && StringUtils.isNotBlank(bankIn.getBankId())){
+            Bank bank = bankRepository.findOne(bankIn.getBankId());
+            if(StringUtils.isBlank(bank.getCode())){
+                throw new ServiceException("该银行没有绑定财务，不能同步金蝶");
+            }
         }
 
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), bankInAuditForm.getPass()));
