@@ -36,7 +36,7 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
 
     fun findByName(name: String): Bank?
 
-    fun findByNameContaining(name: String): MutableList<Bank>
+    fun findByEnabledIsTrueAndNameContaining(name: String): MutableList<Bank>
 
 }
 

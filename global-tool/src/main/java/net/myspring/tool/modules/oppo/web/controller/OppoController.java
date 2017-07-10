@@ -105,8 +105,7 @@ public class OppoController {
 
     //代理商经销商基础数据上抛
     @RequestMapping(value = "pullCustomers", method = RequestMethod.GET)
-    @ResponseBody
-    public String pullOppoCustomers(String key, String createdDate,HttpServletResponse response) throws IOException {
+    public OppoResponseMessage pullOppoCustomers(String key, String createdDate,HttpServletResponse response) throws IOException {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
@@ -119,14 +118,12 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomers));
             responseMessage.setResult("success");
         }
-        String message=ObjectMapperUtils.writeValueAsString(responseMessage);
-        logger.info("message==="+message);
-        return message;
+        return responseMessage;
     }
 
     //运营商属性上抛
     @RequestMapping(value = "pullCustomerOperatortype", method = RequestMethod.GET)
-    public String pullOppoCustomerOperatortype(String key, String createdDate) {
+    public OppoResponseMessage pullOppoCustomerOperatortype(String key, String createdDate) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + createdDate);
@@ -139,12 +136,13 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerOperatortypes));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        logger.info("responseMessage=="+responseMessage.toString());
+        return responseMessage;
     }
 
     //发货退货调拨数据上抛
     @RequestMapping(value ="pullCustomerAllot", method = RequestMethod.GET)
-    public String pullOppoCustomersAllot(String key, String dateStart, String dateEnd) {
+    public OppoResponseMessage pullOppoCustomersAllot(String key, String dateStart, String dateEnd) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
@@ -159,12 +157,12 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerAllots));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //库存数据上抛
     @RequestMapping(value ="pullCustomerStock", method = RequestMethod.GET)
-    public String pullCustomerStock(String key,String createdDate)  {
+    public OppoResponseMessage pullCustomerStock(String key,String createdDate)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+createdDate);
@@ -181,12 +179,12 @@ public class OppoController {
             responseMessage.setResult("success");
         }
         logger.info("库存上抛结束："+new Date());
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //门店条码调拨明细上抛
     @RequestMapping(value ="pullCustomerImeStock", method = RequestMethod.GET)
-    public String pullCustomerImeStock(String key,String dateStart,String dateEnd)  {
+    public OppoResponseMessage pullCustomerImeStock(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey=MD5Utils.encode(factoryAgentName+dateStart+dateEnd);
@@ -201,12 +199,12 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerImeiStocks));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //店总数据上抛
     @RequestMapping(value ="pullCustomerSale", method = RequestMethod.GET)
-    public String pullCustomerSale(String key,String dateStart,String dateEnd) {
+    public OppoResponseMessage pullCustomerSale(String key,String dateStart,String dateEnd) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -221,12 +219,12 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSales));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //门店销售明细
     @RequestMapping(value ="pullCustomerSaleIme", method = RequestMethod.GET)
-    public String pullCustomerSaleIme(String key,String dateStart,String dateEnd)  {
+    public OppoResponseMessage pullCustomerSaleIme(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -241,12 +239,12 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerSaleImes));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //门店销售数据汇总
     @RequestMapping(value ="pullCustomerSaleCount", method = RequestMethod.GET)
-    public String pullCustomerSaleCount(String key,String dateStart,String dateEnd)  {
+    public OppoResponseMessage pullCustomerSaleCount(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -263,12 +261,12 @@ public class OppoController {
             responseMessage.setResult("success");
             logger.info("门店销售数据汇总上抛结束");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //门店售后零售退货条码数据
     @RequestMapping(value ="pullCustomerAfterSaleIme", method = RequestMethod.GET)
-    public String pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd)  {
+    public OppoResponseMessage pullCustomerAfterSaleIme(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -285,12 +283,12 @@ public class OppoController {
             responseMessage.setResult("success");
             logger.info("门店店售后退货条码数据上抛结束");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
 
     //演示机条码数据
     @RequestMapping(value ="pullCustomerDemoPhone", method = RequestMethod.GET)
-    public String pullCustomerDemoPhone(String key,String dateStart,String dateEnd)  {
+    public OppoResponseMessage pullCustomerDemoPhone(String key,String dateStart,String dateEnd)  {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
         String factoryAgentName =agentCode.split(CharConstant.COMMA)[0];
         String localKey = MD5Utils.encode(factoryAgentName + dateStart + dateEnd);
@@ -305,9 +303,6 @@ public class OppoController {
             responseMessage.setMessage(ObjectMapperUtils.writeValueAsString(oppoCustomerDemoPhones));
             responseMessage.setResult("success");
         }
-        return ObjectMapperUtils.writeValueAsString(responseMessage);
+        return responseMessage;
     }
-
-
-
 }
