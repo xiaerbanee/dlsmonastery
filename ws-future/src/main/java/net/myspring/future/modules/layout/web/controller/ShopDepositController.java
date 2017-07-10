@@ -154,6 +154,7 @@ public class ShopDepositController {
                 save(shopDepositForm);
             }catch(Exception e){
                 errMsg.append("第").append(i + 1).append("条记录保存失败，失败原因：").append(e.getMessage()).append("；");
+                e.printStackTrace();
             }
         }
 

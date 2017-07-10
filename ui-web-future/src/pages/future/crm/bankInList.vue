@@ -61,7 +61,7 @@
           <el-button type="primary" @click="search()">{{$t('bankInList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <el-table :data="page.content" style="margin-top:5px;" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('bankInList.loading')" @sort-change="sortChange" stripe border>
+      <el-table :data="page.content" style="margin-top:5px;" :height="pageHeight" v-loading="pageLoading" @selection-change="selectionChange"  :element-loading-text="$t('bankInList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" :selectable="checkSelectable"></el-table-column>
         <el-table-column prop="shopName" column-key="shopId"  :label="$t('bankInList.shopName')" sortable></el-table-column>
         <el-table-column prop="shopClientName"  :label="$t('bankInList.shopClientName')"></el-table-column>
@@ -109,7 +109,8 @@
         formVisible: false,
         selects:[],
         submitDisabled:false,
-        formLabelWidth:'25%'
+        formLabelWidth:'25%',
+        pageHeight:600,
       };
     },
     methods: {
@@ -202,6 +203,7 @@
         }
       }
     },created () {
+      this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/ws/future/crm/bankIn/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
