@@ -240,6 +240,7 @@ public class StoreAllotService {
         KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForStoreAllot(storeAllot,detailList,productMap);
 
         storeAllot.setCloudSynId(kingdeeSynReturnDto.getId());
+        storeAllot.setOutCode(kingdeeSynReturnDto.getBillNo());
         storeAllotRepository.save(storeAllot);
 
         expressOrder.setOutCode(kingdeeSynReturnDto.getBillNo());
