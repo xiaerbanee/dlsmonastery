@@ -1,5 +1,6 @@
 package net.myspring.cloud.common.config;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
@@ -35,16 +36,15 @@ public class JdbcConfig {
     }
 
     private DataSource getDataSource(String prefix) {
-        Properties props = new Properties();
-        props.put("driverClassName", environment.getProperty(prefix + ".driver-class-name"));
-        props.put("url", environment.getProperty(prefix + ".url"));
-        props.put("username", environment.getProperty(prefix + ".username"));
-        props.put("password", environment.getProperty(prefix + ".password"));
-        try {
-            return DruidDataSourceFactory.createDataSource(props);
-        } catch (Exception e) {
-            return null;
-        }
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(environment.getProperty(prefix + ".driver-class-name"));
+        dataSource.setUrl(environment.getProperty(prefix + ".url"));
+        dataSource.setUsername(environment.getProperty(prefix + ".username"));
+        dataSource.setPassword(environment.getProperty(prefix + ".password"));
+        dataSource.setMaxActive(100);
+        dataSource.setMinIdle(10);
+        dataSource.setInitialSize(10);
+        return dataSource;
     }
 
 

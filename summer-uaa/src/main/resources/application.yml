@@ -2,17 +2,18 @@ spring:
   application:
     name: summer-uaa
   datasource:
-    url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-    username: root
-    password: bbk@123456
-    driver-class-name: com.mysql.jdbc.Driver
+    uaa:
+      url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: localhost
     password:
     port: 6379
     database: 0
-    max-idle: 25
-    max-total: 50
+    max-idle: 250
+    max-total: 500
   session:
     store-type: redis
     timeout: 5
