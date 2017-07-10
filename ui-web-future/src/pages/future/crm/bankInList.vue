@@ -173,7 +173,11 @@
           this.submitDisabled = true;
           this.pageLoading = true;
           axios.get('/api/ws/future/crm/bankIn/batchAudit',{params:{ids:this.selects, pass:true}}).then((response) =>{
-            this.$message(response.data.message);
+            if(response.data.success){
+              this.$message(response.data.message);
+            }else{
+              this.$alert(response.data.message);
+            }
             this.pageLoading = false;
             this.submitDisabled = false;
             this.pageRequest();

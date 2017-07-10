@@ -3,6 +3,9 @@
     <head-tab active="shopDepositBatchForm"></head-tab>
     <div>
       <el-row>
+        <su-alert :text="errMsg" type="danger"></su-alert>
+      </el-row>
+      <el-row>
         <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
       </el-row>
       <el-form  :model="inputForm"  ref="inputForm">
@@ -35,6 +38,7 @@
             data:""
           },
           submitDisabled: false,
+          errMsg:'',
           settings: {
             rowHeaders: true,
             minSpareRows: 100,
@@ -160,12 +164,15 @@
             }
             this.inputForm.data = JSON.stringify(this.inputForm.data);
             axios.post('/api/ws/future/crm/shopDeposit/batchAllot', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
-              this.$message(response.data.message);
+
               if (response.data.success) {
+                this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 this.initPage();
+              }else{
+                this.$alert(response.data.message);
+                this.submitDisabled = false;
               }
-              this.submitDisabled = false;
             }).catch( () => {
               this.submitDisabled = false;
             });
