@@ -14,6 +14,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,12 +27,14 @@ public class MenuCategoryController {
     private BackendModuleService backendModuleService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:menuCategory:view')")
     public Page<MenuCategoryDto> list(Pageable pageable, MenuCategoryQuery menuCategoryQuery){
         Page<MenuCategoryDto> page = menuCategoryService.findPage(pageable,menuCategoryQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:menuCategory:delete')")
     public RestResponse delete(MenuCategoryDto menuCategoryDto) {
         if(CollectionUtil.isNotEmpty(menuCategoryDto.getMenuList())){
             return new RestResponse("菜单分类删除失败，请先删除下属菜单",null);
@@ -42,6 +45,7 @@ public class MenuCategoryController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:menuCategory:edit')")
     public RestResponse save(MenuCategoryForm menuCategoryForm) {
         menuCategoryService.save(menuCategoryForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());

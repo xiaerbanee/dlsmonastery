@@ -14,6 +14,7 @@ import net.myspring.util.collection.CollectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,12 +38,14 @@ public class MenuController {
 
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:menu:view')")
     public Page<MenuDto> list(Pageable pageable, MenuQuery menuQuery){
         Page<MenuDto> page = menuService.findPage(pageable,menuQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:menu:delete')")
     public RestResponse delete(MenuForm menuForm, BindingResult bindingResult) {
         List<PermissionDto> permissionDtoList=permissionService.findByMenuId(menuForm.getId());
         if(CollectionUtil.isNotEmpty(permissionDtoList)){
@@ -54,6 +57,7 @@ public class MenuController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:menu:edit')")
     public RestResponse save(MenuForm menuForm) {
         menuService.save(menuForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());

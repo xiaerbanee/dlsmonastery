@@ -19,6 +19,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +47,7 @@ public class DutySignController {
     private DutySignValidator dutySignValidator;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:dutySign:view')")
     public Page<DutySignDto> list(Pageable pageable, DutySignQuery dutySignQuery) {
         Page<DutySignDto> page = dutySignService.findPage(pageable,dutySignQuery);
         for(DutySignDto dutySignDto:page.getContent()){
@@ -62,6 +64,7 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'hr:dutySign:edit')")
     public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
         dutySignValidator.validate(dutySignForm,bindingResult);
         if(bindingResult.hasErrors()){
@@ -72,6 +75,7 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'hr:dutySign:delete')")
     public RestResponse delete(String id) {
         dutySignService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());

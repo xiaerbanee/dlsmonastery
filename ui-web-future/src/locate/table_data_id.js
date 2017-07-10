@@ -292,6 +292,7 @@ export default {
       shopBuildForm: "Mengedit konstruksi toko",
       shopBuildList: "konstruksi toko",
       shopDepositForm: "daftar deposit",
+      shopDepositBatchForm: "押金批量添加",
       shopDepositList: "daftar deposit",
       shopGoodsDepositForm: "piutang deposit",
       shopGoodsDepositList: "piutang deposit",

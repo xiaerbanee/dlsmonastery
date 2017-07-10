@@ -3,8 +3,8 @@
     <head-tab active="officeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:office:edit'">{{$t('officeList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:office:view'">{{$t('officeList.filter')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:office:edit'">{{$t('officeList.add')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'sys:office:view'">{{$t('officeList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('officeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -40,8 +40,8 @@
         <el-table-column prop="remarks" :label="$t('officeList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'hr:office:edit'">{{$t('officeList.edit')}}</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:office:delete'">{{$t('officeList.delete')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:office:edit'">{{$t('officeList.edit')}}</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:office:delete'">{{$t('officeList.delete')}}</el-button>
           </template>
         </el-table-column>
       </el-table>

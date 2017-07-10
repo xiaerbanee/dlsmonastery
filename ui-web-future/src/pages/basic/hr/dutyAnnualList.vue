@@ -3,7 +3,7 @@
     <head-tab active="dutyAnnualList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus">{{$t('dutyAnnualList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:dutyAnnual:edit'">{{$t('dutyAnnualList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search">{{$t('dutyAnnualList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>

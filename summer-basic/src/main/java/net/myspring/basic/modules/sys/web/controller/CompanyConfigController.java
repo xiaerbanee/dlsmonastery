@@ -12,6 +12,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +31,14 @@ public class CompanyConfigController {
 
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:companyConfig:view')")
     public Page<CompanyConfigDto> list(Pageable pageable, CompanyConfigQuery companyConfigQuery){
         Page<CompanyConfigDto> page=companyConfigService.findPage(pageable,companyConfigQuery);
         return page;
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:companyConfig:edit')")
     public RestResponse save(CompanyConfigForm companyConfigForm){
         companyConfigService.save(companyConfigForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
@@ -57,6 +60,7 @@ public class CompanyConfigController {
     }
 
     @RequestMapping(value="delete")
+    @PreAuthorize("hasPermission(null,'sys:companyConfig:delete')")
     public RestResponse delete(String id){
         companyConfigService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());

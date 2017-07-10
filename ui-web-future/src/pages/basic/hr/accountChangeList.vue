@@ -3,10 +3,10 @@
     <head-tab active="accountChangeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus">{{$t('accountChangeList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search">{{$t('accountChangeList.filter')}}</el-button>
-        <el-button type="primary" @click="batchPass" icon="check" >批量通过</el-button>
-        <el-button type="primary" @click="batchNoPass" icon="close" >批量打回</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'hr:accountChange:edit'">{{$t('accountChangeList.add')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('accountChangeList.filter')}}</el-button>
+        <el-button type="primary" @click="batchPass" icon="check"    v-permit="'hr:accountChange:audit'">批量通过</el-button>
+        <el-button type="primary" @click="batchNoPass" icon="close"    v-permit="'hr:accountChange:audit'">批量打回</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('accountChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -45,8 +45,8 @@
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:accountChange:view'">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -3,7 +3,7 @@
     <head-tab active="backendList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('backendList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:backend:edit'">{{$t('backendList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('backendList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -26,9 +26,9 @@
         <el-table-column prop="createdDate" :label="$t('backendList.createdDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('backendList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
-          </template>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')" v-permit="'sys:backend:edit'">修改</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'sys:backend:delete'">删除</el-button></div>
+</template>
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
