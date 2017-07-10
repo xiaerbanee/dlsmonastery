@@ -103,7 +103,7 @@ public class ShopDepositService {
                 shopDeposit.setOutCode(returnDto.getBillNo());
                 shopDepositRepository.save(shopDeposit);
             } else {
-                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent());
+                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent(), type);
                 shopDeposit.setCloudSynId(returnDto.getId());
                 shopDeposit.setOutCode(returnDto.getBillNo());
                 shopDepositRepository.save(shopDeposit);
