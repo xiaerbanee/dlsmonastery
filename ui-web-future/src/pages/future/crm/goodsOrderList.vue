@@ -124,6 +124,9 @@
   .el-table .danger-row {
     background: #FF8888 !important;
   }
+  .el-table .danger-row:hover>td{
+    background: #FF8888 !important;
+  }
 </style>
 <script>
   import officeSelect from 'components/basic/office-select'
