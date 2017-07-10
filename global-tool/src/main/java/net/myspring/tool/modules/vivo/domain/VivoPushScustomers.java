@@ -3,94 +3,62 @@ package net.myspring.tool.modules.vivo.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+//代理商表
 @Entity
-@Table(name = "vivo_push_scustomers")
-public class VivoPushScustomers {
-    @JsonIgnore
+@Table(name="vivo_push_scustomers")
+public class VivoPushSCustomers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private String Id;
-    @Column(name = "customerid")
-    private String customerId;
-    @Column(name = "customername")
+    private String id;
+    private String customerID;
     private String customerName;
-    @Column(name = "shortcut")
-    private String shortCut;
-    @Column(name = "customertype")
+    private String shortcut;
     private String customerType;
-    @Column(name = "customersort")
     private String customerSort;
-    @Column(name = "customerkasort")
     private String customerKasort;
-    @Column(name = "address")
     private String address;
-    @Column(name = "postcode")
-    private String postCode;
-    @Column(name = "telephone")
+    private String postcode;
     private String telephone;
-    @Column(name = "fax")
     private String fax;
-    @Column(name = "linkman")
-    private String linkman;
-    @Column(name = "linktel")
-    private String linktel;
-    @Column(name = "remark")
+    private String linkMan;
+    private String linkTel;
     private String remark;
-    @Column(name = "inuse")
-    private String inUse;
-    @Column(name = "zoneid")
+    private Integer inUse;
     private String zoneId;
-    @Column(name = "companyid")
     private String companyId;
-    @Column(name = "recorddate")
-    private String recordDate;
-    @Column(name = "customerlevel")
-    private String customerLevel;
-    @Column(name = "manager")
-    private String Manager;
-    @Column(name = "customerstr1")
-    private String customerStr1;
-    @Column(name = "customerstr2")
-    private String customerStr2;
-    @Column(name = "customerstr3")
-    private String customerStr3;
-    @Column(name = "customerstr4")
-    private String customerStr4;
-    @Column(name = "customerstr5")
-    private String customerStr5;
-    @Column(name = "customerstr6")
-    private String customerStr6;
-    @Column(name = "customerstr7")
-    private String customerStr7;
-    @Column(name = "customerstr8")
-    private String customerStr8;
-    @Column(name = "customerstr9")
-    private String customerStr9;
-    @Column(name = "customerstr10")
-    private String customerStr10;
-    @Column(name = "latentcustomers")
-    private String latentCustomers;
+    private LocalDate recordDate;
+    private Integer customerLevel;
+    private String manager;
+    private String customerstr1;
+    private String customerstr2;
+    private String customerstr3;
+    private String customerstr4;
+    private String customerstr5;
+    private String customerstr6;
+    private String customerstr7;
+    private String customerstr8;
+    private String customerstr9;
+    private String customerstr10;
+    private Integer latentCustomers;
     @JsonIgnore
-    @Column(name = "created_date")
-    private LocalDateTime createdTime;
+    private LocalDate createdDate;
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public String getCustomerName() {
@@ -101,12 +69,12 @@ public class VivoPushScustomers {
         this.customerName = customerName;
     }
 
-    public String getShortCut() {
-        return shortCut;
+    public String getShortcut() {
+        return shortcut;
     }
 
-    public void setShortCut(String shortCut) {
-        this.shortCut = shortCut;
+    public void setShortcut(String shortcut) {
+        this.shortcut = shortcut;
     }
 
     public String getCustomerType() {
@@ -141,12 +109,12 @@ public class VivoPushScustomers {
         this.address = address;
     }
 
-    public String getPostCode() {
-        return postCode;
+    public String getPostcode() {
+        return postcode;
     }
 
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 
     public String getTelephone() {
@@ -165,20 +133,20 @@ public class VivoPushScustomers {
         this.fax = fax;
     }
 
-    public String getLinkman() {
-        return linkman;
+    public String getLinkMan() {
+        return linkMan;
     }
 
-    public void setLinkman(String linkman) {
-        this.linkman = linkman;
+    public void setLinkMan(String linkMan) {
+        this.linkMan = linkMan;
     }
 
-    public String getLinktel() {
-        return linktel;
+    public String getLinkTel() {
+        return linkTel;
     }
 
-    public void setLinktel(String linktel) {
-        this.linktel = linktel;
+    public void setLinkTel(String linkTel) {
+        this.linkTel = linkTel;
     }
 
     public String getRemark() {
@@ -189,11 +157,11 @@ public class VivoPushScustomers {
         this.remark = remark;
     }
 
-    public String getInUse() {
+    public Integer getInUse() {
         return inUse;
     }
 
-    public void setInUse(String inUse) {
+    public void setInUse(Integer inUse) {
         this.inUse = inUse;
     }
 
@@ -213,123 +181,123 @@ public class VivoPushScustomers {
         this.companyId = companyId;
     }
 
-    public String getRecordDate() {
+    public LocalDate getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(String recordDate) {
+    public void setRecordDate(LocalDate recordDate) {
         this.recordDate = recordDate;
     }
 
-    public String getCustomerLevel() {
+    public Integer getCustomerLevel() {
         return customerLevel;
     }
 
-    public void setCustomerLevel(String customerLevel) {
+    public void setCustomerLevel(Integer customerLevel) {
         this.customerLevel = customerLevel;
     }
 
     public String getManager() {
-        return Manager;
+        return manager;
     }
 
     public void setManager(String manager) {
-        Manager = manager;
+        this.manager = manager;
     }
 
-    public String getCustomerStr1() {
-        return customerStr1;
+    public String getCustomerstr1() {
+        return customerstr1;
     }
 
-    public void setCustomerStr1(String customerStr1) {
-        this.customerStr1 = customerStr1;
+    public void setCustomerstr1(String customerstr1) {
+        this.customerstr1 = customerstr1;
     }
 
-    public String getCustomerStr2() {
-        return customerStr2;
+    public String getCustomerstr2() {
+        return customerstr2;
     }
 
-    public void setCustomerStr2(String customerStr2) {
-        this.customerStr2 = customerStr2;
+    public void setCustomerstr2(String customerstr2) {
+        this.customerstr2 = customerstr2;
     }
 
-    public String getCustomerStr3() {
-        return customerStr3;
+    public String getCustomerstr3() {
+        return customerstr3;
     }
 
-    public void setCustomerStr3(String customerStr3) {
-        this.customerStr3 = customerStr3;
+    public void setCustomerstr3(String customerstr3) {
+        this.customerstr3 = customerstr3;
     }
 
-    public String getCustomerStr4() {
-        return customerStr4;
+    public String getCustomerstr4() {
+        return customerstr4;
     }
 
-    public void setCustomerStr4(String customerStr4) {
-        this.customerStr4 = customerStr4;
+    public void setCustomerstr4(String customerstr4) {
+        this.customerstr4 = customerstr4;
     }
 
-    public String getCustomerStr5() {
-        return customerStr5;
+    public String getCustomerstr5() {
+        return customerstr5;
     }
 
-    public void setCustomerStr5(String customerStr5) {
-        this.customerStr5 = customerStr5;
+    public void setCustomerstr5(String customerstr5) {
+        this.customerstr5 = customerstr5;
     }
 
-    public String getCustomerStr6() {
-        return customerStr6;
+    public String getCustomerstr6() {
+        return customerstr6;
     }
 
-    public void setCustomerStr6(String customerStr6) {
-        this.customerStr6 = customerStr6;
+    public void setCustomerstr6(String customerstr6) {
+        this.customerstr6 = customerstr6;
     }
 
-    public String getCustomerStr7() {
-        return customerStr7;
+    public String getCustomerstr7() {
+        return customerstr7;
     }
 
-    public void setCustomerStr7(String customerStr7) {
-        this.customerStr7 = customerStr7;
+    public void setCustomerstr7(String customerstr7) {
+        this.customerstr7 = customerstr7;
     }
 
-    public String getCustomerStr8() {
-        return customerStr8;
+    public String getCustomerstr8() {
+        return customerstr8;
     }
 
-    public void setCustomerStr8(String customerStr8) {
-        this.customerStr8 = customerStr8;
+    public void setCustomerstr8(String customerstr8) {
+        this.customerstr8 = customerstr8;
     }
 
-    public String getCustomerStr9() {
-        return customerStr9;
+    public String getCustomerstr9() {
+        return customerstr9;
     }
 
-    public void setCustomerStr9(String customerStr9) {
-        this.customerStr9 = customerStr9;
+    public void setCustomerstr9(String customerstr9) {
+        this.customerstr9 = customerstr9;
     }
 
-    public String getCustomerStr10() {
-        return customerStr10;
+    public String getCustomerstr10() {
+        return customerstr10;
     }
 
-    public void setCustomerStr10(String customerStr10) {
-        this.customerStr10 = customerStr10;
+    public void setCustomerstr10(String customerstr10) {
+        this.customerstr10 = customerstr10;
     }
 
-    public String getLatentCustomers() {
+    public Integer getLatentCustomers() {
         return latentCustomers;
     }
 
-    public void setLatentCustomers(String latentCustomers) {
+    public void setLatentCustomers(Integer latentCustomers) {
         this.latentCustomers = latentCustomers;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 }
