@@ -6,6 +6,7 @@ import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.SettleTypeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -48,8 +49,16 @@ public class CnJournalBankManager {
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         entityForBankDto.setDebitAmount(shopDeposit.getAmount());
         entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
-        entityForBankDto.setDepartmentNumber(departmentNumber);
-        entityForBankDto.setBankAccountNumber(bank.getCode());
+        if (departmentNumber != null){
+            entityForBankDto.setDepartmentNumber(departmentNumber);
+        }else{
+            throw new ServiceException("该部门没有编码，不能开单");
+        }
+        if (bank.getCode() != null){
+            entityForBankDto.setBankAccountNumber(bank.getCode());
+        }else{
+            throw new ServiceException(bank.getName()+",该银行没有编码，不能开单");
+        }
         entityForBankDto.setAccountNumber("2241");//其他应付款
         entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
         entityForBankDto.setEmpInfoNumber("0001");//员工
@@ -78,8 +87,16 @@ public class CnJournalBankManager {
             CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
             entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
             entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
-            entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
-            entityForBankDto.setBankAccountNumber(bank.getCode());
+            if (employeePhoneDeposit.getDepartment() != null){
+                entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
+            }else{
+                throw new ServiceException("该部门没有编码，不能开单");
+            }
+            if (bank.getCode() != null){
+                entityForBankDto.setBankAccountNumber(bank.getCode());
+            }else{
+                throw new ServiceException(bank.getName()+",该银行没有编码，不能开单");
+            }
             entityForBankDto.setAccountNumber("2241");//其他应付款
             entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
             entityForBankDto.setEmpInfoNumber("0001");//员工
@@ -108,8 +125,16 @@ public class CnJournalBankManager {
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
         entityForBankDto.setDebitAmount(shopGoodsDeposit.getAmount());
         entityForBankDto.setCreditAmount(shopGoodsDeposit.getAmount().multiply(new BigDecimal(-1)));
-        entityForBankDto.setDepartmentNumber(departmentNumber);
-        entityForBankDto.setBankAccountNumber(bank.getCode());
+        if (departmentNumber != null){
+            entityForBankDto.setDepartmentNumber(departmentNumber);
+        }else{
+            throw new ServiceException("该部门没有编码，不能开单");
+        }
+        if (bank.getCode() != null){
+            entityForBankDto.setBankAccountNumber(bank.getCode());
+        }else{
+            throw new ServiceException(bank.getName()+",该银行没有编码，不能开单");
+        }
         entityForBankDto.setAccountNumber("2241");//其他应付款
         entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
         entityForBankDto.setEmpInfoNumber("0001");//员工
@@ -120,7 +145,6 @@ public class CnJournalBankManager {
         cnJournalEntityForBankDtoList.add(entityForBankDto);
         cnJournalForBankDto.setEntityForBankDtoList(cnJournalEntityForBankDtoList);
         cnJournalForBankDtoList.add(cnJournalForBankDto);
-
         return cloudClient.synJournalBank(cnJournalForBankDtoList).get(0);
     }
 }

@@ -6,6 +6,7 @@ import net.myspring.cloud.modules.input.dto.ArOtherRecAbleDto;
 import net.myspring.cloud.modules.input.dto.ArOtherRecAbleFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -113,9 +114,8 @@ public class ArOtherRecAbleManager {
             }else if (ShopDepositTypeEnum.形象保证金.name().equals(type)){
                 entityDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
                 entityDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.形象保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
-//            }else if (ShopDepositTypeEnum.演示机押金.name().equals(type)){
-//                entityDto.setOtherTypeNumber("");//其他应付款-客户押金（批发）-演示机押金
-//                entityDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.演示机押金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
+            }else if (ShopDepositTypeEnum.演示机押金.name().equals(type)){
+                throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
             }
             entityDtoList.add(entityDto);
             otherRecAbleDto.setArOtherRecAbleFEntityDtoList(entityDtoList);
