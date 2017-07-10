@@ -12,6 +12,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.CustomerDto;
@@ -45,10 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -283,4 +281,17 @@ public class DepotService {
         return depotDtos;
     }
 
+    public Map<String, String> findDepotNameMap(List<String> depotNameList) {
+        Map<String, String> result = new HashMap<>();
+        if(CollectionUtil.isEmpty(depotNameList)){
+            return result;
+        }
+
+        List<Depot> depotList = depotRepository.findByEnabledIsTrueAndNameIn(depotNameList);
+        for(Depot depot : depotList){
+            result.put(depot.getName(), depot.getId());
+        }
+        return result;
+
+    }
 }
