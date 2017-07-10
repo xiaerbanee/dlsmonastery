@@ -1,7 +1,6 @@
 package net.myspring.future.modules.basic.manager;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
@@ -20,11 +19,9 @@ import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
-import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
-import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
@@ -74,13 +71,21 @@ public class SalOutStockManager {
             salOutStockDto.setExtendId(goodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
             salOutStockDto.setDate(goodsOrder.getBillDate());
-            salOutStockDto.setCustomerNumber(clientDto.getOutCode());
+            if(clientDto.getOutCode() != null){
+                salOutStockDto.setCustomerNumber(clientDto.getOutCode());
+            }else{
+                throw new ServiceException(clientDto.getName()+",该客户没有编码，不能开单");
+            }
             salOutStockDto.setNote(goodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             for (GoodsOrderDetail detail : goodsOrderDetailList) {
                 if (detail.getBillQty() != null && detail.getBillQty() > 0) {
                     SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                    entityDto.setStockNumber(depotStore.getOutCode());
+                    if(depotStore.getOutCode() != null){
+                        entityDto.setStockNumber(depotStore.getOutCode());
+                    }else{
+                        throw new ServiceException(depotStore.getId()+",该门店没有编码，不能开单");
+                    }
                     Product product = productIdToOutCodeMap.get(detail.getProductId());
                     if (product.getCode() != null){
                         entityDto.setMaterialNumber(product.getCode());
@@ -109,17 +114,15 @@ public class SalOutStockManager {
             Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
             Client client = clientMap.get(outShop.getClientId());
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
-            if(client == null || StringUtils.isBlank(client.getOutId())){
-                throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
-            }
-            if(depotStore == null || depotStore.getOutCode() == null){
-                throw new ServiceException(client.getName() + " 没有关联财务仓库，不能申请");
-            }
             SalOutStockDto salOutStockDto = new SalOutStockDto();
             salOutStockDto.setExtendId(adGoodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
             salOutStockDto.setDate(adGoodsOrder.getBillDate());
-            salOutStockDto.setCustomerNumber(client.getOutCode());
+            if(client == null || StringUtils.isBlank(client.getOutId())){
+                throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
+            }else{
+                salOutStockDto.setCustomerNumber(client.getOutCode());
+            }
             salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
                     +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
@@ -127,7 +130,11 @@ public class SalOutStockManager {
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
                 Product product = productMap.get(adGoodsOrderDetail.getProductId());
                 SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                entityDto.setStockNumber(depotStore.getOutCode());
+                if(depotStore == null || depotStore.getOutCode() == null){
+                    throw new ServiceException(client.getName() + " 没有关联财务仓库，不能申请");
+                }else{
+                    entityDto.setStockNumber(depotStore.getOutCode());
+                }
                 if (product.getCode() != null){
                     entityDto.setMaterialNumber(product.getCode());
                 }else{
@@ -155,15 +162,16 @@ public class SalOutStockManager {
         Client client = clientRepository.findOne(depot.getId());
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
-        if(client == null || StringUtils.isBlank(client.getOutId())){
-            throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
-        }
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
         SalOutStockDto salOutStockDto = new SalOutStockDto();
         salOutStockDto.setExtendId(adGoodsOrder.getId());
         salOutStockDto.setExtendType(ExtendTypeEnum.柜台订货.name());
         salOutStockDto.setDate(adGoodsOrder.getBillDate());
-        salOutStockDto.setCustomerNumber(client.getOutCode());
+        if(client == null || StringUtils.isBlank(client.getOutId())){
+            throw new ServiceException(client.getName() + " 没有关联财务客户，不能申请");
+        }else{
+            salOutStockDto.setCustomerNumber(client.getOutCode());
+        }
         salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+depot.getContator()+CharConstant.COMMA+depot.getMobilePhone()+CharConstant.COMMA+depot.getAddress());
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
         List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());

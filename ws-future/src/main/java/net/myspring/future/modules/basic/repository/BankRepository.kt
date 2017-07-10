@@ -38,6 +38,8 @@ interface BankRepository : BaseRepository<Bank, String>,BankRepositoryCustom {
 
     fun findByEnabledIsTrueAndNameContaining(name: String): MutableList<Bank>
 
+    fun findByEnabledIsTrueAndNameIn(nameList: List<String>): MutableList<Bank>
+
 }
 
 interface BankRepositoryCustom{
