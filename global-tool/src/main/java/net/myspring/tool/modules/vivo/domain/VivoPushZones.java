@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +23,7 @@ public class VivoPushZones {
     private Integer subCount;
     private String zoneTypes;
     @JsonIgnore
-    private LocalDateTime createdDate;
+        private LocalDate createdDate;
 
     public String getId() {
         return id;
@@ -81,14 +82,6 @@ public class VivoPushZones {
         this.zoneTypes = zoneTypes;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public String getZoneId() {
         return zoneId;
     }
@@ -103,5 +96,13 @@ public class VivoPushZones {
 
     public void setFatherId(String fatherId) {
         this.fatherId = fatherId;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 }

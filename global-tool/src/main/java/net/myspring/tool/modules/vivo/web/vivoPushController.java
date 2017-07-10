@@ -11,9 +11,11 @@ public class vivoPushController {
     @Autowired
     private VivoPushService vivoPushService;
 
-    @RequestMapping(value = "vivoPush")
-    public void vivoPush(){
-        vivoPushService.vivoPush();
+    @RequestMapping(value = "pushVivoData")
+    public void pushVivoData(String date){
+        //获取机构数据
+        vivoPushService.getVivoZones(date);
+        //获取客户数据
+        vivoPushService.getVivoCustomers(date);
     }
-
 }
