@@ -160,11 +160,15 @@
             }
             this.inputForm.data = JSON.stringify(this.inputForm.data);
             axios.post('/api/ws/future/crm/shopDeposit/batchAllot', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
-              this.$message(response.data.message);
+
               if (response.data.success) {
+                this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
+                this.initPage();
+              }else{
+                this.$alert(response.data.message);
+                this.submitDisabled = false;
               }
-              this.submitDisabled = false;
             }).catch( () => {
               this.submitDisabled = false;
             });

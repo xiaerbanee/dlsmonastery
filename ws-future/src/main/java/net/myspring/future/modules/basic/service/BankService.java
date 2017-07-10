@@ -7,6 +7,7 @@ import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Bank;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.BankDto;
 import net.myspring.future.modules.basic.repository.BankRepository;
 import net.myspring.future.modules.basic.web.form.BankForm;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,8 +100,8 @@ public class BankService {
         }
     }
 
-    public List<BankDto> findByNameContaining(String name){
-        List<Bank> banks = bankRepository.findByNameContaining(name);
+    public List<BankDto> findByEnabledIsTrueAndNameContaining(String name){
+        List<Bank> banks = bankRepository.findByEnabledIsTrueAndNameContaining(name);
         List<BankDto> bankDtos= BeanUtil.map(banks, BankDto.class);
         cacheUtils.initCacheInput(bankDtos);
         return bankDtos;
@@ -122,5 +124,19 @@ public class BankService {
         List<Bank> positionList = bankRepository.findAll(ids);
         List<BankDto> positionDtoList=BeanUtil.map(positionList,BankDto.class);
         return positionDtoList;
+    }
+
+    public Map<String, String> findBankNameMap(List<String> bankNameList) {
+        Map<String, String> result = new HashMap<>();
+        if(CollectionUtil.isEmpty(bankNameList)){
+            return result;
+        }
+
+        List<Bank> bankList = bankRepository.findByEnabledIsTrueAndNameIn(bankNameList);
+        for(Bank bank : bankList){
+            result.put(bank.getName(), bank.getId());
+        }
+        return result;
+
     }
 }

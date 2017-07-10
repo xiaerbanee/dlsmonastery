@@ -80,15 +80,12 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
             productIme.product_id productId,
             t1.*
         FROM
-            crm_price_change_ime t1,
-            crm_price_change t2,
-            crm_depot depot,
-            crm_product_ime productIme
+            crm_price_change_ime t1
+            LEFT JOIN crm_price_change t2 ON t1.price_change_id = t2.id
+            LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
+            LEFT JOIN crm_product_ime productIme ON t1.product_ime_id = productIme.id
         WHERE
-            t1.price_change_id = t2.id
-        AND t1.shop_id = depot.id
-        AND t1.product_ime_id = productIme.id
-        AND t1.enabled = 1
+            t1.enabled = 1
         """)
         if(StringUtils.isNotBlank(priceChangeImeQuery.status)){
             sb.append("""  and t1.status=:status  """)
@@ -124,12 +121,10 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
             sb.append("""  and depot.office_id=:officeId  """)
         }
 
-        var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        var countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
-        var paramMap = BeanPropertySqlParameterSource(priceChangeImeQuery)
-        var list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(PriceChangeImeDto::class.java))
-        var count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
-        return PageImpl(list,pageable,count)
+        val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
+        val paramMap = BeanPropertySqlParameterSource(priceChangeImeQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(PriceChangeImeDto::class.java))
+        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
     }
 
 

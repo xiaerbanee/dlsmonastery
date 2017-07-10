@@ -13,6 +13,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,6 +31,7 @@ public class DutyAnnualController {
         return dutyAnnualQuery;
     }
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:dutyAnnual:view')")
     public Page<DutyAnnualDto> list(Pageable pageable, DutyAnnualQuery dutyAnnualQuery) {
         dutyAnnualQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyAnnualDto> page  = dutyAnnualService.findPage(pageable,dutyAnnualQuery);

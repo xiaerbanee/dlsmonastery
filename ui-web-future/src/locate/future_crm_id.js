@@ -2126,6 +2126,8 @@ export default {
     sendByName:"发货人",
     sendDate:"发货时间",
     loading:"拼命加载中",
+    billDetail:"调拨详情",
+    shipDetail:"发货详情",
   },
   storeAllotForm: {
     storeAllotForm: "transfer gudang besar",

@@ -47,8 +47,6 @@
         <el-table-column prop="outCode" :label="$t('shopDepositList.outCode')" sortable></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('shopDepositList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopDepositList.createdDate')" sortable></el-table-column>
-        <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('shopDepositList.lastModifiedBy')" sortable></el-table-column>
-        <el-table-column prop="lastModifiedDate" :label="$t('shopDepositList.lastModifiedDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopDepositList.remarks')" sortable width="200"></el-table-column>
         <el-table-column prop="locked" :label="$t('shopDepositList.locked')" width="70">
           <template scope="scope">

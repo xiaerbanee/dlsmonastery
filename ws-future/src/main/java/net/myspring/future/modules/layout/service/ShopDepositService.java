@@ -6,8 +6,10 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.OutBillTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.ArOtherRecAbleManager;
 import net.myspring.future.modules.basic.manager.CnJournalBankManager;
+import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopDeposit;
 import net.myspring.future.modules.layout.dto.ShopDepositDto;
 import net.myspring.future.modules.layout.dto.ShopDepositLatestDto;
@@ -43,6 +45,8 @@ public class ShopDepositService {
     private ArOtherRecAbleManager arOtherRecAbleManager;
     @Autowired
     private CnJournalBankManager cnJournalBankManager;
+    @Autowired
+    private DepotRepository depotRepository;
 
     public Page<ShopDepositDto> findPage(Pageable pageable, ShopDepositQuery shopDepositQuery) {
         Page<ShopDepositDto> page = shopDepositRepository.findPage(pageable, shopDepositQuery);
@@ -55,6 +59,10 @@ public class ShopDepositService {
 
         if(!shopDepositForm.isCreate()){
             throw new ServiceException();
+        }
+        Depot depot = depotRepository.findOne(shopDepositForm.getShopId());
+        if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType()) && StringUtils.isBlank(depot.getClientId())){
+            throw new ServiceException("该门店没有绑定财务，不能同步金蝶");
         }
 
         if(shopDepositForm.isImageAmountValid()){
@@ -98,12 +106,12 @@ public class ShopDepositService {
 
         if(!OutBillTypeEnum.不同步到金蝶.name().equals(shopDepositForm.getOutBillType())){
             if (OutBillTypeEnum.其他应收单.name().equals(shopDepositForm.getOutBillType())) {
-                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit);
+                KingdeeSynReturnDto returnDto = arOtherRecAbleManager.synForShopDeposit(shopDeposit,type);
                 shopDeposit.setCloudSynId(returnDto.getId());
                 shopDeposit.setOutCode(returnDto.getBillNo());
                 shopDepositRepository.save(shopDeposit);
             } else {
-                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent());
+                KingdeeSynReturnDto returnDto = cnJournalBankManager.synForShopDeposit(shopDeposit,shopDepositForm.getDepartMent(), type);
                 shopDeposit.setCloudSynId(returnDto.getId());
                 shopDeposit.setOutCode(returnDto.getBillNo());
                 shopDepositRepository.save(shopDeposit);

@@ -37,6 +37,7 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:dictEnum:delete')")
     public RestResponse delete(String id) {
         dictEnumService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());
@@ -44,6 +45,7 @@ public class DictEnumController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:dictEnum:edit')")
     public RestResponse save(DictEnumForm dictEnumForm) {
         dictEnumService.save(dictEnumForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

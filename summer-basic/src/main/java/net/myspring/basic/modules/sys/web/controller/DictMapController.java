@@ -15,6 +15,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import net.myspring.basic.modules.sys.service.DictMapService;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,7 @@ public class DictMapController {
     }
 
     @RequestMapping
+    @PreAuthorize("hasPermission(null,'sys:dictMap:view')")
     public Page<DictMapDto> list(Pageable pageable, DictMapQuery dictMapQuery) {
         Page<DictMapDto> page = dictMapService.findPage(pageable, dictMapQuery);
         return page;
@@ -55,12 +57,14 @@ public class DictMapController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:dictMap:edit')")
     public RestResponse save(DictMapForm dictMapForm) {
         dictMapService.save(dictMapForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:dictMap:delete')")
     public RestResponse delete(String id) {
         dictMapService.logicDelete(id);
         RestResponse restResponse = new RestResponse("刪除成功",ResponseCodeEnum.removed.name());

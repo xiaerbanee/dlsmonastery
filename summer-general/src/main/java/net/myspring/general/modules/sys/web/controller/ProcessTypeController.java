@@ -1,13 +1,16 @@
 package net.myspring.general.modules.sys.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.dto.ProcessTypeDto;
 import net.myspring.general.modules.sys.service.ProcessFlowService;
 import net.myspring.general.modules.sys.service.ProcessTypeService;
 import net.myspring.general.modules.sys.web.form.ProcessTypeForm;
 import net.myspring.general.modules.sys.web.query.ProcessTypeQuery;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.Request;
 
 import java.util.List;
 
@@ -60,9 +64,25 @@ public class ProcessTypeController {
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
-    @RequestMapping(value = "findAll")
-    public List<ProcessTypeDto> findAll(){
-        return processTypeService.findAll();
+    @RequestMapping(value = "findByCreatePositionId")
+    public List<ProcessTypeDto> findByCreatePositionId(){
+        List<ProcessTypeDto> processTypeDtoList=Lists.newArrayList();
+        if(RequestUtils.getAdmin()){
+            processTypeDtoList=processTypeService.findAll();
+        }else {
+            processTypeDtoList=processTypeService.findByCreatePositionId(RequestUtils.getPositionId());
+        }
+        return processTypeDtoList;
+    }
+
+    @RequestMapping(value = "findIdByViewPositionId")
+    public List<String> findIdByViewPositionId(){
+        List<String> ids= Lists.newArrayList();
+        if(!RequestUtils.getAdmin()){
+            List<ProcessTypeDto> processTypeDtos=processTypeService.findByViewPositionId(RequestUtils.getPositionId());
+            ids=CollectionUtil.extractToList(processTypeDtos,"id");
+        }
+        return ids;
     }
 
     @RequestMapping(value = "getQuery")

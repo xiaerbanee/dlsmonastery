@@ -40,8 +40,8 @@ class DemoPhoneTypeOfficeRepositoryImpl @Autowired constructor(val namedParamete
         LEFT JOIN crm_demo_phone t2 ON depot.id = t2.shop_id
         where t1.demo_phone_type_id = t2.demo_phone_type_id
         """)
-        if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.officeId)) {
-            sb.append("""  and t1.office_id =:officeId """)
+        if (StringUtils.isNotEmpty(demoPhoneTypeOfficeQuery.areaId)) {
+            sb.append("""  and t1.office_id = :areaId """)
         }
         sb.append(""" GROUP BY t1.id """)
 

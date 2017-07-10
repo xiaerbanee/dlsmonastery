@@ -7,13 +7,13 @@ import net.myspring.future.common.query.BaseQuery;
  */
 public class DemoPhoneTypeOfficeQuery extends BaseQuery{
 
-    private String officeId;
+    private String areaId;
 
-    public String getOfficeId() {
-        return officeId;
+    public String getAreaId() {
+        return areaId;
     }
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
 }

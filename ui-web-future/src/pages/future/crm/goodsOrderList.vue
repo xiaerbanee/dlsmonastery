@@ -12,7 +12,7 @@
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-permit="'crm:goodsOrder:batchAdd'" command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
-            <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'api:carrierOrder:view'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
           </el-dropdown-menu>
@@ -29,7 +29,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.businessId')"  :label-width="formLabelWidth">
-                <el-input autofocus v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
+                <el-input  v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderList.billDate')" :label-width="formLabelWidth">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
@@ -121,7 +121,10 @@
   </div>
 </template>
 <style>
-  .el-table .danger-row {
+  .el-table .danger-row,.el-table .el-table__row--striped.danger-row>td {
+    background: #FF8888 !important;
+  }
+  .el-table .danger-row:hover>td{
     background: #FF8888 !important;
   }
 </style>

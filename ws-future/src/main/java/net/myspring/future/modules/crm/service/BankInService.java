@@ -6,20 +6,16 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.manager.ArReceiveBillManager;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.BankRepository;
-import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.BankIn;
 import net.myspring.future.modules.crm.dto.BankInDto;
 import net.myspring.future.modules.crm.repository.BankInRepository;
 import net.myspring.future.modules.crm.web.form.BankInAuditForm;
-import net.myspring.future.modules.crm.web.form.BankInBatchDetailForm;
-import net.myspring.future.modules.crm.web.form.BankInBatchForm;
 import net.myspring.future.modules.crm.web.form.BankInForm;
 import net.myspring.future.modules.crm.web.query.BankInQuery;
 import net.myspring.general.modules.sys.dto.ActivitiCompleteDto;
@@ -47,16 +43,11 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class BankInService {
-    @Autowired
-    private CloudClient cloudClient;
+
     @Autowired
     private BankInRepository bankInRepository;
    @Autowired
     private DepotRepository depotRepository;
-    @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private BankRepository bankRepository;
     @Autowired
     private ArReceiveBillManager arReceiveBillManager;
     @Autowired
@@ -65,6 +56,8 @@ public class BankInService {
     private ActivitiClient activitiClient;
     @Autowired
     private DepotManager depotManager;
+    @Autowired
+    private BankRepository bankRepository;
 
     public Page<BankInDto> findPage(Pageable pageable, BankInQuery bankInQuery) {
         bankInQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -77,6 +70,17 @@ public class BankInService {
     public void audit(BankInAuditForm bankInAuditForm){
 
         BankIn bankIn = bankInRepository.findOne(bankInAuditForm.getId());
+        Depot depot = depotRepository.findOne(bankIn.getShopId());
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn() && StringUtils.isBlank(depot.getClientId())) ){
+            throw new ServiceException("该门店没有绑定财务，不能同步金蝶");
+        }
+        if(Boolean.TRUE.equals(bankInAuditForm.getSyn()) && StringUtils.isNotBlank(bankIn.getBankId())){
+            Bank bank = bankRepository.findOne(bankIn.getBankId());
+            if(StringUtils.isBlank(bank.getCode())){
+                throw new ServiceException("该银行没有绑定财务，不能同步金蝶");
+            }
+        }
+
         ActivitiCompleteDto activitiCompleteDto = activitiClient.complete(new ActivitiCompleteForm(bankIn.getProcessInstanceId(), bankIn.getProcessTypeId(), bankInAuditForm.getAuditRemarks(), bankInAuditForm.getPass()));
         if("已通过".equals(activitiCompleteDto.getProcessStatus())){
             bankIn.setLocked(true);
@@ -113,7 +117,11 @@ public class BankInService {
         }
         bankIn.setShopId(bankInForm.getShopId());
         bankIn.setType(bankInForm.getType());
-        bankIn.setBankId(bankInForm.getBankId());
+        if(StringUtils.isBlank(bankInForm.getBankId()) || "0".equals(StringUtils.trim(bankInForm.getBankId()))){
+            bankIn.setBankId(null);
+        }else{
+            bankIn.setBankId(bankInForm.getBankId());
+        }
         bankIn.setTransferType(bankInForm.getTransferType());
         bankIn.setInputDate(bankInForm.getInputDate());
         bankIn.setAmount(bankInForm.getAmount());
@@ -168,27 +176,4 @@ public class BankInService {
         return bankInDto;
     }
 
-    @Transactional
-    public void batchAdd(BankInBatchForm bankInBatchForm) {
-        for(BankInBatchDetailForm bankInBatchDetailForm : bankInBatchForm.getBankInBatchDetailFormList()){
-            Depot depot = depotRepository.findByEnabledIsTrueAndName(bankInBatchDetailForm.getShopName());
-            if(depot == null || StringUtils.isBlank(depot.getClientId())){
-                throw new ServiceException("门店："+bankInBatchDetailForm.getShopName()+"不存在，或者未绑定财务门店");
-            }
-            Bank bank = bankRepository.findByName(bankInBatchDetailForm.getBankName());
-            if(bank == null){
-                throw new ServiceException("银行："+bankInBatchDetailForm.getBankName()+"不存在");
-            }
-            BankInForm bankInForm = new BankInForm();
-            bankInForm.setShopId(depot.getId());
-            bankInForm.setBankId(bank.getId());
-            bankInForm.setTransferType(bankInBatchDetailForm.getTransferType());
-            bankInForm.setAmount(bankInBatchDetailForm.getAmount());
-            bankInForm.setInputDate(bankInBatchDetailForm.getInputDate());
-            bankInForm.setType(bankInBatchDetailForm.getType());
-            bankInForm.setRemarks(bankInBatchDetailForm.getRemarks());
-
-            save(bankInForm);
-        }
-    }
 }

@@ -25,7 +25,7 @@
               </el-form-item>
               <el-form-item :label="$t('pricesystemChangeList.pricesystemName')" >
                 <el-select v-model="formData.pricesystemId" filterable clearable :placeholder="$t('pricesystemChangeList.inputKey')">
-                  <el-option v-for="pricesystem in formData.extra.pricesystems" :key="pricesystem.name"  :value="pricesystem.id"></el-option>
+                  <el-option v-for="pricesystem in formData.extra.pricesystems" :key="pricesystem.id" :label="pricesystem.name" :value="pricesystem.id"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
