@@ -5,40 +5,42 @@
       <el-form :model="storeAllot" ref="inputForm"   label-width="150px" class="form input-form">
         <el-row >
           <el-col :span="12">
-            <el-form-item :label="$t('storeAllotDetail.businessId')" prop="businessId">
+            <el-form-item :label="$t('storeAllotDetail.businessId')">
               {{storeAllot.formatId}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.fromStore')" prop="fromStoreName">
+            <el-form-item :label="$t('storeAllotDetail.fromStore')">
               {{storeAllot.fromStoreName}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.toStore')" prop="toStoreName">
+            <el-form-item :label="$t('storeAllotDetail.toStore')">
               {{storeAllot.toStoreName}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.outCode')" prop="outCode">
+            <el-form-item :label="$t('storeAllotDetail.outCode')">
               {{storeAllot.outCode}}
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('storeAllotDetail.createdBy')" prop="createdByName">
+            <el-form-item :label="$t('storeAllotDetail.createdBy')">
               {{storeAllot.createdByName}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.createdDate')" prop="createdDate">
+            <el-form-item :label="$t('storeAllotDetail.createdDate')">
               {{storeAllot.createdDate}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.expressOrder')" prop="expressOrderCodes">
-              {{storeAllot.expressOrderCodes}}
+            <el-form-item :label="$t('storeAllotDetail.expressOrder')">
+              {{storeAllot.expressOrderExpressCodes}}
             </el-form-item>
-            <el-form-item :label="$t('storeAllotDetail.remarks')" prop="remarks">
+            <el-form-item :label="$t('storeAllotDetail.remarks')">
               {{storeAllot.remarks}}
             </el-form-item>
           </el-col>
         </el-row>
-        <el-table :data="storeAllotDetailList" style="margin-top:5px;" v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
+        <div style="width:100%;height:50px;text-align:center;margin-top:25px;font-size:20px">{{$t('storeAllotDetail.billDetail')}}</div>
+        <el-table :data="storeAllotDetailList"  v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
           <el-table-column prop="billQty" :label="$t('storeAllotDetail.billQty')" ></el-table-column>
           <el-table-column prop="shippedQty" :label="$t('storeAllotDetail.shippedQty')" ></el-table-column>
         </el-table>
-        <el-table :data="storeAllotImeList" style="margin-top:5px;" v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
+        <div style="width:100%;height:50px;text-align:center;margin-top:25px;font-size:20px">{{$t('storeAllotDetail.shipDetail')}}</div>
+        <el-table :data="storeAllotImeList" v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
           <el-table-column  prop="productImeIme" :label="$t('storeAllotDetail.productIme')" ></el-table-column>
           <el-table-column  prop="productImeMeid" :label="$t('storeAllotDetail.productMeid')" ></el-table-column>
