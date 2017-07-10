@@ -68,6 +68,9 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         if (auditFileQuery.officeName != null) {
             sb.append(" and office.name like concat('%',:officeName,'%') ")
         }
+        if (CollectionUtil.isNotEmpty(auditFileQuery.processTypeIdList)) {
+            sb.append(" and process_type_id in (:processTypeIdList) ")
+        }
         if (auditFileQuery.createdByName != null) {
             sb.append("""
                 and t1.created_by in(

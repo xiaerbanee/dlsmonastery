@@ -37,10 +37,6 @@ public class AuditFileController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'hr:auditFile:view')")
     public Page<AuditFileDto> list(Pageable pageable, AuditFileQuery auditFileQuery) {
-        if(StringUtils.isBlank(auditFileQuery.getAuditType())||!"全部".equals(auditFileQuery.getAuditType())) {
-            auditFileQuery.setAuditType("全部");
-            auditFileQuery.setPositionId(RequestUtils.getPositionId());
-        }
         Page<AuditFileDto> page = auditFileService.findPage(pageable,auditFileQuery);
         return page;
     }

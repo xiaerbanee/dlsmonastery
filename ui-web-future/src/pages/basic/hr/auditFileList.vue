@@ -149,7 +149,6 @@
       this.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/basic/hr/auditFile/getQuery').then((response) =>{
         this.formData=response.data;
-        this.formData.auditType="全部";
         util.copyValue(that.$route.query,this.formData);
       });
     },activated() {
