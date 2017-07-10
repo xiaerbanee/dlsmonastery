@@ -487,7 +487,7 @@ public class GoodsOrderService {
         //是否自动同步，根据门店是否包含client
         goodsOrderDto.setSyn(false);
         Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
-        if(StringUtils.isNotBlank(shop.getClientId())) {
+        if(StringUtils.isNotBlank(shop.getClientId()) && !ShipTypeEnum.代理发货.name().equals(goodsOrderDto.getShipType()) && !ShipTypeEnum.代理自提.name().equals(goodsOrderDto.getShipType()) ) {
             goodsOrderDto.setSyn(true);
         }
         goodsOrderDto.setShipType(expressOrder.getShipType());
