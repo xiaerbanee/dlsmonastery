@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name="oppo_push_customer")
-public class OppoCustomer implements Serializable {
-    private static final long serialVersionUID = -864662154371775680L;
+public class OppoCustomer  {
     @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

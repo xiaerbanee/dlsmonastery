@@ -117,15 +117,15 @@ public class OppoPushSerivce {
                 }
                 oppoCustomer.setAgentid(agentId);
                 oppoCustomer.setCompanyid(agentCode);
-                oppoCustomer.setDealertype(customerDto.getSalePointType());
+                oppoCustomer.setDealertype(StringUtils.isEmpty(customerDto.getSalePointType())?"":customerDto.getSalePointType());
                 oppoCustomer.setDealergrade("");
-                oppoCustomer.setDealertel(customerDto.getMobilePhone());
-                oppoCustomer.setCitytype(customerDto.getAreaType());
-                oppoCustomer.setBussinesscenter(customerDto.getBussinessCenterName());
-                oppoCustomer.setChainname(customerDto.getChainType());
+                oppoCustomer.setDealertel(StringUtils.isEmpty(customerDto.getMobilePhone())?"":customerDto.getMobilePhone());
+                oppoCustomer.setCitytype(StringUtils.isEmpty(customerDto.getAreaType())?"":customerDto.getAreaType());
+                oppoCustomer.setBussinesscenter(StringUtils.isEmpty(customerDto.getBussinessCenterName())?"":customerDto.getBussinessCenterName());
+                oppoCustomer.setChainname(StringUtils.isEmpty(customerDto.getChainType())?"":customerDto.getChainType());
                 oppoCustomer.setSaletype("");
                 oppoCustomer.setDoorhead(StringUtils.isNotBlank(customerDto.getDoorHead())? "1" : "0");
-                oppoCustomer.setEnabledate(customerDto.getEnableDate());
+                oppoCustomer.setEnabledate(StringUtils.isEmpty(customerDto.getEnableDate())?"":customerDto.getEnableDate());
                 if (isArea(customerDto)) {
                     oppoCustomer.setCustomertype("代理商");
                 } else {
@@ -144,8 +144,8 @@ public class OppoPushSerivce {
                 oppoCustomer.setProvince(province);
                 oppoCustomer.setCity(city);
                 oppoCustomer.setCounty(county);
-                oppoCustomer.setVillage(customerDto.getTownName());
-                oppoCustomer.setDealerarea(customerDto.getShopArea());
+                oppoCustomer.setVillage(StringUtils.isEmpty(customerDto.getTownName())?"":customerDto.getTownName());
+                oppoCustomer.setDealerarea(StringUtils.isEmpty(customerDto.getShopArea())?"":customerDto.getShopArea());
                 oppoCustomer.setFramenum(StringUtils.isBlank(customerDto.getFrameNum())?"":customerDto.getFrameNum());
                 oppoCustomer.setDeskdoublenum(StringUtils.isBlank(customerDto.getFrameNum())?"":customerDto.getFrameNum());
                 oppoCustomer.setDesksinglenum(StringUtils.isBlank(customerDto.getDeskSingleNum())?"":customerDto.getDeskSingleNum());
@@ -404,7 +404,7 @@ public class OppoPushSerivce {
         for(OppoCustomerAfterSaleImei oppoCustomerAfterSaleImei:oppoCustomerAfterSaleImeis){
             oppoCustomerAfterSaleImei.setProductCode(productColorMap.get(oppoCustomerAfterSaleImei.getProductCode()));
             oppoCustomerAfterSaleImei.setDate(oppoCustomerAfterSaleImei.getDate());
-            oppoCustomerAfterSaleImei.setCreatedDate(LocalDateTime.now());
+            oppoCustomerAfterSaleImei.setCreatedDate(LocalDate.now());
         }
         logger.info("同步门店售后退货汇总开始");
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
