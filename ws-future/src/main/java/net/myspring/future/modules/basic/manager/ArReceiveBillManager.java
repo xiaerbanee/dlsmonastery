@@ -5,6 +5,7 @@ import net.myspring.cloud.modules.input.dto.ArReceiveBillDto;
 import net.myspring.cloud.modules.input.dto.ArReceiveBillEntryDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.enums.SettleTypeEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Client;
@@ -42,7 +43,11 @@ public class ArReceiveBillManager {
         receiveBillDto.setExtendId(bankIn.getId());
         receiveBillDto.setExtendType(ExtendTypeEnum.销售收款.name());
         receiveBillDto.setDate(bankIn.getBillDate());
-        receiveBillDto.setCustomerNumber(client.getOutCode());
+        if(client.getOutCode() != null){
+            receiveBillDto.setCustomerNumber(client.getOutCode());
+        }else{
+            throw new ServiceException(client.getName()+",该客户没有编码，不能开单");
+        }
         ArReceiveBillEntryDto entityDto = new ArReceiveBillEntryDto();
         entityDto.setAmount(bankIn.getAmount());
         if ("0".equals(bankIn.getBankId())) {
