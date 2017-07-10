@@ -101,6 +101,9 @@ public class ShopDepositController {
             if(StringUtils.isBlank(shopDepositBatchDetailForm.getShopName())){
                 throw new ServiceException("门店不可以为空");
             }
+            if(OutBillTypeEnum.手工日记账.name().equals(shopDepositBatchDetailForm.getOutBillType()) && StringUtils.isBlank(shopDepositBatchDetailForm.getBankName())){
+                throw new ServiceException("开单类型为手工日记账时，银行不能为空");
+            }
             if(StringUtils.isBlank(shopDepositBatchDetailForm.getOutBillType())){
                 throw new ServiceException("开单类型不可以为空");
             }
@@ -140,7 +143,7 @@ public class ShopDepositController {
             try{
                 ShopDepositForm shopDepositForm = new ShopDepositForm();
                 shopDepositForm.setShopId(depotNameMap.get(shopDepositBatchDetailForm.getShopName()));
-                if(StringUtils.isNotBlank(shopDepositBatchDetailForm.getBankName())){
+                if(OutBillTypeEnum.手工日记账.name().equals(shopDepositBatchDetailForm.getOutBillType())){
                     shopDepositForm.setBankId(bankNameMap.get(shopDepositBatchDetailForm.getBankName()));
                 }else{
                     shopDepositForm.setBankId(null);
