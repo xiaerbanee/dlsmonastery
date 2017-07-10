@@ -3,7 +3,7 @@
     <head-tab active="backendModuleList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >{{$t('backendModuleList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'sys:backendModule:edit'">{{$t('backendModuleList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('backendModuleList.filter')}}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
@@ -30,8 +30,8 @@
         <el-table-column prop="createdDate" :label="$t('backendModuleList.createdDate')"></el-table-column>
         <el-table-column fixed="right" :label="$t('backendModuleList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'edit')"  v-permit="'sys:backendModule:edit'">修改</el-button></div>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  v-permit="'sys:backendModule:delete'">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>

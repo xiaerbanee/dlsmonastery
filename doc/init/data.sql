@@ -317,7 +317,7 @@ INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modi
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司业务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 
 
-update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司内销部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("内销部文员","内销部主管","内销部部长"));
+update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司内销部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("内销部专员","内销部文员","内销部主管","内销部部长"));
 update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司财务部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("财务部主管","财务部专员","财务部部长","省公司财务出纳"));
 update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司仓储部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("仓储部专员","仓储部主管"));
 update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司企划部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("企划部专员","企划部主管","企划部部长"));
