@@ -33,8 +33,6 @@ public class VivoPushService {
     @Transactional
     public  List<VivoPushZones> getVivoZones(String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
-        LocalDate dateStart = LocalDate.now();
-        LocalDate dateEnd = dateStart.plusDays(1);
         List<OfficeEntity> officeEntityList = officeClient.findAll();
         List<VivoPushZones> vivoPushZonesList = Lists.newArrayList();
         Map<String,Integer> map = getOfficeChildCountMap(officeEntityList);

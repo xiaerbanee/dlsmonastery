@@ -5,9 +5,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.OfficeRuleEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.layout.domain.ShopImage;
 import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.repository.ShopImageRepository;
@@ -32,8 +30,6 @@ public class ShopImageService {
 
     @Autowired
     private ShopImageRepository shopImageRepository;
-    @Autowired
-    private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
     @Autowired
