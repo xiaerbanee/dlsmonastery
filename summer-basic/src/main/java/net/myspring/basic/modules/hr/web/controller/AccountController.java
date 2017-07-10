@@ -29,6 +29,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,12 +71,14 @@ public class AccountController {
     private RoleManager roleManager;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:account:view')")
     public Page<AccountDto> list(Pageable pageable, AccountQuery accountQuery) {
         Page<AccountDto> page = accountService.findPage(pageable, accountQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'hr:account:delete')")
     public RestResponse delete(String id) {
         accountService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
@@ -83,6 +86,7 @@ public class AccountController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'hr:account:edit')")
     public RestResponse save(AccountForm accountForm) {
         accountService.save(accountForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

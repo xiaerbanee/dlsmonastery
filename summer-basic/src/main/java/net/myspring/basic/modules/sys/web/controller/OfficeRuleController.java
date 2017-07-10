@@ -10,6 +10,7 @@ import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,12 +26,14 @@ public class OfficeRuleController {
     private OfficeRuleService officeRuleService;
     
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:officeRule:view')")
     public Page<OfficeRuleDto> list(Pageable pageable, OfficeRuleQuery officeRuleQuery) {
         Page<OfficeRuleDto> page = officeRuleService.findPage(pageable,officeRuleQuery);
         return page;
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:officeRule:edit')")
     public RestResponse save(OfficeRuleForm officeRuleForm) {
         officeRuleService.save(officeRuleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
@@ -50,6 +53,7 @@ public class OfficeRuleController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:officeRule:delete')")
     public RestResponse delete(OfficeRuleForm officeRuleForm) {
         officeRuleService.logicDelete(officeRuleForm);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());
