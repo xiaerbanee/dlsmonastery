@@ -92,7 +92,7 @@
         axios.get('/api/basic/hr/auditFile/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
           this.inputForm = response.data;
         })
-        axios.get('/api/general/sys/processType/findAll',{params: {id:this.$route.query.id}}).then((response)=>{
+        axios.get('/api/general/sys/processType/findByCreatePositionId',{params: {id:this.$route.query.id}}).then((response)=>{
           this.processTypeList = response.data;
         })
       }
