@@ -16,6 +16,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,12 +34,14 @@ public class PermissionController {
     private RoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:permission:view')")
     public Page<PermissionDto> list(Pageable pageable, PermissionQuery permissionQuery){
         Page<PermissionDto> page = permissionService.findPage(pageable,permissionQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:permission:delete')")
     public RestResponse delete(PermissionForm permissionForm) {
         permissionService.logicDelete(permissionForm);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
@@ -46,6 +49,7 @@ public class PermissionController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:permission:edit')")
     public RestResponse save(PermissionForm permissionForm) {
         permissionService.save(permissionForm);
         return new RestResponse("保存成功",ResponseCodeEnum.saved.name());

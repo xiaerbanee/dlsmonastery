@@ -13,6 +13,7 @@ import net.myspring.common.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class AccountChangeController {
     private PositionService positionService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:accountChange:view')")
     public Page<AccountChangeDto> list(Pageable pageable, AccountChangeQuery accountChangeQuery){
         Page<AccountChangeDto> page = accountChangeService.findPage(pageable,accountChangeQuery);
         return page;
@@ -59,12 +61,14 @@ public class AccountChangeController {
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
+    @PreAuthorize("hasPermission(null,'hr:accountChange:edit')")
     public RestResponse save( AccountChangeForm accountChangeForm) {
         accountChangeService.save(accountChangeForm);
         return new RestResponse("员工信息调整成功",null);
     }
 
     @RequestMapping(value="delete")
+    @PreAuthorize("hasPermission(null,'hr:accountChange:delete')")
     public RestResponse delete(String id){
         accountChangeService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());

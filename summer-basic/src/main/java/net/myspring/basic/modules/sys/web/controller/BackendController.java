@@ -14,6 +14,7 @@ import net.myspring.util.text.MD5Utils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Base64Utils;
@@ -32,18 +33,21 @@ public class BackendController {
     private BackendService backendService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:backend:view')")
     public Page<BackendDto> list(Pageable pageable, BackendQuery  backendQuery){
         Page<BackendDto> page = backendService.findPage(pageable,backendQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:backend:delete')")
     public RestResponse delete(String id) {
         backendService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:backend:edit')")
     public RestResponse save(BackendForm backendForm) {
         backendService.save(backendForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

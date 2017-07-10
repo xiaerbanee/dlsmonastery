@@ -24,6 +24,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,6 +45,7 @@ public class OfficeController {
     private OfficeRuleService officeRuleService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:office:view')")
     public Page<OfficeDto> list(Pageable pageable, OfficeQuery officeQuery) {
         Page<OfficeDto> page = officeService.findPage(pageable, officeQuery);
         return page;
@@ -76,6 +78,7 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:office:edit')")
     public RestResponse save(OfficeForm officeForm) {
         RestResponse restResponse=officeService.checkSave(officeForm);
         if(!restResponse.getSuccess()){
@@ -117,6 +120,7 @@ public class OfficeController {
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:office:delete')")
     public RestResponse delete(OfficeForm officeForm) {
         RestResponse restResponse = officeService.checkDelete(officeForm);
         if(!restResponse.getSuccess()){

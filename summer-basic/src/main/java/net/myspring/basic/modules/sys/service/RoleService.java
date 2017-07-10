@@ -48,6 +48,14 @@ public class RoleService {
         return roleDto;
     }
 
+    public RoleForm getForm(RoleForm roleForm) {
+        if (!roleForm.isCreate()) {
+            Role Role = roleRepository.findOne(roleForm.getId());
+            roleForm = BeanUtil.map(Role, RoleForm.class);
+        }
+        return roleForm;
+    }
+
     @Transactional
     public Role save(RoleForm roleForm) {
         Role role;
@@ -83,6 +91,8 @@ public class RoleService {
 
     @Transactional
     public void saveRoleAndPermission(RoleForm roleForm) {
+        Role role = BeanUtil.map(roleForm, Role.class);
+        roleRepository.save(role);
         List<RolePermission> rolePermissionList = rolePermissionRepository.findAllByRoleId(roleForm.getId());
         if (CollectionUtil.isNotEmpty(roleForm.getPermissionIdList())) {
             List<String> rolePermissionIdList = CollectionUtil.extractToList(rolePermissionList, "permissionId");

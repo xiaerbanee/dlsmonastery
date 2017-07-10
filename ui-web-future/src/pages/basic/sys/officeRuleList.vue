@@ -3,7 +3,7 @@
     <head-tab active="officeRuleList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus"  >{{$t('officeRuleList.add')}}</el-button>
+        <el-button type="primary" @click="itemAdd" icon="plus"  v-permit="'sys:officeRule:edit'">{{$t('officeRuleList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('officeRuleList.filter')}}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
@@ -30,8 +30,8 @@
         <el-table-column prop="remarks" :label="$t('officeRuleList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('officeRuleList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')">修改</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'edit')"  v-permit="'sys:officeRule:edit'">修改</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  v-permit="'sys:officeRule:delete'">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

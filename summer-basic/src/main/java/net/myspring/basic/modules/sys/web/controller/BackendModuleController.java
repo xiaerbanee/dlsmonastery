@@ -13,6 +13,7 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,18 +33,21 @@ public class BackendModuleController {
     private BackendService backendService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:backendModule:view')")
     public Page<BackendModuleDto> list(Pageable pageable, BackendModuleQuery backendModuleQuery){
         Page<BackendModuleDto> page = backendModuleService.findPage(pageable,backendModuleQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:backendModule:delete')")
     public RestResponse delete(String id) {
         backendModuleService.logicDelete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:backendModule:edit')")
     public RestResponse save(BackendModuleForm backendModuleForm) {
         backendModuleService.save(backendModuleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

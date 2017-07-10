@@ -57,10 +57,14 @@ ribbon:
 hystrix:
   command:
     default:
+      circuitBreaker:
+        enabled:  false
       execution:
         timeout:
           enabled: false
         isolation:
+          semaphore:
+            maxConcurrentRequests: 2000
           thread:
             timeoutInMilliseconds: 180000
 

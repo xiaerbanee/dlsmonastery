@@ -18,6 +18,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,12 +40,14 @@ public class RoleController {
     private BackendModuleService backendModuleService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'sys:role:view')")
     public Page<RoleDto> list(Pageable pageable, RoleQuery RoleQuery){
         Page<RoleDto> page = roleService.findPage(pageable,RoleQuery);
         return page;
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'sys:role:delete')")
     public RestResponse delete(String id) {
         roleService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功", ResponseCodeEnum.removed.name());
@@ -52,6 +55,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'sys:role:edit')")
     public RestResponse save(RoleForm roleForm) {
         roleService.save(roleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
@@ -80,6 +84,7 @@ public class RoleController {
     @RequestMapping(value = "getTreeNode")
     public RoleForm getTreeNode(RoleForm roleForm) {
         if(!roleForm.isCreate()){
+            roleForm=roleService.getForm(roleForm);
             TreeNode treeNode=permissionService.findRoleTree(roleForm.getId());
             List<Permission> permissionList=permissionService.findByRoleId(roleForm.getId());
             List<String> permissionIds = CollectionUtil.extractToList(permissionList, "id");
