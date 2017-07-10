@@ -12,7 +12,7 @@ public class VivoPushSCustomers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-    private String customerID;
+    private String customerId;
     private String customerName;
     private String shortcut;
     private String customerType;
@@ -53,12 +53,12 @@ public class VivoPushSCustomers {
         this.id = id;
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustomerName() {
