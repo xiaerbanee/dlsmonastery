@@ -15,6 +15,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,12 +57,14 @@ public class PositionController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'hr:position:edit')")
     public RestResponse save(PositionForm positionForm, String permissionIdStr) {
         positionService.save(positionForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'hr:position:delete')")
     public RestResponse delete(String id) {
         positionService.delete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());

@@ -334,3 +334,37 @@ update sys_menu set sort=20 where name='渠道库存';
 update sys_menu set sort=30 where name='仓库报表';
 update sys_menu set sort=40 where name='每日打分';
 update sys_menu set sort=50 where name='每日排名';
+
+UPDATE sys_process_type t1,
+ (
+	SELECT
+		t3.id,
+		GROUP_CONCAT(t2.id) AS positionIds
+	FROM
+		hr_position_permission t1,
+		hr_position t2,
+		sys_permission t3
+	WHERE
+		t1.position_id = t2.id
+	AND t1.permission_id = t3.id
+	GROUP BY
+		t3.id
+) t2
+SET t1.create_position_ids = t2.positionIds where t1.create_permission_id=t2.id;
+
+UPDATE sys_process_type t1,
+ (
+	SELECT
+		t3.id,
+		GROUP_CONCAT(t2.id) AS positionIds
+	FROM
+		hr_position_permission t1,
+		hr_position t2,
+		sys_permission t3
+	WHERE
+		t1.position_id = t2.id
+	AND t1.permission_id = t3.id
+	GROUP BY
+		t3.id
+) t2
+SET t1.view_position_ids = t2.positionIds where t1.view_permission_id=t2.id;

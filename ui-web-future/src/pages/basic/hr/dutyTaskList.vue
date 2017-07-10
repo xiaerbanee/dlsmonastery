@@ -14,7 +14,7 @@
         <el-table-column prop="remarks" :label="$t('dutyTaskList.remarks')"></el-table-column>
         <el-table-column fixed="right" :label="$t('dutyTaskList.operation')" width="140">
           <template scope="scope">
-            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'audit',scope.row.dutyType)">{{$t('dutyTaskList.audit')}}</el-button></div>
+            <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'audit',scope.row.dutyType)" v-permit="'hr_duty_edit'">{{$t('dutyTaskList.audit')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

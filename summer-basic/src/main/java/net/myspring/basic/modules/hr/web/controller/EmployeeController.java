@@ -18,6 +18,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,7 @@ public class EmployeeController {
     private AccountService accountService;
 
     @RequestMapping(value = "delete")
+    @PreAuthorize("hasPermission(null,'hr:employee:delete')")
     public RestResponse delete(String id) {
         employeeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
@@ -46,6 +48,7 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "save")
+    @PreAuthorize("hasPermission(null,'hr:employee:edit')")
     public RestResponse save(EmployeeForm employeeForm) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         restResponse.getExtra().put("employeeId", employeeService.save(employeeForm).getId());
@@ -66,6 +69,7 @@ public class EmployeeController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:employee:view')")
     public Page<EmployeeDto> list(Pageable pageable, EmployeeQuery employeeQuery) {
         Page<EmployeeDto> page = employeeService.findPage(pageable, employeeQuery);
         return page;
