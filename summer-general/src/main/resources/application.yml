@@ -2,10 +2,11 @@ spring:
   application:
     name: summer-general
   datasource:
-    url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-    username: root
-    password: bbk@123456
-    driver-class-name: com.mysql.jdbc.Driver
+    JXOPPO:
+      url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      username: root
+      password: bbk@123456
+      driver-class-name: com.mysql.jdbc.Driver
   redis:
     host: localhost
     password:
