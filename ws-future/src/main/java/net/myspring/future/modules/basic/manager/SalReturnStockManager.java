@@ -54,7 +54,11 @@ public class SalReturnStockManager {
         returnStockDto.setExtendId(goodsOrder.getId());
         returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
         returnStockDto.setDate(goodsOrder.getBillDate());
-        returnStockDto.setCustomerNumber(clientDto.getOutCode());
+        if(clientDto.getOutCode() != null){
+            returnStockDto.setCustomerNumber(clientDto.getOutCode());
+        }else{
+            throw new ServiceException(clientDto.getName()+",该客户没有编码，不能开单");
+        }
         returnStockDto.setNote(goodsOrder.getRemarks());
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
         for (GoodsOrderDetail detail : goodsOrderDetailList){
@@ -69,7 +73,11 @@ public class SalReturnStockManager {
                 entityDto.setQty(detail.getReturnQty());
                 entityDto.setPrice(detail.getPrice());
                 entityDto.setEntryNote(goodsOrder.getRemarks());
-                entityDto.setStockNumber(depotStore.getOutCode());
+                if(depotStore.getOutCode() != null){
+                    entityDto.setStockNumber(depotStore.getOutCode());
+                }else{
+                    throw new ServiceException(depotStore.getId()+",该门店没有编码，不能开单");
+                }
                 entityDtoList.add(entityDto);
             }
         }

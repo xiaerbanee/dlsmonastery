@@ -12,7 +12,7 @@
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item v-permit="'crm:goodsOrder:batchAdd'" command="batchAdd">{{$t('goodsOrderList.batchAdd')}}</el-dropdown-item>
-            <el-dropdown-item v-permit="'crm:goodsOrderShip:mallOrder'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
+            <el-dropdown-item v-permit="'api:carrierOrder:view'" command="carrierOrder">{{$t('goodsOrderList.carrierOrder')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="goodsOrderImeList">{{$t('goodsOrderList.goodsOrderImeList')}}</el-dropdown-item>
             <el-dropdown-item v-permit="'crm:goodsOrder:view'" command="exportData">{{$t('goodsOrderList.exportData')}}</el-dropdown-item>
           </el-dropdown-menu>

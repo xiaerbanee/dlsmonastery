@@ -1,5 +1,7 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import net.myspring.future.common.enums.OfficeRuleEnum;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DemoPhoneTypeOfficeDto;
 import net.myspring.future.modules.basic.service.DemoPhoneTypeOfficeService;
 import net.myspring.future.modules.basic.web.query.DemoPhoneTypeOfficeQuery;
@@ -18,6 +20,9 @@ public class DemoPhoneTypeOfficeController {
     @Autowired
     private DemoPhoneTypeOfficeService demoPhoneTypeOfficeService;
 
+    @Autowired
+    private OfficeClient officeClient;
+
     @RequestMapping(method = RequestMethod.GET)
     public Page<DemoPhoneTypeOfficeDto> list(Pageable pageable, DemoPhoneTypeOfficeQuery demoPhoneTypeOfficeQuery){
         Page<DemoPhoneTypeOfficeDto> page = demoPhoneTypeOfficeService.findPage(pageable,demoPhoneTypeOfficeQuery);
@@ -26,6 +31,7 @@ public class DemoPhoneTypeOfficeController {
 
     @RequestMapping(value = "/getQuery")
     public DemoPhoneTypeOfficeQuery getQuery(DemoPhoneTypeOfficeQuery demoPhoneTypeOfficeQuery){
+        demoPhoneTypeOfficeQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         return demoPhoneTypeOfficeQuery;
     }
 

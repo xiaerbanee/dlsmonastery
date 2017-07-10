@@ -12,7 +12,9 @@
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('demoPhoneTypeOfficeList.officeName')" :label-width="formLabelWidth">
-                <office-select v-model="formData.officeId" @afterInit="setSearchText"></office-select>
+                <el-select v-model="formData.areaId" filterable clearable >
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
