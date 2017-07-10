@@ -42,7 +42,7 @@
             startCols: 6,
             colHeaders: [ '门店', '开单类型', '银行',  '部门','开单时间','市场保证金','形象保证金','演示机押金','备注'],
             columns: [{
-              data:"depotName",
+              data:"shopName",
               type: 'autocomplete',
               strict: true,
               allowEmpty:false,
@@ -54,7 +54,7 @@
                 } else {
                   var shopNames = new Array();
                   if(query.length>=2) {
-                    axios.get('/api/ws/future/basic/depot/shop?key='+query).then((response)=>{
+                    axios.get('/api/ws/future/basic/depot/shop?name='+query).then((response)=>{
                       if(response.data.length>0) {
                         for(var index in response.data) {
                           var shopName = response.data[index].name;
@@ -79,9 +79,9 @@
               strict: true,
               width:200
             },{
-              data:"bank",
+              data:"bankName",
               type: "autocomplete",
-              allowEmpty: false,
+              allowEmpty: true,
               strict: true,
               tempBankNames:[],
               source:function (query, process) {
@@ -110,10 +110,10 @@
               },
               width:200
             },{
-              data:'departMent',
+              data:'departMentName',
               type: 'autocomplete',
               strict: true,
-              allowEmpty:true,
+              allowEmpty:false,
               width:200
             }, {
               data:'billDate',
@@ -125,17 +125,17 @@
             }, {
               data:"marketAmount",
               type:'text',
-              allowEmpty:true,
+              allowEmpty:false,
               width:120
             }, {
               data:'imageAmount',
               type:'text',
-              allowEmpty:true,
+              allowEmpty:false,
               width:120
             }, {
               data:'demoPhoneAmount',
               type:'text',
-              allowEmpty:true,
+              allowEmpty:false,
               width:120
             },{
               data:"remarks",
@@ -151,15 +151,25 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            this.inputForm.data = new Array();
+            let tableData = [];
             let list = table.getData();
-            for (var item in list) {
+            for (let item in list) {
               if (!table.isEmptyRow(item)) {
-                this.inputForm.data.push(list[item]);
+                let shopDepositBatchDetailForm = {};
+                shopDepositBatchDetailForm.shopName = row[0];
+                shopDepositBatchDetailForm.outBillType = row[1];
+                shopDepositBatchDetailForm.bankName = row[2];
+                shopDepositBatchDetailForm.departMentName = row[3];
+                shopDepositBatchDetailForm.billDate = row[4];
+                shopDepositBatchDetailForm.marketAmount = row[5];
+                shopDepositBatchDetailForm.imageAmount = row[6];
+                shopDepositBatchDetailForm.demoPhoneAmount = row[7];
+                shopDepositBatchDetailForm.remarks = row[8];
+                tableData.push(shopDepositBatchDetailForm);
               }
             }
-            this.inputForm.data = JSON.stringify(this.inputForm.data);
-            axios.post('/api/ws/future/crm/shopDeposit/batchAllot', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
+            this.inputForm.shopDepositBatchDetailFormList = tableData;
+            axios.post('/api/ws/future/layout/shopDeposit/batchSave', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
 
               if (response.data.success) {
                 this.$message(response.data.message);
@@ -172,19 +182,17 @@
             }).catch( () => {
               this.submitDisabled = false;
             });
-          }else{
-            this.submitDisabled = false;
           }
         })
       },initPage(){
-        axios.get('/api/ws/future/crm/shopDeposit/getForm').then((response)=>{
+        axios.get('/api/ws/future/layout/shopDeposit/getBatchForm').then((response)=>{
           this.inputForm = response.data;
-          var departmentList=new Array();
-          for(let i in response.data.extra.departMentList){
-            departmentList.push(response.data.extra.departMentList[i].ffullName)
+          let departmentNameList=[];
+          for(let each of response.data.extra.departMentList){
+            departmentNameList.push(each.ffullName);
           }
-            this.settings.columns[1].source=response.data.extra.outBillTypeList;
-            this.settings.columns[3].source=departmentList;
+          this.settings.columns[1].source=response.data.extra.outBillTypeList;
+          this.settings.columns[3].source=departmentNameList;
           table = new Handsontable(this.$refs["handsontable"], this.settings);
         });
       }
