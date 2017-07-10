@@ -5,8 +5,10 @@ import net.myspring.cloud.common.enums.ExtendTypeEnum;
 import net.myspring.cloud.modules.input.dto.CnJournalEntityForBankDto;
 import net.myspring.cloud.modules.input.dto.CnJournalForBankDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
+import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.SettleTypeEnum;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -35,7 +37,7 @@ public class CnJournalBankManager {
     @Autowired
     private CloudClient cloudClient;
 
-    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber){
+    public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,String departmentNumber,ShopDepositTypeEnum type){
         List<CnJournalForBankDto> cnJournalForBankDtoList = Lists.newArrayList();
         Bank bank = bankRepository.findOne(shopDeposit.getBankId());
         Depot depot = depotRepository.findOne(shopDeposit.getShopId());
@@ -62,7 +64,15 @@ public class CnJournalBankManager {
         entityForBankDto.setAccountNumber("2241");//其他应付款
         entityForBankDto.setSettleTypeNumber(SettleTypeEnum.电汇.getFNumber());//电汇
         entityForBankDto.setEmpInfoNumber("0001");//员工
-        entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+        if (ShopDepositTypeEnum.市场保证金.name().equals(type)){
+            entityForBankDto.setOtherTypeNumber("2241.00002B");//其他应付款-客户押金（批发）-市场保证金
+            entityForBankDto.setComment(depot.getName()+ CharConstant.COMMA+ShopDepositTypeEnum.市场保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
+        }else if (ShopDepositTypeEnum.形象保证金.name().equals(type)){
+            entityForBankDto.setOtherTypeNumber("2241.00002A");//其他应付款-客户押金（批发）-形象押金
+            entityForBankDto.setComment(depot.getName()+CharConstant.COMMA+ShopDepositTypeEnum.形象保证金.name()+CharConstant.COMMA+shopDeposit.getRemarks());
+        }else if (ShopDepositTypeEnum.演示机押金.name().equals(type)){
+            throw new ServiceException("财务暂时未开--其他应付款-客户押金（批发）-演示机押金");//其他应付款-客户押金（批发）-演示机押金
+        }
         entityForBankDto.setExpenseTypeNumber("6602.000");//无
         entityForBankDto.setCustomerNumber(null);
         entityForBankDto.setComment(depot.getName()+shopDeposit.getRemarks());
