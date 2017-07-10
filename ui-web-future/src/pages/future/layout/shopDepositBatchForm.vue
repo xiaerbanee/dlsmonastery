@@ -163,6 +163,7 @@
               this.$message(response.data.message);
               if (response.data.success) {
                 Object.assign(this.$data, this.getData());
+                this.initPage();
               }
               this.submitDisabled = false;
             }).catch( () => {
