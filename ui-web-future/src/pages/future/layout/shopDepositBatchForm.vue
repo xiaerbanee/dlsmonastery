@@ -3,9 +3,6 @@
     <head-tab active="shopDepositBatchForm"></head-tab>
     <div>
       <el-row>
-        <su-alert :text="errMsg" type="danger"></su-alert>
-      </el-row>
-      <el-row>
         <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
       </el-row>
       <el-form  :model="inputForm"  ref="inputForm">
@@ -38,7 +35,6 @@
             data:""
           },
           submitDisabled: false,
-          errMsg:'',
           settings: {
             rowHeaders: true,
             minSpareRows: 100,
