@@ -54,3 +54,4 @@ ribbon:
 
 logging:
   file: ws-future.log
+  level: debug
