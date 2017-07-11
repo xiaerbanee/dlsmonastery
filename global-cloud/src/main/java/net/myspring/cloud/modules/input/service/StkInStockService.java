@@ -44,7 +44,6 @@ public class StkInStockService {
     @Autowired
     private PurMrbService purMrbService;
 
-    @Transactional
     private KingdeeSynDto save(StkInStockDto stkInStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 stkInStockDto.getExtendId(),
