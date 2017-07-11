@@ -314,6 +314,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         t1.office_id,
         t1.area_id,
         t1.client_id,
+        t1.delegate_depot_id,
         scbzjDeposit.left_amount scbzj,
         xxbzjDeposit.left_amount xxbzj,
         ysjyjDeposit.left_amount ysjyj

@@ -167,7 +167,7 @@
           });
         }).catch(()=>{});
       },checkSelectable(row) {
-        return row.status !== '已通过'
+        return row.status.indexOf('通过')<0;
       }
 
     },created () {

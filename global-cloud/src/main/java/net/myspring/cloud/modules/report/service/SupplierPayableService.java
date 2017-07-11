@@ -212,6 +212,8 @@ public class SupplierPayableService {
                 supplierPayableDetailDto.setEndAmount(beginAmount);
                 supplierPayableDetailDto.setIndex(index++);
                 list.add(supplierPayableDetailDto);
+                BigDecimal payableAmount = BigDecimal.ZERO;
+                BigDecimal actualPayAmount = BigDecimal.ZERO;
                 for (int i = 0; i < detailForBillList.size(); i++) {
                     SupplierPayableDetailDto main = detailForBillList.get(i);
                     supplierPayableDetailDto = new SupplierPayableDetailDto();
@@ -272,9 +274,17 @@ public class SupplierPayableService {
                             list.add(supplierPayableDetailDto);
                         }
                     }
+                    if (main.getActualPayAmount() != null) {
+                        actualPayAmount = actualPayAmount.add(main.getActualPayAmount());
+                    }
+                    if (main.getPayableAmount() != null){
+                        payableAmount = payableAmount.add(main.getPayableAmount());
+                    }
                 }
                 supplierPayableDetailDto = new SupplierPayableDetailDto();
                 supplierPayableDetailDto.setBillType("期末应付");
+                supplierPayableDetailDto.setActualPayAmount(actualPayAmount);
+                supplierPayableDetailDto.setPayableAmount(payableAmount);
                 supplierPayableDetailDto.setEndAmount(beginAmount);
                 supplierPayableDetailDto.setIndex(index++);
                 list.add(supplierPayableDetailDto);
