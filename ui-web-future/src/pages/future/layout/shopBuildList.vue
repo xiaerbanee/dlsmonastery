@@ -59,7 +59,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopBuildList.loading')" @sort-change="sortChange" @selection-change="handleSelectionChange" stripe border>
         <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
-        <el-table-column fixed column-key="id" prop="formatId" :label="$t('shopBuildList.code')" sortable></el-table-column>
+        <el-table-column column-key="id" prop="formatId" :label="$t('shopBuildList.code')" sortable></el-table-column>
         <el-table-column column-key="areaId" prop="areaName" :label="$t('shopBuildList.areaName')" sortable></el-table-column>
         <el-table-column column-key="officeId" prop="officeName" :label="$t('shopBuildList.officeName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('shopBuildList.shopName')" sortable></el-table-column>
@@ -72,7 +72,7 @@
         <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('shopBuildList.lastModifiedBy')" sortable></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('shopBuildList.lastModifiedDate')"  sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopBuildList.remarks')" ></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopBuildList.operation')" width="140">
+        <el-table-column :label="$t('shopBuildList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopBuild:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopBuildList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopBuild:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
