@@ -172,19 +172,19 @@ public class GoodsOrderService {
             goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
         } else {
             goodsOrder = new GoodsOrder();
+            goodsOrder.setShopId(goodsOrderForm.getShopId());
+            goodsOrder.setNetType(goodsOrderForm.getNetType());
+            goodsOrder.setShipType(goodsOrderForm.getShipType());
+            goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
+            goodsOrder.setUseTicket(false);
+            goodsOrder.setStoreId(getDefaultStoreId(goodsOrderForm.getNetType(), shop));
         }
-        goodsOrder.setShopId(goodsOrderForm.getShopId());
-        goodsOrder.setRemarks(goodsOrderForm.getRemarks());
-        goodsOrder.setNetType(goodsOrderForm.getNetType());
         goodsOrder.setLxMallOrder(NetTypeEnum.联信.name().equals(goodsOrderForm.getNetType()) ? goodsOrderForm.getLxMallOrder() : null );
-        goodsOrder.setShipType(goodsOrderForm.getShipType());
-        goodsOrder.setStoreId(getDefaultStoreId(goodsOrderForm.getNetType(), shop));
-        goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
-        goodsOrder.setUseTicket(false);
+        goodsOrder.setRemarks(goodsOrderForm.getRemarks());
         goodsOrderRepository.save(goodsOrder);
 
         saveDetailInfo(goodsOrder, goodsOrderForm, shop);
-        saveExpressOrderInfo(goodsOrder, goodsOrderForm, shop);
+        saveExpressOrderInfo(goodsOrder, shop);
         return goodsOrder;
     }
 
@@ -229,21 +229,21 @@ public class GoodsOrderService {
     }
 
     @Transactional
-    private void saveExpressOrderInfo(GoodsOrder goodsOrder, GoodsOrderForm goodsOrderForm, Depot shop) {
-        ExpressOrder expressOrder;
-        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())) {
-            expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-        }else{
-            expressOrder = new ExpressOrder();
-            expressOrder.setExpressPrintQty(0);
+    private void saveExpressOrderInfo(GoodsOrder goodsOrder, Depot shop) {
+        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
+            //如果已经存在，快递单不需要进行任何修改
+            return;
         }
+
+        ExpressOrder  expressOrder = new ExpressOrder();
+        expressOrder.setExpressPrintQty(0);
         expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(shop.getContator());
         expressOrder.setAddress(shop.getAddress());
         expressOrder.setMobilePhone(shop.getMobilePhone());
         expressOrder.setToDepotId(shop.getId());
-        expressOrder.setShipType(goodsOrderForm.getShipType());
+        expressOrder.setShipType(goodsOrder.getShipType());
         expressOrderRepository.save(expressOrder);
 
         goodsOrder.setExpressOrderId(expressOrder.getId());
