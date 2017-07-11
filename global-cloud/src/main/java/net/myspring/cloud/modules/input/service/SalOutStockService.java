@@ -51,8 +51,6 @@ public class SalOutStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
     @Autowired
-    private ArReceivableRepository arReceivableRepository;
-    @Autowired
     private BdCustomerRepository bdCustomerRepository;
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
