@@ -159,7 +159,7 @@ public class SalOutStockManager {
 
     public KingdeeSynReturnDto synForAdGoodsOrder(AdGoodsOrder adGoodsOrder){
         Depot depot = depotRepository.findOne(adGoodsOrder.getOutShopId());
-        Client client = clientRepository.findOne(depot.getId());
+        Client client = clientRepository.findOne(depot.getClientId());
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();

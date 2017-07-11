@@ -1,7 +1,6 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
-import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
@@ -11,14 +10,13 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.exception.ServiceException;
-import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 
