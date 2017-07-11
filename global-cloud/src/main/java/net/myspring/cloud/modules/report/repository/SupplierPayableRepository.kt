@@ -13,6 +13,7 @@ import java.time.LocalDate
 import java.util.HashMap
 
 /**
+ * 供应商-应付
  * Created by lihx on 2017/6/29.
  */
 @Component
