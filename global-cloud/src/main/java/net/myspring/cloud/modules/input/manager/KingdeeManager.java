@@ -3,15 +3,19 @@ package net.myspring.cloud.modules.input.manager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.enums.KingdeeActionEnum;
+import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.utils.RequestUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
+import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
+import net.myspring.cloud.modules.kingdee.repository.ArReceivableRepository;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
 import net.myspring.common.enums.BoolEnum;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
+import net.myspring.util.text.StringUtils;
 import net.sf.json.JSONObject;
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -30,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 public class KingdeeManager {
     @Autowired
     private KingdeeSynRepository kingdeeSynRepository;
+    @Autowired
+    private ArReceivableRepository arReceivableRepository;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -129,16 +135,19 @@ public class KingdeeManager {
             result =  invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getFormId(), content);
             resultMap.put("AUDIT",result);
             kingdeeSynExtendDto.setBillNo(billNo);
-            String nextBillNo = kingdeeSynExtendDto.getNextBillNo();
-            root = Maps.newLinkedHashMap();
-            root.put("CreateOrgId", 0);
-            root.put("Numbers", nextBillNo);
-            kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo());
-            content = ObjectMapperUtils.writeValueAsString(root);
-            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
-            resultMap.put("NEXT_SUBMIT",result);
-            result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
-            resultMap.put("NEXT_AUDIT",result);
+            String nextBillNo = getNextBillNo(kingdeeSynExtendDto.getFormId(),billNo);
+            if(StringUtils.isNotBlank(nextBillNo)) {
+                root = Maps.newLinkedHashMap();
+                root.put("CreateOrgId", 0);
+                root.put("Numbers", nextBillNo);
+                kingdeeSynExtendDto.setNextBillNo(nextBillNo);
+                kingdeeSynExtendDto.setBillNo(kingdeeSynExtendDto.getBillNo());
+                content = ObjectMapperUtils.writeValueAsString(root);
+                result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.SUBMIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+                resultMap.put("NEXT_SUBMIT",result);
+                result = invoke(kingdeeBook.getKingdeePostUrl(), KingdeeActionEnum.AUDIT.getValue(),kingdeeSynExtendDto.getNextFormId(), content);
+                resultMap.put("NEXT_AUDIT",result);
+            }
             kingdeeSynExtendDto.setSuccess(true);
             kingdeeSynExtendDto.setLocked(true);
         } else {
@@ -150,6 +159,27 @@ public class KingdeeManager {
         kingdeeSynRepository.save(kingdeeSyn);
         return kingdeeSynExtendDto;
     }
+
+
+    public String getNextBillNo(String kingdeeFormId,String billNo) {
+        if(KingdeeFormIdEnum.SAL_OUTSTOCK.name().equals(kingdeeFormId) || KingdeeFormIdEnum.SAL_RETURNSTOCK.name().equals(kingdeeFormId)) {
+            if (StringUtils.isNotBlank(billNo)){
+                List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(billNo);
+                if (receivableList.size() > 0){
+                    for (ArReceivable receivable : receivableList) {
+                        if (receivable != null) {
+                            return receivable.getFBillNo();
+                        }
+                    }
+                }else {
+                    return null;
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
 
 
 
