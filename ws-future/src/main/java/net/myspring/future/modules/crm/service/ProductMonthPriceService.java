@@ -119,8 +119,7 @@ public class ProductMonthPriceService {
 
     }
 
-    @Transactional
-    private void batchSaveProductMonthPriceDetails(List<ProductMonthPriceDetailForm> productMonthPriceDetailList, ProductMonthPrice productMonthPrice) {
+private void batchSaveProductMonthPriceDetails(List<ProductMonthPriceDetailForm> productMonthPriceDetailList, ProductMonthPrice productMonthPrice) {
 
         if(productMonthPriceDetailList == null || productMonthPriceDetailList.isEmpty()){
             return ;

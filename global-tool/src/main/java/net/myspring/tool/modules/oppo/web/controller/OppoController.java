@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
+import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.modules.oppo.service.OppoPushSerivce;
 import net.myspring.tool.modules.oppo.service.OppoService;
@@ -43,6 +44,8 @@ public class OppoController {
         String passWord=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_PASSWORDS.name()).replace("\"","");
         String[] passWords=passWord.split(CharConstant.COMMA);
         //同步颜色编码
+        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+        DbContextHolder.get().setCompanyName(companyName);
         List<OppoPlantProductSel> oppoPlantProductSels=oppoService.getOppoPlantProductSels(agentCodes[0],passWords[0]);
         oppoService.pullPlantProductSels(oppoPlantProductSels);
         //同步物料编码

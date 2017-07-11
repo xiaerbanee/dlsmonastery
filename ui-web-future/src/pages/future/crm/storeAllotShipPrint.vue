@@ -36,6 +36,10 @@
   }
 </script>
 <style type="text/css">
-
+body{
+  font-size: 18px;
+  font-weight:500;
+  line-height: 26px;
+}
 
 </style>
