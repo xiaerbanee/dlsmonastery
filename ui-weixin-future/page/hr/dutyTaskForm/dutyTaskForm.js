@@ -25,13 +25,14 @@ Page({
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        console.log(res.data)
         that.setData({
           dutyType: res.data.dutyType,
           formData: res.data.item
         })
         if (that.data.dutyType == "签到") {
           var images = new Array();
-          $util.downloadFile(images, res.data.attachment, app.globalData.sessionId, 9, function () {
+          $util.downloadFile(images, res.data.item.attachment, app.globalData.sessionId, 9, function () {
             that.setData({ "formProperty.images": images });
           });
         }
