@@ -404,6 +404,7 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         return goodsOrderDto;
     }
 
+    @Transactional(readOnly = false)
     public void updatePullStatus(String id, String pullStatus,String expressOrderCode) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
         if(StringUtils.isNotEmpty(pullStatus)){
@@ -415,7 +416,8 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
                 }
                 carrierOrderRepository.save(carrierOrders);
             }
-        }else if(StringUtils.isNotBlank(expressOrderCode)){
+        }
+        if(StringUtils.isNotBlank(expressOrderCode)){
             ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
             expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderCode,expressOrder.getExpressCompanyId());
         }

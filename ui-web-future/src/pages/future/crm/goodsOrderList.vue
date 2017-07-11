@@ -19,85 +19,84 @@
         </el-dropdown>
         <span  v-html="searchText"></span>
       </el-row>
-      <el-dialog  title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+      <el-dialog  title="状态修改" v-model="detailVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="detailData" label-width="120px">
-          <el-row :gutter="4">
-            <el-col :span="12">
-              <el-form-item label="状态" prop="value">
-                <el-select v-model="inputForm.pullStatus" filterable clearable placeholder="请选择">
-                  <el-option v-for="status in formData.extra.pullStatusList" :key="status" :label="status" :value="status"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <el-form-item label="状态" prop="value">
+            <el-select v-model="inputForm.pullStatus" filterable clearable placeholder="请选择">
+              <el-option v-for="status in formData.extra.pullStatusList" :key="status" :label="status" :value="status"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="快递单号" prop="value">
+              <el-input  type="textarea" :rows="5" placeholder="请输入内容" v-model="inputForm.expressOrderCode"></el-input>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="formSubmit()">确定</el-button>
         </div>
       </el-dialog>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData">
+        <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="2">
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderList.netType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.netType')" >
                 <el-select v-model="formData.netType" clearable filterable :placeholder="$t('goodsOrderList.selectNetType')">
                   <el-option v-for="netType in formData.extra.netTypeList" :key="netType" :label="netType" :value="netType"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.businessId')"  :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.businessId')" >
                 <el-input  v-model="formData.businessId" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.billDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.billDate')">
                 <date-range-picker  v-model="formData.billDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.shipType')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.shipType')" >
                 <el-select v-model="formData.shipType" clearable filterable :placeholder="$t('goodsOrderList.selectShopType')">
                   <el-option v-for="shipType in formData.extra.shipTypeList" :key="shipType" :label="shipType" :value="shipType"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.office')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.office')" >
                 <office-select v-model="formData.areaId" @afterInit="setSearchText"></office-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderList.shipDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.shipDate')">
                 <date-range-picker  v-model="formData.shipDateRange" ></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.shop')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.shop')" >
                 <el-input v-model="formData.shopName" auto-complete="off"  :placeholder="$t('goodsOrderList.likeSearch')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.store')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.store')">
                 <depot-select v-model="formData.storeIdList" category="store" multiple @afterInit="setSearchText"></depot-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.createdBy')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.createdBy')">
                 <account-select v-model="formData.createdBy" @afterInit="setSearchText"  ></account-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.outCode')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.outCode')">
                 <el-input v-model="formData.outCode" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item :label="$t('goodsOrderList.createdDate')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.createdDate')">
                 <date-range-picker v-model="formData.createdDateRange"></date-range-picker>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.expressCodes')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.expressCodes')">
                 <el-input type="textarea" v-model="formData.expressCodes" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.businessId')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.businessId')">
                 <el-input type="textarea" v-model="formData.businessIds" auto-complete="off"  :placeholder="$t('goodsOrderList.multiEnterOrComma')"></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.status')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.status')">
                 <el-select v-model="formData.status" clearable filterable :placeholder="$t('goodsOrderList.selectStatus')">
                   <el-option v-for="status in formData.extra.statusList" :key="status" :label="status" :value="status"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.remarks')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.remarks')">
                 <el-input v-model="formData.remarks" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.expressCode')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.expressCode')">
                 <el-input v-model="formData.expressCode" auto-complete="off" :placeholder="$t('goodsOrderList.likeSearch')" ></el-input>
               </el-form-item>
-              <el-form-item :label="$t('goodsOrderList.lxMallOrder')" :label-width="formLabelWidth">
+              <el-form-item :label="$t('goodsOrderList.lxMallOrder')">
                 <bool-select v-model="formData.lxMallOrder"></bool-select>
               </el-form-item>
             </el-col>
@@ -130,9 +129,7 @@
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'pullStatus')">商城状态</el-button></div>
-
           </template>
-
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -165,9 +162,9 @@
       formData:{
           extra:{}
       },
+      detailData:{},
       inputForm:{},
       initPromise:{},
-      pageHeight:600,
       searchText:"",
       detailVisible:false,
       formLabelWidth: '80px',
@@ -247,8 +244,7 @@
         this.$message(response.data.message);
         this.detailVisible=false;
       })
-    },
-    handleCommand(command) {
+    }, handleCommand(command) {
       if(command==="batchAdd"){
         this.$router.push({ name: 'goodsOrderBatchAdd'});
       }else if(command==="carrierOrder"){
