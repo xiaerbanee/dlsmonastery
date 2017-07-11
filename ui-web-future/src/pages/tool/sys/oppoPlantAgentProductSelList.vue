@@ -52,7 +52,7 @@
     data(){
       return this.getData()
     },mounted() {
-      axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/form').then((response) => {
+      axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/form').then((response) => {
         this.inputForm = response.data;
         if(this.inputForm.lx){
           this.settings.colHeaders.push("LX对应货品");
@@ -134,7 +134,7 @@
             }
             console.log(tableData.length);
             this.inputForm.dataList = JSON.stringify(tableData);
-            axios.post('/api/global/tool/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
+            axios.post('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/save', qs.stringify({data: this.inputForm.dataList}, {allowDots: true})).then((response) => {
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success){
@@ -151,7 +151,7 @@
       },getTableData(){
         let submitData = util.deleteExtra(this.formData);
         util.setQuery("oppoPlantAgentProductSelList",submitData);
-        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
+        axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/filter', {params: submitData}).then((response) => {
           this.settings.data = response.data;
           console.log(response.data.length);
           table.loadData(this.settings.data);
@@ -175,12 +175,12 @@
         }
       },exportData(){
         if(this.date){
-          window.location.href='/api/global/tool/oppo/oppoPlantSendImeiPpsel/export?date='+this.date;
+          window.location.href='/api/global/tool/factory/oppo/oppoPlantSendImeiPpsel/export?date='+this.date;
         }else{
           this.$message({message:"请选择发货串码导出日期",type:'warning'})
         }
       },initPage(){
-        axios.get('/api/global/tool/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
+        axios.get('/api/global/tool/factory/oppo/oppoPlantAgentProductSel/getQuery').then((response)=>{
           this.formData = response.data;
         })
       }

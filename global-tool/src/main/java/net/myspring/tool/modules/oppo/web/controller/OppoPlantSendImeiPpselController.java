@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping(value = "oppo/oppoPlantSendImeiPpsel")
+@RequestMapping(value = "factory/oppo/oppoPlantSendImeiPpsel")
 public class OppoPlantSendImeiPpselController {
 
     @Autowired
