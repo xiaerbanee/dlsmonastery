@@ -774,6 +774,7 @@ export default {
     hasIme: "string kode",
     prerequisiteMessage: "必填信息",
     clientName: "客户",
+    delegateDepotName: "寄售门店",
   },
   goodsOrderDetail: {
     goodsOrderDetail: "货品订货详细",

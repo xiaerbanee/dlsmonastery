@@ -9,6 +9,9 @@ import java.math.BigDecimal;
 public class DepotAccountDto extends DataDto<Depot> {
 
     private String name;
+    private String delegateDepotId;
+    @CacheInput(inputKey = "depots",inputInstance = "delegateDepotId",outputInstance = "name")
+    private String delegateDepotName;
     private String officeId;
     @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "name")
     private String officeName;
@@ -28,6 +31,22 @@ public class DepotAccountDto extends DataDto<Depot> {
     private BigDecimal scbzj; //市场保证金
     private BigDecimal xxbzj; //形象保证金
     private BigDecimal ysjyj; //演示机押金
+
+    public String getDelegateDepotId() {
+        return delegateDepotId;
+    }
+
+    public void setDelegateDepotId(String delegateDepotId) {
+        this.delegateDepotId = delegateDepotId;
+    }
+
+    public String getDelegateDepotName() {
+        return delegateDepotName;
+    }
+
+    public void setDelegateDepotName(String delegateDepotName) {
+        this.delegateDepotName = delegateDepotName;
+    }
 
     public String getDepotShopAreaType() {
         return depotShopAreaType;
