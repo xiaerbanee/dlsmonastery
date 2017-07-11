@@ -10,12 +10,16 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.mapper.BeanUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.Request;
 
 import java.util.List;
 
@@ -26,6 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "input/arReceiveBill")
 public class ArReceiveBillController {
+    private static Logger logger = LoggerFactory.getLogger(ArReceiveBillController.class);
     @Autowired
     private ArReceiveBillService arReceiveBillService;
     @Autowired
@@ -41,6 +46,7 @@ public class ArReceiveBillController {
         if(accountKingdeeBook != null) {
              kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
         }else {
+            logger.info("您没有金蝶账号，不能开单：用户ID为" + RequestUtils.getAccountId() );
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
