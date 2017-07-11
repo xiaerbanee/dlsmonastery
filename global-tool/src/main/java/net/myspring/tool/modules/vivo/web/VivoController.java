@@ -3,6 +3,7 @@ package net.myspring.tool.modules.vivo.web;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
+import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.utils.RequestUtils;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
 import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
@@ -28,23 +29,29 @@ public class VivoController {
     private VivoService vivoService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private CompanyConfigClient companyConfigClient;
 
-    @RequestMapping(value="syn")
-    public String synFactoryVivo(String date){
-//        RequestUtils.setAccountId("1");
-//        RequestUtils.setCompanyId("1");
-        List<String> agentCodes = StringUtils.getSplitList(CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).getValue(),CharConstant.COMMA);
+    @RequestMapping(value="pullFactoryData")
+    public String pullFactoryData(String date){
+        String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
+        String[] agentCodes=agentCode.split(CharConstant.COMMA);
+        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         //同步颜色编码
+        if(!"IDVIVO".equals(companyName)){
+            List<VivoProducts> vivoProducts=vivoService.findProducts();
+            vivoService.pullVivoProducts(vivoProducts);
+        }
         LocalDate localDate= LocalDateUtils.parse(date);
-        List<VivoProducts> vivoProductsList = vivoService.products();
-        List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
-        List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(localDate,agentCodes);
+//        List<VivoProducts> vivoProductsList = vivoService.products();
+//        List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
+//        List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(localDate,agentCodes);
         //同步颜色编码
-        vivoService.pullProducts(vivoProductsList);
+//        vivoService.pullProducts(vivoProductsList);
         //同步物料编码
-        vivoService.pullPlantProducts(vivoPlantProductsList);
+//        vivoService.pullPlantProducts(vivoPlantProductsList);
 //        //同步发货串吗
-        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
+//        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
 //        //同步电子保卡
         List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.plantElectronicsn(localDate);
         vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
