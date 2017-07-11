@@ -128,7 +128,6 @@ public class CarrierOrderService {
                     }
                     carrierMap.put("detail", details);
                     String jsonStr = ObjectMapperUtils.writeValueAsString(carrierMap);
-                    carrierOrderMains.add(carrierOrderMain);
                     if (md5 == null || !md5.equals(MD5Utils.encode(jsonStr))) {
                         sb.append("商城信息：" + detailJson + "格式不正确,加密后字符串" + MD5Utils.encode(jsonStr) + "与原字符串不匹配");
                     } else {

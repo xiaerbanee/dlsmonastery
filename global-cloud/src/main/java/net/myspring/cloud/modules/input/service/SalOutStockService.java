@@ -6,14 +6,12 @@ import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.KingdeeFormIdEnum;
 import net.myspring.cloud.common.enums.KingdeeNameEnum;
 import net.myspring.cloud.common.enums.SalOutStockBillTypeEnum;
-import net.myspring.cloud.common.enums.SalReturnStockBillTypeEnum;
 import net.myspring.cloud.common.utils.HandsontableUtils;
 import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
-import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
@@ -68,30 +66,7 @@ public class SalOutStockService {
                 KingdeeFormIdEnum.SAL_OUTSTOCK.name(),
                 salOutStockDto.getJson(),
                 kingdeeBook,
-                KingdeeFormIdEnum.AR_receivable.name()) {
-            @Override
-            public String getNextBillNo() {
-                if(salOutStockDto.getBillType().contains("现销")){
-                    return "现销";
-                }else{
-                    String billNo = getBillNo();
-                    if (StringUtils.isNotBlank(billNo)){
-                        List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(billNo);
-                        if (receivableList.size() > 0){
-                            for (ArReceivable receivable : receivableList) {
-                                if (receivable != null) {
-                                    return receivable.getFBillNo();
-                                }
-                            }
-                        }else {
-                            return "未生成应收单";
-                        }
-                        return null;
-                    }
-                    return null;
-                }
-            }
-        };
+                KingdeeFormIdEnum.AR_receivable.name());
         kingdeeManager.save(kingdeeSynExtendDto);
         if (!kingdeeSynExtendDto.getSuccess()){
             throw new ServiceException("销售入库单："+kingdeeSynExtendDto.getResult());

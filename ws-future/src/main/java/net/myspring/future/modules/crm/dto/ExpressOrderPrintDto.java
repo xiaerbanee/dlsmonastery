@@ -30,7 +30,16 @@ public class ExpressOrderPrintDto {
     private String mobilePhone;
     private String remarks;
     private String employeeId;
+    private String extendBusinessId;
     private List<ExpressOrderPrintDetailDto> expressOrderPrintDetailDtoList = Lists.newArrayList();
+
+    public String getExtendBusinessId() {
+        return extendBusinessId;
+    }
+
+    public void setExtendBusinessId(String extendBusinessId) {
+        this.extendBusinessId = extendBusinessId;
+    }
 
     public String getId() {
         return id;
