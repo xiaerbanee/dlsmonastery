@@ -89,8 +89,8 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "updatePullStatus")
-    public RestResponse updatePullStatus(String id, String pullStatus,String expressOrderCode) {
-        goodsOrderService.updatePullStatus(id, pullStatus,expressOrderCode);
+    public RestResponse updatePullStatus(String id, String pullStatus,String expressOrderExpressCodes) {
+        goodsOrderService.updatePullStatus(id, pullStatus,expressOrderExpressCodes);
         return new RestResponse("状态修改成功",ResponseCodeEnum.saved.name());
     }
 

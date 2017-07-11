@@ -405,8 +405,8 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         return goodsOrderDto;
     }
 
-    @Transactional(readOnly = false)
-    public void updatePullStatus(String id, String pullStatus,String expressOrderCode) {
+    @Transactional
+    public void updatePullStatus(String id, String pullStatus,String expressOrderExpressCodes) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
         if(StringUtils.isNotEmpty(pullStatus)){
             goodsOrder.setPullStatus(pullStatus);
@@ -418,9 +418,9 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
                 carrierOrderRepository.save(carrierOrders);
             }
         }
-        if(StringUtils.isNotBlank(expressOrderCode)){
+        if(StringUtils.isNotBlank(expressOrderExpressCodes)){
             ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderCode,expressOrder.getExpressCompanyId());
+            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderExpressCodes,expressOrder.getExpressCompanyId());
         }
         goodsOrderRepository.save(goodsOrder);
     }
