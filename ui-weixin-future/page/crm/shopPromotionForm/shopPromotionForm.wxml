@@ -9,8 +9,8 @@
           <view class="weui-label">门店</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="shopId" value="{{formData.shop.id}}" bindtap="bindShop" disabled>
-            <view class="weui-input">{{formData.shop.name}}<image class="right_icon" src="/image/icons/right.png"/></view>
+          <picker name="shopId" value="{{formData.shopId}}" bindtap="bindShop" disabled>
+            <view class="weui-input">{{formData.shopName}}<image class="right_icon" src="/image/icons/right.png"/></view>
           </picker>
         </view>
         <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
@@ -35,7 +35,7 @@
           <view class="weui-label">活动类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="activityType" range="{{formProperty.activityList}}" value="{{formData.activityType}}" data-name="activityType" bindchange="bindActivityType">
+          <picker name="activityType" range="{{formProperty.activityTypeList}}" value="{{formData.activityType}}" data-name="activityType" bindchange="bindActivityType">
             <view class="weui-input">{{formData.activityType}}</view>
           </picker>
         </view>
@@ -143,7 +143,7 @@
                 <view class="weui-uploader__files" id="uploaderFiles">
                   <block wx:for-items="{{formProperty.activityImage2}}" wx:for-item="img" wx:key="{{index}}">
                     <view class="weui-uploader__file" bindtap="previewImage" id="{{item}}">
-                      <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" data-name="activityImage2" bindtap="showImageActionSheet" />
+                      <image class="weui-uploader__img" mode="aspectFill" src="{{img.preview}}" data-view="{{img.view}}" data-index="{{index}}" data-name="               " bindtap="showImageActionSheet" />
                     </view>
                     <input type="hidden" name="activityImage2" value="{{img.id}}" class="hidden" />
                   </block>

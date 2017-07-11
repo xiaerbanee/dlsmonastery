@@ -41,7 +41,7 @@ Page({
         })
     },
     pageRequest: function () {
-        var that = this
+        var that = this;
         wx.request({
             url: $util.getUrl("basic/hr/dutySign"),
             header: {
@@ -110,7 +110,7 @@ Page({
                 if (!res.cancel) {
                     if (itemList[res.tapIndex] == '详细') {
                         wx.navigateTo({
-                            url: '/page/hr/dutySignForm/dutySignForm?action=detail&id=' + id
+                            url: `/page/hr/dutySignForm/dutySignForm?action=detail&id= ${id}`
                         })
                     } else if (itemList[res.tapIndex] == '删除') {
                         wx.request({
