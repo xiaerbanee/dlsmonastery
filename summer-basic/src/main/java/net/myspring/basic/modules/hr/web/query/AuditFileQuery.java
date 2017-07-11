@@ -6,6 +6,8 @@ import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.bouncycastle.cert.ocsp.Req;
+import sun.misc.Request;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,7 +29,18 @@ public class AuditFileQuery extends BaseQuery {
     private String content;
     private String title;
     private String processflowName;
+    private LocalDate createdDateStart;
+    private LocalDate createdDateEnd;
+    private List<String> processTypeIdList=Lists.newArrayList();
     private List<String> processFlowIdList=Lists.newArrayList();
+
+    public List<String> getProcessTypeIdList() {
+        return processTypeIdList;
+    }
+
+    public void setProcessTypeIdList(List<String> processTypeIdList) {
+        this.processTypeIdList = processTypeIdList;
+    }
 
     public List<String> getProcessFlowIdList() {
         return processFlowIdList;
@@ -46,6 +59,11 @@ public class AuditFileQuery extends BaseQuery {
     }
 
     public String getPositionId() {
+        if(StringUtils.isBlank(getAuditType())||!"全部".equals(getAuditType())) {
+            this.positionId= RequestUtils.getPositionId();
+        }else {
+            this.positionId=null;
+        }
         return positionId;
     }
 
@@ -62,6 +80,9 @@ public class AuditFileQuery extends BaseQuery {
     }
 
     public String getAuditType() {
+        if(StringUtils.isBlank(auditType)) {
+            this.auditType= "待批(需要我审核)";
+        }
         return auditType;
     }
 
@@ -144,16 +165,26 @@ public class AuditFileQuery extends BaseQuery {
     public LocalDate getCreatedDateStart() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+        } else if(createdDateStart!=null){
+            return createdDateStart;
         }
+        return null;
+    }
+
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.createdDateStart = dutyDateStart;
     }
 
     public LocalDate getCreatedDateEnd() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
+        } else if(createdDateEnd!=null){
+            return createdDateEnd;
         }
+        return null;
+    }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.createdDateEnd = dutyDateEnd;
     }
 }

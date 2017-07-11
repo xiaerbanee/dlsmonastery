@@ -13,6 +13,8 @@ import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ReflectionUtils;
 
@@ -48,7 +50,6 @@ public class CacheReadUtils {
             return;
         }
         LocalDateTime start = LocalDateTime.now();
-        logger.info("read cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         Class clazz;
         List<Object> list;
         if (CollectionUtil.isNotEmpty(objects)) {
@@ -119,8 +120,6 @@ public class CacheReadUtils {
                 }
             }
             LocalDateTime end = LocalDateTime.now();
-            logger.info("read cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-            logger.info("read cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");
         }
     }
 
@@ -140,14 +139,19 @@ public class CacheReadUtils {
         for(int i=0;i<keyList.size();i++) {
             bytes[i] = keyList.get(i).getBytes();
         }
-        RedisConnection connection = redisTemplate.getConnectionFactory().getConnection();
-        List<byte[]> cacheList = connection.mGet(bytes);
-        connection.close();
+        RedisConnectionFactory factory = redisTemplate.getConnectionFactory();
+        RedisConnection connection = null;
+        List<byte[]> cacheList;
+        try {
+            connection = redisTemplate.getConnectionFactory().getConnection();
+            cacheList = connection.mGet(bytes);
+        } finally {
+            RedisConnectionUtils.releaseConnection(connection,factory);
+        }
         Map<String,Object> cacheMap = Maps.newHashMap();
         for (int i = 0; i < keyList.size(); i++) {
             byte[] cache = cacheList.get(i);
             Object object = null;
-
             if (cache != null) {
                 String json = null;
                 try {

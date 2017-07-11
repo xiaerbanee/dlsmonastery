@@ -119,6 +119,7 @@ public class BankInController {
                 audit(bankInAuditForm);
             }catch(Exception e){
                 errMsg.append("第").append(i + 1).append("条记录审核失败，失败原因：").append(e.getMessage()).append("；");
+                e.printStackTrace();
             }
         }
 
@@ -208,6 +209,7 @@ public class BankInController {
                 save(bankInForm);
             }catch(Exception e){
                 errMsg.append("第").append(i + 1).append("条记录保存失败，失败原因：").append(e.getMessage()).append("；");
+                e.printStackTrace();
             }
         }
 

@@ -4,29 +4,47 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: { },
+    formData: {},
     searchHidden: true,
     activeItem: null,
-    auditList: [{ id: '0', name: '待批(需要我审核)' }, { id: '1', name: '全部' }]
+    auditList: ['待批(需要我审核)', '全部']
   },
   onLoad: function (option) {
-    var that = this
-    that.setData({
-      "formData.auditTypeName": '待批(需要我审核)',
-      "formData.needAuditByMe": '0',
-       "formData.createdDateStart": $util.formatLocalDate($util.getFirstDayOfMonth(new Date())),
-      "formData.createdDateEnd": $util.formatLocalDate(new Date),
-    })
+    var that = this;
+    that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
-    var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
+    let that = this;
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   initPage: function () {
     var that = this;
-    that.pageRequest();
+    wx.request({
+      url: $util.getUrl("basic/hr/auditFile/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.setData({
+          "formData.auditType": '待批(需要我审核)',
+          "formData.createdDateStart": $util.formatLocalDate($util.getFirstDayOfMonth(new Date())),
+          "formData.createdDateEnd": $util.formatLocalDate(new Date),
+        })
+        that.pageRequest();
+      }
+    })
   },
   pageRequest: function () {
     var that = this;
@@ -38,12 +56,14 @@ Page({
         wx.request({
           url: $util.getUrl("basic/hr/auditFile"),
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            for (var item in res.data.content) {
-              if(res.data.content[item].content){
-                res.data.content[item].content = res.data.content[item].content.replace(/\[([^\]]+)\]/g)
-              }
+            let deleted = wx.getStorageSync("authorityList").includes("crm:depot:delete");
+            for (let item in res.data.content) {
+              let actionList = new Array();
+              actionList.push("详细","审核");
+              if (deleted) { actionList.push("删除"); }
+              res.data.content[item].actionList = actionList;
             }
             that.setData({ page: res.data });
             wx.hideToast();
@@ -98,7 +118,7 @@ Page({
   },
   bindAuditType: function (e) {
     var that = this;
-    that.setData({ 'formData.needAuditByMe': that.data.auditList[e.detail.value].id, 'formData.auditTypeName': that.data.auditList[e.detail.value].name })
+    that.setData({ 'formData.auditType': that.data.auditList[e.detail.value] })
   },
   itemActive: function (e) {
     var that = this;
@@ -120,7 +140,7 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id;
     var itemList = that.data.activeItem.actionList;
-    if (!itemList) {
+    if (itemList.length==0) {
       return;
     }
     wx.showActionSheet({
@@ -139,9 +159,9 @@ Page({
             wx.request({
               url: $util.getUrl("basic/hr/auditFile/delete"),
               data: { id: id },
-              header: {  
+              header: {
                 Cookie: "JSESSIONID=" + app.globalData.sessionId
-               },
+              },
               success: function (res) {
                 that.pageRequest();
               }
@@ -167,7 +187,6 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: that.data.formData, "formData.page": 0 });
-    console.log(that.data.formData.auditTypeName)
     that.pageRequest();
   }
 })

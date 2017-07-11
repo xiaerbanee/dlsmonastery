@@ -18,7 +18,6 @@ import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -31,7 +30,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -106,12 +104,22 @@ public class SupplierPayableService {
                 String key = supplierPayableDto.getSupplierId()+CharConstant.COMMA + supplierPayableDto.getDepartmentId();
                 actualPayKeyMap.put(key, supplierPayableDto.getBeginAmount());
             }
-            Map<String, BdSupplier> bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
-            Map<String, BdDepartment> bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId, BdDepartment -> BdDepartment));
+            Map<String, BdSupplier> bdSupplierIdMap;
+            if (supplierIdList.size()>0){
+                bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+            }else {
+                bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+            }
+            Map<String, BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
+            if (departmentIdList.size()>0){
+                 bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId, BdDepartment -> BdDepartment));
+            }
             for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
                 String key = supplierPayable.getSupplierId()+CharConstant.COMMA + supplierPayable.getDepartmentId();
                 supplierPayable.setSupplierName(bdSupplierIdMap.get(supplierPayable.getSupplierId()).getFName());
-                supplierPayable.setDepartmentName(bdDepartmentIdMap.get(supplierPayable.getDepartmentId()).getFFullName());
+                if (bdDepartmentIdMap.size()>0){
+                    supplierPayable.setDepartmentName(bdDepartmentIdMap.get(supplierPayable.getDepartmentId()).getFFullName());
+                }
                 supplierPayable.setPayableAmount(payableKeyMap.get(key));
                 supplierPayable.setActualPayAmount(actualPayKeyMap.get(key));
                 if (supplierPayableQuery.getQueryDetail()) {
@@ -192,11 +200,9 @@ public class SupplierPayableService {
         }else {
             bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }
-        Map<String,BdDepartment> bdDepartmentIdMap;
+        Map<String,BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(departmentIdList)) {
             bdDepartmentIdMap =  bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
-        }else {
-            bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
         }
         Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
         if (materialIdList.size()>0){
@@ -216,7 +222,9 @@ public class SupplierPayableService {
                 int index = 0;
                 SupplierPayableDetailDto supplierPayableDetailDto = new SupplierPayableDetailDto();
                 supplierPayableDetailDto.setBillType(bdSupplierIdMap.get(key.split(CharConstant.COMMA)[0]).getFName());
-                supplierPayableDetailDto.setBillNo(bdDepartmentIdMap.get(key.split(CharConstant.COMMA)[1]).getFFullName());
+                if (bdDepartmentIdMap.size()>0){
+                    supplierPayableDetailDto.setBillNo(bdDepartmentIdMap.get(key.split(CharConstant.COMMA)[1]).getFFullName());
+                }
                 supplierPayableDetailDto.setIndex(index++);
                 list.add(supplierPayableDetailDto);
 

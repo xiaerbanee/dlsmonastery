@@ -7,46 +7,76 @@ Page({
     formData: {},
     formProperty:{},
     activeItem: null,
-    searchHidden: true
+    searchHidden: true,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
-    var that = this;
-    wx.request({
-      url: $util.getUrl("crm/shopPromotion/getQuery"),
-      data: {},
-      method: 'GET',
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
-      success: function (res) {
-        that.setData({ 'formProperty.activityList': res.data.activityType })
-      }
-    })
+    this.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
-    var that = this;
-    app.autoLogin(function(){
-      that.initPage()
-    });
-  },
-  initPage:function() {
-    var that = this;
-    that.pageRequest();
-  },
-  pageRequest: function () {
-    var that = this;
+    let that = this;
     wx.showToast({
       title: '加载中',
       icon: 'loading',
       duration: 10000,
       success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
+  },
+  initPage:function() {
+     let that  = this;
+     wx.request({
+       url: $util.getUrl("ws/future/layout/shopPromotion/getQuery"),
+      data: {},
+      method: 'GET',
+      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      success: function (res) {
+        that.setData({ formData: res.data });
+        that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList });
         wx.request({
-          url: $util.getUrl("crm/shopPromotion"),
-          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          data: that.data.formData,
+          url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=活动拉销"),
+          data: {},
+          method: 'GET',
+          header: {
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
+          },
           success: function (res) {
-            that.setData({ page: res.data });
-            wx.hideToast();
+            that.setData({ 'formProperty.processList': res.data })
           }
         })
+        that.pageRequest();
+      }
+     })
+  },
+  pageRequest: function () {
+    let that = this;
+    wx.request({
+      url: $util.getUrl("ws/future/layout/shopPromotion"),
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
+      data: $util.deleteExtra(that.data.formData),
+      success: function (res) {
+        console.log('list:',res.data)
+        var content = res.data.content;
+        for (var item in content) {
+          var actionList = new Array();
+          actionList.push("详细");
+          if (content[item].isAuditable && content[item].processStatus !== "已通过" && content[item].processStatus !== "未通过") {
+            actionList.push("审核");
+          }
+          if (content[item].isEditable && !content[item].locked) {
+            actionList.push("修改", "删除");
+          }
+          res.data.content[item].actionList = actionList;
+        }
+        that.setData({ page: res.data });
+        wx.hideToast();
+        that.setData({ scrollTop: $util.toUpper() });
       }
     })
   },
@@ -61,7 +91,7 @@ Page({
   },
   bindActivityType: function (e) {
     var that = this;
-    that.setData({ 'formData.activityType': that.data.formProperty.activityList[e.detail.value] })
+    that.setData({ 'formData.activityType': that.data.formProperty.activityTypeList[e.detail.value] })
   },
   bindDateChange: function (e) {
     var that = this;

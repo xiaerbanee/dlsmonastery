@@ -30,6 +30,7 @@ repositories {
 
 dependencies {
 	compile project(':summer-common')
+	compile('com.alibaba:druid:1.0.23')
 	runtime('mysql:mysql-connector-java:5.1.42')
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')

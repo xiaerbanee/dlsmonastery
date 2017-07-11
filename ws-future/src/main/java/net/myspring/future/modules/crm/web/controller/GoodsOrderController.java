@@ -8,12 +8,14 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.GoodsOrderPullStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
+import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
@@ -33,6 +35,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -52,6 +55,8 @@ public class GoodsOrderController {
     private ExpressCompanyService expressCompanyService;
     @Autowired
     private CarrierOrderService carrierOrderService;
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
@@ -71,6 +76,7 @@ public class GoodsOrderController {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
+        goodsOrderQuery.getExtra().put("pullStatusList", GoodsOrderPullStatusEnum.getList());
         return goodsOrderQuery;
     }
 
@@ -80,6 +86,12 @@ public class GoodsOrderController {
         goodsOrderForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
+    }
+
+    @RequestMapping(value = "updatePullStatus")
+    public boolean updatePullStatus(String id, String status) {
+        goodsOrderService.updatePullStatus(id, status);
+        return true;
     }
 
     @RequestMapping(value = "findDetailList")
@@ -132,6 +144,7 @@ public class GoodsOrderController {
         GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderDto.getShipType());
+        goodsOrderBillForm.getExtra().put("storeList",depotService.findStoreList(depotQuery));
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
         goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
         CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name());

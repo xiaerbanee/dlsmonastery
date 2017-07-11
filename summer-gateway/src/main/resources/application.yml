@@ -8,6 +8,7 @@ server:
 
 logging:
   file: summer-gateway.log
+  level: debug
 
 spring:
   redis:
@@ -15,8 +16,8 @@ spring:
     password:
     port: 6379
     database: 0
-    max-idle: 25
-    max-total: 50
+    max-idle: 250
+    max-total: 500
   application:
     name: summer-gateway
 management:
@@ -78,4 +79,3 @@ security:
     resource:
       preferTokenInfo: false
       user-info-uri: http://localhost:1100/uaa/user
-  sessions: ALWAYS

@@ -8,6 +8,7 @@ import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -30,7 +31,7 @@ public class AdGoodsOrderQuery extends BaseQuery {
             return new ArrayList<>();
         }
 
-        return StringUtils.getSplitList(idStr, CharConstant.COMMA);
+        return Arrays.asList(idStr.split(CharConstant.COMMA+CharConstant.VERTICAL_LINE+CharConstant.ENTER+CharConstant.VERTICAL_LINE+CharConstant.SPACE));
     }
 
     public Boolean getHasDeposit() {

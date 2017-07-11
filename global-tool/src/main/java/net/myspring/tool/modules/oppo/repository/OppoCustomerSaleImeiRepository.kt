@@ -39,7 +39,7 @@ class OppoCustomerSaleImeiRepositoryImpl @Autowired constructor(val namedParamet
                     crm_depot de
             where
                     sa.created_date >=:dateStart
-                    and sa.created_date <= :dateEnd
+                    and sa.created_date < :dateEnd
                     and sa.product_ime_id = im.id
                     and sa.shop_id = de.id
                     and sa.is_back = 0

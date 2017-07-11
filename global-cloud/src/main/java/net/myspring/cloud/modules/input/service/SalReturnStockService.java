@@ -60,7 +60,6 @@ public class SalReturnStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    @Transactional
     private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salReturnStockDto.getExtendId(),
@@ -68,30 +67,7 @@ public class SalReturnStockService {
                 KingdeeFormIdEnum.SAL_RETURNSTOCK.name(),
                 salReturnStockDto.getJson(),
                 kingdeeBook,
-                KingdeeFormIdEnum.AR_receivable.name()) {
-            @Override
-            public String getNextBillNo() {
-                if(salReturnStockDto.getBillType().contains("现销")){
-                    return "现销";
-                }else{
-                    String billNo = getBillNo();
-                    if (StringUtils.isNotBlank(billNo)){
-                        List<ArReceivable> receivableList = arReceivableRepository.findTopOneBySourceBillNo(billNo);
-                        if (receivableList.size() > 0){
-                            for (ArReceivable receivable : receivableList) {
-                                if (receivable != null) {
-                                    return receivable.getFBillNo();
-                                }
-                            }
-                        }else {
-                            return "未生成应收单";
-                        }
-                        return null;
-                    }
-                    return null;
-                }
-            }
-        };
+                KingdeeFormIdEnum.AR_receivable.name());
         kingdeeManager.save(kingdeeSynExtendDto);
         if (!kingdeeSynExtendDto.getSuccess()){
             throw new ServiceException("销售退货单："+kingdeeSynExtendDto.getResult());

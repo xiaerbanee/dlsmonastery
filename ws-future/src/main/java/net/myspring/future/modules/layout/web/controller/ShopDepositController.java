@@ -101,8 +101,8 @@ public class ShopDepositController {
             if(StringUtils.isBlank(shopDepositBatchDetailForm.getShopName())){
                 throw new ServiceException("门店不可以为空");
             }
-            if(StringUtils.isBlank(shopDepositBatchDetailForm.getBankName())){
-                throw new ServiceException("银行不可以为空");
+            if(OutBillTypeEnum.手工日记账.name().equals(shopDepositBatchDetailForm.getOutBillType()) && StringUtils.isBlank(shopDepositBatchDetailForm.getBankName())){
+                throw new ServiceException("开单类型为手工日记账时，银行不能为空");
             }
             if(StringUtils.isBlank(shopDepositBatchDetailForm.getOutBillType())){
                 throw new ServiceException("开单类型不可以为空");
@@ -128,7 +128,7 @@ public class ShopDepositController {
             if(!depotNameMap.containsKey(shopDepositBatchDetailForm.getShopName())){
                 throw new ServiceException("门店："+shopDepositBatchDetailForm.getShopName()+"不存在");
             }
-            if(!bankNameMap.containsKey(shopDepositBatchDetailForm.getBankName())){
+            if(StringUtils.isNotBlank(shopDepositBatchDetailForm.getBankName()) && !bankNameMap.containsKey(shopDepositBatchDetailForm.getBankName())){
                 throw new ServiceException("银行："+shopDepositBatchDetailForm.getBankName()+"不存在");
             }
             if(!departmentMap.containsKey(shopDepositBatchDetailForm.getDepartMentName())){
@@ -143,7 +143,11 @@ public class ShopDepositController {
             try{
                 ShopDepositForm shopDepositForm = new ShopDepositForm();
                 shopDepositForm.setShopId(depotNameMap.get(shopDepositBatchDetailForm.getShopName()));
-                shopDepositForm.setBankId(bankNameMap.get(shopDepositBatchDetailForm.getBankName()));
+                if(OutBillTypeEnum.手工日记账.name().equals(shopDepositBatchDetailForm.getOutBillType())){
+                    shopDepositForm.setBankId(bankNameMap.get(shopDepositBatchDetailForm.getBankName()));
+                }else{
+                    shopDepositForm.setBankId(null);
+                }
                 shopDepositForm.setDepartMent(departmentMap.get(shopDepositBatchDetailForm.getDepartMentName()).getFNumber());
                 shopDepositForm.setBillDate(shopDepositBatchDetailForm.getBillDate());
                 shopDepositForm.setDemoPhoneAmount(shopDepositBatchDetailForm.getDemoPhoneAmount());
@@ -154,6 +158,7 @@ public class ShopDepositController {
                 save(shopDepositForm);
             }catch(Exception e){
                 errMsg.append("第").append(i + 1).append("条记录保存失败，失败原因：").append(e.getMessage()).append("；");
+                e.printStackTrace();
             }
         }
 

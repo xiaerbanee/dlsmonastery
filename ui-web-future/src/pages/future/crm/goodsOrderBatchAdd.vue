@@ -28,12 +28,8 @@
 </style>
 <script>
   import Handsontable from 'handsontable/dist/handsontable.full.js'
-  import suAlert from 'components/common/su-alert'
   let table = null;
   export default {
-    components:{
-      suAlert,
-    },
     data() {
       return this.getData();
     },created(){
@@ -170,8 +166,10 @@
             }
           axios.post('/api/ws/future/crm/goodsOrder/batchAdd', qs.stringify(util.deleteExtra(this.formData),{allowDots: true})).then((response)=>{
             this.$message(response.data.message);
-            Object.assign(this.$data, this.getData());
-            this.initPage();
+            if(response.data.success) {
+              Object.assign(this.$data, this.getData());
+              this.initPage();
+            }
           }).catch( () => {
             this.submitDisabled = false;
           });
