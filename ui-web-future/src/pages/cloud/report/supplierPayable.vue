@@ -139,12 +139,11 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
-      },detailAction:function(supplierId,departmentId){
+      },detailAction:function(supplierId){
         this.detailLoading = true;
-        if(supplierId !== null) {
+        if(supplierId !== null){
           let submitDetail = Object();
           submitDetail.supplierIdList = supplierId;
-          submitDetail.departmentIdList = departmentId;
           submitDetail.dateStart = this.formData.dateStart;
           submitDetail.dateEnd = this.formData.dateEnd;
           axios.get('/api/global/cloud/report/supplierPayable/detail',{params:submitDetail}).then((response) =>{
