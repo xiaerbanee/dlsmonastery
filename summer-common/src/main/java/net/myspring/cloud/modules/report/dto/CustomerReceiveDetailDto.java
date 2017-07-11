@@ -32,7 +32,7 @@ public class CustomerReceiveDetailDto {
     private BigDecimal totalAmount;
     //应收金额
     private BigDecimal shouldGet;
-    //实收金额(预收)
+    //实收金额
     private BigDecimal realGet;
     //期末应收款
     private BigDecimal endShouldGet;
