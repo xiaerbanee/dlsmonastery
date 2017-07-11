@@ -6,7 +6,7 @@ import net.myspring.util.collection.CollectionUtil;
 import java.util.List;
 
 public enum BankInTransferTypeEnum {
-    公对公,个人对公;
+    公对公,个人对公, 个人对个人;
     private static List<String> list= Lists.newArrayList();
 
     public static List<String> getList(){

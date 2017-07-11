@@ -46,14 +46,13 @@
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
         <el-table-column fixed prop="supplierName" label="供应商名称" sortable width="200"></el-table-column>
-        <el-table-column prop="departmentName" label="门店名称"></el-table-column>
         <el-table-column prop="beginAmount" label="期初应付"></el-table-column>
         <el-table-column prop="payableAmount" label="应付金额"></el-table-column>
         <el-table-column prop="actualPayAmount" label="实付金额"></el-table-column>
         <el-table-column prop="endAmount" label="期末应付"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
-            <el-button size="small" @click="detailAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
+            <el-button size="small" @click="detailAction(scope.row.supplierId)">详细</el-button>
           </template>
         </el-table-column>
       </el-table>

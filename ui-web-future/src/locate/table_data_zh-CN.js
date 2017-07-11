@@ -120,6 +120,7 @@ export default {
       apPayBill:'付款单',
       cloudReportCategory:"财务报表",
       supplierPayable:"应付对账报表",
+      supplierPayableZMD:"应付对账报表（专卖店）",
       customerReceive:"应收对账报表",
       consignmentReport:"委托代销报表",
       retailReport:"零售报表",

@@ -11,7 +11,7 @@
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.searchBusinessId')">
               <input class="el-input__inner" ref="businessIdInput" v-model="businessId" @input="initPage(businessId, false)"
-                     @keyup.enter="initPage(businessId, true)" placeholder="请输入订单号末6位加回车或12位订单号"/>
+                     @keyup.enter="initPage(businessId, true)" placeholder="请输入订单号末6位加回车或完整订单号"/>
             </el-form-item>
             <div v-show="inputForm.id">
               <el-form-item :label="$t('goodsOrderShip.storeName')">
@@ -111,10 +111,6 @@
         }
       },
       formSubmit() {
-        if(util.isBlank(this.inputForm.imeStr) && util.isBlank(this.inputForm.boxImeStr)) {
-          this.$alert("请填入发货串码或箱号");
-          return;
-        }
         this.submitDisabled = true;
         let checkAndSummaryPromise = this.checkAndSummary();
         checkAndSummaryPromise.then((checkResult)=>{
@@ -163,6 +159,9 @@
           }
         });
       },refreshDetailShipInfo(shipQtyMap){
+        if(!this.goodsOrder.goodsOrderDetailDtoList){
+          return ;
+        }
         for(let item of this.goodsOrder.goodsOrderDetailDtoList) {
           if(item.hasIme) {
             item.shipQty = (shipQtyMap[item.productId] ? shipQtyMap[item.productId] : 0);
@@ -186,7 +185,7 @@
         this.businessId = businessId;
         this.shipResult={};
 
-        if( util.isNotBlank(businessId) && (_.trim(businessId).length === 12 || searchImmediately)){
+        if( util.isNotBlank(businessId) && (_.trim(businessId).length === 12 || _.trim(businessId).length===14 || searchImmediately)){
           axios.get('/api/ws/future/crm/goodsOrderShip/getShipByBusinessId',{params: {businessId:businessId}}).then((response)=>{
             this.goodsOrder = response.data;
             this.inputForm.id  = this.goodsOrder.id;
@@ -197,6 +196,7 @@
             if(util.isNotBlank(this.goodsOrder.id)){
               this.focusOnImeStrTextArea();
             }else{
+              this.$message("该单号不存在或者不是待发货状态");
               this.focusOnBusinessIdInput();
             }
           });

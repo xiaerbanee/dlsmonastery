@@ -82,6 +82,9 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
+        if (StringUtils.isNotEmpty(shopAdQuery.lastModifiedBy)) {
+            sb.append("""  and t1.last_modified_by = :lastModifiedBy """)
+        }
         if (shopAdQuery.specialArea != null && shopAdQuery.specialArea) {
             sb.append("""  and t1.special_area = 1 """)
         }
@@ -99,6 +102,12 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         }
         if (shopAdQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd""")
+        }
+        if (shopAdQuery.lastModifiedDateStart != null) {
+            sb.append("""  and t1.last_modified_date  >= :lastModifiedDateStart """)
+        }
+        if (shopAdQuery.lastModifiedDateEnd != null) {
+            sb.append("""  and t1.last_modified_date  < :lastModifiedDateEnd""")
         }
         if (CollectionUtil.isNotEmpty(shopAdQuery.depotIdList)) {
             sb.append("""  and depot.id in (:depotIdList) """)
@@ -143,6 +152,9 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         if (StringUtils.isNotEmpty(shopAdQuery.createdBy)) {
             sb.append("""  and t1.created_by = :createdBy """)
         }
+        if (StringUtils.isNotEmpty(shopAdQuery.lastModifiedBy)) {
+            sb.append("""  and t1.last_modified_by = :lastModifiedBy """)
+        }
         if (shopAdQuery.specialArea != null && shopAdQuery.specialArea) {
             sb.append("""  and t1.special_area = 1 """)
         }
@@ -160,6 +172,12 @@ class ShopAdRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate
         }
         if (shopAdQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd""")
+        }
+        if (shopAdQuery.lastModifiedDateStart != null) {
+            sb.append("""  and t1.last_modified_date  >= :lastModifiedDateStart """)
+        }
+        if (shopAdQuery.lastModifiedDateEnd != null) {
+            sb.append("""  and t1.last_modified_date  < :lastModifiedDateEnd""")
         }
         if (CollectionUtil.isNotEmpty(shopAdQuery.depotIdList)) {
             sb.append("""  and depot.id in (:depotIdList) """)

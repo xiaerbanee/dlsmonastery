@@ -30,7 +30,7 @@ public class OfficeManager {
         } else if (OfficeTypeEnum.职能部门.name().equalsIgnoreCase(officeDto.getType())) {
             List<OfficeBusinessDto> businessList = officeBusinessRepository.findByOfficeId(officeDto.getId());
             if (CollectionUtil.isNotEmpty(businessList)) {
-                List<String> officeIds = CollectionUtil.extractToList(businessList, "id");
+                List<String> officeIds = CollectionUtil.extractToList(businessList, "businessOfficeId");
                 officeIdList.addAll(officeIds);
                 List<OfficeDto> childOfficeList = officeRepository.findByParentIdsListLike(officeIds);
                 officeIdList.addAll(CollectionUtil.extractToList(childOfficeList, "id"));

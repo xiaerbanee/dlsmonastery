@@ -19,13 +19,13 @@ Page({
     var that = this;
     var options = that.data.options;
     wx.request({
-      url: $util.getUrl("crm/shopPromotion/getForm"),
+      url: $util.getUrl("ws/future/layout/shopPromotion/getForm"),
       data: {},
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
         console.log(res)
-        that.setData({ 'formProperty.activityList': res.data.activityType })
+        that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList })
       }
     })
     if (options.action == "update") {
@@ -46,37 +46,35 @@ Page({
   },
   bindActivityType: function (e) {
     var that = this;
-    that.setData({ 'formData.activityType': that.data.formProperty.activityList[e.detail.value] })
+    that.setData({ 'formData.activityType': that.data.formProperty.activityTypeList[e.detail.value] })
   },
-  addImage: function (e) {
+  addImage:  function(e) {
     var that = this;
-    var activityImage = e.target.dataset.name;
-    var images = that.data.formProperty[activityImage];
-    if (!images) {
-      images = new Array();
-    }
+    let images = [];
+    let name = e.target.dataset.name;
     wx.chooseImage({
       count: 9,
-      sizeType: ['original', 'compressed'],
-      sourceType: ['camera', 'album'],
+      sizeType: ['compressed', 'original'],
+      sourceType: ['album', 'camera'],
       success: function (res) {
         var tempFilePaths = res.tempFilePaths;
-        for (var i in tempFilePaths) {
+        for (let i in tempFilePaths) {
           wx.uploadFile({
-            url: $util.getUrl('sys/folderFile/upload'),
-            header: { 'x-auth-token': app.globalData.sessionId },
+            url: $util.getUrl('general/sys/folderFile/upload'),
+            header: {
+              Cookie: "JSESSIONID=" + app.globalData.sessionId
+            },
             filePath: tempFilePaths[i],
             name: 'file',
-            formData: { uploadPath: 'shopPromotion' },
+            formData: {
+              uploadPath: 'shopPromotion'
+            },
             success: function (res) {
-              var folderFile = JSON.parse(res.data);
-              images.push({
-                id: folderFile[0].id,
-                preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile[0].id),
-                view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile[0].id)
+              var folderFile = JSON.parse(res.data)[0];
+              $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 9, function () {
+                that.data.formProperty[name] = images;
+                that.setData({ formProperty: that.data.formProperty });
               });
-              that.data.formProperty[activityImage] = images;
-              that.setData({ 'formProperty': that.data.formProperty })
             }
           })
         }
@@ -114,7 +112,7 @@ Page({
     e.detail.value.activityImage2 = $util.getImageStr(that.data.formProperty.activityImage2,app.globalData.sessionId);
     e.detail.value.activityImage3 = $util.getImageStr(that.data.formProperty.activityImage3,app.globalData.sessionId);
     wx.request({
-      url: $util.getUrl("crm/shopPromotion/save"),
+      url: $util.getUrl("ws/future/layout/shopPromotion/save"),
       data: e.detail.value,
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
@@ -141,7 +139,7 @@ Page({
   detail: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/shopPromotion/detail"),
+      url: $util.getUrl("ws/future/layout/shopPromotion/findOne"),
       data: { id: that.data.options.id },
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },

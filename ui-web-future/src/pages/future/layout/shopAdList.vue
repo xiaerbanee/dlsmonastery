@@ -10,10 +10,10 @@
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:shopAd:view'">{{$t('shopAdList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopAdList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopAdList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
-            <el-col :span="24">
+            <el-col :span="12">
               <el-form-item :label="$t('shopAdList.areaName')" :label-width="formLabelWidth">
                 <el-select v-model="formData.areaId" filterable clearable >
                   <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -33,6 +33,8 @@
                   <el-option v-for="shopAdType in formData.extra.shopAdTypes" :key="shopAdType.id" :label="shopAdType.name" :value="shopAdType.id"></el-option>
                 </el-select>
               </el-form-item>
+            </el-col>
+            <el-col :span="12">
               <el-form-item :label="$t('shopAdList.processStatus')" :label-width="formLabelWidth">
                 <process-status-select v-model="formData.processStatus" type="ShopAd" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
@@ -41,6 +43,12 @@
               </el-form-item>
               <el-form-item :label="$t('shopAdList.createdBy')" :label-width="formLabelWidth">
                 <account-select  v-model="formData.createdBy"></account-select>
+              </el-form-item>
+              <el-form-item :label="$t('shopAdList.lastModifiedDate')" :label-width="formLabelWidth">
+                <date-range-picker v-model="formData.lastModifiedDate"></date-range-picker>
+              </el-form-item>
+              <el-form-item :label="$t('shopAdList.lastModifiedBy')" :label-width="formLabelWidth">
+                <account-select  v-model="formData.lastModifiedBy"></account-select>
               </el-form-item>
             </el-col>
           </el-row>
