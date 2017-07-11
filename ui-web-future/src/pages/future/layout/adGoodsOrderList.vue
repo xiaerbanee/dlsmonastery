@@ -56,7 +56,7 @@
                 <process-status-select v-model="formData.processStatus" type="AdGoodsOrder" multiple="multiple" @afterInit="setSearchText"></process-status-select>
               </el-form-item>
               <el-form-item :label="$t('adGoodsOrderList.orderCode')" >
-                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.comma')"></el-input>
+                <el-input type="textarea" v-model="formData.idStr" :placeholder="$t('adGoodsOrderList.blankOrComma')"></el-input>
               </el-form-item>
             </el-col>
           </el-row>

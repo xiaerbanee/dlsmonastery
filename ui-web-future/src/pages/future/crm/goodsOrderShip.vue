@@ -111,10 +111,6 @@
         }
       },
       formSubmit() {
-        if(util.isBlank(this.inputForm.imeStr) && util.isBlank(this.inputForm.boxImeStr)) {
-          this.$alert("请填入发货串码或箱号");
-          return;
-        }
         this.submitDisabled = true;
         let checkAndSummaryPromise = this.checkAndSummary();
         checkAndSummaryPromise.then((checkResult)=>{
@@ -163,6 +159,9 @@
           }
         });
       },refreshDetailShipInfo(shipQtyMap){
+        if(!this.goodsOrder.goodsOrderDetailDtoList){
+          return ;
+        }
         for(let item of this.goodsOrder.goodsOrderDetailDtoList) {
           if(item.hasIme) {
             item.shipQty = (shipQtyMap[item.productId] ? shipQtyMap[item.productId] : 0);
