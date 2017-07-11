@@ -33,7 +33,7 @@ class OppoCustomerDemoPhoneRepositoryImpl @Autowired constructor(val namedParame
                 where
                     demo.product_ime_id = im.id
                     and demo.created_date >=:dateStart
-                    and demo.created_date <=:dateEnd
+                    and demo.created_date <:dateEnd
                     and demo.enabled = 1
                 """,paramMap, BeanPropertyRowMapper(OppoCustomerDemoPhone::class.java));
     }

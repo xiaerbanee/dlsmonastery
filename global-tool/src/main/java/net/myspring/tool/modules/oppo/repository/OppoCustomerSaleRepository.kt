@@ -31,7 +31,7 @@ class OppoCustomerSaleRepositoryImpl @Autowired constructor(val namedParameterJd
                     crm_product_ime_sale sa
                 where
                     sa.created_date >=:dateStart
-                    and sa.created_date <=:dateEnd
+                    and sa.created_date <:dateEnd
                     and sa.is_back = 0
                     and sa.enabled = 1
                 group by

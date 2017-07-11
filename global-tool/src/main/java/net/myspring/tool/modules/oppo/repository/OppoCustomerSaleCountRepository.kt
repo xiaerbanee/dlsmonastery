@@ -33,7 +33,7 @@ class OppoCustomerSaleCountRepositoryImpl @Autowired constructor(val namedParame
                     where
                             sa.product_ime_id=im.id
                             and sa.created_date >=:dateStart
-                            and sa.created_date <=:dateEnd
+                            and sa.created_date <:dateEnd
                             and sa.is_back = 0
                             and sa.enabled = 1
                             and im.enabled=1
