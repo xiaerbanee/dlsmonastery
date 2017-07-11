@@ -68,9 +68,9 @@
         <el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>
         <el-table-column :label="$t('goodsOrderDetail.operate')" :render-header="renderAction">
           <template scope="scope">
-            <el-button size="small" type="success" :text="imeMap[scope.row.productId]">{{$t('goodsOrderDetail.ime')}}
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="text" :text="text" >{{$t('goodsOrderDetail.ime')}}
             </el-button>
-            <el-button size="small" type="success" :text="meidMap[scope.row.productId]">
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="text1" :text="text1" >
               {{$t('goodsOrderDetail.meid')}}
             </el-button>
           </template>
@@ -90,6 +90,8 @@
   </div>
 </template>
 <script>
+  import clip from 'clipboard'
+  new clip('.clipBtn')
   export default{
     data(){
       return this.getData();
@@ -116,7 +118,9 @@
           },
           loading: false,
           shopList: [],
-          submitDisabled: false
+          submitDisabled: false,
+          text:"11111111111",
+          text1:"222222222"
         }
       },
       renderAction(createElement) {
@@ -177,12 +181,21 @@
               })
           }
         })
+      },
+      copyToChannel(text,e){
+        var clipBoardContent=text;
+        console.log(window);
+        console.log(e);
+//        window.clipboardData.setData("Text",clipBoardContent);
       }
     }, created(){
       axios.get('/api/ws/future/crm/goodsOrder/detail', {params: {id: this.$route.query.id}}).then((response) => {
         this.goodsOrder = response.data;
+        console.log('data:',response.data);
         this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
         this.goodsOrderImeList = response.data.goodsOrderImeDtoList;
+        console.log('detailList:',this.goodsOrderDetailList);
+        console.log('imeList:',this.goodsOrderImeList);
       });
       axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId', {params: {goodsOrderId: this.$route.query.id}}).then((response) => {
         this.expressOrder = response.data;

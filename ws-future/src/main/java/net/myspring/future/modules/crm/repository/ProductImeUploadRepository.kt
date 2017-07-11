@@ -84,7 +84,12 @@ class ProductImeUploadRepositoryImpl @Autowired constructor(val namedParameterJd
         if (CollectionUtil.isNotEmpty(productImeUploadQuery.imeOrMeidList)) {
             sb.append("""  and (ime.ime in (:imeOrMeidList) or ime.ime2 in (:imeOrMeidList) or ime.meid in (:imeOrMeidList))  """)
         }
-
+        if (CollectionUtil.isNotEmpty(productImeUploadQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeUploadQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(productImeUploadQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeUploadDto::class.java))

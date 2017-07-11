@@ -3,6 +3,7 @@ package net.myspring.cloud.modules.report.repository
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery
 import net.myspring.common.dto.NameValueDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -18,7 +19,8 @@ import java.util.*
 @Component
 class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findEndShouldGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto>? {
+    //截止结余:sum(其他应收-标准销售退货单-收款单+收款退款单+标准销售出库单-现销退货单+现销出库单)
+    fun findEndGet(dateEnd: LocalDate, customerIdList: MutableList<String>): MutableList<CustomerReceiveDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateEnd", dateEnd.toString())
         paramMap.put("customerIdList", customerIdList)
@@ -44,7 +46,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     FROM
                     T_SAL_RETURNSTOCKENTRY t1
                     JOIN T_SAL_RETURNSTOCK t2 ON t1.FID = t2.FID
-                    JOIN T_SAL_RETURNSTOCKENTRY_F t3 ON t2.FID = t3.FID  AND t1.FENTRYID = t3.FENTRYID
+                    JOIN T_SAL_RETURNSTOCKENTRY_F t3 ON t2.FID = t3.FID  and t1.FENTRYID = t3.FENTRYID
                     LEFT JOIN T_BAS_BILLTYPE_L t4 ON t4.FBILLTYPEID = t2.FBILLTYPEID
                 WHERE
                     t4.FNAME = '标准销售退货单'
@@ -57,7 +59,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 FROM
                     T_SAL_OUTSTOCKENTRY t1
                     JOIN T_SAL_OUTSTOCK t2 ON t1.FID = t2.FID
-                    JOIN T_SAL_OUTSTOCKENTRY_F t3 ON t1.FID = t3.FID AND t1.FENTRYID = t3.FENTRYID
+                    JOIN T_SAL_OUTSTOCKENTRY_F t3 ON t1.FID = t3.FID and t1.FENTRYID = t3.FENTRYID
                     LEFT JOIN T_BAS_BILLTYPE_L t4 ON t2.FBILLTYPEID = t4.FBILLTYPEID
                 WHERE
                     t4.FNAME = '标准销售出库单'
@@ -89,7 +91,124 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
         """, paramMap, BeanPropertyRowMapper(CustomerReceiveDto::class.java))
     }
 
-    //其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单
+    //应收金额：sum(其他应收-标准销售退货单+标准销售出库单)
+    fun findShouldGet(customerReceiveQuery:CustomerReceiveQuery): MutableList<CustomerReceiveDto>? {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", customerReceiveQuery.dateStart.toString())
+        paramMap.put("dateEnd", customerReceiveQuery.dateEnd.toString())
+        paramMap.put("customerIdList", customerReceiveQuery.customerIdList)
+        var sb = StringBuilder("""
+            SELECT
+                t.customerId AS customerId,
+                SUM (t.beginAmount) AS shouldGet
+            FROM
+            (
+            """)
+        //其他应收
+        sb.append("""
+            SELECT
+                b.FCONTACTUNIT AS customerId,
+                a.FAMOUNT AS beginAmount
+            FROM
+              T_AR_OTHERRECABLEENTRY a
+            JOIN T_AR_OTHERRECABLE b ON a.FID = b.FID
+            WHERE
+                b.FDATE >= :dateStart
+                and b.FDATE  <= :dateEnd
+                and b.FCONTACTUNIT in (:customerIdList)
+                """)
+        //-标准销售退货单
+        sb.append("""
+            union all
+                SELECT
+                    b.FRETCUSTID AS customerId,
+                    -c.FAMOUNT AS beginAmount
+                FROM
+                    T_SAL_RETURNSTOCKENTRY a
+                    JOIN T_SAL_RETURNSTOCK b ON a.FID = b.FID
+                    JOIN T_SAL_RETURNSTOCKENTRY_F c ON b.FID = c.FID and a.FENTRYID = c.FENTRYID
+                    LEFT JOIN T_BAS_BILLTYPE_L d ON d.FBILLTYPEID = b.FBILLTYPEID
+                WHERE
+                    b.FDATE >= :dateStart 
+                    and b.FDATE  <= :dateEnd
+                    and d.FNAME= '标准销售退货单'
+                    and b.FRETCUSTID in (:customerIdList)
+                """)
+        //标准销售出库单
+        sb.append("""
+            union all
+                SELECT
+                    b.FCUSTOMERID AS customerId,
+                    c.FALLAMOUNT AS beginAmount
+                FROM
+                    T_SAL_OUTSTOCKENTRY a
+                    JOIN T_SAL_OUTSTOCK b ON a.FID = b.FID
+                    JOIN T_SAL_OUTSTOCKENTRY_F c ON a.FID = c.FID and a.FENTRYID = c.FENTRYID
+                    LEFT JOIN T_BAS_BILLTYPE_L d ON b.FBILLTYPEID = d.FBILLTYPEID
+                WHERE
+                    b.FDATE >= :dateStart 
+                    and b.FDATE  <= :dateEnd
+                    and d.FNAME= '标准销售出库单'
+                    and b.FCUSTOMERID in (:customerIdList)
+                """)
+        sb.append("""
+                ) t
+              GROUP BY
+              t.customerId
+        """)
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(CustomerReceiveDto::class.java))
+    }
+
+    //实收金额：收款单-收款退款单
+    fun findActualGet(customerReceiveQuery:CustomerReceiveQuery): MutableList<CustomerReceiveDto>? {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("dateStart", customerReceiveQuery.dateStart.toString())
+        paramMap.put("dateEnd", customerReceiveQuery.dateEnd.toString())
+        paramMap.put("customerIdList", customerReceiveQuery.customerIdList)
+        var sb = StringBuilder("""
+            SELECT
+                t.customerId AS customerId,
+                SUM (t.beginAmount) AS realGet
+            FROM
+            (
+                """)
+        //收款单
+        sb.append("""
+            SELECT
+                b.FCONTACTUNIT AS customerId,
+                a.FRECAMOUNT_E AS beginAmount
+            FROM
+                T_AR_RECEIVEBILLENTRY a
+                join T_AR_RECEIVEBILL b on a.FID = b.FID
+            WHERE
+                b.FDATE >= :dateStart
+                and b.FDATE  <= :dateEnd
+                and b.FCONTACTUNIT in (:customerIdList)
+                """)
+
+        //-收款退款单
+        sb.append("""
+            union all
+                SELECT
+                    b.FCONTACTUNIT AS customerId,
+                    -a.FREALREFUNDAMOUNTFOR AS beginAmount
+                FROM
+                    T_AR_REFUNDBILLENTRY a
+                    JOIN T_AR_REFUNDBILL b ON b.FID = a.FID
+                WHERE
+                    b.FDATE >= :dateStart
+                    and b.FDATE  <= :dateEnd
+                    and b.FCONTACTUNIT in (:customerIdList)
+                """)
+        sb.append("""
+                ) t
+              GROUP BY
+              t.customerId
+        """);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(CustomerReceiveDto::class.java))
+    }
+
+    //其他应收-sum标准销售退货单-收款单+收款退款单+sum标准销售出库单-sum现销退货单+sum现销出库单
     fun findMainList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
@@ -118,10 +237,10 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_BAS_BILLTYPE_L t02
                 WHERE
                     t01.FBILLTYPEID = t02.FBILLTYPEID
-                    AND t01.FCONTACTUNIT IN (:customerIdList)
+                    and t01.FCONTACTUNIT IN (:customerIdList)
 
-                    AND t01.FDATE >=:dateStart
-                    AND t01.FDATE <=:dateEnd
+                    and t01.FDATE >=:dateStart
+                    and t01.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -138,11 +257,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_SAL_RETURNSTOCKENTRY_F t13
                 WHERE
                     t11.FID = t13.FID
-                    AND t11.FBILLTYPEID = t12.FBILLTYPEID
-                    AND t12.FNAME = '标准销售退货单'
-                    AND t11.FRETCUSTID IN (:customerIdList)
-                    AND t11.FDATE >=:dateStart
-                    AND t11.FDATE <=:dateEnd
+                    and t11.FBILLTYPEID = t12.FBILLTYPEID
+                    and t12.FNAME = '标准销售退货单'
+                    and t11.FRETCUSTID IN (:customerIdList)
+                    and t11.FDATE >=:dateStart
+                    and t11.FDATE <=:dateEnd
                 GROUP BY t11.FID,
                     t11.FRETCUSTID,
                     t12.FNAME,
@@ -164,9 +283,9 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_BAS_BILLTYPE_L t22
                 WHERE
                     t21.FBILLTYPEID = t22.FBILLTYPEID
-                    AND t21.FCONTACTUNIT IN (:customerIdList)
-                    AND t21.FDATE >=:dateStart
-                    AND t21.FDATE <=:dateEnd
+                    and t21.FCONTACTUNIT IN (:customerIdList)
+                    and t21.FDATE >=:dateStart
+                    and t21.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -182,9 +301,9 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_BAS_BILLTYPE_L t32
                 WHERE
                     t31.FBILLTYPEID = t32.FBILLTYPEID
-                    AND t31.FCONTACTUNIT IN (:customerIdList)
-                    AND t31.FDATE >=:dateStart
-                    AND t31.FDATE <=:dateEnd
+                    and t31.FCONTACTUNIT IN (:customerIdList)
+                    and t31.FDATE >=:dateStart
+                    and t31.FDATE <=:dateEnd
 
             UNION ALL
                 SELECT
@@ -201,11 +320,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_SAL_OUTSTOCKENTRY_F t43
                 WHERE
                     t41.FID = t43.FID
-                    AND t41.FBILLTYPEID = t42.FBILLTYPEID
-                    AND t42.FNAME = '标准销售出库单'
-                    AND t41.FCUSTOMERID IN (:customerIdList)
-                    AND t41.FDATE >=:dateStart
-                    AND t41.FDATE <=:dateEnd
+                    and t41.FBILLTYPEID = t42.FBILLTYPEID
+                    and t42.FNAME = '标准销售出库单'
+                    and t41.FCUSTOMERID IN (:customerIdList)
+                    and t41.FDATE >=:dateStart
+                    and t41.FDATE <=:dateEnd
                 GROUP BY  t41.FID,
                     t41.FCUSTOMERID,
                     t42.FNAME,
@@ -227,11 +346,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_SAL_RETURNSTOCKENTRY_F t53
                 WHERE
                     t51.FID = t53.FID
-                    AND t51.FBILLTYPEID = t52.FBILLTYPEID
-                    AND t52.FNAME = '现销退货单'
-                    AND t51.FRETCUSTID IN (:customerIdList)
-                    AND t51.FDATE >=:dateStart
-                    AND t51.FDATE <=:dateEnd
+                    and t51.FBILLTYPEID = t52.FBILLTYPEID
+                    and t52.FNAME = '现销退货单'
+                    and t51.FRETCUSTID IN (:customerIdList)
+                    and t51.FDATE >=:dateStart
+                    and t51.FDATE <=:dateEnd
                 GROUP BY t51.FID,
                     t51.FRETCUSTID,
                     t52.FNAME,
@@ -253,11 +372,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                     T_SAL_OUTSTOCKENTRY_F t63
                 WHERE
                     t61.FID = t63.FID
-                    AND t61.FBILLTYPEID = t62.FBILLTYPEID
-                    AND t62.FNAME = '现销出库单'
-                    AND t61.FCUSTOMERID IN (:customerIdList)
-                    AND t61.FDATE >=:dateStart
-                    AND t61.FDATE <=:dateEnd
+                    and t61.FBILLTYPEID = t62.FBILLTYPEID
+                    and t62.FNAME = '现销出库单'
+                    and t61.FCUSTOMERID IN (:customerIdList)
+                    and t61.FDATE >=:dateStart
+                    and t61.FDATE <=:dateEnd
                 GROUP BY  t61.FID,
                     t61.FCUSTOMERID,
                     t62.FNAME,
@@ -273,7 +392,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
 
     }
 
-    //
+    //显示物料:标准销售出库单+现销退货单
     fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
@@ -297,11 +416,11 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_SAL_OUTSTOCKENTRY_F t14
             WHERE
                 t11.FID = t12.FID
-                AND t12.FENTRYID = t14.FENTRYID
-                AND t12.FMATERIALID = t13.FMATERIALID
-                AND t11.FCUSTOMERID IN (:customerIdList)
-                AND t11.FDATE >:dateStart
-                AND t11.FDATE <:dateEnd
+                and t12.FENTRYID = t14.FENTRYID
+                and t12.FMATERIALID = t13.FMATERIALID
+                and t11.FCUSTOMERID IN (:customerIdList)
+                and t11.FDATE >:dateStart
+                and t11.FDATE <:dateEnd
 
             UNION ALL
             SELECT
@@ -321,15 +440,15 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_SAL_RETURNSTOCKENTRY_F t24
             WHERE
                 t21.FID = t22.FID
-                AND t22.FENTRYID = t24.FENTRYID
-                AND t22.FMATERIALID = t23.FMATERIALID
-                AND t21.FRETCUSTID IN (:customerIdList)
-                AND t21.FDATE >=:dateStart
-                AND t21.FDATE <:dateEnd
+                and t22.FENTRYID = t24.FENTRYID
+                and t22.FMATERIALID = t23.FMATERIALID
+                and t21.FRETCUSTID IN (:customerIdList)
+                and t21.FDATE >=:dateStart
+                and t21.FDATE <:dateEnd
         """, paramMap, BeanPropertyRowMapper(CustomerReceiveDetailDto::class.java))
     }
 
-    //其他应收+收款单+收款退款单
+    //显示备注:其他应收+收款单+收款退款单
     fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto> {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
@@ -344,9 +463,9 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_OTHERRECABLEENTRY t2
             WHERE
                 t1.FID = t2.FID
-                AND t1.FCONTACTUNIT IN (:customerIdList)
-                AND t1.FDATE  >:dateStart
-                AND t1.FDATE <:dateEnd
+                and t1.FCONTACTUNIT IN (:customerIdList)
+                and t1.FDATE  >:dateStart
+                and t1.FDATE <:dateEnd
             UNION ALL
             SELECT
                 t3.FBILLNO AS name,
@@ -356,9 +475,9 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_RECEIVEBILLENTRY t4
             WHERE
                 t3.FID = t4.FID
-                AND t3.FCONTACTUNIT  IN (:customerIdList)
-                AND t3.FDATE  >:dateStart
-                AND t3.FDATE <:dateEnd
+                and t3.FCONTACTUNIT  IN (:customerIdList)
+                and t3.FDATE  >:dateStart
+                and t3.FDATE <:dateEnd
             UNION ALL
             SELECT
                 t5.FBILLNO AS name,
@@ -368,9 +487,9 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
                 T_AR_REFUNDBILLENTRY t6
             WHERE
                 t5.FID = t6.FID
-                AND t5.FCONTACTUNIT IN (:customerIdList)
-                AND t5.FDATE  >:dateStart
-                AND t5.FDATE <:dateEnd
+                and t5.FCONTACTUNIT IN (:customerIdList)
+                and t5.FDATE  >:dateStart
+                and t5.FDATE <:dateEnd
         """, paramMap, BeanPropertyRowMapper(NameValueDto::class.java))
 
     }

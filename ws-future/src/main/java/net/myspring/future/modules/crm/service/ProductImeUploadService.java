@@ -57,7 +57,7 @@ public class ProductImeUploadService {
 
 
     public Page<ProductImeUploadDto> findPage(Pageable pageable, ProductImeUploadQuery productImeUploadQuery) {
-
+        productImeUploadQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ProductImeUploadDto> page = productImeUploadRepository.findPage(pageable, productImeUploadQuery);
         cacheUtils.initCacheInput(page.getContent());
 
