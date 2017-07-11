@@ -22,7 +22,7 @@
             </el-form-item>
             <div v-if="searched" >
               <el-form-item :label="$t('imeAllotForm.toDepotId')" prop="toDepotId" >
-                <depot-select v-model="inputForm.toDepotId"  category="shop" ></depot-select>
+                <depot-select v-model="inputForm.toDepotId"  category="depot" ></depot-select>
               </el-form-item>
               <el-form-item :label="$t('imeAllotForm.remarks')" prop="remarks" >
                 <el-input type="textarea" :rows="2" v-model="inputForm.remarks"></el-input>
