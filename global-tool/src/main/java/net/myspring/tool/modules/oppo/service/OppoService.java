@@ -45,29 +45,21 @@ public class OppoService {
 
     @FactoryDataSource
     public List<OppoPlantProductSel> getOppoPlantProductSels(String agentCode,String passWord){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         return oppoPlantProductSelRepository.plantProductSel(agentCode, passWord, "");
     }
 
     @FactoryDataSource
     public List<OppoPlantAgentProductSel> getOppoPlantAgentProductSels(String agentCode,String passWord){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         return oppoPlantAgentProductSelRepository.plantAgentProductSel(agentCode,passWord, "");
     }
 
     @FactoryDataSource
     public List<OppoPlantSendImeiPpsel> getOppoPlantSendImeiPpsels(String agentCode,String passWord,String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         return  oppoPlantSendImeiPpselRepository.plantSendImeiPPSel(agentCode, passWord, date);
     }
 
     @FactoryDataSource
     public List<OppoPlantProductItemelectronSel> getOppoPlantProductItemelectronSels(String agentCode,String passWord,String date){
-        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
-        DbContextHolder.get().setCompanyName(companyName);
         return  oppoPlantProductItemelectronSelRepository.plantProductItemelectronSel(agentCode,passWord, LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1)));
     }
 
@@ -76,7 +68,6 @@ public class OppoService {
     @Transactional(readOnly = false)
     public void pullPlantProductSels(List<OppoPlantProductSel> oppoPlantProductSels) {
         logger.info("开始同步颜色编码");
-        logger.info(oppoPlantProductSels.toString());
         for(OppoPlantProductSel oppoPlantProductSel:oppoPlantProductSels){
             oppoPlantProductSel.setColorId(oppoPlantProductSel.getColorId().trim());
         }
@@ -100,7 +91,7 @@ public class OppoService {
                 }
             }
             if (CollectionUtil.isNotEmpty(list)) {
-                oppoPlantProductSelRepository.save(list);
+                oppoPlantProductSelRepository.save(list).toString();
             }
             logger.info("颜色编码同步成功");
         }
@@ -111,7 +102,6 @@ public class OppoService {
     @Transactional(readOnly = false)
     public void pullPlantAgentProductSels(List<OppoPlantAgentProductSel> oppoPlantAgentProductSels) {
         logger.info("开始物料编码");
-        logger.info(oppoPlantAgentProductSels.toString());
         List<OppoPlantAgentProductSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantAgentProductSels)) {
             List<String> itemNumbers = CollectionUtil.extractToList(oppoPlantAgentProductSels, "itemNumber");
@@ -140,7 +130,6 @@ public class OppoService {
     @Transactional(readOnly = false)
     public void pullPlantSendImeiPpsels(Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap) {
         logger.info("开始发货串码");
-        logger.info(oppoPlantSendImeiPpselMap.toString());
         List<String> imeiList=Lists.newArrayList();
         for (String agentCode : oppoPlantSendImeiPpselMap.keySet()) {
             List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=oppoPlantSendImeiPpselMap.get(agentCode);
@@ -181,7 +170,6 @@ public class OppoService {
     @Transactional(readOnly = false)
     public void pullPlantProductItemelectronSels(List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels) {
         logger.info("开始同步电子保卡");
-        logger.info(oppoPlantProductItemelectronSels.toString());
         List<OppoPlantProductItemelectronSel> list = Lists.newArrayList();
         if (CollectionUtil.isNotEmpty(oppoPlantProductItemelectronSels)) {
             List<String> productNoList = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
