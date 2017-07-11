@@ -19,6 +19,22 @@
         </el-dropdown>
         <span  v-html="searchText"></span>
       </el-row>
+      <el-dialog  title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
+        <el-form :model="detailData" label-width="120px">
+          <el-row :gutter="4">
+            <el-col :span="12">
+              <el-form-item label="状态" prop="value">
+                <el-select v-model="inputForm.pullStatus" filterable clearable placeholder="请选择">
+                  <el-option v-for="status in formData.extra.pullStatusList" :key="status" :label="status" :value="status"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="formSubmit()">确定</el-button>
+        </div>
+      </el-dialog>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="2">
@@ -104,6 +120,7 @@
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
+        <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
@@ -112,6 +129,8 @@
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'pullStatus')">商城状态</el-button></div>
+
           </template>
 
         </el-table-column>
@@ -146,9 +165,11 @@
       formData:{
           extra:{}
       },
+      inputForm:{},
       initPromise:{},
       pageHeight:600,
       searchText:"",
+      detailVisible:false,
       formLabelWidth: '80px',
       formVisible: false,
       pageLoading: false
@@ -212,7 +233,20 @@
         var newWindow=window.open('/#/future/crm/goodsOrderPrint?id=' + id);
       }else if(action=="expressPrint"){
          window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
+      }else if(action=="pullStatus"){
+        this.detailVisible=true;
+        let page=this.page.content;
+        for(let item in page){
+          if(id==page[item].id){
+            this.inputForm=page[item];
+          }
+        }
       }
+    },formSubmit(){
+      axios.post('/api/ws/future/crm/goodsOrder/updatePullStatus', qs.stringify(this.inputForm)).then((response)=> {
+        this.$message(response.data.message);
+        this.detailVisible=false;
+      })
     },
     handleCommand(command) {
       if(command==="batchAdd"){
