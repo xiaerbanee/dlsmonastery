@@ -11,7 +11,7 @@
           <el-col :span="12">
             <el-form-item :label="$t('goodsOrderShip.searchBusinessId')">
               <input class="el-input__inner" ref="businessIdInput" v-model="businessId" @input="initPage(businessId, false)"
-                     @keyup.enter="initPage(businessId, true)" placeholder="请输入订单号末6位加回车或12位订单号"/>
+                     @keyup.enter="initPage(businessId, true)" placeholder="请输入订单号末6位加回车或完整订单号"/>
             </el-form-item>
             <div v-show="inputForm.id">
               <el-form-item :label="$t('goodsOrderShip.storeName')">
