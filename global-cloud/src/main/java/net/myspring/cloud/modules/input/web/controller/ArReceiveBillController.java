@@ -47,7 +47,7 @@ public class ArReceiveBillController {
              kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
         }else {
             logger.info("您没有金蝶账号，不能开单：用户ID为" + RequestUtils.getAccountId() );
-            throw new ServiceException("您没有金蝶账号，不能开单");
+            throw new ServiceException("您没有金蝶账号，不能开单：用户ID为" + RequestUtils.getAccountId() );
         }
         return BeanUtil.map(kingdeeSynDtoList,KingdeeSynReturnDto.class);
     }
