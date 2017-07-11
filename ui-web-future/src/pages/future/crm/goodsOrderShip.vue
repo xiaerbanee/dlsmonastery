@@ -186,7 +186,7 @@
         this.businessId = businessId;
         this.shipResult={};
 
-        if( util.isNotBlank(businessId) && (_.trim(businessId).length === 12 || searchImmediately)){
+        if( util.isNotBlank(businessId) && (_.trim(businessId).length === 12 || _.trim(businessId).length===14 || searchImmediately)){
           axios.get('/api/ws/future/crm/goodsOrderShip/getShipByBusinessId',{params: {businessId:businessId}}).then((response)=>{
             this.goodsOrder = response.data;
             this.inputForm.id  = this.goodsOrder.id;
