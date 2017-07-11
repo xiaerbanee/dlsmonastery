@@ -35,7 +35,7 @@
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
           <el-table-column prop="date" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
-          <el-table-column prop="quantity" label="数量"></el-table-column>
+          <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
           <el-table-column prop="amount" label="金额"></el-table-column>
           <el-table-column prop="payableAmount" label="应付"></el-table-column>
