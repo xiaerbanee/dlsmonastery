@@ -12,6 +12,7 @@ public class SupplierPayableDetailQuery {
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private List<String> supplierIdList = Lists.newArrayList();
+    //针对专卖店
     private List<String> departmentIdList = Lists.newArrayList();
 
     public LocalDate getDateStart() {

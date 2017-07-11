@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="supplierPayable"></head-tab>
+    <head-tab active="supplierPayableZMD"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true">过滤&导出</el-button>
@@ -109,7 +109,7 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("supplierPayable",submitData);
+        util.setQuery("supplierPayableZMD",submitData);
         axios.get('/api/global/cloud/kingdee/bdSupplier?'+ qs.stringify(submitData)).then((response) => {
           let supplierIdList = new Array();
           let suppliers = response.data.content;
@@ -118,7 +118,7 @@
           }
           submitData.supplierIdList = supplierIdList;
           if (submitData.supplierIdList.length !== 0) {
-            axios.get('/api/global/cloud/report/supplierPayable/list?' + qs.stringify(submitData)).then((response) => {
+            axios.get('/api/global/cloud/report/supplierPayableZMD/list?' + qs.stringify(submitData)).then((response) => {
               this.summary = response.data;
             });
           }
@@ -138,7 +138,7 @@
         this.pageRequest();
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href='/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
+          window.location.href='/api/global/cloud/report/supplierPayableZMD/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
       },detailAction:function(supplierId,departmentId){
         this.detailLoading = true;
@@ -148,7 +148,7 @@
           submitDetail.departmentIdList = departmentId;
           submitDetail.dateStart = this.formData.dateStart;
           submitDetail.dateEnd = this.formData.dateEnd;
-          axios.get('/api/global/cloud/report/supplierPayable/detail',{params:submitDetail}).then((response) =>{
+          axios.get('/api/global/cloud/report/supplierPayableZMD/detail',{params:submitDetail}).then((response) =>{
             this.detail = response.data;
             this.detailLoading = false;
             this.detailVisible = true;

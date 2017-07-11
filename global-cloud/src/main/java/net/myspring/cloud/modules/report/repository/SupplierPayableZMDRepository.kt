@@ -13,10 +13,11 @@ import java.time.LocalDate
 import java.util.HashMap
 
 /**
+ * 供应商-应付（ZMD）
  * Created by lihx on 2017/6/29.
  */
 @Component
-class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SupplierPayableZMDRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     //截止结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
     fun findEndPayable(dateEnd: LocalDate, supplierIdList: MutableList<String>,departmentIdList: MutableList<String>): MutableList<SupplierPayableDto>? {
