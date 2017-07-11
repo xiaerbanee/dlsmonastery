@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:adGoodsOrder:edit'">{{$t('adGoodsOrderList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.filter')}}</el-button>
         <el-button type="primary" @click="itemDetailList"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.itemDetailList')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.export')}}</el-button>
         <span v-html="searchText"></span>
@@ -66,7 +66,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
+        <el-table-column prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" sortable></el-table-column>
         <el-table-column prop="billType" :label="$t('adGoodsOrderList.type')" sortable></el-table-column>
@@ -81,7 +81,7 @@
         <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('adGoodsOrderList.createdBy')" sortable></el-table-column>
-        <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')">
+        <el-table-column :label="$t('adGoodsOrderList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:adGoodsOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button></div>
@@ -90,7 +90,7 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.editable" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
-            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
+            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -167,6 +167,7 @@
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
         } else if (action === "print") {
           window.open('/#/future/layout/adGoodsOrderPrint?id='+id, '', '');
+          this.pageRequest();
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
@@ -174,12 +175,6 @@
               this.pageRequest();
             });
           }).catch(()=>{});
-        }
-      },stypeOfPrintBtn(isPrint){
-        if(!isPrint){
-          return "color:#ff0000;";
-        }else {
-          return "";
         }
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {

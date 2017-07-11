@@ -2,6 +2,8 @@ package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.layout.dto.AdGoodsOrderDetailDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.web.query.AdGoodsOrderDetailQuery;
@@ -30,8 +32,11 @@ public class AdGoodsOrderDetailService {
     private AdGoodsOrderDetailRepository adGoodsOrderDetailRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<AdGoodsOrderDetailDto> findPage(Pageable pageable, AdGoodsOrderDetailQuery adGoodsOrderDetailQuery) {
+        adGoodsOrderDetailQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<AdGoodsOrderDetailDto> page = adGoodsOrderDetailRepository.findPage(pageable, adGoodsOrderDetailQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

@@ -35,6 +35,7 @@ Page({
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        console.log(res.data)
         that.setData({ formData: res.data });
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList });
         wx.request({
@@ -61,7 +62,6 @@ Page({
       },
       data: $util.deleteExtra(that.data.formData),
       success: function (res) {
-        console.log('list:',res.data)
         var content = res.data.content;
         for (var item in content) {
           var actionList = new Array();

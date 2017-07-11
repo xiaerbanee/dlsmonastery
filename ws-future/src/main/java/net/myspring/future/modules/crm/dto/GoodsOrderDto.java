@@ -65,12 +65,30 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private String contator;
     private String mobilePhone;
     private String expressOrderExpressCodes;
+    private LocalDateTime expressOrderOutPrintDate;
+    private LocalDateTime expressOrderExpressPrintDate;
     private Boolean lxMallOrder;
     private String shopDepotShopAreaType;
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public LocalDateTime getExpressOrderOutPrintDate() {
+        return expressOrderOutPrintDate;
+    }
+
+    public void setExpressOrderOutPrintDate(LocalDateTime expressOrderOutPrintDate) {
+        this.expressOrderOutPrintDate = expressOrderOutPrintDate;
+    }
+
+    public LocalDateTime getExpressOrderExpressPrintDate() {
+        return expressOrderExpressPrintDate;
+    }
+
+    public void setExpressOrderExpressPrintDate(LocalDateTime expressOrderExpressPrintDate) {
+        this.expressOrderExpressPrintDate = expressOrderExpressPrintDate;
+    }
 
     public String getShopDepotShopAreaType() {
         return shopDepotShopAreaType;
@@ -419,4 +437,13 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
         return null;
 
     }
+
+    public boolean getPrint(){
+        return expressOrderOutPrintDate != null;
+    }
+
+    public boolean getShipPrint(){
+        return expressOrderExpressPrintDate != null;
+    }
+
 }

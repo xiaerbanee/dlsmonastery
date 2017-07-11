@@ -112,6 +112,7 @@ public class SalOutStockManager {
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
         for (AdGoodsOrder adGoodsOrder : adGoodsOrderList){
             Depot outShop = depotMap.get(adGoodsOrder.getOutShopId());
+            Depot shop = depotMap.get(adGoodsOrder.getShopId());
             Client client = clientMap.get(outShop.getClientId());
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
             SalOutStockDto salOutStockDto = new SalOutStockDto();
@@ -123,8 +124,8 @@ public class SalOutStockManager {
             }else{
                 salOutStockDto.setCustomerNumber(client.getOutCode());
             }
-            salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
-                    +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+            salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
+                    +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
@@ -147,8 +148,8 @@ public class SalOutStockManager {
                 }else{
                     entityDto.setPrice(BigDecimal.ZERO);
                 }
-                entityDto.setEntryNote(getFormatId(adGoodsOrder)+CharConstant.COMMA+outShop.getName()+CharConstant.COMMA+outShop.getContator()
-                        +CharConstant.COMMA+outShop.getMobilePhone()+CharConstant.COMMA+outShop.getAddress());
+                entityDto.setEntryNote(getFormatId(adGoodsOrder)+CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
+                        +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
                 entityDtoList.add(entityDto);
             }
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
@@ -159,6 +160,7 @@ public class SalOutStockManager {
 
     public KingdeeSynReturnDto synForAdGoodsOrder(AdGoodsOrder adGoodsOrder){
         Depot depot = depotRepository.findOne(adGoodsOrder.getOutShopId());
+        Depot shop = depotRepository.findOne(adGoodsOrder.getShopId());
         Client client = clientRepository.findOne(depot.getClientId());
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(adGoodsOrder.getStoreId());
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(),"id");
@@ -172,7 +174,7 @@ public class SalOutStockManager {
         }else{
             salOutStockDto.setCustomerNumber(client.getOutCode());
         }
-        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+depot.getContator()+CharConstant.COMMA+depot.getMobilePhone()+CharConstant.COMMA+depot.getAddress());
+        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
         List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
         for(AdGoodsOrderDetail adGoodsOrderDetail:detailList){
@@ -195,7 +197,7 @@ public class SalOutStockManager {
             }else{
                 entityDto.setPrice(BigDecimal.ZERO);
             }
-            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+depot.getName()+CharConstant.COMMA+depot.getContator()+CharConstant.COMMA+depot.getMobilePhone()+CharConstant.COMMA+depot.getAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
+            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
             entityDtoList.add(entityDto);
         }
         salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);

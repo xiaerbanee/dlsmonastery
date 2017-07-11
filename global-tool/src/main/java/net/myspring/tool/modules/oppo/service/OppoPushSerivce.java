@@ -11,25 +11,19 @@ import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.DistrictEntity;
 import net.myspring.tool.common.domain.EmployeeEntity;
 import net.myspring.tool.common.domain.OfficeEntity;
-import net.myspring.tool.modules.oppo.client.OppoClient;
 import net.myspring.tool.modules.oppo.domain.*;
 import net.myspring.tool.common.dto.CustomerDto;
 import net.myspring.tool.modules.oppo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -44,10 +38,6 @@ public class OppoPushSerivce {
     private CustomerClient customerClient;
     @Autowired
     private DistrictClient districtClient;
-    @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
-    private OppoClient oppoClient;
     @Autowired
     private OfficeClient officeClient;
     @Autowired

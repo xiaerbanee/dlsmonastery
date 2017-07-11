@@ -60,6 +60,12 @@ class ShopPromotionRepositoryImpl @Autowired constructor(val namedParameterJdbcT
         if (StringUtils.isNotEmpty(shopPromotionQuery.activityType)) {
             sb.append("""  and t1.activity_type = :activityType """)
         }
+        if (shopPromotionQuery.createdDateStart!=null) {
+            sb.append("""  and t1.created_date >= :createdDateStart """)
+        }
+        if (shopPromotionQuery.createdDateEnd!=null) {
+            sb.append("""  and t1.created_date < :createdDateEnd """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql =MySQLDialect.getInstance().getCountSql(sb.toString())
