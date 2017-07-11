@@ -29,6 +29,8 @@ public class AuditFileQuery extends BaseQuery {
     private String content;
     private String title;
     private String processflowName;
+    private LocalDate createdDateStart;
+    private LocalDate createdDateEnd;
     private List<String> processTypeIdList=Lists.newArrayList();
     private List<String> processFlowIdList=Lists.newArrayList();
 
@@ -163,16 +165,26 @@ public class AuditFileQuery extends BaseQuery {
     public LocalDate getCreatedDateStart() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
-        } else {
-            return null;
+        } else if(createdDateStart!=null){
+            return createdDateStart;
         }
+        return null;
+    }
+
+    public void setDutyDateStart(LocalDate dutyDateStart) {
+        this.createdDateStart = dutyDateStart;
     }
 
     public LocalDate getCreatedDateEnd() {
         if(StringUtils.isNotBlank(createdDate)) {
             return LocalDateUtils.parse(createdDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        } else {
-            return null;
+        } else if(createdDateEnd!=null){
+            return createdDateEnd;
         }
+        return null;
+    }
+
+    public void setDutyDateEnd(LocalDate dutyDateEnd) {
+        this.createdDateEnd = dutyDateEnd;
     }
 }

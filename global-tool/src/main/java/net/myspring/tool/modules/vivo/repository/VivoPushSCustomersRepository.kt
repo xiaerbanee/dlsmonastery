@@ -7,6 +7,7 @@ import net.myspring.tool.modules.vivo.dto.FutureCustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
 import java.time.LocalDate
 
 interface VivoPushSCustomersRepository :BaseRepository<VivoPushSCustomers,String>,VivoPushSCustomersRepositoryCustom{
@@ -15,6 +16,8 @@ interface VivoPushSCustomersRepository :BaseRepository<VivoPushSCustomers,String
 
 interface VivoPushSCustomersRepositoryCustom{
     fun findFutureVivoCustomers(date: LocalDate):MutableList<FutureCustomerDto>
+    fun findByDate(dateStart:LocalDate,dateEnd:LocalDate):MutableList<VivoPushSCustomers>
+    fun batchSave(vivoPushSCustomersList: MutableList<VivoPushSCustomers>):IntArray
 }
 
 class VivoPushSCustomersRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPushSCustomersRepositoryCustom{
@@ -63,5 +66,48 @@ class VivoPushSCustomersRepositoryImpl @Autowired constructor(val namedParameter
                         )
                 )
         """,map,BeanPropertyRowMapper(FutureCustomerDto::class.java))
+    }
+
+    override fun findByDate(dateStart: LocalDate, dateEnd: LocalDate): MutableList<VivoPushSCustomers> {
+        val map = Maps.newHashMap<String,Any>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        return namedParameterJdbcTemplate.query("""
+            SELECT *
+            FROM vivo_push_scustomers
+            WHERE created_date >= :dateStart
+                AND created_date < :dateEnd
+        """,map,BeanPropertyRowMapper(VivoPushSCustomers::class.java))
+    }
+
+    override fun batchSave(vivoPushSCustomersList: MutableList<VivoPushSCustomers>): IntArray {
+        val sb = StringBuffer()
+        sb.append("""
+           insert into vivo_push_scustomers
+            (
+                customer_id,
+                customer_name,
+                zone_id,
+                company_id,
+                record_date,
+                customer_level,
+                customerStr1,
+                customerStr4,
+                customerStr10,
+                created_date
+            )
+            values(
+                :customerId,
+                :customerName,
+                :zoneId,
+                :companyId,
+                :recordDate,
+                :customerLevel,
+                :customerstr1,
+                :customerstr4,
+                :customerstr10,
+                :createdDate
+            )""")
+        return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(vivoPushSCustomersList.toTypedArray()))
     }
 }

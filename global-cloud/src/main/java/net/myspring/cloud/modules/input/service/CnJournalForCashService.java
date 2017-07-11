@@ -50,8 +50,7 @@ public class CnJournalForCashService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    @Transactional
-    private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook kingdeeBook) {
+private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 cnJournalForCashDto.getExtendId(),
                 cnJournalForCashDto.getExtendType(),

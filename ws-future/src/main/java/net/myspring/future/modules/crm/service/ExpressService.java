@@ -93,8 +93,7 @@ public class ExpressService {
         return express;
     }
 
-    @Transactional
-    private ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
+private ExpressOrder reCalcAndUpdateExpressCodes(String expressOrderId) {
 
         ExpressOrder eo = expressOrderRepository.findOne(expressOrderId);
         List<Express> expressList = expressRepository.findByEnabledIsTrueAndExpressOrderId(expressOrderId);
@@ -140,8 +139,7 @@ public class ExpressService {
 
     }
 
-    @Transactional
-    private ExpressOrder saveExpressOrderWithoutSettingExpressCodes(ExpressForm expressForm) {
+private ExpressOrder saveExpressOrderWithoutSettingExpressCodes(ExpressForm expressForm) {
 
         if(expressForm.getExpressOrderToDepotId()  == null){
             throw new ServiceException("errorToDepotIdCantBeNull");

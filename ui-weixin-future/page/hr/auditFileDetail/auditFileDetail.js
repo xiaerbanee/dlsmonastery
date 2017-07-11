@@ -19,13 +19,14 @@ Page({
     var that = this;
     var options=that.data.options;
     wx.request({
-      url: $util.getUrl("basic/hr/auditFile/detail"),
+      url: $util.getUrl("basic/hr/auditFile/findOne"),
       data: { id: options.id },
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
-        that.setData({ formData: res.data.auditFile })
-        var contentImage = $util.getUrl("basic/hr/auditFile/view?x-auth-token=" + app.globalData.sessionId + "&id=" + options.id+"&authorization=Bearer" + wx.getStorageSync('token').access_token);
+        console.log(res.data)
+        that.setData({ formData: res.data })
+        var contentImage = $util.getUrl("basic/hr/auditFile/view?id=" + options.id);
         that.setData({ "formData.contentImage": contentImage })
       }
     })
