@@ -405,24 +405,25 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         return goodsOrderDto;
     }
 
-    @Transactional(readOnly = false)
-    public void updatePullStatus(String id, String pullStatus,String expressOrderCode) {
+    @Transactional
+    public void updatePullStatus(String id, String pullStatus,String expressOrderExpressCodes) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
-        if(StringUtils.isNotEmpty(pullStatus)){
-            goodsOrder.setPullStatus(pullStatus);
-            if (StringUtils.isNotBlank(pullStatus) && GoodsOrderPullStatusEnum.已推送.name().equals(pullStatus) && GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())) {
-                List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(id);
-                for (CarrierOrder carrierOrder : carrierOrders) {
-                    carrierOrder.setStatus(CarrierOrderStatusEnum.已导入.name());
-                }
-                carrierOrderRepository.save(carrierOrders);
-            }
-        }
-        if(StringUtils.isNotBlank(expressOrderCode)){
-            ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderCode,expressOrder.getExpressCompanyId());
-        }
+        goodsOrder.setPullStatus(pullStatus);
         goodsOrderRepository.save(goodsOrder);
+
+        if (GoodsOrderPullStatusEnum.已推送.name().equals(pullStatus) && GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())) {
+            List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(id);
+            for (CarrierOrder carrierOrder : carrierOrders) {
+                carrierOrder.setStatus(CarrierOrderStatusEnum.已导入.name());
+            }
+            carrierOrderRepository.save(carrierOrders);
+        }
+
+        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
+            ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderExpressCodes,expressOrder.getExpressCompanyId());
+        }
+
     }
 
     public List<GoodsOrderDetailDto> findDetailList(String id,String shopId,String netType,String shipType) {
