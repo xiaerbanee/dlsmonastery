@@ -24,7 +24,6 @@ Page({
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
-        console.log(res)
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList })
       }
     })
@@ -106,7 +105,6 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    console.log(e.detail.value)
     that.setData({ submitDisabled: true });
     e.detail.value.activityImage1 = $util.getImageStr(that.data.formProperty.activityImage1,app.globalData.sessionId);
     e.detail.value.activityImage2 = $util.getImageStr(that.data.formProperty.activityImage2,app.globalData.sessionId);

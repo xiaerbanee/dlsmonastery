@@ -294,9 +294,9 @@
         this.shopAccount = response.data;
       });
       Promise.all([formPropertyPromise, billPromise, shopAccountPromise]).then( () => {
+        this.initSummary(null);
         this.refreshExpressShouldGet(null);
         this.filterProducts();
-        this.initSummary(null);
         this.refreshStoreQty();
       });
     }

@@ -108,7 +108,12 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         if (StringUtils.isNotBlank(adGoodsOrderDetailQuery.adGoodsOrderCreatedBy)) {
             sb.append("""  and t2.created_by = :adGoodsOrderCreatedBy """)
         }
-
+        if (CollectionUtil.isNotEmpty(adGoodsOrderDetailQuery.depotIdList)) {
+            sb.append("""  and t2.shop_id in (:depotIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(adGoodsOrderDetailQuery.officeIdList)) {
+            sb.append("""  and shop.office_id in (:officeIdList)  """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(adGoodsOrderDetailQuery)

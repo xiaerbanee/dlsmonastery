@@ -135,9 +135,11 @@
         }else if(action==="ship"){
           this.$router.push({ name: 'storeAllotShip', query: { id: id }});
         }else if(action==="print"){
-           window.open('/#/future/crm/storeAllotPrint?id=' + id, '', '');
+          window.open('/#/future/crm/storeAllotPrint?id=' + id, '', '');
+          this.pageRequest();
         }else if(action==="shipPrint"){
-           window.open('/#/future/crm/storeAllotShipPrint?id=' + id, '', '');
+          window.open('/#/future/crm/storeAllotShipPrint?id=' + id, '', '');
+          this.pageRequest();
         }else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/storeAllot/delete',{params:{id:id}}).then((response) =>{
