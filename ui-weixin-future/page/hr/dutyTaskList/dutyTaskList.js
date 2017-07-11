@@ -9,9 +9,8 @@ Page({
   onLoad: function (option) {
   },
   onShow: function () {
-    let that = this;
     app.autoLogin(function () {
-      that.initPage()
+      this.initPage()
     });
   },
   initPage: function () {
@@ -30,7 +29,6 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
-            console.log(res.data)
             for (let item in res.data) {
               let actionList = new Array();
               actionList.push("审核");

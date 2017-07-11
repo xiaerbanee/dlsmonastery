@@ -29,8 +29,3 @@ call gradle build
 cd..
 cd ws-future
 call gradle build
-
-
-cd..
-cd summer-webapp
-call gradle build

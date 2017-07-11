@@ -24,8 +24,7 @@ public class StkTransferDirectService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    @Transactional
-    private KingdeeSynDto save(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook){
+private KingdeeSynDto save(StkTransferDirectDto stkTransferDirectDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 stkTransferDirectDto.getExtendId(),
                 stkTransferDirectDto.getExtendType(),

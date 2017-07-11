@@ -11,8 +11,7 @@ Page({
     height: null
   },
   onLoad: function (option) {
-    var that = this;
-    that.setData({ height: $util.getWindowHeight() })
+    this.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;

@@ -300,8 +300,7 @@ public class GoodsOrderService {
 
     }
 
-    @Transactional
-    private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
+private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
@@ -656,8 +655,7 @@ public class GoodsOrderService {
         }
     }
 
-    @Transactional
-    private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
+private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
         ExpressOrder expressOrder=new ExpressOrder();
 
         expressOrder.setExpressPrintQty(0);
@@ -673,8 +671,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
-    @Transactional
-    private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
+private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
 
         Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");
         BigDecimal amount = BigDecimal.ZERO;

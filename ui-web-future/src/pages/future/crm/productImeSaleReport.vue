@@ -59,12 +59,17 @@
         </div>
       </search-dialog>
       <div>
-      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange" @row-dblclick="nextLevel" stripe border>
+      <el-table :data="page"  style="margin-top:5px;" v-loading="pageLoading" element-loading-text="加载中" @sort-change="sortChange"stripe border>
         <el-table-column  prop="depotName" label="门店" sortable width="300" v-if="nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
         <el-table-column prop="qty" label="数量"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
+        <el-table-column :label="$t('employeeList.operation')" width="140">
+          <template scope="scope">
+            <el-button size="small" @click="nextLevel(scope.row.productTypeId,scope.row.officeId,scope.row.depotId)">详细</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       </div>
       <div>
@@ -147,15 +152,15 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
-      },nextLevel(	row, event, column){
-        if(row.productTypeId){
-          this.formData.productTypeIdList=row.productTypeId;
+      },nextLevel(	productTypeId, officeId, depotId){
+        if(productTypeId){
+          this.formData.productTypeIdList=productTypeId;
           this.formData.sumType="区域";
           this.pageRequest();
         }else{
           if(!this.nextIsShop){
-            axios.get('/api/basic/sys/office/checkLastLevel?officeId='+row.officeId).then((response) => {
-              this.officeIds.push(row.officeId);
+            axios.get('/api/basic/sys/office/checkLastLevel?officeId='+officeId).then((response) => {
+              this.officeIds.push(officeId);
               this.formData.officeId=this.officeIds[this.officeIds.length-1];
               this.nextIsShop=response.data;
               this.pageRequest();
@@ -163,7 +168,7 @@
           }else{
             this.detailVisible=true;
             this.formData.isDetail=true;
-            this.formData.depotId=row.depotId;
+            this.formData.depotId=depotId;
             axios.post('/api/ws/future/basic/depotShop/depotReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
               this.depotReportList=response.data.depotReportList;
               let productQtyMap=response.data.productQtyMap;

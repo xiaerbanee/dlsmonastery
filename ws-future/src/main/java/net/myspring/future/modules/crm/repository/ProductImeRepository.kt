@@ -640,7 +640,7 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
 
     override fun batchSave(productImes: MutableList<ProductIme>): IntArray? {
         val sb = StringBuilder()
-        sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ");
+        sb.append("insert into crm_product_ime (depot_id,retail_shop_id,product_id,ime,created_time,ime2,item_number,color_id,meid,box_ime,input_type,bill_id,ime_reverse,created_by,created_date,last_modified_by,last_modified_date,version,locked,enabled) values ")
         sb.append("(:depotId,:retailShopId,:productId,:ime,:createdTime,:ime2,:itemNumber,:colorId,:meid,:boxIme,:inputType,:billId,:imeReverse,:createdBy,:createdDate,:lastModifiedBy,:lastModifiedDate,:version,:locked,:enabled)")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(productImes.toTypedArray()));
     }

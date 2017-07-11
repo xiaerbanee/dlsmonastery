@@ -43,8 +43,7 @@ public class PurMrbService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    @Transactional
-    private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
+private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 purMrbDto.getExtendId(),
                 purMrbDto.getExtendType(),

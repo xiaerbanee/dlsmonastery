@@ -48,6 +48,11 @@ public class AuditFileController {
         return auditFileQuery;
     }
 
+    @RequestMapping(value = "getForm", method = RequestMethod.GET)
+    @PreAuthorize("hasPermission(null,'hr:auditFile:view')")
+    public AuditFileForm getForm(AuditFileForm auditFileForm) {
+        return auditFileForm;
+    }
 
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'hr:auditFile:edit')")

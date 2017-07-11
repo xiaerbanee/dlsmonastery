@@ -59,8 +59,7 @@ public class ArRefundBillService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    @Transactional
-    private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeBook){
+private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arRefundBillDto.getExtendId(),
                 arRefundBillDto.getExtendType(),

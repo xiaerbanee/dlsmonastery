@@ -162,8 +162,7 @@ public class ShopGoodsDepositService {
         }
     }
 
-    @Transactional
-    private void syn(ShopGoodsDeposit shopGoodsDeposit) {
+private void syn(ShopGoodsDeposit shopGoodsDeposit) {
         //TODO 同步金蝶
         if(StringUtils.isNotBlank(shopGoodsDeposit.getOutBillType()) && BillTypeEnum.手工日记账.name().equals(shopGoodsDeposit.getOutBillType())){
             KingdeeSynReturnDto kingdeeSynReturnDto = cnJournalBankManager.synForShopGoodsDeposit(shopGoodsDeposit,shopGoodsDeposit.getDepartMent());
