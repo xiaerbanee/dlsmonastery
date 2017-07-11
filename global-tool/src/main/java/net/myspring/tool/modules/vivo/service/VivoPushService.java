@@ -70,8 +70,7 @@ public class VivoPushService {
             vivoPushZonesList.add(vivoPushZone);
         }
         logger.info("开始上抛机构数据"+ LocalDateTime.now());
-        List<VivoPushZones> vivoPushZones = vivoPushZoneRepository.findBydate(dateStart,dateEnd);
-        vivoPushZoneRepository.delete(vivoPushZones);
+        vivoPushZoneRepository.deleteAll();
         vivoPushZoneRepository.batchSave(vivoPushZonesList);
         logger.info("上抛机构数据完成"+LocalDateTime.now());
         return vivoPushZonesList;
@@ -110,8 +109,7 @@ public class VivoPushService {
             vivoPushSCustomersList.add(vivoPushSCustomer);
         }
         logger.info("开始上抛客户数据"+LocalDateTime.now());
-        List<VivoPushSCustomers> vivoPushSCustomers = vivoPushSCustomersRepository.findByDate(dateStart,dateEnd);
-        vivoPushSCustomersRepository.delete(vivoPushSCustomers);
+        vivoPushSCustomersRepository.deleteAll();
         vivoPushSCustomersRepository.batchSave(vivoPushSCustomersList);
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }

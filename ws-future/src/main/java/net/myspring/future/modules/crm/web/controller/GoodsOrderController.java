@@ -89,8 +89,8 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "updatePullStatus")
-    public boolean updatePullStatus(String id, String status) {
-        goodsOrderService.updatePullStatus(id, status);
+    public boolean updatePullStatus(String id, String pullStatus,String expressOrderExpressCodes) {
+        goodsOrderService.updatePullStatus(id, pullStatus,expressOrderExpressCodes);
         return true;
     }
 
