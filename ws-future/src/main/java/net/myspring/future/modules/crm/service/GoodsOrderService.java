@@ -366,6 +366,7 @@ public class GoodsOrderService {
         expressOrder.setContator(goodsOrderBillForm.getContator());
         expressOrder.setAddress(goodsOrderBillForm.getAddress());
         expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrderBillForm.getStoreId());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
         expressOrder.setPrintDate(goodsOrder.getBillDate());

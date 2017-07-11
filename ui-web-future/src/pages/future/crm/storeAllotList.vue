@@ -64,8 +64,8 @@
             <div class="action" v-permit="'crm:storeAllot:view'"><el-button   size="small"  @click.native="itemAction(scope.row.id, 'view')">{{$t('storeAllotList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.status === '待发货' || scope.row.status === '发货中'" v-permit="'crm:storeAllot:ship'" ><el-button size="small" @click.native="itemAction(scope.row.id,'ship')">{{$t('storeAllotList.ship')}}</el-button></div>
             <div class="action" v-if="scope.row.status === '待发货'"  v-permit="'crm:storeAllot:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"> {{$t('storeAllotList.delete')}}</el-button></div>
-            <div class="action" v-permit="'crm:storeAllot:ship'"><el-button :style="stypeOfPrintBtn(scope.row.print)" size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button></div>
-            <div class="action" v-permit="'crm:storeAllot:ship'"><el-button :style="stypeOfShipPrintBtn(scope.row.shipPrint)" size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button></div>
+            <div class="action" v-permit="'crm:storeAllot:ship'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('storeAllotList.print')}}</el-button></div>
+            <div class="action" v-permit="'crm:storeAllot:ship'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">{{$t('storeAllotList.shipPrint')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -152,18 +152,6 @@
           arrs.push(each.id)
         }
         this.multipleSelection=arrs;
-      },stypeOfPrintBtn(isPrint){
-          if(!isPrint){
-              return "color:#ff0000;";
-          }else {
-              return "";
-          }
-      },stypeOfShipPrintBtn(isShipPrint){
-        if(!isShipPrint){
-          return "color:#ff0000;";
-        }else {
-          return "";
-        }
       }
     },created () {
       this.pageHeight = window.outerHeight -320;

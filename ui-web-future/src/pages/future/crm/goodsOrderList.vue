@@ -109,9 +109,9 @@
             <div class="action"><el-button size="small" v-permit="'crm:goodsOrder:view'" @click.native="itemAction(scope.row.id, 'detail')">{{$t('goodsOrderList.detail')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
-            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'ship')">出库单</el-button></div>
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' "  size="small" @click.native="itemAction(scope.row.id, 'print')">出库单</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
-            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">快递单</el-button></div>
           </template>
 
         </el-table-column>
@@ -170,7 +170,7 @@
     pageRequest() {
       this.pageLoading = true;
       this.setSearchText();
-      var submitData = util.deleteExtra(this.formData);
+      let submitData = util.deleteExtra(this.formData);
       util.setQuery("goodsOrderList",submitData);
       axios.get('/api/ws/future/crm/goodsOrder?'+qs.stringify(submitData)).then((response) => {
         this.page = response.data;
@@ -193,28 +193,27 @@
     },mallAdd(){
       this.$router.push({ name: 'goodsOrderMallForm'});
     },itemAction:function(id,action){
-      if(action=="edit") {
+      if(action==="edit") {
         this.$router.push({ name: 'goodsOrderForm', query: { id: id }})
-      }else if(action =="detail"){
+      }else if(action ==="detail"){
         this.$router.push({ name: 'goodsOrderDetail', query: { id: id }})
-      }else if(action=="bill"){
+      }else if(action==="bill"){
         this.$router.push({name:'goodsOrderBill',query:{id:id}})
-      }else if(action =="sign"){
+      }else if(action ==="sign"){
         this.$router.push({name:'goodsOrderSign',query:{id:id}})
-      }else if(action == "delete"){
+      }else if(action === "delete"){
         util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/goodsOrder/delete', {params: {id: id}}).then((response) => {
-          this.$message(response.data.message);
-          this.pageRequest();
-      })
-      }).catch(()=>{});
-      }else if(action=="ship"){
-        var newWindow=window.open('/#/future/crm/goodsOrderPrint?id=' + id);
-      }else if(action=="expressPrint"){
+            this.$message(response.data.message);
+            this.pageRequest();
+          });
+        }).catch(()=>{});
+      }else if(action === "print"){
+        window.open('/#/future/crm/goodsOrderPrint?id=' + id);
+      }else if(action === "shipPrint"){
          window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
       }
-    },
-    handleCommand(command) {
+    }, handleCommand(command) {
       if(command==="batchAdd"){
         this.$router.push({ name: 'goodsOrderBatchAdd'});
       }else if(command==="carrierOrder"){
@@ -228,12 +227,11 @@
       }
     }
  },created () {
-    var that = this;
-    that.pageHeight = window.outerHeight -320;
-    this.initPromise=axios.get('/api/ws/future/crm/goodsOrder/getQuery').then((response) =>{
-      that.formData=response.data;
-      util.copyValue(that.$route.query,that.formData);
-    });
+      this.pageHeight = window.outerHeight -320;
+      this.initPromise=axios.get('/api/ws/future/crm/goodsOrder/getQuery').then((response) =>{
+        this.formData=response.data;
+        util.copyValue(this.$route.query,this.formData);
+      });
   },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();
