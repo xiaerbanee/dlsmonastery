@@ -129,10 +129,8 @@
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' "  size="small" @click.native="itemAction(scope.row.id, 'print')">出库单</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">快递单</el-button></div>
-            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'pullStatus')">商城状态</el-button></div>
-
+            <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="editPullStatus(scope.row)">商城状态</el-button></div>
           </template>
-
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -202,7 +200,6 @@
       this.formData.size = pageSize;
       this.pageRequest();
     },sortChange(column) {
-      console.log(column);
       this.formData.sort=util.getSort(column);
       this.formData.page=0;
       this.pageRequest();
@@ -233,19 +230,16 @@
         window.open('/#/future/crm/goodsOrderPrint?id=' + id);
       }else if(action === "shipPrint"){
          window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
-      }else if(action=="pullStatus"){
-        this.detailVisible=true;
-        let page=this.page.content;
-        for(let item in page){
-          if(id==page[item].id){
-            this.inputForm=page[item];
-          }
-        }
       }
-    },formSubmit(){
+    },editPullStatus(row){
+      this.detailVisible=true;
+      this.inputForm=JSON.parse(JSON.stringify(row));
+    },
+    formSubmit(){
       axios.post('/api/ws/future/crm/goodsOrder/updatePullStatus', qs.stringify(this.inputForm)).then((response)=> {
         this.$message(response.data.message);
         this.detailVisible=false;
+        this.pageRequest();
       })
     }, handleCommand(command) {
       if(command==="batchAdd"){
