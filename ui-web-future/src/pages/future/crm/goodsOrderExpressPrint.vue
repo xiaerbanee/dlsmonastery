@@ -41,7 +41,9 @@
 </script>
 <style type="text/css">
   span {
-    font-size: 19px;
+    font-size: 18px;
+    font-weight:500;
+    line-height: 26px;
   }
   body {
     display: block;
