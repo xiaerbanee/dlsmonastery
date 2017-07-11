@@ -13,6 +13,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
+import net.myspring.future.modules.basic.web.form.PricesystemDetailForm;
 import net.myspring.future.modules.basic.web.form.PrintConfigForm;
 import net.myspring.future.modules.basic.web.query.PrintConfigQuery;
 import net.myspring.future.modules.crm.domain.*;
@@ -183,6 +184,7 @@ public class PrintService {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
                     expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
                     expressOrderPrintDto.setId(expressOrder.getId());
+                    expressOrderPrintDto.setExtendBusinessId(expressOrder.getExtendBusinessId());
                     Integer totalQty = 0;
                     for(GoodsOrderDetail goodsOrderDetail:map.get(expressOrder.getExtendBusinessId())) {
                         GoodsOrder goodsOrder=goodsOrderMap.get(goodsOrderDetail.getGoodsOrderId());
@@ -239,6 +241,7 @@ public class PrintService {
             for(ExpressOrder expressOrder:expressOrders) {
                 if(map.containsKey(expressOrder.getExtendBusinessId())) {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
+                    expressOrderPrintDto.setExtendBusinessId(expressOrder.getExtendBusinessId());
                     expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
                     expressOrderPrintDto.setId(expressOrder.getId());
                     Integer totalQty = 0;
@@ -298,6 +301,7 @@ public class PrintService {
             for(ExpressOrder expressOrder:expressOrders) {
                 if(map.containsKey(expressOrder.getExtendBusinessId())) {
                     ExpressOrderPrintDto expressOrderPrintDto=new ExpressOrderPrintDto();
+                    expressOrderPrintDto.setExtendBusinessId(expressOrder.getExtendBusinessId());
                     expressOrderPrintDto.setExtendType(printConfigQuery.getOrderType());
                     expressOrderPrintDto.setId(expressOrder.getId());
                     Integer totalQty = 0;
@@ -329,6 +333,11 @@ public class PrintService {
             }
         }
         cacheUtils.initCacheInput(expressOrderPrintList);
+        Collections.sort(expressOrderPrintList,new Comparator<ExpressOrderPrintDto>(){
+            public int compare(ExpressOrderPrintDto p1, ExpressOrderPrintDto p2) {
+                return p1.getExtendBusinessId().compareTo(p2.getExtendBusinessId());
+            }
+        });
         return expressOrderPrintList;
     }
 }
