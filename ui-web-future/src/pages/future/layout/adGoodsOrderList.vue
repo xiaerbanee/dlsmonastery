@@ -66,7 +66,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('adGoodsOrderList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
+        <el-table-column prop="formatId" column-key="id" :label="$t('adGoodsOrderList.orderCode')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('adGoodsOrderList.createdDate')" sortable></el-table-column>
         <el-table-column prop="billDate" :label="$t('adGoodsOrderList.billDate')" sortable></el-table-column>
         <el-table-column prop="billType" :label="$t('adGoodsOrderList.type')" sortable></el-table-column>
@@ -81,7 +81,7 @@
         <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('adGoodsOrderList.createdBy')" sortable></el-table-column>
-        <el-table-column fixed="right" :label="$t('adGoodsOrderList.operation')">
+        <el-table-column :label="$t('adGoodsOrderList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:adGoodsOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button></div>
