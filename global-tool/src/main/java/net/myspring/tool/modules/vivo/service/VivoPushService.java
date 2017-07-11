@@ -6,8 +6,6 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.OfficeClient;
-import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.OfficeEntity;
@@ -18,6 +16,8 @@ import net.myspring.tool.modules.vivo.repository.VivoPushSCustomersRepository;
 import net.myspring.tool.modules.vivo.repository.VivoPushZoneRepository;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +39,13 @@ public class VivoPushService {
     @Autowired
     private VivoPushSCustomersRepository vivoPushSCustomersRepository;
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
     @LocalDataSource
     @Transactional
-    public  List<VivoPushZones> getVivoZones(String date){
+    public  List<VivoPushZones> pushVivoZones(String date){
+        LocalDate dateStart = LocalDateUtils.parse(date);
+        LocalDate dateEnd = dateStart.plusDays(1);
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<OfficeEntity> officeEntityList = officeClient.findAll();
         List<VivoPushZones> vivoPushZonesList = Lists.newArrayList();
@@ -65,20 +69,25 @@ public class VivoPushService {
             vivoPushZone.setCreatedDate(LocalDateUtils.parse(date));
             vivoPushZonesList.add(vivoPushZone);
         }
-        vivoPushZoneRepository.save(vivoPushZonesList);
+        logger.info("开始上抛机构数据"+ LocalDateTime.now());
+        List<VivoPushZones> vivoPushZones = vivoPushZoneRepository.findBydate(dateStart,dateEnd);
+        vivoPushZoneRepository.delete(vivoPushZones);
+        vivoPushZoneRepository.batchSave(vivoPushZonesList);
+        logger.info("上抛机构数据完成"+LocalDateTime.now());
         return vivoPushZonesList;
     }
 
     @FutureDataSource
-    @Transactional(readOnly = true)
     public List<FutureCustomerDto> getFutureVivoCustomers(String date){
-        List<FutureCustomerDto> FutureCustomerDtos=vivoPushSCustomersRepository.findFutureVivoCustomers(LocalDateUtils.parse(date));
-        return vivoPushSCustomersRepository.findFutureVivoCustomers(LocalDateUtils.parse(date));
+        List<FutureCustomerDto> futureCustomerDtoList =  vivoPushSCustomersRepository.findFutureVivoCustomers(LocalDateUtils.parse(date));
+        return futureCustomerDtoList;
     }
 
     @LocalDataSource
     @Transactional
-    public void saveVivoPushSCustomers(List<FutureCustomerDto> futureCustomerDtoList){
+    public void saveVivoPushSCustomers(List<FutureCustomerDto> futureCustomerDtoList,String date){
+        LocalDate dateStart = LocalDateUtils.parse(date);
+        LocalDate dateEnd = dateStart.plusDays(1);
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<VivoPushSCustomers> vivoPushSCustomersList = Lists.newArrayList();
         for(FutureCustomerDto futureCustomerDto :futureCustomerDtoList){
@@ -86,18 +95,25 @@ public class VivoPushService {
             String customerId = futureCustomerDto.getCustomerId();
             vivoPushSCustomer.setCustomerLevel(futureCustomerDto.getCustomerLevel());
             if(futureCustomerDto.getCustomerLevel() == 1){
-                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,"D","00000"));
+                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"D","00000"));
             }else {
-                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,"C","00000"));
-                vivoPushSCustomer.setCustomerstr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),"D","00000"));
+                vivoPushSCustomer.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"C","00000"));
+                vivoPushSCustomer.setCustomerstr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),mainCode+"D","00000"));
             }
             vivoPushSCustomer.setCustomerName(futureCustomerDto.getCustomerName());
             vivoPushSCustomer.setZoneId(getZoneId(mainCode,futureCustomerDto.getZoneId()));
             vivoPushSCustomer.setCompanyId(mainCode);
             vivoPushSCustomer.setRecordDate(futureCustomerDto.getRecordDate());
+            vivoPushSCustomer.setCustomerstr1(futureCustomerDto.getCustomerStr1());
+            vivoPushSCustomer.setCustomerstr10(mainCode);
+            vivoPushSCustomer.setCreatedDate(dateStart);
             vivoPushSCustomersList.add(vivoPushSCustomer);
         }
-        vivoPushSCustomersRepository.save(vivoPushSCustomersList);
+        logger.info("开始上抛客户数据"+LocalDateTime.now());
+        List<VivoPushSCustomers> vivoPushSCustomers = vivoPushSCustomersRepository.findByDate(dateStart,dateEnd);
+        vivoPushSCustomersRepository.delete(vivoPushSCustomers);
+        vivoPushSCustomersRepository.batchSave(vivoPushSCustomersList);
+        logger.info("上抛客户数据完成"+LocalDateTime.now());
     }
 
 
