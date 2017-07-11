@@ -61,11 +61,12 @@ class ImeAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
         if(StringUtils.isNotBlank(imeAllotQuery.ime)){
             sb.append("""   and t4.ime like concat('%', :ime,'%')  """)
         }
-        if(imeAllotQuery.crossArea !=null && imeAllotQuery.crossArea ){
-            sb.append("""  AND t1.cross_area  = 1  """)
-        }
-        if(imeAllotQuery.crossArea !=null && !imeAllotQuery.crossArea ){
-            sb.append("""  AND t1.cross_area  = 0  """)
+        if(imeAllotQuery.crossArea != null){
+            if(imeAllotQuery.crossArea){
+                sb.append("""  AND t1.cross_area  = 1  """)
+            }else{
+                sb.append("""  AND t1.cross_area  = 0  """)
+            }
         }
 
         if(StringUtils.isNotBlank(imeAllotQuery.fromDepotName)){

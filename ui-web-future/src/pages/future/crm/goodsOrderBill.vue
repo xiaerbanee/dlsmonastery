@@ -48,6 +48,9 @@
             <el-form-item :label="$t('goodsOrderBill.shopName')" >
               {{shopAccount.name}} <div style="color:red;font-size:16px">{{shopAccount.depotShopAreaType}}</div>
             </el-form-item>
+            <el-form-item v-if="shopAccount.delegateDepotName" :label="$t('goodsOrderBill.delegateDepotName')" >
+              {{shopAccount.delegateDepotName}}
+            </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.clientName')"  >
               {{shopAccount.clientName}}
             </el-form-item>
@@ -60,7 +63,7 @@
               {{shopAccount.remarks}}
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.credit')">
-              {{shopAccount.credit}}
+              <div style="color:red;font-size:16px"> {{shopAccount.credit}}</div>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.summary')" >
               总开单数{{summaryInfo.totalBillQty }}, 总开单金额{{summaryInfo.totalBillAmount.toFixed(2)}}, 总货品数{{summaryInfo.totalProductBillQty }}, 总货品金额{{summaryInfo.totalProductBillAmount.toFixed(2)}}, 开单后应收{{(summaryInfo.totalBillAmount+shopAccount.qmys).toFixed(2)}}

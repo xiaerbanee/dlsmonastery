@@ -900,6 +900,7 @@ export default {
     hasIme: "包含串码",
     prerequisiteMessage: "必填信息",
     clientName: "客户",
+    delegateDepotName: "寄售门店",
   },
   goodsOrderBatchAdd:{
     shopName: "门店",

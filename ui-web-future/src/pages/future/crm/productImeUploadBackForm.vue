@@ -71,11 +71,10 @@
     methods:{
       getData() {
       return{
-        isInit:false,
         searched:false,
 
         inputForm:{
-            imeStr:'',
+            extra:{}
         },
         submitDisabled:false,
 
@@ -98,12 +97,10 @@
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-
             axios.post('/api/ws/future/crm/productImeUpload/uploadBack', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
               Object.assign(this.$data, this.getData());
               this.$router.push({name:'productImeUploadList',query:util.getQuery("productImeUploadList"), params:{_closeFrom:true}})
-
             }).catch( () => {
               this.submitDisabled = false;
             });
@@ -141,17 +138,13 @@
         this.productImeList=[];
         this.productQtyList = [];
         this.$refs["inputForm"].resetFields();
-      }
-    },activated(){
-
-      if(!this.$route.query.headClick || !this.isInit) {
-        Object.assign(this.$data, this.getData());
-
+      },initPage(){
         axios.get('/api/ws/future/crm/productImeUpload/getUploadBackForm').then((response)=>{
           this.inputForm = response.data;
         });
       }
-      this.isInit = true;
+    },created(){
+      this.initPage();
     }
   }
 </script>
