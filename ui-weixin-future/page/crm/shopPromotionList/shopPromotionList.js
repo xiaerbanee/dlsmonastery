@@ -35,6 +35,7 @@ Page({
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        console.log(res.data)
         that.setData({ formData: res.data });
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList });
         wx.request({

@@ -47,7 +47,6 @@ public class DutySignController {
     private DutySignValidator dutySignValidator;
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutySign:view')")
     public Page<DutySignDto> list(Pageable pageable, DutySignQuery dutySignQuery) {
         Page<DutySignDto> page = dutySignService.findPage(pageable,dutySignQuery);
         for(DutySignDto dutySignDto:page.getContent()){
@@ -64,7 +63,6 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:dutySign:edit')")
     public RestResponse save(DutySignForm dutySignForm, BindingResult bindingResult) {
         dutySignValidator.validate(dutySignForm,bindingResult);
         if(bindingResult.hasErrors()){
@@ -75,13 +73,11 @@ public class DutySignController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'hr:dutySign:delete')")
     public RestResponse delete(String id) {
         dutySignService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功", ResponseCodeEnum.removed.name());
         return restResponse;
     }
-
     @RequestMapping(value = "getForm")
     public DutySignForm detail(DutySignForm dutySignForm) {
         dutySignForm = dutySignService.getForm(dutySignForm);
