@@ -6,7 +6,9 @@
         <el-row >
           <el-col :span="8">
             <el-form-item :label="$t('goodsOrderBill.store')" prop="storeId">
-              <depot-select v-model="inputForm.storeId" category="store" @input="refreshStoreQty"></depot-select>
+              <el-select v-model="inputForm.storeId" clearable filterable @input="refreshStoreQty">
+                <el-option v-for="item in formProperty.storeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('goodsOrderBill.billDate')" prop="billDate">
               <date-picker v-model="inputForm.billDate"  ></date-picker>
