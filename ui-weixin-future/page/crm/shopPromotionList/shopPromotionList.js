@@ -61,7 +61,6 @@ Page({
       },
       data: $util.deleteExtra(that.data.formData),
       success: function (res) {
-        console.log('list:',res.data)
         var content = res.data.content;
         for (var item in content) {
           var actionList = new Array();
