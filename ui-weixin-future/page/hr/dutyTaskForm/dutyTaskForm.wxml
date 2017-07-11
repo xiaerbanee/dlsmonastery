@@ -1,5 +1,6 @@
 <view class="page">
   <form class="page__bd" catchsubmit="formSubmit">
+  <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
       <view wx:if="{{dutyType=='请假'}}">

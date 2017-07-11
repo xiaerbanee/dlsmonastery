@@ -9,7 +9,7 @@
           <view class="weui-label">类型</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="processTypeName" value="{{formData.processType.name}}" class="weui-input" disabled />
+          <input name="processTypeName" value="{{formData.processTypeName}}" class="weui-input" disabled />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -22,7 +22,7 @@
       </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <image src="{{formData.contentImage}}" mode="widthFix" bindtap="showImageActionSheet"></image>
+          <image src="{{formData.content}}" mode="widthFix" bindtap="showImageActionSheet"></image>
         </view>
       </view>
       <view class="weui-cell weui-cell_input" >
