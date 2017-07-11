@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -15,8 +16,14 @@ public class JdbcConfig {
     private Environment environment;
 
     @Bean
+    @Primary
     public DataSource dataSource() {
         return getDataSource("spring.datasource.uaa");
+    }
+
+    @Bean
+    public DataSource oauthDataSource() {
+        return getDataSource("spring.datasource.oauth");
     }
 
 

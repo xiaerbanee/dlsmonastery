@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+
+import javax.sql.DataSource;
 
 /**
  * Created by on 28.01.16.
@@ -29,13 +29,13 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
-    private RedisConnectionFactory redisConnectionFactory;
+    @Qualifier("oauthDataSource")
+    private DataSource oauthDataSource;
 
     @Bean
-    public RedisTokenStore tokenStore() {
-        return new RedisTokenStore(redisConnectionFactory);
+    public JdbcTokenStore jdbcTokenStore() {
+        return new JdbcTokenStore(oauthDataSource);
     }
-
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer)
@@ -45,13 +45,12 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .checkTokenAccess("isAuthenticated()");
     }
 
-
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .authenticationManager(authenticationManager)
                 .userDetailsService(customUserDetailsService)
-                .tokenStore(tokenStore());
+                .tokenStore(jdbcTokenStore());
     }
 
     @Override
