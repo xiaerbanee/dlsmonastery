@@ -17,8 +17,6 @@ public class ImeAllotQuery extends BaseQuery{
     private String ime;
     private String status;
     private String createdDateRange;
-    private List<String> statusList;
-
     public String getFromDepotName() {
         return fromDepotName;
     }
@@ -65,14 +63,6 @@ public class ImeAllotQuery extends BaseQuery{
 
     public void setCreatedDateRange(String createdDateRange) {
         this.createdDateRange = createdDateRange;
-    }
-
-    public List<String> getStatusList() {
-        return statusList;
-    }
-
-    public void setStatusList(List<String> statusList) {
-        this.statusList = statusList;
     }
 
     public LocalDate getCreatedDateStart() {

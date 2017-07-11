@@ -2,7 +2,7 @@
   <div>
     <head-tab active="imeAllotForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item >
