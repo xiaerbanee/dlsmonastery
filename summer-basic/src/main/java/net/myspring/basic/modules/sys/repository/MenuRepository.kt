@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.sys.repository
 
+import com.google.common.collect.Maps
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.dto.MenuDto
@@ -66,26 +67,39 @@ interface MenuRepositoryCustom{
 
     fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>?
 
-    fun findByMenuIdsAndMobile(menuIds:MutableList<String>,isMobile:Boolean):MutableList<Menu>
+    fun findByMenuIdsAndMobile(menuIds:MutableList<String>,isMobile:Boolean,roleId: String):MutableList<Menu>
 
 }
 
 class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): MenuRepositoryCustom{
-    override fun findByMenuIdsAndMobile(menuIds: MutableList<String>, isMobile: Boolean): MutableList<Menu> {
+    override fun findByMenuIdsAndMobile(menuIds: MutableList<String>, isMobile: Boolean,roleId:String): MutableList<Menu> {
             var sb = StringBuilder("""
-                   SELECT t1.*
-                    FROM sys_menu t1
-                    where t1.enabled=1
-                    and t1.visible=1
+                   SELECT t4.*
+                   FROM
+                    sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4,sys_role_module t6
+                where
+                t4.menu_category_id=t3.id
+                and t6.backend_module_id=t2.id
+                and t3.backend_module_id=t2.id
+                and t2.backend_id=t1.id
+                and t1.enabled=1
+                and t2.enabled=1
+                and t3.enabled=1
+                and t4.enabled=1
+                and t4.visible=1
+                and t6.enabled=1
             """);
             if(isMobile) {
                 sb.append("""
-                    and t1.mobile=1
-                    and t1.mobile_href is not null
+                    and t4.mobile=1
+                    and t4.mobile_href is not null
                 """);
             }
-        sb.append("  and t1.id in (:menuIds)");
-        return namedParameterJdbcTemplate.query(sb.toString(), Collections.singletonMap("menuIds",menuIds), BeanPropertyRowMapper(Menu::class.java));
+        sb.append("  and t4.id in (:menuIds)    and t6.role_id=:roleId");
+        var paramMap= Maps.newHashMap<String,Any>();
+        paramMap.put("menuIds",menuIds);
+        paramMap.put("roleId",roleId);
+        return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Menu::class.java));
     }
 
     override fun findPage(pageable: Pageable, menuQuery: MenuQuery): Page<MenuDto>? {
