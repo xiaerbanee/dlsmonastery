@@ -130,6 +130,7 @@
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="itemAction(scope.row.id, 'pullStatus')">商城状态</el-button></div>
           </template>
+
         </el-table-column>
       </el-table>
       <pageable :page="page" v-on:pageChange="pageChange"></pageable>
@@ -244,7 +245,8 @@
         this.$message(response.data.message);
         this.detailVisible=false;
       })
-    }, handleCommand(command) {
+    },
+    handleCommand(command) {
       if(command==="batchAdd"){
         this.$router.push({ name: 'goodsOrderBatchAdd'});
       }else if(command==="carrierOrder"){
