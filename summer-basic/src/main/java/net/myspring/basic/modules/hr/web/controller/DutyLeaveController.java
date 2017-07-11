@@ -33,7 +33,6 @@ public class DutyLeaveController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyLeave:view')")
     public Page<DutyLeaveDto> list(Pageable pageable, DutyLeaveQuery dutyLeaveQuery){
         dutyLeaveQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyLeaveDto> page = dutyLeaveService.findPage(pageable,dutyLeaveQuery);
@@ -58,7 +57,6 @@ public class DutyLeaveController {
     }
 
     @RequestMapping(value="save")
-    @PreAuthorize("hasPermission(null,'hr:dutyLeave:edit')")
     public RestResponse save(DutyLeaveForm dutyLeaveForm, BindingResult  bindingResult){
         dutyLeaveValidator.validate(dutyLeaveForm,bindingResult);
         if(bindingResult.hasErrors()){
@@ -69,7 +67,6 @@ public class DutyLeaveController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'hr:dutyLeave:delete')")
     public RestResponse delete(String id) {
         dutyLeaveService.logicDelete(id);
         RestResponse restResponse =new RestResponse("删除成功",ResponseCodeEnum.removed.name());

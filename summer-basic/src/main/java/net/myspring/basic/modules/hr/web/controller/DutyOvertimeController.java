@@ -32,7 +32,6 @@ public class DutyOvertimeController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyOvertime:view')")
     public Page<DutyOvertimeDto> list(Pageable pageable, DutyOvertimeQuery dutyOvertimeQuery) {
         dutyOvertimeQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyOvertimeDto> page = dutyOvertimeService.findPage(pageable,dutyOvertimeQuery);
@@ -43,7 +42,6 @@ public class DutyOvertimeController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:dutyOvertime:edit')")
     public RestResponse save(DutyOvertimeForm dutyOvertimeForm, BindingResult bindingResult) {
         dutyOvertimeValidator.validate(dutyOvertimeForm,bindingResult);
         if(bindingResult.hasErrors()){
@@ -54,7 +52,6 @@ public class DutyOvertimeController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'hr:dutyOvertime:delete')")
     public RestResponse delete(String id) {
         dutyOvertimeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());

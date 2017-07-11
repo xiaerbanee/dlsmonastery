@@ -1,6 +1,6 @@
 //获取应用实例
-let app = getApp();
-let $util = require("../../../util/util.js");
+var app = getApp();
+var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
@@ -9,16 +9,17 @@ Page({
   onLoad: function (option) {
   },
   onShow: function () {
+    var that=this;
     app.autoLogin(function () {
-      this.initPage()
+      that.initPage()
     });
   },
   initPage: function () {
-    let that = this;
+    var that = this;
     that.pageRequest();
   },
   pageRequest: function () {
-    let that = this;
+    var that = this;
     wx.showToast({
       title: '加载中',
       icon: 'loading',
@@ -29,8 +30,8 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: that.data.formData,
           success: function (res) {
-            for (let item in res.data) {
-              let actionList = new Array();
+            for (var item in res.data) {
+              var actionList = new Array();
               actionList.push("审核");
               res.data[item].actionList = actionList;
             }
@@ -42,7 +43,7 @@ Page({
     })
   },
   passAll: function (e) {
-    let that = this;
+    var that = this;
     wx.showModal({
       title: '提示',
       content: '确认全部通过',
@@ -62,10 +63,10 @@ Page({
     })
   },
   itemActive: function (e) {
-    let that = this;
-    let id = e.currentTarget.dataset.id;
-    for (let index in that.data.page) {
-      let item = that.data.page[index];
+    var that = this;
+    var id = e.currentTarget.dataset.id;
+    for (var index in that.data.page) {
+      var item = that.data.page[index];
       if (item.id == id) {
         that.data.activeItem = item;
         item.active = true;
@@ -76,10 +77,10 @@ Page({
     that.setData({ page: that.data.page });
   },
   showActionSheet: function (e) {
-    let that = this;
-    let id = e.currentTarget.dataset.id;
-    let dutyType = e.currentTarget.dataset.dutyType;
-    let itemList = that.data.activeItem.actionList;
+    var that = this;
+    var id = e.currentTarget.dataset.id;
+    var dutyType = e.currentTarget.dataset.dutyType;
+    var itemList = that.data.activeItem.actionList;
     if (itemList.length == 0) { return; }
     wx.showActionSheet({
       itemList: itemList,
