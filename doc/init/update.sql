@@ -687,12 +687,18 @@ CREATE TABLE `sys_backend_module` (
 );
 DROP TABLE IF EXISTS `sys_localization`;
 
+
 DROP TABLE IF EXISTS `sys_gl_voucher`;
 CREATE TABLE `sys_gl_voucher` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `fdate` date DEFAULT NULL,
-  `created_by` bigint(20) DEFAULT NULL,
+  `status` varchar(64) NOT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
+  `out_code` varchar(64) DEFAULT NULL,
+  `company_name` varchar(64) NOT NULL,
+  `kingdee_book_id` bigint(20) DEFAULT NULL,
   `created_name` varchar(64) DEFAULT NULL,
+  `created_by` bigint(20) DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `last_modified_by` bigint(20) DEFAULT NULL,
   `last_modified_date` datetime DEFAULT NULL,
@@ -700,10 +706,6 @@ CREATE TABLE `sys_gl_voucher` (
   `locked` tinyint(1) DEFAULT NULL,
   `enabled` tinyint(1) DEFAULT NULL,
   `remarks` varchar(255) DEFAULT NULL,
-  `status` varchar(64) NOT NULL,
-  `company_id` bigint(20) DEFAULT NULL,
-  `out_code` varchar(64) DEFAULT NULL,
-  `kingdee_book_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`) USING BTREE,
   KEY `created_date` (`created_date`) USING BTREE,
@@ -739,7 +741,6 @@ CREATE TABLE `sys_gl_voucher_entry_flow` (
 DROP TABLE IF EXISTS `sys_kingdee_book`;
 CREATE TABLE `sys_kingdee_book` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `company_id` bigint(20) DEFAULT NULL,
   `name` varchar(64) NOT NULL,
   `type` varchar(64) DEFAULT NULL,
   `kingdee_url` varchar(64) DEFAULT NULL,
@@ -747,6 +748,8 @@ CREATE TABLE `sys_kingdee_book` (
   `kingdee_username` varchar(64) DEFAULT NULL,
   `kingdee_password` varchar(255) DEFAULT NULL,
   `kingdee_dbid` varchar(64) DEFAULT NULL,
+  `company_name` varchar(64) NOT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) NOT NULL,
   `created_date` datetime NOT NULL,
   `last_modified_by` bigint(20) NOT NULL,
@@ -763,7 +766,7 @@ CREATE TABLE `sys_kingdee_syn` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `extend_id` bigint(20) DEFAULT NULL,
   `extend_type` varchar(64) DEFAULT NULL,
-  `form_id` varchar(64) DEFAULT NULL,
+  `form_id` varchar(64) NOT NULL,
   `next_form_id` varchar(64) DEFAULT NULL,
   `content` text,
   `success` tinyint(1) DEFAULT NULL,
@@ -771,7 +774,8 @@ CREATE TABLE `sys_kingdee_syn` (
   `bill_no` varchar(64) DEFAULT NULL,
   `next_bill_no` varchar(64) DEFAULT NULL,
   `auto_audit` tinyint(1) DEFAULT NULL,
-  `company_id` bigint(20) NOT NULL,
+  `company_name` varchar(64) NOT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
   `kingdee_book_id` bigint(20) DEFAULT NULL,
   `created_by` bigint(20) NOT NULL,
   `created_date` datetime NOT NULL,
@@ -953,3 +957,260 @@ WHERE
 ALTER TABLE `crm_bank_in`
 ADD COLUMN `transfer_type`  varchar(64) NULL AFTER `position_id`;
 
+
+-- ----------------------------
+-- Table structure for oppo_plant_agent_product_sel
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_plant_agent_product_sel`;
+CREATE TABLE `oppo_plant_agent_product_sel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `brand_id` varchar(64) DEFAULT NULL,
+  `brand_name` varchar(64) DEFAULT NULL,
+  `type_id` varchar(64) DEFAULT NULL,
+  `type_name` varchar(64) DEFAULT NULL,
+  `color_id` varchar(64) DEFAULT NULL,
+  `color_name` varchar(64) DEFAULT NULL,
+  `code_record_type` varchar(64) DEFAULT NULL,
+  `brand_type` varchar(64) DEFAULT NULL,
+  `item_desc` varchar(64) DEFAULT NULL,
+  `item_number` varchar(64) DEFAULT NULL,
+  `product_id` bigint(20) DEFAULT NULL,
+  `lx_product_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `item_number` (`item_number`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1977 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_plant_product_itemelectron_sel
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_plant_product_itemelectron_sel`;
+CREATE TABLE `oppo_plant_product_itemelectron_sel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created_time` datetime DEFAULT NULL,
+  `customer_id` varchar(255) DEFAULT NULL,
+  `date_time` datetime DEFAULT NULL,
+  `product_no` varchar(64) DEFAULT NULL,
+  `product_nob` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `areap` varchar(64) DEFAULT NULL,
+  `areac` varchar(64) DEFAULT NULL,
+  `imeib` varchar(64) DEFAULT NULL,
+  `dls_product_id` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `product_no` (`product_no`) USING BTREE,
+  KEY `created_time` (`created_time`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2542208 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_plant_product_sel
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_plant_product_sel`;
+CREATE TABLE `oppo_plant_product_sel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `color_id` varchar(255) DEFAULT NULL,
+  `brand_id` varchar(255) DEFAULT NULL,
+  `brand_name` varchar(255) DEFAULT NULL,
+  `color_name` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `short_cut` varchar(255) DEFAULT NULL,
+  `type_id` varchar(255) DEFAULT NULL,
+  `type_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `color_id` (`color_id`) USING BTREE,
+  KEY `color_name` (`color_name`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=511 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_plant_send_imei_ppsel
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_plant_send_imei_ppsel`;
+CREATE TABLE `oppo_plant_send_imei_ppsel` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `company_id` varchar(20) DEFAULT NULL,
+  `bill_id` varchar(20) DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `meid` varchar(255) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `dls_product_id` varchar(255) DEFAULT NULL,
+  `imei_state` varchar(255) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  `imei2` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `imei` (`imei`) USING BTREE,
+  KEY `meid` (`meid`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=2711005 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer`;
+CREATE TABLE `oppo_push_customer` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `customername` varchar(255) DEFAULT NULL,
+  `agentid` varchar(255) DEFAULT NULL,
+  `companyid` varchar(255) DEFAULT NULL,
+  `dealertype` varchar(255) DEFAULT NULL,
+  `dealergrade` varchar(255) DEFAULT NULL,
+  `dealertel` varchar(255) DEFAULT NULL,
+  `citytype` varchar(255) DEFAULT NULL,
+  `bussinesscenter` varchar(255) DEFAULT NULL,
+  `chainName` varchar(255) DEFAULT NULL,
+  `saletype` varchar(255) DEFAULT NULL,
+  `doorhead` varchar(255) DEFAULT NULL,
+  `enabledate` varchar(255) DEFAULT NULL,
+  `customertype` varchar(255) DEFAULT NULL,
+  `keydealer` varchar(255) DEFAULT NULL,
+  `isenable` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `county` varchar(255) DEFAULT NULL,
+  `village` varchar(255) DEFAULT NULL,
+  `dealerarea` varchar(255) DEFAULT NULL,
+  `framenum` varchar(255) DEFAULT NULL,
+  `deskdoublenum` varchar(255) DEFAULT NULL,
+  `desksinglenum` varchar(255) DEFAULT NULL,
+  `cabinetnum` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38567 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_after_sale_imei
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_after_sale_imei`;
+CREATE TABLE `oppo_push_customer_after_sale_imei` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `trans_type` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_allot
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_allot`;
+CREATE TABLE `oppo_push_customer_allot` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `from_customerid` varchar(255) DEFAULT NULL,
+  `to_customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `qty` int(20) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7917 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_demo_phone
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_demo_phone`;
+CREATE TABLE `oppo_push_customer_demo_phone` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_imei_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_imei_stock`;
+CREATE TABLE `oppo_push_customer_imei_stock` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `imei` varchar(255) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `trans_type` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9754 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_operator_type
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_operator_type`;
+CREATE TABLE `oppo_push_customer_operator_type` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `customername` varchar(255) DEFAULT NULL,
+  `operatortype` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5385 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_sale
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_sale`;
+CREATE TABLE `oppo_push_customer_sale` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `total_sale_qty` int(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1045 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_sale_count
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_sale_count`;
+CREATE TABLE `oppo_push_customer_sale_count` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `shop_code` varchar(255) DEFAULT NULL,
+  `agent_code` varchar(255) DEFAULT NULL,
+  `product_code` varchar(255) DEFAULT NULL,
+  `sale_time` date DEFAULT NULL,
+  `qty` int(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2607 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_sale_imei
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_sale_imei`;
+CREATE TABLE `oppo_push_customer_sale_imei` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `imei` varchar(255) DEFAULT NULL,
+  `saletime` datetime DEFAULT NULL,
+  `custname` varchar(255) DEFAULT NULL,
+  `custmobile` varchar(255) DEFAULT NULL,
+  `custsex` varchar(255) DEFAULT NULL,
+  `salepromoter` varchar(255) DEFAULT NULL,
+  `shopcode` varchar(255) DEFAULT NULL,
+  `shopname` varchar(255) DEFAULT NULL,
+  `agentcode` varchar(255) DEFAULT NULL,
+  `agentname` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3390 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for oppo_push_customer_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `oppo_push_customer_stock`;
+CREATE TABLE `oppo_push_customer_stock` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `customerid` varchar(255) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `qty` int(64) DEFAULT NULL,
+  `productcode` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=673 DEFAULT CHARSET=utf8;
+SET FOREIGN_KEY_CHECKS=1;
+
+ALTER TABLE `sys_account_kingdee_book`
+ADD COLUMN `company_name`  varchar(64) NULL AFTER `kingdee_book_id`;
