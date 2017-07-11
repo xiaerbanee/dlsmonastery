@@ -25,7 +25,7 @@ public class BdDepartmentService {
     private BdDepartmentRepository bdDepartmentRepository;
 
     public Page<BdDepartment> findPageIncludeForbid(Pageable pageable, BdDepartmentQuery bdDepartmentQuery) {
-        bdDepartmentQuery.setSort("t1.fdeptId,DESC");
+        bdDepartmentQuery.setSort("t1.fdeptid,DESC");
         Page<BdDepartment> bdDepartmentPage = bdDepartmentRepository.findPageIncludeForbid(pageable,bdDepartmentQuery);
         return bdDepartmentPage;
     }
@@ -48,7 +48,7 @@ public class BdDepartmentService {
     //应付报表
     public BdDepartmentQuery getQueryForSupplierPayable(){
         BdDepartmentQuery bdDepartmentQuery = new BdDepartmentQuery();
-        bdDepartmentQuery.setSort("t1.fdeptId,DESC");
+        bdDepartmentQuery.setSort("t1.fdeptid,DESC");
         return bdDepartmentQuery;
     }
 }

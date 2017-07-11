@@ -18,6 +18,7 @@ import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
+import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.service.GoodsOrderService;
@@ -35,7 +36,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -89,9 +89,9 @@ public class GoodsOrderController {
     }
 
     @RequestMapping(value = "updatePullStatus")
-    public boolean updatePullStatus(String id, String status) {
-        goodsOrderService.updatePullStatus(id, status);
-        return true;
+    public RestResponse updatePullStatus(String id, String pullStatus,String expressOrderExpressCodes) {
+        goodsOrderService.updatePullStatus(id, pullStatus,expressOrderExpressCodes);
+        return new RestResponse("状态修改成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findDetailList")
@@ -108,10 +108,10 @@ public class GoodsOrderController {
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
-        goodsOrderService.save(goodsOrderForm);
+        GoodsOrder goodsOrder = goodsOrderService.save(goodsOrderForm);
         if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
             CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);
-            carrierOrderFrom.setGoodsOrderId(goodsOrderForm.getId());
+            carrierOrderFrom.setGoodsOrderId(goodsOrder.getId());
             carrierOrderService.save(carrierOrderFrom);
         }
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());

@@ -81,6 +81,12 @@ public class DepotService {
         return depotRepository.findStoreList(depotQuery);
     }
 
+
+    public List<DepotDto> findDepotList(DepotQuery depotQuery) {
+        depotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
+        return depotRepository.findDepotList(depotQuery);
+    }
+
     public List<DepotDto> findByIds(List<String> ids){
         List<Depot> depotList=depotRepository.findByEnabledIsTrueAndIdIn(ids);
         List<DepotDto> depotDtoList= BeanUtil.map(depotList,DepotDto.class);
@@ -294,4 +300,5 @@ public class DepotService {
         return result;
 
     }
+
 }

@@ -323,7 +323,7 @@ public class OfficeService {
 
     private String getTopOfficeIdByParentIds(List<Office> officeList ,String parentIds){
         for(Office office:officeList){
-            if(parentIds.contains(office.getId())){
+            if(parentIds.contains(','+office.getId()+',')){
                 return office.getId();
             }
         }

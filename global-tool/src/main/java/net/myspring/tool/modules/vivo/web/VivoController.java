@@ -1,5 +1,7 @@
 package net.myspring.tool.modules.vivo.web;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -11,16 +13,21 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
 import net.myspring.tool.modules.vivo.service.VivoService;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.util.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "vivo")
@@ -35,14 +42,22 @@ public class VivoController {
     @RequestMapping(value="pullFactoryData")
     public String pullFactoryData(String date){
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","");
-        String[] agentCodes=agentCode.split(CharConstant.COMMA);
+        List<String> agentCodes= Arrays.asList(agentCode.split(CharConstant.COMMA));
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         //同步颜色编码
         if(!"IDVIVO".equals(companyName)){
-            List<VivoProducts> vivoProducts=vivoService.findProducts();
+            List<VivoProducts> vivoProducts=vivoService.getProducts();
             vivoService.pullVivoProducts(vivoProducts);
         }
         LocalDate localDate= LocalDateUtils.parse(date);
+        //同步物料编码
+        List<VivoPlantProducts> vivoPlantProducts=vivoService.getPlantProducts();
+        vivoService.pullPlantProducts(vivoPlantProducts);
+        //同步发货串码
+        List<VivoPlantSendimei> vivoPlantSendimeis=vivoService.getPlantSendimei(date,agentCodes);
+        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
+
+
 //        List<VivoProducts> vivoProductsList = vivoService.products();
 //        List<VivoPlantProducts> vivoPlantProductsList = vivoService.plantProducts();
 //        List<VivoPlantSendimei> vivoPlantSendimeis = vivoService.plantSendimei(localDate,agentCodes);
@@ -53,8 +68,8 @@ public class VivoController {
 //        //同步发货串吗
 //        vivoService.pullPlantSendimeis(vivoPlantSendimeis);
 //        //同步电子保卡
-        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.plantElectronicsn(localDate);
-        vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
+//        List<VivoPlantElectronicsn> vivoPlantElectronicsns = vivoService.plantElectronicsn(localDate);
+//        vivoService.pullPlantElectronicsns(vivoPlantElectronicsns);
         return "vivo同步成功";
     }
 

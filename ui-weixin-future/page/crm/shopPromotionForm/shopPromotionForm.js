@@ -22,9 +22,8 @@ Page({
       url: $util.getUrl("ws/future/layout/shopPromotion/getForm"),
       data: {},
       method: 'GET',
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res)
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList })
       }
     })
@@ -48,7 +47,7 @@ Page({
     var that = this;
     that.setData({ 'formData.activityType': that.data.formProperty.activityTypeList[e.detail.value] })
   },
-  addImage:  function(e) {
+  addImage: function (e) {
     var that = this;
     let images = [];
     let name = e.target.dataset.name;
@@ -106,15 +105,14 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    console.log(e.detail.value)
     that.setData({ submitDisabled: true });
-    e.detail.value.activityImage1 = $util.getImageStr(that.data.formProperty.activityImage1,app.globalData.sessionId);
-    e.detail.value.activityImage2 = $util.getImageStr(that.data.formProperty.activityImage2,app.globalData.sessionId);
-    e.detail.value.activityImage3 = $util.getImageStr(that.data.formProperty.activityImage3,app.globalData.sessionId);
+    e.detail.value.activityImage1 = $util.getImageStr(that.data.formProperty.activityImage1, app.globalData.sessionId);
+    e.detail.value.activityImage2 = $util.getImageStr(that.data.formProperty.activityImage2, app.globalData.sessionId);
+    e.detail.value.activityImage3 = $util.getImageStr(that.data.formProperty.activityImage3, app.globalData.sessionId);
     wx.request({
       url: $util.getUrl("ws/future/layout/shopPromotion/save"),
       data: e.detail.value,
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
@@ -142,12 +140,22 @@ Page({
       url: $util.getUrl("ws/future/layout/shopPromotion/findOne"),
       data: { id: that.data.options.id },
       method: 'GET',
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        let images1 = new Array();
+        let images2 = new Array();
+        let images3 = new Array();
+
         that.setData({ formData: res.data })
-        that.setData({ 'formProperty.activityImage1': $util.getImages(res.data.activityImage1) })
-        that.setData({ 'formProperty.activityImage2': $util.getImages(res.data.activityImage2) })
-        that.setData({ 'formProperty.activityImage3': $util.getImages(res.data.activityImage3) })
+        $util.downloadFile(images1, res.data.activityImage1, app.globalData.sessionId, 9, function () {
+          that.setData({ "formProperty.activityImage1": images1 });
+        });
+        $util.downloadFile(images2, res.data.activityImage2, app.globalData.sessionId, 9, function () {
+          that.setData({ "formProperty.activityImage2": images2 });
+        });
+        $util.downloadFile(images3, res.data.activityImage3, app.globalData.sessionId, 9, function () {
+          that.setData({ "formProperty.activityImage3": images3 });
+        });
       }
     })
   }

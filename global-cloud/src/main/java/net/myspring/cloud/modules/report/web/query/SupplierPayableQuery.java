@@ -9,7 +9,13 @@ import java.util.List;
 /**
  * Created by liuj on 2017/5/11.
  */
-public class SupplierPayableQuery extends BaseQuery {
+public class SupplierPayableQuery{
+    private  Integer page = 0;
+
+    private Integer size = 50;
+
+    private String sort = "id,DESC";
+
     private LocalDate dateStart;
     private LocalDate dateEnd;
     private List<String> supplierIdList = Lists.newArrayList();

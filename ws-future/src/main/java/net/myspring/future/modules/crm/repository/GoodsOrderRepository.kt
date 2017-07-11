@@ -60,6 +60,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         return namedParameterJdbcTemplate.query("""
             SELECT
               t2.express_codes as expressOrderExpressCodes,
+              t2.out_print_date as expressOrderOutPrintDate,
+              t2.express_print_date as expressOrderExpressPrintDate,
               shop.client_id clientId,
               shop.office_id shopOfficeId,
               shop.area_id shopAreaId,
@@ -135,6 +137,8 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         val sb = StringBuilder("""
             SELECT
               t2.express_codes as expressOrderExpressCodes,
+              t2.out_print_date as expressOrderOutPrintDate,
+              t2.express_print_date as expressOrderExpressPrintDate,
               shop.client_id clientId,
               shop.office_id shopOfficeId,
               shop.area_id shopAreaId,
