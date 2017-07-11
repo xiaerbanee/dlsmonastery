@@ -40,25 +40,37 @@ public class CustomerReceiveService {
         List<String> customerIdList = customerReceiveQuery.getCustomerIdList();
         if (customerIdList.size() > 0 && dateStart != null && dateEnd != null) {
             //期初结余
-            List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart, customerIdList);
+            List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndGet(dateStart, customerIdList);
             Map<String, BigDecimal> custIdToBeginAccountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
             //期末结余
-            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndShouldGet(dateEnd.plusDays(1), customerIdList);
+            List<CustomerReceiveDto> endList = customerReceiveRepository.findEndGet(dateEnd.plusDays(1), customerIdList);
             Map<String, BigDecimal> custIdToEndAccountMap = endList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
+            //应收金额
+            List<CustomerReceiveDto> shouldGet = customerReceiveRepository.findShouldGet(customerReceiveQuery);
+            Map<String, CustomerReceiveDto> custIdToShouldGetMap = shouldGet.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto->CustomerReceiveDto));
+            //实收金额
+            List<CustomerReceiveDto> actualGet = customerReceiveRepository.findActualGet(customerReceiveQuery);
+            Map<String, CustomerReceiveDto> custIdToActualGetMap = actualGet.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto->CustomerReceiveDto));
             List<BdCustomer> customerList = bdCustomerRepository.findByIdList(customerIdList);
             List<CustomerReceiveDto> customerReceiveDtoList = Lists.newArrayList();
             for (BdCustomer bdCustomer : customerList) {
                 CustomerReceiveDto customerReceiveDto = new CustomerReceiveDto();
                 customerReceiveDto.setCustomerId(bdCustomer.getFCustId());
+                //期初结余
                 if (custIdToBeginAccountMap.get(bdCustomer.getFCustId()) != null){
                     customerReceiveDto.setBeginShouldGet(custIdToBeginAccountMap.get(bdCustomer.getFCustId()));
-                }else {
-                    customerReceiveDto.setBeginShouldGet(BigDecimal.ZERO);
                 }
+                //应收金额
+                if (custIdToShouldGetMap.get(bdCustomer.getFCustId()) != null){
+                    customerReceiveDto.setShouldGet(custIdToShouldGetMap.get(bdCustomer.getFCustId()).getShouldGet());
+                }
+                //实收金额
+                if (custIdToActualGetMap.get(bdCustomer.getFCustId()) != null){
+                    customerReceiveDto.setRealGet(custIdToActualGetMap.get(bdCustomer.getFCustId()).getRealGet());
+                }
+                //期末结余
                 if (custIdToEndAccountMap.get(bdCustomer.getFCustId()) != null){
                     customerReceiveDto.setEndShouldGet(custIdToEndAccountMap.get(bdCustomer.getFCustId()));
-                }else {
-                    customerReceiveDto.setEndShouldGet(BigDecimal.ZERO);
                 }
                 customerReceiveDto.setCustomerName(bdCustomer.getFName());
                 customerReceiveDto.setCustomerGroupName(bdCustomer.getFPrimaryGroupName());
@@ -104,7 +116,7 @@ public class CustomerReceiveService {
     public Map<String,List<CustomerReceiveDetailDto>>  findCustomerReceiveDetailDtoMap(CustomerReceiveDetailQuery customerReceiveDetailQuery) {
         LocalDate dateStart =  customerReceiveDetailQuery.getDateStart();
         //期初应收
-        List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndShouldGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
+        List<CustomerReceiveDto> beginList = customerReceiveRepository.findEndGet(dateStart,customerReceiveDetailQuery.getCustomerIdList());
         Map<String,BigDecimal> custIdToBeginAmountMap = beginList.stream().collect(Collectors.toMap(CustomerReceiveDto::getCustomerId, CustomerReceiveDto::getEndShouldGet));
         //主单据列表(其他应收,-标准销售退货单,-收款单,收款退款单，标准销售出库单，-现销退货单，现销出库单)
         List<CustomerReceiveDetailDto> customerReceiveDetailDtoMainList = customerReceiveRepository.findMainList(customerReceiveDetailQuery);
@@ -158,7 +170,6 @@ public class CustomerReceiveService {
                 int index = 0;
                 CustomerReceiveDetailDto customerReceiveDetailDto= new CustomerReceiveDetailDto();
                 customerReceiveDetailDto.setBillType(bdCustomerMap.get(customerId).getFName());
-                customerReceiveDetailDto.setBillNo("客户编码：" + customerId);
                 customerReceiveDetailDto.setIndex(index++);
                 list.add(customerReceiveDetailDto);
 
@@ -215,9 +226,13 @@ public class CustomerReceiveService {
                     if (main.getShouldGet() != null) {
                         totalShouldGet = totalShouldGet.add(main.getShouldGet());
                     }
+                    if (main.getRealGet() != null){
+                        realGet = realGet.add(main.getRealGet());
+                    }
                 }
                 customerReceiveDetailDto = new CustomerReceiveDetailDto();
                 customerReceiveDetailDto.setShouldGet(totalShouldGet);
+                customerReceiveDetailDto.setRealGet(realGet);
                 customerReceiveDetailDto.setBillType("期末应收");
                 customerReceiveDetailDto.setEndShouldGet(endShouldGet);
                 customerReceiveDetailDto.setIndex(index++);

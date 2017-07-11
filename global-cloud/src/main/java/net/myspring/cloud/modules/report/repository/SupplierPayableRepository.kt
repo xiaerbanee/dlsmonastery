@@ -19,7 +19,7 @@ import java.util.HashMap
 @Component
 class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    //截止结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
+    //截止结余：sum(采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单)
     fun findEndPayable(dateEnd: LocalDate, supplierIdList: MutableList<String>): MutableList<SupplierPayableDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateEnd", dateEnd.toString())
@@ -127,7 +127,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
 
-    //应付金额：采购入库单-采购退料单+其他应付单+应付单
+    //应付金额：sum(采购入库单-采购退料单+其他应付单+应付单)
     fun findShouldPay(supplierPayableQuery: SupplierPayableQuery): MutableList<SupplierPayableDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
@@ -215,7 +215,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
 
-    //实付金额：付款单-付款退款单
+    //实付金额：sum(付款单-付款退款单)
     fun findActualPay(supplierPayableQuery: SupplierPayableQuery): MutableList<SupplierPayableDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
