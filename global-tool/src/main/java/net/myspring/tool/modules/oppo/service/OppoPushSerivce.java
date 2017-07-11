@@ -158,7 +158,6 @@ public class OppoPushSerivce {
             oppoCustomers.add(oppoCustomersMap.get(key));
         }
         logger.info("同步经销商数据开始");
-        logger.info("oppoCustomers="+oppoCustomers.toString());
         String dateEnd=LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<OppoCustomer> oppoCustomerList=oppoCustomerRepository.findByDate(date,dateEnd);
         oppoCustomerRepository.delete(oppoCustomerList);

@@ -74,3 +74,4 @@ ribbon:
 
 logging:
   file: global-tool.log
+  level: debug

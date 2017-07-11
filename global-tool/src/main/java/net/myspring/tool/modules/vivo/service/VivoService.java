@@ -41,8 +41,8 @@ public class VivoService {
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
     @FactoryDataSource
-    public List<VivoProducts> products() {
-        return vivoRepository.products();
+    public List<VivoProducts> findProducts() {
+        return vivoProductsRepository.findProducts();
     }
 
     @FactoryDataSource
@@ -66,20 +66,23 @@ public class VivoService {
 
     //获取颜色编码
     @LocalDataSource
-    public void pullProducts(List<VivoProducts> vivoProducts){
-//        if(CollectionUtil.isNotEmpty(vivoProducts)) {
-//            List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
-//            List<String > localColorIds = vivoProductsRepository.findColorIds(colorIds);
-//            List<VivoProducts> list = Lists.newArrayList();
-//            for(VivoProducts item : vivoProducts){
-//                if( ! localColorIds.contains(item.getColorId())){
-//                    list.add(item);
-//                }
-//            }
-//            if(CollectionUtil.isNotEmpty(list)){
-//                vivoProductsRepository.save(list);
-//            }
-//        }
+    public void pullVivoProducts(List<VivoProducts> vivoProducts){
+        if(CollectionUtil.isNotEmpty(vivoProducts)) {
+            for(VivoProducts vivoProduct:vivoProducts){
+                vivoProduct.setColorId(vivoProduct.getColorId().trim());
+            }
+            List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
+            List<String > localColorIds = vivoProductsRepository.findColorIds(colorIds);
+            List<VivoProducts> list = Lists.newArrayList();
+            for(VivoProducts item : vivoProducts){
+                if( ! localColorIds.contains(item.getColorId())){
+                    list.add(item);
+                }
+            }
+            if(CollectionUtil.isNotEmpty(list)){
+                vivoProductsRepository.save(list);
+            }
+        }
     }
     //获取物料编码
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){

@@ -50,7 +50,6 @@ public class CacheReadUtils {
             return;
         }
         LocalDateTime start = LocalDateTime.now();
-        logger.info("read cache start at " + LocalDateTimeUtils.format(start,LocalDateTimeUtils.FORMATTER_MILLISECOND));
         Class clazz;
         List<Object> list;
         if (CollectionUtil.isNotEmpty(objects)) {
@@ -121,8 +120,6 @@ public class CacheReadUtils {
                 }
             }
             LocalDateTime end = LocalDateTime.now();
-            logger.info("read cache end at " + LocalDateTimeUtils.format(end,LocalDateTimeUtils.FORMATTER_MILLISECOND));
-            logger.info("read cache in " + ChronoUnit.MILLIS.between(start, end) + " mills");
         }
     }
 

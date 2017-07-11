@@ -35,7 +35,7 @@ class OppoCustomerAfterSaleImeiRepositoryImpl @Autowired constructor(val namedPa
         where
             af.bad_product_ime_id = im.id
             and af.created_date >=:dateStart
-            and af.created_date <=:dateEnd
+            and af.created_date <:dateEnd
             and af.enabled = 1
         """,paramMap, BeanPropertyRowMapper(OppoCustomerAfterSaleImei::class.java));
     }
