@@ -41,6 +41,7 @@ import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
+import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
@@ -106,6 +107,8 @@ public class GoodsOrderService {
     private CloudClient cloudClient;
     @Autowired
     private CarrierOrderRepository carrierOrderRepository;
+    @Autowired
+    private ExpressOrderManager expressOrderManager;
 
     public GoodsOrder findByBusinessId(String businessId){
         return goodsOrderRepository.findByBusinessId(businessId);
@@ -402,15 +405,20 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
-    public void updatePullStatus(String id, String status) {
+    public void updatePullStatus(String id, String pullStatus,String expressOrderCode) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
-        goodsOrder.setPullStatus(status);
-        if (StringUtils.isNotBlank(status) && GoodsOrderPullStatusEnum.已推送.name().equals(status) && GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())) {
-            List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(id);
-            for (CarrierOrder carrierOrder : carrierOrders) {
-                carrierOrder.setStatus(CarrierOrderStatusEnum.已导入.name());
+        if(StringUtils.isNotEmpty(pullStatus)){
+            goodsOrder.setPullStatus(pullStatus);
+            if (StringUtils.isNotBlank(pullStatus) && GoodsOrderPullStatusEnum.已推送.name().equals(pullStatus) && GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())) {
+                List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(id);
+                for (CarrierOrder carrierOrder : carrierOrders) {
+                    carrierOrder.setStatus(CarrierOrderStatusEnum.已导入.name());
+                }
+                carrierOrderRepository.save(carrierOrders);
             }
-            carrierOrderRepository.save(carrierOrders);
+        }else if(StringUtils.isNotBlank(expressOrderCode)){
+            ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderCode,expressOrder.getExpressCompanyId());
         }
         goodsOrderRepository.save(goodsOrder);
     }
@@ -452,10 +460,10 @@ public class GoodsOrderService {
         Map<String,Integer>  areaDetailMap = Maps.newHashMap();
         for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
             if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {
-                    if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
-                        areaDetailMap.put(goodsOrderDetail.getProductId(),0);
-                    }
-                    areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
+                if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
+                    areaDetailMap.put(goodsOrderDetail.getProductId(),0);
+                }
+                areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
             }
         }
         //设置其他数据

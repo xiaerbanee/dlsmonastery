@@ -22,6 +22,7 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private String shipType;
     private String netType;
     private String expressOrderId;
+    private String expressOrderCode;
     private String businessId;
     private String allotFromStockCode;
     private String allotToStockCode;
@@ -33,6 +34,14 @@ public class GoodsOrderForm extends BaseForm<GoodsOrder> {
     private List<String> netTypeList;
     private List<String> shipTypeList;
     private String carrierShopId;
+
+    public String getExpressOrderCode() {
+        return expressOrderCode;
+    }
+
+    public void setExpressOrderCode(String expressOrderCode) {
+        this.expressOrderCode = expressOrderCode;
+    }
 
     public boolean isSyn() {
         return syn;
