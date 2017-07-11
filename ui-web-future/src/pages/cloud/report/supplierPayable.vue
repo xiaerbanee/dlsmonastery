@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="supplierPayableZMD"></head-tab>
+    <head-tab active="supplierPayable"></head-tab>
     <div>
       <el-row>
         <el-button type="primary" @click="formVisible = true">过滤&导出</el-button>
@@ -16,9 +16,9 @@
               <el-form-item label="截止日期" >
                 <date-picker placeholder="选择截止日期" v-model="formData.dateEnd"></date-picker>
               </el-form-item>
-              <el-form-item label="门店名称" >
-                <el-select v-model="formData.departmentIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteDepartment" :loading="remoteLoading">
-                  <el-option v-for="item in departments" :key="item.fdeptId" :label="item.ffullName" :value="item.fdeptId"></el-option>
+              <el-form-item label="供应商名称" >
+                <el-select v-model="formData.supplierIdList"  multiple filterable remote placeholder="请输入关键词" :remote-method="remoteSupplier" :loading="remoteLoading">
+                  <el-option v-for="item in suppliers" :key="item.fsupplierId" :label="item.fname" :value="item.fsupplierId"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -46,14 +46,13 @@
       </el-dialog>
       <el-table :data="summary" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" element-loading-text="拼命加载中....." stripe border>
         <el-table-column fixed prop="supplierName" label="供应商名称" sortable width="200"></el-table-column>
-        <el-table-column prop="departmentName" label="门店名称"></el-table-column>
         <el-table-column prop="beginAmount" label="期初应付"></el-table-column>
         <el-table-column prop="payableAmount" label="应付金额"></el-table-column>
         <el-table-column prop="actualPayAmount" label="实付金额"></el-table-column>
         <el-table-column prop="endAmount" label="期末应付"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
-            <el-button size="small" @click="detailAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
+            <el-button size="small" @click="detailAction(scope.row.supplierId)">详细</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,7 +82,7 @@
       return {
         page:{},
         summary:[],
-        departments:[],
+        suppliers:[],
         detail:[],
         formData: {
           extra:{}
@@ -109,15 +108,15 @@
         this.pageLoading = true;
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
-        util.setQuery("supplierPayableZMD",submitData);
-        axios.get('/api/global/cloud/kingdee/bdDepartment?'+ qs.stringify(submitData)).then((response) => {
-          let departmentIdList = new Array();
-          let departments = response.data.content;
-          for (let item in departments) {
-            departmentIdList.push(departments[item].fdeptId);
+        util.setQuery("supplierPayable",submitData);
+        axios.get('/api/global/cloud/kingdee/bdSupplier?'+ qs.stringify(submitData)).then((response) => {
+          let supplierIdList = new Array();
+          let suppliers = response.data.content;
+          for (let item in suppliers) {
+            supplierIdList.push(suppliers[item].fsupplierId);
           }
-          submitData.departmentIdList = departmentIdList;
-          if (submitData.departmentIdList.length !== 0) {
+          submitData.supplierIdList = supplierIdList;
+          if (submitData.supplierIdList.length !== 0) {
             axios.get('/api/global/cloud/report/supplierPayable/list?' + qs.stringify(submitData)).then((response) => {
               this.summary = response.data;
             });
@@ -144,7 +143,7 @@
         this.detailLoading = true;
         if(supplierId !== null) {
           let submitDetail = Object();
-          submitDetail.departmentIdList = supplierId;
+          submitDetail.supplierIdList = supplierId;
           submitDetail.departmentIdList = departmentId;
           submitDetail.dateStart = this.formData.dateStart;
           submitDetail.dateEnd = this.formData.dateEnd;
@@ -166,17 +165,17 @@
         } else if (row.index % 2 !== 0) {
           return "info-row";
         }
-      },remoteDepartment(query) {
-        if (query !== '') {
-          this.remoteLoading = true;
-          axios.get('/api/global/cloud/kingdee/bdDepartment/findByNameLike',{params:{name:query}}).then((response)=>{
-            this.departments = response.data;
-            this.remoteLoading = false;
-          })
-        } else {
-          this.departments = {};
-        }
-      },
+      },remoteSupplier(query) {
+          if (query !== '') {
+            this.remoteLoading = true;
+            axios.get('/api/global/cloud/kingdee/bdSupplier/findByNameLike',{params:{name:query}}).then((response)=>{
+              this.suppliers = response.data;
+              this.remoteLoading = false;
+            })
+          } else {
+            this.suppliers = {};
+          }
+        },
     },activated(){
       this.initPromise.then(()=>{
         this.pageRequest();
@@ -184,7 +183,7 @@
     },created () {
       let that = this;
       that.pageHeight = window.outerHeight -320;
-      that.initPromise = axios.get('/api/global/cloud/kingdee/bdDepartment/getQueryForSupplierPayable').then((response) =>{
+      that.initPromise = axios.get('/api/global/cloud/kingdee/bdSupplier/getQueryForSupplierPayable').then((response) =>{
         that.formData = response.data;
         util.copyValue(that.$route.query,that.formData);
       });
