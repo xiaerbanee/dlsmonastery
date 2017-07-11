@@ -9,24 +9,19 @@ import net.myspring.future.modules.basic.client.CompanyConfigClient;
 import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.third.client.OppoClient;
-import net.myspring.future.modules.third.domain.OppoPlantProductItemelectronSel;
-import net.myspring.future.modules.third.domain.OppoPlantSendImeiPpsel;
-import net.myspring.future.modules.third.repository.*;
+import net.myspring.future.modules.third.dto.OppoPlantProductItemelectronSel;
+import net.myspring.future.modules.third.dto.OppoPlantSendImeiPpsel;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,8 +32,6 @@ public class ScheduleUtils {
     private OppoClient oppoClient;
     @Autowired
     private CompanyConfigClient companyConfigClient;
-    @Autowired
-    OppoCustomerSaleImeiRepository oppoCustomerSaleImeiRepository;
     @Autowired
     private ProductImeRepository productImeRepository;
 

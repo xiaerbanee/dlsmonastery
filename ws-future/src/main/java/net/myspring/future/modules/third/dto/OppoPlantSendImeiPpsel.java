@@ -1,10 +1,10 @@
-package net.myspring.future.modules.third.domain;
+package net.myspring.future.modules.third.dto;
 
 import net.myspring.future.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import java.time.LocalDateTime;
-@Entity
+
 public class OppoPlantSendImeiPpsel  extends IdEntity<OppoPlantSendImeiPpsel> {
     private String id;
     private String billId;
