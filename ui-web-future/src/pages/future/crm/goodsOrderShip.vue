@@ -197,6 +197,7 @@
             if(util.isNotBlank(this.goodsOrder.id)){
               this.focusOnImeStrTextArea();
             }else{
+              this.$message("该单号不存在或者不是待发货状态");
               this.focusOnBusinessIdInput();
             }
           });

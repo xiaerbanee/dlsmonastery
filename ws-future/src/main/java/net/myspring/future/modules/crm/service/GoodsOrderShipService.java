@@ -467,12 +467,12 @@ public class GoodsOrderShipService {
     }
 
     public GoodsOrderDto getShipByBusinessId(String businessId) {
-        List<GoodsOrder> goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList(businessId));
+        List<GoodsOrder> goodsOrderList =  goodsOrderRepository.findByEnabledIsTrueAndStatusAndBusinessIdIn(GoodsOrderStatusEnum.待发货.name(), Collections.singletonList(businessId));
         if(CollectionUtil.isNotEmpty(goodsOrderList)){
             return getShip(goodsOrderList.get(0).getId());
         }
 
-        goodsOrderList =  goodsOrderRepository.findByBusinessIdIn(Collections.singletonList( LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + businessId));
+        goodsOrderList =  goodsOrderRepository.findByEnabledIsTrueAndStatusAndBusinessIdIn(GoodsOrderStatusEnum.待发货.name(), Collections.singletonList( LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + businessId));
         if(CollectionUtil.isNotEmpty(goodsOrderList)){
             return getShip(goodsOrderList.get(0).getId());
         }
