@@ -226,10 +226,8 @@
         }).catch(()=>{});
       }else if(action === "print"){
         window.open('/#/future/crm/goodsOrderPrint?id=' + id);
-        this.pageRequest();
       }else if(action === "shipPrint"){
          window.open('/#/future/crm/goodsOrderShipPrint?id=' + id);
-        this.pageRequest();
       }
     },editPullStatus(row){
       this.detailVisible=true;

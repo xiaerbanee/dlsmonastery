@@ -14,13 +14,14 @@ Page({
         this.setData({ height: $util.getWindowHeight() })
     },
     onShow: function () {
+        var that=this;
         wx.showToast({
             title: '加载中',
             icon: 'loading',
             duration: 10000,
             success: function (res) {
                 app.autoLogin(function () {
-                    this.initPage()
+                    that.initPage()
                 });
             }
         })
@@ -47,11 +48,11 @@ Page({
             header: {
                 Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
-            data: $util.devareExtra(that.data.formData),
+            data: $util.deleteExtra(that.data.formData),
             success: function (res) {
                 for (var item in res.data.content) {
                     var actionList = new Array();
-                    if (res.data.content[item].devared) {
+                    if (res.data.content[item].deleted) {
                         actionList.push("删除");
                     }
                     res.data.content[item].actionList = actionList;
@@ -109,7 +110,7 @@ Page({
                 if (!res.cancel) {
                     if (itemList[res.tapIndex] == "删除") {
                         wx.request({
-                            url: $util.getUrl("basic/hr/dutyTrip/devare"),
+                            url: $util.getUrl("basic/hr/dutyTrip/delete"),
                             data: { id: id },
                             header: {
                                 Cookie: "JSESSIONID=" + app.globalData.sessionId

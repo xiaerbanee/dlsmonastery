@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "oppo")
+@RequestMapping(value = "factory/oppo")
 public class OppoController {
     @Autowired
     private OppoService oppoService;

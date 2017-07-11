@@ -35,7 +35,7 @@
           <el-table-column prop="billNo" label="单据编号"></el-table-column>
           <el-table-column prop="date" label="单据日期"></el-table-column>
           <el-table-column prop="materialName" label="商品名称"></el-table-column>
-          <el-table-column prop="quantity" label="数量"></el-table-column>
+          <el-table-column prop="qty" label="数量"></el-table-column>
           <el-table-column prop="price" label="单价"></el-table-column>
           <el-table-column prop="amount" label="金额"></el-table-column>
           <el-table-column prop="payableAmount" label="应付"></el-table-column>
@@ -139,12 +139,11 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
-      },detailAction:function(supplierId,departmentId){
+      },detailAction:function(supplierId){
         this.detailLoading = true;
-        if(supplierId !== null) {
+        if(supplierId !== null){
           let submitDetail = Object();
           submitDetail.supplierIdList = supplierId;
-          submitDetail.departmentIdList = departmentId;
           submitDetail.dateStart = this.formData.dateStart;
           submitDetail.dateEnd = this.formData.dateEnd;
           axios.get('/api/global/cloud/report/supplierPayable/detail',{params:submitDetail}).then((response) =>{

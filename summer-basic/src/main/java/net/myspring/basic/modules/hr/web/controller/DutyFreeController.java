@@ -33,7 +33,6 @@ public class DutyFreeController {
 
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyFree:view')")
     public Page<DutyFreeDto> list(Pageable pageable, DutyFreeQuery dutyFreeQuery) {
         dutyFreeQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyFreeDto> page = dutyFreeService.findPage(pageable, dutyFreeQuery);
@@ -51,7 +50,6 @@ public class DutyFreeController {
 
 
     @RequestMapping(value = "delete", method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyFree:delete')")
     public RestResponse delete(String id) {
         dutyFreeService.logicDelete(id);
         RestResponse restResponse = new RestResponse("免打卡删除成功", ResponseCodeEnum.removed.name());
@@ -59,7 +57,6 @@ public class DutyFreeController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:dutyFree:edit')")
     public RestResponse save(DutyFreeForm dutyFreeForm, BindingResult bindingResult) {
         dutyFreeValidator.validate(dutyFreeForm,bindingResult);
         if(bindingResult.hasErrors()){
