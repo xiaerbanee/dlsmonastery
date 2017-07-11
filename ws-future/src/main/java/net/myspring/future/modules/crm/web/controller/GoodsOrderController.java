@@ -14,6 +14,7 @@ import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
+import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
@@ -52,6 +53,8 @@ public class GoodsOrderController {
     private ExpressCompanyService expressCompanyService;
     @Autowired
     private CarrierOrderService carrierOrderService;
+    @Autowired
+    private DepotService depotService;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
@@ -132,6 +135,7 @@ public class GoodsOrderController {
         GoodsOrderDto goodsOrderDto = goodsOrderService.findOne(goodsOrderBillForm.getId());
         DepotQuery depotQuery = new DepotQuery();
         depotQuery.setShipType(goodsOrderDto.getShipType());
+        goodsOrderBillForm.getExtra().put("storeList",depotService.findStoreList(depotQuery));
         goodsOrderBillForm.getExtra().put("expressCompanyList",expressCompanyService.findAll());
         goodsOrderBillForm.getExtra().put("expressProductId", CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_PRODUCT_ID.name()).getValue());
         CompanyConfigCacheDto companyConfigCacheDto = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.EXPRESS_SHOULD_GET_RULE.name());

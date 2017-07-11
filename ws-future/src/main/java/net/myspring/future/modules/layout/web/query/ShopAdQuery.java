@@ -21,9 +21,27 @@ public class ShopAdQuery extends BaseQuery{
     private Boolean specialArea;
     private String createdBy;
     private String createdDate;
+    private String lastModifiedBy;
+    private String lastModifiedDate;
     private String processStatus;
     private LocalDate createdDateStart;
     private LocalDate createdDateEnd;
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(String lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
     public String getId() {
         return id;
@@ -113,6 +131,22 @@ public class ShopAdQuery extends BaseQuery{
 
     public void setCreatedDateStart(LocalDate createdDateStart) {
         this.createdDateStart = createdDateStart;
+    }
+
+    public LocalDate getLastModifiedDateStart() {
+        if(StringUtils.isNotBlank(lastModifiedDate)) {
+            return LocalDateUtils.parse(lastModifiedDate.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getLastModifiedDateEnd() {
+        if(StringUtils.isNotBlank(lastModifiedDate)) {
+            return LocalDateUtils.parse(lastModifiedDate.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
+        } else {
+            return null;
+        }
     }
 
     public List<String> getIds(){

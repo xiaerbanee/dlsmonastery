@@ -90,8 +90,6 @@ class BdSupplierRepository @Autowired constructor(val namedParameterJdbcTemplate
                 T_BD_SUPPLIER_L t2
             WHERE
                 t1.FSUPPLIERID = t2.FSUPPLIERID
-                AND t1.FDOCUMENTSTATUS = 'C'
-                AND t1.FFORBIDSTATUS = 'A'
         """);
         if(bdSupplierQuery.supplierIdList.size > 0){
             sb.append(" and t1.FSUPPLIERID in (:supplierIdList) ")
