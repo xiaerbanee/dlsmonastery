@@ -26,6 +26,8 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
 
     fun findByBusinessIdIn(businessIdList: List<String>):MutableList<GoodsOrder>
 
+    fun findByEnabledIsTrueAndStatusAndBusinessIdIn(status:String, businessIdList: List<String>):MutableList<GoodsOrder>
+
     fun findByBusinessId(businessId: String):GoodsOrder
 
     fun findByIdInAndEnabledIsTrue(ids:MutableList<String>):MutableList<GoodsOrder>
