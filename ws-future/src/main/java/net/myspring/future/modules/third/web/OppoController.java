@@ -6,6 +6,8 @@ import net.myspring.future.modules.third.domain.*;
 import net.myspring.future.modules.third.service.OppoService;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,8 +23,11 @@ public class OppoController {
     @Autowired
     private ScheduleUtils scheduleUtils;
 
+    protected Logger logger = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value="synIme")
     public String synIme(String date){
+        logger.info("开始同步串码，同步日期："+date);
         return scheduleUtils.synOppo(date);
     }
 
