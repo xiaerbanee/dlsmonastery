@@ -290,7 +290,6 @@
         this.inputForm.mobilePhone = response.data.mobilePhone;
         this.inputForm.goodsOrderBillDetailFormList = response.data.goodsOrderDetailDtoList;
 
-        this.filterProducts();
         this.initSummary(null);
         this.refreshStoreQty();
       });
@@ -299,7 +298,8 @@
       });
 
       Promise.all([formPropertyPromise, billPromise, shopAccountPromise]).then( () => {
-          this.refreshExpressShouldGet(null);
+        this.refreshExpressShouldGet(null);
+        this.filterProducts();
       });
     }
   }
