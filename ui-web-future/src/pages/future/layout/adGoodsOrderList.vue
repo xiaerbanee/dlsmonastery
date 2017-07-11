@@ -167,6 +167,7 @@
           this.$router.push({name: 'adGoodsOrderSign', query: {id: id}})
         } else if (action === "print") {
           window.open('/#/future/layout/adGoodsOrderPrint?id='+id, '', '');
+          this.pageRequest();
         } else if (action === "delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/layout/adGoodsOrder/delete', {params: {id: id}}).then((response) => {
