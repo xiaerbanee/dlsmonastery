@@ -55,7 +55,7 @@ public class SupplierPayableZMDService {
         List<String> supplierIdList = supplierPayableQuery.getSupplierIdList();
         List<String> departmentIdList = supplierPayableQuery.getDepartmentIdList();
         List<SupplierPayableDto> supplierPayableDtoList = Lists.newArrayList();
-        if (supplierIdList.size() > 0 || departmentIdList.size() > 0) {
+        if (supplierIdList.size() > 0 || departmentIdList.size() > 0 && dateStart != null && dateEnd != null) {
             //期初结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
             List<SupplierPayableDto> startPayList = supplierPayableZMDRepository.findEndPayable(dateStart, supplierIdList, departmentIdList);
             Map<String, SupplierPayableDto> startPayKeyMap = Maps.newHashMap();

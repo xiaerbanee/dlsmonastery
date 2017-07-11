@@ -52,75 +52,77 @@ public class SupplierPayableService {
         LocalDate dateStart = supplierPayableQuery.getDateStart();
         LocalDate dateEnd = supplierPayableQuery.getDateEnd();
         List<String> supplierIdList = supplierPayableQuery.getSupplierIdList();
-        List<SupplierPayableDto> supplierPayableDtoList = Lists.newArrayList();
-        if (supplierIdList.size() > 0) {
-            //期初结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
-            List<SupplierPayableDto> startPayList = supplierPayableRepository.findEndPayable(dateStart, supplierIdList);
-            Map<String, SupplierPayableDto> startPayKeyMap = Maps.newHashMap();
-            for (SupplierPayableDto startPay : startPayList) {
-                String key = startPay.getSupplierId();
-                startPayKeyMap.put(key, startPay);
-            }
-            //期末结余
-            List<SupplierPayableDto> endPayList = supplierPayableRepository.findEndPayable(dateEnd.plusDays(1), supplierIdList);
-            Map<String, SupplierPayableDto> endPayKeyMap = Maps.newHashMap();
-            for (SupplierPayableDto endPay : endPayList) {
-                String key = endPay.getSupplierId();
-                endPayKeyMap.put(key, endPay);
-                SupplierPayableDto supplierPayable = new SupplierPayableDto();
-                supplierPayable.setSupplierId(endPay.getSupplierId());
-                supplierPayable.setEndAmount(endPay.getBeginAmount());
-                if (startPayKeyMap.containsKey(key)) {
-                    supplierPayable.setBeginAmount(startPayKeyMap.get(key).getBeginAmount());
-                } else {
-                    supplierPayable.setBeginAmount(BigDecimal.ZERO);
+        if (supplierIdList.size()>0 && dateStart != null && dateEnd != null ) {
+            List<SupplierPayableDto> supplierPayableDtoList = Lists.newArrayList();
+            if (supplierIdList.size() > 0) {
+                //期初结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
+                List<SupplierPayableDto> startPayList = supplierPayableRepository.findEndPayable(dateStart, supplierIdList);
+                Map<String, SupplierPayableDto> startPayKeyMap = Maps.newHashMap();
+                for (SupplierPayableDto startPay : startPayList) {
+                    String key = startPay.getSupplierId();
+                    startPayKeyMap.put(key, startPay);
                 }
-                supplierPayableDtoList.add(supplierPayable);
-            }
-            for (Map.Entry<String, SupplierPayableDto> startPayMap : startPayKeyMap.entrySet()) {
-                if (!endPayKeyMap.containsKey(startPayMap.getKey())) {
+                //期末结余
+                List<SupplierPayableDto> endPayList = supplierPayableRepository.findEndPayable(dateEnd.plusDays(1), supplierIdList);
+                Map<String, SupplierPayableDto> endPayKeyMap = Maps.newHashMap();
+                for (SupplierPayableDto endPay : endPayList) {
+                    String key = endPay.getSupplierId();
+                    endPayKeyMap.put(key, endPay);
                     SupplierPayableDto supplierPayable = new SupplierPayableDto();
-                    supplierPayable.setSupplierId(startPayMap.getValue().getSupplierId());
-                    supplierPayable.setBeginAmount(startPayMap.getValue().getBeginAmount());
-                    supplierPayable.setEndAmount(BigDecimal.ZERO);
+                    supplierPayable.setSupplierId(endPay.getSupplierId());
+                    supplierPayable.setEndAmount(endPay.getBeginAmount());
+                    if (startPayKeyMap.containsKey(key)) {
+                        supplierPayable.setBeginAmount(startPayKeyMap.get(key).getBeginAmount());
+                    } else {
+                        supplierPayable.setBeginAmount(BigDecimal.ZERO);
+                    }
                     supplierPayableDtoList.add(supplierPayable);
                 }
-            }
-            //应付金额：采购入库单-采购退料单+其他应付单+应付单
-            List<SupplierPayableDto> payableList = supplierPayableRepository.findShouldPay(supplierPayableQuery);
-            Map<String, BigDecimal> payableKeyMap = Maps.newHashMap();
-            for (SupplierPayableDto supplierPayableDto : payableList) {
-                String key = supplierPayableDto.getSupplierId();
-                payableKeyMap.put(key, supplierPayableDto.getBeginAmount());
-            }
-            //实付金额：付款单-付款退款单
-            List<SupplierPayableDto> actualPayList = supplierPayableRepository.findActualPay(supplierPayableQuery);
-            Map<String, BigDecimal> actualPayKeyMap = Maps.newHashMap();
-            for (SupplierPayableDto supplierPayableDto : actualPayList) {
-                String key = supplierPayableDto.getSupplierId();
-                actualPayKeyMap.put(key, supplierPayableDto.getBeginAmount());
-            }
-            Map<String, BdSupplier> bdSupplierIdMap;
-            if (supplierIdList.size()>0){
-                bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
-            }else {
-                bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
-            }
-            for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
-                String key = supplierPayable.getSupplierId();
-                supplierPayable.setSupplierName(bdSupplierIdMap.get(supplierPayable.getSupplierId()).getFName());
-                supplierPayable.setPayableAmount(payableKeyMap.get(key));
-                supplierPayable.setActualPayAmount(actualPayKeyMap.get(key));
-                if (supplierPayableQuery.getQueryDetail()) {
-                    SupplierPayableDetailQuery supplierPayableDetailQuery = new SupplierPayableDetailQuery();
-                    supplierPayableDetailQuery.setSupplierIdList(supplierPayableQuery.getSupplierIdList());
-                    supplierPayableDetailQuery.setDateStart(supplierPayableQuery.getDateStart());
-                    supplierPayableDetailQuery.setDateEnd(supplierPayableQuery.getDateEnd());
-                    Map<String,List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
-                    supplierPayable.setSupplierPayableDetailDtoList(supplierPayableDetailDtoMap.get(key));
+                for (Map.Entry<String, SupplierPayableDto> startPayMap : startPayKeyMap.entrySet()) {
+                    if (!endPayKeyMap.containsKey(startPayMap.getKey())) {
+                        SupplierPayableDto supplierPayable = new SupplierPayableDto();
+                        supplierPayable.setSupplierId(startPayMap.getValue().getSupplierId());
+                        supplierPayable.setBeginAmount(startPayMap.getValue().getBeginAmount());
+                        supplierPayable.setEndAmount(BigDecimal.ZERO);
+                        supplierPayableDtoList.add(supplierPayable);
+                    }
                 }
+                //应付金额：采购入库单-采购退料单+其他应付单+应付单
+                List<SupplierPayableDto> payableList = supplierPayableRepository.findShouldPay(supplierPayableQuery);
+                Map<String, BigDecimal> payableKeyMap = Maps.newHashMap();
+                for (SupplierPayableDto supplierPayableDto : payableList) {
+                    String key = supplierPayableDto.getSupplierId();
+                    payableKeyMap.put(key, supplierPayableDto.getBeginAmount());
+                }
+                //实付金额：付款单-付款退款单
+                List<SupplierPayableDto> actualPayList = supplierPayableRepository.findActualPay(supplierPayableQuery);
+                Map<String, BigDecimal> actualPayKeyMap = Maps.newHashMap();
+                for (SupplierPayableDto supplierPayableDto : actualPayList) {
+                    String key = supplierPayableDto.getSupplierId();
+                    actualPayKeyMap.put(key, supplierPayableDto.getBeginAmount());
+                }
+                Map<String, BdSupplier> bdSupplierIdMap;
+                if (supplierIdList.size() > 0) {
+                    bdSupplierIdMap = bdSupplierRepository.findBySupplierIdList(supplierIdList).stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                } else {
+                    bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
+                }
+                for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
+                    String key = supplierPayable.getSupplierId();
+                    supplierPayable.setSupplierName(bdSupplierIdMap.get(supplierPayable.getSupplierId()).getFName());
+                    supplierPayable.setPayableAmount(payableKeyMap.get(key));
+                    supplierPayable.setActualPayAmount(actualPayKeyMap.get(key));
+                    if (supplierPayableQuery.getQueryDetail()) {
+                        SupplierPayableDetailQuery supplierPayableDetailQuery = new SupplierPayableDetailQuery();
+                        supplierPayableDetailQuery.setSupplierIdList(supplierPayableQuery.getSupplierIdList());
+                        supplierPayableDetailQuery.setDateStart(supplierPayableQuery.getDateStart());
+                        supplierPayableDetailQuery.setDateEnd(supplierPayableQuery.getDateEnd());
+                        Map<String, List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
+                        supplierPayable.setSupplierPayableDetailDtoList(supplierPayableDetailDtoMap.get(key));
+                    }
+                }
+                return supplierPayableDtoList;
             }
-            return supplierPayableDtoList;
         }
         return null;
     }
