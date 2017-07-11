@@ -188,8 +188,7 @@ public class DutyService {
         }
     }
 
-    @Transactional
-    private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
+private Boolean restAudit(DutyRest dutyRest, String auditById, Boolean pass, String auditRemarks) {
         if (pass) {
             Double restHour = 0.0;
             if (DutyRestTypeEnum.加班调休.toString().equals(dutyRest.getType())) {

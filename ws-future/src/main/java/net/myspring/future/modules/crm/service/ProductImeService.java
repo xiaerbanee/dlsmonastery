@@ -387,8 +387,7 @@ public class ProductImeService {
         productImeRepository.save(toBeSaved);
     }
 
-    @Transactional
-    private String toUpperCase(String str) {
+private String toUpperCase(String str) {
         if (str == null) {
             return null;
         }
