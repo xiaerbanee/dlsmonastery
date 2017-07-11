@@ -35,7 +35,6 @@ public class ArReceiveBillService {
     @Autowired
     private BdDepartmentRepository bdDepartmentRepository;
 
-    @Transactional
     private KingdeeSynDto save(ArReceiveBillDto arReceiveBillDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arReceiveBillDto.getExtendId(),
