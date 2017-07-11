@@ -38,7 +38,7 @@ public class ArReceiveBillManager {
 
     public KingdeeSynReturnDto synForBankIn(BankIn bankIn, BankInAuditForm bankInAuditForm) {
         Depot depot = depotRepository.findOne(bankIn.getShopId());
-        Client client = clientRepository.findOne(depot.getId());
+        Client client = clientRepository.findOne(depot.getClientId());
 
         ArReceiveBillDto receiveBillDto = new ArReceiveBillDto();
         receiveBillDto.setExtendId(bankIn.getId());
