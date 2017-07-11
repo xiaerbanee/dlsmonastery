@@ -52,6 +52,8 @@
         <el-table-column fixed prop="customerGroupName" label="客户分组" sortable width="150"></el-table-column>
         <el-table-column prop="customerName" label="客户名称"></el-table-column>
         <el-table-column prop="beginShouldGet" label="期初应收"></el-table-column>
+        <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
+        <el-table-column prop="realGet" label="实收金额"></el-table-column>
         <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
