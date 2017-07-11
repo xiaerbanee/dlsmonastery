@@ -16,7 +16,6 @@ interface VivoPushSCustomersRepository :BaseRepository<VivoPushSCustomers,String
 
 interface VivoPushSCustomersRepositoryCustom{
     fun findFutureVivoCustomers(date: LocalDate):MutableList<FutureCustomerDto>
-    fun findByDate(dateStart:LocalDate,dateEnd:LocalDate):MutableList<VivoPushSCustomers>
     fun batchSave(vivoPushSCustomersList: MutableList<VivoPushSCustomers>):IntArray
 }
 
@@ -68,17 +67,6 @@ class VivoPushSCustomersRepositoryImpl @Autowired constructor(val namedParameter
         """,map,BeanPropertyRowMapper(FutureCustomerDto::class.java))
     }
 
-    override fun findByDate(dateStart: LocalDate, dateEnd: LocalDate): MutableList<VivoPushSCustomers> {
-        val map = Maps.newHashMap<String,Any>()
-        map.put("dateStart",dateStart)
-        map.put("dateEnd",dateEnd)
-        return namedParameterJdbcTemplate.query("""
-            SELECT *
-            FROM vivo_push_scustomers
-            WHERE created_date >= :dateStart
-                AND created_date < :dateEnd
-        """,map,BeanPropertyRowMapper(VivoPushSCustomers::class.java))
-    }
 
     override fun batchSave(vivoPushSCustomersList: MutableList<VivoPushSCustomers>): IntArray {
         val sb = StringBuffer()
