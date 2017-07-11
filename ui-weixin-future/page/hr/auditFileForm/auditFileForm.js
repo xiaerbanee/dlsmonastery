@@ -3,15 +3,15 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    formData: { },
-    formProperty:{},
+    formData: {},
+    formProperty: {},
     response: {},
     submitDisabled: false
   },
   onLoad: function (options) {
     var that = this;
     that.data.options = options
-    app.autoLogin(function(){
+    app.autoLogin(function () {
       that.initPage()
     })
   },
@@ -24,13 +24,23 @@ Page({
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        that.setData({ 'formProperty.processList': res.data.processTypes })
+        wx.request({
+          url: $util.getUrl("/general/sys/processType/findByCreatePositionId"),
+          data: {},
+          method: 'GET',
+          header: {
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
+          },
+          success: function (res) {
+            that.setData({ 'formProperty.processList': res.data })
+          }
+        })
       }
     })
-    if ( options.action == "update") {
+    if (options.action == "update") {
       wx.request({
-        url: $util.getUrl("basic/hr/auditFile/detail"),
-        data: { id:  options.id },
+        url: $util.getUrl("basic/hr/auditFile/findOne"),
+        data: { id: options.id },
         method: 'GET',
         header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
         success: function (res) {
@@ -54,8 +64,7 @@ Page({
   bindProcessType: function (e) {
     var that = this;
     that.setData({
-      'formData.processType.id': that.data.formProperty.processList[e.detail.value].id,
-      'formData.processType.name': that.data.formProperty.processList[e.detail.value].name
+      'formData.name': that.data.formProperty.processList[e.detail.value].name
     })
   },
   formSubmit: function (e) {
@@ -66,7 +75,7 @@ Page({
       data: e.detail.value,
       header: {
         Cookie: "JSESSIONID=" + app.globalData.sessionId
-        },
+      },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
@@ -80,7 +89,7 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if(responseData && responseData.errors && responseData.errors[key] != null) {
+    if (responseData && responseData.errors && responseData.errors[key] != null) {
       that.setData({ "response.error": responseData.errors[key].message });
       delete responseData.errors[key];
       that.setData({ "response.data": responseData })

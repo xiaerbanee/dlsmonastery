@@ -8,6 +8,7 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.enums.GoodsOrderPullStatusEnum;
 import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
@@ -34,6 +35,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -74,6 +76,7 @@ public class GoodsOrderController {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
+        goodsOrderQuery.getExtra().put("pullStatusList", GoodsOrderPullStatusEnum.getList());
         return goodsOrderQuery;
     }
 
@@ -83,6 +86,12 @@ public class GoodsOrderController {
         goodsOrderForm.getExtra().put("netTypeList", Lists.newArrayList(NetTypeEnum.移动.name(), NetTypeEnum.联信.name()));
         goodsOrderForm.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         return goodsOrderForm;
+    }
+
+    @RequestMapping(value = "updatePullStatus")
+    public boolean updatePullStatus(String id, String status) {
+        goodsOrderService.updatePullStatus(id, status);
+        return true;
     }
 
     @RequestMapping(value = "findDetailList")
