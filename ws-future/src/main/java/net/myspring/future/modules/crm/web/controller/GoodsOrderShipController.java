@@ -1,9 +1,9 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.google.common.collect.Maps;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.future.common.constant.FormatterConstant;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
@@ -31,12 +31,10 @@ public class GoodsOrderShipController {
     @Autowired
     private GoodsOrderShipService goodsOrderShipService;
 
-
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
     public Page<GoodsOrderDto> list(Pageable pageable, GoodsOrderQuery goodsOrderQuery){
-        Page<GoodsOrderDto> page = goodsOrderShipService.findAll(pageable, goodsOrderQuery);
-        return page;
+        return goodsOrderShipService.findAll(pageable, goodsOrderQuery);
     }
 
     @RequestMapping(value = "getQuery")
@@ -106,7 +104,7 @@ public class GoodsOrderShipController {
         if(StringUtils.isBlank(businessId)){
             return new GoodsOrderDto();
         }
-        return goodsOrderShipService.getShipByBusinessId(businessId);
+        return goodsOrderShipService.getShipByBusinessId(businessId.replaceAll(FormatterConstant.GOODS_ORDER, ""));
     }
 
     @RequestMapping(value = "print")
