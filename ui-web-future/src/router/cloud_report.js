@@ -6,7 +6,7 @@ const retailAccount  = r => require.ensure([], () => r(require('pages/cloud/repo
 
 let routes = [
   {path: '/cloud/report/supplierPayable',component: supplierPayable,name: 'supplierPayable'},
-  {path: '/cloud/report/supplierPayable',component: supplierPayableZMD,name: 'supplierPayableZMD'},
+  {path: '/cloud/report/supplierPayableZMD',component: supplierPayableZMD,name: 'supplierPayableZMD'},
   {path: '/cloud/report/customerReceive',component: customerReceive,name: 'customerReceive'},
   {path: '/cloud/report/consignmentReport',component: consignmentReport,name: 'consignmentReport'},
   {path: '/cloud/report/retailAccount',component: retailAccount,name: 'retailAccount'},

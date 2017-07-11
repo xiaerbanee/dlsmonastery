@@ -11,7 +11,10 @@ import java.util.List;
  * Created by guolm on 2017/6/11.
  */
 
-@FeignClient("ws-future")
-public interface OppoClient {
+@FeignClient("global-tool")
+public interface FactoryClient {
+
+    @RequestMapping(method = RequestMethod.GET, value = "oppo/pullFactoryData")
+    String pullOppoFactoryData(@RequestParam(value="date") String date);
 
 }

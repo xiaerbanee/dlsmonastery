@@ -4,13 +4,14 @@
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
+      <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">开始日期</view>
         </view>
         <view class="weui-cell__bd ">
           <picker mode="date" name="createdDateStart" value="{{formData.createdDateStart}}" data-name="createdDateStart" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.createdDateStart}}</view>
+            <view class="weui-input">{{formData.createdDateStart?formData.createdDateStart:""}}</view>
           </picker>
         </view>
       </view>
@@ -20,7 +21,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker mode="date" name="createdDateEnd" value="{{formData.createdDateEnd}}" data-name="createdDateEnd" bindchange="bindDateChange">
-            <view class="weui-input">{{formData.createdDateEnd}}</view>
+            <view class="weui-input">{{formData.createdDateEnd?formData.createdDateEnd:""}}</view>
           </picker>
         </view>
       </view>
@@ -29,7 +30,7 @@
           <view class="weui-label">门店</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="shopName" class="weui-input" placeholder="模糊搜索" value="{{formData.shopName}}"/>
+          <input name="shopName" class="weui-input" placeholder="模糊搜索" value="{{formData.shopName}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">

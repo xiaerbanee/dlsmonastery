@@ -39,7 +39,6 @@ public class DutyRestController {
     private DutyRestValidator dutyRestValidator;
 
     @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasPermission(null,'hr:dutyRest:view')")
     public Page<DutyRestDto> list(Pageable pageable, DutyRestQuery dutyRestQuery) {
         dutyRestQuery.setCreatedBy(RequestUtils.getAccountId());
         Page<DutyRestDto> page = dutyRestService.findPage(pageable,dutyRestQuery);
@@ -67,7 +66,6 @@ public class DutyRestController {
     }
 
     @RequestMapping(value = "save")
-    @PreAuthorize("hasPermission(null,'hr:dutyRest:edit')")
     public RestResponse save(DutyRestForm dutyRestForm, BindingResult bindingResult) {
         dutyRestValidator.validate(dutyRestForm,bindingResult);
         if(bindingResult.hasErrors()){
@@ -78,7 +76,6 @@ public class DutyRestController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'hr:dutyRest:delete')")
     public RestResponse delete(String id) {
         dutyRestService.logicDelete(id);
         RestResponse restResponse = new RestResponse("删除成功",ResponseCodeEnum.removed.name());

@@ -80,10 +80,48 @@ interface DepotRepositoryCustom{
 
     fun findDto(id: String): DepotDto
 
+    fun findDepotList(depotQuery: DepotQuery): List<DepotDto>
 
 }
 
 class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotRepositoryCustom{
+    override fun findDepotList(depotQuery: DepotQuery): List<DepotDto> {
+        val sb = StringBuffer()
+        sb.append("""
+            SELECT
+                t1.*
+            FROM
+                crm_depot t1
+            WHERE
+                t1.enabled = 1
+        """)
+        if (depotQuery.clientIsNull != null) {
+            if(depotQuery.clientIsNull){
+                sb.append("  and t1.client_id is NULL ")
+            }else{
+                sb.append("  and t1.client_id is NOT NULL ")
+            }
+        }
+        if (depotQuery.adShop != null) {
+            sb.append("  and t1.ad_shop = :adShop")
+        }
+        if (depotQuery.popShop != null) {
+            sb.append("  and t1.pop_shop = :popShop ")
+        }
+        if (StringUtils.isNotBlank(depotQuery.name)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+        }
+        if (CollectionUtil.isNotEmpty(depotQuery.depotIdList)) {
+            sb.append("""  and t1.id in (:depotIdList)""")
+        }
+        if (CollectionUtil.isNotEmpty(depotQuery.officeIdList)) {
+            sb.append("""  and t1.office_id  in (:officeIdList) """)
+        }
+        sb.append(" limit 0,20")
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(DepotDto::class.java))
+
+    }
+
     override fun findDepotAccount(depotId: String): DepotAccountDto {
         return namedParameterJdbcTemplate.queryForObject("""
           select
@@ -276,6 +314,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         t1.office_id,
         t1.area_id,
         t1.client_id,
+        t1.delegate_depot_id,
         scbzjDeposit.left_amount scbzj,
         xxbzjDeposit.left_amount xxbzj,
         ysjyjDeposit.left_amount ysjyj

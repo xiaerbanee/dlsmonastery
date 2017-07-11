@@ -38,27 +38,29 @@ public class VivoService {
     @Autowired
     private VivoPlantProductsRepository vivoPlantProductsRepository;
     @Autowired
+    private VivoPlantSendimeiRepository vivoPlantSendimeiRepository;
+    @Autowired
     private VivoPlantElectronicsnRepository vivoPlantElectronicsnRepository;
 
     @FactoryDataSource
-    public List<VivoProducts> findProducts() {
+    public List<VivoProducts> getProducts() {
         return vivoProductsRepository.findProducts();
     }
 
     @FactoryDataSource
-    public List<VivoPlantProducts> plantProducts() {
-        return vivoRepository.plantProducts();
+    public List<VivoPlantProducts> getPlantProducts() {
+        return vivoPlantProductsRepository.findPlantProducts();
     }
 
     @FactoryDataSource
-    public List<VivoPlantSendimei> plantSendimei(LocalDate createdTime, List<String> agentCodes) {
-        LocalDate dateStart = createdTime;
-        LocalDate dateEnd = createdTime.plusDays(1);
-        return vivoRepository.plantSendimei(dateStart, dateEnd, agentCodes);
+    public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
+        String dateStart = date;
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date));
+        return vivoPlantSendimeiRepository.findPlantSendimei(dateStart, dateEnd, agentCodes);
     }
 
     @FactoryDataSource
-    public List<VivoPlantElectronicsn> plantElectronicsn(LocalDate retailDate) {
+    public List<VivoPlantElectronicsn> getPlantElectronicsn(LocalDate retailDate) {
         LocalDate dateStart = retailDate;
         LocalDate dateEnd = retailDate.plusDays(1);
         return vivoRepository.plantElectronicsn(dateStart, dateEnd);
@@ -86,37 +88,47 @@ public class VivoService {
     }
     //获取物料编码
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
-//        if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
-//            List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
-//            List<String> newItemNumbers=Lists.newArrayList();
-//            for(String itemNumber:itemNumbers){
-//                newItemNumbers.add(itemNumber.trim());
-//            }
-//            List<String> localItemNumbers = vivoPlantProductsRepository.findItemNumbers(newItemNumbers);
-//            List<VivoPlantProducts> list= Lists.newArrayList();
-//            for(VivoPlantProducts item : vivoPlantProducts){
-//                if(!localItemNumbers.contains(item.getItemNumber().trim())){
-//                    list.add(item);
-//                }
-//            }
-//            if(CollectionUtil.isNotEmpty(list)) {
-//                vivoPlantProductsRepository.save(list);
-//            }
-//        }
+        if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
+            for(VivoPlantProducts plantProduct:vivoPlantProducts){
+                plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
+            }
+            List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
+            List<String> localItemNumbers = vivoPlantProductsRepository.findItemNumbers(itemNumbers);
+            List<VivoPlantProducts> list= Lists.newArrayList();
+            for(VivoPlantProducts plantProduct : vivoPlantProducts){
+                if(!localItemNumbers.contains(plantProduct.getItemNumber().trim())){
+                    plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
+                    list.add(plantProduct);
+                }
+            }
+            if(CollectionUtil.isNotEmpty(list)) {
+                vivoPlantProductsRepository.save(list);
+            }
+        }
     }
 
     //查询发货串码
     @LocalDataSource
     public String pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
-        List<VivoPlantSendimei> list = Lists.newArrayList();
-        Map<String,List<VivoPlantSendimei>> agentCodeMap= Maps.newHashMap();
-        for(VivoPlantSendimei vivoPlantSendimei:vivoPlantSendimeis){
-            if(!agentCodeMap.containsKey(vivoPlantSendimei.getCompanyId())){
-                List<VivoPlantSendimei> plantSendimeis=Lists.newArrayList();
-                agentCodeMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
+        if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
+            List<String> imeiList = Lists.newArrayList();
+            Map<String,List<VivoPlantSendimei>> agentCodeMap= Maps.newHashMap();
+            for(VivoPlantSendimei vivoPlantSendimei:vivoPlantSendimeis){
+                if(!agentCodeMap.containsKey(vivoPlantSendimei.getCompanyId())){
+                    List<VivoPlantSendimei> plantSendimeis=Lists.newArrayList();
+                    agentCodeMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
+                }
+                imeiList.add(vivoPlantSendimei.getImei());
+                agentCodeMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
             }
-            agentCodeMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
+            List<String> localImeiList=vivoPlantSendimeiRepository.findImeis(imeiList);
+            for(String agentCode:agentCodeMap.keySet()){
+                List<VivoPlantSendimei>  plantSendimeis=agentCodeMap.get(agentCode);
+            }
         }
+
+
+
         Map<String,VivoPlantSendimei> map = CollectionUtil.extractToMap(vivoPlantSendimeis,"imei");
         Set<String> imeis=map.keySet();
 //        for(List<String> imeiList:Lists.partition(new ArrayList<String>(imeis),1500)){
@@ -132,7 +144,7 @@ public class VivoService {
 //                vivoPlantSendimeiRepository.save(vivoPlantSendimeisList);
 //            }
 //        }
-        return "发货串码同步成功，共同步"+list.size()+"条数据";
+        return "发货串码同步成功，共同步条数据";
     }
 
 
