@@ -51,7 +51,6 @@ import net.myspring.future.modules.crm.web.query.GoodsOrderQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -60,12 +59,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.LockModeType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -146,7 +143,6 @@ public class GoodsOrderService {
                 }
             }
         }
-
         return page;
     }
 
@@ -167,140 +163,178 @@ public class GoodsOrderService {
         return restResponse;
     }
 
-    //保存及修改订单
     @Transactional
     public GoodsOrder save(GoodsOrderForm goodsOrderForm) {
-        Boolean isCreate = goodsOrderForm.isCreate();
+
+        Depot shop = depotRepository.findOne(goodsOrderForm.getShopId());
         GoodsOrder goodsOrder;
-        //保存订单
-        if(isCreate) {
-            goodsOrder = BeanUtil.map(goodsOrderForm,GoodsOrder.class);
-            goodsOrder.setStoreId(getDefaultStoreId(goodsOrder));
-            goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
-            goodsOrder.setUseTicket(false);
-            goodsOrderRepository.save(goodsOrder);
-        } else {
+        if(StringUtils.isNotBlank(goodsOrderForm.getId())) {
             goodsOrder = goodsOrderRepository.findOne(goodsOrderForm.getId());
-            ReflectionUtil.copyProperties(goodsOrderForm,goodsOrder);
-            goodsOrderRepository.save(goodsOrder);
+        } else {
+            goodsOrder = new GoodsOrder();
         }
-
-        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
-        //保存订单明细
-        BigDecimal amount = BigDecimal.ZERO;
-        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
-        //价格体系
-        List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
-        Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
-
-        for (int i = goodsOrderForm.getGoodsOrderDetailFormList().size() - 1; i >= 0; i--) {
-            GoodsOrderDetailForm goodsOrderDetailForm = goodsOrderForm.getGoodsOrderDetailFormList().get(i);
-            if(goodsOrderDetailForm.getQty()==null) {
-                goodsOrderDetailForm.setQty(0);
-            }
-            if(goodsOrderDetailForm.getQty()<0) {
-                throw new ServiceException("订货明细里的数量不能小于0");
-            }
-            if(goodsOrderDetailForm.isCreate()) {
-                if (goodsOrderDetailForm.getQty() > 0) {
-                    GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderDetailForm,GoodsOrderDetail.class);
-                    goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
-                    goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
-                    goodsOrderDetail.setShippedQty(0);
-                    PricesystemDetail pricesystemDetail = pricesystemDetailMap.get(goodsOrderDetail.getProductId());
-                    goodsOrderDetail.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailRepository.save(goodsOrderDetail);
-                    amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
-                }
-            } else {
-                if(goodsOrderDetailMap.containsKey(goodsOrderDetailForm.getId())) {
-                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
-                    goodsOrderDetail.setQty(goodsOrderDetailForm.getQty());
-                    goodsOrderDetail.setBillQty(goodsOrderDetailForm.getQty());
-                    goodsOrderDetailRepository.save(goodsOrderDetail);
-                    amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
-                }
-            }
-        }
-        //更新总价
-        goodsOrder.setAmount(amount);
-        //更新快递单信息
-        ExpressOrder expressOrder = getExpressOrder(goodsOrderForm);
-        expressOrderRepository.save(expressOrder);
-        goodsOrder.setExpressOrderId(expressOrder.getId());
+        goodsOrder.setShopId(goodsOrderForm.getShopId());
+        goodsOrder.setRemarks(goodsOrderForm.getRemarks());
+        goodsOrder.setNetType(goodsOrderForm.getNetType());
+        goodsOrder.setLxMallOrder(NetTypeEnum.联信.name().equals(goodsOrderForm.getNetType()) ? goodsOrderForm.getLxMallOrder() : null );
+        goodsOrder.setShipType(goodsOrderForm.getShipType());
+        goodsOrder.setStoreId(getDefaultStoreId(goodsOrderForm.getNetType(), shop));
+        goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
+        goodsOrder.setUseTicket(false);
         goodsOrderRepository.save(goodsOrder);
-        goodsOrderForm.setId(goodsOrder.getId());
+
+        saveDetailInfo(goodsOrder, goodsOrderForm, shop);
+        saveExpressOrderInfo(goodsOrder, goodsOrderForm, shop);
         return goodsOrder;
     }
 
-    //开单
+    @Transactional
+    private void saveDetailInfo(GoodsOrder goodsOrder, GoodsOrderForm goodsOrderForm, Depot shop) {
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+
+        BigDecimal amount = BigDecimal.ZERO;
+        List<PricesystemDetail> pricesystemDetailList = pricesystemDetailRepository.findByPricesystemId(shop.getPricesystemId());
+        Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
+        List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
+        for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
+            if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty()<0) {
+                throw new ServiceException("订货明细里的数量不能小于0");
+            }
+            if(!pricesystemDetailMap.containsKey(goodsOrderDetailForm.getProductId())){
+                throw new ServiceException("该产品（"+goodsOrderDetailForm.getProductId()+"）不包含在该门店价格体系内，不允许订货");
+            }
+
+            GoodsOrderDetail goodsOrderDetail;
+            if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())) {
+                goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderDetailForm.getId());
+            } else {
+                goodsOrderDetail = new GoodsOrderDetail();
+                goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
+                goodsOrderDetail.setProductId(goodsOrderDetailForm.getProductId());
+                goodsOrderDetail.setReturnQty(0);
+                goodsOrderDetail.setShippedQty(0);
+                goodsOrderDetail.setPrice(pricesystemDetailMap.get(goodsOrderDetail.getProductId()).getPrice());
+            }
+            goodsOrderDetail.setQty(goodsOrderDetailForm.getQty() == null ? 0 : goodsOrderDetailForm.getQty());
+            goodsOrderDetail.setBillQty(goodsOrderDetail.getQty());
+
+            detailsToBeSaved.add(goodsOrderDetail);
+            amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
+        }
+        goodsOrderDetailRepository.save(detailsToBeSaved);
+
+        goodsOrder.setAmount(amount);
+        goodsOrderRepository.save(goodsOrder);
+    }
+
+    @Transactional
+    private void saveExpressOrderInfo(GoodsOrder goodsOrder, GoodsOrderForm goodsOrderForm, Depot shop) {
+        ExpressOrder expressOrder;
+        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())) {
+            expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+        }else{
+            expressOrder = new ExpressOrder();
+            expressOrder.setExpressPrintQty(0);
+        }
+        expressOrder.setExtendId(goodsOrder.getId());
+        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
+        expressOrder.setContator(shop.getContator());
+        expressOrder.setAddress(shop.getAddress());
+        expressOrder.setMobilePhone(shop.getMobilePhone());
+        expressOrder.setToDepotId(shop.getId());
+        expressOrder.setShipType(goodsOrderForm.getShipType());
+        expressOrderRepository.save(expressOrder);
+
+        goodsOrder.setExpressOrderId(expressOrder.getId());
+        goodsOrderRepository.save(goodsOrder);
+    }
+
     @Transactional
     public  void bill(GoodsOrderBillForm goodsOrderBillForm) {
-        Integer totalBillQty = 0;
-        Integer mobileBillQty = 0;
+
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
         if(goodsOrderBillForm.getSyn() && StringUtils.isBlank(shop.getClientId())){
             throw new ServiceException("门店没有对应的财务记录，不能同步财务");
         }
-
-        ReflectionUtil.copyProperties(goodsOrderBillForm,goodsOrder);
-        BigDecimal amount = BigDecimal.ZERO;
-        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
-        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
-        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
-
-        for (int i = goodsOrderBillForm.getGoodsOrderBillDetailFormList().size() - 1; i >= 0; i--) {
-            GoodsOrderBillDetailForm goodsOrderBillDetailForm=goodsOrderBillForm.getGoodsOrderBillDetailFormList().get(i);
-            if (goodsOrderBillDetailForm.getBillQty() == null) {
-                goodsOrderBillDetailForm.setBillQty(0);
-            }
-            totalBillQty = totalBillQty + goodsOrderBillDetailForm.getBillQty();
-            Product product = productMap.get(goodsOrderBillDetailForm.getProductId());
-            if(product.getHasIme()) {
-                mobileBillQty = mobileBillQty + goodsOrderBillDetailForm.getBillQty();
-            }
-            if(goodsOrderBillDetailForm.isCreate()) {
-                if (goodsOrderBillDetailForm.getBillQty() > 0) {
-                    GoodsOrderDetail goodsOrderDetail = BeanUtil.map(goodsOrderBillDetailForm,GoodsOrderDetail.class);
-                    goodsOrderDetail.setQty(0);
-                    goodsOrderDetail.setShippedQty(0);
-                    goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
-                    goodsOrderDetailRepository.save(goodsOrderDetail);
-                    amount = amount.add(new BigDecimal(goodsOrderDetail.getBillQty()).multiply(goodsOrderDetail.getPrice()));
-                }
-            } else {
-                if(goodsOrderDetailMap.containsKey(goodsOrderBillDetailForm.getId())) {
-                    GoodsOrderDetail goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderBillDetailForm.getId());
-                    goodsOrderDetail.setBillQty(goodsOrderBillDetailForm.getBillQty());
-                    goodsOrderDetail.setPrice(goodsOrderBillDetailForm.getPrice());
-                    goodsOrderDetailRepository.save(goodsOrderDetail);
-                    amount = amount.add(new BigDecimal(goodsOrderBillDetailForm.getBillQty()).multiply(goodsOrderBillDetailForm.getPrice()));
-                }
-            }
-        }
-        goodsOrder.setAmount(amount);
+        goodsOrder.setStoreId(goodsOrderBillForm.getStoreId());
+        goodsOrder.setBillDate(goodsOrderBillForm.getBillDate());
+        goodsOrder.setRemarks(goodsOrderBillForm.getRemarks());
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
         goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
-        ExpressOrder expressOrder = getExpressOrder(goodsOrderBillForm);
-        //设置需要打印的快递单个数
-        Integer expressPrintQty = 0;
-        if (ShipTypeEnum.总部发货.name().equals(goodsOrder.getShipType())) {
-            expressPrintQty = expressUtils.getExpressPrintQty(totalBillQty);
-        }
-        expressOrder.setExpressPrintQty(expressPrintQty);
-        expressOrder.setTotalQty(totalBillQty);
-        expressOrder.setMobileQty(mobileBillQty);
-        expressOrderRepository.save(expressOrder);
-        if (goodsOrderBillForm.getSyn()) {
+
+        Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
+
+        List<GoodsOrderDetail> detailList = saveDetailInfoWhenBill(goodsOrder, goodsOrderBillForm);
+
+        ExpressOrder expressOrder = saveExpressOrderInfoWhenBill(goodsOrder, goodsOrderBillForm, detailList, productMap);
+        if (Boolean.TRUE.equals(goodsOrderBillForm.getSyn())) {
             syn(goodsOrder, expressOrder);
         }
-
     }
 
-private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
+    @Transactional
+    private List<GoodsOrderDetail> saveDetailInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm) {
+        BigDecimal amount = BigDecimal.ZERO;
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
+        Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
+
+        List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
+        for (GoodsOrderBillDetailForm goodsOrderBillDetailForm : goodsOrderBillForm.getGoodsOrderBillDetailFormList()) {
+            GoodsOrderDetail goodsOrderDetail;
+            if(StringUtils.isNotBlank(goodsOrderBillDetailForm.getId())){
+                goodsOrderDetail = goodsOrderDetailMap.get(goodsOrderBillDetailForm.getId());
+            }else{
+                goodsOrderDetail = new GoodsOrderDetail();
+                goodsOrderDetail.setGoodsOrderId(goodsOrder.getId());
+                goodsOrderDetail.setProductId(goodsOrderBillDetailForm.getProductId());
+                goodsOrderDetail.setQty(0);
+                goodsOrderDetail.setShippedQty(0);
+                goodsOrderDetail.setReturnQty(0);
+            }
+            goodsOrderDetail.setBillQty(goodsOrderBillDetailForm.getBillQty() == null ? 0 : goodsOrderBillDetailForm.getBillQty());
+            goodsOrderDetail.setPrice(goodsOrderBillDetailForm.getPrice());
+            detailsToBeSaved.add(goodsOrderDetail);
+
+            amount = amount.add(new BigDecimal(goodsOrderBillDetailForm.getBillQty() == null ? 0 : goodsOrderBillDetailForm.getBillQty()).multiply(goodsOrderBillDetailForm.getPrice()));
+        }
+        goodsOrderDetailRepository.save(detailsToBeSaved);
+
+        goodsOrder.setAmount(amount);
+        goodsOrderRepository.save(goodsOrder);
+
+        return detailsToBeSaved;
+    }
+
+    @Transactional
+    private ExpressOrder saveExpressOrderInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm, List<GoodsOrderDetail> detailList, Map<String,Product> productMap) {
+        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+        expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
+        expressOrder.setContator(goodsOrderBillForm.getContator());
+        expressOrder.setAddress(goodsOrderBillForm.getAddress());
+        expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrderBillForm.getStoreId());
+        expressOrder.setPrintDate(goodsOrder.getBillDate());
+
+        int totalBillQty = 0;
+        int mobileBillQty = 0;
+        for(GoodsOrderDetail goodsOrderDetail : detailList){
+            totalBillQty += goodsOrderDetail.getBillQty();
+            if(productMap.get(goodsOrderDetail.getProductId()).getHasIme()){
+                mobileBillQty += goodsOrderDetail.getBillQty();
+            }
+        }
+        expressOrder.setTotalQty(totalBillQty);
+        expressOrder.setMobileQty(mobileBillQty);
+        expressOrder.setExpressPrintQty(ShipTypeEnum.总部发货.name().equals(goodsOrder.getShipType()) ? expressUtils.getExpressPrintQty(totalBillQty) : 0 );
+        expressOrderRepository.save(expressOrder);
+        return expressOrder;
+    }
+
+    @Transactional
+    private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
@@ -333,51 +367,14 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
             goodsOrder.setOutCode(outCode);
         }
         goodsOrderRepository.save(goodsOrder);
+
         expressOrder.setOutCode(goodsOrder.getOutCode()==null ? null : goodsOrder.getOutCode().replaceAll(CharConstant.COMMA, "<br/>"));
         expressOrderRepository.save(expressOrder);
-
     }
 
-    private ExpressOrder getExpressOrder(GoodsOrderForm goodsOrderForm) {
-        Depot shop = depotRepository.findOne(goodsOrderForm.getShopId());
-        ExpressOrder expressOrder = new ExpressOrder();
-        if(StringUtils.isNotBlank(goodsOrderForm.getExpressOrderId())) {
-            expressOrder = expressOrderRepository.findOne(goodsOrderForm.getExpressOrderId());
-        }else{
-            expressOrder.setExpressPrintQty(0);
-        }
-        expressOrder.setExtendId(goodsOrderForm.getId());
-        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
-        expressOrder.setContator(shop.getContator());
-        expressOrder.setAddress(shop.getAddress());
-        expressOrder.setMobilePhone(shop.getMobilePhone());
-        expressOrder.setToDepotId(shop.getId());
-        expressOrder.setShipType(goodsOrderForm.getShipType());
-        return expressOrder;
-    }
-
-
-    private ExpressOrder getExpressOrder(GoodsOrderBillForm goodsOrderBillForm) {
-        GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderBillForm.getId());
-        Depot shop = depotRepository.findOne(goodsOrder.getShopId());
-        ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
-        expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
-        expressOrder.setExtendId(goodsOrder.getId());
-        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
-        expressOrder.setContator(goodsOrderBillForm.getContator());
-        expressOrder.setAddress(goodsOrderBillForm.getAddress());
-        expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
-        expressOrder.setFromDepotId(goodsOrderBillForm.getStoreId());
-        expressOrder.setToDepotId(shop.getId());
-        expressOrder.setShipType(goodsOrder.getShipType());
-        expressOrder.setPrintDate(goodsOrder.getBillDate());
-        return expressOrder;
-    }
-
-
-    private String getDefaultStoreId(GoodsOrder goodsOrder) {
+    private String getDefaultStoreId(String netType, Depot shop) {
         String defaultStoreId;
-        if(NetTypeEnum.联信.name().equals(goodsOrder.getNetType())){
+        if(NetTypeEnum.联信.name().equals(netType)){
             defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
         }else {
             defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
@@ -385,7 +382,6 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
         if(StringUtils.isNotBlank(carrierLockOfficeIds)){
             List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
-            Depot shop = depotRepository.findOne(goodsOrder.getShopId());
             if(officeIdList.contains(shop.getOfficeId())) {
                 defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
             }
@@ -659,7 +655,8 @@ private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         }
     }
 
-private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
+    @Transactional
+    private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
         ExpressOrder expressOrder=new ExpressOrder();
 
         expressOrder.setExpressPrintQty(0);
@@ -675,7 +672,8 @@ private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderB
         goodsOrderRepository.save(goodsOrder);
     }
 
-private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
+    @Transactional
+    private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
 
         Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");
         BigDecimal amount = BigDecimal.ZERO;
