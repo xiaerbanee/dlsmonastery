@@ -57,6 +57,14 @@ public class VoucherService {
     private KingdeeBookRepository kingdeeBookRepository;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
+        if(StringUtils.isBlank(voucherQuery.getStatus())){
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
+            if (accountKingdeeBook != null) {
+                voucherQuery.setStatus(VoucherStatusEnum.省公司财务审核.name());
+            }else{
+                voucherQuery.setStatus(VoucherStatusEnum.地区财务审核.name());
+            }
+        }
         Page<VoucherDto> page = voucherRepository.findPage(pageable, voucherQuery);
         return page;
     }

@@ -12,7 +12,6 @@ import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdSupplierRepository;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
-import net.myspring.cloud.modules.report.repository.SupplierPayableRepository;
 import net.myspring.cloud.modules.report.repository.SupplierPayableZMDRepository;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
@@ -34,17 +33,19 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 供应商-应付
+ * 供应商-应付(ZMD)
  * Created by lihx on 2017/6/29.
  */
 @Service
 @KingdeeDataSource
 @Transactional(readOnly = true)
-public class SupplierPayableService {
+public class SupplierPayableZMDService {
     @Autowired
-    private SupplierPayableRepository supplierPayableRepository;
+    private SupplierPayableZMDRepository supplierPayableZMDRepository;
     @Autowired
     private BdSupplierRepository bdSupplierRepository;
+    @Autowired
+    private BdDepartmentRepository bdDepartmentRepository;
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
@@ -52,23 +53,25 @@ public class SupplierPayableService {
         LocalDate dateStart = supplierPayableQuery.getDateStart();
         LocalDate dateEnd = supplierPayableQuery.getDateEnd();
         List<String> supplierIdList = supplierPayableQuery.getSupplierIdList();
+        List<String> departmentIdList = supplierPayableQuery.getDepartmentIdList();
         List<SupplierPayableDto> supplierPayableDtoList = Lists.newArrayList();
-        if (supplierIdList.size() > 0) {
+        if (supplierIdList.size() > 0 || departmentIdList.size() > 0) {
             //期初结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
-            List<SupplierPayableDto> startPayList = supplierPayableRepository.findEndPayable(dateStart, supplierIdList);
+            List<SupplierPayableDto> startPayList = supplierPayableZMDRepository.findEndPayable(dateStart, supplierIdList, departmentIdList);
             Map<String, SupplierPayableDto> startPayKeyMap = Maps.newHashMap();
             for (SupplierPayableDto startPay : startPayList) {
-                String key = startPay.getSupplierId();
+                String key = startPay.getSupplierId()+CharConstant.COMMA + startPay.getDepartmentId();
                 startPayKeyMap.put(key, startPay);
             }
             //期末结余
-            List<SupplierPayableDto> endPayList = supplierPayableRepository.findEndPayable(dateEnd.plusDays(1), supplierIdList);
+            List<SupplierPayableDto> endPayList = supplierPayableZMDRepository.findEndPayable(dateEnd.plusDays(1), supplierIdList, departmentIdList);
             Map<String, SupplierPayableDto> endPayKeyMap = Maps.newHashMap();
             for (SupplierPayableDto endPay : endPayList) {
-                String key = endPay.getSupplierId();
+                String key = endPay.getSupplierId()+CharConstant.COMMA + endPay.getDepartmentId();
                 endPayKeyMap.put(key, endPay);
                 SupplierPayableDto supplierPayable = new SupplierPayableDto();
                 supplierPayable.setSupplierId(endPay.getSupplierId());
+                supplierPayable.setDepartmentId(endPay.getDepartmentId());
                 supplierPayable.setEndAmount(endPay.getBeginAmount());
                 if (startPayKeyMap.containsKey(key)) {
                     supplierPayable.setBeginAmount(startPayKeyMap.get(key).getBeginAmount());
@@ -81,23 +84,24 @@ public class SupplierPayableService {
                 if (!endPayKeyMap.containsKey(startPayMap.getKey())) {
                     SupplierPayableDto supplierPayable = new SupplierPayableDto();
                     supplierPayable.setSupplierId(startPayMap.getValue().getSupplierId());
+                    supplierPayable.setDepartmentId(startPayMap.getValue().getDepartmentId());
                     supplierPayable.setBeginAmount(startPayMap.getValue().getBeginAmount());
                     supplierPayable.setEndAmount(BigDecimal.ZERO);
                     supplierPayableDtoList.add(supplierPayable);
                 }
             }
             //应付金额：采购入库单-采购退料单+其他应付单+应付单
-            List<SupplierPayableDto> payableList = supplierPayableRepository.findShouldPay(supplierPayableQuery);
+            List<SupplierPayableDto> payableList = supplierPayableZMDRepository.findShouldPay(supplierPayableQuery);
             Map<String, BigDecimal> payableKeyMap = Maps.newHashMap();
             for (SupplierPayableDto supplierPayableDto : payableList) {
-                String key = supplierPayableDto.getSupplierId();
+                String key = supplierPayableDto.getSupplierId()+CharConstant.COMMA + supplierPayableDto.getDepartmentId();
                 payableKeyMap.put(key, supplierPayableDto.getBeginAmount());
             }
             //实付金额：付款单-付款退款单
-            List<SupplierPayableDto> actualPayList = supplierPayableRepository.findActualPay(supplierPayableQuery);
+            List<SupplierPayableDto> actualPayList = supplierPayableZMDRepository.findActualPay(supplierPayableQuery);
             Map<String, BigDecimal> actualPayKeyMap = Maps.newHashMap();
             for (SupplierPayableDto supplierPayableDto : actualPayList) {
-                String key = supplierPayableDto.getSupplierId();
+                String key = supplierPayableDto.getSupplierId()+CharConstant.COMMA + supplierPayableDto.getDepartmentId();
                 actualPayKeyMap.put(key, supplierPayableDto.getBeginAmount());
             }
             Map<String, BdSupplier> bdSupplierIdMap;
@@ -106,14 +110,22 @@ public class SupplierPayableService {
             }else {
                 bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId, BdSupplier -> BdSupplier));
             }
+            Map<String, BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
+            if (departmentIdList.size()>0){
+                 bdDepartmentIdMap = bdDepartmentRepository.findAll().stream().collect(Collectors.toMap(BdDepartment::getFDeptId, BdDepartment -> BdDepartment));
+            }
             for (SupplierPayableDto supplierPayable : supplierPayableDtoList) {
-                String key = supplierPayable.getSupplierId();
+                String key = supplierPayable.getSupplierId()+CharConstant.COMMA + supplierPayable.getDepartmentId();
                 supplierPayable.setSupplierName(bdSupplierIdMap.get(supplierPayable.getSupplierId()).getFName());
+                if (bdDepartmentIdMap.size()>0){
+                    supplierPayable.setDepartmentName(bdDepartmentIdMap.get(supplierPayable.getDepartmentId()).getFFullName());
+                }
                 supplierPayable.setPayableAmount(payableKeyMap.get(key));
                 supplierPayable.setActualPayAmount(actualPayKeyMap.get(key));
                 if (supplierPayableQuery.getQueryDetail()) {
                     SupplierPayableDetailQuery supplierPayableDetailQuery = new SupplierPayableDetailQuery();
                     supplierPayableDetailQuery.setSupplierIdList(supplierPayableQuery.getSupplierIdList());
+                    supplierPayableDetailQuery.setDepartmentIdList(supplierPayableQuery.getDepartmentIdList());
                     supplierPayableDetailQuery.setDateStart(supplierPayableQuery.getDateStart());
                     supplierPayableDetailQuery.setDateEnd(supplierPayableQuery.getDateEnd());
                     Map<String,List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
@@ -128,11 +140,14 @@ public class SupplierPayableService {
     public List<SupplierPayableDetailDto> findSupplierPayableDetailDtoList(SupplierPayableDetailQuery supplierPayableDetailQuery) {
         List<SupplierPayableDetailDto> detailDtoList = Lists.newArrayList();
         List<String> supplierIdList = supplierPayableDetailQuery.getSupplierIdList();
+        List<String> departmentIdList = supplierPayableDetailQuery.getDepartmentIdList();
         Map<String,List<SupplierPayableDetailDto>> map = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
         if (map.size() > 0){
-            for (String supplierId : supplierIdList){
-                String key = supplierId;
-                detailDtoList.addAll(map.get(key));
+            for (String departmentId : departmentIdList){
+                for (String supplierId : supplierIdList){
+                    String key = supplierId+CharConstant.COMMA+departmentId;
+                    detailDtoList.addAll(map.get(key));
+                }
             }
         }
         return detailDtoList;
@@ -142,21 +157,22 @@ public class SupplierPayableService {
     public Map<String, List<SupplierPayableDetailDto>> findSupplierPayableDetailDtoMap(SupplierPayableDetailQuery supplierPayableDetailQuery) {
         LocalDate dateStart = supplierPayableDetailQuery.getDateStart();
         List<String> supplierIdList = supplierPayableDetailQuery.getSupplierIdList();
+        List<String> departmentIdList = supplierPayableDetailQuery.getDepartmentIdList();
         //期初应收
-        List<SupplierPayableDto> beginList = supplierPayableRepository.findEndPayable(dateStart,supplierIdList);
+        List<SupplierPayableDto> beginList = supplierPayableZMDRepository.findEndPayable(dateStart,supplierIdList,departmentIdList);
         //根据key组织成map
         Map<String,BigDecimal> keyToBeginAmountMap = Maps.newHashMap();
         for (SupplierPayableDto supplierPayableDto : beginList){
-            String key = supplierPayableDto.getSupplierId();
+            String key = supplierPayableDto.getSupplierId()+CharConstant.COMMA+supplierPayableDto.getDepartmentId();
             keyToBeginAmountMap.put(key,supplierPayableDto.getBeginAmount());
         }
         //主单--采购入库单sum+采购退料单sum+应付单sum+付款单+付款退款单+其他应付单
-        List<SupplierPayableDetailDto> detailForBillList = supplierPayableRepository.findMainList(supplierPayableDetailQuery);
+        List<SupplierPayableDetailDto> detailForBillList = supplierPayableZMDRepository.findMainList(supplierPayableDetailQuery);
         //根据key组织成map
         Map<String, List<SupplierPayableDetailDto>> keyToMainBillMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(detailForBillList)) {
             for (SupplierPayableDetailDto supplierPayableDetailDto: detailForBillList) {
-                String key = supplierPayableDetailDto.getSupplierId();
+                String key = supplierPayableDetailDto.getSupplierId()+CharConstant.COMMA+supplierPayableDetailDto.getDepartmentId();
                 if (!keyToMainBillMap.containsKey(key)) {
                     keyToMainBillMap.put(key, new ArrayList<>());
                 }
@@ -164,7 +180,7 @@ public class SupplierPayableService {
             }
         }
         //有物料的
-        List<SupplierPayableDetailDto> detailForMaterialList = supplierPayableRepository.findDetailList(supplierPayableDetailQuery);
+        List<SupplierPayableDetailDto> detailForMaterialList = supplierPayableZMDRepository.findDetailList(supplierPayableDetailQuery);
         //根据BillNo组织成map
         Map<String, List<SupplierPayableDetailDto>> billNoToDetailBillMap = Maps.newHashMap();
         List<String> materialIdList = Lists.newArrayList();
@@ -184,6 +200,10 @@ public class SupplierPayableService {
         }else {
             bdSupplierIdMap = bdSupplierRepository.findAll().stream().collect(Collectors.toMap(BdSupplier::getFSupplierId,BdSupplier->BdSupplier));
         }
+        Map<String,BdDepartment> bdDepartmentIdMap = Maps.newHashMap();
+        if (CollectionUtil.isNotEmpty(departmentIdList)) {
+            bdDepartmentIdMap =  bdDepartmentRepository.findByIdList(departmentIdList).stream().collect(Collectors.toMap(BdDepartment::getFDeptId,BdDepartment->BdDepartment));
+        }
         Map<String,BdMaterial> materialIdMap = Maps.newHashMap();
         if (materialIdList.size()>0){
             materialIdMap = bdMaterialRepository.findByMasterIdList(materialIdList).stream().collect(Collectors.toMap(BdMaterial::getFMasterId,BdMaterial->BdMaterial));
@@ -201,7 +221,10 @@ public class SupplierPayableService {
                 }
                 int index = 0;
                 SupplierPayableDetailDto supplierPayableDetailDto = new SupplierPayableDetailDto();
-                supplierPayableDetailDto.setBillType(bdSupplierIdMap.get(key).getFName());
+                supplierPayableDetailDto.setBillType(bdSupplierIdMap.get(key.split(CharConstant.COMMA)[0]).getFName());
+                if (bdDepartmentIdMap.size()>0){
+                    supplierPayableDetailDto.setBillNo(bdDepartmentIdMap.get(key.split(CharConstant.COMMA)[1]).getFFullName());
+                }
                 supplierPayableDetailDto.setIndex(index++);
                 list.add(supplierPayableDetailDto);
 
@@ -293,6 +316,7 @@ public class SupplierPayableService {
         List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"supplierName", "供应商名称"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"departmentName", "门店名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"beginAmount", "期初应付"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"payableAmount", "应付金额"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "实付金额"));
@@ -315,7 +339,7 @@ public class SupplierPayableService {
                 columnList.add(new SimpleExcelColumn(workbook,"endAmount", "实付"));
                 columnList.add(new SimpleExcelColumn(workbook,"note", "期末"));
                 SupplierPayableDetailDto supplierPayableDetailDto = supplierPayableDetailDtoList.get(0);
-                SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType(), supplierPayableDetailDtoList, columnList);
+                SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType()+"("+supplierPayableDetailDto.getBillNo()+")", supplierPayableDetailDtoList, columnList);
                 simpleExcelSheetList.add(excelSheet);
             }
         }

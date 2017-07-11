@@ -13,20 +13,22 @@ import java.time.LocalDate
 import java.util.HashMap
 
 /**
- * 供应商-应付
+ * 供应商-应付(ZMD)
  * Created by lihx on 2017/6/29.
  */
 @Component
-class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
+class SupplierPayableZMDRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
     //截止结余：采购入库单-采购退料单+应付单+其他应付单-付款单+付款退款单
-    fun findEndPayable(dateEnd: LocalDate, supplierIdList: MutableList<String>): MutableList<SupplierPayableDto>? {
+    fun findEndPayable(dateEnd: LocalDate, supplierIdList: MutableList<String>,departmentIdList: MutableList<String>): MutableList<SupplierPayableDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateEnd", dateEnd.toString())
         paramMap.put("supplierIdList", supplierIdList)
+        paramMap.put("departmentIdList",departmentIdList)
         var sb = StringBuilder("""
             SELECT
                 a.supplierId AS supplierId,
+                a.departmentId AS departmentId,
                 SUM (a.fsamount) AS beginAmount
             FROM
             (
@@ -35,6 +37,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 sb.append("""
                     SELECT
                         b.FSUPPLIERID AS supplierId,
+                        b.fpurchaseDeptId AS departmentId,
                         c.FALLAMOUNT AS fsamount
                     FROM
                         T_STK_INSTOCKENTRY a
@@ -44,13 +47,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     WHERE
                         b.FDATE < :dateEnd
                         and f.FERPCLSID = '1'
-                        and b.FSUPPLIERID in (:supplierIdList)
-                    """)
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FSUPPLIERID in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and b.fpurchaseDeptId in (:departmentIdList)  """)
+                        }
                 //-采购退料单
                 sb.append("""
                 UNION ALL
                     SELECT
                         b.FSUPPLIERID AS supplierId,
+                        b.fmrDeptId AS departmentId,
                         - c.FALLAMOUNT AS fsamount
                     FROM
                         T_PUR_MRBENTRY a
@@ -60,14 +69,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     WHERE
                         b.FDATE < :dateEnd
                         and f.FERPCLSID = '1'
-                        and b.FSUPPLIERID in (:supplierIdList)
-                    """)
-
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FSUPPLIERID in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and b.fmrDeptId in (:departmentIdList)  """)
+                        }
                 //应付单
                 sb.append("""
                 UNION ALL
                     SELECT
                         b.FSUPPLIERID AS supplierId,
+                        b.fpurchaseDeptId AS departmentId,
                         a.FALLAMOUNT AS FAMOUNT
                     FROM
                         T_AP_PAYABLEENTRY a
@@ -76,53 +90,75 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     WHERE
                          b.FDATE < :dateEnd
                          and f.FERPCLSID = '6'
-                         and b.FSUPPLIERID in (:supplierIdList)
-                    """)
-
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FSUPPLIERID in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and b.fpurchaseDeptId in (:departmentIdList)  """)
+                        }
                 //其他应付单
                 sb.append("""
                 UNION ALL
                     SELECT
                         b.FCONTACTUNIT AS supplierId,
+                        a.fcostDepartmentId AS departmentId,
                         a.FTOTALAMOUNT
                     FROM
                         T_AP_OTHERPAYABLEENTRY a
                         JOIN T_AP_OTHERPAYABLE b ON a.FID = b.FID
                     WHERE
                         b.FDATE < :dateEnd
-                        and b.FCONTACTUNIT in (:supplierIdList)
-                    """)
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FCONTACTUNIT in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and a.fcostDepartmentId in (:departmentIdList)  """)
+                        }
                 //-付款单
                 sb.append("""
                 UNION ALL
                     SELECT
                         b.FCONTACTUNIT AS supplierId,
+                        b.fpurchasedeptid AS departmentId,
                         - a.FPAYTOTALAMOUNT AS FAMOUNT
                     FROM
                         T_AP_PAYBILLENTRY a
                         JOIN T_AP_PAYBILL b ON a.FID = b.FID
                     WHERE
                         b.FDATE < :dateEnd
-                        and b.FCONTACTUNIT in (:supplierIdList)
-                    """)
-
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FCONTACTUNIT in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and b.fpurchasedeptid in (:departmentIdList)  """)
+                        }
                 //付款退款单
                 sb.append("""
                 UNION ALL
                     SELECT
                         b.FCONTACTUNIT AS supplierId,
+                        b.fpurchasedeptid AS departmentId,
                         a.FREFUNDAMOUNT AS FAMOUNT
                     FROM
                         T_AP_REFUNDBILLENTRY a
                         JOIN T_AP_REFUNDBILL b ON a.FID = b.FID
                     WHERE
                         b.FDATE < :dateEnd
-                        and b.FCONTACTUNIT in (:supplierIdList)
-                    """)
+                        """)
+                        if(supplierIdList.size>0){
+                            sb.append(""" and b.FCONTACTUNIT in (:supplierIdList)  """)
+                        }
+                        if(departmentIdList.size>0){
+                            sb.append(""" and b.fpurchasedeptid in (:departmentIdList)  """)
+                        }
             sb.append("""
                 ) a
                 GROUP BY
-                    a.supplierId
+                    a.supplierId,
+                    a.departmentId
         """)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
@@ -133,9 +169,11 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
         paramMap.put("dateEnd", supplierPayableQuery.dateEnd.toString())
         paramMap.put("supplierIdList", supplierPayableQuery.supplierIdList)
+        paramMap.put("departmentIdList",supplierPayableQuery.departmentIdList)
         var sb = StringBuilder("""
             SELECT
                 a.supplierId AS supplierId,
+                a.departmentId AS departmentId,
                 SUM (a.beginAmount) AS beginAmount
             FROM
             (
@@ -144,6 +182,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 sb.append("""
                 SELECT
                     b.FSUPPLIERID AS supplierId,
+                    b.fpurchaseDeptId AS departmentId,
                     c.FALLAMOUNT  AS beginAmount
                 FROM
                   T_STK_INSTOCKENTRY a
@@ -154,14 +193,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     b.FDATE >= :dateStart
                     and b.FDATE  <= :dateEnd
                     and f.FERPCLSID = '1'
-                    and b.FSUPPLIERID in (:supplierIdList)
-                """)
-
+                    """)
+                    if(supplierPayableQuery.supplierIdList.size>0) {
+                        sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                    }
+                    if (supplierPayableQuery.departmentIdList.size>0){
+                        sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+                    }
                 //-采购退料单
                 sb.append("""
             union all
                 SELECT
                     b.FSUPPLIERID AS supplierId,
+                    b.fmrDeptId AS departmentId,
                     -c.FALLAMOUNT AS beginAmount
                 FROM
                   T_PUR_MRBENTRY a
@@ -172,14 +216,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     b.FDATE >= :dateStart
                     and b.FDATE <= :dateEnd
                     and f.FERPCLSID = '1'
-                    and b.FSUPPLIERID in (:supplierIdList)
-                """)
-
+                    """)
+                    if(supplierPayableQuery.supplierIdList.size>0) {
+                        sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                    }
+                    if (supplierPayableQuery.departmentIdList.size>0){
+                        sb.append("""  and b.fmrDeptId in (:departmentIdList)  """)
+                    }
                 //其他应付单
                 sb.append("""
             union all
                 SELECT
                     b.FCONTACTUNIT AS supplierId,
+                    a.fcostDepartmentId AS departmentId,
                     a.FTOTALAMOUNT AS beginAmount
                 FROM
                   T_AP_OTHERPAYABLEENTRY a
@@ -187,14 +236,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 WHERE
                     b.FDATE >= :dateStart
                     and b.FDATE <= :dateEnd
-                    and b.FCONTACTUNIT in (:supplierIdList)
-                """)
-
+                    """)
+                    if(supplierPayableQuery.supplierIdList.size>0) {
+                        sb.append("""  and b.FCONTACTUNIT in (:supplierIdList)  """)
+                    }
+                    if (supplierPayableQuery.departmentIdList.size>0){
+                        sb.append("""  and a.fcostDepartmentId in (:departmentIdList)  """)
+                    }
                 //应付单
                 sb.append("""
             union all
                 SELECT
                     b.FSUPPLIERID AS supplierId,
+                    b.fpurchaseDeptId AS departmentId,
                     a.FALLAMOUNT AS beginAmount
                 FROM
                   T_AP_PAYABLEENTRY a
@@ -204,13 +258,18 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                     b.FDATE >= :dateStart
                     and b.FDATE  <= :dateEnd
                     and f.FERPCLSID = '6'
-                    and b.FSUPPLIERID in (:supplierIdList)
-                """)
-
+                    """)
+                    if(supplierPayableQuery.supplierIdList.size>0) {
+                        sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                    }
+                    if (supplierPayableQuery.departmentIdList.size>0){
+                        sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+                    }
         sb.append("""
                 ) a
               GROUP BY
-              a.supplierId
+              a.supplierId,
+              a.departmentId
         """)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
@@ -221,9 +280,11 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
         paramMap.put("dateEnd", supplierPayableQuery.dateEnd.toString())
         paramMap.put("supplierIdList", supplierPayableQuery.supplierIdList)
+        paramMap.put("departmentIdList",supplierPayableQuery.departmentIdList)
         var sb = StringBuilder("""
             SELECT
                 a.supplierId AS supplierId,
+                a.departmentId AS departmentId,
                 SUM (a.beginAmount) AS beginAmount
             FROM
             (
@@ -232,6 +293,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         sb.append("""
                 SELECT
                     b.FCONTACTUNIT AS supplierId,
+                    b.fpurchasedeptid AS departmentId,
                     a.FPAYTOTALAMOUNT AS beginAmount
                 FROM
                     T_AP_PAYBILLENTRY a
@@ -239,14 +301,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 WHERE
                     b.FDATE >= :dateStart
                     and b.FDATE  <= :dateEnd
-                     and b.FCONTACTUNIT in (:supplierIdList)
                 """)
-
+                if(supplierPayableQuery.supplierIdList.size>0) {
+                    sb.append(""" and b.FCONTACTUNIT in (:supplierIdList) """)
+                }
+                if (supplierPayableQuery.departmentIdList.size>0){
+                    sb.append(""" and b.fpurchasedeptid in (:departmentIdList) """)
+                }
         //-付款退款单
         sb.append("""
             union all
                 SELECT
                     b.FCONTACTUNIT AS supplierId,
+                    b.fpurchasedeptid AS departmentId,
                     -a.FREFUNDAMOUNT AS beginAmount
                 FROM
                   T_AP_REFUNDBILLENTRY a
@@ -254,12 +321,18 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 WHERE
                     b.FDATE >= :dateStart
                     and b.FDATE  <= :dateEnd
-                    and b.FCONTACTUNIT in (:supplierIdList)
-                """)
+                   """)
+                if(supplierPayableQuery.supplierIdList.size>0) {
+                    sb.append(""" and b.FCONTACTUNIT in (:supplierIdList) """)
+                }
+                if (supplierPayableQuery.departmentIdList.size>0){
+                    sb.append(""" and b.fpurchasedeptid in (:departmentIdList) """)
+                }
         sb.append("""
                 ) a
               GROUP BY
-              a.supplierId
+              a.supplierId,
+              a.departmentId
         """);
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDto::class.java))
     }
@@ -270,9 +343,11 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         paramMap.put("dateStart", supplierPayableDetailQuery.dateStart.toString())
         paramMap.put("dateEnd", supplierPayableDetailQuery.dateEnd.toString())
         paramMap.put("supplierIdList", supplierPayableDetailQuery.supplierIdList)
+        paramMap.put("departmentIdList",supplierPayableDetailQuery.departmentIdList)
         var sb = StringBuilder("""
             select
                 t.supplierId,
+                t.departmentId,
                 t.date,
                 t.billType,
                 t.billNo,
@@ -287,6 +362,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         sb.append("""
             SELECT
                 b.FSUPPLIERID AS supplierId,
+                b.fpurchaseDeptId AS departmentId,
                 b.FDATE  as date,
                 d.FNAME AS billType,
                 b.FBILLNO  as billNo,
@@ -306,11 +382,17 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 f.FERPCLSID = '1'
                 and b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
-                and b.FSUPPLIERID in (:supplierIdList)
-            """)
+                """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+                }
             sb.append("""
             GROUP BY
                 b.FSUPPLIERID,
+                b.fpurchaseDeptId,
                 b.FDATE,
                 d.FNAME,
                 b.FBILLNO,
@@ -321,6 +403,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         union all
             SELECT
                 b.FSUPPLIERID AS supplierId,
+                b.fmrDeptId AS departmentId,
                 b.FDATE AS DATE,
                 d.FNAME AS billType,
                 b.FBILLNO AS billNo,
@@ -340,8 +423,13 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 f.FERPCLSID = '1'
                 and b.FDATE >= :dateStart
                 and b.FDATE <= :dateEnd
-                and b.FSUPPLIERID in (:supplierIdList)
-                """)
+            """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and b.fmrDeptId in (:departmentIdList)  """)
+                }
             sb.append("""
             GROUP BY
                 b.FSUPPLIERID,
@@ -356,6 +444,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         union all
             SELECT
                 b.FSUPPLIERID AS supplierId,
+                b.fpurchaseDeptId AS departmentId,
                 b.FDATE as date,
                 d.FNAME AS billType,
                 b.FBILLNO  as billNo,
@@ -373,11 +462,17 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 f.FERPCLSID = '6'
                 and b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
-                and b.FSUPPLIERID in (:supplierIdList)
-            """)
+                """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+                }
             sb.append("""
             GROUP BY
                 b.FSUPPLIERID,
+                b.fpurchaseDeptId,
                 b.FDATE,
                 d.FNAME,
                 b.FBILLNO,
@@ -388,6 +483,7 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         union all
             SELECT
                 b.FCONTACTUNIT AS supplierId,
+                b.fpurchasedeptid AS departmentId,
                 b.FDATE AS date,
                 d.FNAME AS billType,
                 b.FBILLNO AS billNo,
@@ -403,13 +499,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
             WHERE
                 b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
-                and b.FCONTACTUNIT in (:supplierIdList)
-            """)
+        """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FCONTACTUNIT in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and b.fpurchasedeptid in (:departmentIdList)  """)
+                }
 //        //付款退款单
         sb.append("""
         union all
             SELECT
                 b.FCONTACTUNIT AS supplierId,
+                b.fpurchasedeptid AS departmentId,
                 b.FDATE as date,
                 d.FNAME AS billType,
                 b.FBILLNO as billNo,
@@ -425,13 +527,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
             WHERE
                 b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
-                 and b.FCONTACTUNIT in (:supplierIdList)
-            """)
+        """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FCONTACTUNIT in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and b.fpurchasedeptid in (:departmentIdList)  """)
+                }
 //        //其他应付单
         sb.append("""
         union all
             SELECT
                 b.FCONTACTUNIT AS supplierId,
+                a.fcostDepartmentId AS departmentId,
                 b.FDATE as date,
                 d.FNAME AS billType,
                 b.FBILLNO as billNo,
@@ -460,12 +568,18 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
             WHERE
                 b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
-                and b.FCONTACTUNIT in (:supplierIdList)
-                """)
+        """)
+                if(supplierPayableDetailQuery.supplierIdList.size>0){
+                    sb.append("""  and b.FCONTACTUNIT in (:supplierIdList)  """)
+                }
+                if(supplierPayableDetailQuery.departmentIdList.size>0){
+                    sb.append("""  and a.fcostDepartmentId in (:departmentIdList)  """)
+                }
         sb.append("""
             ) t
             order by
                 t.supplierId,
+                t.departmentId,
                 t.date
         """)
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
@@ -477,11 +591,13 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
         paramMap.put("dateStart", supplierPayableDetailQuery.dateStart.toString())
         paramMap.put("dateEnd", supplierPayableDetailQuery.dateEnd.toString())
         paramMap.put("supplierIdList", supplierPayableDetailQuery.supplierIdList)
+        paramMap.put("departmentIdList",supplierPayableDetailQuery.departmentIdList)
         var sb = StringBuilder("")
         //采购入库单
         sb.append("""
             SELECT
                 b.FSUPPLIERID AS supplierId,
+                b.fpurchaseDeptId AS departmentId,
                 b.FDATE  as date,
                 d.FNAME AS billType,
                 b.FBILLNO  as billNo,
@@ -501,13 +617,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
                 and f.FERPCLSID = '1'
-                and b.FSUPPLIERID in (:supplierIdList)
-            """)
+                """)
+        if(supplierPayableDetailQuery.supplierIdList.size>0){
+            sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+        }
+        if(supplierPayableDetailQuery.departmentIdList.size>0){
+            sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+        }
         //采购退料单
         sb.append("""
         union all
             SELECT
                 b.FSUPPLIERID AS supplierId,
+                b.fmrDeptId AS departmentId,
                 b.FDATE AS DATE,
                 d.FNAME AS billType,
                 b.FBILLNO AS billNo,
@@ -527,13 +649,19 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 b.FDATE >= :dateStart
                 and b.FDATE <= :dateEnd
                 and f.FERPCLSID = '1'
-                and b.FSUPPLIERID in (:supplierIdList)
-         """)
+            """)
+        if(supplierPayableDetailQuery.supplierIdList.size>0){
+            sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+        }
+        if(supplierPayableDetailQuery.departmentIdList.size>0){
+            sb.append("""  and b.fmrDeptId in (:departmentIdList)  """)
+        }
         //应付单
         sb.append("""
         union all
             SELECT
                 b.FSUPPLIERID AS supplyId,
+                b.fpurchaseDeptId AS departmentId,
                 b.FDATE as date,
                 d.FNAME AS billType,
                 b.FBILLNO  as billNo,
@@ -551,8 +679,13 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
                 b.FDATE >= :dateStart
                 and b.FDATE  <= :dateEnd
                 and f.FERPCLSID = '6'
-                and b.FSUPPLIERID in (:supplierIdList)
-            """)
+                """)
+        if(supplierPayableDetailQuery.supplierIdList.size>0){
+            sb.append("""  and b.FSUPPLIERID in (:supplierIdList)  """)
+        }
+        if(supplierPayableDetailQuery.departmentIdList.size>0){
+            sb.append("""  and b.fpurchaseDeptId in (:departmentIdList)  """)
+        }
         return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(SupplierPayableDetailDto::class.java))
     }
 
