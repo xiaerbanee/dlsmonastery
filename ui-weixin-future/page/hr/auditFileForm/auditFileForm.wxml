@@ -8,8 +8,8 @@
           <view class="weui-label">流程</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="processTypeId" range="{{formProperty.processList}}" range-key="name" value="{{formData.processType.id}}" bindchange="bindProcessType">
-            <view class="weui-input">{{formData.processType.name}}</view>
+          <picker name="processTypeName" range="{{formProperty.processList}}" range-key="name" value="{{formData.name}}" bindchange="bindProcessType">
+            <view class="weui-input">{{formData.name}}</view>
           </picker>
         </view>
         <view class="weui-cell__ft" wx:if="{{response.data.errors.processTypeId}}">

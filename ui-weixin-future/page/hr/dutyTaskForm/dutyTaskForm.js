@@ -25,7 +25,6 @@ Page({
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res.data.item)
         that.setData({
           dutyType: res.data.dutyType,
           formData: res.data.item
@@ -61,14 +60,14 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true });
     wx.request({
-      url: $util.getUrl("hr/duty/audit"),
+      url: $util.getUrl("basic/hr/duty/audit"),
       data: e.detail.value,
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ 'response.data': res.data, submitDisabled: false });
+          that.setData({ 'response.error': res.data, submitDisabled: false });
         }
       }
     })

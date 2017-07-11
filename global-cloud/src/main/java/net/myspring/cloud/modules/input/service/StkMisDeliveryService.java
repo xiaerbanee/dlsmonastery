@@ -46,8 +46,7 @@ public class StkMisDeliveryService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    @Transactional
-    private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
+private KingdeeSynDto save(StkMisDeliveryDto stkMisDeliveryDto,KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 stkMisDeliveryDto.getExtendId(),
                 stkMisDeliveryDto.getExtendType(),

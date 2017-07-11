@@ -16,10 +16,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.ExpressOrderTypeEnum;
-import net.myspring.future.common.enums.GoodsOrderStatusEnum;
-import net.myspring.future.common.enums.NetTypeEnum;
-import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -44,6 +41,7 @@ import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
+import net.myspring.future.modules.crm.manager.ExpressOrderManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
@@ -62,10 +60,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.LockModeType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -107,6 +107,8 @@ public class GoodsOrderService {
     private CloudClient cloudClient;
     @Autowired
     private CarrierOrderRepository carrierOrderRepository;
+    @Autowired
+    private ExpressOrderManager expressOrderManager;
 
     public GoodsOrder findByBusinessId(String businessId){
         return goodsOrderRepository.findByBusinessId(businessId);
@@ -298,8 +300,7 @@ public class GoodsOrderService {
 
     }
 
-    @Transactional
-    private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
+private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
         //开单的时候，如果是选择昌东仓库，默认生成一张从大库到昌东仓库的直接调拨单
@@ -404,6 +405,24 @@ public class GoodsOrderService {
         return goodsOrderDto;
     }
 
+    public void updatePullStatus(String id, String pullStatus,String expressOrderCode) {
+        GoodsOrder goodsOrder = goodsOrderRepository.findOne(id);
+        if(StringUtils.isNotEmpty(pullStatus)){
+            goodsOrder.setPullStatus(pullStatus);
+            if (StringUtils.isNotBlank(pullStatus) && GoodsOrderPullStatusEnum.已推送.name().equals(pullStatus) && GoodsOrderStatusEnum.待签收.name().equals(goodsOrder.getStatus())) {
+                List<CarrierOrder> carrierOrders = carrierOrderRepository.findByGoodsOrderId(id);
+                for (CarrierOrder carrierOrder : carrierOrders) {
+                    carrierOrder.setStatus(CarrierOrderStatusEnum.已导入.name());
+                }
+                carrierOrderRepository.save(carrierOrders);
+            }
+        }else if(StringUtils.isNotBlank(expressOrderCode)){
+            ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+            expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderCode,expressOrder.getExpressCompanyId());
+        }
+        goodsOrderRepository.save(goodsOrder);
+    }
+
     public List<GoodsOrderDetailDto> findDetailList(String id,String shopId,String netType,String shipType) {
         List<GoodsOrderDetailDto> goodsOrderDetailDtoList   = Lists.newArrayList();
         Map<String,GoodsOrderDetail> goodsOrderDetailMap = Maps.newHashMap();
@@ -441,10 +460,10 @@ public class GoodsOrderService {
         Map<String,Integer>  areaDetailMap = Maps.newHashMap();
         for(GoodsOrderDetail goodsOrderDetail:areaDetailList) {
             if(!goodsOrderDetail.getGoodsOrderId().equals(id)) {
-                    if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
-                        areaDetailMap.put(goodsOrderDetail.getProductId(),0);
-                    }
-                    areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
+                if(!areaDetailMap.containsKey(goodsOrderDetail.getProductId())) {
+                    areaDetailMap.put(goodsOrderDetail.getProductId(),0);
+                }
+                areaDetailMap.put(goodsOrderDetail.getProductId(),areaDetailMap.get(goodsOrderDetail.getProductId())+ goodsOrderDetail.getQty());
             }
         }
         //设置其他数据
@@ -637,8 +656,7 @@ public class GoodsOrderService {
         }
     }
 
-    @Transactional
-    private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
+private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
         ExpressOrder expressOrder=new ExpressOrder();
 
         expressOrder.setExpressPrintQty(0);
@@ -654,8 +672,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
-    @Transactional
-    private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
+private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
 
         Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");
         BigDecimal amount = BigDecimal.ZERO;

@@ -1,5 +1,6 @@
 package net.myspring.tool.modules.vivo.web;
 
+import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.vivo.dto.FutureCustomerDto;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
@@ -17,10 +18,10 @@ public class vivoPushController {
 
     @RequestMapping(value = "pushVivoData")
     public void pushVivoData(String date){
-        //获取机构数据
-        //vivoPushService.getVivoZones(date);
-        //获取客户数据
+        //机构数据
+        vivoPushService.pushVivoZones(date);
+        //客户数据
         List<FutureCustomerDto> futureCustomerDtoList = vivoPushService.getFutureVivoCustomers(date);
-        vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList);
+        vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList,date);
     }
 }
