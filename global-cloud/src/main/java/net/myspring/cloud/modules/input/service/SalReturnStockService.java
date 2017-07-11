@@ -60,7 +60,7 @@ public class SalReturnStockService {
     @Autowired
     private BdMaterialRepository bdMaterialRepository;
 
-    private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
+private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBook kingdeeBook) {
         KingdeeSynExtendDto kingdeeSynExtendDto = new KingdeeSynExtendDto(
                 salReturnStockDto.getExtendId(),
                 salReturnStockDto.getExtendType(),

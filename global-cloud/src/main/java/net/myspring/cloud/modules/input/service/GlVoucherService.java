@@ -49,7 +49,7 @@ public class GlVoucherService {
         return glVoucherRepository.findByBillNo(billNo);
     }
 
-    private KingdeeSynDto save(GlVoucherDto glVoucherDto, KingdeeBook kingdeeBook){
+private KingdeeSynDto save(GlVoucherDto glVoucherDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 glVoucherDto.getExtendId(),
                 glVoucherDto.getExtendType(),

@@ -53,7 +53,7 @@ public class ArOtherRecAbleService {
     @Autowired
     private KingdeeManager kingdeeManager;
 
-    private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
+private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook){
         KingdeeSynDto kingdeeSynDto = new KingdeeSynDto(
                 arOtherRecAbleDto.getExtendId(),
                 arOtherRecAbleDto.getExtendType(),
