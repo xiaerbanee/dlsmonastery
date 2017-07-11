@@ -53,6 +53,9 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         if (auditFileQuery.processTypeId != null) {
             sb.append(" and t1.process_type_id =:processTypeId ")
         }
+        if (CollectionUtil.isNotEmpty(auditFileQuery.processTypeIdList)) {
+            sb.append(" and t1.process_type_id in (:processTypeIdList) ")
+        }
         if (auditFileQuery.id != null) {
             sb.append(" and t1.id=:id ")
         }

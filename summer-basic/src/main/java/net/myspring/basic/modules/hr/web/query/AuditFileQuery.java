@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.bouncycastle.cert.ocsp.Req;
@@ -39,6 +40,9 @@ public class AuditFileQuery extends BaseQuery {
     }
 
     public void setProcessTypeIdList(List<String> processTypeIdList) {
+        if(CollectionUtil.isNotEmpty(processTypeIdList)){
+            processTypeIdList.add("0");
+        }
         this.processTypeIdList = processTypeIdList;
     }
 
