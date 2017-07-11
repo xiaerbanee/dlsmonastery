@@ -30,7 +30,7 @@
             销售退货单号：{{shopAllot.outReturnCode}}
           </div>
         </div>
-        <div class="span4">
+        <div class="span6">
           <div v-if="printType === 'salePrint'">
             客户名称：{{shopAllot.toShopName }}
           </div>
@@ -196,8 +196,9 @@
   body {
     margin: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 18px;
+    font-weight:500;
+    line-height: 26px;
     color: #333;
     background-color: #fff;
   }

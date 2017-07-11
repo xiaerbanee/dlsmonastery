@@ -101,8 +101,9 @@
   body {
     margin: 0;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 20px;
+    font-size: 18px;
+    font-weight:500;
+    line-height: 26px;
     color: #333;
     background-color: #fff;
   }
