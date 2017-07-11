@@ -99,6 +99,11 @@ public class DepotController {
         return depotService.findStoreList(depotQuery);
     }
 
+    @RequestMapping(value = "depot")
+    public List<DepotDto>  depot(DepotQuery depotQuery) {
+        return depotService.findDepotList(depotQuery);
+    }
+
     @RequestMapping(value = "findByIds")
     public List<DepotDto> findByListIds(@RequestParam("idStr") List<String> ids) {
         List<DepotDto> depotDtoList =depotService.findByIds(ids);

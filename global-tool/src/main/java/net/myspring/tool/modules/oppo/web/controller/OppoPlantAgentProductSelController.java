@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "oppo/oppoPlantAgentProductSel")
+@RequestMapping(value = "factory/oppo/oppoPlantAgentProductSel")
 public class OppoPlantAgentProductSelController {
     @Autowired
     private OppoPlantAgentProductSelService oppoPlantAgentProductSelService;
