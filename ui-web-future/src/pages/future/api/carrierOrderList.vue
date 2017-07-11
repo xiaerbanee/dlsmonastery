@@ -63,7 +63,7 @@
         </div>
       </search-dialog>
       <el-dialog  title="订单详细" v-model="detailVisible" size="small" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="detailData" label-width="120px">
+        <el-form :model="inputForm" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">
               <el-form-item label="货品订货单号" prop="category">
@@ -115,7 +115,7 @@
         <el-table-column fixed="right" :label="$t('productTypeList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'api:carrierOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'detail')">详细</el-button></div>
-            <div class="action" v-permit="'api:carrierOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.goodsOrderId,'edit')">修改</el-button></div>
+            <div class="action" v-permit="'api:carrierOrder:edit'"><el-button size="small" @click.native="updateStatus(scope.row)">修改</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -132,7 +132,6 @@
           extra:{}
         },
         inputForm:{},
-        detailData:{},
         initPromise:{},
         searchText:'',
         command:"",
@@ -175,15 +174,10 @@
       },itemAction:function(goodsOrderId,action){
         if(action =="detail"){
           this.$router.push({ name: 'goodsOrderDetail', query: { id: goodsOrderId }})
-        }else if(action=="edit"){
-         this.detailVisible=true;
-         let page=this.page.content;
-         for(let item in page){
-           if(goodsOrderId==page[item].goodsOrderId){
-             this.inputForm=page[item];
-           }
-         }
         }
+      },updateStatus(row){
+        this.detailVisible=true;
+        this.inputForm=JSON.parse(JSON.stringify(row));
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
             window.location.href='/api/ws/future/api/carrierOrder/export?'+qs.stringify(util.deleteExtra(this.formData))
@@ -204,6 +198,7 @@
             axios.post('/api/ws/future/api/carrierOrder/updateStatusAndRemarks', qs.stringify(this.inputForm)).then((response)=> {
               this.$message(response.data.message);
               this.detailVisible=false;
+              this.pageRequest();
             })
       }
     },created () {

@@ -289,17 +289,15 @@
         this.inputForm.address = response.data.address;
         this.inputForm.mobilePhone = response.data.mobilePhone;
         this.inputForm.goodsOrderBillDetailFormList = response.data.goodsOrderDetailDtoList;
-
-        this.filterProducts();
-        this.initSummary(null);
-        this.refreshStoreQty();
       });
       let shopAccountPromise = axios.get('/api/ws/future/crm/goodsOrder/findShopAccountByGoodsOrderId',{params: {goodsOrderId:this.$route.query.id}}).then((response)=>{
         this.shopAccount = response.data;
       });
-
       Promise.all([formPropertyPromise, billPromise, shopAccountPromise]).then( () => {
-          this.refreshExpressShouldGet(null);
+        this.initSummary(null);
+        this.refreshExpressShouldGet(null);
+        this.filterProducts();
+        this.refreshStoreQty();
       });
     }
   }

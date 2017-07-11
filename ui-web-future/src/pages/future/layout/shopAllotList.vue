@@ -133,9 +133,11 @@
         this.$router.push({ name: 'shopAllotForm'})
       },print(id, action){
         if(action==="returnPrint") {
-          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
+          window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
+          this.pageRequest();
         } else if(action==="salePrint") {
-          var newWindow = window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
+          window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
+          this.pageRequest();
         }
       },itemAction:function(id, action){
         if(action==="edit") {

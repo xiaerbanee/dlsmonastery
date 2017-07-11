@@ -14,14 +14,10 @@ import net.myspring.cloud.modules.sys.domain.Voucher;
 import net.myspring.cloud.modules.sys.domain.VoucherEntry;
 import net.myspring.cloud.modules.sys.domain.VoucherEntryFlow;
 import net.myspring.cloud.modules.sys.dto.VoucherDto;
-import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
-import net.myspring.cloud.modules.sys.repository.VoucherEntryFlowRepository;
-import net.myspring.cloud.modules.sys.repository.VoucherEntryRepository;
-import net.myspring.cloud.modules.sys.repository.VoucherRepository;
+import net.myspring.cloud.modules.sys.repository.*;
 import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
@@ -57,6 +53,8 @@ public class VoucherService {
     private VoucherEntryFlowRepository voucherEntryFlowRepository;
     @Autowired
     private AccountKingdeeBookRepository accountKingdeeBookRepository;
+    @Autowired
+    private KingdeeBookRepository kingdeeBookRepository;
 
     public Page<VoucherDto> findPage(Pageable pageable, VoucherQuery voucherQuery) {
         Page<VoucherDto> page = voucherRepository.findPage(pageable, voucherQuery);
@@ -80,11 +78,12 @@ public class VoucherService {
             voucher.setFDate(date);
             voucher.setCompanyName(RequestUtils.getCompanyName());
             AccountKingdeeBook accountKingdeeBook = accountKingdeeBookRepository.findByAccountId(RequestUtils.getAccountId());
-            voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
             if (accountKingdeeBook != null){
+                voucher.setKingdeeBookId(accountKingdeeBook.getKingdeeBookId());
                 voucher.setCreatedName(accountKingdeeBook.getUsername());
                 voucher.setStatus(VoucherStatusEnum.省公司财务审核.name());
             }else{
+                voucher.setKingdeeBookId(kingdeeBookRepository.findByCompanyName(RequestUtils.getCompanyName()).getId());
                 voucher.setCreatedName(RequestUtils.getAccountId());
                 voucher.setStatus(VoucherStatusEnum.地区财务审核.name());
             }

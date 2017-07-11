@@ -98,9 +98,8 @@
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:mallOrder'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:sreturn'" ><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderShipList.sreturn')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderShipList.delete')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'storePrint')">出库单</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'expressPrint')">快递单</el-button></div>
-
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'print')">出库单</el-button></div>
+            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">快递单</el-button></div>
           </template>
         </el-table-column>
       </el-table>
@@ -141,7 +140,7 @@
     pageRequest() {
       this.pageLoading = true;
       this.setSearchText();
-      var submitData = util.deleteExtra(this.formData);
+      let submitData = util.deleteExtra(this.formData);
       util.setQuery("goodsOrderShipList",submitData);
       axios.get('/api/ws/future/crm/goodsOrderShip?'+qs.stringify(submitData)).then((response) => {
         this.page = response.data;
@@ -160,38 +159,38 @@
       this.formVisible = false;
       this.pageRequest();
     },itemAction:function(id,action){
-      if(action=="detail") {
+      if(action==="detail") {
         this.$router.push({ name: 'goodsOrderDetail', query: { id: id }})
 
-      }else if(action=="sign"){
+      }else if(action==="sign"){
         util.confirmBefore(this).then(() => {
           axios.get('/api/ws/future/crm/goodsOrderShip/sign',{params:{goodsOrderId:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           });
         }).catch(()=>{});
-      }else if(action =="shipBack"){
+      }else if(action ==="shipBack"){
         util.confirmBefore(this).then(() => {
           axios.get('/api/ws/future/crm/goodsOrderShip/shipBack', {params: {goodsOrderId: id}}).then((response) => {
             this.$message(response.data.message);
             this.pageRequest();
           });
         })
-      }else if(action == "mallOrder"){
+      }else if(action === "mallOrder"){
         this.$router.push({name:'goodsOrderDetail',query:{id:id,carrierEdit:true}})
-      }else if(action =="sreturn"){
+      }else if(action ==="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
-      }else if(action =="delete"){
+      }else if(action ==="delete"){
         util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
             this.pageRequest();
           });
         }).catch(()=>{});
-      }else if(action=="storePrint"){
-        window.open("/#/future/crm/goodsOrderStorePrint?id="+id,",");
-      }else if(action=="expressPrint"){
-        window.open("/#/future/crm/goodsOrderExpressPrint?id="+id,",");
+      }else if(action==="print"){
+        window.open("/#/future/crm/goodsOrderPrint?id="+id);
+      }else if(action==="shipPrint"){
+        window.open("/#/future/crm/goodsOrderShipPrint?id="+id);
       }
     },itemShip(businessId){
       this.$router.push({name:'goodsOrderShip',query:{businessId:businessId}});
