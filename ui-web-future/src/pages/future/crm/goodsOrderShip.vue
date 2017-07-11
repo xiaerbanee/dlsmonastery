@@ -159,6 +159,9 @@
           }
         });
       },refreshDetailShipInfo(shipQtyMap){
+        if(!this.goodsOrder.goodsOrderDetailDtoList){
+          return ;
+        }
         for(let item of this.goodsOrder.goodsOrderDetailDtoList) {
           if(item.hasIme) {
             item.shipQty = (shipQtyMap[item.productId] ? shipQtyMap[item.productId] : 0);
