@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.manager;
 
 import net.myspring.future.modules.crm.repository.GoodsOrderRepository;
+import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -19,17 +21,19 @@ public class RedisIdManager {
 
     private final Long initialValue = -1L;
 
-    public synchronized Long getNextGoodsOrderBusinessId(LocalDate localDate) {
+    public synchronized String getNextGoodsOrderBusinessId(LocalDate localDate) {
         String key = "goodsOrderBusinessId:" + LocalDateUtils.format(localDate);
-        Long businessId;
+        String businessId;
         RedisAtomicLong redisAtomicLong = new RedisAtomicLong(key,jedisConnectionFactory,initialValue);
         if(redisAtomicLong.get()==initialValue) {
             businessId = goodsOrderRepository.findMaxBusinessId(localDate);
             if(businessId==null) {
-                businessId = Long.valueOf(LocalDateUtils.formatLocalDate(localDate, "yyMMdd") + "000000");
+                businessId = IdUtils.getNextBusinessId(businessId,localDate);
             }
+            redisAtomicLong.set(Long.valueOf(businessId));
+        }else {
+            businessId = String.valueOf(redisAtomicLong.incrementAndGet());
         }
-        businessId = redisAtomicLong.incrementAndGet();
         return businessId;
     }
 
