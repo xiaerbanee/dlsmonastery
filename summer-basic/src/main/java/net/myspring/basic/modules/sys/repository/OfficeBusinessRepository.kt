@@ -35,10 +35,10 @@ interface  OfficeBusinessRepository: BaseRepository<OfficeBusiness, String> {
     fun findAllBusinessIdById(id:String):MutableList<OfficeBusiness>
 
     @Query("""
-             UPDATE  #{#entityName} t set t.enabled=0 where t.businessOfficeId IN ?1
+             UPDATE  #{#entityName} t set t.enabled=?1 where t.businessOfficeId IN ?2 and t.officeId=?3
      """)
     @Modifying
-    fun setEnabledByBusinessOfficeIds(businessOfficeIds:MutableList<String>):Int
+    fun setEnabledByOfficeAndBusinessOfficeIds(enabled: Boolean,businessOfficeIds:MutableList<String>,officeId: String):Int
 
     @Query("""
            UPDATE  #{#entityName} t set t.enabled=?1 where t.officeId IN ?2

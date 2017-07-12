@@ -48,7 +48,8 @@ interface RoleModuleRepository : BaseRepository<RoleModule, String> {
             UPDATE  #{#entityName} t
             SET t.enabled=?1
             where t.backendModuleId in (?2)
+                and t.roleId=?3
      """)
     @Modifying
-    fun setEnabledByModuleIdList(enabled: Boolean, moduleIds: MutableList<String>): Int
+    fun setEnabledByRoleIdAndModuleIdList(enabled: Boolean, moduleIds: MutableList<String>,roleId: String): Int
 }
