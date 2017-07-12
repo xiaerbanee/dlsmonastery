@@ -4,7 +4,7 @@ import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.time.LocalDate;
 
-public class FutureCustomerDto {
+public class SCustomerDto {
     private String customerId;
     private String customerName;
     @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "name")
