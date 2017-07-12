@@ -76,12 +76,12 @@
         <el-table-column prop="shopOfficeName" :label="$t('adGoodsOrderList.officeName')" ></el-table-column>
         <el-table-column prop="shopAreaName" :label="$t('adGoodsOrderList.areaName')" ></el-table-column>
         <el-table-column prop="depotShopAreaType" :label="$t('adGoodsOrderList.areaType')" ></el-table-column>
-        <el-table-column prop="shopName" column-key="shopId" :label="$t('adGoodsOrderList.shopName')" sortable></el-table-column>
+        <el-table-column prop="shopName" column-key="shopId" :label="$t('adGoodsOrderList.shopName')"  width="150" sortable></el-table-column>
         <el-table-column prop="amount" :label="$t('adGoodsOrderList.amount')"  sortable></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('adGoodsOrderList.expressCodes')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('adGoodsOrderList.remarks')"></el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy" :label="$t('adGoodsOrderList.createdBy')" sortable></el-table-column>
-        <el-table-column :label="$t('adGoodsOrderList.operation')">
+        <el-table-column :label="$t('adGoodsOrderList.operation')" width="150">
           <template scope="scope">
             <div class="action" v-permit="'crm:adGoodsOrder:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('adGoodsOrderList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('审核')>0" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('adGoodsOrderList.audit')}}</el-button></div>

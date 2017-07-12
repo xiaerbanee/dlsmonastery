@@ -114,7 +114,6 @@
         formVisible: false,
         pageLoading: false,
         multipleSelection:[],
-        pickerDateOption:util.pickerDateOption
       };
     },
     methods: {
@@ -140,7 +139,6 @@
         this.formData.sort=util.getSort(column);
         this.formData.page=0;
         this.pageRequest();
-
       },search() {
         this.formVisible = false;
         this.pageRequest();
