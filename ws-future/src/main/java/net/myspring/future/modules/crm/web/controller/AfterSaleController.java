@@ -3,46 +3,31 @@ package net.myspring.future.modules.crm.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.CompanyConfigCodeEnum;
-import net.myspring.common.enums.DictEnumCategoryEnum;
-import net.myspring.common.response.ResponseCodeEnum;
-import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.AfterSaleDetailTypeEnum;
-import net.myspring.future.common.enums.AfterSaleTypeEnum;
-import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
-import net.myspring.future.modules.api.dto.CarrierOrderDto;
-import net.myspring.future.modules.api.web.query.CarrierOrderQuery;
 import net.myspring.future.modules.basic.client.DictEnumClient;
-import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.crm.domain.AfterSale;
 import net.myspring.future.modules.crm.domain.ProductIme;
-import net.myspring.future.modules.crm.dto.AfterSaleInputDto;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
-import net.myspring.future.modules.crm.dto.AfterSaleCompanyDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.repository.AfterSaleRepository;
 import net.myspring.future.modules.crm.service.AfterSaleService;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.AfterSaleForm;
-import net.myspring.future.modules.crm.web.form.AfterSaleToCompanyForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.json.ObjectMapperUtils;
-import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.HtmlUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -232,5 +217,10 @@ public class AfterSaleController {
     public RestResponse logicDelete(String id) {
         afterSaleService.delete(id);
         return new RestResponse("删除成功",null);
+    }
+
+    @RequestMapping(value = "exportData",method = RequestMethod.GET)
+    public ModelAndView exportData(AfterSaleQuery afterSaleQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",afterSaleService.export(afterSaleQuery));
     }
 }

@@ -6,6 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.add')}}</el-button>
         <el-button type="primary" @click="itemEdit" icon="edit" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.edit')}}</el-button>
         <el-button type="primary" @click="itemSyn" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.syn')}}</el-button>
+        <el-button type="primary" @click="exportData"  v-permit="'crm:afterSale:view'">{{$t('afterSaleList.export')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -47,7 +48,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('afterSaleList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="id" :label="$t('afterSaleList.bill')" sortable></el-table-column>
+        <el-table-column fixed prop="businessId" :label="$t('afterSaleList.bill')" sortable></el-table-column>
         <el-table-column prop="badProductIme" :label="$t('afterSaleList.badProductIme')"></el-table-column>
         <el-table-column prop="badProductName" :label="$t('afterSaleList.badProductName')" ></el-table-column>
         <el-table-column prop="toAreaProductIme" :label="$t('afterSaleList.toAreaProductIme')"></el-table-column>
@@ -124,6 +125,10 @@
           this.$message(response.data.message);
           this.pageRequest();
         })
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href='/api/ws/future/crm/afterSale/exportData?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },itemAction:function(id,action){
          if(action=="delete"){
            util.confirmBeforeDelRecord(this).then(() => {
