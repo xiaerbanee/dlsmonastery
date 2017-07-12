@@ -182,7 +182,7 @@
         }).catch(()=>{});
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/layout/adGoodsOrder/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

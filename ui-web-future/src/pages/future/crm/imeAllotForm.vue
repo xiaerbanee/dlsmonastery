@@ -2,7 +2,7 @@
   <div>
     <head-tab active="imeAllotForm"></head-tab>
     <div>
-      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="60px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item >
@@ -11,7 +11,7 @@
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item  :label="$t('imeAllotForm.imeStr')" prop="imeStr">
               <el-input type="textarea" :rows="6" v-model="inputForm.imeStr" :placeholder="$t('imeAllotForm.inputIme')" ></el-input>
             </el-form-item>
@@ -33,7 +33,7 @@
             </div>
 
           </el-col>
-          <el-col :span="16" v-if="searched">
+          <el-col :span="15" :offset="1"  v-if="searched">
             <template>
               <el-table :data="productQtyList" style="width: 100%" border>
                 <el-table-column prop="productName" :label="$t('imeAllotForm.productName')"></el-table-column>

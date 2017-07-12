@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:imeAllot:edit'">{{$t('imeAllotList.imeAllotList')}}</el-button>
         <el-button type="primary" @click="batchAudit(true)" icon="check" v-permit="'crm:imeAllot:batchSave'">{{$t('imeAllotList.batchPass')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:imeAllot:view'">{{$t('imeAllotList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -171,7 +171,7 @@
       }
 
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/crm/imeAllot/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

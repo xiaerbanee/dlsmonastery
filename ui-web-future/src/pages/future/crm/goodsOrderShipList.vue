@@ -196,7 +196,7 @@
       this.$router.push({name:'goodsOrderShip',query:{businessId:businessId}});
     }
  },created () {
-    this.pageHeight = window.outerHeight -320;
+     this.pageHeight = 0.75*window.innerHeight;
     this.initPromise=axios.get('/api/ws/future/crm/goodsOrderShip/getQuery').then((response) =>{
       this.formData=response.data;
       util.copyValue(this.$route.query,this.formData);

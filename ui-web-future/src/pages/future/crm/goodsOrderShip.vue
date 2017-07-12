@@ -53,7 +53,7 @@
           </el-col>
         </el-row>
         <div v-show="inputForm.id">
-          <el-table :data="goodsOrder.goodsOrderDetailDtoList" style="margin-top:5px;" :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
+          <el-table :data="goodsOrder.goodsOrderDetailDtoList" :row-class-name="tableRowClassName" style="margin-top:5px;"  :element-loading-text="$t('goodsOrderShip.loading')" stripe border >
             <el-table-column  prop="productName" :label="$t('goodsOrderShip.productName')" sortable width="200"></el-table-column>
             <el-table-column prop="hasIme" :label="$t('goodsOrderShip.hasIme')" >
               <template scope="scope">
@@ -211,10 +211,24 @@
           };
           this.focusOnBusinessIdInput();
         }
+      },
+      tableRowClassName(row, index){
+        if (row.leftQty != 0) {
+          return "row-unfinished";
+        }else{
+          return "row-finished";
+        }
       }
     },created(){
       this.initPage(this.$route.query.businessId, true);
     }
   }
 </script>
-
+<style>
+  .el-table .row-unfinished,.el-table .row-unfinished>td{
+    background: rgba(255,73,73,.1) !important;
+  }
+  .el-table .row-finished,.el-table .row-finished>td{
+    background: rgba(18,206,102,.1) !important;
+  }
+</style>

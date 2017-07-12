@@ -80,7 +80,7 @@
         this.$router.push({ name: 'demoPhoneForm'})
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       axios.get('/api/ws/future/basic/demoPhoneTypeOffice/getQuery').then((response) => {
         this.formData = response.data;
         util.copyValue(this.$route.query, this.formData);
