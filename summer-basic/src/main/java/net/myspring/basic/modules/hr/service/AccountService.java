@@ -189,7 +189,7 @@ public class AccountService {
                 addAccountPermissions.add(new AccountPermission(accountForm.getId(), permissionId));
             }
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                accountPermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
+                accountPermissionRepository.setEnabledByAccountAndPermissionIdList(false,removeIdList,accountForm.getId());
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 accountPermissionRepository.save(addAccountPermissions);

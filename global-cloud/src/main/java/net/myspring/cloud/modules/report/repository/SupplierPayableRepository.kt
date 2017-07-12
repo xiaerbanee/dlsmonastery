@@ -2,7 +2,6 @@ package net.myspring.cloud.modules.report.repository
 
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto
-import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
@@ -265,11 +264,11 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
     }
 
     //采购入库单sum+采购退料单sum+应付单sum+付款单+付款退款单+其他应付单
-    fun findMainList(supplierPayableDetailQuery: SupplierPayableDetailQuery): MutableList<SupplierPayableDetailDto>?{
+    fun findMainList(supplierPayableQuery: SupplierPayableQuery): MutableList<SupplierPayableDetailDto>?{
         var paramMap = HashMap<String, Any>()
-        paramMap.put("dateStart", supplierPayableDetailQuery.dateStart.toString())
-        paramMap.put("dateEnd", supplierPayableDetailQuery.dateEnd.toString())
-        paramMap.put("supplierIdList", supplierPayableDetailQuery.supplierIdList)
+        paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
+        paramMap.put("dateEnd", supplierPayableQuery.dateEnd.toString())
+        paramMap.put("supplierIdList", supplierPayableQuery.supplierIdList)
         var sb = StringBuilder("""
             select
                 t.supplierId,
@@ -472,11 +471,11 @@ class SupplierPayableRepository @Autowired constructor(val jdbcTemplate: JdbcTem
     }
 
     //显示物料: 采购入库单+采购退料单+应付单
-    fun findDetailList(supplierPayableDetailQuery: SupplierPayableDetailQuery): MutableList<SupplierPayableDetailDto>?{
+    fun findDetailList(supplierPayableQuery: SupplierPayableQuery): MutableList<SupplierPayableDetailDto>?{
         var paramMap = HashMap<String, Any>()
-        paramMap.put("dateStart", supplierPayableDetailQuery.dateStart.toString())
-        paramMap.put("dateEnd", supplierPayableDetailQuery.dateEnd.toString())
-        paramMap.put("supplierIdList", supplierPayableDetailQuery.supplierIdList)
+        paramMap.put("dateStart", supplierPayableQuery.dateStart.toString())
+        paramMap.put("dateEnd", supplierPayableQuery.dateEnd.toString())
+        paramMap.put("supplierIdList", supplierPayableQuery.supplierIdList)
         var sb = StringBuilder("")
         //采购入库单
         sb.append("""

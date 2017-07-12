@@ -7,7 +7,7 @@
         <el-button type="primary" @click="itemBatchAdd" icon="plus" v-permit="'crm:bankIn:edit'">批量添加</el-button>
         <el-button type="primary" :disabled="submitDisabled"  @click="batchPass" icon="check" v-permit="'crm:bankIn:audit'">{{$t('bankInList.batchPass')}}</el-button>
         <el-button   type="primary" @click="exportData" v-permit="'crm:bankIn:view'">{{$t('bankInList.export')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:bankIn:view'">{{$t('bankInList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('bankInList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">

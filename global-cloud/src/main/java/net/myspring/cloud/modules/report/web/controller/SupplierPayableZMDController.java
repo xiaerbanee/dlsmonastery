@@ -3,7 +3,6 @@ package net.myspring.cloud.modules.report.web.controller;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
 import net.myspring.cloud.modules.report.service.SupplierPayableZMDService;
-import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
 import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,8 @@ public class SupplierPayableZMDController {
 
 
     @RequestMapping(value = "detail",method = RequestMethod.GET)
-    public List<SupplierPayableDetailDto> detail(SupplierPayableDetailQuery supplierPayableDetailQuery) {
-        return supplierPayableZMDService.findSupplierPayableDetailDtoList(supplierPayableDetailQuery);
+    public List<SupplierPayableDetailDto> detail(SupplierPayableQuery supplierPayableQuery) {
+        return supplierPayableZMDService.findSupplierPayableDetailDtoList(supplierPayableQuery);
     }
 
 
@@ -45,6 +44,11 @@ public class SupplierPayableZMDController {
     @RequestMapping(value = "export")
     public ModelAndView export(SupplierPayableQuery supplierPayableQuery) {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", supplierPayableZMDService.export(supplierPayableQuery));
+    }
+
+    @RequestMapping(value = "exportDetailOne")
+    public ModelAndView exportDetailOne(SupplierPayableQuery supplierPayableQuery){
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", supplierPayableZMDService.exportDetailOne(supplierPayableQuery));
     }
 
 }

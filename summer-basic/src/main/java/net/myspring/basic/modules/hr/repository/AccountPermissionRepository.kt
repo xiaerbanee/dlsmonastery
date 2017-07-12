@@ -26,10 +26,10 @@ interface AccountPermissionRepository : BaseRepository<AccountPermission,String>
    
 
     @Query("""
-        update  #{#entityName} t set t.enabled=?1 where t.permissionId IN ?2
+        update  #{#entityName} t set t.enabled=?1 where t.permissionId IN ?2 and t.accountId=?3
         """)
     @Modifying
-    fun setEnabledByPermissionIdList(enabled: Boolean,permissionIdList: MutableList<String>): Int
+    fun setEnabledByAccountAndPermissionIdList(enabled: Boolean,permissionIdList: MutableList<String>,accountId: String): Int
 
     @Query("""
         SELECT t.permissionId
