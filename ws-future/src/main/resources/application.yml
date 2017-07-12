@@ -18,6 +18,8 @@ eureka:
 feign:
   hystrix:
     enabled: false
+  httpclient:
+    enabled: true
 
 security:
   oauth2:

@@ -26,6 +26,8 @@ security:
 feign:
   hystrix:
     enabled: false
+  httpclient:
+    enabled: true
 
 ribbon:
   ReadTimeout: 180000
