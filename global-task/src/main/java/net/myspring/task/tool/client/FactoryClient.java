@@ -17,4 +17,7 @@ public interface FactoryClient {
     @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pullFactoryData")
     String pullOppoFactoryData(@RequestParam(value="date") String date);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/factory/oppo/pushFactoryData")
+    String pushOppoFactoryData(@RequestParam(value="date") String date);
+
 }
