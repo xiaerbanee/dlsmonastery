@@ -1,14 +1,6 @@
 package net.myspring.tool.common.config;
 
-import net.myspring.FutureApplication;
-import net.myspring.common.utils.StringUtils;
-import net.myspring.future.common.utils.ThreadLocalContext;
-import net.myspring.future.modules.hr.domain.Account;
-import net.myspring.future.modules.hr.service.AccountService;
-import net.myspring.future.modules.sys.security.CustomUserDetails;
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
