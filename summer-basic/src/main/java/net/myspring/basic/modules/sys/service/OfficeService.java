@@ -246,7 +246,7 @@ public class OfficeService {
             }
             officeBusinessRepository.setEnabledByOfficeId(true, office.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                officeBusinessRepository.setEnabledByBusinessOfficeIds(removeIdList);
+                officeBusinessRepository.setEnabledByOfficeAndBusinessOfficeIds(false,removeIdList,office.getId());
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeBusinessRepository.save(officeBusinessList);
@@ -266,7 +266,7 @@ public class OfficeService {
             }
             officeLeaderRepository.setEnabledByOfficeId(true, office.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                officeLeaderRepository.setEnabledByLeaderIds(false,removeIdList);
+                officeLeaderRepository.setEnabledByOfficeAndLeaderIds(false,removeIdList,office.getId());
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 officeLeaderRepository.save(leaderList);

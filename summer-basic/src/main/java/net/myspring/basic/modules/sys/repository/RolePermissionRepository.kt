@@ -47,9 +47,10 @@ interface RolePermissionRepository: BaseRepository<RolePermission, String> {
          UPDATE  #{#entityName} t
          SET t.enabled=?1
          where t.permissionId in ?2
+        and t.roleId=?3
      """)
     @Modifying
-    fun setEnabledByPermissionIdList(enabled: Boolean,  permissionIdList: MutableList<String>): Int
+    fun setEnabledByRoleIdAndPermissionIdList(enabled: Boolean,  permissionIdList: MutableList<String>,roleId: String): Int
 
     @Query("""
         SELECT t
