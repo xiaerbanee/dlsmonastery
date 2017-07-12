@@ -46,4 +46,9 @@ public class SupplierPayableZMDController {
         return new ModelAndView(new ExcelView(), "simpleExcelBook", supplierPayableZMDService.export(supplierPayableQuery));
     }
 
+    @RequestMapping(value = "exportDetailOne")
+    public ModelAndView exportDetailOne(SupplierPayableQuery supplierPayableQuery){
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", supplierPayableZMDService.exportDetailOne(supplierPayableQuery));
+    }
+
 }

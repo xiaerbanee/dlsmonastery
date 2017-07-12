@@ -351,6 +351,32 @@ public class SupplierPayableZMDService {
             }
         }
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);
-        return new SimpleExcelBook(workbook,"应付款汇总报表(专卖店)"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款对账报表(专卖店)"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+    }
+
+    public SimpleExcelBook exportDetailOne(SupplierPayableQuery supplierPayableQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SupplierPayableDetailDto> supplierPayableDetailDtoList = findSupplierPayableDetailDtoList(supplierPayableQuery);
+        if (CollectionUtil.isNotEmpty(supplierPayableDetailDtoList)){
+            List<SimpleExcelColumn> columnList = Lists.newArrayList();
+            CellStyle cellStyleRed = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.RED.name());
+            columnList.add(new SimpleExcelColumn(workbook,"billType", "业务类型"));
+            columnList.add(new SimpleExcelColumn(workbook,"billNo", "单据编号"));
+            columnList.add(new SimpleExcelColumn(workbook,"date", "单据日期"));
+            columnList.add(new SimpleExcelColumn(workbook,"materialName", "商品名称"));
+            columnList.add(new SimpleExcelColumn(workbook,"qty", "数量"));
+            columnList.add(new SimpleExcelColumn(workbook,"price", "单价"));
+            columnList.add(new SimpleExcelColumn(workbook,"amount", "金额"));
+            columnList.add(new SimpleExcelColumn(workbook,"payableAmount", "应付"));
+            columnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "实付"));
+            columnList.add(new SimpleExcelColumn(workbook,"endAmount", "期末"));
+            columnList.add(new SimpleExcelColumn(workbook,"note", "摘要"));
+            SupplierPayableDetailDto supplierPayableDetailDto = supplierPayableDetailDtoList.get(0);
+            SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType(), supplierPayableDetailDtoList, columnList);
+            simpleExcelSheetList.add(excelSheet);
+        }
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款对账报表(专卖店)"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 }

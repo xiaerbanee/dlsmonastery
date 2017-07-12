@@ -326,7 +326,7 @@ public class SupplierPayableService {
             }
         }
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);
-        return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款对账报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 
     public SimpleExcelBook exportDetailOne(SupplierPayableQuery supplierPayableQuery){
@@ -352,6 +352,6 @@ public class SupplierPayableService {
             simpleExcelSheetList.add(excelSheet);
         }
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);
-        return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款对账报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 }
