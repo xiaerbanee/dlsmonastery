@@ -86,7 +86,7 @@
         };
       },
       search() {
-        axios.get('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
+        axios.post('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
           table.loadData(response.data);
         })
       },
