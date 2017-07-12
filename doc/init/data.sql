@@ -47,6 +47,7 @@ INSERT INTO sys_role SELECT
 FROM
 	db_oppo_test.sys_role t1
 WHERE
+
 	t1.enabled = 1;
 
 	update hr_position t1,db_oppo_test.hr_position t2 set t1.role_id=t2.role_id where t1.`name`=t2.`name`;
@@ -309,12 +310,15 @@ INSERT into sys_permission(name,permission,created_by,created_date,last_modified
 INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('修改','crm:vivoFactoryOrderList:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
 INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('删除','crm:vivoFactoryOrderList:delete',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
 
+INSERT into sys_permission(name,permission,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,menu_id)VALUES('修改','input:stkInStock:edit',1,'2017-07-01 12:21:34',1,'2017-07-01 12:21:34','',0,0,1,'221');
+
 
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司内销部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司财务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司仓储部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司企划部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司业务部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
+INSERT INTO `sys_office`(name,created_by,created_date,last_modified_by,last_modified_date,remarks,version,locked,enabled,company_id,type,parent_id,parent_ids,point,ding_id,level,joint_type,tag,task_point,agent_code,sort,office_rule_id,area_id,joint_level,all_data_scope)VALUES('总公司人事部','1','2017-06-29 16:39:55','1','2017-06-29 16:39:55',NULL,'0','0','1','1','职能部门','127','0,',NULL,NULL,'2','直营',NULL,NULL,NULL,NULL,NULL,NULL,'一级',true);
 
 
 update hr_account t1 set t1.office_id=(SELECT t2.id FROM sys_office t2 where t2.name="总公司内销部") where t1.position_id in (select t3.id FROM hr_position t3 where t3.name in ("内销部专员","内销部文员","内销部主管","内销部部长"));
@@ -368,3 +372,31 @@ UPDATE sys_process_type t1,
 		t3.id
 ) t2
 SET t1.view_position_ids = t2.positionIds where t1.view_permission_id=t2.id;
+
+update sys_office set joint_level="二级";
+update sys_office set office_rule_id=4 where type='100';
+update sys_office set office_rule_id=5 where type='200';
+update sys_office set office_rule_id=6 where type='300';
+update sys_office SET type='业务部门' where type!='职能部门';
+update sys_office of,sys_office of1  set of.area_id=of1.id where  of.parent_ids like CONCAT('%,',of1.id,',%') and of1.office_rule_id=4;
+
+update hr_account SET office_id=2607 ,position_id=15 where login_name in ("刘小花","方桂蓉","章群芳0");
+
+
+UPDATE hr_account
+SET office_id = (
+SELECT t1.id FROM sys_office t1 where name="吉安北南文员部"
+)
+WHERE
+	login_name IN (
+		"刘娟萍",
+		"宁春雪",
+		"李晓琼",
+		"黄方",
+		"曹琳",
+		"袁志芳",
+		"龚玲苗",
+		"周群平",
+		"郭元",
+		"周英"
+	)

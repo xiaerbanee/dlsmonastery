@@ -165,12 +165,12 @@ public class ProcessTypeService {
     }
 
     public List<ProcessTypeDto> findByCreatePositionId(String positionId){
-        List<ProcessType> processTypeList=processTypeRepository.findByCreatePositionIdsLike(positionId);
+        List<ProcessType> processTypeList=processTypeRepository.findByCreatePositionIdsLike("%,"+positionId+",%");
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
     public List<ProcessTypeDto> findByViewPositionId(String positionId){
-        List<ProcessType> processTypeList=processTypeRepository.findByViewPositionIdsLike(positionId);
+        List<ProcessType> processTypeList=processTypeRepository.findByViewPositionIdsLike("%,"+positionId+",%");
         return BeanUtil.map(processTypeList,ProcessTypeDto.class);
     }
 
