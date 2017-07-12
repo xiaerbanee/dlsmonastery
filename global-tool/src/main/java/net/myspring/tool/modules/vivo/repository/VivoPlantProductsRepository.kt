@@ -15,7 +15,7 @@ interface VivoPlantProductsRepository : BaseRepository<VivoPlantProducts, String
 }
 interface VivoPlantProductsRepositoryCustom{
     fun findPlantProducts() :MutableList<VivoPlantProducts>
-    fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<String>
+    fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<VivoPlantProducts>
 
 }
 class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantProductsRepositoryCustom {
@@ -25,11 +25,11 @@ class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJ
         """,  BeanPropertyRowMapper(VivoPlantProducts::class.java));
     }
 
-    override fun findItemNumbers(itemNumbers:MutableList<String>): MutableList<String>{
+    override fun findItemNumbers(itemNumbers:MutableList<String>): MutableList<VivoPlantProducts>{
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("itemNumbers",itemNumbers);
         return namedParameterJdbcTemplate.query("""
-                select t.item_number  from vivo_plant_products  t where t.item_number in(:itemNumbers)
-        """,  paramMap,BeanPropertyRowMapper(String::class.java));
+                select * from vivo_plant_products  t where t.item_number in(:itemNumbers)
+        """,  paramMap,BeanPropertyRowMapper(VivoPlantProducts::class.java));
     }
 }
