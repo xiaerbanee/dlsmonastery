@@ -39,8 +39,6 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
     private String positionName;
     @CacheInput(inputKey = "accounts",inputInstance = "leaderId",outputInstance = "loginName")
     private String leaderName;
-    private List<String> typeList= Lists.newArrayList();
-    private List<PositionDto> positionList=Lists.newArrayList();
 
     public String getMobilePhone() {
         return mobilePhone;
@@ -192,22 +190,6 @@ public class AccountChangeForm extends BaseForm<AccountChange> {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
-    }
-
-    public List<String> getTypeList() {
-        return typeList;
-    }
-
-    public void setTypeList(List<String> typeList) {
-        this.typeList = typeList;
-    }
-
-    public List<PositionDto> getPositionList() {
-        return positionList;
-    }
-
-    public void setPositionList(List<PositionDto> positionList) {
-        this.positionList = positionList;
     }
 
 }

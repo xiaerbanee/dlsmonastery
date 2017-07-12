@@ -13,7 +13,7 @@
             <div v-show="inputForm.id!=null||inputForm.accountId!=null">
               <el-form-item :label="$t('accountChangeForm.type')"  prop="type">
                 <el-select :disabled="isDetail" v-model="inputForm.type" filterable clearable :placeholder="$t('accountChangeForm.selectGroup')"  @change="getOldValue">
-                  <el-option v-for="item in inputForm.typeList" :key="item" :label="item" :value="item"></el-option>
+                  <el-option v-for="item in inputForm.extra.typeList" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item :label="$t('accountChangeForm.oldValue')" prop="oldValue">
@@ -27,7 +27,7 @@
               </el-form-item>
               <el-form-item v-if="inputForm.type=='岗位'" :label="$t('accountChangeForm.newValue')"  prop="newValue" >
                 <el-select :disabled="isDetail" v-model="inputForm.newValue" filterable :placeholder="$t('accountChangeForm.inputWord')" >
-                  <el-option v-for="item in inputForm.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in inputForm.extra.positionList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item  v-if="inputForm.type=='上级'" :label="$t('accountChangeForm.newValue')"  prop="newValue">
@@ -70,7 +70,9 @@
           submitDisabled:false,
           accounts:[],
           offices:[],
-          inputForm:{},
+          inputForm:{
+              extra:[],
+          },
           rules: {
             accountId: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
             type: [{ required: true, message: this.$t('accountChangeForm.prerequisiteMessage')}],
@@ -87,14 +89,10 @@
         this.inputForm.expiryDate=util.formatLocalDate( this.inputForm.expiryDate)
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/basic/hr/accountChange/save', qs.stringify(this.inputForm)).then((response)=> {
-              if(response.data.message){
+            axios.post('/api/basic/hr/accountChange/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
               this.$message(response.data.message);
-            }
-            Object.assign(this.$data, this.getData());
-            if(!this.isCreate){
+              Object.assign(this.$data, this.getData());
               this.$router.push({name:'accountChangeList',query:util.getQuery("accountChangeList")})
-            }
           }).catch( ()=> {
               that.submitDisabled = false;
             });
