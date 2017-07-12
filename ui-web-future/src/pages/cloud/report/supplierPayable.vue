@@ -50,10 +50,10 @@
         <el-table-column prop="payableAmount" label="应付金额"></el-table-column>
         <el-table-column prop="actualPayAmount" label="实付金额"></el-table-column>
         <el-table-column prop="endAmount" label="期末应付"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.supplierId)">详细</el-button>
-            <el-button type="primary" @click="exportDetailOne(scope.row.supplierId)" icon="upload">导出</el-button>
+            <el-button size="small" @click="exportDetailOne(scope.row.supplierId)">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
