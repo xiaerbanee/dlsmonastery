@@ -99,9 +99,9 @@
       }
     },created () {
       var that = this;
-      that.pageHeight = window.outerHeight - 320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/general/sys/processType/getQuery').then((response) => {
-        that.formData = response.data;
+        this.formData = response.data;
         util.copyValue(that.$route.query, that.formData);
       });
     },activated(){
