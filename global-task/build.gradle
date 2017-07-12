@@ -30,6 +30,7 @@ repositories {
 
 
 dependencies {
+	compile project(':summer-common')
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	runtime('org.springframework.boot:spring-boot-devtools')
