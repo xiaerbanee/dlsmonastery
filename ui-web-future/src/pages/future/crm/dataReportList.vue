@@ -122,7 +122,7 @@
         });
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       util.copyValue(this.$route.query,this.formData);
       this.actionButton.hasEdit = util.isPermit("crm:demoPhone:edit");
       this.pageRequest();

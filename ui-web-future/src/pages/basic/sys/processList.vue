@@ -39,7 +39,7 @@
       }
      },
     created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       util.copyValue(this.$route.query,this.submitData);
       util.setQuery("processList",this.submitData);
       util.copyValue(this.formData,this.submitData);

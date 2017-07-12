@@ -68,8 +68,8 @@
         <el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>
         <el-table-column :label="$t('goodsOrderDetail.operate')" :render-header="renderAction">
           <template scope="scope">
-            <el-button size="small" class="clipBtn" type="success">{{$t('goodsOrderDetail.ime')}}</el-button>
-            <el-button size="small" class="clipBtn" type="success" >{{$t('goodsOrderDetail.meid')}}</el-button>
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="testText">{{$t('goodsOrderDetail.ime')}}</el-button>
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="textText">{{$t('goodsOrderDetail.meid')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -115,6 +115,7 @@
           loading: false,
           shopList: [],
           submitDisabled: false,
+          testText:'测试信息'
         }
       },
       renderAction(createElement) {
@@ -179,11 +180,8 @@
     }, created(){
       axios.get('/api/ws/future/crm/goodsOrder/detail', {params: {id: this.$route.query.id}}).then((response) => {
         this.goodsOrder = response.data;
-        console.log('data:',response.data);
         this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
         this.goodsOrderImeList = response.data.goodsOrderImeDtoList;
-        console.log('detailList:',this.goodsOrderDetailList);
-        console.log('imeList:',this.goodsOrderImeList);
       });
       axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId', {params: {goodsOrderId: this.$route.query.id}}).then((response) => {
         this.expressOrder = response.data;

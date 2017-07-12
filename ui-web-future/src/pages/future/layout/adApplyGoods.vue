@@ -131,7 +131,7 @@
           }
           this.totalApplyQty = tempTotalApplyQty;
       },initPage(){
-        this.pageHeight = window.outerHeight -320;
+         this.pageHeight = 0.75*window.innerHeight;
         axios.get('api/ws/future/layout/adApply/getAdApplyGoodsList').then((response) =>{
           this.inputForm = response.data;
           this.searchDetail();

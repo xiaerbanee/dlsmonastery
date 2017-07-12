@@ -5,15 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-
-import javax.sql.DataSource;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 /**
  * Created by on 28.01.16.
@@ -28,13 +28,14 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
     private AuthenticationManager authenticationManager;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
     @Autowired
-    @Qualifier("oauthDataSource")
-    private DataSource oauthDataSource;
+    @Qualifier("oauthRedisConnectionFactory")
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
-    public JdbcTokenStore jdbcTokenStore() {
-        return new JdbcTokenStore(oauthDataSource);
+    public RedisTokenStore tokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
     }
 
     @Override
@@ -45,12 +46,13 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .checkTokenAccess("isAuthenticated()");
     }
 
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
                 .authenticationManager(authenticationManager)
                 .userDetailsService(customUserDetailsService)
-                .tokenStore(jdbcTokenStore());
+                .tokenStore(tokenStore());
     }
 
     @Override

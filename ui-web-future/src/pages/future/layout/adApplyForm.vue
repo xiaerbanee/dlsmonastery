@@ -153,7 +153,7 @@
             this.setProductList(response.data);
           });
        },initPage(){
-        this.pageHeight = window.outerHeight -320;
+         this.pageHeight = 0.75*window.innerHeight;
         axios.get('api/ws/future/layout/adApply/getForm').then((response) =>{
           this.inputForm = response.data;
         });
