@@ -19,7 +19,7 @@ interface ProductRepository : BaseRepository<Product,String>{
         t1.enabled=1
         AND  t1.companyName = :companyName
      """)
-    fun findNameByCompanyName(@Param("companyName")companyName:String): MutableList<String>
+    fun findNameByCompanyName(@Param("companyName")companyName:String): MutableList<String>?
 
     @Query("""
         SELECT
@@ -30,7 +30,7 @@ interface ProductRepository : BaseRepository<Product,String>{
         AND  t1.companyName = :companyName
         and t1.name = :name
     """)
-    fun findByNameAndCompanyName(@Param("companyName")companyName: String,@Param("name")name: String): Product?
+    fun findByNameAndCompanyName(@Param("companyName")companyName: String,@Param("name")name: String): Product
 
     @Query("""
         SELECT
@@ -41,7 +41,7 @@ interface ProductRepository : BaseRepository<Product,String>{
         AND  t1.companyName = :companyName
         and t1.code = :code
     """)
-    fun findByCodeAndCompanyName(@Param("companyName")companyName: String,@Param("code")code: String): Product?
+    fun findByCodeAndCompanyName(@Param("companyName")companyName: String,@Param("code")code: String): Product
 
     @Query("""
         SELECT
@@ -51,7 +51,7 @@ interface ProductRepository : BaseRepository<Product,String>{
         t1.enabled=1
         AND  t1.companyName = :companyName
     """)
-    fun findByCompanyName(@Param("companyName")companyName: String): MutableList<Product>
+    fun findByCompanyName(@Param("companyName")companyName: String): MutableList<Product>?
 
     @Query("""
         SELECT max(t1.outDate)

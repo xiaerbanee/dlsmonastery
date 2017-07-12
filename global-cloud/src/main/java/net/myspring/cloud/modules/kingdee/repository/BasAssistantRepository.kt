@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    fun findByNameList(nameList: List<String>): MutableList<BasAssistant> {
+    fun findByNameList(nameList: List<String>): MutableList<BasAssistant>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FENTRYID,
@@ -62,7 +62,7 @@ class BasAssistantRepository  @Autowired constructor(val namedParameterJdbcTempl
         }
     }
 
-    fun findByType(type: String): MutableList<BasAssistant> {
+    fun findByType(type: String): MutableList<BasAssistant>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FENTRYID,

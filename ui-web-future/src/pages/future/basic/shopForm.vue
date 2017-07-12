@@ -106,6 +106,12 @@
         },
         remoteLoading:false,
         rules: {
+          depotShopId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          name: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          officeId: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          address: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
     },

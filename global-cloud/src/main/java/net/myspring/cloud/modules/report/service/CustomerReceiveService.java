@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.repository.*;
+import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.repository.CustomerReceiveRepository;
@@ -12,6 +13,10 @@ import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.common.dto.NameValueDto;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -247,5 +252,86 @@ public class CustomerReceiveService {
         customerReceiveQuery.setSort("t1.fcustid,DESC");
         customerReceiveQuery.getExtra().put("customerGroupList",bdCustomerRepository.findPrimaryGroupAndPrimaryGroupName());
         return customerReceiveQuery;
+    }
+
+    public SimpleExcelBook export(BdCustomerQuery bdCustomerQuery){
+        List<BdCustomer> bdCustomerList = bdCustomerRepository.findAll(bdCustomerQuery);
+        List<String> customerIdList  = Lists.newArrayList();
+        for (BdCustomer bdCustomer : bdCustomerList){
+           customerIdList.add(bdCustomer.getFCustId());
+        }
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setQueryDetail(true);
+        customerReceiveQuery.setDateStart(bdCustomerQuery.getDateStart());
+        customerReceiveQuery.setDateEnd(bdCustomerQuery.getDateEnd());
+        customerReceiveQuery.setCustomerIdList(customerIdList);
+        List<CustomerReceiveDto> customerReceiveDtoList = findCustomerReceiveDtoList(customerReceiveQuery);
+        if (customerReceiveDtoList != null) {
+            Workbook workbook = new SXSSFWorkbook(10000);
+            List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+            List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "customerGroupName", "客户分组"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "customerName", "客户名称"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "beginShouldGet", "期初应收"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shouldGet", "应收金额"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "realGet", "实收金额"));
+            simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "endShouldGet", "期末应收"));
+            SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收汇总", customerReceiveDtoList, simpleExcelColumnList);
+            simpleExcelSheetList.add(simpleExcelSheet);
+            for (CustomerReceiveDto customerReceiveDto : customerReceiveDtoList) {
+                List<CustomerReceiveDetailDto> customerReceiveDetailDtoList = customerReceiveDto.getCustomerReceiveDetailDtoList();
+                if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoList)) {
+                    List<SimpleExcelColumn> columnList = Lists.newArrayList();
+                    CellStyle cellStyleRed = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.RED.name());
+                    columnList.add(new SimpleExcelColumn(workbook, "billType", "业务类型"));
+                    columnList.add(new SimpleExcelColumn(workbook, "billNo", "单据编号"));
+                    columnList.add(new SimpleExcelColumn(workbook, "billDate", "单据日期"));
+                    columnList.add(new SimpleExcelColumn(workbook, "materialName", "商品名称"));
+                    columnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
+                    columnList.add(new SimpleExcelColumn(workbook, "price", "单价"));
+                    columnList.add(new SimpleExcelColumn(workbook, "totalAmount", "金额"));
+                    columnList.add(new SimpleExcelColumn(workbook, "shouldGet", "应收"));
+                    columnList.add(new SimpleExcelColumn(workbook, "realGet", "实收"));
+                    columnList.add(new SimpleExcelColumn(workbook, "endShouldGet", "期末"));
+                    columnList.add(new SimpleExcelColumn(workbook, "remarks", "摘要"));
+                    CustomerReceiveDetailDto customerReceiveDetailDto = customerReceiveDetailDtoList.get(0);
+                    SimpleExcelSheet excelSheet = new SimpleExcelSheet(customerReceiveDetailDto.getBillType(), customerReceiveDetailDtoList, columnList);
+                    simpleExcelSheetList.add(excelSheet);
+                }
+            }
+            ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+            return new SimpleExcelBook(workbook, "应收款对账报表" + customerReceiveQuery.getDateStart() + "-" + customerReceiveQuery.getDateEnd() + ".xlsx", simpleExcelSheetList);
+        }
+        return  null;
+    }
+
+    public SimpleExcelBook exportDetailOne(CustomerReceiveQuery customerReceiveQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        CustomerReceiveDetailQuery customerReceiveDetailQuery = new CustomerReceiveDetailQuery();
+        customerReceiveDetailQuery.setCustomerIdList(customerReceiveQuery.getCustomerIdList());
+        customerReceiveDetailQuery.setDateStart(customerReceiveQuery.getDateStart());
+        customerReceiveDetailQuery.setDateEnd(customerReceiveQuery.getDateEnd());
+        List<CustomerReceiveDetailDto> customerReceiveDetailDtoList = findCustomerReceiveDetailDtoList(customerReceiveDetailQuery);
+        if (CollectionUtil.isNotEmpty(customerReceiveDetailDtoList)){
+            List<SimpleExcelColumn> columnList = Lists.newArrayList();
+            CellStyle cellStyleRed = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.RED.name());
+            columnList.add(new SimpleExcelColumn(workbook,"billType", "业务类型"));
+            columnList.add(new SimpleExcelColumn(workbook,"billNo", "单据编号"));
+            columnList.add(new SimpleExcelColumn(workbook,"billDate", "单据日期"));
+            columnList.add(new SimpleExcelColumn(workbook,"materialName", "商品名称"));
+            columnList.add(new SimpleExcelColumn(workbook,"qty", "数量"));
+            columnList.add(new SimpleExcelColumn(workbook,"price", "单价"));
+            columnList.add(new SimpleExcelColumn(workbook,"totalAmount", "金额"));
+            columnList.add(new SimpleExcelColumn(workbook,"shouldGet", "应收"));
+            columnList.add(new SimpleExcelColumn(workbook,"realGet", "实收"));
+            columnList.add(new SimpleExcelColumn(workbook,"endShouldGet", "期末"));
+            columnList.add(new SimpleExcelColumn(workbook,"remarks", "摘要"));
+            CustomerReceiveDetailDto customerReceiveDetailDto = customerReceiveDetailDtoList.get(0);
+            SimpleExcelSheet excelSheet = new SimpleExcelSheet(customerReceiveDetailDto.getBillType(), customerReceiveDetailDtoList, columnList);
+            simpleExcelSheetList.add(excelSheet);
+        }
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应收款对账报表"+ customerReceiveQuery.getDateStart()+"-"+customerReceiveQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class BdFlexItemGroupRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun findAll(): MutableList<BdFlexItemGroup> {
+    fun findAll(): MutableList<BdFlexItemGroup>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FID,
