@@ -393,7 +393,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     //显示物料:标准销售出库单+现销退货单
-    fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto> {
+    fun findDetailList(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<CustomerReceiveDetailDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
         paramMap.put("dateEnd",customerReceiveDetailQuery.dateEnd.toString())
@@ -449,7 +449,7 @@ class  CustomerReceiveRepository @Autowired constructor(val jdbcTemplate: JdbcTe
     }
 
     //显示备注:其他应收+收款单+收款退款单
-    fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto> {
+    fun findRemarks(customerReceiveDetailQuery: CustomerReceiveDetailQuery): MutableList<NameValueDto>? {
         var paramMap = HashMap<String, Any>()
         paramMap.put("dateStart",customerReceiveDetailQuery.dateStart.toString())
         paramMap.put("dateEnd",customerReceiveDetailQuery.dateEnd.toString())

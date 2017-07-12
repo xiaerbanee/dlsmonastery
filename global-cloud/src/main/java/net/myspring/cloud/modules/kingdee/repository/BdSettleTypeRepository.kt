@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class BdSettleTypeRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findByNameList(nameList:List<String>):MutableList<BdSettleType>{
+    fun findByNameList(nameList:List<String>):MutableList<BdSettleType>? {
         return namedParameterJdbcTemplate.query("""
             select 
                 t1.FID,
@@ -32,7 +32,7 @@ class BdSettleTypeRepository @Autowired constructor(val namedParameterJdbcTempla
         """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(BdSettleType::class.java))
     }
 
-    fun findAll():MutableList<BdSettleType>{
+    fun findAll():MutableList<BdSettleType>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FID,
@@ -50,7 +50,7 @@ class BdSettleTypeRepository @Autowired constructor(val namedParameterJdbcTempla
         """, BeanPropertyRowMapper(BdSettleType::class.java))
     }
 
-    fun findAllForDefault():MutableList<BdSettleType>{
+    fun findAllForDefault():MutableList<BdSettleType>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FID,

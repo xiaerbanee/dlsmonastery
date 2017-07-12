@@ -15,7 +15,7 @@ import java.util.*
  */
 @Component
 class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun findAll(): MutableList<BdMaterial> {
+    fun findAll(): MutableList<BdMaterial>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
@@ -44,7 +44,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
-    fun findByErpCleId(ErpCleId:String): MutableList<BdMaterial> {
+    fun findByErpCleId(ErpCleId:String): MutableList<BdMaterial>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
@@ -74,7 +74,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         """,Collections.singletonMap("ErpCleId",ErpCleId), BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
-    fun findByMaxModifyDate(modifyDate:LocalDateTime): MutableList<BdMaterial> {
+    fun findByMaxModifyDate(modifyDate:LocalDateTime): MutableList<BdMaterial>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
@@ -174,7 +174,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         }
     }
 
-    fun findByNameList(nameList: List<String>): MutableList<BdMaterial> {
+    fun findByNameList(nameList: List<String>): MutableList<BdMaterial>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,
@@ -204,7 +204,7 @@ class  BdMaterialRepository @Autowired constructor(val namedParameterJdbcTemplat
         """,Collections.singletonMap("nameList",nameList),BeanPropertyRowMapper(BdMaterial::class.java))
     }
 
-    fun findByMasterIdList(MasterIdList: List<String>): MutableList<BdMaterial> {
+    fun findByMasterIdList(MasterIdList: List<String>): MutableList<BdMaterial>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FMASTERID,

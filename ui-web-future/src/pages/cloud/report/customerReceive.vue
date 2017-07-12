@@ -3,7 +3,7 @@
     <head-tab active="customerReceive"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary"@click="formVisible = true" icon="search">过滤</el-button>
+        <el-button type="primary" @click="formVisible = true">过滤&导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
@@ -30,7 +30,8 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="search()" icon="search">搜索</el-button>
+          <el-button type="primary" @click="exportData()" icon="upload">导出</el-button>
         </div>
       </search-dialog>
       <el-dialog v-model="detailVisible" size="large">
@@ -55,9 +56,10 @@
         <el-table-column prop="shouldGet" label="应收金额"></el-table-column>
         <el-table-column prop="realGet" label="实收金额"></el-table-column>
         <el-table-column prop="endShouldGet" label="期末应收"></el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="200">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.customerId)">详细</el-button>
+            <el-button size="small" @click="exportDetailOne(scope.row.customerId)">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -153,6 +155,19 @@
             this.detailLoading = false;
             this.detailVisible = true;
           })
+        }
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href = '/api/global/cloud/report/customerReceive/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(() => {
+        });
+      },exportDetailOne(customerId){
+        if(customerId !== null) {
+          let submitDetail = Object();
+          submitDetail.customerIdList = customerId;
+          submitDetail.dateStart = this.formData.dateStart;
+          submitDetail.dateEnd = this.formData.dateEnd;
+          window.location.href = '/api/global/cloud/report/customerReceive/exportDetailOne?'+qs.stringify(submitDetail);
         }
       },tableRowClassName(row, index) {
          if (row.index === 0) {

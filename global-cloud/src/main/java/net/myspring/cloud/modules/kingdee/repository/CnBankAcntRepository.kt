@@ -15,7 +15,7 @@ import java.util.*
 @Component
 class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findByNameList(nameList:List<String>):MutableList<CnBankAcnt>{
+    fun findByNameList(nameList:List<String>):MutableList<CnBankAcnt>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FBANKACNTID,
@@ -35,7 +35,7 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
 
-    fun findAll():MutableList<CnBankAcnt>{
+    fun findAll():MutableList<CnBankAcnt>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FBANKACNTID,
@@ -54,7 +54,7 @@ class CnBankAcntRepository @Autowired constructor(val namedParameterJdbcTemplate
         """, BeanPropertyRowMapper(CnBankAcnt::class.java))
     }
 
-    fun findByMaxModifyDate(modifyDate: LocalDateTime) :MutableList<CnBankAcnt>{
+    fun findByMaxModifyDate(modifyDate: LocalDateTime) :MutableList<CnBankAcnt>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FBANKACNTID,

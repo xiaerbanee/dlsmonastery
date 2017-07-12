@@ -14,7 +14,7 @@ import java.util.*
 @Component
 class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-    fun findByNameLike(name: String): MutableList<BdStock> {
+    fun findByNameLike(name: String): MutableList<BdStock>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSTOCKID,
@@ -40,7 +40,7 @@ class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: 
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdStock::class.java))
     }
 
-    fun findByNameList(nameList: MutableList<String>): MutableList<BdStock> {
+    fun findByNameList(nameList: MutableList<String>): MutableList<BdStock>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSTOCKID,
@@ -66,7 +66,7 @@ class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: 
         """, Collections.singletonMap("nameList",nameList), BeanPropertyRowMapper(BdStock::class.java))
     }
 
-    fun findAll(): MutableList<BdStock> {
+    fun findAll(): MutableList<BdStock>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSTOCKID,
@@ -91,7 +91,7 @@ class  BdStockRepository @Autowired constructor(val namedParameterJdbcTemplate: 
         """, BeanPropertyRowMapper(BdStock::class.java))
     }
 
-    fun findByMaxModifyDate(modifyDate: LocalDateTime): MutableList<BdStock> {
+    fun findByMaxModifyDate(modifyDate: LocalDateTime): MutableList<BdStock>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FSTOCKID,

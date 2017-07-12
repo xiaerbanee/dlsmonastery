@@ -30,9 +30,10 @@
             <el-tag :type="scope.row.enabled ? 'primary' : 'danger'">{{scope.row.enabled | bool2str}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('processTypeList.operation')" width="140">
+        <el-table-column fixed="right" :label="$t('processTypeList.operation')" width="200">
           <template scope="scope">
-              <el-button size="small" @click.native="itemAction(scope.row.id,'详细')" v-permit="'sys:processType:view'">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'详细')" v-permit="'sys:processType:view'">详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'修改')" v-permit="'sys:processType:view'">修改</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'删除')" v-permit="'sys:processType:delete'">删除</el-button>
           </template>
         </el-table-column>
@@ -88,7 +89,10 @@
       },itemAction:function(id,action){
         if(action=="详细") {
           this.$router.push({ name: 'processTypeForm', query: { id: id }})
-        } else if(action=="删除") {
+        }else if(action === '修改'){
+          this.$router.push({ name: 'processTypeForm', query: { id: id,editable:true }})
+        }
+        else if(action=="删除") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/general/sys/processType/delete',{params:{id:id}}).then((response) =>{
               this.$message(response.data.message);

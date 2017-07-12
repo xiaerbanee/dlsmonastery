@@ -273,7 +273,7 @@ class GlcxViewRepository @Autowired constructor(val namedParameterJdbcTemplate: 
         """,paramMap,BeanPropertyRowMapper(RetailAccountDto::class.java))
     }
 
-    fun findAllDepartment():MutableList<BdDepartment>{
+    fun findAllDepartment():MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             SELECT DISTINCT
                 fdeptnum AS FNumber,
