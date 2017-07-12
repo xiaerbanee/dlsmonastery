@@ -16,6 +16,9 @@ public class ReportScoreAreaQuery extends BaseQuery{
 
 
     public String getScoreDateRange() {
+        if (StringUtils.isBlank(scoreDateRange)) {
+            scoreDateRange=LocalDate.now().minusDays(1)+CharConstant.DATE_RANGE_SPLITTER+LocalDate.now().minusDays(1);
+        }
         return scoreDateRange;
     }
 
@@ -55,10 +58,12 @@ public class ReportScoreAreaQuery extends BaseQuery{
     }
 
     public LocalDate getScoreDateEnd() {
-        if(StringUtils.isNotBlank(scoreDateRange)) {
+        if(StringUtils.isNotBlank(scoreDateRange)&&scoreDateEnd==null) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else if(scoreDateEnd!=null){
             return scoreDateEnd.plusDays(1);
+        }else if(scoreDateEnd==null){
+            return LocalDate.now().minusDays(1);
         }
         return null;
     }

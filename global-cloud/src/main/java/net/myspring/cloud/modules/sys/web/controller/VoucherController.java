@@ -20,6 +20,7 @@ import net.myspring.cloud.modules.sys.web.form.VoucherForm;
 import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
@@ -163,6 +165,18 @@ public class VoucherController {
             map.put("headerList", flexItemNameList);
             map.put("data", voucherService.initData(voucherDto));
             return map;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "export")
+    public ModelAndView export (String id) {
+        VoucherDto voucherDto = voucherService.findOne(id);
+        if (voucherDto != null) {
+            voucherDto.setBdAccountList(bdAccountService.findAll());
+            voucherDto.setBdFlexItemGroupList(bdFlexItemGroupService.findAll());
+            voucherDto.setBdFlexItemPropertyList(bdFlexItemPropertyService.findAll());
+            return new ModelAndView(new ExcelView(), "simpleExcelBook", voucherService.export(voucherDto));
         }
         return null;
     }

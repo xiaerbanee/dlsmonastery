@@ -30,7 +30,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopPromotionList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="businessId" :label="$t('shopPromotionList.businessId')" sortable width="150"></el-table-column>
+        <el-table-column prop="businessId" :label="$t('shopPromotionList.businessId')" sortable width="150"></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('shopPromotionList.shopName')" sortable></el-table-column>
         <el-table-column prop="activityType" :label="$t('shopPromotionList.activityType')" sortable></el-table-column>
         <el-table-column prop="dayAmount" :label="$t('shopPromotionList.amount')" sortable></el-table-column>
@@ -45,7 +45,7 @@
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('shopPromotionList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('shopPromotionList.createdDate')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopPromotionList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopPromotionList.operation')">
+        <el-table-column :label="$t('shopPromotionList.operation')">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopPromotion:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPromotionList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopPromotion:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPromotionList.delete')}}</el-button></div>

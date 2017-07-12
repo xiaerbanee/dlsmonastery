@@ -50,6 +50,9 @@ public class ReportScoreOfficeQuery extends BaseQuery {
 
 
     public String getScoreDateRange() {
+        if (StringUtils.isBlank(scoreDateRange)) {
+            scoreDateRange=LocalDate.now().minusDays(1)+CharConstant.DATE_RANGE_SPLITTER+LocalDate.now().minusDays(1);
+        }
         return scoreDateRange;
     }
 
@@ -58,7 +61,7 @@ public class ReportScoreOfficeQuery extends BaseQuery {
     }
 
     public LocalDate getScoreDateStart() {
-        if(StringUtils.isNotBlank(scoreDateRange)) {
+        if(StringUtils.isNotBlank(scoreDateRange)&&scoreDateStart==null) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[0]);
         } else if(scoreDateStart!=null){
             return scoreDateStart;
@@ -71,10 +74,12 @@ public class ReportScoreOfficeQuery extends BaseQuery {
     }
 
     public LocalDate getScoreDateEnd() {
-        if(StringUtils.isNotBlank(scoreDateRange)) {
+        if(StringUtils.isNotBlank(scoreDateRange)&&scoreDateEnd==null) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
         } else if(scoreDateEnd!=null){
             return scoreDateEnd.plusDays(1);
+        }else if(scoreDateEnd==null){
+            return LocalDate.now().minusDays(1);
         }
         return null;
     }

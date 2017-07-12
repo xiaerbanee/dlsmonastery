@@ -1,0 +1,8 @@
+spring:
+  redis:
+    host: localhost
+    password:
+    port: 6379
+    database: 0
+    max-idle: 250
+    max-total: 500

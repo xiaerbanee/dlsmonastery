@@ -15,10 +15,12 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
+import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.DepotAdApplyForm;
 import net.myspring.future.modules.basic.web.form.ProductAdForm;
@@ -69,6 +71,8 @@ public class AdApplyService {
     private ProductRepository productRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private DepotStoreRepository depotStoreRepository;
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
@@ -133,7 +137,11 @@ public class AdApplyService {
         //同步财务库存
         if(adApplyDtos.size()>0){
             List<String> storeId = Lists.newArrayList();
-            storeId.add(adApplyBillTypeChangeForm.getStoreId());
+            DepotStore depotStore = depotStoreRepository.findOne(adApplyBillTypeChangeForm.getStoreId());
+            if(StringUtils.isBlank(depotStore.getOutId())){
+                throw new ServiceException("在金蝶中不存在该仓库");
+            }
+            storeId.add(depotStore.getOutId());
             List<StkInventory> stkInventories = cloudClient.findInventoriesByDepotStoreOutIds(storeId);
             Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
             for(AdApplyDto adApplyDto:adApplyDtos){
