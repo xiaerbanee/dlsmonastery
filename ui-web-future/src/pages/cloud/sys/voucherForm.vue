@@ -114,37 +114,37 @@
         let extra = response.data.extra;
         this.settings.colHeaders = extra.headerList;
         accountNumberNameToFlexGroupNamesMap = extra.accountNumberNameToFlexGroupNamesMap;
-        this.settings.columns.push({type: 'text', strict: true, allowEmpty: false});
-        this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, accountName:[],source: this.accountName});
+        this.settings.columns.push({type: 'text', strict: true, allowEmpty: false,width:150});
+        this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: false, width:100, accountName:[],source: this.accountName});
         this.settings.columns[1].source = extra.accountNumberNameList;
         let colHeaders = extra.headerList;
         headers = extra.headerList;
         for (let i=0;i<colHeaders.length;i++){
             if(colHeaders[i] === "供应商") {
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, supplierName:[],source: this.supplierName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100,supplierName:[],source: this.supplierName});
               this.settings.columns[i].source = extra.supplierNumberNameList;
             }else if(colHeaders[i] === "客户"){
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, customerName:[],source: this.customerName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100, customerName:[],source: this.customerName});
               this.settings.columns[i].source = extra.customerNumberNameList;
             }else if(colHeaders[i] === "银行账号"){
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, bankAccountName:[],source: this.bankAccountName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100, bankAccountName:[],source: this.bankAccountName});
               this.settings.columns[i].source = extra.bankAcntNumberNameList;
             }else if(colHeaders[i] === "其他类"){
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, otherTypeName:[],source: this.otherTypeName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100, otherTypeName:[],source: this.otherTypeName});
               this.settings.columns[i].source = extra.otherTypeNumberNameList;
             }else if(colHeaders[i] === "部门") {
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, departmentName: [], source: this.departmentName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100, departmentName: [], source: this.departmentName});
               this.settings.columns[i].source = extra.departmentNumberNameList;
             }else if(colHeaders[i] === "费用类") {
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, expenseTypeName:[],source: this.expenseTypeName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100, expenseTypeName:[],source: this.expenseTypeName});
               this.settings.columns[i].source = extra.expenseTypeNumberNameList;
             }else if(colHeaders[i] === "员工") {
-              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, empInfoName:[],source: this.empInfoName});
+              this.settings.columns.push({type: "autocomplete", strict: true, allowEmpty: true, width:100,empInfoName:[],source: this.empInfoName});
               this.settings.columns[i].source = extra.empInfoNumberNameList;
             }
         }
-        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, strict: true});
-        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, strict: true});
+        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
+        this.settings.columns.push({type: 'numeric', format:"0,0.00", allowEmpty: true, width:80, strict: true});
         this.settings.data = extra.data;
         table = new Handsontable(this.$refs["handsontable"], this.settings);
       });
