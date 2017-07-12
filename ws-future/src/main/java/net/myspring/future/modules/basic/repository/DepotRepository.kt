@@ -294,7 +294,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             }
         }
         if (StringUtils.isNotEmpty(depotStoreQuery.name)) {
-            sb.append("""  and t1.name LIKE CONCAT('%',:name,'%') """)
+            sb.append("""  and (t1.name LIKE CONCAT('%',:name,'%') or t1.name_pinyin LIKE CONCAT('%',:name,'%')""")
         }
         if (CollectionUtil.isNotEmpty(depotStoreQuery.depotIdList)) {
             sb.append("""  and t1.id in (:depotIdList)""")
