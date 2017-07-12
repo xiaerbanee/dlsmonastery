@@ -16,5 +16,5 @@ interface  VoucherEntryFlowRepository : BaseRepository<VoucherEntryFlow,String>{
         WHERE
         t1.glVoucherEntryId = :voucherEntryId
      """)
-    fun findByVoucherEntryId(@Param("voucherEntryId")voucherEntryId:String):MutableList<VoucherEntryFlow>
+    fun findByVoucherEntryId(@Param("voucherEntryId")voucherEntryId:String):MutableList<VoucherEntryFlow>?
 }

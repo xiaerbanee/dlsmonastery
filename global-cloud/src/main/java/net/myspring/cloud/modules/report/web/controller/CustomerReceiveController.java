@@ -1,14 +1,18 @@
 package net.myspring.cloud.modules.report.web.controller;
 
+import net.myspring.cloud.modules.kingdee.service.BdCustomerService;
+import net.myspring.cloud.modules.kingdee.web.query.BdCustomerQuery;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.service.CustomerReceiveService;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.util.excel.ExcelView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,6 +51,17 @@ public class CustomerReceiveController {
     @RequestMapping(value = "getQuery")
     public CustomerReceiveQuery getQuery() {
         return customerReceiveService.getQuery();
+    }
+
+    @RequestMapping(value = "export")
+    public ModelAndView export(BdCustomerQuery bdCustomerQuery) {
+
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", customerReceiveService.export(bdCustomerQuery));
+    }
+
+    @RequestMapping(value = "exportDetailOne")
+    public ModelAndView exportDetailOne(CustomerReceiveQuery customerReceiveQuery){
+        return new ModelAndView(new ExcelView(), "simpleExcelBook", customerReceiveService.exportDetailOne(customerReceiveQuery));
     }
 
 }
