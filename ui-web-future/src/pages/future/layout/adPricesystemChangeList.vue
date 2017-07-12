@@ -14,6 +14,9 @@
               <el-form-item :label="$t('adPricesystemChangeList.productName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('adPricesystemChangeList.productCode')" :label-width="formLabelWidth">
+                <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -82,7 +85,7 @@
         this.$router.push({ name: 'adPricesystemChangeForm'})
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/layout/adPricesystemChange/getQuery').then((response) => {
         this.formData = response.data;
         util.copyValue(this.$route.query,this.formData);

@@ -63,7 +63,7 @@
         }
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.pageRequest();
     }
   };

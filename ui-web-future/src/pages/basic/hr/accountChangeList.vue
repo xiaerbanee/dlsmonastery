@@ -151,7 +151,7 @@
       }
     },created () {
       var that=this;
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/accountChange/getQuery').then((response) =>{
         that.formData=response.data;
         console.log(this.formData.extra.typeList);

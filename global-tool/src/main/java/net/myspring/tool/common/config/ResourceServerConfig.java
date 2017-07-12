@@ -26,6 +26,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/sys/folderFile/download").permitAll().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/factory/**").permitAll().anyRequest().authenticated();
     }
 }

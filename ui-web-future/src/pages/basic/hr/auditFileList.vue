@@ -146,7 +146,7 @@
       }
     },created () {
       var that=this;
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/auditFile/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(that.$route.query,this.formData);

@@ -6,9 +6,11 @@ import net.myspring.future.modules.basic.domain.AdPricesystem;
 import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.AdPricesystemDto;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.repository.AdPricesystemDetailRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.repository.AdpricesystemRepository;
+import net.myspring.future.modules.basic.web.query.ProductQuery;
 import net.myspring.future.modules.layout.domain.AdPricesystemChange;
 import net.myspring.future.modules.layout.dto.AdPricesystemChangeDto;
 import net.myspring.future.modules.layout.repository.AdPricesystemChangeRepository;
@@ -52,12 +54,10 @@ public class AdPricesystemChangeService {
     }
 
     public List<List<Object>> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        List<Product> productList;
-        if(adPricesystemChangeQuery.getProductName()!=null){
-            productList = productRepository.findByNameLike(adPricesystemChangeQuery.getProductName());
-        }else{
-            productList = productRepository.findAllEnabled();
-        }
+        ProductQuery productQuery = new ProductQuery();
+        productQuery.setName(adPricesystemChangeQuery.getProductName());
+        productQuery.setCode(adPricesystemChangeQuery.getProductCode());
+        List<ProductDto> productList = productRepository.findFilter(productQuery);
         List<AdPricesystem> adPricesystemList = adpricesystemRepository.findByEnabledIsTrue();
         List<List<Object>> data = getFormData(productList,adPricesystemList);
         return data;
@@ -137,7 +137,7 @@ public class AdPricesystemChangeService {
     }
 
     //拼接数据给界面
-    private List<List<Object>> getFormData(List<Product> productList, List<AdPricesystem> adPricesystemList) {
+    private List<List<Object>> getFormData(List<ProductDto> productList, List<AdPricesystem> adPricesystemList) {
         List<List<Object>> datas = Lists.newArrayList();
         List<Map<String, AdPricesystemDetail>> adPricesystemDetailList = Lists.newArrayList();
         for (AdPricesystem adPricesystem : adPricesystemList) {
@@ -150,7 +150,7 @@ public class AdPricesystemChangeService {
             }
             adPricesystemDetailList.add(map);
         }
-        for (Product product : productList) {
+        for (ProductDto product : productList) {
             List<Object> rows = Lists.newArrayList();
             rows.add(product.getId());
             rows.add(product.getCode());

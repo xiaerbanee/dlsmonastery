@@ -25,7 +25,7 @@ public class ProductDto extends DataDto<Product> {
     private Boolean allowOrder;
     private String image;
     private Boolean locked;
-
+    private BigDecimal shouldGet;
     private String expiryDateRemarks;
     private BigDecimal price2;
     private BigDecimal retailPrice;
@@ -79,6 +79,14 @@ public class ProductDto extends DataDto<Product> {
 
     public void setExpiryDateRemarks(String expiryDateRemarks) {
         this.expiryDateRemarks = expiryDateRemarks;
+    }
+
+    public BigDecimal getShouldGet() {
+        return shouldGet;
+    }
+
+    public void setShouldGet(BigDecimal shouldGet) {
+        this.shouldGet = shouldGet;
     }
 
     public BigDecimal getPrice2() {
