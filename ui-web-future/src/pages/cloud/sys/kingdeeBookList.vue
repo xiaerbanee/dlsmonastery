@@ -17,14 +17,14 @@
           <el-row :gutter="4">
             <el-form-item label="账套" >
               <el-select v-model="formData.name" filterable clearable placeholder="请选择">
-                <el-option v-for="name in formData.nameList" :key="name" :label="name" :value="name"></el-option>
+                <el-option v-for="name in formData.extra.nameList" :key="name" :label="name" :value="name"></el-option>
               </el-select>
             </el-form-item>
           </el-row>
           <el-row :gutter="4">
             <el-form-item label="账套类型" >
               <el-select v-model="formData.type" filterable clearable placeholder="请选择">
-                <el-option v-for="type in formData.typeList" :key="type" :label="type" :value="type"></el-option>
+                <el-option v-for="type in formData.extra.typeList" :key="type" :label="type" :value="type"></el-option>
               </el-select>
             </el-form-item>
             <el-col :span="24">

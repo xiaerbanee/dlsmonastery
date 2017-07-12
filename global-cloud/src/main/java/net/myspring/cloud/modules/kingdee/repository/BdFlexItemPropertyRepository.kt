@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class BdFlexItemPropertyRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun findAll(): MutableList<BdFlexItemProperty> {
+    fun findAll(): MutableList<BdFlexItemProperty>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t.FID,

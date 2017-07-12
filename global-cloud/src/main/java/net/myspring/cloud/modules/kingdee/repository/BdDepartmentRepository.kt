@@ -43,7 +43,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         return PageImpl(list,pageable,count);
     }
 
-    fun findByIdList(idList: MutableList<String>): MutableList<BdDepartment> {
+    fun findByIdList(idList: MutableList<String>): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
@@ -62,7 +62,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("idList", idList), BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
-    fun findAll(): MutableList<BdDepartment> {
+    fun findAll(): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
@@ -80,7 +80,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
-    fun findAllIncludeForbid(): MutableList<BdDepartment> {
+    fun findAllIncludeForbid(): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
@@ -96,7 +96,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
-    fun findByNameLike(name: String): MutableList<BdDepartment> {
+    fun findByNameLike(name: String): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
@@ -115,7 +115,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdDepartment::class.java))
     }
 
-    fun findByNameList(nameList: List<String>): MutableList<BdDepartment> {
+    fun findByNameList(nameList: List<String>): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
@@ -163,7 +163,7 @@ class  BdDepartmentRepository @Autowired constructor(val namedParameterJdbcTempl
     }
 
     //SalDeptId是BdCustomer对象关联BdDepartment的字段
-    fun findBySalDeptIdList(salDeptIdList:List<String>): MutableList<BdDepartment> {
+    fun findBySalDeptIdList(salDeptIdList:List<String>): MutableList<BdDepartment>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FDEPTID,
