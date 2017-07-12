@@ -14,7 +14,6 @@ import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestErrorField;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
-import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.common.enums.StoreAllotStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -33,6 +32,7 @@ import net.myspring.future.modules.crm.dto.StoreAllotDetailSimpleDto;
 import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.dto.StoreAllotImeDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.StoreAllotDetailForm;
 import net.myspring.future.modules.crm.web.form.StoreAllotForm;
@@ -45,7 +45,6 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -96,6 +95,8 @@ public class StoreAllotService {
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired
     private ExpressOrderManager expressOrderManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public StoreAllotDto findDto(String id) {
         StoreAllotDto storeAllotDto = storeAllotRepository.findDto(id);
@@ -109,8 +110,8 @@ public class StoreAllotService {
             throw new ServiceException("发货的调拨单id不能为空");
         }
         StoreAllot storeAllot = storeAllotRepository.findOne(storeAllotShipForm.getId());
-        if(!GoodsOrderStatusEnum.待发货.name().equals(storeAllot.getStatus())){
-            throw new ServiceException("该调拨单的状态不为待发货，不能发货");
+        if(!StoreAllotStatusEnum.待发货.name().equals(storeAllot.getStatus()) && !StoreAllotStatusEnum.发货中.name().equals(storeAllot.getStatus())){
+            throw new ServiceException("该调拨单的状态不为待发货或发货中，不能发货");
         }
         Map<String, StoreAllotDetail> storeAllotDetailMap = Maps.newHashMap();
         List<StoreAllotDetail> storeAllotDetailList = storeAllotDetailRepository.findByStoreAllotIdIn(Lists.newArrayList(storeAllotShipForm.getId()));
@@ -235,7 +236,8 @@ public class StoreAllotService {
         }
     }
 
-private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList, ExpressOrder expressOrder, Map<String, Product> productMap){
+    @Transactional
+    private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList, ExpressOrder expressOrder, Map<String, Product> productMap){
         KingdeeSynReturnDto kingdeeSynReturnDto = stkTransferDirectManager.synForStoreAllot(storeAllot,detailList,productMap);
 
         storeAllot.setCloudSynId(kingdeeSynReturnDto.getId());
@@ -247,23 +249,24 @@ private void synToCloud(StoreAllot storeAllot, List<StoreAllotDetail> detailList
 
     }
 
-private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
+    @Transactional
+    private StoreAllot saveStoreAllot(StoreAllotForm storeAllotForm) {
         StoreAllot storeAllot = new StoreAllot();
         storeAllot.setFromStoreId(storeAllotForm.getFromStoreId());
         storeAllot.setToStoreId(storeAllotForm.getToStoreId());
         storeAllot.setShipType(storeAllotForm.getShipType());
         storeAllot.setRemarks(storeAllotForm.getRemarks());
         LocalDate now = LocalDate.now();
-        String maxBusinessId = storeAllotRepository.findMaxBusinessId(now.atStartOfDay());
-        storeAllot.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, now));
-        storeAllot.setBillDate(LocalDate.now());
+        storeAllot.setBusinessId(redisIdManager.getNextStoreAllotBusinessId(now));
+        storeAllot.setBillDate(now);
         storeAllot.setStatus(StoreAllotStatusEnum.待发货.name());
 
         storeAllotRepository.save(storeAllot);
         return storeAllot;
     }
 
-private List<StoreAllotDetail> saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> detailFormList) {
+    @Transactional
+    private List<StoreAllotDetail> saveStoreAllotDetails(String storeAllotId, List<StoreAllotDetailForm> detailFormList) {
         //大库调拨只有新增，没有修改
 
         List<StoreAllotDetail> toBeSaved = Lists.newArrayList();
@@ -285,7 +288,8 @@ private List<StoreAllotDetail> saveStoreAllotDetails(String storeAllotId, List<S
         return toBeSaved;
     }
 
-private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm, Map<String, Product> productMap) {
+    @Transactional
+    private ExpressOrder saveExpressOrder(StoreAllot storeAllot, StoreAllotForm storeAllotForm, Map<String, Product> productMap) {
 
         ExpressOrder expressOrder = new ExpressOrder();
         expressOrder.setExtendBusinessId(storeAllot.getBusinessId());

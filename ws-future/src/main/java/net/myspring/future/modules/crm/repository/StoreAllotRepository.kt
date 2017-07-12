@@ -29,7 +29,7 @@ interface StoreAllotRepository : BaseRepository<StoreAllot, String>, StoreAllotR
     WHERE
         t1.createdDate >= ?1
         """)
-    fun findMaxBusinessId(createdDate: LocalDateTime): String
+    fun findMaxBusinessId(createdDate: LocalDateTime): String?
 
     fun findByBusinessIdIn(businessIdList:MutableList<String>):MutableList<StoreAllot>
 

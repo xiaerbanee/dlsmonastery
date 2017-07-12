@@ -243,6 +243,7 @@ public class GoodsOrderService {
         expressOrder.setContator(shop.getContator());
         expressOrder.setAddress(shop.getAddress());
         expressOrder.setMobilePhone(shop.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
         expressOrderRepository.save(expressOrder);
@@ -662,6 +663,7 @@ public class GoodsOrderService {
         expressOrder.setContator(firstDetailForm.getContator());
         expressOrder.setAddress(firstDetailForm.getAddress());
         expressOrder.setMobilePhone(firstDetailForm.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(toDepot.getId());
         expressOrder.setShipType(firstDetailForm.getShipType());
         expressOrderRepository.save(expressOrder);

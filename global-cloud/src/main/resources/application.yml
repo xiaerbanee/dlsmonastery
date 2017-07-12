@@ -32,4 +32,7 @@ ribbon:
   ConnectTimeout: 180000
 logging:
   file: global-cloud.log
-  level: debug
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG

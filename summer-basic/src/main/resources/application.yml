@@ -53,4 +53,7 @@ amap:
   key: 6186e993a28a8cba1d5d9e4b8b34efe3
 logging:
   file: summer-basic.log
-  level: debug
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG
