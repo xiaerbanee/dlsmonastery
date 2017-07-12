@@ -10,6 +10,8 @@ import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -70,7 +72,9 @@ public class RedisIdManager {
             String key = keyPrefix + LocalDateUtils.format(date);
             String currBusinessId = getCurrentBusinessId(key, dbMaxBusinessIdSupplier, date);
             String nextBusinessId = String.valueOf(Long.valueOf(currBusinessId)+1);
-            redisTemplate.getConnectionFactory().getConnection().set(key.getBytes("UTF-8"), nextBusinessId.getBytes("UTF-8"));
+            RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
+            redisConnection.set(key.getBytes("UTF-8"), nextBusinessId.getBytes("UTF-8"));
+            RedisConnectionUtils.releaseConnection(redisConnection,redisTemplate.getConnectionFactory());
             return nextBusinessId;
         }catch(Exception e){
             throw new ServiceException(e);
@@ -79,7 +83,9 @@ public class RedisIdManager {
 
     private String getCurrentBusinessId(String key, Supplier<String> dbMaxBusinessIdSupplier, LocalDate date){
         try{
-            byte[] redisValue = redisTemplate.getConnectionFactory().getConnection().get(key.getBytes("UTF-8"));
+            RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
+            byte[] redisValue = redisConnection.get(key.getBytes("UTF-8"));
+            RedisConnectionUtils.releaseConnection(redisConnection,redisTemplate.getConnectionFactory());
             if(redisValue!=null){
                 return new String(redisValue,"UTF-8");
             }
