@@ -107,7 +107,6 @@
             shopId: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
             netType: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
             shipType: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
-            lxMallOrder: [{required: true, message: this.$t('goodsOrderForm.prerequisiteMessage')}],
           }
         }
       },
