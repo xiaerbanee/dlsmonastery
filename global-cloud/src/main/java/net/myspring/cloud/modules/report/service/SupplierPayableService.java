@@ -258,6 +258,12 @@ public class SupplierPayableService {
                         supplierPayableDetailDto.setEndAmount(beginAmount);
                         list.add(supplierPayableDetailDto);
                     }
+                    if (supplierPayableDetailDto.getActualPayAmount() != null) {
+                        actualPayAmount = actualPayAmount.add(supplierPayableDetailDto.getActualPayAmount());
+                    }
+                    if (supplierPayableDetailDto.getPayableAmount() != null){
+                        payableAmount = payableAmount.add(supplierPayableDetailDto.getPayableAmount());
+                    }
                     if (billNoToDetailBillMap.containsKey(main.getBillNo())) {
                         for (SupplierPayableDetailDto detailMaterial : billNoToDetailBillMap.get(main.getBillNo())) {
                             supplierPayableDetailDto = new SupplierPayableDetailDto();
@@ -273,12 +279,6 @@ public class SupplierPayableService {
                             supplierPayableDetailDto.setIndex(index);
                             list.add(supplierPayableDetailDto);
                         }
-                    }
-                    if (supplierPayableDetailDto.getActualPayAmount() != null) {
-                        actualPayAmount = actualPayAmount.add(supplierPayableDetailDto.getActualPayAmount());
-                    }
-                    if (supplierPayableDetailDto.getPayableAmount() != null){
-                        payableAmount = payableAmount.add(supplierPayableDetailDto.getPayableAmount());
                     }
                 }
                 supplierPayableDetailDto = new SupplierPayableDetailDto();
