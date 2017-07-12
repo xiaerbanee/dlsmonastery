@@ -27,6 +27,8 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String attachment;
     private String processFlowId;
     private String positionId;
+    private boolean auditable;
+    private boolean editable;
 
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
