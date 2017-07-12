@@ -11,7 +11,6 @@ import net.myspring.future.modules.crm.service.ImeAllotService;
 import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotSimpleForm;
-import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;

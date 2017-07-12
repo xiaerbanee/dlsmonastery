@@ -58,21 +58,21 @@ public class GoodsOrderShipController {
     }
 
     @RequestMapping(value = "ship")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:ship')")
     public RestResponse ship(GoodsOrderShipForm goodsOrderShipForm) {
          goodsOrderShipService.ship(goodsOrderShipForm);
          return new RestResponse("保存成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "sign")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:sign')")
     public RestResponse sign(String goodsOrderId) {
         goodsOrderShipService.sign(goodsOrderId);
         return new RestResponse("签收成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "shipBack")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:shipBack')")
     public RestResponse shipBack(String goodsOrderId) {
         goodsOrderShipService.shipBack(goodsOrderId);
         return new RestResponse("重发成功",ResponseCodeEnum.saved.name());
@@ -80,26 +80,26 @@ public class GoodsOrderShipController {
 
 
     @RequestMapping(value = "sreturn")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:sreturn')")
     public RestResponse sreturn(GoodsOrderForm goodsOrderForm) {
         goodsOrderShipService.sreturn(goodsOrderForm);
         return new RestResponse("销售退货成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "getSreturn")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:sreturn')")
     public GoodsOrderDto getSreturn(String id) {
         return goodsOrderShipService.getSreturn(id);
     }
 
     @RequestMapping(value = "getShip")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:edit')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:ship')")
     public GoodsOrderDto getShip(String id) {
         return goodsOrderShipService.getShip(id);
     }
 
     @RequestMapping(value = "getShipByBusinessId")
-    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:view')")
+    @PreAuthorize("hasPermission(null,'crm:goodsOrderShip:ship')")
     public GoodsOrderDto getShipByBusinessId(String businessId) {
         if(StringUtils.isBlank(businessId)){
             return new GoodsOrderDto();

@@ -97,7 +97,7 @@
           let form = this.$refs["inputForm"];
           form.validate((valid) => {
             if (valid) {
-              axios.post('/api/ws/future/crm/imeAllot/save',qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response)=> {
+              axios.post('/api/ws/future/crm/imeAllot/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response)=> {
                 this.$message(response.data.message);
                 Object.assign(this.$data, this.getData());
                 this.initPage();
@@ -110,10 +110,10 @@
           });
         },onImeStrChange(){
             this.searched = true;
-          axios.get('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+          axios.post('/api/ws/future/crm/imeAllot/checkForImeAllot', qs.stringify({imeStr: this.inputForm.imeStr})).then((response)=>{
             this.errMsg=response.data;
           });
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+          axios.post('/api/ws/future/crm/productIme/findDtoListByImes', qs.stringify({imeStr: this.inputForm.imeStr})).then((response)=>{
             this.productImeList=response.data;
 
             let tmpMap = new Map();

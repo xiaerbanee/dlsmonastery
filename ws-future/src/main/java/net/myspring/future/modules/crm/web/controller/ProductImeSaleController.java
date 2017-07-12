@@ -1,12 +1,10 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.unboundid.ldap.sdk.BindResult;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeForSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;

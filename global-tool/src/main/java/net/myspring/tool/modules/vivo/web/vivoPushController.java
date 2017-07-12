@@ -1,8 +1,8 @@
 package net.myspring.tool.modules.vivo.web;
 
-import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.tool.common.dataSource.DbContextHolder;
-import net.myspring.tool.modules.vivo.dto.FutureCustomerDto;
+import net.myspring.tool.modules.vivo.domain.SCustomersM13e00;
+import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +18,13 @@ public class vivoPushController {
 
     @RequestMapping(value = "pushVivoData")
     public void pushVivoData(String date){
+        DbContextHolder.get().setCompanyName("JXVIVO");
         //机构数据
-        vivoPushService.pushVivoZones(date);
+        vivoPushService.pushVivoZonesData();
         //客户数据
-        List<FutureCustomerDto> futureCustomerDtoList = vivoPushService.getFutureVivoCustomers(date);
+        DbContextHolder.get().setCompanyName("JXOPPO");
+        List<SCustomerDto> futureCustomerDtoList = vivoPushService.getVivoCustomersData(date);
+        DbContextHolder.get().setCompanyName("JXVIVO");
         vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList,date);
     }
 }

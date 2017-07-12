@@ -136,12 +136,14 @@ public class MenuService {
             } else {
                 permissionList = permissionRepository.findByRoleId(roleId);
             }
-            menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
-            List<Menu> menuList=menuRepository.findByMenuIdsAndMobile(menuIdList,false,roleId);
-            if(CollectionUtil.isNotEmpty(menuList)){
-                menuIdList=CollectionUtil.extractToList(menuList,"id");
-            }else {
-                menuIdList=Lists.newArrayList();
+            if(CollectionUtil.isNotEmpty(permissionList)){
+                menuIdList = CollectionUtil.extractToList(permissionList, "menuId");
+                List<Menu> menuList=menuRepository.findByMenuIdsAndMobile(menuIdList,false,roleId);
+                if(CollectionUtil.isNotEmpty(menuList)){
+                    menuIdList=CollectionUtil.extractToList(menuList,"id");
+                }else {
+                    menuIdList=Lists.newArrayList();
+                }
             }
             List<Menu> permissionIsEmptyMenus = menuRepository.findByPermissionIsEmpty();
             menuIdList = CollectionUtil.union(menuIdList, CollectionUtil.extractToList(permissionIsEmptyMenus, "id"));

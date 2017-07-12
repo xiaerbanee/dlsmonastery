@@ -78,7 +78,7 @@ public class RoleService {
             }
             roleModuleRepository.setEnabledByRoleId(true, role.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                roleModuleRepository.setEnabledByModuleIdList(false,removeIdList);
+                roleModuleRepository.setEnabledByRoleIdAndModuleIdList(false,removeIdList,role.getId());
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 roleModuleRepository.save(addRoleModules);
@@ -104,7 +104,7 @@ public class RoleService {
             }
             rolePermissionRepository.setEnabledByRoleId(true, roleForm.getId());
             if (CollectionUtil.isNotEmpty(removeIdList)) {
-                rolePermissionRepository.setEnabledByPermissionIdList(false,removeIdList);
+                rolePermissionRepository.setEnabledByRoleIdAndPermissionIdList(false,removeIdList,roleForm.getId());
             }
             if (CollectionUtil.isNotEmpty(addIdList)) {
                 rolePermissionRepository.save(rolePermissions);

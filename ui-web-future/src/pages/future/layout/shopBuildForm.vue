@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item :label="$t('shopBuildForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop" @input="refreshRecentMonthSaleAmount()" :disabled="shopDisabled"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="shop" @input="refreshRecentMonthSaleAmount()" :disabled="shopDisabled"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopBuildForm.monthSaleQty')" prop="recentSaleDescription">
               {{recentSaleDescription}}

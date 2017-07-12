@@ -17,10 +17,10 @@ interface OfficeLeaderRepository : BaseRepository<OfficeLeader,String>{
     fun setEnabledByOfficeId(@Param("enabled") enabled: Boolean, @Param("officeId") officeId: String): Int
 
     @Query("""
-        UPDATE  #{#entityName} set enabled=:enabled where leaderId in :leaderList
+        UPDATE  #{#entityName} set enabled=:enabled where leaderId in :leaderList and officeId=:officeId
     """)
     @Modifying
-    fun setEnabledByLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: MutableList<String>): Int
+    fun setEnabledByOfficeAndLeaderIds(@Param("enabled") enabled: Boolean, @Param("leaderList") leaderList: MutableList<String>,@Param("officeId")officeId: String): Int
 
     @Query("""
         SELECT t1
