@@ -655,6 +655,7 @@ public class GoodsOrderService {
 
         expressOrder.setExpressPrintQty(0);
         expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
+        expressOrder.setExtendId(goodsOrder.getId());
         expressOrder.setContator(firstDetailForm.getContator());
         expressOrder.setAddress(firstDetailForm.getAddress());
         expressOrder.setMobilePhone(firstDetailForm.getMobilePhone());
