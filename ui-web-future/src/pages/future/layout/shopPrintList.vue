@@ -52,8 +52,8 @@
           <template scope="scope">
             <div class="action" v-permit="'crm:shopPrint:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopPrint:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopPrintList.audit')}}</el-button></div>
-            <div class="action" v-if="((scope.row.isEditable&&!scope.row.locked)||scope.row.isAuditable)&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopPrint:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button></div>
-            <div class="action" v-if="scope.row.isEditable&&!scope.row.locked" v-permit="'crm:shopPrint:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable||(scope.row.isEditable&&!scope.row.locked)" v-permit="'crm:shopPrint:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopPrintList.edit')}}</el-button></div>
+            <div class="action" v-if="scope.row.isAuditable||(scope.row.isEditable&&!scope.row.locked)" v-permit="'crm:shopPrint:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopPrintList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
