@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,7 +60,7 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value = "checkForSale")
-    public String checkForSale(String imeStr) {
+    public String checkForSale(@RequestBody  String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;
@@ -68,7 +69,7 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value = "checkForSaleBack")
-    public String checkForSaleBack(String imeStr) {
+    public String checkForSaleBack(@RequestBody  String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;
@@ -77,7 +78,7 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value="findProductImeForSaleDto")
-    public List<ProductImeForSaleDto> findProductImeForSaleDto(String imeStr) {
+    public List<ProductImeForSaleDto> findProductImeForSaleDto(@RequestBody String imeStr) {
         return productImeSaleService.findProductImeForSaleDto(imeStr);
     }
 
