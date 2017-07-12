@@ -42,7 +42,7 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
 interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>
 
-    fun findNextBusinessId(date: LocalDate): String
+    fun findMaxBusinessId(date: LocalDate): Long
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
 
@@ -127,10 +127,10 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 """, Collections.singletonMap("businessIdList", businessIdList), String::class.java)
     }
 
-    override fun findNextBusinessId(date: LocalDate): String {
+    override fun findMaxBusinessId(date: LocalDate): Long {
         val sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date"
-        val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),String::class.java)
-        return IdUtils.getNextBusinessId(maxBusinessId, date)
+        val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),Long::class.java)
+        return maxBusinessId;
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {
