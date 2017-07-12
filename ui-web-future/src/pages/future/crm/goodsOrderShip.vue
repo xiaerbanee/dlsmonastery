@@ -21,7 +21,13 @@
                 {{goodsOrder.formatId}}
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShip.boxImeStr')" prop="boxImeStr">
-                <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
+                <!--回车，删除，ctrl+v，ctrl+x时均触发-->
+                <textarea v-model="inputForm.boxImeStr" :rows="5" class="el-textarea__inner"
+                          @keyup.enter="checkAndSummary()"
+                          @keyup.delete="checkAndSummary()"
+                          @keyup.ctrl.86="checkAndSummary()"
+                          @keyup.ctrl.88="checkAndSummary()"
+                ></textarea>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShip.expressCodes')" prop="expressCodes">
                 <el-input type="textarea" v-model="inputForm.expressCodes" ></el-input>
@@ -41,7 +47,13 @@
                 <bool-radio-group v-model="continueShip"></bool-radio-group>
               </el-form-item>
               <el-form-item   :label="$t('goodsOrderShip.imeStr')" prop="imeStr">
-                <textarea ref="imeStrTextArea" v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner" @input="checkAndSummary()"></textarea>
+                <!--回车，删除，ctrl+v，ctrl+x时均触发-->
+                <textarea ref="imeStrTextArea" v-model="inputForm.imeStr" :rows="5" class="el-textarea__inner"
+                          @keyup.enter="checkAndSummary()"
+                          @keyup.delete="checkAndSummary()"
+                          @keyup.ctrl.86="checkAndSummary()"
+                          @keyup.ctrl.88="checkAndSummary()"
+                ></textarea>
               </el-form-item>
               <el-form-item :label="$t('goodsOrderShip.shipRemarks')" prop="shipRemarks">
                 <el-input type="textarea" v-model="inputForm.shipRemarks"></el-input>
@@ -117,27 +129,29 @@
           if(checkResult === "error" ){
             this.$alert("请先处理错误信息");
             this.submitDisabled = false;
-            return;
+          }else if(checkResult === "warning"){
+            this.$confirm("还有货品未发送完，确认保存？").then(()=>{
+              this.doSubmit();
+            }).catch(()=>{
+              this.submitDisabled = false;
+            });
+          }else{
+            this.doSubmit();
           }
-
-          if(checkResult === "warning" && !confirm("还有货品未发送完，确认保存？")){
-            this.submitDisabled = false;
-            return;
-          }
-
-          axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
-            this.$message(response.data.message);
-            this.submitDisabled = false;
-            if(this.continueShip){
-              this.initPage(null, true);
-            } else {
-              this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}});
-            }
-          }).catch(()=> {
-            this.submitDisabled = false;
-          });
         });
-      },checkAndSummary(){
+      }, doSubmit(){
+        axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+          this.$message(response.data.message);
+          this.submitDisabled = false;
+          if(this.continueShip){
+            this.initPage(null, true);
+          } else {
+            this.$router.push({name:'goodsOrderShipList',query:util.getQuery("goodsOrderShipList"), params:{_closeFrom:true}});
+          }
+        }).catch(()=> {
+          this.submitDisabled = false;
+        });
+      }, checkAndSummary(){
         return axios.get('/api/ws/future/crm/goodsOrderShip/shipCheck',{params:{id:this.inputForm.id,boxImeStr:this.inputForm.boxImeStr,imeStr:this.inputForm.imeStr}}).then((response) => {
           this.shipResult = response.data;
           this.refreshDetailShipInfo(this.shipResult.shipQtyMap);
@@ -213,7 +227,7 @@
         }
       },
       tableRowClassName(row, index){
-        if (row.leftQty != 0) {
+        if (row.leftQty !== 0) {
           return "row-unfinished";
         }else{
           return "row-finished";
