@@ -88,7 +88,7 @@
         this.pageRequest();
       }
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/ws/future/crm/afterSale/getQuery').then((response) =>{
         that.formData=response.data;
         util.copyValue(that.$route.query,that.formData);

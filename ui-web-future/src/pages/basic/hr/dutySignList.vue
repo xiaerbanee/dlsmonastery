@@ -109,7 +109,7 @@
         window.location.href="/api/basic/hr/dutySign/export?"+qs.stringify(submitData);
 			}
     },created () {
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
       this.initPromise = axios.get('/api/basic/hr/dutySign/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);

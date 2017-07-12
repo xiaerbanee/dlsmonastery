@@ -51,7 +51,6 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	runtime('mysql:mysql-connector-java:5.1.42')
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
-	compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '9.5.0'
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 

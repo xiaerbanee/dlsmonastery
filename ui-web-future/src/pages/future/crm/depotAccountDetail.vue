@@ -36,7 +36,7 @@
       }
     },
     created(){
-      this.pageHeight = window.outerHeight -320;
+       this.pageHeight = 0.75*window.innerHeight;
 
       axios.get('/api/ws/future/basic/depot/findDepotAccountDetailList',{params:{clientOutId:this.$route.query.clientOutId, dateRange:this.$route.query.dateRange}} ).then((response)=>{
 
