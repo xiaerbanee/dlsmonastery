@@ -1,45 +1,8 @@
 spring:
   application:
     name: global-tool
-  datasource:
-    local:
-      url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-      username: root
-      password: bbk@123456
-      driver-class-name: com.mysql.jdbc.Driver
-    future:
-      JXOPPO:
-        url: jdbc:mysql://168.192.1.17:3316/db_oppo?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
-        username: root
-        password: bbk@123456
-        driver-class-name: com.mysql.jdbc.Driver
-    factory:
-      JXOPPO:
-        url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
-        username: Agent
-        password: gz86!*%
-        driver-class-name: net.sourceforge.jtds.jdbc.Driver
-      JXVIVO:
-        url: jdbc:jtds:sqlserver://218.16.99.180:13120/plantesaleweb
-        username: user_m13e00
-        password: user_m13e00
-        driver-class-name: net.sourceforge.jtds.jdbc.Driver
-  redis:
-    host: localhost
-    password:
-    port: 6379
-    database: 0
-    max-idle: 250
-    max-total: 500
-  cloud:
-    stream:
-      bindings:
-        output:
-          destination: cloud-stream
-  rabbitmq:
-    addresses: amqp://127.0.0.1:5672
-    username: alan
-    password: alan
+  profiles:
+    active: dev
 
 server:
   port: 2100
@@ -65,8 +28,6 @@ security:
 feign:
   hystrix:
     enabled: false
-  httpclient:
-    enabled: true
 
 ribbon:
   ReadTimeout: 180000
