@@ -37,7 +37,7 @@ public class ImeAllotController {
     }
 
     @RequestMapping(value = "checkForImeAllot")
-    public String checkForImeAllot(@RequestBody  String imeStr) {
+    public String checkForImeAllot(String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;

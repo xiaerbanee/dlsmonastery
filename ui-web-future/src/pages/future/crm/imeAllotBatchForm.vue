@@ -98,10 +98,10 @@
         };
       },
       search() {
-        axios.post('/api/ws/future/crm/productIme/findDtoListByImes', {params: {imeStr:this.imeStr}}).then((response) => {
+        axios.post('/api/ws/future/crm/productIme/findDtoListByImes', qs.stringify({imeStr: this.imeStr})).then((response) => {
           table.loadData(response.data);
         });
-        axios.post('/api/ws/future/crm/imeAllot/checkForImeAllot',{params:{imeStr:this.imeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/imeAllot/checkForImeAllot', qs.stringify({imeStr: this.imeStr})).then((response)=>{
           this.errMsg=response.data;
         });
       },
