@@ -74,7 +74,7 @@ public class BankInController {
     }
 
     @RequestMapping(value = "delete")
-    @PreAuthorize("hasPermission(null,'crm:bankIn:delte')")
+    @PreAuthorize("hasPermission(null,'crm:bankIn:delete')")
     public RestResponse delete(String id) {
         bankInService.logicDelete(id);
         return new RestResponse("删除成功",ResponseCodeEnum.removed.name());

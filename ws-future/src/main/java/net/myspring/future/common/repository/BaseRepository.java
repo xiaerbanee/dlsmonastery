@@ -18,5 +18,6 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
 
    T logicDelete(ID id);
 
+   List<T> loginDeleteByIdList(List<ID> idList);
 
 }

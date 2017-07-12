@@ -94,6 +94,10 @@ public class OppoPushSerivce {
         }
         for(CustomerDto customerDto:customerDtosList){
             String depotId=getDepotId(customerDto);
+            //一代库不上抛
+            if(StringUtils.isBlank(depotId)){
+                continue;
+            }
             if(StringUtils.isNotBlank(customerDto.getAreaId())){
                 customerDto.setAreaName(officeMap.get(customerDto.getAreaId()).getName());
             }

@@ -26,7 +26,7 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
 
     public List<String> getViewPositionIdList() {
         if(CollectionUtil.isEmpty(viewPositionIdList)&&StringUtils.isNotBlank(viewPositionIds)){
-            this.createdPositionIdList=StringUtils.getSplitList(viewPositionIds, CharConstant.COMMA);
+            this.viewPositionIdList=StringUtils.getSplitList(viewPositionIds, CharConstant.COMMA);
         }
         return viewPositionIdList;
     }

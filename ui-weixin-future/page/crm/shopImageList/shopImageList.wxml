@@ -29,8 +29,8 @@
           <view class="weui-label">办事处</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="officeId" range="{{formProperty.areaList}}" range-key="name" value="{{formData.officeId}}" bindchange="bindOffice">
-            <view class="weui-input">{{formData.officeName}}</view>
+          <picker name="areaId" range="{{formProperty.areaList}}" range-key="name" value="{{formData.id}}" bindchange="bindOffice">
+            <view class="weui-input">{{formData.name}}</view>
           </picker>
         </view>
       </view>
@@ -39,9 +39,7 @@
           <view class="weui-label">门店</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="shopId" value="{{formData.shopId}}" bindtap="bindShop" disabled>
-            <view class="weui-input">{{formData.shopName}} <image class="right_icon" src="/image/icons/right.png"/></view>
-          </picker>
+          <input name="shopName" class="weui-input" placeholder="模糊搜索" value="{{formData.shopName?formData.shopName:''}}" />
         </view>
       </view>
     </view>
@@ -54,9 +52,10 @@
       <template is="header" />
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
-          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.shop.name}}</view>
-          <view class="weui-media-box__desc item_style">{{item.created.fullName}}{{item.createdDate}}</view>
-          <view class="weui-media-box__desc item_style">部门:{{item.shop.office.name}}</view>
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.shopName}}</view>
+          <view class="weui-media-box__desc item_style">{{item.createdByName}}-{{item.createdDate}}</view>
+          <view class="weui-media-box__desc item_style">办事处:{{item.areaName}}</view>
+          <view class="weui-media-box__desc item_style">门店:{{item.shopName}}</view>
           <view class="weui-media-box__desc item_style">形象方案:{{item.imageType}}</view>
           <view class="weui-media-box__desc item_style">图片规格:{{item.imageSize}}</view>
           <view class="weui-media-box__desc item_style">备注:{{item.remarks}}</view>

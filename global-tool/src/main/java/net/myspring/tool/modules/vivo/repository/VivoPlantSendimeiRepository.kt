@@ -24,7 +24,7 @@ interface VivoPlantSendimeiRepository : BaseRepository<VivoPlantSendimei, String
 }
 interface VivoPlantSendimeiRepositoryCustom{
     fun findPlantSendimei(dateStart: String, dateEnd: String, agentCodes: MutableList<String>): MutableList<VivoPlantSendimei>
-    fun findImeis( imeiList: MutableList<String>): MutableList<String>
+    fun findImeis( imeiList: MutableList<String>): MutableList<VivoPlantSendimei>
 }
 
 class VivoPlantSendimeiRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantSendimeiRepositoryCustom {
@@ -35,18 +35,18 @@ class VivoPlantSendimeiRepositoryImpl @Autowired constructor(val namedParameterJ
         paramMap.put("agentCodes",agentCodes);
         return namedParameterJdbcTemplate.query("""
       select *  from vr_plant_sendimei_m13e00 t1
-        where t1.createdTime >= :dateStart
-        and t1.createdTime < :dateEnd
-        and t1.companyId in :agentCodes
+        where t1.createdtime >= :dateStart
+        and t1.createdtime < :dateEnd
+        and t1.company_id in :agentCodes
       """,paramMap,BeanPropertyRowMapper(VivoPlantSendimei::class.java));
     }
 
-    override fun findImeis(imeiList:MutableList<String>): MutableList<String>{
+    override fun findImeis(imeiList:MutableList<String>): MutableList<VivoPlantSendimei>{
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("imeiList",imeiList);
         return namedParameterJdbcTemplate.query("""
-                select t.imei  from vivo_plant_sendimei t where t.imei in(:imeiList)
-        """,  paramMap,BeanPropertyRowMapper(String::class.java));
+                select t  from vivo_plant_sendimei t where t.imei in(:imeiList)
+        """,  paramMap,BeanPropertyRowMapper(VivoPlantSendimei::class.java));
     }
 
 }
