@@ -128,11 +128,11 @@
             }
           });
         },imeStrChanged(){
-          axios.get('/api/ws/future/crm/productImeUpload/checkForUpload',{params:{imeStr:this.imeStr}}).then((response)=>{
+          axios.post('/api/ws/future/crm/productImeUpload/checkForUpload',qs.stringify({imeStr: this.imeStr})).then((response)=>{
             this.errMsg=response.data;
           });
 
-          axios.get('/api/ws/future/crm/productIme/findDtoListByImes',{params:{imeStr:this.imeStr}}).then((response)=>{
+          axios.post('/api/ws/future/crm/productIme/findDtoListByImes',qs.stringify({imeStr: this.imeStr})).then((response)=>{
             this.productImeList=response.data;
 
             let tmpMap = new Map();
