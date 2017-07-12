@@ -2,9 +2,7 @@ package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.util.time.LocalDateUtils;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class IdUtils {
@@ -50,7 +48,6 @@ public class IdUtils {
 		return idList;
 	}
 
-
 	public static String getFormatId(String id, String prefix) {
 		return getFormatId(id, prefix, "000000000000");
 	}
@@ -62,14 +59,6 @@ public class IdUtils {
 			java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat(format);
 			return prefix + decimalFormat.format(Long.valueOf(id));
 		}
-	}
-
-	public static String getNextBusinessId(String maxBusinessId, LocalDate date) {
-		if(maxBusinessId==null) {
-			String businessId = LocalDateUtils.formatLocalDate(date,"yyMMdd") + "000000";
-			maxBusinessId = String.valueOf(businessId);
-		}
-		return String.valueOf(Long.valueOf(maxBusinessId)+1);
 	}
 
 }

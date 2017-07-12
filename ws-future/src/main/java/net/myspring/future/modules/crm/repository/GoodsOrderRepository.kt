@@ -7,7 +7,6 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
-import net.myspring.util.text.IdUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -37,12 +36,20 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
      """)
     @Modifying
     fun updateStatusByIdIn( status:String,ids: MutableList<String>):Int
+
+    @Query("""
+    SELECT
+        MAX(t1.businessId)
+    FROM
+        #{#entityName} t1
+    WHERE
+        t1.billDate = ?1
+        """)
+    fun findMaxBusinessId(billDate: LocalDate): String?
 }
 
 interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>
-
-    fun findNextBusinessId(date: LocalDate): String
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
 
@@ -53,6 +60,7 @@ interface GoodsOrderRepositoryCustom {
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+
     override fun findDtoListByIdList(goodsOrderIdList: List<String>): List<GoodsOrderDto> {
         if(CollectionUtil.isEmpty(goodsOrderIdList)){
             return ArrayList()
@@ -125,12 +133,6 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                       and t.lx_mall_order=1
                       and t.enabled = 1
                 """, Collections.singletonMap("businessIdList", businessIdList), String::class.java)
-    }
-
-    override fun findNextBusinessId(date: LocalDate): String {
-        val sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date"
-        val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),String::class.java)
-        return IdUtils.getNextBusinessId(maxBusinessId, date)
     }
 
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {

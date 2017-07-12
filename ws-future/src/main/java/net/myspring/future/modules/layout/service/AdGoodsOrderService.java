@@ -15,13 +15,17 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.*;
+import net.myspring.future.modules.basic.domain.AdPricesystem;
+import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
+import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
 import net.myspring.future.modules.basic.repository.*;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
@@ -68,8 +72,6 @@ public class AdGoodsOrderService {
     @Autowired
     private AdGoodsOrderRepository adGoodsOrderRepository;
     @Autowired
-    private DepotStoreRepository depotStoreRepository;
-    @Autowired
     private ClientRepository clientRepository;
     @Autowired
     private ProductRepository productRepository;
@@ -92,11 +94,11 @@ public class AdGoodsOrderService {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private CloudClient cloudClient;
-    @Autowired
     private DepotManager depotManager;
     @Autowired
     private SalOutStockManager salOutStockManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public Page<AdGoodsOrderDto> findPage(Pageable pageable, AdGoodsOrderQuery adGoodsOrderQuery) {
         adGoodsOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -104,46 +106,6 @@ public class AdGoodsOrderService {
         cacheUtils.initCacheInput(page.getContent());
         return page;
     }
-
-//    public Map<String,Object> getAmountMap(AdGoodsOrder adGoodsOrder){
-//        Map<String,Object> map=Maps.newHashMap();
-//        // 统计应付运费,以门店物料运费为准
-//        Map<String,AdPricesystemDetail> priceMap = Maps.newHashMap();
-//        Depot shop=depotRepository.findOne(adGoodsOrder.getShopId());
-//
-//
-//        BigDecimal yfyfAmount = BigDecimal.ZERO;
-//        for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrder.getAdGoodsOrderDetailList()) {
-//            if (priceMap.get(adGoodsOrderDetail.getProductId()) != null) {
-//                BigDecimal price = priceMap.get(adGoodsOrderDetail.getProductId()).getPrice();
-//                if (price != null) {
-//                    yfyfAmount = yfyfAmount.add(new BigDecimal(adGoodsOrderDetail.getBillQty()).multiply(price));
-//                }
-//            }
-//        }
-//        // 统计应收运费 ，全部以A类物料运费为准
-//        Map<String, AdPricesystemDetail> ysyfMap = Maps.newHashMap();
-//        AdPricesystem defaultAdPricesystem = adpricesystemRepository.findByName("");
-//        if (defaultAdPricesystem != null) {
-//            List<AdPricesystemDetail> adPricesystemDetailList=adPricesystemDetailRepository.findByAdPricesystemId(defaultAdPricesystem.getId());
-//            for (AdPricesystemDetail adDetail : adPricesystemDetailList) {
-//                ysyfMap.put(adDetail.getProductId(), adDetail);
-//            }
-//        }
-//        BigDecimal ysyfAmount = BigDecimal.ZERO;
-//        for (AdGoodsOrderDetail adGoodsOrderDetail : adGoodsOrder.getAdGoodsOrderDetailList()) {
-//            if (ysyfMap.get(adGoodsOrderDetail.getProductId()) != null) {
-//                BigDecimal price = ysyfMap.get(adGoodsOrderDetail.getProductId()).getPrice();
-//                if (price != null) {
-//                    ysyfAmount = ysyfAmount.add(new BigDecimal(adGoodsOrderDetail.getBillQty()).multiply(price));
-//                }
-//            }
-//        }
-//        map.put("ysyfAmount", ysyfAmount);
-//        map.put("yfyfAmount", yfyfAmount);
-//        map.put("priceMap", priceMap);
-//        return map;
-//    }
 
     @Transactional
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
@@ -191,7 +153,7 @@ public class AdGoodsOrderService {
         }
     }
 
-private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
+    private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
         ActivitiStartDto activitiStartDto = activitiClient.start(new ActivitiStartForm("柜台订货", adGoodsOrder.getId(), AdGoodsOrder.class.getSimpleName(), adGoodsOrder.getOutShopId()));
 
@@ -205,7 +167,7 @@ private void startAndSaveProcessFlowInfo(AdGoodsOrder adGoodsOrder) {
 
     }
 
-private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
+    private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm adGoodsOrderForm) {
 
         ExpressOrder expressOrder;
 
@@ -237,7 +199,7 @@ private void saveExpressOrderInfo(AdGoodsOrder adGoodsOrder, AdGoodsOrderForm ad
 
     }
 
-private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
+    private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsOrderDetailForm> detailFormList) {
 
         List<AdGoodsOrderDetail> toBeSaved = new ArrayList<>();
         for (AdGoodsOrderDetailForm adGoodsOrderDetailForm : detailFormList) {
@@ -367,7 +329,7 @@ private void saveAdGoodsOrderDetailInfo(AdGoodsOrder adGoodsOrder, List<AdGoodsO
             throw new ServiceException("该订单状态不为：" + AdGoodsOrderStatusEnum.待开单.name() + "，不能开单");
         }
 
-        adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(adGoodsOrderRepository.findMaxBusinessId(adGoodsOrderBillForm.getBillDate()), adGoodsOrderBillForm.getBillDate()));
+        adGoodsOrder.setBusinessId(redisIdManager.getNextAdGoodsOrderBusinessId(adGoodsOrderBillForm.getBillDate()));
         adGoodsOrder.setStoreId(adGoodsOrderBillForm.getStoreId());
         adGoodsOrder.setBillDate(adGoodsOrderBillForm.getBillDate());
         adGoodsOrder.setBillAddress(adGoodsOrderBillForm.getBillAddress());

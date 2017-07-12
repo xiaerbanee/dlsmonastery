@@ -42,6 +42,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
@@ -106,6 +107,8 @@ public class GoodsOrderService {
     private CarrierOrderRepository carrierOrderRepository;
     @Autowired
     private ExpressOrderManager expressOrderManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public GoodsOrder findByBusinessId(String businessId){
         return goodsOrderRepository.findByBusinessId(businessId);
@@ -240,6 +243,7 @@ public class GoodsOrderService {
         expressOrder.setContator(shop.getContator());
         expressOrder.setAddress(shop.getAddress());
         expressOrder.setMobilePhone(shop.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
         expressOrderRepository.save(expressOrder);
@@ -260,7 +264,7 @@ public class GoodsOrderService {
         goodsOrder.setBillDate(goodsOrderBillForm.getBillDate());
         goodsOrder.setRemarks(goodsOrderBillForm.getRemarks());
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(goodsOrderBillForm.getBillDate()));
+        goodsOrder.setBusinessId(redisIdManager.getNextGoodsOrderBusinessId(goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
 
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
@@ -659,6 +663,7 @@ public class GoodsOrderService {
         expressOrder.setContator(firstDetailForm.getContator());
         expressOrder.setAddress(firstDetailForm.getAddress());
         expressOrder.setMobilePhone(firstDetailForm.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(toDepot.getId());
         expressOrder.setShipType(firstDetailForm.getShipType());
         expressOrderRepository.save(expressOrder);

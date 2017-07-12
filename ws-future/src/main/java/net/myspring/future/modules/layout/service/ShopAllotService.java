@@ -1,11 +1,8 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
-import net.myspring.cloud.common.enums.ExtendTypeEnum;
-import net.myspring.cloud.modules.input.dto.*;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -15,7 +12,7 @@ import net.myspring.future.modules.basic.domain.PricesystemDetail;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemDetailRepository;
-import net.myspring.future.modules.crm.dto.StoreAllotDto;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
@@ -28,7 +25,6 @@ import net.myspring.future.modules.layout.web.form.ShopAllotDetailForm;
 import net.myspring.future.modules.layout.web.form.ShopAllotForm;
 import net.myspring.future.modules.layout.web.query.ShopAllotQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,6 +57,8 @@ public class ShopAllotService {
     private ClientRepository clientRepository;
     @Autowired
     private PricesystemDetailRepository pricesystemDetailRepository;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
         Page<ShopAllotDto> page = shopAllotRepository.findPage(pageable, shopAllotQuery);
@@ -108,7 +106,7 @@ public class ShopAllotService {
             shopAllot.setToShopId(shopAllotForm.getToShopId());
             shopAllot.setRemarks(shopAllotForm.getRemarks());
             LocalDate now = LocalDate.now();
-            shopAllot.setBusinessId(IdUtils.getNextBusinessId(shopAllotRepository.findMaxBusinessId(now.atStartOfDay()), now));
+            shopAllot.setBusinessId(redisIdManager.getNextShopAllotBusinessId(now));
             shopAllot.setStatus(AuditStatusEnum.申请中.name());
 
             shopAllotRepository.save(shopAllot);

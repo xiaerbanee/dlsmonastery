@@ -1,11 +1,9 @@
 package net.myspring.future.modules.crm.repository
 
 import com.google.common.collect.Maps
-import net.myspring.future.common.enums.AfterSaleTypeEnum
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.AfterSale
 import net.myspring.future.modules.crm.dto.AfterSaleDto
-import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
@@ -18,7 +16,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -36,6 +34,13 @@ interface AfterSaleRepository : BaseRepository<AfterSale, String>,AfterSaleRepos
 
     fun findByBadProductImeIdIn(badProductImeId:MutableList<String>):MutableList<AfterSale>
 
+    @Query("""
+    SELECT MAX(t1.businessId)
+    FROM #{#entityName} t1
+    WHERE t1.createdDate >= ?1
+        """)
+    fun findMaxBusinessId(dateStart: LocalDateTime): String?
+
 }
 
 
@@ -48,13 +53,6 @@ interface AfterSaleRepositoryCustom{
     fun findDtoByImeIn(imeList:MutableList<String>): MutableList<AfterSaleDto>
 
     fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto>
-
-    @Query("""
-    SELECT MAX(t1.businessId)
-    FROM #{#entityName} t1
-    WHERE t1.createdDate >= ?1
-        """)
-    fun findMaxBusinessId(dateStart: LocalDate): MutableList<String>
 
 }
 
@@ -120,18 +118,6 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         print(sb.toString())
         return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));
-    }
-
-    override fun findMaxBusinessId(dateStart: LocalDate): MutableList<String> {
-        val sb = StringBuilder()
-        sb.append("""
-            SELECT MAX(t1.business_id)
-            FROM crm_after_sale  t1
-            WHERE t1.created_date >= :dateStart
-        """)
-        var paramMap = HashMap<String, Any>()
-        paramMap.put("dateStart", dateStart);
-        return namedParameterJdbcTemplate.queryForList(sb.toString(), paramMap, String::class.java)
     }
 
     override fun findDtoByIds(ids: MutableList<String>): MutableList<AfterSaleDto> {
