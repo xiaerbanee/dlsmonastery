@@ -1,3 +1,12 @@
+spring:
+  application:
+    name: summer-gateway
+  profiles:
+    active: dev
+management:
+  security:
+    enabled: false
+
 server:
   port: 443
   ssl:
@@ -9,20 +18,6 @@ server:
 logging:
   file: summer-gateway.log
   level: debug
-
-spring:
-  redis:
-    host: localhost
-    password:
-    port: 6379
-    database: 0
-    max-idle: 250
-    max-total: 500
-  application:
-    name: summer-gateway
-management:
-  security:
-    enabled: false
 
 eureka:
   instance:
