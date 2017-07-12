@@ -2,7 +2,7 @@ spring:
   application:
     name: global-tool
   profiles:
-    active: dev
+    active: prod
 
 server:
   port: 2100
