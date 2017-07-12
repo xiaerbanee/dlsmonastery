@@ -2,6 +2,7 @@ package net.myspring.basic.modules.sys.repository
 
 import com.google.common.collect.Maps
 import net.myspring.basic.common.repository.BaseRepository
+import net.myspring.basic.common.utils.RequestUtils
 import net.myspring.basic.modules.sys.domain.Menu
 import net.myspring.basic.modules.sys.dto.MenuDto
 import net.myspring.basic.modules.sys.web.query.MenuQuery
@@ -74,7 +75,7 @@ interface MenuRepositoryCustom{
 class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): MenuRepositoryCustom{
     override fun findByMenuIdsAndMobile(menuIds: MutableList<String>, isMobile: Boolean,roleId:String): MutableList<Menu> {
             var sb = StringBuilder("""
-                   SELECT t4.*
+                   SELECT DISTINCT t4.*
                    FROM
                     sys_backend t1,sys_backend_module t2,sys_menu_category t3,sys_menu t4,sys_role_module t6
                 where
@@ -95,7 +96,12 @@ class MenuRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: 
                     and t4.mobile_href is not null
                 """);
             }
-        sb.append("  and t4.id in (:menuIds)    and t6.role_id=:roleId");
+        if(!RequestUtils.getAdmin()) {
+            sb.append("""
+                    and t6.role_id=:roleId
+                """);
+        }
+        sb.append("  and t4.id in (:menuIds)    ");
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("menuIds",menuIds);
         paramMap.put("roleId",roleId);
