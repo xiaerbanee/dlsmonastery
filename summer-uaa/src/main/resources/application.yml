@@ -8,7 +8,7 @@ spring:
       password: bbk@123456
       driver-class-name: com.mysql.jdbc.Driver
     oauth:
-      url: jdbc:mysql://168.192.1.17:3316/summer_oauth?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      url: jdbc:mysql://168.192.1.17:3316/db_oauth?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
       username: root
       password: bbk@123456
       driver-class-name: com.mysql.jdbc.Driver
@@ -39,8 +39,6 @@ eureka:
 feign:
   hystrix:
     enabled: false
-  httpclient:
-    enabled: true
 
 weixin:
   appid: wx9306888de0cb1c04
