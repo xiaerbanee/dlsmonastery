@@ -1,35 +1,32 @@
 package net.myspring.tool.modules.vivo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 //代理商表
 @Entity
-@Table(name="vivo_push_scustomers")
-public class VivoPushSCustomers {
+@Table(name = "S_Customers_M13E00")
+public class SCustomersM13e00 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    private String customerId;
-    private String customerName;
+    private String customerid;
+    private String customername;
     private String shortcut;
-    private String customerType;
-    private String customerSort;
-    private String customerKasort;
+    private String customertype;
+    private String customersort;
+    private String customerkasort;
     private String address;
     private String postcode;
     private String telephone;
     private String fax;
-    private String linkMan;
-    private String linkTel;
+    private String linkman;
+    private String linktel;
     private String remark;
-    private Integer inUse;
-    private String zoneId;
-    private String companyId;
-    private LocalDate recordDate;
-    private Integer customerLevel;
+    private String inuse;
+    private String zoneid;
+    private String companyid;
+    private LocalDate recorddate;
+    private Integer customerlevel;
     private String manager;
     private String customerstr1;
     private String customerstr2;
@@ -41,34 +38,27 @@ public class VivoPushSCustomers {
     private String customerstr8;
     private String customerstr9;
     private String customerstr10;
-    private Integer latentCustomers;
-    @JsonIgnore
-    private LocalDate createdDate;
+    private String latentcustomers;
 
-    public String getId() {
-        return id;
+    @Column(name = "CustomerID")
+    public String getCustomerid() {
+        return customerid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCustomerid(String customerid) {
+        this.customerid = customerid;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    @Column(name = "CustomerName")
+    public String getCustomername() {
+        return customername;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setCustomername(String customername) {
+        this.customername = customername;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
+    @Column(name = "ShortCut")
     public String getShortcut() {
         return shortcut;
     }
@@ -77,30 +67,34 @@ public class VivoPushSCustomers {
         this.shortcut = shortcut;
     }
 
-    public String getCustomerType() {
-        return customerType;
+    @Column(name = "CustomerType")
+    public String getCustomertype() {
+        return customertype;
     }
 
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
+    public void setCustomertype(String customertype) {
+        this.customertype = customertype;
     }
 
-    public String getCustomerSort() {
-        return customerSort;
+    @Column(name = "CustomerSort")
+    public String getCustomersort() {
+        return customersort;
     }
 
-    public void setCustomerSort(String customerSort) {
-        this.customerSort = customerSort;
+    public void setCustomersort(String customersort) {
+        this.customersort = customersort;
     }
 
-    public String getCustomerKasort() {
-        return customerKasort;
+    @Column(name = "CustomerKASort")
+    public String getCustomerkasort() {
+        return customerkasort;
     }
 
-    public void setCustomerKasort(String customerKasort) {
-        this.customerKasort = customerKasort;
+    public void setCustomerkasort(String customerkasort) {
+        this.customerkasort = customerkasort;
     }
 
+    @Column(name = "Address")
     public String getAddress() {
         return address;
     }
@@ -109,6 +103,7 @@ public class VivoPushSCustomers {
         this.address = address;
     }
 
+    @Column(name = "Postcode")
     public String getPostcode() {
         return postcode;
     }
@@ -117,6 +112,7 @@ public class VivoPushSCustomers {
         this.postcode = postcode;
     }
 
+    @Column(name = "Telephone")
     public String getTelephone() {
         return telephone;
     }
@@ -125,6 +121,7 @@ public class VivoPushSCustomers {
         this.telephone = telephone;
     }
 
+    @Column(name = "Fax")
     public String getFax() {
         return fax;
     }
@@ -133,22 +130,25 @@ public class VivoPushSCustomers {
         this.fax = fax;
     }
 
-    public String getLinkMan() {
-        return linkMan;
+    @Column(name = "LinkMan")
+    public String getLinkman() {
+        return linkman;
     }
 
-    public void setLinkMan(String linkMan) {
-        this.linkMan = linkMan;
+    public void setLinkman(String linkman) {
+        this.linkman = linkman;
     }
 
-    public String getLinkTel() {
-        return linkTel;
+    @Column(name = "LinkTel")
+    public String getLinktel() {
+        return linktel;
     }
 
-    public void setLinkTel(String linkTel) {
-        this.linkTel = linkTel;
+    public void setLinktel(String linktel) {
+        this.linktel = linktel;
     }
 
+    @Column(name = "Remark")
     public String getRemark() {
         return remark;
     }
@@ -157,46 +157,52 @@ public class VivoPushSCustomers {
         this.remark = remark;
     }
 
-    public Integer getInUse() {
-        return inUse;
+    @Column(name = "InUse")
+    public String getInuse() {
+        return inuse;
     }
 
-    public void setInUse(Integer inUse) {
-        this.inUse = inUse;
+    public void setInuse(String inuse) {
+        this.inuse = inuse;
     }
 
-    public String getZoneId() {
-        return zoneId;
+    @Column(name = "ZoneID")
+    public String getZoneid() {
+        return zoneid;
     }
 
-    public void setZoneId(String zoneId) {
-        this.zoneId = zoneId;
+    public void setZoneid(String zoneid) {
+        this.zoneid = zoneid;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    @Column(name = "CompanyID")
+    public String getCompanyid() {
+        return companyid;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompanyid(String companyid) {
+        this.companyid = companyid;
     }
 
-    public LocalDate getRecordDate() {
-        return recordDate;
+    @Column(name = "RecordDate")
+    public LocalDate getRecorddate() {
+        return recorddate;
     }
 
-    public void setRecordDate(LocalDate recordDate) {
-        this.recordDate = recordDate;
+    public void setRecorddate(LocalDate recorddate) {
+        this.recorddate = recorddate;
     }
 
-    public Integer getCustomerLevel() {
-        return customerLevel;
+    @Column(name = "CustomerLevel")
+    public Integer getCustomerlevel() {
+        return customerlevel;
     }
 
-    public void setCustomerLevel(Integer customerLevel) {
-        this.customerLevel = customerLevel;
+    public void setCustomerlevel(Integer customerlevel) {
+        this.customerlevel = customerlevel;
     }
 
+    @Column(name = "manager")
     public String getManager() {
         return manager;
     }
@@ -205,6 +211,7 @@ public class VivoPushSCustomers {
         this.manager = manager;
     }
 
+    @Column(name = "Customerstr1")
     public String getCustomerstr1() {
         return customerstr1;
     }
@@ -213,6 +220,7 @@ public class VivoPushSCustomers {
         this.customerstr1 = customerstr1;
     }
 
+    @Column(name = "Customerstr2")
     public String getCustomerstr2() {
         return customerstr2;
     }
@@ -221,6 +229,7 @@ public class VivoPushSCustomers {
         this.customerstr2 = customerstr2;
     }
 
+    @Column(name = "Customerstr3")
     public String getCustomerstr3() {
         return customerstr3;
     }
@@ -229,6 +238,7 @@ public class VivoPushSCustomers {
         this.customerstr3 = customerstr3;
     }
 
+    @Column(name = "Customerstr4")
     public String getCustomerstr4() {
         return customerstr4;
     }
@@ -237,6 +247,7 @@ public class VivoPushSCustomers {
         this.customerstr4 = customerstr4;
     }
 
+    @Column(name = "Customerstr5")
     public String getCustomerstr5() {
         return customerstr5;
     }
@@ -245,6 +256,7 @@ public class VivoPushSCustomers {
         this.customerstr5 = customerstr5;
     }
 
+    @Column(name = "Customerstr6")
     public String getCustomerstr6() {
         return customerstr6;
     }
@@ -253,6 +265,7 @@ public class VivoPushSCustomers {
         this.customerstr6 = customerstr6;
     }
 
+    @Column(name = "Customerstr7")
     public String getCustomerstr7() {
         return customerstr7;
     }
@@ -261,6 +274,7 @@ public class VivoPushSCustomers {
         this.customerstr7 = customerstr7;
     }
 
+    @Column(name = "Customerstr8")
     public String getCustomerstr8() {
         return customerstr8;
     }
@@ -269,6 +283,7 @@ public class VivoPushSCustomers {
         this.customerstr8 = customerstr8;
     }
 
+    @Column(name = "Customerstr9")
     public String getCustomerstr9() {
         return customerstr9;
     }
@@ -277,6 +292,7 @@ public class VivoPushSCustomers {
         this.customerstr9 = customerstr9;
     }
 
+    @Column(name = "Customerstr10")
     public String getCustomerstr10() {
         return customerstr10;
     }
@@ -285,19 +301,12 @@ public class VivoPushSCustomers {
         this.customerstr10 = customerstr10;
     }
 
-    public Integer getLatentCustomers() {
-        return latentCustomers;
+    @Column(name = "LatentCustomers")
+    public String getLatentcustomers() {
+        return latentcustomers;
     }
 
-    public void setLatentCustomers(Integer latentCustomers) {
-        this.latentCustomers = latentCustomers;
-    }
-
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
+    public void setLatentcustomers(String latentcustomers) {
+        this.latentcustomers = latentcustomers;
     }
 }

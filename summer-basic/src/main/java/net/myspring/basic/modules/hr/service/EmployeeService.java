@@ -60,8 +60,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameLike("%"+name+"%");
-        List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
+        List<EmployeeDto> employeeDtoList=employeeRepository.findByNameLike(name);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
     }

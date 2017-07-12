@@ -26,6 +26,9 @@ public class ReportScoreForm extends BaseForm<ReportScore> {
     private Integer rank;
 
     public LocalDate getScoreDate() {
+        if(scoreDate==null){
+            scoreDate= LocalDate.now().minusDays(1);
+        }
         return scoreDate;
     }
 

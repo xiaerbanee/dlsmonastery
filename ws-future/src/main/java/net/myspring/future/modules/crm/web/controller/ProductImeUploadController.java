@@ -19,7 +19,6 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,7 +104,7 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value = "checkForUpload")
-    public String checkForUpload(@RequestBody String imeStr) {
+    public String checkForUpload(String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;
@@ -114,7 +113,7 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value = "checkForUploadBack")
-    public String checkForUploadBack(@RequestBody  String imeStr) {
+    public String checkForUploadBack(String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;

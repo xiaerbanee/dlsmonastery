@@ -50,6 +50,9 @@ public class ReportScoreOfficeQuery extends BaseQuery {
 
 
     public String getScoreDateRange() {
+        if (StringUtils.isBlank(scoreDateRange)) {
+            scoreDateRange=LocalDate.now().minusDays(1)+CharConstant.DATE_RANGE_SPLITTER+LocalDate.now().minusDays(1);
+        }
         return scoreDateRange;
     }
 

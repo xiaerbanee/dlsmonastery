@@ -1,7 +1,6 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
@@ -12,16 +11,12 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.OfficeClient;
-import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.dto.DepotReportDto;
-import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
-import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
 import net.myspring.future.modules.crm.dto.ProductImeReportDto;
@@ -33,18 +28,16 @@ import net.myspring.future.modules.crm.web.form.ProductImeCreateForm;
 import net.myspring.future.modules.crm.web.query.ProductImeQuery;
 import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.ExcelUtils;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -89,7 +82,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value="findDtoListByImes")
-    public List<ProductImeDto> findDtoListByImes(@RequestBody String imeStr) {
+    public List<ProductImeDto> findDtoListByImes(String imeStr) {
         return productImeService.findDtoListByImes(imeStr);
     }
 
@@ -206,7 +199,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value = "batchQuery")
-    public  Map<String, Object> batchQuery(@RequestBody String allImeStr){
+    public  Map<String, Object> batchQuery(String allImeStr){
         Map<String, Object> result = new HashMap<>();
 
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);
