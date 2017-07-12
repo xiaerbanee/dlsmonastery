@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.repository
 
 import net.myspring.future.common.repository.BaseRepository
+import net.myspring.future.modules.crm.domain.ReportScoreArea
 import net.myspring.future.modules.crm.domain.ReportScoreOffice
 import net.myspring.future.modules.crm.dto.ReportScoreOfficeDto
 import net.myspring.future.modules.crm.web.query.ReportScoreOfficeQuery
@@ -17,6 +18,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
 interface ReportScoreOfficeRepository : BaseRepository<ReportScoreOffice, String>, ReportScoreOfficeRepositoryCustom{
+
+    fun findByReportScoreAreaIdIn(reportScoreAreaIdList:MutableList<String>):MutableList<ReportScoreOffice>
 }
 
 interface ReportScoreOfficeRepositoryCustom{
