@@ -61,6 +61,8 @@ Page({
         }
         if (that.data.options.scoreDateStart || that.data.options.scoreDateEnd) {
           that.setData({ "formData.scoreDateStart": that.data.options.scoreDateStart, "formData.scoreDateEnd": that.data.options.scoreDateEnd });
+        } else {
+          that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)), "formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         }
         that.pageRequest();
       }
