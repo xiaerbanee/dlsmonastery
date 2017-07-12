@@ -145,10 +145,10 @@
         });
       },searchImeStr(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.errMsg=response.data;
       });
-        axios.get('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
             let tmp = [];
             if(response.data){
               for(let each of response.data){

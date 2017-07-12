@@ -44,10 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
@@ -92,7 +89,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value="findDtoListByImes")
-    public List<ProductImeDto> findDtoListByImes(String imeStr) {
+    public List<ProductImeDto> findDtoListByImes(@RequestBody String imeStr) {
         return productImeService.findDtoListByImes(imeStr);
     }
 
@@ -209,7 +206,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value = "batchQuery")
-    public  Map<String, Object> batchQuery(String allImeStr){
+    public  Map<String, Object> batchQuery(@RequestBody String allImeStr){
         Map<String, Object> result = new HashMap<>();
 
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);

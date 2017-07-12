@@ -53,7 +53,6 @@ Page({
       },
       success: function (res) {
         that.setData({ 'fromProperty.areaList': res.data.extra.areaList, formData: res.data });
-        that.setData({ "formData.scoreDateStart": $util.formatLocalDate($util.addDay(new Date(), -1)),"formData.scoreDateEnd": $util.formatLocalDate($util.addDay(new Date(), -1)) });
         that.pageRequest();
       }
     })

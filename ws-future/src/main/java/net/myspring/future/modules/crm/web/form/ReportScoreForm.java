@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ReportScoreForm extends BaseForm<ReportScore> {
 
-    private LocalDate scoreDate;
+    private LocalDate scoreDate=LocalDate.now().minusDays(1);
     private BigDecimal score;
     private BigDecimal monthScore;
     private BigDecimal companyScore;
