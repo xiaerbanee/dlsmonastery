@@ -1,6 +1,7 @@
 package net.myspring.tool.common.utils;
 
 import com.google.common.collect.Maps;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
@@ -46,12 +47,15 @@ public class RequestUtils {
     }
 
     public  static Map<String, Object> getSecurityMap() {
-        OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
         LinkedHashMap<String,Object> principal = Maps.newLinkedHashMap();
-        if(auth !=  null) {
-            Object object = ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
-            if(object instanceof Map){
-                principal= (LinkedHashMap)object;
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        if(authentication instanceof  OAuth2Authentication){
+            OAuth2Authentication auth = (OAuth2Authentication)authentication;
+            if(auth !=  null) {
+                Object object = ((LinkedHashMap)auth.getUserAuthentication().getDetails()).get("principal");
+                if(object instanceof Map){
+                    principal= (LinkedHashMap)object;
+                }
             }
         }
         return principal;

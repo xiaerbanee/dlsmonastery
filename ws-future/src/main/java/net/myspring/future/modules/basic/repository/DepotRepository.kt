@@ -375,6 +375,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             sh.carrier_type as carrierType,
             sh.door_head as doorHead,
             sh.enable_date as enableDate,
+            sh.channel_type as channelType,
             de.enabled as enabled,
             de.is_hidden as isHidden,
             de.district_id as districtId,
