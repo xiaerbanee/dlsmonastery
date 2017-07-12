@@ -58,10 +58,4 @@ public class DynamicDataSourceAspect {
         }
         DbContextHolder.get().setDataSourceType(dataSourceType);
     }
-
-
-    @After("serviceExecution()")
-    public void removeDbContextHolder(JoinPoint point) {
-        DbContextHolder.get().remove();
-    }
 }
