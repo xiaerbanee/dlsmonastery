@@ -54,6 +54,24 @@ public class CacheConfig extends CachingConfigurerSupport {
         return jedisConnectionFactory;
     }
 
+
+
+    @Bean(name="oauthRedisConnectionFactory")
+    public JedisConnectionFactory oauthRedisConnectionFactory() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setHostName(redisHost);
+        jedisConnectionFactory.setPort(redisPort);
+        jedisConnectionFactory.setPassword(redisPassword);
+        jedisConnectionFactory.setDatabase(15);
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(maxIdle);
+        jedisPoolConfig.setMaxTotal(maxTotal);
+        jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
+        return jedisConnectionFactory;
+    }
+
+
+
     @Bean
     RedisTemplate<Object, Object> redisTemplate() {
         RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<Object, Object>();
