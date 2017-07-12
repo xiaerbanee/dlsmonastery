@@ -121,8 +121,8 @@ public class AccountChangeService {
         Account account=accountRepository.findOne(accountChangeForm.getAccountId());
         Employee employee=employeeRepository.findOne(account.getEmployeeId());
         AccountChange accountChange=new AccountChange();
-        accountChange.setAccountId(accountChange.getAccountId());
-        accountChange.setNewValue(accountChange.getNewValue());
+        accountChange.setAccountId(accountChangeForm.getAccountId());
+        accountChange.setNewValue(accountChangeForm.getNewValue());
         accountChange.setType(accountChangeForm.getType());
         accountChange.setRemarks(accountChangeForm.getRemarks());
         if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
