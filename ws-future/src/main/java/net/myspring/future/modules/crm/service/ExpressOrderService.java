@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -128,7 +129,7 @@ public class ExpressOrderService {
         headColumnList.add(new SimpleExcelColumn(headCellStyle,"其他费"));
         excelColumnList.add(headColumnList);
 
-        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000), expressOrderQuery).getContent();
+        List<ExpressOrderDto> expressOrderDtoList=findPage(new PageRequest(0,10000, new Sort(Sort.Direction.ASC, "extend_business_id")), expressOrderQuery).getContent();
         List<String>  extendBusinessIdList= CollectionUtil.extractToList(expressOrderDtoList,"extendBusinessId");
         List<String>  lxMallOrderBusinessIdList=goodsOrderRepository.findLxMallOrderBybusinessIdList(extendBusinessIdList);
 
@@ -163,7 +164,7 @@ public class ExpressOrderService {
                 }
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,"江西省"));
-                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,expressOrderDto.getToDepotDistrictCity()));//TODO 這樣獲取名稱是否正確
+                simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle,expressOrderDto.getToDepotDistrictCity()));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
                 simpleExcelColumnList.add(new SimpleExcelColumn(dataCellStyle," "));
