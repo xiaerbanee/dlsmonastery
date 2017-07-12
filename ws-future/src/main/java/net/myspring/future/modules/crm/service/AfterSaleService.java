@@ -23,12 +23,19 @@ import net.myspring.future.modules.crm.web.form.AfterSaleProductAllotForm;
 import net.myspring.future.modules.crm.web.form.AfterSaleStoreAllotForm;
 import net.myspring.future.modules.crm.web.query.AfterSaleQuery;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.ExcelUtils;
+import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.SimpleExcelColumn;
+import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.elasticsearch.xpack.notification.hipchat.V1Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -490,5 +497,37 @@ public class AfterSaleService {
         if (StringUtils.isNotBlank(item)) {
             list.add(item.trim());
         }
+    }
+
+    public SimpleExcelBook export(AfterSaleQuery afterSaleQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
+
+        List<AfterSaleDto> afterSaleDtoList = findFilter(afterSaleQuery);
+
+        List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"businessId","单号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductIme","坏机串码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductName","坏机货品"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductName","替换机货品"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"retailDepotName","地区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"packageStatus","包装"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"memory","内存"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreType","退机类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreRemarks","退机备注"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreDate","退机日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toCompanyDate","返厂日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"fromCompanyDate","返仓日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductIme","替换机串码"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"replaceProductImeId","垫机"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badType","坏机类型"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"fromCompanyProductName","返仓型号"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"createdByName","创建人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"createdDate","创建时间"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"lastModifiedByName","更新人"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"lastModifiedDate","更新时间"));
+
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导出数据",afterSaleDtoList,simpleExcelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
+        return new SimpleExcelBook(workbook,"售后列表"+LocalDate.now()+".xlsx",simpleExcelSheet);
     }
 }

@@ -192,8 +192,8 @@
                 this.recentSaleDescription='';
                 this.imageDeposit =0;
               }else{
-                axios.get('/api/ws/future/basic/depot/findByClientId' + '?clientId=' + response.data[0].clientId).then((response) => {
-                    if(response.data.length > 1){
+                axios.get('/api/ws/future/basic/depot/findOne',{params: {id:this.inputForm.outShopId}}).then((response) => {
+                    if(response.data.id !== response.data.clientId){
                       this.isDelegateShop = true;
                       this.inputForm.shopId = null;
                       this.recentSaleDescription='';

@@ -14,6 +14,9 @@
               <el-form-item :label="$t('adPricesystemChangeList.productName')" :label-width="formLabelWidth">
                 <el-input v-model="formData.productName" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('adPricesystemChangeList.productCode')" :label-width="formLabelWidth">
+                <el-input v-model="formData.productCode" auto-complete="off" :placeholder="$t('adPricesystemChangeForm.likeSearch')"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
