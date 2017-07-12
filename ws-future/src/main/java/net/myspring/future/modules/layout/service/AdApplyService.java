@@ -138,6 +138,9 @@ public class AdApplyService {
         if(adApplyDtos.size()>0){
             List<String> storeId = Lists.newArrayList();
             DepotStore depotStore = depotStoreRepository.findOne(adApplyBillTypeChangeForm.getStoreId());
+            if(StringUtils.isBlank(depotStore.getOutId())){
+                throw new ServiceException("在金蝶中不存在该仓库");
+            }
             storeId.add(depotStore.getOutId());
             List<StkInventory> stkInventories = cloudClient.findInventoriesByDepotStoreOutIds(storeId);
             Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");

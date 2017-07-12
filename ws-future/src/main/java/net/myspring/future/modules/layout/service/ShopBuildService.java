@@ -160,7 +160,7 @@ public class ShopBuildService {
         Workbook workbook = new SXSSFWorkbook(10000);
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "officeName", "地区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "地区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "店名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaType", "区域类型"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "fixtureType", "装修类别"));

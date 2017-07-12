@@ -175,13 +175,13 @@
           return;
         }
         let tempList=new Array();
-        for(let index of this.adApplyList){
+        /*for(let index of this.adApplyList){
           if(util.isNotBlank(index.nowBilledQty)){
             tempList.push(index)
           }
-        }
+        }*/
         for(let index of this.adApplyList){
-          if((util.contains(index.shopName,val)||util.contains(index.productName,val)||util.contains(index.productCode,val))&&util.isBlank(index.nowBilledQty)){
+          if(util.contains(index.shopName,val)||util.contains(index.productName,val)||util.contains(index.productCode,val)){
             tempList.push(index)
           }
         }
