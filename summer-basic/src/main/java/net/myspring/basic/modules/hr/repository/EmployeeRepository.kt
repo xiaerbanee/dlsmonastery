@@ -4,7 +4,6 @@ import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.hr.domain.Employee
 import net.myspring.basic.modules.hr.dto.EmployeeDto
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery
-import net.myspring.basic.modules.sys.dto.RoleDto
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -22,8 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.LocalDate
-import java.time.LocalDateTime
-import javax.persistence.EntityManager
+import java.util.*
 
 /**
  * Created by lihx on 2017/5/25.
@@ -68,9 +66,26 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
 
 }
 interface EmployeeRepositoryCustom{
+    fun findByNameLike(name: String):MutableList<EmployeeDto>
+
     fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto>
 }
 class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): EmployeeRepositoryCustom{
+    override fun findByNameLike(name: String):MutableList<EmployeeDto>{
+        return namedParameterJdbcTemplate.query("""
+                SELECT
+                    account.position_id positionId,
+                    account.office_id officeId,
+                    t1.*
+                FROM
+                    hr_employee t1
+                LEFT JOIN hr_account account ON account.id = t1.account_id
+                WHERE
+                    t1.enabled = 1
+                AND t1.name LIKE CONCAT('%' ,:name, '%')
+        """,Collections.singletonMap("name",name),BeanPropertyRowMapper(EmployeeDto::class.java))
+    }
+
     override fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto> {
         var sb = StringBuilder("""
             SELECT employee.*,account.office_id,account.position_id,account.leader_id
