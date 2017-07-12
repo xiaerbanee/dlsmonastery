@@ -18,10 +18,10 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
     private String type;
     private String name;
     private String viewPositionIds;
-    private String createdPositionIds;
+    private String createPositionIds;
     private Boolean auditFileType;
     private List<String> viewPositionIdList=Lists.newArrayList();
-    private List<String> createdPositionIdList=Lists.newArrayList();
+    private List<String> createPositionIdList=Lists.newArrayList();
     private List<ProcessFlowDto> processFlowList = Lists.newArrayList();
 
     public List<String> getViewPositionIdList() {
@@ -35,15 +35,15 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
         this.viewPositionIdList = viewPositionIdList;
     }
 
-    public List<String> getCreatedPositionIdList() {
-        if(CollectionUtil.isEmpty(createdPositionIdList)&&StringUtils.isNotBlank(createdPositionIds)){
-            this.createdPositionIdList=StringUtils.getSplitList(createdPositionIds, CharConstant.COMMA);
+    public List<String> getCreatePositionIdList() {
+        if(CollectionUtil.isEmpty(createPositionIdList)&&StringUtils.isNotBlank(createPositionIds)){
+            this.createPositionIdList=StringUtils.getSplitList(createPositionIds, CharConstant.COMMA);
         }
-        return createdPositionIdList;
+        return createPositionIdList;
     }
 
-    public void setCreatedPositionIdList(List<String> createdPositionIdList) {
-        this.createdPositionIdList = createdPositionIdList;
+    public void setCreatePositionIdList(List<String> createPositionIdList) {
+        this.createPositionIdList = createPositionIdList;
     }
 
     public String getType() {
@@ -70,12 +70,12 @@ public class ProcessTypeForm extends BaseForm<ProcessType> {
         this.viewPositionIds = viewPositionIds;
     }
 
-    public String getCreatedPositionIds() {
-        return createdPositionIds;
+    public String getCreatePositionIds() {
+        return createPositionIds;
     }
 
-    public void setCreatedPositionIds(String createdPositionIds) {
-        this.createdPositionIds = createdPositionIds;
+    public void setCreatePositionIds(String createPositionIds) {
+        this.createPositionIds = createPositionIds;
     }
 
     public Boolean getAuditFileType() {
