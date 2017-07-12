@@ -46,6 +46,9 @@ class AdPricesystemChangeRepositoryImpl @Autowired constructor(val namedParamete
         if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productName)) {
             sb.append("""  and product.name like CONCAT('%', :productName,'%')  """)
         }
+        if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productCode)) {
+            sb.append("""  and product.code like CONCAT('%', :productCode,'%')  """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
