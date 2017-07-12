@@ -54,6 +54,7 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.supplierId,scope.row.departmentId)">详细</el-button>
+            <el-button size="small" @click="exportDetailOne(scope.row.supplierId,scope.row.departmentId)">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -140,6 +141,15 @@
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/global/cloud/report/supplierPayableZMD/export?'+qs.stringify(util.deleteExtra(this.formData));
         }).catch(()=>{});
+      },exportDetailOne(supplierId,departmentId){
+        if(supplierId !== null) {
+          let submitDetail = Object();
+          submitDetail.supplierIdList = supplierId;
+          submitDetail.departmentIdList = departmentId;
+          submitDetail.dateStart = this.formData.dateStart;
+          submitDetail.dateEnd = this.formData.dateEnd;
+          window.location.href = '/api/global/cloud/report/supplierPayable/exportDetailOne?'+qs.stringify(submitDetail);
+        }
       },detailAction:function(supplierId,departmentId){
         this.detailLoading = true;
         if(supplierId !== null) {

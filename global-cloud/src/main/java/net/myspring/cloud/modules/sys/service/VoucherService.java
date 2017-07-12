@@ -20,6 +20,7 @@ import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
@@ -320,5 +321,13 @@ public class VoucherService {
             }
         }
         return list;
+    }
+
+    //待写
+    public SimpleExcelBook export(VoucherDto voucherDto){
+        List<String> flexItemNameList = getHeaders(voucherDto.getBdFlexItemGroupList());
+        List<List<String>> data = initData(voucherDto);
+        return null;
+
     }
 }
