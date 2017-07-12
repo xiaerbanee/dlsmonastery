@@ -59,7 +59,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressOrderList.loading')"  @selection-change="handleSelectionChange" @sort-change="sortChange" stripe border>
         <el-table-column type="selection" width="50" :selectable="checkSelectable"></el-table-column>
-        <el-table-column column-key="id" fixed prop="formatId" :label="$t('shopAdList.adCode')" sortable width=120></el-table-column>
+        <el-table-column column-key="id" prop="formatId" :label="$t('shopAdList.adCode')" sortable width=120></el-table-column>
         <el-table-column column-key="areaId" prop="areaName"  :label="$t('shopAdList.areaName')" sortable></el-table-column>
         <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopAdList.shopName')" sortable></el-table-column>
         <el-table-column prop="specialArea" :label="$t('shopAdList.specialArea')">
@@ -78,7 +78,7 @@
         <el-table-column column-key="lastModifiedBy" prop="lastModifiedByName" :label="$t('expressOrderList.lastModifiedBy' )" sortable></el-table-column>
         <el-table-column prop="lastModifiedDate" :label="$t('expressOrderList.lastModifiedDate')" sortable width=100></el-table-column>
         <el-table-column prop="remarks" :label="$t('expressOrderList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('expressOrderList.operation')" width="140">
+        <el-table-column :label="$t('expressOrderList.operation')" width="140">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopAd:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('shopPrintList.detail')}}</el-button></div>
             <div class="action" v-if="scope.row.isAuditable&&scope.row.processStatus.indexOf('通过')<0" v-permit="'crm:shopAd:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('shopBuildList.audit')}}</el-button></div>
