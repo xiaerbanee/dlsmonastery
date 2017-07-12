@@ -11,7 +11,7 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.shopId')" prop="shopId">
-              <depot-select v-model="inputForm.shopId" category="adShop" :disabled="!isCreate"></depot-select>
+              <depot-select v-model="inputForm.shopId" category="shop" :disabled="!isCreate"></depot-select>
             </el-form-item>
             <el-form-item :label="$t('shopAdForm.length')" prop="length">
               <el-input v-model.number="inputForm.length" auto-complete="off" :placeholder="$t('shopAdForm.transverseDimensions')"></el-input>

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.myspring.future.common.config;
 
 import feign.RequestInterceptor;
@@ -22,23 +38,26 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import java.util.Arrays;
 
+/**
+ * Pre-defined custom RequestInterceptor for Feign Requests It uses the
+ * {@link OAuth2ClientContext OAuth2ClientContext} provided from the environment and
+ * construct a new header on the request before it is made by Feign
+ *
+ * @author Joao Pedro Evangelista
+ */
 public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
+
+    public static final String BEARER = "Bearer";
+
+    public static final String AUTHORIZATION = "Authorization";
+
+    private final OAuth2ClientContext oAuth2ClientContext;
 
     private final OAuth2ProtectedResourceDetails resource;
 
-    private final String tokenType =  "Bearer";
+    private final String tokenType;
 
-    private final String header = "Authorization";
-
-    /**
-     * Fully customizable constructor for changing token type and header name, in cases of
-     * Bearer and Authorization is not the default such as "bearer", "authorization"
-     *
-     * @param resource type of resource to be accessed
-     */
-    public MyOAuth2FeignRequestInterceptor(OAuth2ProtectedResourceDetails resource) {
-        this.resource = resource;
-    }
+    private final String header;
 
     private AccessTokenProvider accessTokenProvider = new AccessTokenProviderChain(Arrays
             .<AccessTokenProvider> asList(new AuthorizationCodeAccessTokenProvider(),
@@ -46,6 +65,34 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
                     new ResourceOwnerPasswordAccessTokenProvider(),
                     new ClientCredentialsAccessTokenProvider()));
 
+    /**
+     * Default constructor which uses the provided OAuth2ClientContext and Bearer tokens
+     * within Authorization header
+     *
+     * @param oAuth2ClientContext provided context
+     * @param resource type of resource to be accessed
+     */
+    public MyOAuth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext,
+                                           OAuth2ProtectedResourceDetails resource) {
+        this(oAuth2ClientContext, resource, BEARER, AUTHORIZATION);
+    }
+
+    /**
+     * Fully customizable constructor for changing token type and header name, in cases of
+     * Bearer and Authorization is not the default such as "bearer", "authorization"
+     *
+     * @param oAuth2ClientContext current oAuth2 Context
+     * @param resource type of resource to be accessed
+     * @param tokenType type of token e.g. "token", "Bearer"
+     * @param header name of the header e.g. "Authorization", "authorization"
+     */
+    public MyOAuth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext,
+                                           OAuth2ProtectedResourceDetails resource, String tokenType, String header) {
+        this.oAuth2ClientContext = oAuth2ClientContext;
+        this.resource = resource;
+        this.tokenType = tokenType;
+        this.header = header;
+    }
 
     /**
      * Create a template with the header of provided name and extracted extract
@@ -103,7 +150,6 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
      */
     protected OAuth2AccessToken acquireAccessToken()
             throws UserRedirectRequiredException {
-        OAuth2ClientContext oAuth2ClientContext = null;
         AccessTokenRequest tokenRequest = oAuth2ClientContext.getAccessTokenRequest();
         if (tokenRequest == null) {
             throw new AccessTokenRequiredException(
@@ -134,5 +180,4 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
     public void setAccessTokenProvider(AccessTokenProvider accessTokenProvider) {
         this.accessTokenProvider = accessTokenProvider;
     }
-
 }
