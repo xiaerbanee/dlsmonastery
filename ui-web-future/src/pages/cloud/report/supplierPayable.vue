@@ -53,6 +53,7 @@
         <el-table-column fixed="right" label="操作" width="120">
           <template scope="scope">
             <el-button size="small" @click="detailAction(scope.row.supplierId)">详细</el-button>
+            <el-button type="primary" @click="exportDetailOne(scope.row.supplierId)" icon="upload">导出</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -137,8 +138,17 @@
         this.pageRequest();
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href='/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
-        }).catch(()=>{});
+          window.location.href = '/api/global/cloud/report/supplierPayable/export?'+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(() => {
+        });
+      },exportDetailOne(supplierId){
+        if(supplierId !== null) {
+          let submitDetail = Object();
+          submitDetail.supplierIdList = supplierId;
+          submitDetail.dateStart = this.formData.dateStart;
+          submitDetail.dateEnd = this.formData.dateEnd;
+          window.location.href = '/api/global/cloud/report/supplierPayable/exportDetailOne?'+qs.stringify(submitDetail);
+        }
       },detailAction:function(supplierId){
         this.detailLoading = true;
         if(supplierId !== null){

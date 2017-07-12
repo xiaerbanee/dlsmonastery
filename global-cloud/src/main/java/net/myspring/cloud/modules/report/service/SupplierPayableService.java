@@ -4,19 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.cloud.common.dataSource.annotation.KingdeeDataSource;
 import net.myspring.cloud.common.enums.BillTypeEnum;
-import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.cloud.modules.kingdee.domain.BdSupplier;
-import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdSupplierRepository;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDetailDto;
 import net.myspring.cloud.modules.report.dto.SupplierPayableDto;
 import net.myspring.cloud.modules.report.repository.SupplierPayableRepository;
-import net.myspring.cloud.modules.report.repository.SupplierPayableZMDRepository;
-import net.myspring.cloud.modules.report.web.query.SupplierPayableDetailQuery;
 import net.myspring.cloud.modules.report.web.query.SupplierPayableQuery;
-import net.myspring.common.constant.CharConstant;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -113,11 +108,7 @@ public class SupplierPayableService {
                     supplierPayable.setPayableAmount(payableKeyMap.get(key));
                     supplierPayable.setActualPayAmount(actualPayKeyMap.get(key));
                     if (supplierPayableQuery.getQueryDetail()) {
-                        SupplierPayableDetailQuery supplierPayableDetailQuery = new SupplierPayableDetailQuery();
-                        supplierPayableDetailQuery.setSupplierIdList(supplierPayableQuery.getSupplierIdList());
-                        supplierPayableDetailQuery.setDateStart(supplierPayableQuery.getDateStart());
-                        supplierPayableDetailQuery.setDateEnd(supplierPayableQuery.getDateEnd());
-                        Map<String, List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
+                        Map<String, List<SupplierPayableDetailDto>> supplierPayableDetailDtoMap = findSupplierPayableDetailDtoMap(supplierPayableQuery);
                         supplierPayable.setSupplierPayableDetailDtoList(supplierPayableDetailDtoMap.get(key));
                     }
                 }
@@ -127,23 +118,26 @@ public class SupplierPayableService {
         return null;
     }
 
-    public List<SupplierPayableDetailDto> findSupplierPayableDetailDtoList(SupplierPayableDetailQuery supplierPayableDetailQuery) {
+    public List<SupplierPayableDetailDto> findSupplierPayableDetailDtoList(SupplierPayableQuery supplierPayableQuery) {
         List<SupplierPayableDetailDto> detailDtoList = Lists.newArrayList();
-        List<String> supplierIdList = supplierPayableDetailQuery.getSupplierIdList();
-        Map<String,List<SupplierPayableDetailDto>> map = findSupplierPayableDetailDtoMap(supplierPayableDetailQuery);
-        if (map.size() > 0){
-            for (String supplierId : supplierIdList){
-                String key = supplierId;
-                detailDtoList.addAll(map.get(key));
+        List<String> supplierIdList = supplierPayableQuery.getSupplierIdList();
+        if (supplierIdList.size()>0 && supplierPayableQuery.getDateStart() != null && supplierPayableQuery.getDateEnd() != null ) {
+            Map<String, List<SupplierPayableDetailDto>> map = findSupplierPayableDetailDtoMap(supplierPayableQuery);
+            if (map.size() > 0) {
+                for (String supplierId : supplierIdList) {
+                    String key = supplierId;
+                    detailDtoList.addAll(map.get(key));
+                }
             }
+            return detailDtoList;
         }
-        return detailDtoList;
+        return null;
     }
 
     //一个supplierId+departmentId对应List<CustomerReceiveDetailDto>
-    public Map<String, List<SupplierPayableDetailDto>> findSupplierPayableDetailDtoMap(SupplierPayableDetailQuery supplierPayableDetailQuery) {
-        LocalDate dateStart = supplierPayableDetailQuery.getDateStart();
-        List<String> supplierIdList = supplierPayableDetailQuery.getSupplierIdList();
+    public Map<String, List<SupplierPayableDetailDto>> findSupplierPayableDetailDtoMap(SupplierPayableQuery supplierPayableQuery) {
+        LocalDate dateStart = supplierPayableQuery.getDateStart();
+        List<String> supplierIdList = supplierPayableQuery.getSupplierIdList();
         //期初应收
         List<SupplierPayableDto> beginList = supplierPayableRepository.findEndPayable(dateStart,supplierIdList);
         //根据key组织成map
@@ -153,7 +147,7 @@ public class SupplierPayableService {
             keyToBeginAmountMap.put(key,supplierPayableDto.getBeginAmount());
         }
         //主单--采购入库单sum+采购退料单sum+应付单sum+付款单+付款退款单+其他应付单
-        List<SupplierPayableDetailDto> detailForBillList = supplierPayableRepository.findMainList(supplierPayableDetailQuery);
+        List<SupplierPayableDetailDto> detailForBillList = supplierPayableRepository.findMainList(supplierPayableQuery);
         //根据key组织成map
         Map<String, List<SupplierPayableDetailDto>> keyToMainBillMap = Maps.newHashMap();
         if (CollectionUtil.isNotEmpty(detailForBillList)) {
@@ -166,7 +160,7 @@ public class SupplierPayableService {
             }
         }
         //有物料的
-        List<SupplierPayableDetailDto> detailForMaterialList = supplierPayableRepository.findDetailList(supplierPayableDetailQuery);
+        List<SupplierPayableDetailDto> detailForMaterialList = supplierPayableRepository.findDetailList(supplierPayableQuery);
         //根据BillNo组织成map
         Map<String, List<SupplierPayableDetailDto>> billNoToDetailBillMap = Maps.newHashMap();
         List<String> materialIdList = Lists.newArrayList();
@@ -258,11 +252,11 @@ public class SupplierPayableService {
                         supplierPayableDetailDto.setEndAmount(beginAmount);
                         list.add(supplierPayableDetailDto);
                     }
-                    if (supplierPayableDetailDto.getActualPayAmount() != null) {
-                        actualPayAmount = actualPayAmount.add(supplierPayableDetailDto.getActualPayAmount());
-                    }
                     if (supplierPayableDetailDto.getPayableAmount() != null){
                         payableAmount = payableAmount.add(supplierPayableDetailDto.getPayableAmount());
+                    }
+                    if (supplierPayableDetailDto.getActualPayAmount() != null) {
+                        actualPayAmount = actualPayAmount.add(supplierPayableDetailDto.getActualPayAmount());
                     }
                     if (billNoToDetailBillMap.containsKey(main.getBillNo())) {
                         for (SupplierPayableDetailDto detailMaterial : billNoToDetailBillMap.get(main.getBillNo())) {
@@ -330,6 +324,32 @@ public class SupplierPayableService {
                 SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType(), supplierPayableDetailDtoList, columnList);
                 simpleExcelSheetList.add(excelSheet);
             }
+        }
+        ExcelUtils.doWrite(workbook, simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+    }
+
+    public SimpleExcelBook exportDetailOne(SupplierPayableQuery supplierPayableQuery){
+        Workbook workbook = new SXSSFWorkbook(10000);
+        List<SimpleExcelSheet> simpleExcelSheetList = Lists.newArrayList();
+        List<SupplierPayableDetailDto> supplierPayableDetailDtoList = findSupplierPayableDetailDtoList(supplierPayableQuery);
+        if (CollectionUtil.isNotEmpty(supplierPayableDetailDtoList)){
+            List<SimpleExcelColumn> columnList = Lists.newArrayList();
+            CellStyle cellStyleRed = ExcelUtils.getCellStyleMap(workbook).get(ExcelCellStyle.RED.name());
+            columnList.add(new SimpleExcelColumn(workbook,"billType", "业务类型"));
+            columnList.add(new SimpleExcelColumn(workbook,"billNo", "单据编号"));
+            columnList.add(new SimpleExcelColumn(workbook,"date", "单据日期"));
+            columnList.add(new SimpleExcelColumn(workbook,"materialName", "商品名称"));
+            columnList.add(new SimpleExcelColumn(workbook,"qty", "数量"));
+            columnList.add(new SimpleExcelColumn(workbook,"price", "单价"));
+            columnList.add(new SimpleExcelColumn(workbook,"amount", "金额"));
+            columnList.add(new SimpleExcelColumn(workbook,"payableAmount", "应付"));
+            columnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "实付"));
+            columnList.add(new SimpleExcelColumn(workbook,"endAmount", "期末"));
+            columnList.add(new SimpleExcelColumn(workbook,"note", "摘要"));
+            SupplierPayableDetailDto supplierPayableDetailDto = supplierPayableDetailDtoList.get(0);
+            SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType(), supplierPayableDetailDtoList, columnList);
+            simpleExcelSheetList.add(excelSheet);
         }
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);
         return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
