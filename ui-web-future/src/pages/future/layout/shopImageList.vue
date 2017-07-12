@@ -27,14 +27,14 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('shopImageList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="areaName" :label="$t('shopImageList.areaName')" width="150"></el-table-column>
+        <el-table-column prop="areaName" :label="$t('shopImageList.areaName')" width="150"></el-table-column>
         <el-table-column prop="officeName" :label="$t('shopImageList.officeName')"></el-table-column>
         <el-table-column column-key="shopId" prop="shopName"  :label="$t('shopImageList.shopName')" sortable></el-table-column>
         <el-table-column prop="imageType"  :label="$t('shopImageList.imageType')" sortable></el-table-column>
         <el-table-column prop="image"  :label="$t('shopImageList.image')" sortable></el-table-column>
         <el-table-column prop="imageSize"  :label="$t('shopImageList.imageSize')" sortable></el-table-column>
         <el-table-column prop="remarks" :label="$t('shopImageList.remarks')"></el-table-column>
-        <el-table-column fixed="right" :label="$t('shopImageList.operation')" width="160">
+        <el-table-column :label="$t('shopImageList.operation')" width="160">
           <template scope="scope">
             <div class="action" v-permit="'crm:shopImage:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('shopImageList.edit')}}</el-button></div>
             <div class="action" v-permit="'crm:shopImage:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('shopImageList.delete')}}</el-button></div>

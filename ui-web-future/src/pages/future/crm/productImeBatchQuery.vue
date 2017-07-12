@@ -82,7 +82,7 @@
         }
       }, onAllImeStrChange(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productIme/batchQuery',{params:{allImeStr:this.allImeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/productIme/batchQuery',{params:{allImeStr:this.allImeStr}}).then((response)=>{
           this.errMsg=response.data.errMsg;
           this.productImeList=response.data.productImeList;
 

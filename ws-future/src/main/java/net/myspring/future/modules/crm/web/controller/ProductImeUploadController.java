@@ -105,7 +105,7 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value = "checkForUpload")
-    public String checkForUpload(String imeStr) {
+    public String checkForUpload(@RequestBody String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;
@@ -114,7 +114,7 @@ public class ProductImeUploadController {
     }
 
     @RequestMapping(value = "checkForUploadBack")
-    public String checkForUploadBack(String imeStr) {
+    public String checkForUploadBack(@RequestBody  String imeStr) {
         List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
         if(imeList.size() == 0){
             return null;
