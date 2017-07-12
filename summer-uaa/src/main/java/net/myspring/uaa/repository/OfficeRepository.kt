@@ -39,8 +39,7 @@ class OfficeRepository @Autowired constructor(val namedParameterJdbcTemplate: Na
         sb.append("""
             SELECT t1.*
             FROM sys_office t1
-            where  t1.enabled =1
-            and (
+            where  (
         """)
         for ((index) in parentIdList.withIndex()) {
             sb.append(" t1.parent_ids like :parentId").append(index);
