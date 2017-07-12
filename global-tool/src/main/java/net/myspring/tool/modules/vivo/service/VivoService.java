@@ -3,6 +3,7 @@ package net.myspring.tool.modules.vivo.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.modules.vivo.domain.VivoPlantElectronicsn;
@@ -55,7 +56,8 @@ public class VivoService {
     @FactoryDataSource
     public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
         String dateStart = date;
-        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date));
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        System.out.println("request==="+ DbContextHolder.get().getCompanyName()+"\t"+DbContextHolder.get().getDataSourceType()+"\t"+agentCodes.toString());
         return vivoPlantSendimeiRepository.findPlantSendimei(dateStart, dateEnd, agentCodes);
     }
 
@@ -74,7 +76,7 @@ public class VivoService {
                 vivoProduct.setColorId(vivoProduct.getColorId().trim());
             }
             List<String> colorIds = CollectionUtil.extractToList(vivoProducts, "colorId");
-            List<String > localColorIds = vivoProductsRepository.findColorIds(colorIds);
+            List<String> localColorIds = CollectionUtil.extractToList( vivoProductsRepository.findColorIds(colorIds),"colorId");
             List<VivoProducts> list = Lists.newArrayList();
             for(VivoProducts item : vivoProducts){
                 if( ! localColorIds.contains(item.getColorId())){
@@ -93,7 +95,8 @@ public class VivoService {
                 plantProduct.setItemNumber(plantProduct.getItemNumber().trim());
             }
             List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
-            List<String> localItemNumbers = vivoPlantProductsRepository.findItemNumbers(itemNumbers);
+            List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
+            System.err.println("localItemNumbers=="+localItemNumbers.toString());
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
                 if(!localItemNumbers.contains(plantProduct.getItemNumber().trim())){
@@ -121,9 +124,27 @@ public class VivoService {
                 imeiList.add(vivoPlantSendimei.getImei());
                 agentCodeMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
             }
-            List<String> localImeiList=vivoPlantSendimeiRepository.findImeis(imeiList);
+            List<String> localImeiList=Lists.newArrayList();
+            for(List<String>imes:CollectionUtil.splitList(imeiList,1000)){
+                List<VivoPlantSendimei> plantSendimeis=vivoPlantSendimeiRepository.findImeis(imes);
+                if(CollectionUtil.isNotEmpty(plantSendimeis)){
+                    localImeiList.addAll(CollectionUtil.extractToList(plantSendimeis,"imei"));
+                }
+            }
+            List<VivoPlantSendimei> pullPlantSendimeis=Lists.newArrayList();
             for(String agentCode:agentCodeMap.keySet()){
                 List<VivoPlantSendimei>  plantSendimeis=agentCodeMap.get(agentCode);
+                for(VivoPlantSendimei plantSendimei:plantSendimeis){
+                    plantSendimei.setCompanyId(agentCode);
+                    if(!localImeiList.contains(plantSendimei.getImei())){
+                        pullPlantSendimeis.add(plantSendimei);
+                    }
+                }
+            }
+            if(CollectionUtil.isNotEmpty(pullPlantSendimeis)){
+                for(List<VivoPlantSendimei> sendimeis:CollectionUtil.splitList(pullPlantSendimeis,100)){
+                    vivoPlantSendimeiRepository.save(sendimeis);
+                }
             }
         }
 

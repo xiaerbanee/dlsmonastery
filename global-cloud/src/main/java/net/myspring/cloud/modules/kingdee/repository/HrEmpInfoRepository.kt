@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    fun findByNameList(nameList: List<String>): MutableList<HrEmpInfo> {
+    fun findByNameList(nameList: List<String>): MutableList<HrEmpInfo>? {
         return namedParameterJdbcTemplate.query("""
             select 
                 t1.FNUMBER,
@@ -54,7 +54,7 @@ class  HrEmpInfoRepository @Autowired constructor(val namedParameterJdbcTemplate
         }
     }
 
-    fun findAll(): MutableList<HrEmpInfo> {
+    fun findAll(): MutableList<HrEmpInfo>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FNUMBER,

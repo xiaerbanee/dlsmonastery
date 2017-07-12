@@ -48,6 +48,12 @@ class ShopImageRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         if (StringUtils.isNotEmpty(shopImageQuery.areaId)) {
             sb.append("""  and depot.area_id = :areaId """)
         }
+        if (shopImageQuery.createdDateStart != null) {
+            sb.append(" AND t1.created_date >= :createdDateStart ")
+        }
+        if (shopImageQuery.createdDateEnd != null) {
+            sb.append(" AND t1.created_date  < :createdDateEnd ")
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(shopImageQuery), BeanPropertyRowMapper(ShopImageDto::class.java))

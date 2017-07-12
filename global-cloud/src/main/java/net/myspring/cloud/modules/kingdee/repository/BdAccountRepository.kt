@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
 
-    fun findAll(): MutableList<BdAccount> {
+    fun findAll(): MutableList<BdAccount>? {
         return namedParameterJdbcTemplate.query("""
             select
                 t1.FACCTID,
@@ -35,7 +35,7 @@ class BdAccountRepository @Autowired constructor(val namedParameterJdbcTemplate:
         """, BeanPropertyRowMapper(BdAccount::class.java))
     }
 
-    fun findByIsBank(isBank:Boolean): MutableList<BdAccount> {
+    fun findByIsBank(isBank:Boolean): MutableList<BdAccount>? {
         return namedParameterJdbcTemplate.query("""
             select 
                 t1.FACCTID, 

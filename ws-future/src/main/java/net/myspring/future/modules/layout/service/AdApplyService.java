@@ -197,6 +197,9 @@ public class AdApplyService {
         if(!adApplyEditForm.isCreate()){
             AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
             adApply.setConfirmQty(adApplyEditForm.getConfirmQty());
+            if(adApplyEditForm.getConfirmQty()<adApply.getBilledQty()){
+                throw new ServiceException("修改的确认数不能小于已开单数");
+            }
             adApply.setLeftQty(adApplyEditForm.getConfirmQty()-adApply.getBilledQty());
             adApply.setRemarks(adApplyEditForm.getRemarks());
             adApplyRepository.save(adApply);

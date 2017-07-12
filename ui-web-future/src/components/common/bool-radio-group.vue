@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-radio-group v-model="innerBool" @change="onChange">
+    <el-radio-group v-model="innerBool" @change="onChange" :disabled="disabled">
       <el-radio :label=true>{{$t('depotForm.true')}}</el-radio>
       <el-radio :label=false>{{$t('depotForm.false')}}</el-radio>
     </el-radio-group>
@@ -8,7 +8,7 @@
 </template>
 <script>
   export default {
-    props: ['value'],
+    props: ['value','disabled'],
     data() {
       return {
         innerBool:false

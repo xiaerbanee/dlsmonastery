@@ -4,38 +4,44 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: {
-      pageNumber: 0,
-      pageSize: 10
-    },
+    formData: {},
     formProperty: {},
     searchHidden: true,
-    activeItem: null
+    activeItem: null,
+    scrollTop: null,
+    height: null
   },
   onLoad: function (option) {
+    this.setData({ height: $util.getWindowHeight() })
+  },
+  onShow: function () {
+    var that = this;
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
+  },
+  initPage: function () {
     var that = this;
     wx.request({
       url: $util.getUrl("ws/future/layout/shopImage/getQuery"),
       data: {},
       method: 'GET',
       header: {
-        'x-auth-token': app.globalData.sessionId,
-        'authorization': "Bearer" + wx.getStorageSync('token').access_token
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ 'formProperty.areaList': res.data.extra.areaList })
+        console.log(res.data)
+        that.setData({ 'formProperty.areaList': res.data.extra.areaList,formData:res.data });
+        that.pageRequest();
       }
     })
-  },
-  onShow: function () {
-    var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
-  },
-  initPage: function () {
-    var that = this;
-    that.pageRequest();
   },
   pageRequest: function () {
     var that = this;
@@ -47,12 +53,10 @@ Page({
         wx.request({
           url: $util.getUrl("ws/future/layout/shopImage"),
           header: {
-            'x-auth-token': app.globalData.sessionId,
-            'authorization': "Bearer" + wx.getStorageSync('token').access_token
+            Cookie: "JSESSIONID=" + app.globalData.sessionId
           },
-          data: that.data.formData,
+          data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -81,13 +85,8 @@ Page({
   bindOffice: function (e) {
     var that = this;
     that.setData({
-      'formData.officeId': that.data.formProperty.areaList[e.detail.value].id,
-      'formData.officeName': that.data.formProperty.areaList[e.detail.value].name
-    })
-  },
-  bindShop: function (e) {
-    wx.navigateTo({
-      url: '/page/crm/depotSearch/depotSearch'
+      'formData.areaId': that.data.formProperty.areaList[e.detail.value].id,
+      'formData.areaName': that.data.formProperty.areaList[e.detail.value].name
     })
   },
   itemActive: function (e) {
@@ -125,8 +124,7 @@ Page({
               url: $util.getUrl("ws/future/layout/shopImage/delete"),
               data: { id: id },
               header: {
-                'x-auth-token': app.globalData.sessionId,
-                'authorization': "Bearer" + wx.getStorageSync('token').access_token
+                Cookie: "JSESSIONID=" + app.globalData.sessionId
               },
               success: function (res) {
                 that.pageRequest();
@@ -139,37 +137,37 @@ Page({
   },
   formSubmit: function (e) {
     var that = this;
-    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.pageNumber": 0 });
+    that.setData({ searchHidden: !that.data.searchHidden, formData: e.detail.value, "formData.page": 0 });
     that.pageRequest();
   },
   toFirstPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": 0 });
+    that.setData({ "formData.page": 0 });
     that.pageRequest();
   },
   toPreviousPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getPreviousPageNumber(that.data.formData.pageNumber) });
+    that.setData({ "formData.page": $util.getPreviousPageNumber(that.data.formData.page) });
     that.pageRequest();
   },
   toNextPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": $util.getNextPageNumber(that.data.formData.pageNumber, that.data.page.totalPages) });
+    that.setData({ "formData.page": $util.getNextPageNumber(that.data.formData.page, that.data.page.totalPages) });
     that.pageRequest();
   },
   toLastPage: function () {
     var that = this;
-    that.setData({ "formData.pageNumber": that.data.page.totalPages - 1 });
+    that.setData({ "formData.page": that.data.page.totalPages - 1 });
     that.pageRequest();
   },
   toPage: function () {
     var that = this;
-    var itemList = $util.getPageList(that.data.formData.pageNumber, that.data.page.totalPages);
+    var itemList = $util.getPageList(that.data.formData.page, that.data.page.totalPages);
     wx.showActionSheet({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          that.setData({ "formData.pageNumber": itemList[res.tapIndex] - 1 });
+          that.setData({ "formData.page": itemList[res.tapIndex] - 1 });
           that.pageRequest();
         }
       }

@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 
 interface ReportScoreAreaRepository : BaseRepository<ReportScoreArea, String>,ReportScoreAreaRepositoryCustom {
+    fun findByReportScoreId(reportScoreId:String):MutableList<ReportScoreArea>
 }
     interface ReportScoreAreaRepositoryCustom{
         fun findPage(pageable: Pageable, reportScoreAreaQuery: ReportScoreAreaQuery): Page<ReportScoreAreaDto>

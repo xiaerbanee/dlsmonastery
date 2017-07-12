@@ -1,5 +1,6 @@
 package net.myspring.future.common.repository;
 
+import com.google.common.collect.Lists;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -50,5 +51,21 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
             }
         }
         return t;
+    }
+
+    @Override
+    public List<T> loginDeleteByIdList(List<ID> ids) {
+        List<T> list= Lists.newArrayList();
+        if(CollectionUtil.isNotEmpty(ids)){
+            for(ID id:ids){
+                T t = findOne(id);
+                if(t != null) {
+                    ReflectionUtil.setFieldValue(t,"enabled",false);
+                    save(t);
+                    list.add(t);
+                }
+            }
+        }
+        return list;
     }
 }
