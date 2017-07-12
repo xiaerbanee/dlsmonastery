@@ -295,11 +295,11 @@ public class SupplierPayableZMDService {
                             list.add(DetailDto);
                         }
                     }
-                    if (main.getActualPayAmount() != null) {
-                        actualPayAmount = actualPayAmount.add(main.getActualPayAmount());
+                    if (DetailDto.getActualPayAmount() != null) {
+                        actualPayAmount = actualPayAmount.add(DetailDto.getActualPayAmount());
                     }
-                    if (main.getPayableAmount() != null){
-                        payableAmount = payableAmount.add(main.getPayableAmount());
+                    if (DetailDto.getPayableAmount() != null){
+                        payableAmount = payableAmount.add(DetailDto.getPayableAmount());
                     }
                 }
                 DetailDto = new SupplierPayableDetailDto();
@@ -318,7 +318,6 @@ public class SupplierPayableZMDService {
         return null;
     }
 
-    //excel报错
     public SimpleExcelBook export(SupplierPayableQuery supplierPayableQuery){
         supplierPayableQuery.setQueryDetail(true);
         List<SupplierPayableDto> supplierPayableDtoList = findSupplierPayableDtoList(supplierPayableQuery);
@@ -341,19 +340,20 @@ public class SupplierPayableZMDService {
                 columnList.add(new SimpleExcelColumn(workbook,"billType", "业务类型"));
                 columnList.add(new SimpleExcelColumn(workbook,"billNo", "单据编号"));
                 columnList.add(new SimpleExcelColumn(workbook,"date", "单据日期"));
-                columnList.add(new SimpleExcelColumn(workbook,"quantity", "商品名称"));
-                columnList.add(new SimpleExcelColumn(workbook,"price", "数量"));
-                columnList.add(new SimpleExcelColumn(workbook,"amount", "单价"));
-                columnList.add(new SimpleExcelColumn(workbook,"payableAmount", "金额"));
-                columnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "应付"));
-                columnList.add(new SimpleExcelColumn(workbook,"endAmount", "实付"));
-                columnList.add(new SimpleExcelColumn(workbook,"note", "期末"));
+                columnList.add(new SimpleExcelColumn(workbook,"materialName", "商品名称"));
+                columnList.add(new SimpleExcelColumn(workbook,"qty", "数量"));
+                columnList.add(new SimpleExcelColumn(workbook,"price", "单价"));
+                columnList.add(new SimpleExcelColumn(workbook,"amount", "金额"));
+                columnList.add(new SimpleExcelColumn(workbook,"payableAmount", "应付"));
+                columnList.add(new SimpleExcelColumn(workbook,"actualPayAmount", "实付"));
+                columnList.add(new SimpleExcelColumn(workbook,"endAmount", "期末"));
+                columnList.add(new SimpleExcelColumn(workbook,"note", "摘要"));
                 SupplierPayableDetailDto supplierPayableDetailDto = supplierPayableDetailDtoList.get(0);
                 SimpleExcelSheet excelSheet = new SimpleExcelSheet(supplierPayableDetailDto.getBillType()+"("+supplierPayableDetailDto.getBillNo()+")", supplierPayableDetailDtoList, columnList);
                 simpleExcelSheetList.add(excelSheet);
             }
         }
         ExcelUtils.doWrite(workbook, simpleExcelSheetList);
-        return new SimpleExcelBook(workbook,"应付款汇总报表"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
+        return new SimpleExcelBook(workbook,"应付款汇总报表(专卖店)"+ supplierPayableQuery.getDateStart()+"-"+supplierPayableQuery.getDateEnd()+".xlsx",simpleExcelSheetList);
     }
 }

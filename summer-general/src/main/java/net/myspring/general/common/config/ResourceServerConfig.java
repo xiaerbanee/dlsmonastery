@@ -22,8 +22,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oauth2ClientContext, ClientCredentialsResourceDetails resource) {
-        return new OAuth2FeignRequestInterceptor(oauth2ClientContext, resource);
+    public RequestInterceptor oauth2FeignRequestInterceptor(ClientCredentialsResourceDetails resource) {
+        return new MyOAuth2FeignRequestInterceptor(resource);
     }
 
     @Override
