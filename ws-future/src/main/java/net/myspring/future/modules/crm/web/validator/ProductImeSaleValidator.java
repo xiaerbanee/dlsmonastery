@@ -76,14 +76,5 @@ public class ProductImeSaleValidator implements Validator {
         if(StringUtils.isBlank(productImeSaleForm.getBuyerPhone())){
             errors.rejectValue("buyerPhone", "error.buyerPhone", "必填信息");
         }
-        if(StringUtils.isBlank(productImeSaleForm.getShopId())){
-            errors.rejectValue("shopId", "error.shopId", "必填信息");
-        }
-
-
-
-
-
-
     }
 }

@@ -129,7 +129,7 @@
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
-            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
+            axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false
             if(response.data.success){
@@ -145,10 +145,10 @@
         });
       },searchImeStr(){
         this.searched = true;
-        axios.post('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
           this.errMsg=response.data;
       });
-        axios.post('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.get('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
             let tmp = [];
             if(response.data){
               for(let each of response.data){
