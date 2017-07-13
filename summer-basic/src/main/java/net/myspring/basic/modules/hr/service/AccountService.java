@@ -100,7 +100,7 @@ public class AccountService {
             accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
         } else {
             if(accountForm.isCreate()){
-                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getLoginName()));
+                accountForm.setPassword(StringUtils.getEncryptPassword("123456"));
             }else {
                 accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
             }
