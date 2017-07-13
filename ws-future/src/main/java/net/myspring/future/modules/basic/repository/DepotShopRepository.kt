@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -54,6 +55,7 @@ interface DepotShopRepositoryCustom{
 }
 
 class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):DepotShopRepositoryCustom{
+
     override fun findFilter(depotShopQuery: DepotShopQuery): MutableList<DepotShopDto> {
         val sb = StringBuffer()
         sb.append("""

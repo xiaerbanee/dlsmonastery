@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +109,8 @@ public class ClientService {
 
     @Transactional
     public void syn(){
-        List<BdCustomer> bdCustomers=cloudClient.getAllCustomer();
+        LocalDateTime outDate=clientRepository.findMaxOutDate();
+        List<BdCustomer> bdCustomers=cloudClient.findCustomerByMaxModifyDate(outDate);
         List<Client> clientList=clientRepository.findByOutIdIn(CollectionUtil.extractToList(bdCustomers,"FCustId"));
         Map<String,Client> outIdClientMap=CollectionUtil.extractToMap(clientList,"outId");
         for(BdCustomer bdCustomer:bdCustomers){

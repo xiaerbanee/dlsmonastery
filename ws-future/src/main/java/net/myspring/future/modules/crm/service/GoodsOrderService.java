@@ -325,6 +325,7 @@ public class GoodsOrderService {
         expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
         expressOrder.setFromDepotId(goodsOrderBillForm.getStoreId());
         expressOrder.setPrintDate(goodsOrder.getBillDate());
+        expressOrder.setExpressCompanyId(goodsOrderBillForm.getExpressCompanyId());
 
         int totalBillQty = 0;
         int mobileBillQty = 0;
