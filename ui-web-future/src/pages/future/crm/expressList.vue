@@ -4,16 +4,16 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:express:edit'">{{$t('expressList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:express:view'">{{$t('expressList.filter')}}</el-button>
+        <el-button type="primary" @click="formVisible = true" icon="search" v-permit="'crm:express:view'">{{$t('expressList.filter')}}</el-button>
         <el-button type="primary" @click="exportData"  v-permit="'crm:express:view'">{{$t('expressList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('expressList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
-        <el-form :model="formData" :label-width="formLabelWidth">
+        <el-form :model="formData" label-width="28%">
           <el-row :gutter="4">
             <el-col :span="24">
               <el-form-item :label="$t('expressList.code')" >
-                <el-input v-model="formData.code" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
+                <el-input v-model="formData.code" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('expressList.toDepotName')" >
                 <depot-select v-model="formData.expressOrderToDepotId" category="shop" @afterInit="setSearchText"></depot-select>
@@ -22,7 +22,7 @@
                 <date-range-picker v-model="formData.createdDateRange" ></date-range-picker>
               </el-form-item>
               <el-form-item :label="$t('expressList.extendBusinessId')">
-                <el-input v-model="formData.expressOrderExtendBusinessId" auto-complete="off" :placeholder="$t('expressList.likeSearch')"></el-input>
+                <el-input v-model="formData.expressOrderExtendBusinessId" :placeholder="$t('expressList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('expressList.fromDepotName')">
                 <depot-select v-model="formData.expressOrderFromDepotId" category="store" @afterInit="setSearchText"></depot-select>
@@ -43,7 +43,7 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('expressList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column fixed prop="code" :label="$t('expressList.code')" sortable></el-table-column>
+        <el-table-column prop="code" :label="$t('expressList.code')" sortable></el-table-column>
         <el-table-column prop="expressOrderExpressCompanyName"  :label="$t('expressList.expressCompanyName')" ></el-table-column>
         <el-table-column prop="expressOrderExtendType" :label="$t('expressList.extendType')" ></el-table-column>
         <el-table-column prop="expressOrderExtendBusinessId" :label="$t('expressList.extendBusinessId')" ></el-table-column>
@@ -84,7 +84,6 @@
             extra:{}
         },
         initPromise:{},
-        formLabelWidth: '28%',
         formVisible: false,
         pageLoading: false,
         pageHeight: 600,
@@ -99,7 +98,7 @@
       pageRequest() {
         this.pageLoading = true;
         this.setSearchText();
-        var submitData = util.deleteExtra(this.formData);
+        let submitData = util.deleteExtra(this.formData);
         util.setQuery("expressList",submitData);
         axios.get('/api/ws/future/crm/express?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
@@ -117,10 +116,10 @@
         this.formVisible = false;
         this.pageRequest();
       },itemAdd(){
-        this.$router.push({ name: 'expressForm'})
+        this.$router.push({ name: 'expressForm'});
       },itemAction:function(id,action){
         if(action==="edit") {
-          this.$router.push({ name: 'expressForm', query: { id: id }})
+          this.$router.push({ name: 'expressForm', query: { id: id }});
         } else if(action==="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
             axios.get('/api/ws/future/crm/express/delete',{params:{id:id}}).then((response) =>{
@@ -135,7 +134,7 @@
         }).catch(()=>{});
       }
     },created () {
-       this.pageHeight = 0.75*window.innerHeight;
+      this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/express/getQuery').then((response) =>{
         this.formData=response.data;
         util.copyValue(this.$route.query,this.formData);
