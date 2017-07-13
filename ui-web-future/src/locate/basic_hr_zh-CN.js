@@ -60,6 +60,8 @@ export default {
     accountForm: "账户管理编辑",
     mainAccount: "主账户",
     loginName: "登录名",
+    password: "密码",
+    confirmPassword: "确认密码",
     officeName: "部门",
     depot: "绑定门店",
     leader: "员工上级",
