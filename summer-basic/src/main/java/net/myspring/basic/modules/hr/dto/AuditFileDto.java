@@ -167,7 +167,7 @@ public class AuditFileDto extends DataDto<AuditFile> {
     }
 
     public Boolean getEditable() {
-        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId()!= null && (getCreatedBy().equals(RequestUtils.getAccountId()) || RequestUtils.getAdmin())) {
+        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId()!= null && (RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAdmin())) {
             return true;
         } else {
             return false;
