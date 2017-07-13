@@ -7,10 +7,10 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
     kingdee:
       JXOPPO:
-        url: jdbc:jtds:sqlserver://168.192.1.13:1433/AIS2017040100OPPO
+        url: jdbc:sqlserver://168.192.1.13:1433;DatabaseName=AIS2017040100OPPO
         username: sa
         password: bbk@123456
-        driver-class-name: net.sourceforge.jtds.jdbc.Driver
+        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   redis:
     host: localhost
     password:

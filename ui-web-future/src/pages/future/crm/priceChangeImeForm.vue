@@ -34,9 +34,6 @@
       data(){
         return this.getData();
       },
-      mounted () {
-        table = new Handsontable(this.$refs["handsontable"], this.settings);
-        },
       methods: {
         getData() {
           return {
@@ -111,10 +108,13 @@
                 }
               }
               axios.post('/api/ws/future/crm/priceChangeIme/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
-                this.$message(response.data.message);
-                this.submitDisabled = false;
-                if (response.data.success) {
+                  this.submitDisabled = false;
+                  if (response.data.success) {
+                  this.$message(response.data.message);
                   Object.assign(this.$data, this.getData());
+                  this.initPage();
+                }else{
+                  this.$alert(response.data.message);
                 }
               }).catch( ()=> {
                 that.submitDisabled = false;
@@ -126,6 +126,7 @@
         }, initPage(){
           axios.get('/api/ws/future/crm/priceChangeIme/getForm').then((response) => {
             this.inputForm = response.data;
+            table = new Handsontable(this.$refs["handsontable"], this.settings);
           });
         }
       }, created () {

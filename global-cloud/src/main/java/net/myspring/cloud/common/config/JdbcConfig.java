@@ -44,6 +44,7 @@ public class JdbcConfig {
         dataSource.setMaxActive(100);
         dataSource.setMinIdle(10);
         dataSource.setInitialSize(10);
+        dataSource.setRemoveAbandonedTimeout(600);
         return dataSource;
     }
 

@@ -7,6 +7,7 @@ import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -53,6 +54,8 @@ public class PriceChangeImeService {
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public PriceChangeImeDto findOne(String id){
         PriceChangeImeDto priceChangeImeDto = new PriceChangeImeDto();
@@ -74,6 +77,7 @@ public class PriceChangeImeService {
     }
 
     public Page<PriceChangeImeDto> findPage(Pageable pageable, PriceChangeImeQuery priceChangeImeQuery){
+        priceChangeImeQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<PriceChangeImeDto> page=priceChangeImeRepository.findPage(pageable,priceChangeImeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -117,6 +121,7 @@ public class PriceChangeImeService {
     @Transactional
     public String save(PriceChangeImeUploadForm priceChangeImeUploadForm){
         String priceChangeId = priceChangeImeUploadForm.getPriceChangeId();
+        List<String> productTypeIds = priceChangeRepository.findProductTypeIdsById(priceChangeId);
         List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
         if(CollectionUtil.isEmpty(imeUploadList)){
             return null;
@@ -159,8 +164,22 @@ public class PriceChangeImeService {
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
+            List<String> needSaveProductTypeIds = CollectionUtil.extractToList(productImeDtos,"productTypeId");
+            List<String> needSaveProductImeIds = CollectionUtil.extractToList(productImeDtos,"id");
             if(productImeDtos == null){
                 return "保存失败";
+            }
+            for(String needSaveProductTypeId:needSaveProductTypeIds){
+                if(!productTypeIds.contains(needSaveProductTypeId)){
+                    return "输入的串码中含有不是调价项目中的产品型号,保存失败";
+                }
+            }
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
+            List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
+            for(String productImeId:needSaveProductImeIds){
+                if(existProductImeIds.contains(productImeId)){
+                    return "输入的串码中有串码已存在所选择的调价项目下,保存失败";
+                }
             }
             Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
