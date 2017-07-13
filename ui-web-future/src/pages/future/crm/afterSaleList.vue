@@ -6,8 +6,7 @@
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.add')}}</el-button>
         <el-button type="primary" @click="itemEdit" icon="edit" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.edit')}}</el-button>
         <el-button type="primary" @click="itemSyn" icon="plus" v-permit="'crm:afterSale:edit'">{{$t('afterSaleList.syn')}}</el-button>
-        <el-button type="primary" @click="exportData"  v-permit="'crm:afterSale:view'">{{$t('afterSaleList.export')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">过滤或导出</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('afterSaleList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -44,6 +43,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button @click="exportData()">{{$t('afterSaleList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('afterSaleList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -126,8 +126,11 @@
           this.pageRequest();
         })
       },exportData(){
+        this.formVisible = false;
+        var submitData = util.deleteExtra(this.formData);
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href='/api/ws/future/crm/afterSale/exportData?'+qs.stringify(util.deleteExtra(this.formData));
+          window.location.href='/api/ws/future/crm/afterSale/exportData?'+qs.stringify(submitData);
+          this.pageRequest()
         }).catch(()=>{});
       },itemAction:function(id,action){
          if(action=="delete"){

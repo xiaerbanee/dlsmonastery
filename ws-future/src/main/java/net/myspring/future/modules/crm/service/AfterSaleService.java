@@ -499,15 +499,13 @@ public class AfterSaleService {
 
     public SimpleExcelBook export(AfterSaleQuery afterSaleQuery){
         Workbook workbook = new SXSSFWorkbook(10000);
-
         List<AfterSaleDto> afterSaleDtoList = findFilter(afterSaleQuery);
-
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"businessId","单号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductIme","坏机串码"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"badProductName","坏机货品"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toAreaProductName","替换机货品"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"retailDepotName","地区"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaDepotName","地区"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"packageStatus","包装"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"memory","内存"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"toStoreType","退机类型"));
