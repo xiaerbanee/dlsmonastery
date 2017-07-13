@@ -164,6 +164,9 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(goodsOrderQuery.businessId)) {
             sb.append(" and t1.business_id like concat('%',:businessId,'%')")
         }
+        if (StringUtils.isNotBlank(goodsOrderQuery.storeName)) {
+            sb.append(" and shop.name like concat('%',:storeName,'%')")
+        }
         if (goodsOrderQuery.billDateStart != null) {
             sb.append(" and t1.bill_date >= :billDateStart")
         }

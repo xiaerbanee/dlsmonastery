@@ -8,50 +8,61 @@ Page({
     formProperty:{},
     searchHidden: true,
     activeItem: null,
+    scrollTop:null,
   },
   onLoad: function (option) {
-    var that = this;
-    wx.request({
-      url: $util.getUrl("crm/goodsOrder/getQuery"),
-      data: {},
-      method: 'GET',
-      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-      success: function (res) {
-        that.setData({
-          'formProperty.storeList': res.data.stores, 'formProperty.statusList': res.data.status,
-          'formProperty.shipList': res.data.shipTypes, 'formProperty.netList': res.data.netTypes, 'formProperty.areaList': res.data.areas
-        })
-      }
-    })
+    let that = this;
+      wx.request({
+          url: $util.getUrl("ws/future/crm/goodsOrder/getQuery"),
+          data: {},
+          method: 'GET',
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          success: function (res) {
+              that.setData({
+                  'formProperty.storeList': res.data.extra.stores, 
+                  'formProperty.statusList': res.data.extra.statusList,
+                  'formProperty.shipList': res.data.extra.shipTypeList,
+                  'formProperty.netList': res.data.extra.netTypeList, 
+                  'formProperty.areaList': res.data.extra.areaList,
+                  formData:res.data
+              })
+          }
+      })
+    this.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
-    var that = this;
-    app.autoLogin(function () {
-      that.initPage()
-    });
-  },
-  initPage: function () {
-    var that = this;
-    that.pageRequest();
-  },
-  pageRequest: function () {
-    var that = this
+    let that = this;
     wx.showToast({
       title: '加载中',
       icon: 'loading',
       duration: 10000,
-      success: function () {
-        wx.request({
-          url: $util.getUrl("crm/goodsOrder"),
-          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          data: that.data.formData,
-          success: function (res) {
-            that.setData({ page: res.data});
-            wx.hideToast();
-          }
-        })
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
       }
     })
+  },
+  initPage: function () {
+    this.pageRequest();
+  },
+  pageRequest: function () {
+    var that = this
+        wx.request({
+          url: $util.getUrl("ws/future/crm/goodsOrder"),
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          data: $util.deleteExtra(that.data.formData),
+          success: function (res) {    
+            for(var item in res.data.content){
+              let actionList = new Array();
+              actionList.push("详细");
+              res.data.content[item].actionList=actionList
+            }
+            that.setData({ page: res.data});
+            wx.hideToast();
+            that.setData({ scrollTop: $util.toUpper() });
+          }
+        })
   },
   add: function () {
     wx.navigateTo({
@@ -65,15 +76,15 @@ Page({
   bindArea: function (e) {
     var that = this;
     that.setData({
-      'formData.area.id': that.data.formProperty.areaList[e.detail.value].id,
-      'formData.area.name': that.data.formProperty.areaList[e.detail.value].name
+      'formData.areaId': that.data.formProperty.areaList[e.detail.value].id,
+      'formData.areaName': that.data.formProperty.areaList[e.detail.value].name
     })
   },
   bindStore: function (e) {
     var that = this;
     that.setData({
-      'formData.store.id': that.data.formProperty.storeList[e.detail.value].id,
-      'formData.store.name': that.data.formProperty.storeList[e.detail.value].name
+      'formData.storeId': that.data.formProperty.storeList[e.detail.value].id,
+      'formData.storeName': that.data.formProperty.storeList[e.detail.value].name
     })
   },
   bindStatus: function (e) {
@@ -104,8 +115,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;

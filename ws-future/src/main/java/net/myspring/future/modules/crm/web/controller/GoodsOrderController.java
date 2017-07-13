@@ -8,12 +8,10 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.GoodsOrderPullStatusEnum;
-import net.myspring.future.common.enums.GoodsOrderStatusEnum;
-import net.myspring.future.common.enums.NetTypeEnum;
-import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
@@ -58,6 +56,8 @@ public class GoodsOrderController {
     private CarrierOrderService carrierOrderService;
     @Autowired
     private DepotService depotService;
+    @Autowired
+    private OfficeClient officeClient;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
@@ -74,6 +74,7 @@ public class GoodsOrderController {
     @RequestMapping(value = "getQuery")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
+        goodsOrderQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
