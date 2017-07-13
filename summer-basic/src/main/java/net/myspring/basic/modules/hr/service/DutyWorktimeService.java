@@ -363,9 +363,9 @@ public class DutyWorktimeService {
                 }
                 if (StringUtils.isNotBlank(employeeId) && isDateRow) {
                     for (int j = 1; j < row.getLastCellNum(); j++) {
-                        tempDate = String.valueOf(row.getCell(j)).trim();
-                        if (StringUtils.isNotBlank(tempDate)&&!"null".equals(tempDate)) {
-                            Object worktime = sheetAt.getRow(i+1).getCell(j);
+                        tempDate = (String) ExcelUtils.getCellValue(row.getCell(j));
+                        if (StringUtils.isNotBlank(tempDate)) {
+                            Object worktime = ExcelUtils.getCellValue(sheetAt.getRow(i+1).getCell(j));
                             String dateStr = yearMonth.split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
                             LocalDate dutyDate = LocalDateUtils.parse(dateStr);
                             LocalTime startTime = null;

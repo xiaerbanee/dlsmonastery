@@ -34,7 +34,7 @@
                 <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('auditFileList.stageName')">
-                <el-input v-model="formData.stageName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
+                <el-input v-model="formData.processStatus" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('auditFileList.content')">
                 <el-input v-model="formData.content" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>

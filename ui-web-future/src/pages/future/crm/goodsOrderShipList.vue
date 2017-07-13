@@ -97,7 +97,6 @@
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:shipBack'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'shipBack')">{{$t('goodsOrderShipList.shipBack')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货' || scope.row.status=='待签收')" v-permit="'crm:goodsOrderShip:mallOrder'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'mallOrder')">{{$t('goodsOrderShipList.mallOrder')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:sreturn'" ><el-button   size="small" @click.native="itemAction(scope.row.id, 'sreturn')">{{$t('goodsOrderShipList.sreturn')}}</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderShipList.delete')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'print')">出库单</el-button></div>
             <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待发货')" v-permit="'crm:goodsOrderShip:print'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">快递单</el-button></div>
           </template>
@@ -180,13 +179,6 @@
         this.$router.push({name:'goodsOrderDetail',query:{id:id,carrierEdit:true}})
       }else if(action ==="sreturn"){
         this.$router.push({name:'goodsOrderSreturn',query:{id:id}})
-      }else if(action ==="delete"){
-        util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/ws/future/crm/goodsOrder/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          });
-        }).catch(()=>{});
       }else if(action==="print"){
         window.open("/#/future/crm/goodsOrderPrint?id="+id);
       }else if(action==="shipPrint"){

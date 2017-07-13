@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -22,27 +20,9 @@ import java.util.*
 
 interface ProductImeSaleRepository : BaseRepository<ProductImeSale, String>, ProductImeSaleRepositoryCustom {
 
-    fun findByProductImeId(productImeId: String): MutableList<ProductImeSale>
-
-    @Query("""
-    SELECT
-        t1
-    FROM
-        #{#entityName} t1
-    WHERE
-        t1.employeeId = :employeeId
-    AND t1.createdDate >= :createdDateStart
-    AND t1.createdDate <= :createdDateEnd
-        """ )
-    fun findByEmployeeId(@Param("employeeId") employeeId: String, @Param("createdDateStart") createdDateStart: LocalDateTime, @Param("createdDateEnd") createdDateEnd: LocalDateTime): MutableList<ProductImeSale>
-
     fun findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId: String): ProductImeSale?
 
-
-
 }
-
-
 
 interface ProductImeSaleRepositoryCustom{
     fun findPage(pageable: Pageable, productImeSaleQuery: ProductImeSaleQuery): Page<ProductImeSaleDto>

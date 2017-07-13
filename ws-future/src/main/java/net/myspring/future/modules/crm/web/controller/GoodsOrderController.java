@@ -113,6 +113,22 @@ public class GoodsOrderController {
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
+        if(CollectionUtil.isEmpty(goodsOrderForm.getGoodsOrderDetailFormList())){
+            throw new ServiceException("订货明细不能为空");
+        }
+        Integer totalQty = 0;
+        for(GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()){
+            if(goodsOrderDetailForm.getQty() !=null && goodsOrderDetailForm.getQty()<0){
+                throw new ServiceException("订货明细里的数量不能小于0");
+            }
+            if(goodsOrderDetailForm.getQty() !=null){
+                totalQty = totalQty + goodsOrderDetailForm.getQty();
+            }
+        }
+        if(totalQty == 0){
+            throw new ServiceException("总订货数量必须大于0");
+        }
+
         GoodsOrder goodsOrder = goodsOrderService.save(goodsOrderForm);
         if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
             CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);

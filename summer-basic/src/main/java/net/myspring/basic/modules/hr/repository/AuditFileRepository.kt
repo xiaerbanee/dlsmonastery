@@ -74,6 +74,9 @@ class AuditFileRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempl
         if (CollectionUtil.isNotEmpty(auditFileQuery.processTypeIdList)) {
             sb.append(" and process_type_id in (:processTypeIdList) ")
         }
+        if(StringUtils.isNotBlank(auditFileQuery.processStatus)){
+            sb.append(" and process_status like concat('%',:processStatus,'%') ")
+        }
         if (auditFileQuery.createdByName != null) {
             sb.append("""
                 and t1.created_by in(

@@ -96,17 +96,20 @@ public class AccountService {
     @Transactional
     public Account save(AccountForm accountForm) {
         Account account;
+        if (StringUtils.isNotBlank(accountForm.getPassword())) {
+            accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
+        } else {
+            if(accountForm.isCreate()){
+                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getLoginName()));
+            }else {
+                accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
+            }
+        }
         if (accountForm.isCreate()) {
-            accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getLoginName()));
             account = BeanUtil.map(accountForm, Account.class);
             accountRepository.save(account);
         } else {
             account = accountRepository.findOne(accountForm.getId());
-            if (StringUtils.isNotBlank(accountForm.getPassword())) {
-                accountForm.setPassword(StringUtils.getEncryptPassword(accountForm.getPassword()));
-            } else {
-                accountForm.setPassword(accountRepository.findOne(accountForm.getId()).getPassword());
-            }
             if(StringUtils.isBlank(accountForm.getOutPassword())&&StringUtils.isNotBlank(account.getOutPassword())){
                 accountForm.setOutPassword(account.getOutPassword());
             }

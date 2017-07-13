@@ -35,6 +35,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
+    fun findByEnabledIsTrueAndDepotShopId(depotShopId:String): Depot
+
     fun findByEnabledIsTrueAndDepotShopIdIsNotNull(): MutableList<Depot>
 
     fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>

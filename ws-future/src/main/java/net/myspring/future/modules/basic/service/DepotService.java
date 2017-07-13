@@ -100,6 +100,13 @@ public class DepotService {
         return depotDto;
     }
 
+    public DepotDto findByDepotShopId(String depotShopId) {
+        Depot depot = depotRepository.findByEnabledIsTrueAndDepotShopId(depotShopId);
+        DepotDto depotDto=BeanUtil.map(depot,DepotDto.class);
+        cacheUtils.initCacheInput(depotDto);
+        return depotDto;
+    }
+
     public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery) {
 
         if(depotAccountQuery.getDutyDateRange() == null || depotAccountQuery.getDutyDateStart()==null || LocalDate.now().minusDays(70).isAfter(depotAccountQuery.getDutyDateStart()) ){
