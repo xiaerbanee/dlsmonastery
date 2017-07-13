@@ -18,6 +18,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.EntityManager
 
@@ -47,12 +48,21 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
     fun findAllEnabled(): MutableList<Client>
 
     fun findByNameContaining(name: String): MutableList<Client>
+
+    @Query("""
+        SELECT
+        Max(t1.out_date)
+        FROM #{#entityName} t1
+        WHERE  t1.enabled = 1
+    """)
+    fun findMaxOutDate(): LocalDateTime
 }
 
 interface ClientRepositoryCustom{
     fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto>
 
     fun findByDepotId(depotId: String): ClientDto?
+
 }
 
 class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ClientRepositoryCustom{
