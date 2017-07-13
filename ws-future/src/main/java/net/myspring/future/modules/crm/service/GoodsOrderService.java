@@ -201,9 +201,6 @@ public class GoodsOrderService {
         Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
-            if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty() < 0){
-                throw new ServiceException("订单明细数量不能小于0");
-            }
             if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() == 0) {
                 if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())){
                     goodsOrderDetailRepository.delete(goodsOrderDetailForm.getId());

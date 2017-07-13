@@ -126,7 +126,7 @@
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'" v-permit="'crm:goodsOrder:bill'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'bill')">{{$t('goodsOrderList.bill')}}</el-button></div>
             <div class="action"  v-if="scope.row.enabled && scope.row.status=='待开单'"  v-permit="'crm:goodsOrder:edit'" ><el-button size="small" @click.native="itemAction(scope.row.id, 'edit')">{{$t('goodsOrderList.edit')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' "  size="small" @click.native="itemAction(scope.row.id, 'print')">出库单</el-button></div>
-            <div class="action"  v-if="scope.row.enabled && (scope.row.status=='待开单' || scope.row.status=='待发货')" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
+            <div class="action"  v-if="canDel(scope.row)" v-permit="'crm:goodsOrder:delete'"><el-button   size="small" @click.native="itemAction(scope.row.id, 'delete')">{{$t('goodsOrderList.delete')}}</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button :style="scope.row.shipPrint ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id, 'shipPrint')">快递单</el-button></div>
             <div class="action"  v-permit="'crm:goodsOrder:print'"><el-button size="small" @click.native="editPullStatus(scope.row)">商城状态</el-button></div>
           </template>
@@ -176,6 +176,8 @@
       this.$nextTick(function () {
         this.searchText = util.getSearchText(this.$refs.searchDialog);
       })
+    },canDel(row){
+       return row.enabled && (row.status==='待开单' || (row.status==='待发货' && util.isPermit('crm:goodsOrder:bill')));
     },
     tableRowClassName(row, index) {
       if (row.shopShouldGetAfterBill<= 0 && row.status==='待开单' && _.trim(row.shopCode) !== '') {

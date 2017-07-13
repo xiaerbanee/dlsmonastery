@@ -49,6 +49,7 @@ class AdGoodsOrderDetailRepositoryImpl @Autowired constructor(val namedParameter
         val sb = StringBuffer()
         sb.append("""
              SELECT
+                    t2.remarks adGoodsOrderRemarks,
                     t2.parent_id adGoodsOrderParentId,
                     t2.shop_id adGoodsOrderShopId,
                     shop.area_id adGoodsOrderShopAreaId,
