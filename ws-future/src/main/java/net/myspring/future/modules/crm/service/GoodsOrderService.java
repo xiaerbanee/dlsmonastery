@@ -200,9 +200,13 @@ public class GoodsOrderService {
         Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
-            if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty()<0) {
-                throw new ServiceException("订货明细里的数量不能小于0");
+            if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() <= 0) {
+                if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())){
+                    goodsOrderDetailRepository.delete(goodsOrderDetailForm.getId());
+                }
+                continue;
             }
+
             if(!pricesystemDetailMap.containsKey(goodsOrderDetailForm.getProductId())){
                 throw new ServiceException("该产品（"+goodsOrderDetailForm.getProductId()+"）不包含在该门店价格体系内，不允许订货");
             }
@@ -479,7 +483,6 @@ public class GoodsOrderService {
         if(!Boolean.TRUE.equals(product.getVisible())){
             return false;
         }
-        //TODO 判断逻辑是否完整
         //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
         if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
             OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());

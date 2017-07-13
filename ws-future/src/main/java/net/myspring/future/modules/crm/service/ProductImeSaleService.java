@@ -26,7 +26,6 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,6 +122,7 @@ public class ProductImeSaleService {
             productImeSale.setEmployeeId(employeeId);
             productImeSale.setProductImeId(productIme.getId());
             productImeSale.setShopId(saleShopId);
+            productImeSale.setIsBack(false);
             productImeSale.setRemarks(productImeSaleForm.getRemarks());
             productImeSale.setBuyer(productImeSaleForm.getBuyer());
             productImeSale.setBuyerAge(productImeSaleForm.getBuyerAge());
