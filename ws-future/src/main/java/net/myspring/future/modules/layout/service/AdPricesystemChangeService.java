@@ -54,10 +54,8 @@ public class AdPricesystemChangeService {
     }
 
     public List<List<Object>> findFilter(AdPricesystemChangeQuery adPricesystemChangeQuery) {
-        ProductQuery productQuery = new ProductQuery();
-        productQuery.setName(adPricesystemChangeQuery.getProductName());
-        productQuery.setCode(adPricesystemChangeQuery.getProductCode());
-        List<ProductDto> productList = productRepository.findFilter(productQuery);
+
+        List<ProductDto> productList = productRepository.findFilterForAdpricesystemChange(adPricesystemChangeQuery);
         List<AdPricesystem> adPricesystemList = adpricesystemRepository.findByEnabledIsTrue();
         List<List<Object>> data = getFormData(productList,adPricesystemList);
         return data;

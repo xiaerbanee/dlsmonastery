@@ -202,7 +202,7 @@
         }
         this.multipleSelection=arrs;
       },checkSelectable(row) {
-        return row.processStatus !== '已通过';
+        return row.isAuditable&&row.processStatus.indexOf('通过')<0;
       }
     },created () {
        this.pageHeight = 0.75*window.innerHeight;
