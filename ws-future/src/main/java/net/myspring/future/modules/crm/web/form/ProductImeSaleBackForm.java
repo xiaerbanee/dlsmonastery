@@ -8,13 +8,9 @@ import net.myspring.util.text.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by wangzm on 2017/4/21.
- */
 public class ProductImeSaleBackForm extends BaseForm<ProductImeSale> {
 
     private String imeStr;
-
 
     public List<String> getImeList(){
         if(imeStr == null){
