@@ -25,7 +25,7 @@ public class AuditFileQuery extends BaseQuery {
     private String officeName;
     private String officeId;
     private String createdByName;
-    private String stageName;
+    private String processStatus;
     private String processTypeId;
     private String content;
     private String title;
@@ -126,12 +126,12 @@ public class AuditFileQuery extends BaseQuery {
         this.createdByName = createdByName;
     }
 
-    public String getStageName() {
-        return stageName;
+    public String getProcessStatus() {
+        return processStatus;
     }
 
-    public void setStageName(String stageName) {
-        this.stageName = stageName;
+    public void setProcessStatus(String processStatus) {
+        this.processStatus = processStatus;
     }
 
     public String getProcessTypeId() {
