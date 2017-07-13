@@ -51,7 +51,7 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
 
     @Query("""
         SELECT
-        Max(t1.out_date)
+        Max(t1.outDate)
         FROM #{#entityName} t1
         WHERE  t1.enabled = 1
     """)
