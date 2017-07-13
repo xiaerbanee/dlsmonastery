@@ -8,8 +8,8 @@
           <view class="weui-label">门店</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="shopId" value="{{formData.shop.id}}" bindtap="bindShop" disabled>
-            <view class="weui-input">{{formData.shop.name}}
+          <picker name="shopId" value="{{formData.shopId}}" bindtap="bindShop" disabled>
+            <view class="weui-input">{{formData.shopName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>
           </picker>

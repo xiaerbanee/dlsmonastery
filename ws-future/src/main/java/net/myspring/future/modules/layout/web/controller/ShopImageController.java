@@ -7,10 +7,12 @@ import net.myspring.future.modules.layout.dto.ShopImageDto;
 import net.myspring.future.modules.layout.service.ShopImageService;
 import net.myspring.future.modules.layout.web.form.ShopImageForm;
 import net.myspring.future.modules.layout.web.query.ShopImageQuery;
+import net.myspring.future.modules.layout.web.validator.ShopImageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,8 @@ public class ShopImageController {
 
     @Autowired
     private ShopImageService shopImageService;
+    @Autowired
+    private ShopImageValidator shopImageValidator;
 
 
 
@@ -51,7 +55,11 @@ public class ShopImageController {
 
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:shopImage:edit')")
-    public RestResponse save(ShopImageForm shopImageForm) {
+    public RestResponse save(ShopImageForm shopImageForm,BindingResult bindingResult) {
+        shopImageValidator.validate(shopImageForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return new RestResponse(bindingResult,"保存失败", null);
+        }
         shopImageService.save(shopImageForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }

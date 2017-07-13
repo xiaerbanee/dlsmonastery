@@ -33,8 +33,8 @@ public class DutyFreeValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         DutyFreeForm dutyFree = (DutyFreeForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "freeDate", "error.freeDate", "请选择时间");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "freeDate", "error.freeDate", "必填信息");
 
         if (dutyFree.getDateType() != null && dutyFree.getFreeDate() != null) {
             if (ChronoUnit.DAYS.between(dutyFree.getFreeDate(), LocalDateTime.now()) > 10) {

@@ -23,8 +23,8 @@ public class DutyTripValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors){
         DutyTripForm dutyTrip = (DutyTripForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateStart", "error.dateStart", "请选择开始时间");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateEnd", "error.dateEnd", "请选择结束日期");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateStart", "error.dateStart", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateEnd", "error.dateEnd", "必填信息");
         if(dutyTrip.getDateStart()!=null&&dutyTrip.getDateEnd()!=null){
             if(dutyTrip.getDateEnd().isBefore(dutyTrip.getDateStart())){
                 errors.rejectValue("dateStart","error.dateStart","开始日期必须小于等于结束日期");

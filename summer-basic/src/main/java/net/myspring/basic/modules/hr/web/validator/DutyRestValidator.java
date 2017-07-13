@@ -23,22 +23,22 @@ public class DutyRestValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         DutyRestForm dutyRest = (DutyRestForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "error.type", "请选择调休类型");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "请选择日期");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "error.type", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "必填信息");
 
         if(dutyRest.getType() !=null ){
             if (dutyRest.getType() .equals( "加班调休")) {
                 if(dutyRest.getHour()!=null&&dutyRest.getHour().doubleValue()>dutyRest.getOvertimeLeftHour()){
                     errors.rejectValue( "hour", "error.hour", "时长大于可调休时间");
                 }
-                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeStart", "error.timeStart", "请选择开始时间");
-                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeEnd", "error.timeEnd", "请选择结束日期");
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeStart", "error.timeStart", "必填信息");
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeEnd", "error.timeEnd", "必填信息");
             }
             if (dutyRest.getType() .equals( "年假调休")) {
                 if(dutyRest.getHour()!=null&&dutyRest.getHour().doubleValue()>dutyRest.getAnnualLeftHour()){
                     errors.rejectValue("hour", "error.hour", "时长大于可调休时间");
                 }
-                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
+                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "必填信息");
             }
             if(ChronoUnit.DAYS.between(dutyRest.getDutyDate(), LocalDateTime.now())>10){
                 errors.rejectValue("dutyDate","error.dutyDate","只能申请10天内数据");

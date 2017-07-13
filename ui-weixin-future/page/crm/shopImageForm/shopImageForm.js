@@ -4,8 +4,8 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     formData: {},
-    formProperty:{},
-    response:{},
+    formProperty: {images:[]},
+    response: {},
     submitDisabled: false,
     submitHidden: false,
     options: null
@@ -17,32 +17,35 @@ Page({
       that.initPage()
     })
   },
-  initPage:function(){
+  initPage: function () {
     var that = this;
-    var options=that.data.options;
+    var options = that.data.options;
     wx.request({
       url: $util.getUrl("ws/future/layout/shopImage/getForm"),
       data: {},
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        that.setData({ 'formProperty.imageTypeList': res.data.imageTypeList });
+        console.log(">>>>>>",res.data)
+        that.setData({ 'formProperty.imageTypeList': res.data.extra.imageTypeList });
         wx.request({
-          url:  $util.getUrl("ws/future/layout/shopImage/findOne?id="+options.id),
+          url: $util.getUrl("ws/future/layout/shopImage/findOne?id=" + options.id),
           data: {},
           method: 'GET',
-          header: {Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          success: function(res){
-            console.log(res.data)
-            that.setData({formData:res.data})
+          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          success: function (res) {
+            var images = new Array();
+            that.setData({ formData: res.data })
+            $util.downloadFile(images, res.data.image, app.globalData.sessionId, 9, function () {
+              that.setData({ "formProperty.images": images });
+            });
+            console.log("=======",res.data)
+            that.setData({ formData: res.data })
           }
         })
       }
     })
-    if (options.action == "update") {
-      that.detail();
-    } else if (options.action == "detail") {
-      that.detail();
+    if (options.action == "detail") {
       that.setData({ submitHidden: !that.data.submitHidden });
     }
   },
@@ -58,18 +61,15 @@ Page({
   addImage: function (e) {
     var that = this;
     var images = that.data.formProperty.images;
-    if (!images) {
-      images = new Array();
-    }
     wx.chooseImage({
       count: 9,
-      sizeType: ['compressed','original'],
-      sourceType: ['camera','album'],
+      sizeType: ['compressed', 'original'],
+      sourceType: ['camera', 'album'],
       success: function (res) {
         var tempFilePaths = res.tempFilePaths
-        for (var i in tempFilePaths) {
+        for (let i in tempFilePaths) {
           wx.uploadFile({
-            url: $util.getUrl('sys/folderFile/upload'),
+            url: $util.getUrl('general/sys/folderFile/upload'),
             header: {
               Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
@@ -79,13 +79,10 @@ Page({
               uploadPath: 'shopImage'
             },
             success: function (res) {
-              var folderFile = JSON.parse(res.data);
-              images.push({
-                id: folderFile[0].id,
-                preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId +  '&id=' + folderFile[0].id),
-                view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile[0].id)
-              })
-              that.setData({ 'formProperty.images': images })
+              var folderFile = JSON.parse(res.data)[0];
+              $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 9, function () {
+                that.setData({ "formProperty.images": images });
+              });
             }
           })
         }
@@ -116,16 +113,16 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-     e.detail.value.image = $util.getImageStr(that.data.formProperty.images,app.globalData.sessionId);
+    e.detail.value.image = $util.getImageStr(that.data.formProperty.images, app.globalData.sessionId);
     wx.request({
-      url: $util.getUrl("crm/shopImage/save"),
+      url: $util.getUrl("ws/future/layout/shopImage/save"),
       data: e.detail.value,
-      header: {Cookie: "JSESSIONID=" + app.globalData.sessionId},
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ 'response.data': res.data , submitDisabled: false});
+          that.setData({ 'response.data': res.data, submitDisabled: false });
         }
       }
     })
@@ -134,25 +131,12 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if(responseData && responseData.errors && responseData.errors[key] != null) {
+    if (responseData && responseData.errors && responseData.errors[key] != null) {
       that.setData({ "response.error": responseData.errors[key].message });
       delete responseData.errors[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })
     }
-  },
-  detail: function () {
-    var that = this;
-    wx.request({
-      url: $util.getUrl("crm/shopImage/detail"),
-      data: { id: that.data.options.id },
-      method: 'GET',
-      header: { 'x-auth-token': app.globalData.sessionId },
-      success: function (res) {
-         that.setData({ formData: res.data })
-         that.setData({ 'formProperty.images': $util.getImages(res.data.images) })
-      }
-    })
   }
 })
