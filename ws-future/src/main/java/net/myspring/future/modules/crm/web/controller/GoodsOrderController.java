@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +78,10 @@ public class GoodsOrderController {
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
         goodsOrderQuery.getExtra().put("pullStatusList", GoodsOrderPullStatusEnum.getList());
+
+        LocalDate today = LocalDate.now();
+        goodsOrderQuery.setCreatedDateRange(today.minusWeeks(1).toString() + " - " + today.toString());
+
         return goodsOrderQuery;
     }
 

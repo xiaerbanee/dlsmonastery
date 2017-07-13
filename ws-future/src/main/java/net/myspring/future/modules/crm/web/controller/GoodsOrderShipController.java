@@ -4,6 +4,7 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.future.common.enums.GoodsOrderStatusEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.enums.ShipTypeEnum;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -42,7 +44,11 @@ public class GoodsOrderShipController {
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
-        goodsOrderQuery.getExtra().put("statusList",Arrays.asList("待发货","待签收","已完成"));
+        goodsOrderQuery.getExtra().put("statusList",Arrays.asList(GoodsOrderStatusEnum.待发货.name(), GoodsOrderStatusEnum.待签收.name(), GoodsOrderStatusEnum.已完成.name()));
+
+        LocalDate today = LocalDate.now();
+        goodsOrderQuery.setBillDateRange(today.minusWeeks(1).toString() + " - " + today.toString());
+
         return goodsOrderQuery;
     }
 

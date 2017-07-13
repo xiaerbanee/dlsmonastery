@@ -60,6 +60,13 @@ public class AccountChangeController {
         return restResponse;
     }
 
+    @RequestMapping(value="audit",method=RequestMethod.GET)
+    public RestResponse audit(String id,boolean pass){
+        RestResponse restResponse=new RestResponse("审核成功",ResponseCodeEnum.audited.name());
+        accountChangeService.pass(id,pass);
+        return restResponse;
+    }
+
     @RequestMapping(value = "save", method = RequestMethod.POST)
     @PreAuthorize("hasPermission(null,'hr:accountChange:edit')")
     public RestResponse save( AccountChangeForm accountChangeForm) {

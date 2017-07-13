@@ -37,17 +37,6 @@ Page({
       success: function (res) {
         that.setData({ formData: res.data });
         that.setData({ 'formProperty.activityTypeList': res.data.extra.activityTypeList });
-        wx.request({
-          url: $util.getUrl("general/sys/processFlow/findByProcessTypeName?processTypeName=活动拉销"),
-          data: {},
-          method: 'GET',
-          header: {
-            Cookie: "JSESSIONID=" + app.globalData.sessionId
-          },
-          success: function (res) {
-            that.setData({ 'formProperty.processList': res.data })
-          }
-        })
         that.pageRequest();
       }
      })

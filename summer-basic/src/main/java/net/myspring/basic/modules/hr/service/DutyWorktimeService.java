@@ -14,10 +14,12 @@ import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.repository.*;
 import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
+import net.myspring.basic.modules.sys.client.FolderFileClient;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.repository.OfficeRepository;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.AuditTypeEnum;
+import net.myspring.general.modules.sys.dto.FolderFileFeignDto;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.*;
 import net.myspring.util.text.StringUtils;
@@ -32,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -67,7 +70,8 @@ public class DutyWorktimeService {
     private CacheUtils cacheUtils;
     @Autowired
     private OfficeRepository officeRepository;
-
+    @Autowired
+    private FolderFileClient folderFileClient;
     public Page<DutyWorktimeDto> findPage(Pageable pageable, DutyWorktimeQuery dutyWorktimeQuery) {
         Page<DutyWorktimeDto> page = dutyWorktimeRepository.findPage(pageable, dutyWorktimeQuery);
         cacheUtils.initCacheInput(page.getContent());
@@ -322,10 +326,10 @@ public class DutyWorktimeService {
     }
 
     @Transactional
-    public void save(DutyWorktimeForm dutyWorktimeForm) {
+    public void save(String folderFileId, String yearMonth, String remarks) {
         Map<String, DutyWorktime> dutyWorktimeMap = Maps.newLinkedHashMap();
-//        GridFSDBFile gridFSDBFile = storageGridFsTemplate.findOne(new Query(Criteria.where("_id").is(dutyWorktimeForm.getMongoId())));
-        Workbook workbook = ExcelUtils.getWorkbook(new File("aaa"));
+        FolderFileFeignDto folderFile = folderFileClient.findById(folderFileId);
+        Workbook workbook= ExcelUtils.getWorkbook(new File(folderFile.getUploadPath(RequestUtils.getCompanyName())));
         Sheet sheetAt = workbook.getSheetAt(0);
         int rowCount = sheetAt.getLastRowNum();
         if (rowCount > 1) {
@@ -362,7 +366,7 @@ public class DutyWorktimeService {
                         tempDate = String.valueOf(row.getCell(j)).trim();
                         if (StringUtils.isNotBlank(tempDate)&&!"null".equals(tempDate)) {
                             Object worktime = sheetAt.getRow(i+1).getCell(j);
-                            String dateStr = dutyWorktimeForm.getYearMonth().split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
+                            String dateStr = yearMonth.split("-")[0] + "-" + tempDate.split(" ")[0].replace("/", "-");
                             LocalDate dutyDate = LocalDateUtils.parse(dateStr);
                             LocalTime startTime = null;
                             LocalTime endTime = null;

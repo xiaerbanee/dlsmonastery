@@ -47,6 +47,7 @@
           <template scope="scope">
             <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:accountChange:view'">详细</el-button>
             <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:accountChange:audit'">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -103,7 +104,9 @@
       },itemAction:function(id,action){
         if(action=="detail") {
           this.$router.push({ name: 'accountChangeForm', query: { id: id,action:action }})
-        } else if(action="delete") {
+        } else if(action=="audit"){
+          this.$router.push({ name: 'accountChangeForm', query: { id: id,action:action }})
+        }else if(action="delete") {
             util.confirmBeforeDelRecord(this).then(() => {
           axios.get('/api/basic/hr/accountChange/delete',{params:{id:id}}).then((response) =>{
             this.$message(response.data.message);
