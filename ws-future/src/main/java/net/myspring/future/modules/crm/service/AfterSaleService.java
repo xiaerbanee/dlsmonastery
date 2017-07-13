@@ -234,7 +234,7 @@ public class AfterSaleService {
                                         isUpdate = true;
                                     }
                                 } else {
-                                    if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId()) || !afterSale.getToAreaProductImeId().equals(toAreaProductIme.getId())) {
+                                    if (StringUtils.isNotBlank(afterSale.getToAreaProductImeId()) || !toAreaProductIme.getId().equals(afterSale.getToAreaProductImeId())) {
                                         isUpdate = true;
                                     }
                                 }
