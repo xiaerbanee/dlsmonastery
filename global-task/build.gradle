@@ -41,6 +41,5 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE"
-		mavenBom 'org.springframework.cloud:spring-cloud-stream-dependencies:Brooklyn.SR3'
 	}
 }
