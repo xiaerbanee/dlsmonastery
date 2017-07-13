@@ -120,6 +120,7 @@ public class GoodsOrderShipService {
         productImeShipQuery.setImeList(goodsOrderShipForm.getImeList());
         productImeShipQuery.setBoxImeList(goodsOrderShipForm.getBoxImeList());
         List<ProductIme> productImeList = productImeRepository.findShipList(productImeShipQuery);
+        Map<String,Product> productImeProductMap = productRepository.findMap(CollectionUtil.extractToList(productImeList,"productId"));
         Set<String> boxImeSet = Sets.newHashSet();
         Set<String> imeSet = Sets.newHashSet();
         for (ProductIme productIme : productImeList) {
@@ -133,7 +134,7 @@ public class GoodsOrderShipService {
             }
             Product product = productMap.get(productIme.getProductId());
             if(product==null || !goodsOrderDetailMap.containsKey(product.getId())){
-                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "的货品不在订货范围内","ime_error","imeStr"));
+                restResponse.getErrors().add(new RestErrorField("箱号：" + productIme.getBoxIme() +"，串码：" + productIme.getIme() + "，货品："+productImeProductMap.get(productIme.getProductId()).getName()+"不在订货范围内","ime_error","imeStr"));
             } else {
                 goodsOrderDetailMap.get(product.getId()).setShipQty(goodsOrderDetailMap.get(product.getId()).getShipQty() + 1);
             }

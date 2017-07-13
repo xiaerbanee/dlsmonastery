@@ -125,7 +125,7 @@
           if (valid) {
             axios.post('/api/ws/future/crm/productImeSale/sale',qs.stringify(util.deleteExtra(this.inputForm), {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
-              this.submitDisabled = false
+              this.submitDisabled = false;
             if(response.data.success){
                 Object.assign(this.$data, this.getData());
                 this.initPage();

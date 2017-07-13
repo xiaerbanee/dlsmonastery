@@ -145,6 +145,13 @@ util.confirmBefore = function(vueObj){
   });
 }
 
+util.getLatestGoodsOrderBillDate = function () {
+  return store.state.global.latestGoodsOrderBillDate;
+};
+
+util.setLatestGoodsOrderBillDate = function (latestGoodsOrderBillDate) {
+  store.dispatch("setLatestGoodsOrderBillDate", latestGoodsOrderBillDate);
+};
 
 util.getQuery = function (routerName) {
   var query = {};

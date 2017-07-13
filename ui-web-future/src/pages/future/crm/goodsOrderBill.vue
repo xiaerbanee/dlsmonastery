@@ -164,6 +164,7 @@
             let submitData =JSON.parse(JSON.stringify(this.inputForm));
             submitData.goodsOrderBillDetailFormList = this.getDetailListForSubmit();
             axios.post('/api/ws/future/crm/goodsOrder/bill', qs.stringify(submitData, {allowDots:true})).then((response)=> {
+              util.setLatestGoodsOrderBillDate(this.inputForm.billDate);
               this.$message(response.data.message);
               this.$router.push({name:'goodsOrderList',query:util.getQuery("goodsOrderList"), params:{_closeFrom:true}})
             }).catch( () => {
@@ -284,7 +285,11 @@
 
         this.inputForm.id = response.data.id;
         this.inputForm.storeId = response.data.storeId;
-        this.inputForm.billDate = response.data.billDate;
+        //先从本地缓存中获取本地默认值，没有再从后台获取全局默认值
+        this.inputForm.billDate = util.getLatestGoodsOrderBillDate();
+        if(!this.inputForm.billDate){
+          this.inputForm.billDate = response.data.billDate;
+        }
         this.inputForm.expressCompanyId = response.data.expressCompanyId;
         this.inputForm.syn = response.data.syn;
         this.inputForm.remarks = response.data.remarks;
