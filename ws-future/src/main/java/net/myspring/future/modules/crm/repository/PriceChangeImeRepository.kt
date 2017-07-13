@@ -7,6 +7,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
@@ -120,7 +121,12 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if(StringUtils.isNotBlank(priceChangeImeQuery.officeId)){
             sb.append("""  and depot.office_id=:officeId  """)
         }
-
+        if (CollectionUtil.isNotEmpty(priceChangeImeQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(priceChangeImeQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList) """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(priceChangeImeQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(PriceChangeImeDto::class.java))

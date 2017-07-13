@@ -39,12 +39,15 @@ interface PriceChangeRepository : BaseRepository<PriceChange, String>, PriceChan
 
     fun findByEnabledIsTrueOrderByIdDesc(): MutableList<PriceChange>
 
+
 }
 
 interface PriceChangeRepositoryCustom{
     fun findPage(pageable: Pageable, priceChangeQuery : PriceChangeQuery): Page<PriceChangeDto>
 
     fun findNearPriceChange(): PriceChange
+
+    fun findProductTypeIdsById(id:String):MutableList<String>
 }
 
 class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): PriceChangeRepositoryCustom {
@@ -81,5 +84,18 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
 
     }
 
+    override fun findProductTypeIdsById(id:String):MutableList<String>{
+        val sb = StringBuilder("""
+            SELECT
+                t2.product_type_id
+            FROM
+                crm_price_change t1
+                LEFT JOIN crm_price_change_product t2 ON t1.id = t2.price_change_id
+            WHERE
+                t1.enabled = 1
+            AND t1.id = :id
+        """)
+        return namedParameterJdbcTemplate.queryForList(sb.toString(),Collections.singletonMap("id", id), String::class.java)
+    }
 
 }

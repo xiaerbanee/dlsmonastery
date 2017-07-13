@@ -5,7 +5,7 @@
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
-        <el-button type="primary" icon="picture" @click="pictureAdd" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.uploadPicture')}}</el-button>
+        <!--<el-button type="primary" icon="picture" @click="pictureAdd" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.uploadPicture')}}</el-button>-->
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
@@ -70,10 +70,10 @@
         <el-table-column column-key="createdBy" prop="createdByName" :label="$t('priceChangeImeList.createdBy')" sortable></el-table-column>
         <el-table-column  :label="$t('priceChangeImeList.operation')" width="140">
           <template scope="scope">
-            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
-            <div class="action" v-if="scope.row.status !='已通过'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
+            <div class="action" v-if="scope.row.status !== '已通过'&&scope.row.image !== null" v-permit="'crm:priceChangeIme:audit'"><el-button size="small" @click.native="itemAction(scope.row.id,'audit')">{{$t('priceChangeImeList.audit')}}</el-button></div>
+            <div class="action" v-if="scope.row.status ==='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'upload')">{{$t('priceChangeImeList.upload')}}</el-button></div>
             <div class="action" v-permit="'crm:priceChangeIme:view'"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')">{{$t('priceChangeImeList.detail')}}</el-button></div>
-            <div class="action" v-if="scope.row.status =='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('priceChangeImeList.delete')}}</el-button></div>
+            <div class="action" v-if="scope.row.status ==='申请中'" v-permit="'crm:priceChangeIme:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('priceChangeImeList.delete')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>
