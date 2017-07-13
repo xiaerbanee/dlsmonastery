@@ -60,6 +60,8 @@ export default {
     accountForm: "FORMULIR AKUN",
     mainAccount: "AKUN UTAMA",
     loginName: "USERNAME",
+    password: "kata sandi",
+    confirmPassword: "确认密码",
     officeName: "DEPARTEMEN",
     depot: "绑定门店",
     leader: "pemimpin",
