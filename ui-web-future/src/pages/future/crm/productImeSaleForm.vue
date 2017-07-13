@@ -105,7 +105,6 @@
           productQtyList:[],
           rules: {
             imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            remarks: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
           },
         }
       },
