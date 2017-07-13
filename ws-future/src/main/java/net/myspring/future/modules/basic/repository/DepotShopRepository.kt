@@ -43,11 +43,13 @@ interface DepotShopRepositoryCustom{
 
     fun findBaokaStoreReport(reportQuery: ReportQuery):MutableList<DepotReportDto>
     
-    fun findDto(id:String):DepotShopDto;
+    fun findDto(id:String):DepotShopDto
 
+    fun deleteDepotAccountByDepotId(depotId:String):Int
 
+    fun saveDepotAccount(depotId: String,accountIds: MutableList<String>):Int
 
-
+    fun findAccountIdsByDepotId(depotId: String):MutableList<String>
 
 }
 
@@ -520,6 +522,32 @@ class DepotShopRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         return PageImpl(list,pageable,count)
     }
 
+    override fun deleteDepotAccountByDepotId(depotId:String):Int{
+        return namedParameterJdbcTemplate.update("""
+          DELETE FROM
+              crm_account_depot
+          where depot_id=:depotId
+        """,Collections.singletonMap("depotId",depotId))
+    }
 
-
+    override fun findAccountIdsByDepotId(depotId: String):MutableList<String>{
+        return namedParameterJdbcTemplate.queryForList("""
+            SELECT
+                t1.account_id
+            FROM
+                crm_account_depot t1
+            WHERE
+                t1.depot_id = :depotId
+        """,Collections.singletonMap("depotId",depotId),String::class.java)
+    }
+    override fun saveDepotAccount(depotId: String,accountIds: MutableList<String>):Int{
+        val sb = StringBuilder("""
+            INSERT INTO crm_account_depot(account_id,depot_id) values
+        """)
+        for(accountId in accountIds){
+            sb.append("("+accountId+","+depotId+"),")
+        }
+        sb.deleteCharAt(sb.length -1)
+        return namedParameterJdbcTemplate.update(sb.toString(),HashMap<String,Any>())
+    }
 }

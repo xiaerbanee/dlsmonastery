@@ -3,6 +3,7 @@ import com.google.common.collect.Lists;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.*;
@@ -19,6 +20,7 @@ import net.myspring.future.modules.basic.service.AdPricesystemService;
 import net.myspring.future.modules.basic.service.ChainService;
 import net.myspring.future.modules.basic.service.DepotShopService;
 import net.myspring.future.modules.basic.service.PricesystemService;
+import net.myspring.future.modules.basic.web.form.DepotAccountForm;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -29,6 +31,7 @@ import net.myspring.future.modules.crm.web.query.StoreAllotQuery;
 import net.myspring.future.modules.layout.web.query.ShopAdQuery;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.text.StringUtils;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -110,6 +113,26 @@ public class DepotShopController {
         depotShopForm.getExtra().put("specialityStoreList",dictMapClient.findByCategory((DictMapCategoryEnum.门店_体验店类型.name())));
         depotShopForm.getExtra().put("shopMonthTotalList",dictEnumClient.findByCategory((DictEnumCategoryEnum.SHOP_MONTH_TOTAL.name())));
         return depotShopForm;
+    }
+
+    @RequestMapping(value = "getAccountForm")
+    public DepotAccountForm getAccountForm(DepotAccountForm depotAccountForm){
+        return depotAccountForm;
+    }
+
+    @RequestMapping(value = "findAccountIdsByDepotId")
+    public List<String> findAccountIdsByDepotId(String depotId){
+        if(StringUtils.isNotBlank(depotId)){
+            return depotShopService.findAccountIdsByDepotId(depotId);
+        }else{
+            throw new ServiceException("未选中门店");
+        }
+    }
+
+    @RequestMapping(value = "saveDepotAccount")
+    public RestResponse saveDepotAccount(DepotAccountForm depotAccountForm){
+        depotShopService.saveDepotAccount(depotAccountForm);
+        return new RestResponse("绑定成功",ResponseCodeEnum.saved.name());
     }
 
     @RequestMapping(value = "findOne")
