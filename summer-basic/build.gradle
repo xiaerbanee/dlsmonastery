@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
 	compile project(':summer-common')
-	compile('com.alibaba:druid:1.0.23')
+	compile('com.alibaba:druid:1.1.1')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
 	compile('org.springframework.boot:spring-boot-starter')

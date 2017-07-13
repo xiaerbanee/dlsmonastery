@@ -18,7 +18,7 @@ Page({
         var that = this;
         var options = that.data.options;
         wx.request({
-            url: $util.getUrl("crm/goodsOrder/detail"),
+            url: $util.getUrl("ws/future/crm/goodsOrder/findOne"),
             header: {
                 Cookie: "JSESSIONID=" + app.globalData.sessionId
             },
