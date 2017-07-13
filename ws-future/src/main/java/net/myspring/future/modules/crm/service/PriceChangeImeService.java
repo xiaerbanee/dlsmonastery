@@ -175,12 +175,12 @@ public class PriceChangeImeService {
                 }
             }
             List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
+            List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
             for(String productImeId:needSaveProductImeIds){
-                if(!existPriceChangeIme.contains(productImeId)){
-                    return "输入的串码中含有已存在所选择的调价项目下";
+                if(existProductImeIds.contains(productImeId)){
+                    return "输入的串码中有串码已存在所选择的调价项目下,保存失败";
                 }
             }
-            List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
             Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
                 PriceChangeIme priceChangeIme = new PriceChangeIme();
