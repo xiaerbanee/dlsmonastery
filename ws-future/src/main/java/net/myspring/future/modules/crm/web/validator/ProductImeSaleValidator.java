@@ -64,26 +64,5 @@ public class ProductImeSaleValidator implements Validator {
         if(StringUtils.isNotBlank(sb.toString())) {
             errors.rejectValue("imeStr", "error.imeStr", sb.toString());
         }
-        if(StringUtils.isBlank(productImeSaleForm.getBuyer())){
-            errors.rejectValue("buyer", "error.buyer", "必填信息");
-        }
-        if(productImeSaleForm.getBuyerAge()==null){
-            errors.rejectValue("buyerAge", "error.buyerAge", "必填信息且必须为数字");
-        }
-        if(StringUtils.isBlank(productImeSaleForm.getBuyerSex())){
-            errors.rejectValue("buyerSex", "error.buyerSex", "必填信息");
-        }
-        if(StringUtils.isBlank(productImeSaleForm.getBuyerPhone())){
-            errors.rejectValue("buyerPhone", "error.buyerPhone", "必填信息");
-        }
-        if(StringUtils.isBlank(productImeSaleForm.getShopId())){
-            errors.rejectValue("shopId", "error.shopId", "必填信息");
-        }
-
-
-
-
-
-
     }
 }
