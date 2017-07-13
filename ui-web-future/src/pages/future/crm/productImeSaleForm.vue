@@ -71,7 +71,6 @@
                       </div>
                       <div v-else>{{scope.row.depotName}}</div>
                     </div>
-
                   </template>
                 </el-table-column>
               </el-table>
@@ -106,10 +105,6 @@
           productQtyList:[],
           rules: {
             imeStr: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            buyer: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            buyerAge: [{ required: true, type:"number", message: this.$t('productImeSaleForm.prerequisiteAndNumberMessage')}],
-            buyerSex: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
-            buyerPhone: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
             remarks: [{ required: true, message: this.$t('productImeSaleForm.prerequisiteMessage')}],
           },
         }
@@ -145,10 +140,10 @@
         });
       },searchImeStr(){
         this.searched = true;
-        axios.get('/api/ws/future/crm/productImeSale/checkForSale',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/productImeSale/checkForSale',qs.stringify({imeStr: this.inputForm.imeStr})).then((response)=>{
           this.errMsg=response.data;
       });
-        axios.get('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',{params:{imeStr:this.inputForm.imeStr}}).then((response)=>{
+        axios.post('/api/ws/future/crm/productImeSale/findProductImeForSaleDto',qs.stringify({imeStr: this.inputForm.imeStr})).then((response)=>{
             let tmp = [];
             if(response.data){
               for(let each of response.data){
