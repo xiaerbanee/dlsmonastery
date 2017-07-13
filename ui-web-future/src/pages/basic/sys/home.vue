@@ -84,7 +84,7 @@
             </tbody>
           </table>
         </el-card>
-        <el-card class="box-card margin">
+        <el-card class="box-card margin" v-if="account.admin">
           <div slot="header" class="clearfix">
             <span style="font-size:20px">{{$t('home.synData')}}</span>
           </div>

@@ -2,6 +2,7 @@ package net.myspring.general.modules.sys.web.controller;
 
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.general.common.utils.RequestUtils;
 import net.myspring.general.modules.sys.service.CacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,9 @@ public class CacheController {
 
     @RequestMapping(value = "init")
     public RestResponse init() {
-        cacheService.init();
+        if(RequestUtils.getAdmin()){
+            cacheService.init();
+        }
         return new RestResponse("初始化缓存成功", ResponseCodeEnum.updated.name());
     }
 }
