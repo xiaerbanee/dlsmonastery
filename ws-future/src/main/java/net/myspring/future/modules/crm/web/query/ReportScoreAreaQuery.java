@@ -60,8 +60,8 @@ public class ReportScoreAreaQuery extends BaseQuery{
     public LocalDate getScoreDateEnd() {
         if(StringUtils.isNotBlank(scoreDateRange)) {
             return LocalDateUtils.parse(scoreDateRange.split(CharConstant.DATE_RANGE_SPLITTER)[1]).plusDays(1);
-        }else if(scoreDateStart!=null){
-            return scoreDateStart.plusDays(1);
+        }else if(scoreDateEnd!=null){
+            return scoreDateEnd.plusDays(1);
         }
         return null;
     }

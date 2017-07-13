@@ -7,7 +7,7 @@
           <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.createdPositionIds')" prop="createdPositionIds">
-          <position-select v-model="inputForm.createdPositionIdList" :multiple = "true" :disabled="!editable&&!isCreate"></position-select>
+          <position-select v-model="inputForm.createPositionIdList" :multiple = "true" :disabled="!editable&&!isCreate"></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.viewPositionIds')" prop="viewPositionIds">
           <position-select v-model="inputForm.viewPositionIdList" :multiple="true" :disabled="!editable&&!isCreate"></position-select>
@@ -71,7 +71,7 @@
           rules: {
             name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            createdPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            createPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             viewPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
           }
         }

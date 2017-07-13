@@ -6,6 +6,7 @@ import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,7 @@ public class CacheUtils {
             if(tuple.size()>0) {
                 RedisConnection redisConnection = redisTemplate.getConnectionFactory().getConnection();
                 redisConnection.mSet(tuple);
+                RedisConnectionUtils.releaseConnection(redisConnection,redisTemplate.getConnectionFactory());
             }
         }
     }

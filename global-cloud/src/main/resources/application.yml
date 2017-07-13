@@ -26,10 +26,15 @@ security:
 feign:
   hystrix:
     enabled: false
+  httpclient:
+    enabled: true
 
 ribbon:
   ReadTimeout: 180000
   ConnectTimeout: 180000
 logging:
   file: global-cloud.log
-  level: debug
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG

@@ -27,7 +27,7 @@ interface ShopAllotRepository : BaseRepository<ShopAllot,String>,ShopAllotReposi
         #{#entityName} t
     where  t.createdDate >= ?1
     """)
-    fun findMaxBusinessId(localDateTime: LocalDateTime): String
+    fun findMaxBusinessId(localDateTime: LocalDateTime): String?
 
 
 }

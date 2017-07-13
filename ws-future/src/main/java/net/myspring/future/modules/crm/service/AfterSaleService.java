@@ -8,7 +8,6 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
-import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
 import net.myspring.future.modules.basic.manager.StkMisDeliveryManager;
@@ -18,6 +17,7 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.*;
 import net.myspring.future.modules.crm.web.form.AfterSaleProductAllotForm;
 import net.myspring.future.modules.crm.web.form.AfterSaleStoreAllotForm;
@@ -28,14 +28,11 @@ import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.excel.SimpleExcelColumn;
 import net.myspring.util.excel.SimpleExcelSheet;
 import net.myspring.util.mapper.BeanUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.elasticsearch.xpack.notification.hipchat.V1Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -72,6 +69,8 @@ public class AfterSaleService {
     private StkTransferDirectManager stkTransferDirectManager;
     @Autowired
     private StkMisDeliveryManager stkMisDeliveryManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
         Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
@@ -175,8 +174,7 @@ public class AfterSaleService {
                     }
                 }
                 LocalDate now = LocalDate.now();
-                List<String> maxBusinessIdList = afterSaleRepository.findMaxBusinessId(now);
-                afterSale.setBusinessId(IdUtils.getNextBusinessId(CollectionUtil.isEmpty(maxBusinessIdList)?null:maxBusinessIdList.get(0), now));
+                afterSale.setBusinessId(redisIdManager.getNextAfterSaleBusinessId(now));
                 afterSale.setToStoreDate(toStoreDate);
                 afterSaleRepository.save(afterSale);
                 AfterSaleImeAllot afterSaleImeAllot = new AfterSaleImeAllot(afterSale.getId(), badProductIme.getId(), badProductIme.getDepotId(), badStore.getId(), "坏机录入");

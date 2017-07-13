@@ -6,6 +6,7 @@ import net.myspring.basic.modules.hr.dto.DutyWorktimeExportDto;
 import net.myspring.basic.modules.hr.service.DutyWorktimeService;
 import net.myspring.basic.modules.hr.web.form.DutyWorktimeForm;
 import net.myspring.basic.modules.hr.web.query.DutyWorktimeQuery;
+import net.myspring.basic.modules.sys.client.FolderFileClient;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
@@ -70,8 +71,8 @@ public class DutyWorktimeController {
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
-    public RestResponse importFile(DutyWorktimeForm dutyWorktimeForm) {
-        dutyWorktimeService.save(dutyWorktimeForm);
+    public RestResponse importFile(String folderFileId, String yearMonth, String remarks) {
+        dutyWorktimeService.save(folderFileId,yearMonth,remarks);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
 
