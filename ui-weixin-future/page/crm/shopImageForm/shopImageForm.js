@@ -21,13 +21,22 @@ Page({
     var that = this;
     var options=that.data.options;
     wx.request({
-      url: $util.getUrl("crm/shopImage/getForm"),
+      url: $util.getUrl("ws/future/layout/shopImage/getForm"),
       data: {},
       method: 'GET',
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res);
-        that.setData({ 'formProperty.imageTypeList': res.data.shopImageTypes })
+        that.setData({ 'formProperty.imageTypeList': res.data.imageTypeList });
+        wx.request({
+          url:  $util.getUrl("ws/future/layout/shopImage/findOne?id="+options.id),
+          data: {},
+          method: 'GET',
+          header: {Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          success: function(res){
+            console.log(res.data)
+            that.setData({formData:res.data})
+          }
+        })
       }
     })
     if (options.action == "update") {

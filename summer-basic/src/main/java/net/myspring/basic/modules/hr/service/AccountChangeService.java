@@ -211,6 +211,11 @@ public class AccountChangeService {
             audit(id,pass,"批量审核");
         }
     }
+
+    @Transactional
+    public void pass(String id,boolean pass){
+        audit(id,pass,"审核");
+    }
     @Transactional
     public void logicDelete(String id){
         accountChangeRepository.logicDelete(id);
