@@ -4,26 +4,25 @@
       <view class="weui-panel__hd">{{goodsOrder.businessId}}</view>
       <view class="weui-panel__bd">
         <view class="weui-media-box weui-media-box_text">
-          <view class="weui-media-box__desc"><span>发货仓库：</span>  {{goodsOrder.store.name}}</view>
-          <view class="weui-media-box__desc"><span>门店：</span>  {{goodsOrder.shop.name}}</view>
+          <view class="weui-media-box__desc"><span>发货仓库：</span>  {{goodsOrder.storeName}}</view>
+          <view class="weui-media-box__desc"><span>门店：</span>  {{goodsOrder.shopName}}</view>
           <view class="weui-media-box__desc"><span>开单日期：</span>  {{goodsOrder.billDate}}</view>
           <view class="weui-media-box__desc"><span>外部单号：</span>  {{goodsOrder.outCode}}</view>
-          <view class="weui-media-box__desc"><span>创建人：</span>  {{goodsOrder.created.fullName}}</view>
+          <view class="weui-media-box__desc"><span>创建人：</span>  {{goodsOrder.createdByName}}</view>
           <view class="weui-media-box__desc"><span>创建时间：</span>  {{goodsOrder.createdDate}}</view>
           <view class="weui-media-box__desc"><span>使用电子券：</span> 
             <span wx:if="{{goodsOrder.isUseTicket}}">是</span> 
             <span wx:else>否</span> 
           </view>
-          <view class="weui-media-box__desc"><span>快递单号：</span>  {{goodsOrder.expressOrder.expressCodes}}</view>
+          <view class="weui-media-box__desc"><span>快递单号：</span>  {{goodsOrder.expressOrderExpressCodes}}</view>
           <view class="weui-media-box__desc"><span>发货类型：</span>  {{goodsOrder.shipType}}</view>
-          <view class="weui-media-box__desc"><span>专卖店货品信息：</span>  {{goodsOrder.purchaseInfo}}</view>
         </view>
       </view>
     </view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__hd">开单详情</view>
       <view class="weui-panel__bd">
-        <block wx:for="{{goodsOrder.goodsOrderDetailList}}" wx:key="id" data-id="{{item.id}}">
+        <block wx:for="{{goodsOrder.goodsOrderDetailDtoList}}" wx:key="id" data-id="{{item.id}}">
           <view class="weui-media-box weui-media-box_text">
             <view class="weui-media-box__title weui-media-box__title_in-text">{{item.product.name}}</view>
             <view class="weui-media-box__desc"><span>订货数：</span>  {{item.qty}}</view>

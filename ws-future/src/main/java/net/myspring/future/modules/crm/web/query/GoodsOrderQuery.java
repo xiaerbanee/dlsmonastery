@@ -34,6 +34,7 @@ public class GoodsOrderQuery extends BaseQuery {
 
     private String shopId;
     private String shopName;
+    private String storeName;
     private List<String> storeIdList = new ArrayList<>();
     private String createdBy;
 
@@ -288,5 +289,13 @@ public class GoodsOrderQuery extends BaseQuery {
 
     public void setBusinessIdList(List<String> businessIdList) {
         this.businessIdList = businessIdList;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }
