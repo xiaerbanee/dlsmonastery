@@ -147,14 +147,14 @@
       },initPage(){
         axios.get('/api/ws/future/basic/depotShop/findDepotForm').then((response)=>{
           this.inputForm = response.data;
-          axios.get('/api/ws/future/basic/depotShop/findShop',{params: {id:this.$route.query.id}}).then((response)=>{
+          axios.get('/api/ws/future/basic/depot/findByDepotShopId',{params: {depotShopId:this.$route.query.id}}).then((response)=>{
             util.copyValue(response.data,this.inputForm);
+            console.log(response.data)
             if(util.isNotBlank(this.inputForm.clientId)){
               this.clientList =new Array({id:response.data.clientId,name:response.data.clientName})
             }
           });
         })
-
       }
     },created () {
       this.initPage();

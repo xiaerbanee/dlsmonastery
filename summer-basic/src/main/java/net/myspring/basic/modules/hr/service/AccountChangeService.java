@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
+import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountChange;
@@ -107,6 +108,7 @@ public class AccountChangeService {
                 employee.setRegularDate(LocalDateUtils.parse(accountChange.getNewValue()));
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
                 employee.setLeaveDate(LocalDateUtils.parse(accountChange.getNewValue()));
+                employee.setStatus(EmployeeStatusEnum.离职.name());
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.底薪.name())){
