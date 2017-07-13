@@ -201,7 +201,7 @@ public class GoodsOrderService {
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
             if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty() < 0){
-                throw new ServiceException("该产品（"+goodsOrderDetailForm.getProductId()+"）订单明细数量不能小于0");
+                throw new ServiceException("订单明细数量不能小于0");
             }
             if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() == 0) {
                 if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())){
