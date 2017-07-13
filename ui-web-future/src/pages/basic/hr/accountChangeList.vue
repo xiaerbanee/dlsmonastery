@@ -45,9 +45,9 @@
         <el-table-column  prop="remarks" :label="$t('accountChangeList.remarks')" sortable ></el-table-column>
         <el-table-column :label="$t('accountChangeList.operation')" width="140">
           <template scope="scope">
-            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:accountChange:view'">详细</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'">删除</el-button>
-            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:accountChange:audit'">审核</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'detail')" v-permit="'hr:accountChange:view'" >详细</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'delete')" v-permit="'hr:accountChange:delete'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">删除</el-button>
+            <el-button size="small" @click.native="itemAction(scope.row.id,'audit')" v-permit="'hr:accountChange:audit'" v-if="scope.row.processStatus !== '已通过' &&scope.row.processStatus !== '未通过'">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
