@@ -13,15 +13,15 @@ spring:
         driver-class-name: com.mysql.jdbc.Driver
     factory:
       JXOPPO:
-        url: jdbc:sqlserver://121.10.21.123:1439;DatabaseName=plantesaleweb
+        url: jdbc:jtds:sqlserver://121.10.21.123:1439/plantesaleweb
         username: Agent
         password: gz86!*%
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
       JXVIVO:
-        url: jdbc:sqlserver://218.16.99.180:13120;DatabaseName=plantesaleweb
+        url: jdbc:jtds:sqlserver://218.16.99.180:13120/plantesaleweb
         username: user_m13e00
         password: user_m13e00
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        driver-class-name: net.sourceforge.jtds.jdbc.Driver
   redis:
     host: localhost
     password:
