@@ -191,6 +191,7 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
+    @Transactional
     private void saveDetailInfo(GoodsOrder goodsOrder, GoodsOrderForm goodsOrderForm, Depot shop) {
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
@@ -200,7 +201,10 @@ public class GoodsOrderService {
         Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
-            if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() <= 0) {
+            if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty() < 0){
+                throw new ServiceException("订单明细数量不能小于0");
+            }
+            if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() == 0) {
                 if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())){
                     goodsOrderDetailRepository.delete(goodsOrderDetailForm.getId());
                 }
@@ -234,6 +238,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+    @Transactional
     private void saveExpressOrderInfo(GoodsOrder goodsOrder, Depot shop) {
         if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
             //如果已经存在，快递单不需要进行任何修改
@@ -281,6 +286,7 @@ public class GoodsOrderService {
         }
     }
 
+    @Transactional
     private List<GoodsOrderDetail> saveDetailInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm) {
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
@@ -313,6 +319,7 @@ public class GoodsOrderService {
         return detailsToBeSaved;
     }
 
+    @Transactional
     private ExpressOrder saveExpressOrderInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm, List<GoodsOrderDetail> detailList, Map<String,Product> productMap) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
@@ -337,6 +344,7 @@ public class GoodsOrderService {
         return expressOrder;
     }
 
+    @Transactional
     private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
@@ -657,6 +665,7 @@ public class GoodsOrderService {
         }
     }
 
+    @Transactional
     private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
         ExpressOrder expressOrder=new ExpressOrder();
 
@@ -675,6 +684,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+    @Transactional
     private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
 
         Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");
