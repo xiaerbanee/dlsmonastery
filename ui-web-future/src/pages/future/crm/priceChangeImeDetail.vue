@@ -22,13 +22,13 @@
             <el-form-item :label="$t('priceChangeImeDetail.shopName')">
               {{inputForm.shopName}}
             </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='upload'">
+            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action === 'upload'">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('priceChangeImeDetail.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
               </el-upload>
             </el-form-item>
-            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action=='audit'">
+            <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action !=='upload'">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
               </el-upload>
             </el-form-item>
@@ -69,18 +69,20 @@
               pass:'',
               auditRemarks:'',
             },
-            rules: {}
+            rules: {
+              image: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+            }
           }
       },
       methods:{
         formSubmit(){
           this.submitDisabled = true;
           let form = this.$refs["inputForm"];
+          this.inputForm.image = util.getFolderFileIdStr(this.fileList)
           form.validate((valid) => {
             if (valid) {
-                this.inputForm.image = util.getFolderFileIdStr(this.fileList)
                 util.copyValue(this.inputForm,this.submitData);
-              this.inputForm.image = util.getFolderFileIdStr(this.fileList);
+              this.submitData.image = util.getFolderFileIdStr(this.fileList);
               if(this.action==='upload'){
                 this.url = '/api/ws/future/crm/priceChangeIme/imageUpload';
               }else if(this.action==='audit'){
@@ -113,8 +115,8 @@
           axios.get('/api/ws/future/crm/priceChangeIme/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
             this.inputForm = response.data;
             if(this.inputForm.image != null) {
-              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((res)=>{
-                this.fileList= res.data;
+              axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
+                this.fileList= response.data;
               });
             }
           })
