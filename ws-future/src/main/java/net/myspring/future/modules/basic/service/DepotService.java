@@ -106,6 +106,7 @@ public class DepotService {
             throw new ServiceException("查询条件请选择为70天以内");
         }
 
+        depotAccountQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<DepotAccountDto> page = depotRepository.findDepotAccountList(pageable, depotAccountQuery);
         cacheUtils.initCacheInput(page.getContent());
 

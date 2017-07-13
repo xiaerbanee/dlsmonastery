@@ -2,7 +2,7 @@ spring:
   application:
     name: global-tool
   profiles:
-    active: prod
+    active: dev
 
 server:
   port: 2100
@@ -28,6 +28,8 @@ security:
 feign:
   hystrix:
     enabled: false
+  httpclient:
+    enabled: true
 
 ribbon:
   ReadTimeout: 180000
