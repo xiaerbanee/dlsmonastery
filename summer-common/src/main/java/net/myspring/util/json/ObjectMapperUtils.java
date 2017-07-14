@@ -3,8 +3,10 @@ package net.myspring.util.json;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liuj on 2016-11-01.
@@ -48,6 +52,26 @@ public class ObjectMapperUtils {
             logger.error(e.getMessage());
         }
         return result;
+    }
+
+    public static  <T> List<T> readValueToBeanList(String json, Class<T> clazz) {
+        JavaType javaType = ObjectMapperUtils.getObjectMapper().getTypeFactory().constructParametricType(ArrayList.class, clazz);
+        return readValueToBeanList(objectMapper, json, javaType);
+    }
+
+
+    public static  <T> List<T> readValueToBeanList(ObjectMapper objectMapper, String json, JavaType javaType) {
+        List<T> t = Lists.newArrayList();
+        try {
+            Object o = objectMapper.readValue(json, javaType);
+            if(o!=null){
+                t= (List<T>) o;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
+        return t;
     }
 
     public static  <T> T readValue(String json, Class<T> clazz) {
