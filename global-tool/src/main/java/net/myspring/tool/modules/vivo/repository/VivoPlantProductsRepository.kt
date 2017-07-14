@@ -12,6 +12,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 
 interface VivoPlantProductsRepository : BaseRepository<VivoPlantProducts, String>, VivoPlantProductsRepositoryCustom {
 
+    @Query("select t from #{#entityName} t  where t.productId is not null or t.lxProductId is not null")
+    fun findAllByProductId() : MutableList<VivoPlantProducts>
+
 }
 interface VivoPlantProductsRepositoryCustom{
     fun findPlantProducts() :MutableList<VivoPlantProducts>
