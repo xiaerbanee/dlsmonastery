@@ -17,7 +17,7 @@
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input"  bindtap="showError" data-key="saleShopId">
+      <view class="weui-cell weui-cell_input"  wx:if="{{shops.length!=0}}" bindtap="showError" data-key="saleShopId">
         <view class="weui-cell__hd">
           <view class="weui-label">核销门店</view>
         </view>
