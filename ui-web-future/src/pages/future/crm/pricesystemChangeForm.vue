@@ -65,6 +65,8 @@
               }
               return cellProperties;
             },
+            fixedColumnsLeft:1,
+            fixedRowsTop:0,
             colHeaders: [],
             data:[],
             columns:[]
