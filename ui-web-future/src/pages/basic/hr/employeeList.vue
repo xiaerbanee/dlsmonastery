@@ -31,6 +31,11 @@
                   type="month"
                   placeholder="选择月" />
               </el-form-item>
+              <el-form-item label="办事处">
+                <el-select v-model="formData.areaId">
+                  <el-option v-for="item in formData.extra.areaList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('employeeList.status')">
@@ -130,8 +135,9 @@
       },exportData(){
         this.formVisible = false;
         var submitData = util.deleteExtra(this.formData);
+        submitData.leaveDateMonth=util.formatLocalDate(this.formData.leaveDateMonth);
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/basic/hr/employee/exportData?"+submitData;
+          window.location.href="/api/basic/hr/employee/exportData?"+qs.stringify(submitData);
           this.pageRequest();
         }).catch(()=>{});
       },itemAdd(){

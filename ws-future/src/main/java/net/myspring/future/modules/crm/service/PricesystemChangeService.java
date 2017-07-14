@@ -82,30 +82,32 @@ public class PricesystemChangeService {
             if(rows.size()-pricesystems.size() != 1){
                 return;
             }
-            for(int i = 1;i<rows.size();i++){
-                String newPriceStr = StringUtils.toString(rows.get(i)).trim();
-                BigDecimal newPrice =  BigDecimal.ZERO;
-                if(StringUtils.isNotBlank(newPriceStr)) {
-                    newPrice = new BigDecimal(newPriceStr);
-                }
-                Product product  =productMap.get(rows.get(0));
-                if(product == null){
-                    return;
-                }
-                PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(pricesystems.get(i-1).getId(),product.getId());
-                BigDecimal oldPrice = BigDecimal.ZERO;
-                if(pricesystemDetail !=null&&pricesystemDetail.getPrice()!=null){
-                    oldPrice = pricesystemDetail.getPrice();
-                }
-                if(newPrice.compareTo(oldPrice) !=0){
-                    PricesystemChange pricesystemChange = new PricesystemChange();
-                    pricesystemChange.setProductId(product.getId());
-                    pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
-                    pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
-                    pricesystemChange.setNewPrice(newPrice);
-                    pricesystemChange.setOldPrice(oldPrice);
-                    pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
-                    pricesystemChanges.add(pricesystemChange);
+            if(CollectionUtil.isNotEmpty(rows)&&rows.get(0)!=null&&StringUtils.isNotEmpty((String)rows.get(0))){
+                for(int i = 1;i<rows.size();i++){
+                    String newPriceStr = StringUtils.toString(rows.get(i)).trim();
+                    BigDecimal newPrice =  BigDecimal.ZERO;
+                    if(StringUtils.isNotBlank(newPriceStr)) {
+                        newPrice = new BigDecimal(newPriceStr);
+                    }
+                    Product product  =productMap.get(rows.get(0));
+                    if(product == null){
+                        return;
+                    }
+                    PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(pricesystems.get(i-1).getId(),product.getId());
+                    BigDecimal oldPrice = BigDecimal.ZERO;
+                    if(pricesystemDetail !=null&&pricesystemDetail.getPrice()!=null){
+                        oldPrice = pricesystemDetail.getPrice();
+                    }
+                    if(newPrice.compareTo(oldPrice) !=0){
+                        PricesystemChange pricesystemChange = new PricesystemChange();
+                        pricesystemChange.setProductId(product.getId());
+                        pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
+                        pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
+                        pricesystemChange.setNewPrice(newPrice);
+                        pricesystemChange.setOldPrice(oldPrice);
+                        pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
+                        pricesystemChanges.add(pricesystemChange);
+                    }
                 }
             }
         }

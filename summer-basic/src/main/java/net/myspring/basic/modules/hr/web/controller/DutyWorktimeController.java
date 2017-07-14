@@ -10,6 +10,7 @@ import net.myspring.basic.modules.sys.client.FolderFileClient;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.time.LocalDateUtils;
 import org.apache.commons.lang.StringUtils;
@@ -58,7 +59,7 @@ public class DutyWorktimeController {
     }
 
     @RequestMapping(value = "export", method = RequestMethod.GET)
-    public String export(String month) {
+    public ModelAndView export(String month) {
         LocalDate dateStart=LocalDateUtils.getFirstDayOfThisMonth(LocalDate.now());
         if(StringUtils.isNotBlank(month)) {
             String[] yearMonth=StringUtils.split(month, CharConstant.DATE_RANGE_SPLITTER);
@@ -67,7 +68,7 @@ public class DutyWorktimeController {
         LocalDate dateEnd=LocalDateUtils.getLastDayOfThisMonth(dateStart);
         List<DutyWorktimeExportDto> dutyWorktimeExportDtoList=dutyWorktimeService.getDutyWorktimeExportDto(dateStart,dateEnd);
         Workbook workbook = new SXSSFWorkbook(10000);
-        return dutyWorktimeService.findSimpleExcelSheet(month,workbook,dutyWorktimeExportDtoList);
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",dutyWorktimeService.findSimpleExcelSheet(month,workbook,dutyWorktimeExportDtoList));
     }
 
     @RequestMapping(value = "import", method = RequestMethod.POST)
