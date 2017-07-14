@@ -44,7 +44,7 @@ public class OppoService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @Scheduled(cron = "0 0 1,3,6,12 * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void syn(){
         logger.info("开始同步串码："+LocalDateTime.now());
         String date=LocalDateUtils.format(LocalDate.now());

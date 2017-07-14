@@ -22,23 +22,14 @@
           <view class="weui-label">核销门店</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="shopId" value="{{formData.id}}" range="{{shops}}" range-key="name" bindtap="bindSaleShop">
+          <picker name="saleShopId" value="{{formData.id}}" range="{{shops}}" range-key="name" bindtap="bindSaleShop">
             <view class="weui-input">{{formData.name}}</view>
           </picker>
         </view>
       </view>
-      <view class="weui-cell weui-cell_input" wx:if="{{shops.length==0}}" bindtap="showError" data-key="shopId">
-        <view class="weui-cell__hd">
-          <view class="weui-label">核销门店</view>
-        </view>
-        <view class="weui-cell__bd" style="overflow:hidden">
-          <input class="hidden" name="shopId" value="{{productImeSearchResult[0].depotId}}" />
-          <view class="weui-input">{{productImeSearchResult[0].depotName}}</view>
-        </view>
-      </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">备注</view>
+          <view class="weui-label">备注</view> 
         </view>
         <view class="weui-cell__bd">
           <input name="remarks" class="weui-input" value="{{formData.remarks}}" />

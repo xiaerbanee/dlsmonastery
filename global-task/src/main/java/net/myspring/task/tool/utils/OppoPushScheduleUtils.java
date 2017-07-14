@@ -18,7 +18,7 @@ public class OppoPushScheduleUtils {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 0 22,23 * * ?")
+    @Scheduled(cron = "0 0 21,22,23 * * ?")
     public void pullOppoData(){
         logger.info("工厂上抛数据开始");
         String date= LocalDateUtils.format(LocalDate.now());
