@@ -66,10 +66,10 @@
         <el-table-column prop="realBillQty" :label="$t('goodsOrderDetail.billQty')"></el-table-column>
         <el-table-column prop="shippedQty" :label="$t('goodsOrderDetail.shippedQty')"></el-table-column>
         <el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>
-        <el-table-column :label="$t('goodsOrderDetail.operate')" :render-header="renderAction">
+        <el-table-column :label="$t('goodsOrderDetail.operate')">
           <template scope="scope">
-            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="testText">{{$t('goodsOrderDetail.ime')}}</el-button>
-            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="textText">{{$t('goodsOrderDetail.meid')}}</el-button>
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="imeMap.has(scope.row.productId) ? imeMap.get(scope.row.productId) : ' '">{{$t('goodsOrderDetail.ime')}}</el-button>
+            <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="meidMap.has(scope.row.productId) ? meidMap.get(scope.row.productId) : ' '">{{$t('goodsOrderDetail.meid')}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,8 +87,8 @@
   </div>
 </template>
 <script>
-  import clip from 'clipboard'
-  new clip('.clipBtn')
+  import Clip from 'clipboard'
+
   export default{
     data(){
       return this.getData();
@@ -102,11 +102,9 @@
           expressOrder: {},
           goodsOrderDetailList: [],
           goodsOrderImeList: [],
-          imeMap: [],
-          meidMap: [],
+          imeMap: {},
+          meidMap: {},
           rules: {},
-          activityEntity: {},
-          fileList: [],
           formData: {
             id: this.$route.query.id,
             carrierShopId: "",
@@ -115,21 +113,8 @@
           loading: false,
           shopList: [],
           submitDisabled: false,
-          testText:'测试信息'
         }
-      },
-      renderAction(createElement) {
-        return createElement(
-          'a', {
-            attrs: {
-              class: 'el-button el-button--primary el-button--small'
-            }, domProps: {
-              innerHTML: this.$t('goodsOrderDetail.copy')
-            }
-          }
-        );
-      },
-      search(query){
+      }, search(query){
         if (query.length >= 2) {
           this.loading = true;
           axios.get('/api/ws/future/api/carrierShop/search', {params: {name: query}})
@@ -176,12 +161,35 @@
               })
           }
         })
+      },extractAndJoin(list, keyProp, valueProp){
+        if(!list){
+          return new Map();
+        }
+        let result = new Map();
+        for(let each of list ){
+          let key = each[keyProp];
+          let val =  each[valueProp];
+          if(util.isBlank(val)){
+            continue;
+          }
+          if(result.has(key)){
+            result.set(key, result.get(key) + "\n" + val);
+          }else{
+            result.set(key, val);
+          }
+        }
+        return result;
       }
     }, created(){
+      new Clip('.clipBtn');
       axios.get('/api/ws/future/crm/goodsOrder/detail', {params: {id: this.$route.query.id}}).then((response) => {
         this.goodsOrder = response.data;
         this.goodsOrderDetailList = response.data.goodsOrderDetailDtoList;
         this.goodsOrderImeList = response.data.goodsOrderImeDtoList;
+
+        this.imeMap = this.extractAndJoin(this.goodsOrderImeList, "productId", "productImeIme");
+        this.meidMap = this.extractAndJoin(this.goodsOrderImeList, "productId", "productImeMeid");
+
       });
       axios.get('/api/ws/future/crm/expressOrder/findByGoodsOrderId', {params: {goodsOrderId: this.$route.query.id}}).then((response) => {
         this.expressOrder = response.data;

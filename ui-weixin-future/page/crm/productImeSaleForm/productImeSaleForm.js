@@ -3,7 +3,7 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    productImeSearchResult: {},
+    productImeSearchResult: [],
     formData: { imeStr: '' },
     formProperty: {},
     response: {},
@@ -85,7 +85,9 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-    if (!that.data.productImeSearchResult){
+    if (that.data.productImeSearchResult.length!=0){
+      console.log(that.data.productImeSearchResult)
+
       var productImeSaleDetailList = new Array();
       if (that.data.saleShopId) {
         productImeSaleDetailList.push({ saleShopId: that.data.saleShopId, productImeId: that.data.productImeSearchResult[0].id });
