@@ -67,11 +67,8 @@ public class VivoPushService {
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
             sZonesM13e00.setZoneid(getZoneId(mainCode,officeEntity.getId()));
+            //setZoneName 报数据超过数据库字段zoneName设置的长度的错误，正在与工厂联系，尚未回复。
             sZonesM13e00.setZonename(officeEntity.getName());
-            if(sZonesM13e00.getZonename().toString().length()>10){
-                logger.info(sZonesM13e00.getZonename());
-                sZonesM13e00.setZonename("测试");
-            }
             sZonesM13e00.setShortcut(mainCode);
             String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
             sZonesM13e00.setZonedepth(parentIds.length);
