@@ -20,10 +20,13 @@ import net.myspring.cloud.modules.sys.web.query.VoucherQuery;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.collection.CollectionUtil;
-import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.excel.*;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -323,11 +326,26 @@ public class VoucherService {
         return list;
     }
 
-    //待写
+    //TODO Excel单元格导出有问题
     public SimpleExcelBook export(VoucherDto voucherDto){
         List<String> flexItemNameList = getHeaders(voucherDto.getBdFlexItemGroupList());
         List<List<String>> data = initData(voucherDto);
+        Workbook workbook = new SXSSFWorkbook(10000);
+        Map<String, CellStyle> cellStyleMap= ExcelUtils.getCellStyleMap(workbook);
+        List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
+        List<SimpleExcelColumn> simpleCell = Lists.newArrayList();
+        for (String head : flexItemNameList){
+            simpleCell.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.HEADER.name()),head));
+        }
+        excelColumnList.add(simpleCell);
+        for (List<String> row : data){
+            for (String cell : row){
+                simpleCell.add(new SimpleExcelColumn(cellStyleMap.get(ExcelCellStyle.DATA.name()),cell));
+            }
+            excelColumnList.add(simpleCell);
+        }
+        SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("凭证",excelColumnList);
+//       return new SimpleExcelBook(workbook,voucherDto.getFDate()+"凭证"+voucherDto.getStatus()+".xlsx",simpleExcelSheet);
         return null;
-
     }
 }

@@ -23,7 +23,7 @@ feign:
 
 security:
   oauth2:
-    client:
+    local:
       clientId: ws-future-service
       clientSecret: ws-future-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token

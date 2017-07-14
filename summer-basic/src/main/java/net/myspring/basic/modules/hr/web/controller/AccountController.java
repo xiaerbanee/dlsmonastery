@@ -26,6 +26,7 @@ import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -214,6 +215,13 @@ public class AccountController {
             accountCommonDtoList= BeanUtil.map(accountDtoList,AccountCommonDto.class);
         }
         return accountCommonDtoList;
+    }
+
+    @RequestMapping(value = "getAccountId")
+    public Map<String,Object> getAccountId() {
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("accountId",RequestUtils.getAccountId());
+        return map;
     }
 
 }

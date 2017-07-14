@@ -151,7 +151,7 @@
         }).catch(()=>{});
       },pictureAdd(){
         this.$router.push({ name: 'priceChangeImeImageUpload'})
-      }
+      },
     },created () {
        this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/priceChangeIme/getQuery').then((response) =>{
