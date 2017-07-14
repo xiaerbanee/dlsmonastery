@@ -69,10 +69,19 @@ public class GoodsOrderDto extends DataDto<GoodsOrder> {
     private LocalDateTime expressOrderExpressPrintDate;
     private Boolean lxMallOrder;
     private String shopDepotShopAreaType;
+    private String carrierOrderCodes;
 
     private List<GoodsOrderDetailDto> goodsOrderDetailDtoList = Lists.newArrayList();
 
     private List<GoodsOrderImeDto> goodsOrderImeDtoList = Lists.newArrayList();
+
+    public String getCarrierOrderCodes() {
+        return carrierOrderCodes;
+    }
+
+    public void setCarrierOrderCodes(String carrierOrderCodes) {
+        this.carrierOrderCodes = carrierOrderCodes;
+    }
 
     public LocalDateTime getExpressOrderOutPrintDate() {
         return expressOrderOutPrintDate;

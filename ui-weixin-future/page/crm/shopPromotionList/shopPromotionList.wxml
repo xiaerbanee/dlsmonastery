@@ -59,14 +59,14 @@
           <view class="weui-media-box__desc item_style">类型:{{item.activityType}}</view>
           <view class="weui-media-box__desc item_style">当日门店销售总额:{{item.amount}}</view>
           <view class="weui-media-box__desc item_style">当天{{item.brandName}}销量：{{item.dayAmount}}</view>
-          <view class="weui-media-box__desc item_style">销售人员描述：{{item.salerComment}}</view>
-          <view class="weui-media-box__desc item_style">物料描述：{{item.materialComment}}</view>
-          <view class="weui-media-box__desc item_style">体验区照片：{{item.activityImage1}}</view>
-          <view class="weui-media-box__desc item_style">互动游戏区照片：{{item.activityImage2}}</view>
-          <view class="weui-media-box__desc item_style">外场布置照片：{{item.activityImage3}}</view>
-          <view class="weui-media-box__desc item_style">业务总结描述：{{item.comment}}</view>
+          <view class="weui-media-box__desc item_style">销售人员描述：{{item.salerComment?item.salerComment:''}}</view>
+          <view class="weui-media-box__desc item_style">物料描述：{{item.materialComment?item.materialComment:''}}</view>
+          <view class="weui-media-box__desc item_style">体验区照片：{{item.activityImage1?item.activityImage1:''}}</view>
+          <view class="weui-media-box__desc item_style">互动游戏区照片：{{item.activityImage2?item.activityImage2:''}}</view>
+          <view class="weui-media-box__desc item_style">外场布置照片：{{item.activityImage3?item.activityImage3:''}}</view>
+          <view class="weui-media-box__desc item_style">业务总结描述：{{item.comment?item.comment:''}}</view>
           <view class="weui-media-box__desc item_style">业务联系电话：{{item.phone}}</view>
-          <view class="weui-media-box__desc item_style">备注：{{item.remarks}}</view>
+          <view class="weui-media-box__desc item_style">备注：{{item.remarks?item.remarks:''}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">{{item.lastModifiedDate}}</view>
             <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>

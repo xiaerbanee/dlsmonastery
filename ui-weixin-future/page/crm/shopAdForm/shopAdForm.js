@@ -30,7 +30,7 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypeFormList })
+        that.setData({ 'formProperty.shopAdTypeList': res.data.extra.shopAdTypeFormList})
       }
     })
     if (options.action == "update") {

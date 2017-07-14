@@ -9,11 +9,11 @@
           <view class="weui-label">门店</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="shopId" value="{{formData.shopId}}" bindtap="bindShop" disabled>
+          <picker name="shopId" value="{{formData.shopId?formData.shopId:''}}" bindtap="bindShop" disabled>
             <view class="weui-input">{{formData.shopName}}<image class="right_icon" src="/image/icons/right.png"/></view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -22,11 +22,11 @@
           <view class="weui-label">活动日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="activityDate" value="{{formData.activityDate}}" bindchange="bindActivityDate">
+          <picker mode="date" name="activityDate" value="{{formData.activityDate?formData.activityDate:''}}" bindchange="bindActivityDate">
             <view class="weui-input">{{formData.activityDate}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.activityDate}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.activityDate}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -35,11 +35,11 @@
           <view class="weui-label">活动类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="activityType" range="{{formProperty.activityTypeList}}" value="{{formData.activityType}}" data-name="activityType" bindchange="bindActivityType">
+          <picker name="activityType" range="{{formProperty.activityTypeList}}" value="{{formData.activityType?formData.activityType:''}}" data-name="activityType" bindchange="bindActivityType">
             <view class="weui-input">{{formData.activityType}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.activityType}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.activityType}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -50,7 +50,7 @@
         <view class="weui-cell__bd">
           <input name="dayAmount" class="weui-input" value="{{formData.dayAmount}}"/>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.dayAmount}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.dayAmount}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -61,7 +61,7 @@
         <view class="weui-cell__bd">
           <input name="amount" class="weui-input" value="{{formData.amount}}" />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.amount}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.amount}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -96,7 +96,7 @@
         <view class="weui-cell__bd">
           <input name="phone" class="weui-input" value="{{formData.phone}}"  />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.phone}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.phone}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>

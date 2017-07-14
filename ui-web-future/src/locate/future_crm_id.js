@@ -919,7 +919,7 @@ export default {
     goodsOrderImeList: "串码",
     batchAdd: "批量订货",
     more: "更多",
-
+    carrierOrderCodes: "商城单号",
   },
   goodsOrderImeList: {
     goodsOrderImeList: "货品订货串码列表",
