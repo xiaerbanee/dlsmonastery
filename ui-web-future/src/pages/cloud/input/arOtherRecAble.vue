@@ -59,9 +59,18 @@
                     if (accountNumber !== number){
                       table.setDataAtCell(i, 6, '');
                       let j = i=1;
-                      alert('第'+j+"其他类的编码前4位必须和对应科目的编码一致");
+                      alert('第'+j+"行,其他类的编码前4位必须和对应科目的编码一致");
                     }
                   });
+                }
+              }
+              for (let i = changes.length - 1; i >= 0; i--) {
+                let row = changes[i][0];
+                let column = changes[i][1];
+                if(column === 3 &&　changes[i][3] === 0) {
+                  let n = row +1;
+                  alert('第'+n+"行，金额不能为零");
+                  table.setDataAtCell(row, 3, '');
                 }
               }
             }
