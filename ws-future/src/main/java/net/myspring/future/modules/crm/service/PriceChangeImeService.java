@@ -142,7 +142,7 @@ public class PriceChangeImeService {
             }
             remarksList.add(remarks);
         }
-        if(shopNameList == null||imeList == null){
+        if(CollectionUtil.isEmpty(shopNameList)||CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("门店或者串码列表为空，保存失败");
         }
         if(shopNameList.size()!=imeList.size()){
