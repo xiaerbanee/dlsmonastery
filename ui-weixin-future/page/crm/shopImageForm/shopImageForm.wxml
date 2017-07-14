@@ -14,7 +14,7 @@
             </view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -27,7 +27,7 @@
             <view class="weui-input">{{formData.imageType}}</view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.imageType}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.imageType}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -38,7 +38,7 @@
         <view class="weui-cell__bd">
           <input name="imageSize" value="{{formData.imageSize}}" class="weui-input" />
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.imageSize}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.imageSize}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -70,7 +70,7 @@
               <view class="weui-uploader__input-box">
                 <view class="weui-uploader__input" bindtap="addImage"></view>
               </view>
-              <view class="weui-cell__ft" wx:if="{{response.data.errors.attachment}}">
+              <view class="weui-cell__ft" wx:if="{{response.data.attachment}}">
                 <icon type="warn" class="warn"></icon>
               </view>
             </view>

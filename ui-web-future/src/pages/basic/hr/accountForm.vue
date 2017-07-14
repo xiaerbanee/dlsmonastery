@@ -77,9 +77,11 @@
           }
         };
         var validatePass = (rule, value, callback) => {
+            console.log(value);
+            console.log(this.inputForm.password)
           if (value === '') {
             callback(new Error('请再次输入密码'));
-          } else if (value !== this.inputForm.password) {
+          } else if (value !== this.inputForm.password&&value!==undefined) {
             callback(new Error('两次输入密码不一致!'));
           } else {
             callback();
