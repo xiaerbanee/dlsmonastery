@@ -67,7 +67,7 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
 }
 interface EmployeeRepositoryCustom{
     fun findByNameLike(name: String):MutableList<EmployeeDto>
-
+    fun findFilter(employeeQuery: EmployeeQuery):MutableList<EmployeeDto>
     fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto>
 }
 class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): EmployeeRepositoryCustom{
@@ -141,5 +141,61 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         var count = namedParameterJdbcTemplate.queryForObject(countSql, BeanPropertySqlParameterSource(employeeQuery),Long::class.java);
         return PageImpl(list,pageable,count);
     }
+
+    override fun findFilter(employeeQuery: EmployeeQuery): MutableList<EmployeeDto> {
+        var sb = StringBuilder("""
+            SELECT employee.*,account.office_id,account.position_id,account.leader_id,CONCAT(district.province,district.city,district.county) as originName
+            FROM hr_employee employee,
+            hr_account account,
+            sys_office office,
+            sys_district district
+            where  employee.account_id=account.id
+            and account.office_id=office.id
+            and employee.enabled=1
+            and employee.origin_id = district.id
+        """);
+        if(StringUtils.isNotBlank(employeeQuery.name)) {
+            sb.append(" and employee.name like CONCAT('%',:name,'%')");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.status)) {
+            sb.append(" and employee.status =:status");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.mobilePhone)) {
+            sb.append(" and employee.mobile_phone like CONCAT('%',:mobilePhone,'%')");
+        }
+        if(employeeQuery.entryDateStart!=null) {
+            sb.append(" AND employee.entry_date > :entryDateStart");
+        }
+        if(employeeQuery.entryDateEnd!=null) {
+            sb.append(" AND employee.entry_date < :entryDateEnd");
+        }
+        if(employeeQuery.regularDateStart!=null) {
+            sb.append(" AND employee.regular_date > :regularDateStart");
+        }
+        if(employeeQuery.leaveDateStart!=null) {
+            sb.append(" AND employee.regular_date < :leaveDateStart");
+        }
+        if(employeeQuery.regularDateStart!=null) {
+            sb.append(" AND employee.leave_date > :regularDateStart");
+        }
+        if(employeeQuery.leaveDateEnd!=null) {
+            sb.append(" AND employee.leave_date < :leaveDateEnd");
+        }
+        if(employeeQuery.positionId!=null) {
+            sb.append(" AND employee.account_id in(select t1.id from hr_account t1 where t1.enabled=1 and t1.position_id=:positionId)");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.officeId)) {
+            sb.append(" and account.office_id =:officeId");
+        }
+        if(CollectionUtil.isNotEmpty(employeeQuery.officeIdList)) {
+            sb.append(" and account.office_id in (:officeIdList)");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
+            sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
+        }
+
+        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(employeeQuery),BeanPropertyRowMapper(EmployeeDto::class.java))
+    }
+
 
 }
