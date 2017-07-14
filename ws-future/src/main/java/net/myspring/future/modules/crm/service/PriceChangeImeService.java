@@ -85,7 +85,7 @@ public class PriceChangeImeService {
     }
 
     public PriceChangeImeForm getForm(PriceChangeImeForm priceChangeImeForm){
-        List<PriceChange> priceChange = priceChangeRepository.findByPriceChangeIme(PriceChangeStatusEnum.抽检中.name());
+        List<PriceChange> priceChange = priceChangeRepository.findPriceChangeInDate(LocalDate.now());
         priceChangeImeForm.getExtra().put("priceChangeDtos",BeanUtil.map(priceChange, PriceChangeDto.class));
         return priceChangeImeForm;
     }
@@ -165,7 +165,11 @@ public class PriceChangeImeService {
                     notExist +=StringUtils.join(shopName,CharConstant.COMMA);
                 }
             }
-            throw new ServiceException(notExist+"不存在,保存失败");
+            if(StringUtils.isNotBlank(notExist)){
+                throw new ServiceException(notExist+"不存在,保存失败");
+            }else{
+                throw new ServiceException("输入了重复的串码,保存失败");
+            }
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
