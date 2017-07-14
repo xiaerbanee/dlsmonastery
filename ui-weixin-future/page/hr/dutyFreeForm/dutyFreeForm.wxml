@@ -21,7 +21,7 @@
           <view class="weui-label">时间类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType}}" bindchange="bindDateType">
+          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType?formData.dateType:''}}" bindchange="bindDateType">
             <view class="weui-input">{{formData.dateType}}</view>
           </picker>
         </view>
