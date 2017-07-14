@@ -3,7 +3,7 @@
   <view class="page__hd">
     <template is="userinfo" data="{{userInfo}}" />
   </view>
-  <view style="color:red">测试账号为xcxtest,密码123456</view>
+  <view style="color:red">测试账号为xcxtest,密码123456（请大家使用自己的帐号密码，不要使用测试帐号）</view>
   <form class="page__bd" catchsubmit="formSubmit">
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
