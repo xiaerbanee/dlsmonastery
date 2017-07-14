@@ -26,7 +26,7 @@ public class DutyRestValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "type", "error.type", "必填信息");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "必填信息");
 
-        if(dutyRest.getType() !=null ){
+        if(dutyRest.getType() !=null){
             if (dutyRest.getType() .equals( "加班调休")) {
                 if(dutyRest.getHour()!=null&&dutyRest.getHour().doubleValue()>dutyRest.getOvertimeLeftHour()){
                     errors.rejectValue( "hour", "error.hour", "时长大于可调休时间");

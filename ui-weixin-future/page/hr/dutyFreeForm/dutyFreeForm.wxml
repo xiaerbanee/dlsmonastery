@@ -8,7 +8,7 @@
           <view class="weui-label">时间</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="freeDate" value="{{formData.freeDate}}" bindchange="bindFreeDate">
+          <picker mode="date" name="freeDate" value="{{formData.freeDate?formData.freeDate:''}}" bindchange="bindFreeDate">
             <view class="weui-input">{{formData.freeDate}}</view>
           </picker>
         </view>

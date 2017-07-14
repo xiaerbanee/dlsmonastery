@@ -45,9 +45,8 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
-        } else if (res.data.message){
-          that.setData({ "response.error": res.data.message, disabled: false })
-        } else if (res.data.extra){
+        } else {
+          that.setData({ "response.error": res.data.message, disabled: false})
           that.setData({ 'response.data': res.data.extra.errors, disabled: false });
         }
       }

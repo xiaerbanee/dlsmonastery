@@ -13,7 +13,7 @@
               <view class="weui-label">调休类型</view>
             </view>
             <view class="weui-cell__bd">
-              <picker name="type" range="{{formProperty.extra.restList}}" value="{{formData.restType}}" data-name="restType" bindchange="bindRestType">
+              <picker name="type" range="{{formProperty.extra.restList}}" value="{{formData.restType?formData.restType:''}}" data-name="restType" bindchange="bindRestType">
                 <view class="weui-input">{{formData.restType}}</view>
               </picker>
             </view>
@@ -26,7 +26,7 @@
               <view class="weui-label">调休日期</view>
             </view>
             <view class="weui-cell__bd">
-              <picker mode="date" name="dutyDate" value="{{formData.dutyDate}}" data-name="dutyDate" bindchange="bindChange">
+              <picker mode="date" name="dutyDate" value="{{formData.dutyDate?formData.dutyDate:''}}" data-name="dutyDate" bindchange="bindChange">
                 <view class="weui-input">{{formData.dutyDate}}</view>
               </picker>
             </view>

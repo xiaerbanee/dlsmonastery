@@ -8,7 +8,7 @@
           <view class="weui-label">开始日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart}}" data-name="dutyDateStart" bindchange="bindDateChange">
+          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart?formData.dutyDateStart:''}}" data-name="dutyDateStart" bindchange="bindDateChange">
             <view class="weui-input">{{formData.dutyDateStart}}</view>
           </picker>
         </view>
@@ -21,7 +21,7 @@
           <view class="weui-label">结束日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd}}" data-name="dutyDateEnd" bindchange="bindDateChange">
+          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd?formData.dutyDateEnd:''}}" data-name="dutyDateEnd" bindchange="bindDateChange">
             <view class="weui-input">{{formData.dutyDateEnd}}</view>
           </picker>
         </view>
