@@ -122,8 +122,10 @@ Page({
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ 'response.data': res.data, submitDisabled: false });
+          console.log(res.data)
+          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
         }
+        that.setData({ submitDisabled: false });
       }
     })
   },
@@ -131,9 +133,9 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if (responseData && responseData.errors && responseData.errors[key] != null) {
-      that.setData({ "response.error": responseData.errors[key].message });
-      delete responseData.errors[key];
+    if (responseData && responseData[key] != null) {
+      that.setData({ "response.error": responseData[key].message });
+      delete responseData[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })

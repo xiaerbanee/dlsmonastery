@@ -126,6 +126,8 @@ public class GoodsOrderService {
         cacheUtils.initCacheInput(page.getContent());
 
         if (CollectionUtil.isNotEmpty(page.getContent())) {
+            Map<String, String> carrierOrderCodesMap = getCarrierOrderCodesMap(page);
+
             CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
             customerReceiveQuery.setDateStart(LocalDate.now());
             customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
@@ -138,6 +140,8 @@ public class GoodsOrderService {
             }
 
             for (GoodsOrderDto goodsOrderDto : page.getContent()) {
+
+                goodsOrderDto.setCarrierOrderCodes(carrierOrderCodesMap.get(goodsOrderDto.getId()));
                 if (GoodsOrderStatusEnum.待开单.name().equals(goodsOrderDto.getStatus())) {
                     if(StringUtils.isNotBlank(goodsOrderDto.getClientOutId())){
                         BigDecimal shouldGet = customerReceiveDtoMap.containsKey(goodsOrderDto.getClientOutId()) ?  customerReceiveDtoMap.get(goodsOrderDto.getClientOutId()).getEndShouldGet() : BigDecimal.ZERO ;
@@ -147,6 +151,19 @@ public class GoodsOrderService {
             }
         }
         return page;
+    }
+
+    private Map<String, String> getCarrierOrderCodesMap(Page<GoodsOrderDto> page) {
+        List<CarrierOrder> carrierOrderList = carrierOrderRepository.findByEnabledIsTrueAndGoodsOrderIdIn(CollectionUtil.extractToList(page.getContent(), "id"));
+        Map<String, String> carrierOrderCodesMap = new HashMap<>();
+        for(CarrierOrder carrierOrder : carrierOrderList){
+            if(carrierOrderCodesMap.containsKey(carrierOrder.getGoodsOrderId())){
+                carrierOrderCodesMap.put(carrierOrder.getGoodsOrderId(), carrierOrderCodesMap.get(carrierOrder.getGoodsOrderId())+CharConstant.ENTER+carrierOrder.getCode());
+            }else{
+                carrierOrderCodesMap.put(carrierOrder.getGoodsOrderId(), carrierOrder.getCode());
+            }
+        }
+        return carrierOrderCodesMap;
     }
 
     public RestResponse validateShop(String shopId) {

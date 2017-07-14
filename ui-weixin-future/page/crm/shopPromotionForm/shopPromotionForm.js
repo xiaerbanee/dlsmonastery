@@ -114,10 +114,11 @@ Page({
       data: e.detail.value,
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
+        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ 'response.data': res.data, submitDisabled: false });
+          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
         }
       }
     })
@@ -126,9 +127,9 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if (responseData && responseData.errors && responseData.errors[key] != null) {
-      that.setData({ "response.error": responseData.errors[key].message });
-      delete responseData.errors[key];
+    if (responseData && responseData[key] != null) {
+      that.setData({ "response.error": responseData[key].message });
+      delete responseData[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })
