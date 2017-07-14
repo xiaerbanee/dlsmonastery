@@ -6,9 +6,11 @@ import net.myspring.basic.common.query.BaseQuery;
 import net.myspring.basic.modules.hr.dto.PositionDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,6 +29,31 @@ public class EmployeeQuery extends BaseQuery {
     private String officeId;
     private String dutyDateStart;
     private String dutyDateEnd;
+    private String leaveDateMonth;
+
+    public String getLeaveDateMonth() {
+        return leaveDateMonth;
+    }
+
+    public void setLeaveDateMonth(String leaveDateMonth) {
+        this.leaveDateMonth = leaveDateMonth;
+    }
+
+    public LocalDate getLeaveDateMonthStart() {
+        if(StringUtils.isNotBlank(leaveDateMonth)) {
+            return LocalDateUtils.getFirstDayOfThisMonth(LocalDateUtils.parse(leaveDateMonth));
+        } else {
+            return null;
+        }
+    }
+
+    public LocalDate getLeaveDateMonthEnd() {
+        if(StringUtils.isNotBlank(leaveDateMonth)) {
+            return LocalDateUtils.getLastDayOfThisMonth(LocalDateUtils.parse(leaveDateMonth));
+        } else {
+            return null;
+        }
+    }
 
     public List<String> getOfficeIds() {
         return officeIds;

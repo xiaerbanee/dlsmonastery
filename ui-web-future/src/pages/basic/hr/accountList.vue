@@ -103,7 +103,9 @@
       },exportData(){
         this.formVisible = false;
         var submitData = util.deleteExtra(this.formData);
-        window.location.href="/api/basic/hr/account/export?"+qs.stringify(submitData);
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href="/api/basic/hr/account/export?"+qs.stringify(submitData);
+        }).catch(()=>{});
       },itemAuthAdd(){
         this.$router.push({name:"accountAuthorityForm"})
       },itemAction:function(id,action){

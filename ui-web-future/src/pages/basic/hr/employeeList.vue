@@ -4,7 +4,7 @@
     <div>
       <el-row>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'hr:employee:edit'">{{$t('employeeList.add')}}</el-button>
-        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:employee:view'">{{$t('employeeList.filter')}}</el-button>
+        <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'hr:account:view'">{{$t('accountList.filterOrExport')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('employeeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -24,6 +24,12 @@
                 <el-select v-model="formData.positionId" clearable filterable :placeholder="$t('employeeList.selectGroup')">
                   <el-option v-for="item in formData.extra.positionList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
+              </el-form-item>
+              <el-form-item label="在职月份">
+                <el-date-picker
+                  v-model="formData.leaveDateMonth"
+                  type="month"
+                  placeholder="选择月" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -55,6 +61,7 @@
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('employeeList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column prop="name" :label="$t('employeeList.employeeName')" sortable></el-table-column>
         <el-table-column prop="sex" :label="$t('employeeList.sex')"></el-table-column>
+        <el-table-column prop="areaName" label="办事处"></el-table-column>
         <el-table-column prop="officeName" :label="$t('employeeList.officeName')"></el-table-column>
         <el-table-column prop="positionName" :label="$t('employeeList.positionName')"></el-table-column>
         <el-table-column prop="leaderName" :label="$t('employeeList.leader')"></el-table-column>
@@ -104,6 +111,7 @@
         this.setSearchText();
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("employeeList",submitData);
+        submitData.leaveDateMonth=util.formatLocalDate(this.formData.leaveDateMonth);
         axios.get('/api/basic/hr/employee?'+qs.stringify(submitData)).then((response) => {
           this.page = response.data;
           this.pageLoading = false;
@@ -120,8 +128,11 @@
         this.formVisible = false;
         this.pageRequest();
       },exportData(){
+        this.formVisible = false;
+        var submitData = util.deleteExtra(this.formData);
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/basic/hr/employee/exportData?"+qs.stringify(util.deleteExtra(this.formData));
+          window.location.href="/api/basic/hr/employee/exportData?"+submitData;
+          this.pageRequest();
         }).catch(()=>{});
       },itemAdd(){
         this.$router.push({ name: 'employeeForm'})
@@ -142,6 +153,7 @@
       that.pageHeight = window.outerHeight -320;
       this.initPromise = axios.get('/api/basic/hr/employee/getQuery').then((response) =>{
         that.formData=response.data;
+        console.log(response.data)
         util.copyValue(that.$route.query,that.formData);
       });
     },activated() {
