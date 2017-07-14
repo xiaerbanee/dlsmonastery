@@ -6,7 +6,6 @@ Page({
     userInfo: [],
     disabled: false,
     code: "",
-    tip:""
   },
   onLoad: function () {
     var that = this
@@ -66,13 +65,5 @@ Page({
         }
       }
     })
-  },
-  checkLogin(e){
-    var that=this;
-    if (e.detail.value ==="xcxtest"){
-      that.setData({tip: "当前登录的为测试帐号xcxtest，请绑定并登陆自己的真实帐号"})
-    }else{
-      that.setData({tip: "当前登录帐号为："+e.detail.value})
-    }
   }
 })
