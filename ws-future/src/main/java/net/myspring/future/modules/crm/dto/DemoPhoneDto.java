@@ -10,8 +10,10 @@ import net.myspring.util.cahe.annotation.CacheInput;
 public class DemoPhoneDto extends DataDto<DemoPhone> {
     private String ime;
     private String shopId;
-    @CacheInput(inputKey = "depots",inputInstance = "shopId",outputInstance = "name")
     private String shopName;
+    private String areaId;
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
+    private String areaName;
     private String demoPhoneTypeId;
     @CacheInput(inputKey = "demoPhoneTypes",inputInstance = "demoPhoneTypeId",outputInstance = "name")
     private String demoPhoneType;
@@ -29,6 +31,22 @@ public class DemoPhoneDto extends DataDto<DemoPhone> {
 
     public void setShopId(String shopId) {
         this.shopId = shopId;
+    }
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
     public String getIme() {

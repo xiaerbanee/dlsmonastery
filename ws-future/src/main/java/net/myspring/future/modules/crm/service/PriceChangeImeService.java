@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -117,6 +118,22 @@ public class PriceChangeImeService {
             priceChangeIme.setAuditBy(RequestUtils.getAccountId());
             priceChangeImeRepository.save(priceChangeIme);
         }
+    }
+
+    @Transactional
+    public void batchAudit(String[] ids){
+        if(ids ==null){
+            throw new ServiceException("未选中任何记录");
+        }
+        List<String> idList = Arrays.asList(ids);
+        List<PriceChangeIme> pricechangeimes = priceChangeImeRepository.findAll(idList);
+        for(PriceChangeIme priceChangeIme:pricechangeimes){
+            priceChangeIme.setStatus(AuditStatusEnum.已通过.name());
+            priceChangeIme.setAuditRemarks("批量审核通过");
+            priceChangeIme.setAuditDate(LocalDateTime.now());
+            priceChangeIme.setAuditBy(RequestUtils.getAccountId());
+        }
+        priceChangeImeRepository.save(pricechangeimes);
     }
 
     @Transactional
