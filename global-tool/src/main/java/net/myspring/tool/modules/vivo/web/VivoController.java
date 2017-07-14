@@ -57,12 +57,10 @@ public class VivoController {
             vivoService.pullVivoProducts(vivoProducts);
         }
         //同步物料编码
-        DbContextHolder.get().setCompanyName("JXVIVO");
         List<VivoPlantProducts> vivoPlantProducts=vivoService.getPlantProducts();
         logger.info("vivoPlantProducts=="+vivoPlantProducts.toString());
         vivoService.pullPlantProducts(vivoPlantProducts);
         //同步发货串码
-        DbContextHolder.get().setCompanyName("JXVIVO");
         List<VivoPlantSendimei> vivoPlantSendimeis=vivoService.getPlantSendimei(date,agentCodes);
         vivoService.pullPlantSendimeis(vivoPlantSendimeis);
 
