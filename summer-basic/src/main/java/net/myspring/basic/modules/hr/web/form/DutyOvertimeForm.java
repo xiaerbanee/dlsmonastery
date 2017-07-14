@@ -11,27 +11,27 @@ import java.time.LocalTime;
  */
 
 public class DutyOvertimeForm extends BaseForm<DutyOvertime> {
-    private Integer hour;
-    private Integer leftHour;
+    private Double hour;
+    private Double leftHour;
     private String status;
     private String employeeId;
     private LocalDate dutyDate;
     private LocalTime timeStart;
     private LocalTime timeEnd;
 
-    public Integer getHour() {
+    public Double getHour() {
         return hour;
     }
 
-    public void setHour(Integer hour) {
+    public void setHour(Double hour) {
         this.hour = hour;
     }
 
-    public Integer getLeftHour() {
+    public Double getLeftHour() {
         return leftHour;
     }
 
-    public void setLeftHour(Integer leftHour) {
+    public void setLeftHour(Double leftHour) {
         this.leftHour = leftHour;
     }
 
