@@ -127,7 +127,6 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
      */
     public OAuth2AccessToken getToken() {
         OAuth2AccessToken accessToken = null;
-        SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication principal = SecurityContextHolder.getContext().getAuthentication();
         if (principal instanceof OAuth2Authentication) {
             OAuth2Authentication authentication = (OAuth2Authentication) principal;
@@ -144,6 +143,7 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
         return accessToken;
     }
 
+
     /**
      * Try to acquire the token using a access token provider
      *
@@ -154,21 +154,6 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
     protected OAuth2AccessToken acquireAccessToken()
             throws UserRedirectRequiredException {
         AccessTokenRequest tokenRequest = oAuth2ClientContext.getAccessTokenRequest();
-        if (tokenRequest == null) {
-            throw new AccessTokenRequiredException(
-                    "Cannot find valid context on request for resource '"
-                            + resource.getId() + "'.",
-                    resource);
-        }
-        String stateKey = tokenRequest.getStateKey();
-        if (stateKey != null) {
-            tokenRequest.setPreservedState(
-                    oAuth2ClientContext.removePreservedState(stateKey));
-        }
-        OAuth2AccessToken existingToken = oAuth2ClientContext.getAccessToken();
-        if (existingToken != null) {
-            oAuth2ClientContext.setAccessToken(existingToken);
-        }
         OAuth2AccessToken obtainableAccessToken;
         obtainableAccessToken = accessTokenProvider.obtainAccessToken(resource,
                 tokenRequest);
@@ -176,11 +161,6 @@ public class MyOAuth2FeignRequestInterceptor implements RequestInterceptor {
             throw new IllegalStateException(
                     " Access token provider returned a null token, which is illegal according to the contract.");
         }
-        oAuth2ClientContext.setAccessToken(obtainableAccessToken);
         return obtainableAccessToken;
-    }
-
-    public void setAccessTokenProvider(AccessTokenProvider accessTokenProvider) {
-        this.accessTokenProvider = accessTokenProvider;
     }
 }

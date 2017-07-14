@@ -49,7 +49,7 @@ public class RequestUtils {
         return (List<String>) getSecurityMap().get("officeIdList");
     }
 
-    public  static Map<String, Object> getSecurityMap() {
+    private  static Map<String, Object> getSecurityMap() {
         OAuth2Authentication auth = (OAuth2Authentication)SecurityContextHolder.getContext().getAuthentication();
         LinkedHashMap<String,Object> principal = Maps.newLinkedHashMap();
         if(auth !=  null) {
