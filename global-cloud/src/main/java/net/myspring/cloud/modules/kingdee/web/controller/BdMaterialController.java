@@ -35,7 +35,7 @@ public class BdMaterialController {
     }
 
     @RequestMapping(value = "findByMaxModifyDate")
-    public List<BdMaterial> findByMaxModifyDate(LocalDateTime maxModifyDate){
-        return bdMaterialService.findByMaxModifyDate(maxModifyDate);
+    public List<BdMaterial> findByMaxModifyDate(String maxModifyDate){
+        return bdMaterialService.findByMaxModifyDate(LocalDateTime.parse(maxModifyDate));
     }
 }
