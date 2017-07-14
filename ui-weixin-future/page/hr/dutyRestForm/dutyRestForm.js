@@ -100,21 +100,24 @@ Page({
     var dateType = that.data.formData.dateType;
     if ($util.isNotBlank(restType) && $util.isNotBlank(dutyDate)) {
       if ($util.isNotBlank(timeStart) && $util.isNotBlank(timeEnd)) {
-        var dateTimeStart = new Date((dutyDate + " " + timeStart)).getTime();
-        var dateTimeEnd = new Date((dutyDate + " " + timeEnd)).getTime();
-        hour = (dateTimeEnd - dateTimeStart) * 1.0 / (3600 * 1000);
-        if (hour == Math.floor(hour)) {
-          that.setData({ 'formData.hour': Math.floor(hour) })
+        timeStart = timeStart.split(':');
+        timeEnd = timeEnd.split(':');
+        var timeStartLong = timeStart[0] * 60 + 1.0 * timeStart[1];
+        var timeEndLong = timeEnd[0] * 60 + 1.0 * timeEnd[1];
+        if (timeEndLong < timeStartLong) {
+          hour = 0;
         } else {
-          var tempTotalrestHour = Math.floor(hour) + 0.5;
-          if (hour > tempTotalrestHour) {
-            hour = Math.floor(hour) + 1.0;
-            that.setData({ 'formData.hour': hour })
-          } else {
-            hour = tempTotalrestHour;
-            that.setData({ 'formData.hour': hour })
+          hour = parseInt((timeEndLong - timeStartLong) / 60)
+          console.log(hour)
+          if ((timeEndLong - timeStartLong) % 60 >0&&(timeEndLong - timeStartLong) % 60 <= 30) {
+            hour = hour + 0.5
+          } else if ((timeEndLong - timeStartLong) % 60 > 30){
+            hour = hour +1
           }
         }
+        that.setData({
+          'formData.hour': hour
+        });
       }
       if (restType == '年假调休' && $util.isNotBlank(dateType)) {
         hour = dateType == '全天' ? 8.0 : 4.0;

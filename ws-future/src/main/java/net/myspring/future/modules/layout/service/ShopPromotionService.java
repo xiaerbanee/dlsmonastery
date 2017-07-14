@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.service;
 
 import net.myspring.future.common.enums.ActivityTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.layout.domain.ShopPromotion;
 import net.myspring.future.modules.layout.dto.ShopPromotionDto;
 import net.myspring.future.modules.layout.repository.ShopPromotionRepository;
@@ -9,7 +10,6 @@ import net.myspring.future.modules.layout.web.form.ShopPromotionForm;
 import net.myspring.future.modules.layout.web.query.ShopPromotionQuery;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
-import net.myspring.util.text.IdUtils;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +27,8 @@ public class ShopPromotionService {
     private ShopPromotionRepository shopPromotionRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public Page<ShopPromotionDto> findPage(Pageable pageable, ShopPromotionQuery shopPromotionQuery){
         Page<ShopPromotionDto> page = shopPromotionRepository.findPage(pageable,shopPromotionQuery);
@@ -40,8 +42,7 @@ public class ShopPromotionService {
         if(shopPromotionForm.isCreate()){
             shopPromotion = BeanUtil.map(shopPromotionForm,ShopPromotion.class);
             LocalDate now = LocalDate.now();
-            String maxBusinessId = shopPromotionRepository.findMaxBusinessId(now.atStartOfDay());
-            shopPromotion.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, now));
+            shopPromotion.setBusinessId(redisIdManager.getNextShopPromotionBusinessId(now));
             shopPromotionRepository.save(shopPromotion);
         }else{
             shopPromotion = shopPromotionRepository.findOne(shopPromotionForm.getId());

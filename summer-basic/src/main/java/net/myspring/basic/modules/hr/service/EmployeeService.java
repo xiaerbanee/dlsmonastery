@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.hr.domain.Employee;
@@ -60,8 +61,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> findByNameLike(String name){
-        List<Employee> employeeList=employeeRepository.findByEnabledIsTrueAndNameLike("%"+name+"%");
-        List<EmployeeDto> employeeDtoList= BeanUtil.map(employeeList,EmployeeDto.class);
+        List<EmployeeDto> employeeDtoList=employeeRepository.findByNameLike(name);
         cacheUtils.initCacheInput(employeeDtoList);
         return employeeDtoList;
     }
@@ -71,12 +71,16 @@ public class EmployeeService {
         Employee employee;
         if(employeeForm.isCreate()) {
             employee=BeanUtil.map(employeeForm,Employee.class);
-            employeeRepository.save(employee);
         } else {
             employee = employeeRepository.findOne(employeeForm.getId());
             ReflectionUtil.copyProperties(employeeForm,employee);
-            employeeRepository.save(employee);
         }
+        if(employeeForm.getLeaveDate()==null){
+            employee.setStatus(EmployeeStatusEnum.在职.name());
+        }else {
+            employee.setStatus(EmployeeStatusEnum.离职.name());
+        }
+        employeeRepository.save(employee);
         return employee;
     }
 

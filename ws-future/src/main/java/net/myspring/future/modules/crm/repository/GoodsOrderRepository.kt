@@ -7,7 +7,6 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDto
 import net.myspring.future.modules.crm.web.query.GoodsOrderQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
-import net.myspring.util.text.IdUtils
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
@@ -37,12 +36,20 @@ interface GoodsOrderRepository : BaseRepository<GoodsOrder, String>, GoodsOrderR
      """)
     @Modifying
     fun updateStatusByIdIn( status:String,ids: MutableList<String>):Int
+
+    @Query("""
+    SELECT
+        MAX(t1.businessId)
+    FROM
+        #{#entityName} t1
+    WHERE
+        t1.billDate = ?1
+        """)
+    fun findMaxBusinessId(billDate: LocalDate): String?
 }
 
 interface GoodsOrderRepositoryCustom {
     fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto>
-
-    fun findNextBusinessId(date: LocalDate): String
 
     fun findLxMallOrderBybusinessIdList(businessIdList: List<String>): List<String>
 
@@ -53,6 +60,7 @@ interface GoodsOrderRepositoryCustom {
 }
 
 class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : GoodsOrderRepositoryCustom {
+
     override fun findDtoListByIdList(goodsOrderIdList: List<String>): List<GoodsOrderDto> {
         if(CollectionUtil.isEmpty(goodsOrderIdList)){
             return ArrayList()
@@ -127,12 +135,6 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
                 """, Collections.singletonMap("businessIdList", businessIdList), String::class.java)
     }
 
-    override fun findNextBusinessId(date: LocalDate): String {
-        val sql = "select max(t.business_id) from crm_goods_order t where t.bill_date = :date"
-        val maxBusinessId = namedParameterJdbcTemplate.queryForObject(sql,Collections.singletonMap("date", date),String::class.java)
-        return IdUtils.getNextBusinessId(maxBusinessId, date)
-    }
-
     override fun findAll(pageable: Pageable, goodsOrderQuery: GoodsOrderQuery): Page<GoodsOrderDto> {
         val sb = StringBuilder("""
             SELECT
@@ -161,6 +163,9 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
         if (StringUtils.isNotBlank(goodsOrderQuery.businessId)) {
             sb.append(" and t1.business_id like concat('%',:businessId,'%')")
+        }
+        if (StringUtils.isNotBlank(goodsOrderQuery.storeName)) {
+            sb.append(" and shop.name like concat('%',:storeName,'%')")
         }
         if (goodsOrderQuery.billDateStart != null) {
             sb.append(" and t1.bill_date >= :billDateStart")
@@ -230,7 +235,10 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
-        val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(goodsOrderQuery), BeanPropertyRowMapper(GoodsOrderDto::class.java))
-        return PageImpl(list,pageable,((pageable.pageNumber + 100) * pageable.pageSize).toLong())
+        val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
+        val paramMap = BeanPropertySqlParameterSource(goodsOrderQuery)
+        val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(GoodsOrderDto::class.java))
+        val count = namedParameterJdbcTemplate.queryForObject(countSql, paramMap, Long::class.java)
+        return PageImpl(list,pageable,count)
     }
 }

@@ -30,6 +30,7 @@ repositories {
 
 
 dependencies {
+	compile project(':summer-common')
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
 	runtime('org.springframework.boot:spring-boot-devtools')
@@ -40,6 +41,5 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE"
-		mavenBom 'org.springframework.cloud:spring-cloud-stream-dependencies:Brooklyn.SR3'
 	}
 }

@@ -4,38 +4,38 @@
     <div>
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-form-item :label="$t('processTypeForm.name')" prop="name">
-          <el-input v-model="inputForm.name"></el-input>
+          <el-input v-model="inputForm.name" :disabled="!isCreate"></el-input>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.createdPositionIds')" prop="createdPositionIds">
-          <position-select v-model="inputForm.createdPositionIdList" :multiple = "true"></position-select>
+          <position-select v-model="inputForm.createPositionIdList" :multiple = "true" :disabled="!editable&&!isCreate"></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.viewPositionIds')" prop="viewPositionIds">
-          <position-select v-model="inputForm.viewPositionIdList" :multiple="true"></position-select>
+          <position-select v-model="inputForm.viewPositionIdList" :multiple="true" :disabled="!editable&&!isCreate"></position-select>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.auditFileType')" prop="auditFileType">
-          <bool-radio-group v-model="inputForm.auditFileType"></bool-radio-group>
+          <bool-radio-group v-model="inputForm.auditFileType" :disabled="!isCreate"></bool-radio-group>
         </el-form-item>
         <el-form-item :label="$t('processTypeForm.remarks')" prop="remarks">
-          <el-input v-model="inputForm.remarks"></el-input>
+          <el-input v-model="inputForm.remarks" :disabled="!editable&&!isCreate"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="isCreate">{{$t('processTypeForm.save')}}</el-button>
+        <el-form-item >
+          <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()" v-if="editable||isCreate">{{$t('processTypeForm.save')}}</el-button>
         </el-form-item>
         <template>
           <el-table :data="inputForm.processFlowList" border stripe>
-            <el-table-column :label="$t('processTypeForm.name')">
+            <el-table-column :label="$t('processTypeForm.name')" >
               <template scope="scope">
-                <el-input v-model="scope.row.name"></el-input>
+                <el-input v-model="scope.row.name" :disabled="!isCreate"></el-input>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('processTypeForm.sort')">
+            <el-table-column :label="$t('processTypeForm.sort')" >
               <template scope="scope">
-                <el-input v-model="scope.row.sort"></el-input>
+                <el-input v-model="scope.row.sort" :disabled="!isCreate"></el-input>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('processTypeForm.positionName')">
+            <el-table-column :label="$t('processTypeForm.positionName')" >
               <template scope="scope">
-                <position-select v-model="scope.row.positionId" ></position-select>
+                <position-select v-model="scope.row.positionId" :disabled="!isCreate"></position-select>
               </template>
             </el-table-column>
             <el-table-column :label="$t('processTypeForm.operation')" :render-header="renderAction"  v-if="isCreate">
@@ -61,6 +61,7 @@
       getData(){
         return{
           isCreate:this.$route.query.id==null,
+          editable: this.$route.query.editable,
           submitDisabled:false,
           loading: false,
           inputForm:{
@@ -70,7 +71,7 @@
           rules: {
             name: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             auditFileType: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
-            createdPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
+            createPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
             viewPositionIdList: [{ required: true, message: this.$t('processTypeForm.prerequisiteMessage')}],
           }
         }
@@ -139,9 +140,9 @@
           } else {
             axios.get('/api/general/sys/processType/getForm',{params: {id:this.$route.query.id}}).then((response)=>{
               this.inputForm=response.data;
-              console.log(response.data);
               axios.get('/api/general/sys/processType/findOne',{params: {id:this.$route.query.id}}).then((response)=>{
                 util.copyValue(response.data,this.inputForm);
+                console.log(this.inputForm);
               });
             });
           }

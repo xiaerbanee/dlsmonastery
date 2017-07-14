@@ -245,4 +245,11 @@
   .el-table .row-finished,.el-table .row-finished>td{
     background: rgba(18,206,102,.1) !important;
   }
+  .alert{
+    font-size: 16px !important;
+  }
+  .alert-danger{
+    background-color:#c48888 !important;
+    color:#613030 !important;
+  }
 </style>

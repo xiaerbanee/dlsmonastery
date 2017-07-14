@@ -31,8 +31,8 @@ repositories {
 
 dependencies {
 	compile project(':summer-common')
-	compile('com.alibaba:druid:1.0.23')
-	compile('net.sourceforge.jtds:jtds:1.3.1')
+	compile('com.alibaba:druid:1.1.1')
+	compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '6.2.0.jre8'
 	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.cloud:spring-cloud-starter-oauth2')
@@ -42,8 +42,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile 'org.springframework.boot:spring-boot-starter-data-redis'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-	compile 'org.springframework.cloud:spring-cloud-stream'
-	compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
 	compile 'org.activiti:activiti-spring-boot-starter-basic:5.22.0'
 	compile group: 'org.activiti', name: 'activiti-bpmn-layout', version: '5.22.0'
 	compile('org.springframework.cloud:spring-cloud-starter-feign')
@@ -52,6 +50,8 @@ dependencies {
 	runtime('mysql:mysql-connector-java:5.1.42')
 	compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.5.0'
 	runtime('org.springframework.boot:spring-boot-devtools')
+	compile group: 'org.apache.httpcomponents', name: 'httpclient'
+	compile group: 'io.github.openfeign', name: 'feign-httpclient', version: '9.5.0'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile group: 'org.json', name: 'json', version: '20160810'
 	compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
@@ -60,6 +60,5 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE"
-		mavenBom 'org.springframework.cloud:spring-cloud-stream-dependencies:Brooklyn.SR3'
 	}
 }

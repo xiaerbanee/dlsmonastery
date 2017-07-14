@@ -185,7 +185,7 @@
         }).catch(()=>{});
     },
       checkSelectable(row) {
-        return row.processStatus.indexOf('通过')<0;
+        return row.isAuditable&&row.processStatus.indexOf('通过')<0;
       }
     },
     created () {

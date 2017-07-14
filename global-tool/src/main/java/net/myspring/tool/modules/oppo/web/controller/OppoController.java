@@ -65,6 +65,8 @@ public class OppoController {
 
     @RequestMapping(value = "pushFactoryData")
     public String pushFactoryData(String date) {
+        String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
+        DbContextHolder.get().setCompanyName(companyName);
         oppoPushSerivce.getOppoCustomers(date);
         oppoPushSerivce.getOppoCustomerOperatortype(date);
         List<OppoCustomerAllot> oppoCustomerAllots=oppoPushSerivce.getFutureOppoCustomerAllot(date);

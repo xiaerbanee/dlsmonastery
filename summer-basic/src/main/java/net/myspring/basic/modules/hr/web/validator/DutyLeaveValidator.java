@@ -40,10 +40,10 @@ public class DutyLeaveValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         DutyLeaveForm dutyLeaveForm = (DutyLeaveForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "请选择时间类型");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "leaveType", "error.leaveType", "请选择请假类型");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateStart", "error.dutyDateStart", "开始日期不能为空");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateEnd", "error.dutyDateEnd", "结束日期不能为空");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dateType", "error.dateType", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "leaveType", "error.leaveType", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateStart", "error.dutyDateStart", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDateEnd", "error.dutyDateEnd", "必填信息");
 
         if (dutyLeaveForm.getDutyDateStart()!=null && dutyLeaveForm.getDutyDateEnd()!=null) {
             String employeeId = RequestUtils.getEmployeeId();

@@ -17,6 +17,7 @@ import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotShopRepository;
+import net.myspring.future.modules.basic.web.form.DepotAccountForm;
 import net.myspring.future.modules.basic.web.form.DepotForm;
 import net.myspring.future.modules.basic.web.form.DepotShopForm;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -204,6 +205,19 @@ public class DepotShopService {
         }
         setPercentage(depotReportList);
         return depotReportList;
+    }
+
+    public List<String> findAccountIdsByDepotId(String depotId){
+        return depotShopRepository.findAccountIdsByDepotId(depotId);
+    }
+
+    @Transactional
+    public void saveDepotAccount(DepotAccountForm depotAccountForm){
+        //先删除表中的depot-account
+        depotShopRepository.deleteDepotAccountByDepotId(depotAccountForm.getShopId());
+        if(CollectionUtil.isNotEmpty(depotAccountForm.getAccountIds())){
+            depotShopRepository.saveDepotAccount(depotAccountForm.getShopId(),depotAccountForm.getAccountIds());
+        }
     }
 
     public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery) {

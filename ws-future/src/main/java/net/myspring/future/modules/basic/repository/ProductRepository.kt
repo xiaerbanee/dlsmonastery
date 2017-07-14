@@ -5,6 +5,7 @@ import net.myspring.future.modules.basic.domain.Product
 import net.myspring.future.modules.basic.domain.ProductType
 import net.myspring.future.modules.basic.dto.ProductDto
 import net.myspring.future.modules.basic.web.query.ProductQuery
+import net.myspring.future.modules.layout.web.query.AdPricesystemChangeQuery
 import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
@@ -189,6 +190,8 @@ interface ProductRepositoryCustom{
 
     fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>
 
+    fun findFilterForAdpricesystemChange(adPricesystemChangeQuery: AdPricesystemChangeQuery):MutableList<ProductDto>
+
     fun findPage(pageable: Pageable, productQuery: ProductQuery): Page<ProductDto>
 }
 
@@ -222,6 +225,24 @@ class ProductRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
             OR t.code LIKE CONCAT('%',:nameOrCode,'%')
             AND t.out_group_name = :outGroupName
           """, params, BeanPropertyRowMapper(ProductDto::class.java))
+    }
+
+    override fun findFilterForAdpricesystemChange(adPricesystemChangeQuery: AdPricesystemChangeQuery):MutableList<ProductDto>{
+        val sb = StringBuilder("""
+            SELECT
+                t1.*
+            FROM
+                crm_product t1
+            WHERE
+                t1.enabled=1
+        """)
+        if (StringUtils.isNotEmpty(adPricesystemChangeQuery.productName)) {
+            sb.append("""  and t1.name LIKE CONCAT('%',:productName,'%') """)
+        }
+        if (CollectionUtil.isNotEmpty(adPricesystemChangeQuery.productCodeLists)) {
+            sb.append("""  and t1.code in (:productCodeLists) """)
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), BeanPropertySqlParameterSource(adPricesystemChangeQuery), BeanPropertyRowMapper(ProductDto::class.java))
     }
 
     override fun findFilter(productQuery: ProductQuery): MutableList<ProductDto>{

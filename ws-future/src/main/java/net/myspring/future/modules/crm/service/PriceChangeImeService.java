@@ -2,11 +2,13 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.*;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -53,6 +55,8 @@ public class PriceChangeImeService {
     private DepotRepository depotRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public PriceChangeImeDto findOne(String id){
         PriceChangeImeDto priceChangeImeDto = new PriceChangeImeDto();
@@ -74,6 +78,7 @@ public class PriceChangeImeService {
     }
 
     public Page<PriceChangeImeDto> findPage(Pageable pageable, PriceChangeImeQuery priceChangeImeQuery){
+        priceChangeImeQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<PriceChangeImeDto> page=priceChangeImeRepository.findPage(pageable,priceChangeImeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -115,11 +120,12 @@ public class PriceChangeImeService {
     }
 
     @Transactional
-    public String save(PriceChangeImeUploadForm priceChangeImeUploadForm){
+    public void save(PriceChangeImeUploadForm priceChangeImeUploadForm){
         String priceChangeId = priceChangeImeUploadForm.getPriceChangeId();
+        List<String> productTypeIds = priceChangeRepository.findProductTypeIdsById(priceChangeId);
         List<List<String>> imeUploadList = priceChangeImeUploadForm.getImeUploadList();
         if(CollectionUtil.isEmpty(imeUploadList)){
-            return null;
+            throw new ServiceException("未上传任何调价串码，保存失败");
         }
         List<String> shopNameList = new ArrayList<>();
         List<String> imeList = new ArrayList<>();
@@ -128,15 +134,19 @@ public class PriceChangeImeService {
             String shopName = StringUtils.toString(row.get(0)).trim();
             String ime = StringUtils.toString(row.get(1)).trim();
             String remarks = StringUtils.toString(row.get(2)).trim();
-            shopNameList.add(shopName);
-            imeList.add(ime);
+            if(StringUtils.isNotBlank(shopName)){
+                shopNameList.add(shopName);
+            }
+            if(StringUtils.isNotBlank(ime)){
+                imeList.add(ime);
+            }
             remarksList.add(remarks);
         }
-        if(shopNameList == null||imeList == null){
-            return null;
+        if(CollectionUtil.isEmpty(shopNameList)||CollectionUtil.isEmpty(imeList)){
+            throw new ServiceException("门店或者串码列表为空，保存失败");
         }
         if(shopNameList.size()!=imeList.size()){
-            return null;
+            throw new ServiceException("门店与串码不一一匹配，长度不同，保存失败");
         }
 
         //检查门店、串码在系统中是否存在
@@ -155,12 +165,26 @@ public class PriceChangeImeService {
                     notExist +=StringUtils.join(shopName,CharConstant.COMMA);
                 }
             }
-            return notExist+"不存在,保存失败";
+            throw new ServiceException(notExist+"不存在,保存失败");
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
+            List<String> needSaveProductTypeIds = CollectionUtil.extractToList(productImeDtos,"productTypeId");
+            List<String> needSaveProductImeIds = CollectionUtil.extractToList(productImeDtos,"id");
             if(productImeDtos == null){
-                return "保存失败";
+                throw new ServiceException("未找到任何串码所对应的机型,保存失败");
+            }
+            for(String needSaveProductTypeId:needSaveProductTypeIds){
+                if(!productTypeIds.contains(needSaveProductTypeId)){
+                    throw new ServiceException("输入的串码中含有不是调价项目中的产品型号,保存失败");
+                }
+            }
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
+            List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
+            for(String productImeId:needSaveProductImeIds){
+                if(existProductImeIds.contains(productImeId)){
+                    throw new ServiceException("输入的串码中有串码已存在所选择的调价项目下,保存失败");
+                }
             }
             Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
@@ -176,7 +200,6 @@ public class PriceChangeImeService {
                 priceChangeImes.add(priceChangeIme);
             }
             priceChangeImeRepository.save(priceChangeImes);
-            return "保存成功";
         }
 
     }

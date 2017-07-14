@@ -61,6 +61,7 @@ export default {
       depotStoreList:"仓库管理",
       roleForm:"角色编辑",
       depotShopForm:"门店基础属性",
+      depotShopAccountForm:"账号门店绑定",
       depotStoreForm:"仓库编辑",
       shopForm:"门店业务属性",
       afterSaleAreaList:"地区录入",

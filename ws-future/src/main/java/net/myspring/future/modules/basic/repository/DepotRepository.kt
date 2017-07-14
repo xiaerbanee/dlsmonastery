@@ -35,6 +35,8 @@ interface DepotRepository :BaseRepository<Depot,String>,DepotRepositoryCustom {
 
     fun findByEnabledIsTrueAndIdIn(idList: MutableList<String>): MutableList<Depot>
 
+    fun findByEnabledIsTrueAndDepotShopId(depotShopId:String): Depot
+
     fun findByEnabledIsTrueAndDepotShopIdIsNotNull(): MutableList<Depot>
 
     fun findByEnabledIsTrueAndAdShopIsTrueAndIsHiddenIsFalse():MutableList<Depot>
@@ -347,6 +349,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if(StringUtils.isNotBlank(depotAccountQuery.areaId)){
             sb.append("""  and t1.area_id = :areaId  """)
         }
+        if(CollectionUtil.isNotEmpty(depotAccountQuery.depotIdList)){
+            sb.append("""  and t1.id in (:depotIdList) """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
@@ -375,6 +380,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
             sh.carrier_type as carrierType,
             sh.door_head as doorHead,
             sh.enable_date as enableDate,
+            sh.channel_type as channelType,
             de.enabled as enabled,
             de.is_hidden as isHidden,
             de.district_id as districtId,

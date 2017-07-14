@@ -41,6 +41,16 @@ public class AccountDto extends DataDto<Account> {
     @CacheInput(inputKey = "employees",inputInstance = "employeeId",outputInstance = "status")
     private String employeeStatus;
 
+    private boolean admin=RequestUtils.getAdmin();
+
+    public boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     public String getOutId() {
         return outId;
     }

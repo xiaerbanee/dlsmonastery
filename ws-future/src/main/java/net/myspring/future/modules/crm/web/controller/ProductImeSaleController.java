@@ -1,27 +1,22 @@
 package net.myspring.future.modules.crm.web.controller;
 
 
-import com.unboundid.ldap.sdk.BindResult;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeForSaleDto;
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto;
 import net.myspring.future.modules.crm.service.ProductImeSaleService;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleBackForm;
 import net.myspring.future.modules.crm.web.form.ProductImeSaleForm;
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery;
-import net.myspring.future.modules.crm.web.validator.ProductImeSaleValidator;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +30,6 @@ public class ProductImeSaleController {
 
     @Autowired
     private ProductImeSaleService productImeSaleService;
-    @Autowired
-    private ProductImeSaleValidator productImeSaleValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ProductImeSaleDto> list(Pageable pageable, ProductImeSaleQuery productImeSaleQuery){
@@ -83,15 +76,10 @@ public class ProductImeSaleController {
     }
 
     @RequestMapping(value = "sale")
-    public RestResponse sale(ProductImeSaleForm productImeSaleForm, BindingResult bindResult) {
-        productImeSaleValidator.validate(productImeSaleForm,bindResult);
-        if(bindResult.hasFieldErrors()){
-            return new RestResponse(bindResult,"保存失败", null);
-        }
-
+    public RestResponse sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
-            new RestResponse("没有输入任何有效的串码", null);
+            throw new ServiceException("没有输入任何有效的串码");
         }
         String errMsg = productImeSaleService.checkForSale(imeList);
         if(StringUtils.isNotBlank(errMsg)){

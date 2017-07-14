@@ -21,7 +21,7 @@ import java.util.*
  */
 @Component
 class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
-    fun findAll(): MutableList<BdCustomer> {
+    fun findAll(): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -47,7 +47,41 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
-    fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer> {
+    fun findAll(bdCustomerQuery: BdCustomerQuery): MutableList<BdCustomer>? {
+        var paramMap = HashMap<String, Any>()
+        paramMap.put("customerGroup", bdCustomerQuery.customerGroup)
+        paramMap.put("customerIdList", bdCustomerQuery.customerIdList)
+        var sb = StringBuilder("""
+             SELECT
+                t1.FCUSTID,
+                t1.FNUMBER,
+                t1.FSALDEPTID,
+                t2.FNAME,
+                t1.FPRIMARYGROUP,
+                t4.FNAME AS fprimaryGroupName,
+                t1.FMODIFYDATE,
+                t1.FFORBIDSTATUS,
+                t1.FDOCUMENTSTATUS
+            FROM
+                T_BD_CUSTOMER t1,
+                T_BD_CUSTOMER_L t2,
+                T_BD_CUSTOMERGROUP t3,
+                T_BD_CUSTOMERGROUP_L t4
+            WHERE
+                t1.FCUSTID = t2.FCUSTID
+                AND t1.FPRIMARYGROUP = t3.FID
+                AND t3.FID = t4.FID
+        """);
+        if(bdCustomerQuery.customerIdList.size > 0){
+            sb.append(" and t1.FCUSTID in (:customerIdList) ")
+        }
+        if (StringUtils.isNotBlank(bdCustomerQuery.customerGroup)){
+            sb.append(" and t1.FPRIMARYGROUP = :customerGroup  ")
+        }
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(BdCustomer::class.java))
+    }
+
+    fun findByNameList(nameList: MutableList<String>): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -75,7 +109,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
 
     }
 
-    fun findByNumberList(numberList: MutableList<String>): MutableList<BdCustomer> {
+    fun findByNumberList(numberList: MutableList<String>): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -134,7 +168,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         }
     }
 
-    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer> {
+    fun findByIdList(idList: MutableList<String>): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -161,7 +195,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, Collections.singletonMap("idList",idList),  BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
-    fun findByNameLike(name: String): MutableList<BdCustomer> {
+    fun findByNameLike(name: String): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,
@@ -188,7 +222,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         """, Collections.singletonMap("name",name),BeanPropertyRowMapper(BdCustomer::class.java))
     }
 
-    fun findPrimaryGroupAndPrimaryGroupName(): MutableList<NameValueDto> {
+    fun findPrimaryGroupAndPrimaryGroupName(): MutableList<NameValueDto>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FPRIMARYGROUP as value,
@@ -243,7 +277,7 @@ class  BdCustomerRepository @Autowired constructor(val namedParameterJdbcTemplat
         return PageImpl(list,pageable,count);
     }
 
-    fun findByMaxModifyDate(modifyDate: LocalDateTime): MutableList<BdCustomer> {
+    fun findByMaxModifyDate(modifyDate: LocalDateTime): MutableList<BdCustomer>? {
         return namedParameterJdbcTemplate.query("""
             SELECT
                 t1.FCUSTID,

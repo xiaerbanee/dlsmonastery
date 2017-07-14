@@ -12,7 +12,7 @@ interface VivoProductsRepository : BaseRepository<VivoProducts, String>, VivoPro
 }
 interface VivoProductsRepositoryCustom{
     fun findProducts() :MutableList<VivoProducts>
-    fun findColorIds(colorIds:MutableList<String>):MutableList<String>
+    fun findColorIds(colorIds:MutableList<String>):MutableList<VivoProducts>
 }
 class VivoProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) : VivoProductsRepositoryCustom{
     override fun findProducts(): MutableList<VivoProducts>{
@@ -21,12 +21,12 @@ class VivoProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTe
         """,  BeanPropertyRowMapper(VivoProducts::class.java));
     }
 
-    override fun findColorIds(colorIds:MutableList<String>): MutableList<String>{
+    override fun findColorIds(colorIds:MutableList<String>): MutableList<VivoProducts>{
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("colorIds",colorIds);
         return namedParameterJdbcTemplate.query("""
-                select t.color_id  from vivo_products t where t.color_id in(:colorIds)
-        """,  paramMap,BeanPropertyRowMapper(String::class.java));
+                select *  from vivo_products t where t.color_id in(:colorIds)
+        """,  paramMap,BeanPropertyRowMapper(VivoProducts::class.java));
     }
 
 }

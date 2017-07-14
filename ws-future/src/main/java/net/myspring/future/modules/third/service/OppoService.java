@@ -18,6 +18,7 @@ import net.myspring.util.text.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -43,7 +44,14 @@ public class OppoService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @Transactional(readOnly = false)
+    @Scheduled(cron = "0 0 1,3,6,12 * * ?")
+    public void syn(){
+        logger.info("开始同步串码："+LocalDateTime.now());
+        String date=LocalDateUtils.format(LocalDate.now());
+        synOppo(date);
+        logger.info("串码同步结束："+LocalDateTime.now());
+    }
+
     public String synOppo(String date) {
         if (StringUtils.isBlank(date)) {
             date = LocalDateUtils.formatLocalDate(LocalDate.now(), "yyyy-MM-dd");

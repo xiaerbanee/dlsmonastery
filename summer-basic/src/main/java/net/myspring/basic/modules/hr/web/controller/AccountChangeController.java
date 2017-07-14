@@ -48,8 +48,8 @@ public class AccountChangeController {
     @RequestMapping(value = "findData")
     public AccountChangeForm getForm(AccountChangeQuery accountChangeQuery){
         AccountChangeForm accountChangeForm=accountChangeService.getForm(accountChangeQuery);
-        accountChangeForm.setTypeList(AccountChangeTypeEnum.getList());
-        accountChangeForm.setPositionList(positionService.findAll());
+        accountChangeForm.getExtra().put("typeList",AccountChangeTypeEnum.getList());
+        accountChangeForm.getExtra().put("positionList",positionService.findAll());
         return accountChangeForm;
     }
 
@@ -57,6 +57,13 @@ public class AccountChangeController {
     public RestResponse batchPass(@RequestParam(value = "ids[]") String[] ids, boolean pass) {
         RestResponse restResponse=new RestResponse("审核成功",ResponseCodeEnum.audited.name());
         accountChangeService.batchPass(ids,pass);
+        return restResponse;
+    }
+
+    @RequestMapping(value="audit",method=RequestMethod.GET)
+    public RestResponse audit(String id,boolean pass){
+        RestResponse restResponse=new RestResponse("审核成功",ResponseCodeEnum.audited.name());
+        accountChangeService.pass(id,pass);
         return restResponse;
     }
 

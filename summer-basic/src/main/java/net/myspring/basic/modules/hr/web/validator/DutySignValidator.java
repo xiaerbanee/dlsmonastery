@@ -17,8 +17,8 @@ public class DutySignValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "attachment", "error.attachment", "请选择照片");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "error.address", "请选择地址");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "attachment", "error.attachment", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "error.address", "必填信息");
 
     }
 }

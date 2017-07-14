@@ -8,12 +8,10 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
-import net.myspring.future.common.enums.GoodsOrderPullStatusEnum;
-import net.myspring.future.common.enums.GoodsOrderStatusEnum;
-import net.myspring.future.common.enums.NetTypeEnum;
-import net.myspring.future.common.enums.ShipTypeEnum;
+import net.myspring.future.common.enums.*;
 import net.myspring.future.modules.api.service.CarrierOrderService;
 import net.myspring.future.modules.api.web.form.CarrierOrderFrom;
+import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
@@ -40,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +56,8 @@ public class GoodsOrderController {
     private CarrierOrderService carrierOrderService;
     @Autowired
     private DepotService depotService;
+    @Autowired
+    private OfficeClient officeClient;
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
@@ -73,10 +74,15 @@ public class GoodsOrderController {
     @RequestMapping(value = "getQuery")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:view')")
     public GoodsOrderQuery getQuery(GoodsOrderQuery goodsOrderQuery) {
+        goodsOrderQuery.getExtra().put("areaList",officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
         goodsOrderQuery.getExtra().put("netTypeList",NetTypeEnum.getList());
         goodsOrderQuery.getExtra().put("shipTypeList",ShipTypeEnum.getList());
         goodsOrderQuery.getExtra().put("statusList",GoodsOrderStatusEnum.getList());
         goodsOrderQuery.getExtra().put("pullStatusList", GoodsOrderPullStatusEnum.getList());
+
+        LocalDate today = LocalDate.now();
+        goodsOrderQuery.setCreatedDateRange(today.minusWeeks(1).toString() + " - " + today.toString());
+
         return goodsOrderQuery;
     }
 
@@ -108,6 +114,22 @@ public class GoodsOrderController {
     @RequestMapping(value = "save")
     @PreAuthorize("hasPermission(null,'crm:goodsOrder:edit')")
     public RestResponse save(GoodsOrderForm goodsOrderForm) {
+        if(CollectionUtil.isEmpty(goodsOrderForm.getGoodsOrderDetailFormList())){
+            throw new ServiceException("订货明细不能为空");
+        }
+        Integer totalQty = 0;
+        for(GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()){
+            if(goodsOrderDetailForm.getQty() !=null && goodsOrderDetailForm.getQty()<0){
+                throw new ServiceException("订货明细里的数量不能小于0");
+            }
+            if(goodsOrderDetailForm.getQty() !=null){
+                totalQty = totalQty + goodsOrderDetailForm.getQty();
+            }
+        }
+        if(totalQty == 0){
+            throw new ServiceException("总订货数量必须大于0");
+        }
+
         GoodsOrder goodsOrder = goodsOrderService.save(goodsOrderForm);
         if(StringUtils.isNotBlank(goodsOrderForm.getDetailJson())){
             CarrierOrderFrom carrierOrderFrom= BeanUtil.map(goodsOrderForm, CarrierOrderFrom.class);

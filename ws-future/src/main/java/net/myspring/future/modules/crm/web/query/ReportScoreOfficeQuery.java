@@ -16,8 +16,8 @@ public class ReportScoreOfficeQuery extends BaseQuery {
     private String scoreDateRange;
     private String officeId;
     private String areaId;
-    private LocalDate scoreDateStart=LocalDate.now().minusDays(1);
-    private LocalDate scoreDateEnd=LocalDate.now().minusDays(1);
+    private LocalDate scoreDateStart;
+    private LocalDate scoreDateEnd;
     private String sort = "month_rank,ASC";
 
 

@@ -3,8 +3,8 @@ package net.myspring.future.modules.layout.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
-import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
+import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
@@ -25,6 +25,7 @@ import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.DepotAdApplyForm;
 import net.myspring.future.modules.basic.web.form.ProductAdForm;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.layout.domain.AdApply;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
@@ -85,6 +86,8 @@ public class AdApplyService {
     private CloudClient cloudClient;
     @Autowired
     private SalOutStockManager salOutStockManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public Page<AdApplyDto> findPage(Pageable pageable, AdApplyQuery adApplyQuery) {
         adApplyQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -138,6 +141,9 @@ public class AdApplyService {
         if(adApplyDtos.size()>0){
             List<String> storeId = Lists.newArrayList();
             DepotStore depotStore = depotStoreRepository.findOne(adApplyBillTypeChangeForm.getStoreId());
+            if(StringUtils.isBlank(depotStore.getOutId())){
+                throw new ServiceException("在金蝶中不存在该仓库");
+            }
             storeId.add(depotStore.getOutId());
             List<StkInventory> stkInventories = cloudClient.findInventoriesByDepotStoreOutIds(storeId);
             Map<String,StkInventory> stringStkInventoryMap = CollectionUtil.extractToMap(stkInventories,"FMaterialId");
@@ -191,6 +197,9 @@ public class AdApplyService {
         if(!adApplyEditForm.isCreate()){
             AdApply adApply = adApplyRepository.findOne(adApplyEditForm.getId());
             adApply.setConfirmQty(adApplyEditForm.getConfirmQty());
+            if(adApplyEditForm.getConfirmQty()<adApply.getBilledQty()){
+                throw new ServiceException("修改的确认数不能小于已开单数");
+            }
             adApply.setLeftQty(adApplyEditForm.getConfirmQty()-adApply.getBilledQty());
             adApply.setRemarks(adApplyEditForm.getRemarks());
             adApplyRepository.save(adApply);
@@ -283,12 +292,9 @@ public class AdApplyService {
         }
         adGoodsOrderDetailRepository.save(adGoodsOrderDetails);
 
-        //自动开单
-        String maxBusinessId = adGoodsOrderRepository.findMaxBusinessId(adApplyBillForm.getBillDate());
-
         for(AdGoodsOrder adGoodsOrder:adGoodsOrders){
 
-            adGoodsOrder.setBusinessId(IdUtils.getNextBusinessId(maxBusinessId, adApplyBillForm.getBillDate()));
+            adGoodsOrder.setBusinessId(redisIdManager.getNextAdGoodsOrderBusinessId(adApplyBillForm.getBillDate()));
             BigDecimal amount = BigDecimal.ZERO;
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){

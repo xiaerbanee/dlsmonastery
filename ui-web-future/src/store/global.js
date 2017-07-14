@@ -45,13 +45,18 @@ const getAuthorityList = function () {
   return local;
 }
 
+const getLatestGoodsOrderBillDate = function () {
+  return window.localStorage.getItem("latestGoodsOrderBillDate");
+}
+
 export default {
   state: {
     tabs: getTabs(),
     lang: getLang(),
     menus:getMenus(),
     account:getAccount(),
-    authorityList:getAuthorityList()
+    authorityList:getAuthorityList(),
+    latestGoodsOrderBillDate:getLatestGoodsOrderBillDate(),
   },getters: {
     getQuery: (state, routerName) => {
       var query = {};
@@ -83,6 +88,10 @@ export default {
       localStorage.setItem('authorityList', JSON.stringify(authorityList))
       state.authorityList = authorityList;
     },
+    setLatestGoodsOrderBillDate(state,latestGoodsOrderBillDate) {
+      localStorage.setItem('latestGoodsOrderBillDate', latestGoodsOrderBillDate)
+      state.latestGoodsOrderBillDate = latestGoodsOrderBillDate;
+    },
     setAccount(state,account) {
       localStorage.setItem('account', JSON.stringify(account))
       state.account = account;
@@ -94,6 +103,9 @@ export default {
     },
     setTabs({ commit, state }, tabs) {
       commit('setTabs', tabs);
+    },
+    setLatestGoodsOrderBillDate({ commit, state }, latestGoodsOrderBillDate) {
+      commit('setLatestGoodsOrderBillDate', latestGoodsOrderBillDate);
     },
     setQuery({ commit, state }, params) {
       if (params.routerName != "home") {
@@ -120,6 +132,7 @@ export default {
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
+      commit('setLatestGoodsOrderBillDate', null);
     }
   }
 }

@@ -161,6 +161,14 @@ public class DepotController {
         return depotService.findDto(id);
     }
 
+    @RequestMapping(value = "findByDepotShopId")
+    public DepotDto findByDepotShopId(String depotShopId) {
+        if(StringUtils.isBlank(depotShopId)){
+            return new DepotDto();
+        }
+        return depotService.findByDepotShopId(depotShopId);
+    }
+
     @RequestMapping(value = "scheduleSynArea")
     public RestResponse scheduleSynArea(String accountId) {
         depotService.scheduleSynArea();

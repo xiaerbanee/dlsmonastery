@@ -71,15 +71,23 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
     var timeEnd = that.data.formData.timeEnd;
     var dutyDate = that.data.formData.dutyDate;
     if ($util.isNotBlank(timeStart) && $util.isNotBlank(timeEnd)) {
-      var dateTimeStart = new Date((dutyDate + " " + timeStart)).getTime();
-      var dateTimeEnd = new Date((dutyDate + " " + timeEnd)).getTime();
-      hour = (dateTimeEnd - dateTimeStart) * 1.0 / (3600 * 1000);
-      if (hour - Math.floor(hour) < 0.5) {
-        hour = Math.floor(hour);
-        that.setData({ 'formData.hour': Math.floor(hour) })
-      } else {
-        that.setData({ 'formData.hour': Math.floor(hour) + 0.5 })
+      timeStart = timeStart.split(':');
+      timeEnd = timeEnd.split(':');
+      var timeStartLong = timeStart[0] * 60 + 1.0 *timeStart[1];
+      var timeEndLong = timeEnd[0] * 60+1.0*timeEnd[1];
+      if(timeEndLong<timeStartLong){
+        hour=0;
+      }else{
+        hour = parseInt((timeEndLong - timeStartLong) / 60)
+        console.log(hour)
+        if ((timeEndLong - timeStartLong)%60>=30){
+          hour=hour+0.5
+        }
       }
+      that.setData({
+        'formData.hour':hour
+      });
+    
     }
   },
 })

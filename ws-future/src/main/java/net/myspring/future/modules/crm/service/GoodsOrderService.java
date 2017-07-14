@@ -42,6 +42,7 @@ import net.myspring.future.modules.crm.dto.GoodsOrderDetailDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderDto;
 import net.myspring.future.modules.crm.dto.GoodsOrderImeDto;
 import net.myspring.future.modules.crm.manager.ExpressOrderManager;
+import net.myspring.future.modules.crm.manager.RedisIdManager;
 import net.myspring.future.modules.crm.repository.ExpressOrderRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.repository.GoodsOrderImeRepository;
@@ -106,6 +107,8 @@ public class GoodsOrderService {
     private CarrierOrderRepository carrierOrderRepository;
     @Autowired
     private ExpressOrderManager expressOrderManager;
+    @Autowired
+    private RedisIdManager redisIdManager;
 
     public GoodsOrder findByBusinessId(String businessId){
         return goodsOrderRepository.findByBusinessId(businessId);
@@ -188,6 +191,7 @@ public class GoodsOrderService {
         return goodsOrder;
     }
 
+    @Transactional
     private void saveDetailInfo(GoodsOrder goodsOrder, GoodsOrderForm goodsOrderForm, Depot shop) {
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         Map<String,GoodsOrderDetail> goodsOrderDetailMap  = CollectionUtil.extractToMap(goodsOrderDetailList,"id");
@@ -197,9 +201,13 @@ public class GoodsOrderService {
         Map<String,PricesystemDetail> pricesystemDetailMap = CollectionUtil.extractToMap(pricesystemDetailList,"productId");
         List<GoodsOrderDetail> detailsToBeSaved = new ArrayList<>();
         for (GoodsOrderDetailForm goodsOrderDetailForm : goodsOrderForm.getGoodsOrderDetailFormList()) {
-            if(goodsOrderDetailForm.getQty() != null && goodsOrderDetailForm.getQty()<0) {
-                throw new ServiceException("订货明细里的数量不能小于0");
+            if(goodsOrderDetailForm.getQty() == null || goodsOrderDetailForm.getQty() == 0) {
+                if(StringUtils.isNotBlank(goodsOrderDetailForm.getId())){
+                    goodsOrderDetailRepository.delete(goodsOrderDetailForm.getId());
+                }
+                continue;
             }
+
             if(!pricesystemDetailMap.containsKey(goodsOrderDetailForm.getProductId())){
                 throw new ServiceException("该产品（"+goodsOrderDetailForm.getProductId()+"）不包含在该门店价格体系内，不允许订货");
             }
@@ -227,6 +235,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+    @Transactional
     private void saveExpressOrderInfo(GoodsOrder goodsOrder, Depot shop) {
         if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
             //如果已经存在，快递单不需要进行任何修改
@@ -240,6 +249,7 @@ public class GoodsOrderService {
         expressOrder.setContator(shop.getContator());
         expressOrder.setAddress(shop.getAddress());
         expressOrder.setMobilePhone(shop.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(shop.getId());
         expressOrder.setShipType(goodsOrder.getShipType());
         expressOrderRepository.save(expressOrder);
@@ -260,7 +270,7 @@ public class GoodsOrderService {
         goodsOrder.setBillDate(goodsOrderBillForm.getBillDate());
         goodsOrder.setRemarks(goodsOrderBillForm.getRemarks());
         goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrder.setBusinessId(goodsOrderRepository.findNextBusinessId(goodsOrderBillForm.getBillDate()));
+        goodsOrder.setBusinessId(redisIdManager.getNextGoodsOrderBusinessId(goodsOrderBillForm.getBillDate()));
         goodsOrderRepository.save(goodsOrder);
 
         Map<String,Product> productMap = productRepository.findMap(CollectionUtil.extractToList(goodsOrderBillForm.getGoodsOrderBillDetailFormList(),"productId"));
@@ -273,6 +283,7 @@ public class GoodsOrderService {
         }
     }
 
+    @Transactional
     private List<GoodsOrderDetail> saveDetailInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm) {
         BigDecimal amount = BigDecimal.ZERO;
         List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
@@ -305,6 +316,7 @@ public class GoodsOrderService {
         return detailsToBeSaved;
     }
 
+    @Transactional
     private ExpressOrder saveExpressOrderInfoWhenBill(GoodsOrder goodsOrder, GoodsOrderBillForm goodsOrderBillForm, List<GoodsOrderDetail> detailList, Map<String,Product> productMap) {
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
         expressOrder.setExtendBusinessId(goodsOrder.getBusinessId());
@@ -313,6 +325,7 @@ public class GoodsOrderService {
         expressOrder.setMobilePhone(goodsOrderBillForm.getMobilePhone());
         expressOrder.setFromDepotId(goodsOrderBillForm.getStoreId());
         expressOrder.setPrintDate(goodsOrder.getBillDate());
+        expressOrder.setExpressCompanyId(goodsOrderBillForm.getExpressCompanyId());
 
         int totalBillQty = 0;
         int mobileBillQty = 0;
@@ -329,6 +342,7 @@ public class GoodsOrderService {
         return expressOrder;
     }
 
+    @Transactional
     private void syn(GoodsOrder goodsOrder, ExpressOrder expressOrder){
         Depot shop=depotRepository.findOne(goodsOrder.getShopId());
 
@@ -475,7 +489,6 @@ public class GoodsOrderService {
         if(!Boolean.TRUE.equals(product.getVisible())){
             return false;
         }
-        //TODO 判断逻辑是否完整
         //如果是总部发货，且下单人员是地区人员，则根据货品是否开放下单
         if(ShipTypeEnum.总部发货.name().equals(shipType) || ShipTypeEnum.总部自提.name().equals(shipType)) {
             OfficeDto officeDto = OfficeUtil.findOne(redisTemplate,RequestUtils.getOfficeId());
@@ -650,6 +663,7 @@ public class GoodsOrderService {
         }
     }
 
+    @Transactional
     private void saveExpressOrderInfoWhenBatchAdd(GoodsOrder goodsOrder, GoodsOrderBatchAddDetailForm firstDetailForm, Depot toDepot) {
         ExpressOrder expressOrder=new ExpressOrder();
 
@@ -659,6 +673,7 @@ public class GoodsOrderService {
         expressOrder.setContator(firstDetailForm.getContator());
         expressOrder.setAddress(firstDetailForm.getAddress());
         expressOrder.setMobilePhone(firstDetailForm.getMobilePhone());
+        expressOrder.setFromDepotId(goodsOrder.getStoreId());
         expressOrder.setToDepotId(toDepot.getId());
         expressOrder.setShipType(firstDetailForm.getShipType());
         expressOrderRepository.save(expressOrder);
@@ -667,6 +682,7 @@ public class GoodsOrderService {
         goodsOrderRepository.save(goodsOrder);
     }
 
+    @Transactional
     private void saveGoodsOrderDetailInfoWhenBatchAdd(GoodsOrder goodsOrder, List<GoodsOrderBatchAddDetailForm> goodsOrderBatchAddDetailFormList) {
 
         Map<String, List<GoodsOrderBatchAddDetailForm>> detailMap = CollectionUtil.extractToMapList(goodsOrderBatchAddDetailFormList, "productName");

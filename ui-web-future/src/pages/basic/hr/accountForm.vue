@@ -11,6 +11,12 @@
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
               <el-input v-model="inputForm.loginName"></el-input>
             </el-form-item>
+            <el-form-item :label="$t('accountForm.password')" prop="password">
+              <el-input v-model="inputForm.password"  type="password"></el-input>
+            </el-form-item>
+            <el-form-item :label="$t('accountForm.confirmPassword')" prop="confirmPassword">
+              <el-input v-model="inputForm.confirmPassword" type="password"></el-input>
+            </el-form-item>
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
               <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
@@ -70,6 +76,15 @@
             })
           }
         };
+        var validatePass = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请再次输入密码'));
+          } else if (value !== this.inputForm.password) {
+            callback(new Error('两次输入密码不一致!'));
+          } else {
+            callback();
+          }
+        };
         return{
           isCreate:this.$route.query.id==null,
           multiple:true,
@@ -77,11 +92,13 @@
           inputForm:{
             extra:{}
           },
+          confirmPassword:"",
           radio:'1',
           remoteLoading:false,
           rules: {
             employeeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
             loginName: [{ required: true,validator: checkLoginName}],
+            confirmPassword: [{ validator: validatePass }],
             officeId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
             positionId: [{ required: true, message: this.$t('accountForm.prerequisiteMessage')}],
           }

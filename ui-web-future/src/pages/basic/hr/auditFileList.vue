@@ -34,7 +34,7 @@
                 <el-input v-model="formData.createdByName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('auditFileList.stageName')">
-                <el-input v-model="formData.stageName" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
+                <el-input v-model="formData.processStatus" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
               </el-form-item>
               <el-form-item :label="$t('auditFileList.content')">
                 <el-input v-model="formData.content" auto-complete="off" :placeholder="$t('auditFileList.likeSearch')"></el-input>
@@ -67,9 +67,9 @@
         <el-table-column prop="memo":label="$t('auditFileList.memo')"></el-table-column>
         <el-table-column :label="$t('auditFileList.operation')" width="140">
           <template scope="scope">
-            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action"  v-permit="'hr:auditFile:edit'">审核</el-button></div>
+            <div class="action"> <el-button size="small" @click.native="itemAction(scope.row.id,'verify')"  class="action" v-if="scope.row.auditable">审核</el-button></div>
             <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'detail')"  class="action"  v-permit="'hr:auditFile:view'">详细</el-button></div>
-              <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'">删除</el-button></div>
+              <div class="action"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')"  class="action" v-permit="'hr:auditFile:delete'" v-if="scope.row.editable">删除</el-button></div>
           </template>
         </el-table-column>
       </el-table>

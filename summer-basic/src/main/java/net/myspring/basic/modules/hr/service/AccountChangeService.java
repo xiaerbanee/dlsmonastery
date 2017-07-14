@@ -1,6 +1,7 @@
 package net.myspring.basic.modules.hr.service;
 
 import net.myspring.basic.common.enums.AccountChangeTypeEnum;
+import net.myspring.basic.common.enums.EmployeeStatusEnum;
 import net.myspring.basic.common.utils.CacheUtils;
 import net.myspring.basic.modules.hr.domain.Account;
 import net.myspring.basic.modules.hr.domain.AccountChange;
@@ -107,6 +108,7 @@ public class AccountChangeService {
                 employee.setRegularDate(LocalDateUtils.parse(accountChange.getNewValue()));
             } else if (accountChange.getType().equals(AccountChangeTypeEnum.离职.toString())) {
                 employee.setLeaveDate(LocalDateUtils.parse(accountChange.getNewValue()));
+                employee.setStatus(EmployeeStatusEnum.离职.name());
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.入职.name())){
                 employee.setEntryDate(LocalDateUtils.parse(accountChange.getNewValue()));
             }else if(accountChange.getType().equals(AccountChangeTypeEnum.底薪.name())){
@@ -121,8 +123,8 @@ public class AccountChangeService {
         Account account=accountRepository.findOne(accountChangeForm.getAccountId());
         Employee employee=employeeRepository.findOne(account.getEmployeeId());
         AccountChange accountChange=new AccountChange();
-        accountChange.setAccountId(accountChange.getAccountId());
-        accountChange.setNewValue(accountChange.getNewValue());
+        accountChange.setAccountId(accountChangeForm.getAccountId());
+        accountChange.setNewValue(accountChangeForm.getNewValue());
         accountChange.setType(accountChangeForm.getType());
         accountChange.setRemarks(accountChangeForm.getRemarks());
         if (accountChange.getType().equals(AccountChangeTypeEnum.部门.toString())) {
@@ -210,6 +212,11 @@ public class AccountChangeService {
         for(String id:idList){
             audit(id,pass,"批量审核");
         }
+    }
+
+    @Transactional
+    public void pass(String id,boolean pass){
+        audit(id,pass,"审核");
     }
     @Transactional
     public void logicDelete(String id){

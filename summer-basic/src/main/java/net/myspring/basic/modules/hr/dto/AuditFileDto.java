@@ -1,11 +1,15 @@
 package net.myspring.basic.modules.hr.dto;
 
 import com.google.common.collect.Lists;
+import com.sun.org.apache.regexp.internal.RE;
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.AuditFile;
+import net.myspring.common.enums.AuditTypeEnum;
 import net.myspring.general.modules.sys.dto.ActivitiDetailDto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -21,6 +25,10 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String content;
     private List<ActivitiDetailDto> activitiDetailList= Lists.newArrayList();
     private String attachment;
+    private String processFlowId;
+    private String positionId;
+    private boolean auditable;
+    private boolean editable;
 
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
@@ -28,6 +36,15 @@ public class AuditFileDto extends DataDto<AuditFile> {
     private String officeName;
     @CacheInput(inputKey = "processTypes",inputInstance = "processTypeId",outputInstance = "name")
     private String processTypeName;
+    private boolean locked;
+
+    public boolean getLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
 
     public String getContent() {
         return content;
@@ -124,4 +141,41 @@ public class AuditFileDto extends DataDto<AuditFile> {
     public void setOfficeName(String officeName) {
         this.officeName = officeName;
     }
+
+    public String getProcessFlowId() {
+        return processFlowId;
+    }
+
+    public void setProcessFlowId(String processFlowId) {
+        this.processFlowId = processFlowId;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
+
+    public Boolean getAuditable() {
+        if (processFlowId == null) {
+            return false;
+        } else {
+            return RequestUtils.getPositionId().equals(positionId) || RequestUtils.getAdmin();
+        }
+    }
+
+    public Boolean getEditable() {
+        if ((!getLocked() && !getFinished()) && RequestUtils.getAccountId()!= null && (RequestUtils.getAccountId().equals(getCreatedBy()) || RequestUtils.getAdmin())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean getFinished() {
+        return AuditTypeEnum.PASS.getValue().equals(processStatus) || AuditTypeEnum.NOT_PASS.getValue().equals(processStatus);
+    }
+
 }

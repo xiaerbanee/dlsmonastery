@@ -3,10 +3,9 @@
     <head-tab active="depotShopList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="itemAdd" icon="plus" >添加基础属性</el-button>
-        <el-button type="primary" @click="itemAddDepot" icon="plus" >添加业务属性</el-button>
+        <el-button type="primary" @click="itemAddDepot" icon="plus" >添加</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search">过滤或导出</el-button>
-        <el-button type="primary" @click="synArea = true" icon="search">机构同步</el-button>
+        <el-button type="primary" @click="itemBindAccount" icon="plus">账户绑定</el-button>
         <span v-html="searchText"></span>
       </el-row>
       <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyTripList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
@@ -181,6 +180,8 @@
         this.$router.push({ name: 'depotShopForm'})
       },itemAddDepot(){
         this.$router.push({ name: 'shopForm'})
+      },itemBindAccount(){
+          this.$router.push({name: 'depotShopAccountForm'})
       },exportData(){
         this.formVisible = false;
         util.confirmBeforeExportData(this).then(() => {

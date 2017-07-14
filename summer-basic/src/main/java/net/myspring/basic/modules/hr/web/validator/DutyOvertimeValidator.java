@@ -33,9 +33,9 @@ public class DutyOvertimeValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         DutyOvertimeForm dutyOvertime = (DutyOvertimeForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "请选择日期");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeStart", "error.timeStart", "请选择开始时间");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeEnd", "error.timeEnd", "请选择结束日期");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "dutyDate", "error.dutyDate", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeStart", "error.timeStart", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "timeEnd", "error.timeEnd", "必填信息");
         if (dutyOvertime.getDutyDate() != null && dutyOvertime.getTimeStart() != null && dutyOvertime.getTimeEnd() != null) {
             if (dutyOvertime.getHour() < 2.0) {
                 errors.rejectValue("timeStart", "error.timeStart", "加班时间不得少于2小时");

@@ -28,8 +28,8 @@ public class ShopAdValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ShopAdForm shopAdForm=(ShopAdForm) target;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "shopId", "error.shopId", "门店不能为空");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "shopAdTypeId", "error.shopAdTypeId", "广告品种不能为空");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "shopId", "error.shopId", "必填信息");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "shopAdTypeId", "error.shopAdTypeId", "必填信息");
         if(shopAdForm.getLength()!=null && shopAdForm.getLength().compareTo(BigDecimal.ZERO)==-1 ){
             errors.rejectValue("length", "error.qty", "长度不能为小于0");
         }
@@ -48,9 +48,9 @@ public class ShopAdValidator implements Validator {
             }
             if(ShopAdTotalPriceTypeEnum.按面积.name().equals(shopAdTypeDto.getTotalPriceType())){
                 if(shopAdForm.getLength()==null||shopAdForm.getWidth()==null||shopAdForm.getQty()==null){
-                    errors.rejectValue("length", "error.qty", "长度不能为空");
-                    errors.rejectValue("width", "error.qty", "高度不能为空");
-                    errors.rejectValue("qty", "error.qty", "数量值不能为空");
+                    errors.rejectValue("length", "error.qty", "必填信息");
+                    errors.rejectValue("width", "error.qty", "必填信息");
+                    errors.rejectValue("qty", "error.qty", "必填信息");
                 }
             }
         }
