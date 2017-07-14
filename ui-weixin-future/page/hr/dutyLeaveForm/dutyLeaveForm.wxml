@@ -34,7 +34,7 @@
           <view class="weui-label">时间类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType}}" data-name="dateType" bindchange="bindTypeChange" disabled="{{leaveDisabled}}">
+          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType?formData.dateType:''}}" data-name="dateType" bindchange="bindTypeChange" disabled="{{leaveDisabled}}">
             <view class="weui-input">{{formData.dateType}}</view>
           </picker>
         </view>
@@ -47,7 +47,7 @@
           <view class="weui-label">请假类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="leaveType" range="{{formProperty.leaveList}}" value="{{formData.leaveType}}" data-name="leaveType" bindchange="bindTypeChange">
+          <picker name="leaveType" range="{{formProperty.leaveList}}" value="{{formData.leaveType?formData.leaveType:''}}" data-name="leaveType" bindchange="bindTypeChange">
             <view class="weui-input">{{formData.leaveType}}</view>
           </picker>
         </view>
