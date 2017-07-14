@@ -285,6 +285,9 @@ public class DutyWorktimeService {
                 String key = employeeId + CharConstant.ENTER + LocalDateUtils.format(date);
                 Employee employee = employeeMap.get(employeeId);
                 Account account = accountMap.get(employee.getAccountId());
+                if(account==null){
+                    System.out.println(account.getId());
+                }
                 Office office = officeMap.get(account.getOfficeId());
                 DutyWorktimeExportDto dutyWorktime = new DutyWorktimeExportDto();
                 dutyWorktime.setEmployeeId(employeeId);
@@ -430,7 +433,7 @@ public class DutyWorktimeService {
         }
     }
 
-    public String findSimpleExcelSheet(String month, Workbook workbook, List<DutyWorktimeExportDto> dutyWorktimeExporeList) {
+    public SimpleExcelBook findSimpleExcelSheet(String month, Workbook workbook, List<DutyWorktimeExportDto> dutyWorktimeExporeList) {
         List<List<SimpleExcelColumn>> excelColumnList = Lists.newArrayList();
         Map<String, CellStyle> cellStyleMap = ExcelUtils.getCellStyleMap(workbook);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
@@ -471,9 +474,9 @@ public class DutyWorktimeService {
             excelColumnList.add(simpleExcelColumnList);
         }
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("考勤记录", excelColumnList);
+        ExcelUtils.doWrite(workbook,simpleExcelSheet);
         SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "考勤记录" + month + ".xlsx", simpleExcelSheet);
-        ByteArrayInputStream byteArrayInputStream = ExcelUtils.doWrite(simpleExcelBook.getWorkbook(), simpleExcelBook.getSimpleExcelSheets());
-        return null;
+        return simpleExcelBook;
     }
 
     private String getCellStyle(DutyWorktimeExportDto dutyWorktime) {

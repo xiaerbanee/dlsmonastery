@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.service.PositionService;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -41,6 +42,8 @@ public class EmployeeController {
     private DictEnumService dictEnumService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private OfficeService officeService;
 
     @RequestMapping(value = "delete")
     @PreAuthorize("hasPermission(null,'hr:employee:delete')")
@@ -97,6 +100,7 @@ public class EmployeeController {
     public EmployeeQuery getQuery(EmployeeQuery employeeQuery) {
         employeeQuery.getExtra().put("positionList", positionService.findAll());
         employeeQuery.getExtra().put("statusList", EmployeeStatusEnum.getList());
+        employeeQuery.getExtra().put("areaList",officeService.findByOfficeRuleName("办事处"));
         return employeeQuery;
     }
 
