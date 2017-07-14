@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import java.time.LocalDate
 import java.util.*
 
 
@@ -47,6 +48,8 @@ interface PriceChangeRepositoryCustom{
 
     fun findNearPriceChange(): PriceChange
 
+    fun findPriceChangeInDate(date: LocalDate): MutableList<PriceChange>
+
     fun findProductTypeIdsById(id:String):MutableList<String>
 }
 
@@ -58,6 +61,19 @@ class PriceChangeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTem
         ORDER BY  t1.price_change_date DESC ,t1.upload_end_date DESC
         limit 0,1
                 """, HashMap<String, Any>(), BeanPropertyRowMapper(PriceChange::class.java))
+    }
+
+    override fun findPriceChangeInDate(date: LocalDate): MutableList<PriceChange>{
+        return namedParameterJdbcTemplate.query("""
+        SELECT
+	        t1.*
+        FROM
+	        crm_price_change t1
+        WHERE
+	        t1.enabled = 1
+        AND t1.price_change_date <= :date
+        AND t1.upload_end_date >= :date
+        """,Collections.singletonMap("date",date),BeanPropertyRowMapper(PriceChange::class.java))
     }
 
     override fun findPage(pageable: Pageable, priceChangeQuery: PriceChangeQuery): Page<PriceChangeDto> {

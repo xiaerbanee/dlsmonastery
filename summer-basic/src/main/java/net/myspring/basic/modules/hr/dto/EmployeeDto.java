@@ -32,6 +32,7 @@ public class EmployeeDto extends DataDto<Employee> {
     private String bankNumber;
     private String sex;
     private String originId;
+    private String originName;
     private String dutyCode;
     private String salerName;
     private String accountId;
@@ -267,5 +268,13 @@ public class EmployeeDto extends DataDto<Employee> {
 
     public void setSalerName(String salerName) {
         this.salerName = salerName;
+    }
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
     }
 }

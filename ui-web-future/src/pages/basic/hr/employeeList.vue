@@ -48,6 +48,7 @@
           </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="exportData()">{{$t('employeeList.export')}}</el-button>
           <el-button type="primary" @click="search()">{{$t('employeeList.sure')}}</el-button>
         </div>
       </search-dialog>
@@ -77,7 +78,7 @@
   import officeSelect from 'components/basic/office-select'
 
   export default {
-      components:{officeSelect},
+    components:{officeSelect},
     data() {
       return {
         page:{},
@@ -90,7 +91,7 @@
         formVisible: false,
         pageLoading: false,
         remoteLoading:false,
-    };
+      };
     },
     methods: {
       setSearchText() {
@@ -118,6 +119,10 @@
       },search() {
         this.formVisible = false;
         this.pageRequest();
+      },exportData(){
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href="/api/basic/hr/employee/exportData?"+qs.stringify(util.deleteExtra(this.formData));
+        }).catch(()=>{});
       },itemAdd(){
         this.$router.push({ name: 'employeeForm'})
       },itemAction:function(id,action){
@@ -125,11 +130,11 @@
           this.$router.push({ name: 'employeeForm', query: { id: id }})
         } else if(action=="delete") {
           util.confirmBeforeDelRecord(this).then(() => {
-          axios.get('/api/basic/hr/employee/delete',{params:{id:id}}).then((response) =>{
-            this.$message(response.data.message);
-            this.pageRequest();
-          });
-        }).catch(()=>{});
+            axios.get('/api/basic/hr/employee/delete',{params:{id:id}}).then((response) =>{
+              this.$message(response.data.message);
+              this.pageRequest();
+            });
+          }).catch(()=>{});
         }
       }
     },created () {

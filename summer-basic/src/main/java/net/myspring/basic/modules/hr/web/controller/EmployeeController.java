@@ -14,6 +14,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +118,11 @@ public class EmployeeController {
     public List<EmployeeDto> findAll() {
         List<EmployeeDto> employeeDtoList = employeeService.findAll();
         return employeeDtoList;
+    }
+
+    @RequestMapping(value = "exportData",method = RequestMethod.GET)
+    public ModelAndView exportData(EmployeeQuery employeeQuery) throws IOException{
+        return new ModelAndView(new ExcelView(),"simpleExcelBook",employeeService.exportData(employeeQuery));
     }
 
 }
