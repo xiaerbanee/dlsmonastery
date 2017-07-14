@@ -23,7 +23,7 @@ ribbon:
 
 security:
   oauth2:
-    client:
+    local:
       clientId: general-service
       clientSecret: general-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token

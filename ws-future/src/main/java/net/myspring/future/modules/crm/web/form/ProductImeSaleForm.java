@@ -3,7 +3,10 @@ package net.myspring.future.modules.crm.web.form;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.form.BaseForm;
 import net.myspring.future.modules.crm.domain.ProductImeSale;
+import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.text.StringUtils;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,22 @@ public class ProductImeSaleForm extends BaseForm<ProductImeSale> {
     private Integer buyerAge;
     private String buyerSex;
     private String buyerPhone;
+    private String productImeSaleDetailStr;
     private List<ProductImeSaleDetailForm> productImeSaleDetailList;
 
     public List<ProductImeSaleDetailForm> getProductImeSaleDetailList() {
+        if(CollectionUtil.isEmpty(productImeSaleDetailList)&&StringUtils.isNotBlank(productImeSaleDetailStr)){
+            this.productImeSaleDetailList= ObjectMapperUtils.readValueToBeanList(HtmlUtils.htmlUnescape(productImeSaleDetailStr),ProductImeSaleDetailForm.class);
+        }
         return productImeSaleDetailList;
+    }
+
+    public String getProductImeSaleDetailStr() {
+        return productImeSaleDetailStr;
+    }
+
+    public void setProductImeSaleDetailStr(String productImeSaleDetailStr) {
+        this.productImeSaleDetailStr = productImeSaleDetailStr;
     }
 
     public void setProductImeSaleDetailList(List<ProductImeSaleDetailForm> productImeSaleDetailList) {

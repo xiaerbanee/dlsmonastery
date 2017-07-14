@@ -180,7 +180,7 @@ public class GoodsOrderService {
             goodsOrder.setShipType(goodsOrderForm.getShipType());
             goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
             goodsOrder.setUseTicket(false);
-            goodsOrder.setStoreId(getDefaultStoreId(goodsOrderForm.getNetType(), shop));
+            goodsOrder.setStoreId(getDefaultStoreId(goodsOrder.getShipType(), goodsOrder.getNetType(), shop));
         }
         goodsOrder.setLxMallOrder(NetTypeEnum.联信.name().equals(goodsOrderForm.getNetType()) ? goodsOrderForm.getLxMallOrder() : null );
         goodsOrder.setRemarks(goodsOrderForm.getRemarks());
@@ -237,15 +237,16 @@ public class GoodsOrderService {
 
     @Transactional
     private void saveExpressOrderInfo(GoodsOrder goodsOrder, Depot shop) {
+        ExpressOrder expressOrder;
         if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
-            //如果已经存在，快递单不需要进行任何修改
-            return;
+            expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+        }else{
+            expressOrder = new ExpressOrder();
+            expressOrder.setExpressPrintQty(0);
+            expressOrder.setExtendId(goodsOrder.getId());
+            expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         }
 
-        ExpressOrder  expressOrder = new ExpressOrder();
-        expressOrder.setExpressPrintQty(0);
-        expressOrder.setExtendId(goodsOrder.getId());
-        expressOrder.setExtendType(ExpressOrderTypeEnum.手机订单.name());
         expressOrder.setContator(shop.getContator());
         expressOrder.setAddress(shop.getAddress());
         expressOrder.setMobilePhone(shop.getMobilePhone());
@@ -381,7 +382,12 @@ public class GoodsOrderService {
         expressOrderRepository.save(expressOrder);
     }
 
-    private String getDefaultStoreId(String netType, Depot shop) {
+    private String getDefaultStoreId(String shipType, String netType, Depot shop) {
+
+        if(!ShipTypeEnum.总部发货.name().equals(shipType) && !ShipTypeEnum.总部自提.name().equals(shipType) ){
+            return null;
+        }
+
         String defaultStoreId;
         if(NetTypeEnum.联信.name().equals(netType)){
             defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
@@ -428,7 +434,6 @@ public class GoodsOrderService {
             ExpressOrder expressOrder=expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
             expressOrderManager.save(ExpressOrderTypeEnum.手机订单.name(), goodsOrder.getId(), expressOrderExpressCodes,expressOrder.getExpressCompanyId());
         }
-
     }
 
     public List<GoodsOrderDetailDto> findDetailList(String id,String shopId,String netType,String shipType) {
@@ -454,13 +459,11 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && product != null && netTypeMatch(netType, product.getNetType())) {
-                if(allowOrder(product, shipType)) {
-                    GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
-                    goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
-                    goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
-                    goodsOrderDetailDtoList.add(goodsOrderDetailDto);
-                }
+            if(!goodsOrderDetailMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(netType, product) && allowOrder(product, shipType)) {
+                GoodsOrderDetailDto goodsOrderDetailDto= new GoodsOrderDetailDto();
+                goodsOrderDetailDto.setProductId(pricesystemDetail.getProductId());
+                goodsOrderDetailDto.setPrice(pricesystemDetail.getPrice());
+                goodsOrderDetailDtoList.add(goodsOrderDetailDto);
             }
         }
         //办事处已订货数
@@ -485,6 +488,10 @@ public class GoodsOrderService {
         return goodsOrderDetailDtoList;
     }
 
+    private boolean productValidForOrderOrBill(String netType, Product product) {
+        return product != null && product.getEnabled() && Boolean.TRUE.equals(product.getVisible()) && netTypeMatch(netType, product.getNetType());
+    }
+
     private boolean allowOrder(Product product, String shipType) {
         if(!Boolean.TRUE.equals(product.getVisible())){
             return false;
@@ -502,25 +509,16 @@ public class GoodsOrderService {
     public GoodsOrderDto getBill(String id) {
         GoodsOrderDto goodsOrderDto = findOne(id);
         ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrderDto.getExpressOrderId());
+        Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
 
         goodsOrderDto.setBillDate(LocalDate.now());
-        if(StringUtils.isNotBlank(expressOrder.getExpressCompanyId())){
-            goodsOrderDto.setExpressCompanyId(expressOrder.getExpressCompanyId());
-        }else{
-            String defaultExpressCompanyId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue();
-            goodsOrderDto.setExpressCompanyId(StringUtils.trimToNull(defaultExpressCompanyId));
-        }
-
-        //是否自动同步，根据门店是否包含client
-        goodsOrderDto.setSyn(false);
-        Depot shop = depotRepository.findOne(goodsOrderDto.getShopId());
-        if(StringUtils.isNotBlank(shop.getClientId()) && !ShipTypeEnum.代理发货.name().equals(goodsOrderDto.getShipType()) && !ShipTypeEnum.代理自提.name().equals(goodsOrderDto.getShipType()) ) {
-            goodsOrderDto.setSyn(true);
-        }
+        goodsOrderDto.setExpressCompanyId(getExpressCompanyIdWhenBill(expressOrder));
         goodsOrderDto.setShipType(expressOrder.getShipType());
         goodsOrderDto.setAddress(expressOrder.getAddress());
         goodsOrderDto.setContator(expressOrder.getContator());
         goodsOrderDto.setMobilePhone(expressOrder.getMobilePhone());
+        goodsOrderDto.setSyn(getDefaultSynWhenBill(goodsOrderDto.getShipType(), shop));
+
         //开单明细
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(id);
         List<GoodsOrderDetailDto> goodsOrderDetailDtoList = BeanUtil.map(goodsOrderDetailList,GoodsOrderDetailDto.class);
@@ -540,7 +538,7 @@ public class GoodsOrderService {
         productMap.putAll(productRepository.findMap(CollectionUtil.extractToList(pricesystemDetailList,"productId")));
         for(PricesystemDetail pricesystemDetail:pricesystemDetailList) {
             Product product = productMap.get(pricesystemDetail.getProductId());
-            if(product != null && Boolean.TRUE.equals(product.getVisible()) && !goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && netTypeMatch(goodsOrderDto.getNetType(), product.getNetType())) {
+            if(!goodsOrderDetailDtoMap.containsKey(pricesystemDetail.getProductId()) && productValidForOrderOrBill(goodsOrderDto.getNetType(), product)) {
                 GoodsOrderDetailDto goodsOrderDetailDto = new GoodsOrderDetailDto();
                 goodsOrderDetailDto.setProductId(product.getId());
                 goodsOrderDetailDto.setProductOutId(product.getOutId());
@@ -561,6 +559,18 @@ public class GoodsOrderService {
         goodsOrderDto.setGoodsOrderDetailDtoList(goodsOrderDetailDtoList);
 
         return goodsOrderDto;
+    }
+
+    private String getExpressCompanyIdWhenBill(ExpressOrder expressOrder) {
+        if(StringUtils.isNotBlank(expressOrder.getExpressCompanyId())){
+            return expressOrder.getExpressCompanyId();
+        }else{
+            return StringUtils.trimToNull(CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_EXPRESS_COMPANY_ID.name()).getValue());
+        }
+    }
+
+    private boolean getDefaultSynWhenBill(String shipType, Depot shop) {
+        return StringUtils.isNotBlank(shop.getClientId()) && !ShipTypeEnum.代理发货.name().equals(shipType) && !ShipTypeEnum.代理自提.name().equals(shipType);
     }
 
     private boolean netTypeMatch(String netType1, String netType2) {

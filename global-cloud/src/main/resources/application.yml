@@ -14,7 +14,7 @@ eureka:
 
 security:
   oauth2:
-    client:
+    local:
       clientId: cloud-service
       clientSecret: cloud-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token
