@@ -55,10 +55,12 @@ public class VivoService {
 
     @FactoryDataSource
     public List<VivoPlantSendimei> getPlantSendimei(String date, List<String> agentCodes) {
-        String dateStart = date;
+        if(StringUtils.isBlank(date)){
+            date= LocalDateUtils.format(LocalDate.now());
+        }
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-        System.out.println("request==="+ DbContextHolder.get().getCompanyName()+"\t"+DbContextHolder.get().getDataSourceType()+"\t"+agentCodes.toString());
-        return vivoPlantSendimeiRepository.findPlantSendimei(dateStart, dateEnd, agentCodes);
+       System.err.println("vivoPlantSendImei==="+ DbContextHolder.get().getCompanyName()+"\t"+DbContextHolder.get().getDataSourceType());
+        return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
     }
 
     @FactoryDataSource
