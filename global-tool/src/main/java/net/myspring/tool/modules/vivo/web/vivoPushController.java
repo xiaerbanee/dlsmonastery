@@ -23,15 +23,10 @@ public class vivoPushController {
         //机构数据
         vivoPushService.pushVivoZonesData();
         //客户数据
-        DbContextHolder.get().setCompanyName("JXOPPO");
         List<SCustomerDto> futureCustomerDtoList = vivoPushService.getVivoCustomersData(date);
-        DbContextHolder.get().setCompanyName("JXVIVO");
         vivoPushService.saveVivoPushSCustomers(futureCustomerDtoList,date);
         //库存汇总数据
-        DbContextHolder.get().setCompanyName("JXOPPO");
         List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = vivoPushService.getCustomerStockData(date);
-        System.err.println("DbContextHolder=="+DbContextHolder.get().getCompanyName()+"\t"+DbContextHolder.get().getDataSourceType());
-        DbContextHolder.get().setCompanyName("JXVIVO");
         Map<String,String> productColorMap = vivoPushService.getProductColorMap();
         vivoPushService.pushCustomerStockData(sPlantCustomerStockDtoList,productColorMap,date);
     }
