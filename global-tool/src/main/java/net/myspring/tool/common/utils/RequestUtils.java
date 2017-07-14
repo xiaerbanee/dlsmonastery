@@ -46,7 +46,7 @@ public class RequestUtils {
         return (List<String>) getSecurityMap().get("officeIdList");
     }
 
-    public  static Map<String, Object> getSecurityMap() {
+    private  static Map<String, Object> getSecurityMap() {
         LinkedHashMap<String,Object> principal = Maps.newLinkedHashMap();
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         if(authentication instanceof  OAuth2Authentication){
