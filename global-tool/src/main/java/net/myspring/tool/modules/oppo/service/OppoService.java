@@ -129,7 +129,7 @@ public class OppoService {
     @LocalDataSource
     @Transactional(readOnly = false)
     public void pullPlantSendImeiPpsels(Map<String,List<OppoPlantSendImeiPpsel>> oppoPlantSendImeiPpselMap) {
-        logger.info("开始发货串码");
+        logger.info("发货串码开始同步");
         List<String> imeiList=Lists.newArrayList();
         for (String agentCode : oppoPlantSendImeiPpselMap.keySet()) {
             List<OppoPlantSendImeiPpsel> oppoPlantSendImeiPpsels=oppoPlantSendImeiPpselMap.get(agentCode);
@@ -141,8 +141,10 @@ public class OppoService {
             }
         }
         List<OppoPlantSendImeiPpsel> localPlantSendImeiPpsels=Lists.newArrayList();
-        for(List<String> imeis:CollectionUtil.splitList(imeiList,1000)){
-            localPlantSendImeiPpsels.addAll(oppoPlantSendImeiPpselRepository.findByimeis(imeis));
+        if(CollectionUtil.isNotEmpty(imeiList)){
+            for(List<String> imeis:CollectionUtil.splitList(imeiList,1000)){
+                localPlantSendImeiPpsels.addAll(oppoPlantSendImeiPpselRepository.findByimeis(imeis));
+            }
         }
         List<String> localImeis=Lists.newArrayList();
         if(CollectionUtil.isNotEmpty(localPlantSendImeiPpsels)){
@@ -175,8 +177,10 @@ public class OppoService {
             List<String> productNoList = CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
             List<String> localProductNos=Lists.newArrayList();
             List<OppoPlantProductItemelectronSel> plantProductItemelectronSels=Lists.newArrayList();
-            for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
-                plantProductItemelectronSels.addAll(oppoPlantProductItemelectronSelRepository.findProductNos(productNos));
+            if(CollectionUtil.isNotEmpty(productNoList)){
+                for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
+                    plantProductItemelectronSels.addAll(oppoPlantProductItemelectronSelRepository.findProductNos(productNos));
+                }
             }
             if(CollectionUtil.isNotEmpty(plantProductItemelectronSels)){
                 localProductNos=CollectionUtil.extractToList(plantProductItemelectronSels, "productNo");

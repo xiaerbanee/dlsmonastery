@@ -95,7 +95,6 @@
           }
         },
         formSubmit(){
-          var that = this;
           this.submitDisabled = true;
           var form = this.$refs["inputForm"];
           form.validate((valid) => {
@@ -108,8 +107,8 @@
                 }
               }
               axios.post('/api/ws/future/crm/priceChangeIme/save', qs.stringify(util.deleteExtra(this.inputForm), {allowDots: true})).then((response) => {
-                  this.submitDisabled = false;
-                  if (response.data.success) {
+                this.submitDisabled = false;
+                if (response.data.success) {
                   this.$message(response.data.message);
                   Object.assign(this.$data, this.getData());
                   this.initPage();
@@ -117,7 +116,7 @@
                   this.$alert(response.data.message);
                 }
               }).catch( ()=> {
-                that.submitDisabled = false;
+                this.submitDisabled = false;
               });
             } else {
               this.submitDisabled = false;
