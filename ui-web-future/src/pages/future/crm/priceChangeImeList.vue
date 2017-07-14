@@ -3,7 +3,6 @@
     <head-tab active="priceChangeImeList"></head-tab>
     <div>
       <el-row>
-        <el-button type="primary" @click="batchPass" icon="check" v-permit="'crm:priceChangeIme:audit'">{{$t('priceChangeImeList.batchPass')}}</el-button>
         <el-button type="primary" @click="itemAdd" icon="plus" v-permit="'crm:priceChangeIme:edit'">{{$t('priceChangeImeList.add')}}</el-button>
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.filter')}}</el-button>
         <!--<el-button type="primary" icon="picture" @click="pictureAdd" v-permit="'crm:priceChangeIme:view'">{{$t('priceChangeImeList.uploadPicture')}}</el-button>-->
@@ -48,7 +47,6 @@
         </div>
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('priceChangeImeList.loading')" @sort-change="sortChange" stripe border>
-        <el-table-column type="selection" width="55" :selectable="checkSelectable"></el-table-column>
         <el-table-column  prop="ime" :label="$t('priceChangeImeList.ime')" sortable width="150"></el-table-column>
         <el-table-column prop="saleDate" :label="$t('priceChangeImeList.saleDate')" sortable></el-table-column>
         <el-table-column column-key="productId" prop="productName" :label="$t('priceChangeImeList.type')" sortable></el-table-column>
@@ -147,8 +145,6 @@
           }else{
             this.$router.push({ name: 'priceChangeImeDetail', query: { id: id ,action:action }})
           }
-      },batchPass(){
-
       },exportData(){
         util.confirmBeforeExportData(this).then(() => {
           window.location.href='/api/ws/future/crm/priceChangeIme/export?'+qs.stringify(util.deleteExtra(this.formData));
@@ -156,9 +152,6 @@
       },pictureAdd(){
         this.$router.push({ name: 'priceChangeImeImageUpload'})
       },
-      checkSelectable(row) {
-        return row.status !== '已通过'&&row.image !== null;
-      }
     },created () {
        this.pageHeight = 0.75*window.innerHeight;
       this.initPromise=axios.get('/api/ws/future/crm/priceChangeIme/getQuery').then((response) =>{
