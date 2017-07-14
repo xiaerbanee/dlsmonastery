@@ -79,7 +79,7 @@
         var validatePass = (rule, value, callback) => {
           if (value === '') {
             callback(new Error('请再次输入密码'));
-          } else if (value !== this.inputForm.password) {
+          } else if (value !== this.inputForm.password&&value!==undefined) {
             callback(new Error('两次输入密码不一致!'));
           } else {
             callback();
@@ -108,7 +108,6 @@
         var that = this;
         this.submitDisabled = true;
         var form = this.$refs["inputForm"];
-        console.log("form"+form);
         form.validate((valid) => {
           if (valid) {
             var submitData = util.deleteExtra(this.inputForm);

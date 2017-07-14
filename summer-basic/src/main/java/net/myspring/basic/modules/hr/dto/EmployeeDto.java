@@ -36,6 +36,7 @@ public class EmployeeDto extends DataDto<Employee> {
     private String dutyCode;
     private String salerName;
     private String accountId;
+    private String areaName;
 
     @CacheInput(inputKey = "accounts",inputInstance = "accountId",outputInstance = "loginName")
     private String accountName;
@@ -45,6 +46,14 @@ public class EmployeeDto extends DataDto<Employee> {
     private String leaderName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     public String getCode() {
         return code;
