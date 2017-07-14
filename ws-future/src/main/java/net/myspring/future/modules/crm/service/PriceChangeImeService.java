@@ -134,8 +134,12 @@ public class PriceChangeImeService {
             String shopName = StringUtils.toString(row.get(0)).trim();
             String ime = StringUtils.toString(row.get(1)).trim();
             String remarks = StringUtils.toString(row.get(2)).trim();
-            shopNameList.add(shopName);
-            imeList.add(ime);
+            if(StringUtils.isNotBlank(shopName)){
+                shopNameList.add(shopName);
+            }
+            if(StringUtils.isNotBlank(ime)){
+                imeList.add(ime);
+            }
             remarksList.add(remarks);
         }
         if(shopNameList == null||imeList == null){
