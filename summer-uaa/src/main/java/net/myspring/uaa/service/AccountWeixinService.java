@@ -32,6 +32,9 @@ public class AccountWeixinService {
         String loginName=accountWeixinForm.getLoginName();
         AccountDto account = accountRepository.findByLoginName(loginName);
         if ((account != null && StringUtils.validatePassword(accountWeixinForm.getPassword(), account.getPassword())) || "xcxtest".equals(accountWeixinForm.getLoginName())) {
+            if(account.getLeaveDate()!=null){
+                return new RestResponse("你绑定的账户已离职，请绑定OA登陆账户",null);
+            }
             WeixinSessionDto weixinSessionDto = weixinManager.findWeixinSessionDto(accountWeixinForm.getCode());
             List<AccountWeixinDto> accountWeixinList = accountWeixinDtoRepository.findByAccountId(account.getId());
             if (CollectionUtil.isNotEmpty(accountWeixinList)&&accountWeixinList.size()==1) {
@@ -56,6 +59,6 @@ public class AccountWeixinService {
                 return new RestResponse("账号绑定成功",null);
             }
         }
-        return new RestResponse("绑定失败，登陆名或者密码不正确", null,false);
+        return new RestResponse("绑定失败，登陆名或者密码不正确，请绑定OA登陆账户", null,false);
     }
 }
