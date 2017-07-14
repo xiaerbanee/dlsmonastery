@@ -5,7 +5,7 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="24">
           <el-col :span="6">
-            <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productId">
+            <el-form-item :label="$t('pricesystemChangeForm.product')" prop="productIds">
               <product-select v-model="inputForm.productIds" :multiple=true @input="handleChange"></product-select>
             </el-form-item>
             <el-form-item :label="$t('pricesystemChangeForm.remarks')" prop="remarks">
@@ -75,18 +75,19 @@
           formProperty:{},
           remoteLoading:false,
           inputForm:{
-            productIds:"",
-            data:[],
-            remarks:''
+              extra:{}
           },
-          rules: {}
+          rules: {
+            productIds: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
+          }
         }
       },
       formSubmit(){
+        let that = this;
         this.submitDisabled = true;
-        table.validateCells(function(valid){
+        table.validateCells((valid)=>{
           if(valid) {
-            var form = this.$refs["inputForm"];
+            let form = this.$refs["inputForm"];
             form.validate((valid) => {
               if (valid) {
                 this.inputForm.data = JSON.stringify(this.settings.data);
@@ -100,8 +101,8 @@
               }
             })
           } else {
-              this.$message.error("表格中有错误数据");
-              this.submitDisabled = false;
+            this.$message.error("表格中有错误数据");
+            this.submitDisabled = false;
           }
         });
       },handleChange(){
@@ -111,12 +112,12 @@
         }else{
           axios.get('/api/ws/future/basic/pricesystemDetail/filter',{params:{productIds:this.inputForm.productIds}}).then((response)=>{
             this.settings.data = response.data;
-           table.loadData(this.settings.data);
+            table.loadData(this.settings.data);
           });
         }
       },initPage(){
         axios.get('/api/ws/future/crm/pricesystemChange/getForm').then((response)=>{
-          this.formProperty=response.data;
+          this.inputForm=response.data;
         });
       }
     },created () {
