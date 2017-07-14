@@ -43,7 +43,6 @@ Page({
 Cookie:"JSESSIONID="+app.globalData.sessionId
       },
       success: function (res) {
-        console.log(">>>>>>>>>",res)
         if (res.data.success) {
           wx.navigateBack();
         } else if (res.data.message){
@@ -85,7 +84,6 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
           hour=hour+0.5
         }
       }
-      console.log(isNaN(hour))
       that.setData({
         'formData.hour':hour
       });
