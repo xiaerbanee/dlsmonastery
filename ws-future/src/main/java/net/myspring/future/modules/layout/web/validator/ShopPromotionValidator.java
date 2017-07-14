@@ -12,7 +12,7 @@ import org.springframework.validation.Validator;
  * Created by zhucc on 2017/7/13.
  */
 @Component
-public class shopPromotionValidator implements Validator {
+public class ShopPromotionValidator implements Validator {
 
 
     @Override
