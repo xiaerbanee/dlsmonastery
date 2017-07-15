@@ -28,8 +28,6 @@ public class DemoPhoneTypeController {
 
     @Autowired
     private DemoPhoneTypeService demoPhoneTypeService;
-    @Autowired
-    private ProductTypeService productTypeService;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<DemoPhoneTypeDto> list(Pageable pageable, DemoPhoneTypeQuery demoPhoneTypeQuery) {
