@@ -2,20 +2,25 @@ package net.myspring.util.text;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.util.time.LocalDateUtils;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
-import org.springside.modules.utils.text.EncodeUtil;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.util.List;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
+
+	public static String getSheetName(String name) {
+		if (isBlank(name)) {
+			return null;
+		} else {
+			return name.trim().replace("/", "").replace("\\", "").replace("?", "").replace("[", "").replace("]", "").replace("*", "");
+		}
+	}
 
 	public static <E> List<E> getSplitList(String str, String splitter) {
 		List<E> list = Lists.newArrayList();

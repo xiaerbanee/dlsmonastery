@@ -11,10 +11,11 @@ import net.myspring.tool.modules.vivo.domain.VivoPlantProducts;
 import net.myspring.tool.modules.vivo.domain.VivoPlantSendimei;
 import net.myspring.tool.modules.vivo.domain.VivoProducts;
 import net.myspring.tool.modules.vivo.dto.FactoryOrderDto;
+import net.myspring.tool.modules.vivo.dto.VivoPlantSendimeiDto;
 import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.collection.CollectionUtil;
+import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,19 +60,21 @@ public class VivoService {
             date= LocalDateUtils.format(LocalDate.now());
         }
         String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
-       System.err.println("vivoPlantSendImei==="+ DbContextHolder.get().getCompanyName()+"\t"+DbContextHolder.get().getDataSourceType());
         return vivoPlantSendimeiRepository.findPlantSendimei(date, dateEnd, agentCodes);
     }
 
     @FactoryDataSource
-    public List<VivoPlantElectronicsn> getPlantElectronicsn(LocalDate retailDate) {
-        LocalDate dateStart = retailDate;
-        LocalDate dateEnd = retailDate.plusDays(1);
-        return vivoRepository.plantElectronicsn(dateStart, dateEnd);
+    public List<VivoPlantElectronicsn> getPlantElectronicsn(String date) {
+        if(StringUtils.isBlank(date)){
+            date= LocalDateUtils.format(LocalDate.now());
+        }
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        return vivoPlantElectronicsnRepository.findPlantElectronicsn(date,dateEnd);
     }
 
     //获取颜色编码
     @LocalDataSource
+    @Transactional(readOnly = false)
     public void pullVivoProducts(List<VivoProducts> vivoProducts){
         if(CollectionUtil.isNotEmpty(vivoProducts)) {
             for(VivoProducts vivoProduct:vivoProducts){
@@ -91,6 +94,8 @@ public class VivoService {
         }
     }
     //获取物料编码
+    @LocalDataSource
+    @Transactional(readOnly = false)
     public void pullPlantProducts( List<VivoPlantProducts> vivoPlantProducts){
         if(CollectionUtil.isNotEmpty(vivoPlantProducts)) {
             for(VivoPlantProducts plantProduct:vivoPlantProducts){
@@ -98,7 +103,6 @@ public class VivoService {
             }
             List<String> itemNumbers =CollectionUtil.extractToList(vivoPlantProducts, "itemNumber");
             List<String> localItemNumbers = CollectionUtil.extractToList(vivoPlantProductsRepository.findItemNumbers(itemNumbers),"itemNumber");
-            System.err.println("localItemNumbers=="+localItemNumbers.toString());
             List<VivoPlantProducts> list= Lists.newArrayList();
             for(VivoPlantProducts plantProduct : vivoPlantProducts){
                 if(!localItemNumbers.contains(plantProduct.getItemNumber().trim())){
@@ -114,28 +118,31 @@ public class VivoService {
 
     //查询发货串码
     @LocalDataSource
-    public String pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
+    @Transactional(readOnly = false)
+    public void pullPlantSendimeis(List<VivoPlantSendimei> vivoPlantSendimeis){
         if(CollectionUtil.isNotEmpty(vivoPlantSendimeis)){
             List<String> imeiList = Lists.newArrayList();
-            Map<String,List<VivoPlantSendimei>> agentCodeMap= Maps.newHashMap();
+            Map<String,List<VivoPlantSendimei>> vivoPlantSendimeiMap= Maps.newHashMap();
             for(VivoPlantSendimei vivoPlantSendimei:vivoPlantSendimeis){
-                if(!agentCodeMap.containsKey(vivoPlantSendimei.getCompanyId())){
+                if(!vivoPlantSendimeiMap.containsKey(vivoPlantSendimei.getCompanyId())){
                     List<VivoPlantSendimei> plantSendimeis=Lists.newArrayList();
-                    agentCodeMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
+                    vivoPlantSendimeiMap.put(vivoPlantSendimei.getCompanyId(),plantSendimeis);
                 }
                 imeiList.add(vivoPlantSendimei.getImei());
-                agentCodeMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
+                vivoPlantSendimeiMap.get(vivoPlantSendimei.getCompanyId()).add(vivoPlantSendimei);
             }
             List<String> localImeiList=Lists.newArrayList();
-            for(List<String>imes:CollectionUtil.splitList(imeiList,1000)){
-                List<VivoPlantSendimei> plantSendimeis=vivoPlantSendimeiRepository.findImeis(imes);
-                if(CollectionUtil.isNotEmpty(plantSendimeis)){
-                    localImeiList.addAll(CollectionUtil.extractToList(plantSendimeis,"imei"));
+            if(CollectionUtil.isNotEmpty(imeiList)){
+                for(List<String>imes:CollectionUtil.splitList(imeiList,1000)){
+                    List<VivoPlantSendimei> plantSendimeis=vivoPlantSendimeiRepository.findImeis(imes);
+                    if(CollectionUtil.isNotEmpty(plantSendimeis)){
+                        localImeiList.addAll(CollectionUtil.extractToList(plantSendimeis,"imei"));
+                    }
                 }
             }
             List<VivoPlantSendimei> pullPlantSendimeis=Lists.newArrayList();
-            for(String agentCode:agentCodeMap.keySet()){
-                List<VivoPlantSendimei>  plantSendimeis=agentCodeMap.get(agentCode);
+            for(String agentCode:vivoPlantSendimeiMap.keySet()){
+                List<VivoPlantSendimei>  plantSendimeis=vivoPlantSendimeiMap.get(agentCode);
                 for(VivoPlantSendimei plantSendimei:plantSendimeis){
                     plantSendimei.setCompanyId(agentCode);
                     if(!localImeiList.contains(plantSendimei.getImei())){
@@ -144,61 +151,57 @@ public class VivoService {
                 }
             }
             if(CollectionUtil.isNotEmpty(pullPlantSendimeis)){
-                for(List<VivoPlantSendimei> sendimeis:CollectionUtil.splitList(pullPlantSendimeis,100)){
-                    vivoPlantSendimeiRepository.save(sendimeis);
-                }
+                vivoPlantSendimeiRepository.batchSave(pullPlantSendimeis);
             }
         }
-
-
-
-        Map<String,VivoPlantSendimei> map = CollectionUtil.extractToMap(vivoPlantSendimeis,"imei");
-        Set<String> imeis=map.keySet();
-//        for(List<String> imeiList:Lists.partition(new ArrayList<String>(imeis),1500)){
-//            Set<String> localImeis = vivoPlantSendimeiRepository.findImeis(imeiList);
-//            for(String imei:imeiList){
-//                if(!localImeis.contains(imei)){
-//                    list.add(map.get(imei));
-//                }
-//            }
-//        }
-//        if(CollectionUtil.isNotEmpty(list)){
-//            for(List<VivoPlantSendimei> vivoPlantSendimeisList :Lists.partition(list,1500)) {
-//                vivoPlantSendimeiRepository.save(vivoPlantSendimeisList);
-//            }
-//        }
-        return "发货串码同步成功，共同步条数据";
     }
 
 
     //查询电子保卡
     @LocalDataSource
-    public String pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
-        List<VivoPlantElectronicsn> list = Lists.newArrayList();
-//        if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {
-//            List<String> snImeis = CollectionUtil.extractToList(vivoPlantElectronicsns, "snImei");
-//            List<String> localsnImeis  = vivoPlantElectronicsnRepository.findSnImeis(snImeis);
-//            for(VivoPlantElectronicsn item : vivoPlantElectronicsns){
-//                if( ! localsnImeis.contains(item.getSnImei())){
-//                    list.add(item);
-//                }
-//            }
-////            if(CollectionUtil.isNotEmpty(list)) {
-////                vivoPlantElectronicsnRepository.save(list);
-////            }
-//        }
-        return "电子保卡同步成功,共同步"+list.size()+"条数据";
+    public void pullPlantElectronicsns(List<VivoPlantElectronicsn> vivoPlantElectronicsns) {
+        if(CollectionUtil.isNotEmpty(vivoPlantElectronicsns)) {
+            List<String> snImeis = CollectionUtil.extractToList(vivoPlantElectronicsns, "snImei");
+            List<String> localImeiList=Lists.newArrayList();
+            if(CollectionUtil.isNotEmpty(snImeis)){
+                for(List<String> imeis:CollectionUtil.splitList(snImeis,1000)){
+                    List<VivoPlantElectronicsn> plantElectronicsns  = vivoPlantElectronicsnRepository.findSnImeis(imeis);
+                    if(CollectionUtil.isNotEmpty(plantElectronicsns)){
+                        localImeiList.addAll(CollectionUtil.extractToList(plantElectronicsns,"snImei"));
+                    }
+                }
+            }
+            List<VivoPlantElectronicsn> list = Lists.newArrayList();
+            for(VivoPlantElectronicsn item : vivoPlantElectronicsns){
+                if( ! localImeiList.contains(item.getSnImei())){
+                    list.add(item);
+                }
+            }
+            if(CollectionUtil.isNotEmpty(list)) {
+                vivoPlantElectronicsnRepository.save(list);
+            }
+        }
     }
 
-    public  List<VivoPlantSendimei>  synIme(String date) {
-//        LocalDate nowDate= LocalDateUtils.parse(date);
-//        LocalDate dateStart = nowDate.minusDays(1);
-//        LocalDate dateEnd = nowDate.plusDays(1);
-//        List<String>  mainCodes=Lists.newArrayList();
-//        mainCodes.add("M13E00");
-//        List<VivoPlantSendimei> vivoPlantSendimeis = vivoPlantSendimeiRepository.findSynList(dateStart, dateEnd, mainCodes);
-        return null;
+    @LocalDataSource
+    public  List<VivoPlantSendimeiDto>  synIme(String date,String agentCode) {
+        String dateStart =date;
+        String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
+        List<VivoPlantSendimeiDto> vivoPlantSendimeiDtos = vivoPlantSendimeiRepository.findSynList(dateStart, dateEnd, mainCodes);
+        return vivoPlantSendimeiDtos;
     }
+
+
+    @LocalDataSource
+    public  List<VivoPlantElectronicsn>  synVivoPlantElectronicsnl(String date, String agentCode) {
+        String dateStart =date;
+        String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
+        List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
+        List<VivoPlantElectronicsn> plantElectronicsns = vivoPlantElectronicsnRepository.findSynList(dateStart, dateEnd, mainCodes);
+        return plantElectronicsns;
+    }
+
 
     @Transactional(readOnly = true)
     public FactoryOrderDto factoryOrder(FactoryOrderDto factoryOrderDto){
