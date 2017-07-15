@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient
 @EnableFeignClients
 @EnableScheduling
-public class SummerTaskApplication {
+public class GlobalTaskApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SummerTaskApplication.class, args);
+		SpringApplication.run(GlobalTaskApplication.class, args);
 	}
 }
