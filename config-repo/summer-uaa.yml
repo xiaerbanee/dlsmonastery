@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: prod
   session:
     store-type: redis
     timeout: 5
