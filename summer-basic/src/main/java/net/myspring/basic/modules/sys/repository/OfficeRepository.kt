@@ -4,6 +4,7 @@ import com.google.common.collect.Maps
 import net.myspring.basic.common.repository.BaseRepository
 import net.myspring.basic.modules.sys.domain.Office
 import net.myspring.basic.modules.sys.dto.DictMapDto
+import net.myspring.basic.modules.sys.dto.OfficeChildDto
 import net.myspring.basic.modules.sys.dto.OfficeDto
 import net.myspring.basic.modules.sys.web.query.OfficeQuery
 import net.myspring.util.collection.CollectionUtil
@@ -114,6 +115,8 @@ interface OfficeRepositoryCustom {
     fun findByAreaIds(areaIds: MutableList<String>): MutableList<Office>
 
     fun findPage(pageable: Pageable, officeQuery: OfficeQuery): Page<OfficeDto>?
+
+    fun findAllChildCount(): MutableList<OfficeChildDto>
 }
 
 class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): OfficeRepositoryCustom {
@@ -249,6 +252,22 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
             paramMap.put("parentId" + index ,"%$value%");
         }
         return namedParameterJdbcTemplate.query(sb.toString(),paramMap, BeanPropertyRowMapper(Office::class.java));
+    }
+
+    override fun findAllChildCount():MutableList<OfficeChildDto> {
+        return namedParameterJdbcTemplate.query("""
+            select
+                of.*,
+                count(*) as childCount
+            from
+                hr_office of,
+                hr_office of1
+            where
+                of1.parent_ids like concat('%,', of.id, ',%')
+            group by
+                of.id
+            order by of.id asc
+        """,BeanPropertyRowMapper(OfficeChildDto::class.java));
     }
 
 }

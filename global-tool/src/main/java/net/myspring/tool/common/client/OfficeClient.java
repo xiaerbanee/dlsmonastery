@@ -16,6 +16,6 @@ import java.util.Map;
 @FeignClient("summer-basic")
 public interface OfficeClient {
 
-    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findAll")
+    @RequestMapping(method = RequestMethod.GET,value = "/sys/office/findAllChildCount")
     List<OfficeEntity> findAll();
 }
