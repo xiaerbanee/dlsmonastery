@@ -48,7 +48,9 @@ const getAuthorityList = function () {
 const getLatestGoodsOrderBillDate = function () {
   return window.localStorage.getItem("latestGoodsOrderBillDate");
 }
-
+const getLatestShipStatus = function(){
+  return window.localStorage.getItem('getLatestShipStatus')
+}
 export default {
   state: {
     tabs: getTabs(),
@@ -57,6 +59,7 @@ export default {
     account:getAccount(),
     authorityList:getAuthorityList(),
     latestGoodsOrderBillDate:getLatestGoodsOrderBillDate(),
+    latestShipStatus:getLatestShipStatus(),
   },getters: {
     getQuery: (state, routerName) => {
       var query = {};
@@ -95,6 +98,10 @@ export default {
     setAccount(state,account) {
       localStorage.setItem('account', JSON.stringify(account))
       state.account = account;
+    },
+    setLatestShipStatus(state,latestShipStatus){
+      localStorage.setItem('latestShipStatus', latestShipStatus)
+      state.latestShipStatus = latestShipStatus;
     }
   },
   actions: {
@@ -127,12 +134,16 @@ export default {
     },
     setAccount({ commit, state }, account) {
       commit('setAccount', account);
+    },
+    setLatestShipStatus({ commit, state }, latestShipStatus) {
+      commit('setLatestShipStatus', latestShipStatus);
     },clearGlobal({ commit, state }) {
       commit('setTabs', new Map());
       commit('setMenus', []);
       commit('setAccount', {});
       commit('setAuthorityList', []);
       commit('setLatestGoodsOrderBillDate', null);
+      commit('setLatestShipStatus', null);
     }
   }
 }

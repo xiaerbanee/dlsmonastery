@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.Express
 import net.myspring.future.modules.crm.dto.ExpressDto
 import net.myspring.future.modules.crm.web.query.ExpressQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -104,6 +105,12 @@ class ExpressRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplat
         }
         if(StringUtils.isNotBlank(expressrQuery.expressOrderFromDepotId)){
             sb.append("""   and ord.from_depot_id = :expressOrderFromDepotId   """)
+        }
+        if (CollectionUtil.isNotEmpty(expressrQuery.officeIdList)) {
+            sb.append("""  and toDepot.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(expressrQuery.depotIdList)) {
+            sb.append("""  and toDepot.id in (:depotIdList)  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

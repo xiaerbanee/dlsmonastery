@@ -58,6 +58,12 @@ class DepotDetailRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         if (depotDetailQuery.isSame!=null) {
             sb.append("""  and t1.is_same=:isSame """)
         }
+        if (CollectionUtil.isNotEmpty(depotDetailQuery.officeIdList)) {
+            sb.append("""  and t3.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(depotDetailQuery.depotIdList)) {
+            sb.append("""  and t3.id in (:depotIdList)  """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
         val countSql = MySQLDialect.getInstance().getCountSql(sb.toString())
         val paramMap = BeanPropertySqlParameterSource(depotDetailQuery)

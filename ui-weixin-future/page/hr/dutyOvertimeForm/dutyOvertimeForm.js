@@ -46,7 +46,7 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({"response.error":res.data.message})
+          that.setData({ "response.error": res.data.message, disabled: false})
           that.setData({ 'response.data': res.data.extra.errors, disabled: false });
         }
       }
@@ -79,7 +79,6 @@ Cookie:"JSESSIONID="+app.globalData.sessionId
         hour=0;
       }else{
         hour = parseInt((timeEndLong - timeStartLong) / 60)
-        console.log(hour)
         if ((timeEndLong - timeStartLong)%60>=30){
           hour=hour+0.5
         }

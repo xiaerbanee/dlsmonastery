@@ -9,7 +9,7 @@
         <el-button type="primary" @click="itemCollect" icon="document" v-permit="'crm:demoPhone:view'">{{$t('demoPhoneList.collect')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('demoPhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('demoPhoneList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
@@ -34,6 +34,7 @@
       </search-dialog>
       <el-table :data="page.content" :height="pageHeight" style="margin-top:5px;" v-loading="pageLoading" :element-loading-text="$t('demoPhoneList.loading')" @sort-change="sortChange" stripe border>
         <el-table-column fixed prop="ime" :label="$t('demoPhoneList.ime')" sortable></el-table-column>
+        <el-table-column prop="areaName" :label="$t('demoPhoneList.areaName')"></el-table-column>
         <el-table-column column-key="shopId" prop="shopName" :label="$t('demoPhoneList.shopName')" sortable></el-table-column>
         <el-table-column column-key="demoPhoneTypeId" prop="demoPhoneType" :label="$t('demoPhoneList.demoPhoneType')" sortable></el-table-column>
         <el-table-column column-key="employeeId" prop="employeeName" :label="$t('demoPhoneList.employeeName')" sortable></el-table-column>

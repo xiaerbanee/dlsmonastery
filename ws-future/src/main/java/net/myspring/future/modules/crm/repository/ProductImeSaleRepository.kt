@@ -5,6 +5,7 @@ import net.myspring.future.modules.crm.domain.ProductImeSale
 import net.myspring.future.modules.crm.dto.ProductImeForSaleDto
 import net.myspring.future.modules.crm.dto.ProductImeSaleDto
 import net.myspring.future.modules.crm.web.query.ProductImeSaleQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -172,7 +173,12 @@ class ProductImeSaleRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if (StringUtils.isNotBlank(productImeSaleQuery.employeeId )) {
             sb.append("""  and t1.employee_id = :employeeId  """)
         }
-
+        if (CollectionUtil.isNotEmpty(productImeSaleQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeSaleQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList)  """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(productImeSaleQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ProductImeSaleDto::class.java))

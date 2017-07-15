@@ -107,15 +107,15 @@ public class EmployeeService {
     public SimpleExcelBook exportData(EmployeeQuery employeeQuery){
         Workbook workbook = new SXSSFWorkbook(10000);
         List<EmployeeDto> employeeDtoList = employeeRepository.findFilter(employeeQuery);
+        cacheUtils.initCacheInput(employeeDtoList);
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"accountName","登陆名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"name","姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"status","状态"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"code","工号"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","办事处"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"areaName","办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"officeName","部门"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"positionName","岗位"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","报表名称"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"salary","底薪"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"leaderName","上级"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"education","学历"));
@@ -128,10 +128,8 @@ public class EmployeeService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"idcard","身份证号"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"school","学校"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"major","专业"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"originName","籍贯"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"bankName","开户行"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"bankNumber","银行卡号"));
-        simpleExcelColumnList.add(new SimpleExcelColumn(workbook,"","所属门店"));
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("导出数据",employeeDtoList,simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);

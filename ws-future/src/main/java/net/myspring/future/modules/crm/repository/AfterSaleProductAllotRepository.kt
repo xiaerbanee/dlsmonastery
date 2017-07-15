@@ -77,6 +77,12 @@ class AfterSaleProductAllotRepositoryImpl @Autowired constructor(val namedParame
         if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.fromOutCodeList)) {
             sb.append(" AND t1.from_out_code in (:fromOutCodeList) ")
         }
+        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.officeIdList)) {
+            sb.append("""  and t3.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(afterSaleProductAllotQuery.depotIdList)) {
+            sb.append("""  and t3.id in (:depotIdList)  """)
+        }
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

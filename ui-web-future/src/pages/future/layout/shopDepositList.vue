@@ -9,7 +9,7 @@
         <el-button type="primary" @click="exportLatest"  v-permit="'crm:shopDeposit:view'">{{$t('shopDepositList.exportLatest')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('shopDepositList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">

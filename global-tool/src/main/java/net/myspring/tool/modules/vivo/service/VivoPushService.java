@@ -12,13 +12,15 @@ import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
 import net.myspring.tool.common.domain.OfficeEntity;
 import net.myspring.tool.common.utils.CacheUtils;
-import net.myspring.tool.modules.vivo.domain.SZonesM13e00;
-import net.myspring.tool.modules.vivo.domain.SCustomersM13e00;
+import net.myspring.tool.modules.vivo.domain.*;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
-import net.myspring.tool.modules.vivo.repository.SCustomersM13e00Repository;
-import net.myspring.tool.modules.vivo.repository.SZonesM13e00Repository;
+import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
+import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
+import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.text.StringUtils;
+import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,22 @@ public class VivoPushService {
     @Autowired
     private SCustomersM13e00Repository sCustomersM13e00Repository;
     @Autowired
+    private SPlantCustomerStockRepository sPlantCustomerStockRepository;
+    @Autowired
+    private SPlantCustomerStockDetailRepository sPlantCustomerStockDetailRepository;
+    @Autowired
+    private VivoPlantProductsRepository vivoPlantProductsRepository;
+    @Autowired
+    private SPlantStockStoresM13e00Repository sPlantStockStoresM13e00Repository;
+    @Autowired
+    private SPlantStockSupplyM13e00Repository sPlantStockSupplyM13e00Repository;
+    @Autowired
+    private SPlantStockDealerM13e00Repository sPlantStockDealerM13e00Repository;
+    @Autowired
+    private SProductItemStocksM13e00Repository sProductItemStocksM13e00Repository;
+    @Autowired
+    private SProductItem000M13e00Repository sProductItem000M13e00Repository;
+    @Autowired
     private CacheUtils cacheUtils;
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -56,10 +74,12 @@ public class VivoPushService {
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
             sZonesM13e00.setZoneid(getZoneId(mainCode,officeEntity.getId()));
-            sZonesM13e00.setZonename(officeEntity.getName());
-            if(sZonesM13e00.getZonename().toString().length()>10){
-                logger.info(sZonesM13e00.getZonename());
-                sZonesM13e00.setZonename("测试");
+            //setZoneName 报数据超过数据库字段zoneName设置的长度的错误，正在与工厂联系，尚未回复。
+            //sZonesM13e00.setZonename(officeEntity.getName());
+            if (officeEntity.getName().toString().length() > 10){
+                sZonesM13e00.setZonename("数据长度超出范围");
+            }else {
+                sZonesM13e00.setZonename(officeEntity.getName());
             }
             sZonesM13e00.setShortcut(mainCode);
             String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
@@ -119,6 +139,171 @@ public class VivoPushService {
 //        sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }
+
+    @FutureDataSource
+    public List<SPlantCustomerStockDto> getCustomerStockData(String date){
+        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
+        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
+        List<SPlantCustomerStockDto> sPlantCustomerStockDtoList = sPlantCustomerStockRepository.findCustomerStockData(dateStart,dateEnd);
+        return sPlantCustomerStockDtoList;
+    }
+
+    @FactoryDataSource
+    @Transactional
+    public void pushCustomerStockData(List<SPlantCustomerStockDto> sPlantCustomerStockDtoList,Map<String,String> productColorMap,String date){
+
+        String dateStart = LocalDateUtils.format(LocalDateUtils.parse(date));
+        String dateEnd = LocalDateUtils.format(LocalDateUtils.parse(dateStart));
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+
+        List<SPlantStockStoresM13e00> sPlantStockStoresM13e00List = Lists.newArrayList();
+        List<SPlantStockSupplyM13e00> sPlantStockSupplyM13e00List = Lists.newArrayList();
+        List<SPlantStockDealerM13e00> sPlantStockDealerM13e00List = Lists.newArrayList();
+
+        for (SPlantCustomerStockDto sPlantCustomerStockDto : sPlantCustomerStockDtoList) {
+            int customerLevel = sPlantCustomerStockDto.getCustomerLevel();
+            String colorId = productColorMap.get(sPlantCustomerStockDto.getProductId());
+            if (StringUtils.isBlank(colorId)){
+                continue;
+            }
+            if (customerLevel == 1) {
+                SPlantStockStoresM13e00 sPlantStockStoresM13e00 = new SPlantStockStoresM13e00();
+                sPlantStockStoresM13e00.setCompanyid(mainCode);
+                sPlantStockStoresM13e00.setStoreid(mainCode+"K0000");
+                sPlantStockStoresM13e00.setProductid(colorId);
+                sPlantStockStoresM13e00.setSumstock(0);
+                sPlantStockStoresM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockStoresM13e00.setBad(0);
+                sPlantStockStoresM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockStoresM13e00.setAccountdate(dateStart);
+                sPlantStockStoresM13e00List.add(sPlantStockStoresM13e00);
+            }
+            if (customerLevel == 2) {
+                String supplyId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"D","00000");
+                SPlantStockSupplyM13e00 sPlantStockSupplyM13e00 = new SPlantStockSupplyM13e00();
+                sPlantStockSupplyM13e00.setCompanyid(mainCode);
+                sPlantStockSupplyM13e00.setSupplyid(supplyId);
+                sPlantStockSupplyM13e00.setProductid(colorId);
+                sPlantStockSupplyM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockSupplyM13e00.setSumstock(0);
+                sPlantStockSupplyM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockSupplyM13e00.setBad(0);
+                sPlantStockSupplyM13e00.setAccountdate(dateStart);
+                sPlantStockSupplyM13e00List.add(sPlantStockSupplyM13e00);
+            }
+            if (customerLevel == 3) {
+                String dealerId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"C","00000");
+                SPlantStockDealerM13e00 sPlantStockDealerM13e00 = new SPlantStockDealerM13e00();
+                sPlantStockDealerM13e00.setCompanyid(mainCode);
+                sPlantStockDealerM13e00.setDealerid(dealerId);
+                sPlantStockDealerM13e00.setProductid(colorId);
+                sPlantStockDealerM13e00.setSumstock(0);
+                sPlantStockDealerM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockDealerM13e00.setBad(0);
+                sPlantStockDealerM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockDealerM13e00.setAccountdate(dateStart);
+                sPlantStockDealerM13e00List.add(sPlantStockDealerM13e00);
+            }
+        }
+
+        logger.info("开始上抛一代库库存数据"+LocalDateTime.now());
+        sPlantStockStoresM13e00Repository.deleteByAccountDate(dateStart,dateEnd);
+        sPlantStockStoresM13e00Repository.batchSave(sPlantStockStoresM13e00List);
+        logger.info("上抛一代库库存数据成功"+LocalDateTime.now());
+
+        logger.info("开始上抛二代库库存数据"+LocalDateTime.now());
+        sPlantStockSupplyM13e00Repository.deleteByAccountDate(dateStart,dateEnd);
+        sPlantStockSupplyM13e00Repository.batchSave(sPlantStockSupplyM13e00List);
+        logger.info("上抛二代库库存数据成功"+LocalDateTime.now());
+
+        logger.info("开始上抛经销商库存数据"+LocalDateTime.now());
+        sPlantStockDealerM13e00Repository.deleteByAccountDate(dateStart,dateEnd);
+        sPlantStockDealerM13e00Repository.batchSave(sPlantStockDealerM13e00List);
+        logger.info("上抛经销商库存数据成功"+LocalDateTime.now());
+    }
+
+    @FutureDataSource
+    public List<SPlantCustomerStockDetailDto> getCustomerStockDetailData(String date){
+        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
+        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
+        List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList = sPlantCustomerStockDetailRepository.findCustomerStockDetailData(dateStart,dateEnd);
+        return sPlantCustomerStockDetailDtoList;
+    }
+
+    @FactoryDataSource
+    @Transactional
+    public void pushCustomerStockDetailData(List<SPlantCustomerStockDetailDto> sPlantCustomerStockDetailDtoList,Map<String,String> productColorMap,String date){
+
+        LocalDate dateStart = LocalDateUtils.parse(date).minusYears(1);
+        LocalDate dateEnd = LocalDateUtils.parse(date).plusDays(1);
+        String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
+
+        List<SProductItemStocksM13e00> sProductItemStocksM13e00List = Lists.newArrayList();
+        List<SProductItem000M13e00> sProductItem000M13e00List = Lists.newArrayList();
+
+        for (SPlantCustomerStockDetailDto sPlantCustomerStockDetailDto : sPlantCustomerStockDetailDtoList){
+            int customerLevel = sPlantCustomerStockDetailDto.getCustomerLevel();
+            String colorId = productColorMap.get(sPlantCustomerStockDetailDto.getProductId());
+            if(StringUtils.isBlank(colorId)){
+                continue;
+            }
+            String productNo = sPlantCustomerStockDetailDto.getIme();
+            if (customerLevel == 1){
+                SProductItemStocksM13e00 sProductItemStocksM13e00 = new SProductItemStocksM13e00();
+                sProductItemStocksM13e00.setCompanyId(mainCode);
+                sProductItemStocksM13e00.setProductId(colorId);
+                sProductItemStocksM13e00.setProductNo(productNo);
+                sProductItemStocksM13e00.setStoreId(mainCode+"K0000");
+                sProductItemStocksM13e00.setStatus("在渠道中");
+                sProductItemStocksM13e00.setStatusInfo(mainCode+"K0000");
+                sProductItemStocksM13e00.setUpdateTime(date);
+                sProductItemStocksM13e00List.add(sProductItemStocksM13e00);
+            } else {
+                SProductItem000M13e00 sProductItem000M13e00 = new SProductItem000M13e00();
+                sProductItem000M13e00.setCompanyId(mainCode);
+                sProductItem000M13e00.setProductId(colorId);
+                sProductItem000M13e00.setProductNo(productNo);
+                sProductItem000M13e00.setStoreId(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getStoreId(),mainCode+"D","00000"));
+                if(customerLevel == 2){
+                    sProductItem000M13e00.setStatusInfo(sProductItem000M13e00.getStoreId());
+                } else {
+                    sProductItem000M13e00.setStatusInfo(StringUtils.getFormatId(sPlantCustomerStockDetailDto.getCustomerId(),mainCode+"C","00000"));
+                }
+                sProductItem000M13e00.setStatus("在渠道中");
+                sProductItem000M13e00.setUpdateTime(date);
+                sProductItem000M13e00List.add(sProductItem000M13e00);
+            }
+        }
+
+        logger.info("开始同步库存串码明细数据:"+LocalDateTime.now());
+        sProductItemStocksM13e00Repository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
+        sProductItemStocksM13e00Repository.batchSave(sProductItemStocksM13e00List);
+        sProductItem000M13e00Repository.deleteByUpdateTime(date,LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1)));
+        sProductItem000M13e00Repository.batchSave(sProductItem000M13e00List);
+        logger.info("同步库存串码明细数据完成:"+LocalDateTime.now());
+    }
+
+    @LocalDataSource
+    public Map<String,String> getProductColorMap(){
+        System.err.println("CompanyName:"+DbContextHolder.get().getCompanyName()+"DataSourceType:"+DbContextHolder.get().getDataSourceType());
+        List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
+        Map<String, String> productColorMap = Maps.newHashMap();
+
+        for (VivoPlantProducts vivoPlantProduct : vivoPlantProductList){
+            String colorId = vivoPlantProduct.getColorId();
+            String productId = vivoPlantProduct.getProductId();
+            String lxProductId = vivoPlantProduct.getLxProductId();
+            if (StringUtils.isNotBlank(colorId) && StringUtils.isNotBlank(productId)){
+                productColorMap.put(productId,colorId);
+            }
+            if (StringUtils.isNotBlank(colorId) && StringUtils.isNotBlank(lxProductId)){
+                productColorMap.put(lxProductId,colorId);
+            }
+        }
+
+        return productColorMap;
+    }
+
 
 
     //上抛组织机构数据

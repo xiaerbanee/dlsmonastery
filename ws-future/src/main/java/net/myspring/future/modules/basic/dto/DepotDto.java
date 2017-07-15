@@ -32,7 +32,7 @@ public class DepotDto extends DataDto<Depot> {
     @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "name")
     private String areaName;
     private String officeId;
-    @CacheInput(inputKey = "offices",inputInstance = "officeId",outputInstance = "jointType")
+    @CacheInput(inputKey = "offices",inputInstance = "areaId",outputInstance = "jointType")
     private String jointType;
     private String clientId;
     @CacheInput(inputKey = "clients",inputInstance = "clientId",outputInstance = "name")

@@ -8,8 +8,10 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.StkMisDeliveryManager;
 import net.myspring.future.modules.basic.manager.StkTransferDirectManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -71,8 +73,11 @@ public class AfterSaleService {
     private StkMisDeliveryManager stkMisDeliveryManager;
     @Autowired
     private RedisIdManager redisIdManager;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<AfterSaleDto> findPage(Pageable pageable, AfterSaleQuery afterSaleQuery){
+        afterSaleQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<AfterSaleDto> afterSaleDtoPage=afterSaleRepository.findPage(pageable,afterSaleQuery);
         cacheUtils.initCacheInput(afterSaleDtoPage.getContent());
         return afterSaleDtoPage;

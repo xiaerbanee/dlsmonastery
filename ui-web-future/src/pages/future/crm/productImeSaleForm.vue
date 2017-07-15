@@ -159,6 +159,7 @@
                     editable : each.editable,
                     fromChain : each.fromChain,
                     saleShopId : null,
+                    accessChainDepotList:each.accessChainDepotList
                   });
               }
             }

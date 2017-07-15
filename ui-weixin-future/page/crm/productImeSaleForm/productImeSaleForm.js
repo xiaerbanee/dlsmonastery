@@ -3,12 +3,13 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    productImeSearchResult: {},
+    productImeSearchResult: [],
     formData: { imeStr: '' },
     formProperty: {},
     response: {},
     shops: [],
-    submitDisabled: false
+    submitDisabled: false,
+    saleShopId: null,
   },
   onLoad: function (option) {
     var that = this;
@@ -67,6 +68,7 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
+          console.log(res.data)
           that.setData({ shops: res.data[0].accessChainDepotList })
           that.setData({ productImeSearchResult: res.data });
         }
@@ -77,28 +79,45 @@ Page({
     var that = this;
     that.setData({
       'formData.id': that.data.shops[e.detail.value].id,
-      'formData.name': that.data.shops[e.detail.value].name
+      'formData.name': that.data.shops[e.detail.value].name,
+      saleShopId: that.data.shops[e.detail.value].id
     })
   },
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-    wx.request({
-      url: $util.getUrl("ws/future/crm/productImeSale/sale"),
-      data: e.detail.value,
-      header: {
-        Cookie: "JSESSIONID=" + app.globalData.sessionId
-      },
-      success: function (res) {
-        if (res.data.success) {
-          that.setData({ "response.data": res.data });
-          wx.navigateBack();
-        } else {
-          that.setData({ "response.error": res.data.message })
-          that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
-        }
+    if (that.data.productImeSearchResult.length!=0){
+      console.log(that.data.productImeSearchResult)
+
+      var productImeSaleDetailList = new Array();
+      if (that.data.saleShopId) {
+        productImeSaleDetailList.push({ saleShopId: that.data.saleShopId, productImeId: that.data.productImeSearchResult[0].id });
+      } else {
+        productImeSaleDetailList.push({ saleShopId: null, productImeId: that.data.productImeSearchResult[0].id });
       }
-    })
+      e.detail.value.productImeSaleDetailStr = JSON.stringify(productImeSaleDetailList);
+      wx.request({
+        url: $util.getUrl("ws/future/crm/productImeSale/sale"),
+        data: e.detail.value,
+        header: {
+          Cookie: "JSESSIONID=" + app.globalData.sessionId,
+        },
+        success: function (res) {
+          if (res.data.success) {
+            that.setData({ "response.data": res.data });
+            wx.navigateBack();
+          } else if (res.data.message) {
+            that.setData({ "response.error": res.data.message })
+            that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
+          } else {
+            that.setData({ "response.error": res.data });
+          }
+          that.setData({ submitDisabled: false });
+        }
+      })
+    }else{
+      that.setData({ submitDisabled: false });
+    }
   },
   showError: function (e) {
     var that = this;

@@ -15,7 +15,7 @@ eureka:
 
 security:
   oauth2:
-    client:
+    local:
       clientId: tool-service
       clientSecret: tool-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token
