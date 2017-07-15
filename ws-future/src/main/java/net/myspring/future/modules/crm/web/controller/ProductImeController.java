@@ -236,7 +236,7 @@ public class ProductImeController {
         return result;
     }
 
-    @RequestMapping(value="batchExport", method = RequestMethod.GET)
+    @RequestMapping(value="batchExport")
     public ModelAndView batchExport(String allImeStr) throws IOException {
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);
         SimpleExcelBook simpleExcelBook = productImeService.export(productImeService.batchQuery(allImeList));

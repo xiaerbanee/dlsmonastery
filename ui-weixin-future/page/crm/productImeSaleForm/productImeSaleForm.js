@@ -3,13 +3,13 @@ var app = getApp();
 var $util = require("../../../util/util.js");
 Page({
   data: {
-    productImeSearchResult: {},
+    productImeSearchResult: [],
     formData: { imeStr: '' },
     formProperty: {},
     response: {},
     shops: [],
     submitDisabled: false,
-    saleShopId:null,
+    saleShopId: null,
   },
   onLoad: function (option) {
     var that = this;
@@ -68,6 +68,7 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
+          console.log(res.data)
           that.setData({ shops: res.data[0].accessChainDepotList })
           that.setData({ productImeSearchResult: res.data });
         }
@@ -85,11 +86,12 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
-    console.log(that.data.productImeSearchResult)
-    if (that.data.productImeSearchResult){
+    if (that.data.productImeSearchResult.length!=0){
+      console.log(that.data.productImeSearchResult)
+
       var productImeSaleDetailList = new Array();
-      if (that.saleShopId) {
-        productImeSaleDetailList.push({ saleShopId: that.data.shops[e.detail.value].id, productImeId: that.data.productImeSearchResult[0].id });
+      if (that.data.saleShopId) {
+        productImeSaleDetailList.push({ saleShopId: that.data.saleShopId, productImeId: that.data.productImeSearchResult[0].id });
       } else {
         productImeSaleDetailList.push({ saleShopId: null, productImeId: that.data.productImeSearchResult[0].id });
       }
@@ -101,7 +103,6 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId,
         },
         success: function (res) {
-          console.log(res)
           if (res.data.success) {
             that.setData({ "response.data": res.data });
             wx.navigateBack();

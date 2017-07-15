@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -71,7 +72,7 @@ public class PricesystemChangeService {
     @Transactional
     public void save(PricesystemChangeForm pricesystemChangeForm){
         if(pricesystemChangeForm.getProductIds().size() == 0){
-            return;
+            throw new ServiceException("未找到任何调价货品,调价失败");
         }
         Map<String,Product> productMap = CollectionUtil.extractToMap(productRepository.findAll(pricesystemChangeForm.getProductIds()),"name");
         String json = HtmlUtils.htmlUnescape(pricesystemChangeForm.getData());
@@ -80,32 +81,34 @@ public class PricesystemChangeService {
         List<PricesystemChange> pricesystemChanges = Lists.newArrayList();
         for(List<Object> rows:data){
             if(rows.size()-pricesystems.size() != 1){
-                return;
+                throw new ServiceException("调价列与价格体系列长度不一致,调价失败");
             }
-            for(int i = 1;i<rows.size();i++){
-                String newPriceStr = StringUtils.toString(rows.get(i)).trim();
-                BigDecimal newPrice =  BigDecimal.ZERO;
-                if(StringUtils.isNotBlank(newPriceStr)) {
-                    newPrice = new BigDecimal(newPriceStr);
-                }
-                Product product  =productMap.get(rows.get(0));
-                if(product == null){
-                    return;
-                }
-                PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(pricesystems.get(i-1).getId(),product.getId());
-                BigDecimal oldPrice = BigDecimal.ZERO;
-                if(pricesystemDetail !=null&&pricesystemDetail.getPrice()!=null){
-                    oldPrice = pricesystemDetail.getPrice();
-                }
-                if(newPrice.compareTo(oldPrice) !=0){
-                    PricesystemChange pricesystemChange = new PricesystemChange();
-                    pricesystemChange.setProductId(product.getId());
-                    pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
-                    pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
-                    pricesystemChange.setNewPrice(newPrice);
-                    pricesystemChange.setOldPrice(oldPrice);
-                    pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
-                    pricesystemChanges.add(pricesystemChange);
+            if(CollectionUtil.isNotEmpty(rows)&&rows.get(0)!=null&&StringUtils.isNotEmpty((String)rows.get(0))){
+                for(int i = 1;i<rows.size();i++){
+                    String newPriceStr = StringUtils.toString(rows.get(i)).trim();
+                    BigDecimal newPrice =  BigDecimal.ZERO;
+                    if(StringUtils.isNotBlank(newPriceStr)) {
+                        newPrice = new BigDecimal(newPriceStr);
+                    }
+                    Product product  =productMap.get(rows.get(0));
+                    if(product == null){
+                        throw new ServiceException("未找到该货品");
+                    }
+                    PricesystemDetail pricesystemDetail = pricesystemDetailRepository.findByPricesystemIdAndProductId(pricesystems.get(i-1).getId(),product.getId());
+                    BigDecimal oldPrice = BigDecimal.ZERO;
+                    if(pricesystemDetail !=null&&pricesystemDetail.getPrice()!=null){
+                        oldPrice = pricesystemDetail.getPrice();
+                    }
+                    if(newPrice.compareTo(oldPrice) !=0){
+                        PricesystemChange pricesystemChange = new PricesystemChange();
+                        pricesystemChange.setProductId(product.getId());
+                        pricesystemChange.setPricesystemId(pricesystems.get(i-1).getId());
+                        pricesystemChange.setStatus(AuditStatusEnum.申请中.name());
+                        pricesystemChange.setNewPrice(newPrice);
+                        pricesystemChange.setOldPrice(oldPrice);
+                        pricesystemChange.setRemarks(pricesystemChangeForm.getRemarks());
+                        pricesystemChanges.add(pricesystemChange);
+                    }
                 }
             }
         }

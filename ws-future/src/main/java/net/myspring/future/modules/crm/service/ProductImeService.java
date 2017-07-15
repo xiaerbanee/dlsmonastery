@@ -74,6 +74,7 @@ public class ProductImeService {
 
     //分页，但不查询总数
     public Page<ProductImeDto> findPage(Pageable pageable, ProductImeQuery productImeQuery) {
+        productImeQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ProductImeDto> page = productImeRepository.findPage(pageable, productImeQuery);
 
         cacheUtils.initCacheInput(page.getContent());

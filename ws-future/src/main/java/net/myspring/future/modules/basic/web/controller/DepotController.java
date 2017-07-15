@@ -122,7 +122,7 @@ public class DepotController {
 
     @RequestMapping(value = "findDepotAccountList")
     public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery) {
-        return depotService.findDepotAccountList(pageable, depotAccountQuery);
+        return depotService.findDepotAccountList(pageable, depotAccountQuery,false);
     }
 
     @RequestMapping(value = "findDepotAccountDetailList")

@@ -34,6 +34,16 @@ public class EmployeeForm extends BaseForm<Employee> {
     private String salerName;
     private String accountId;
     private String code;
+    private AccountForm accountForm;
+
+    public AccountForm getAccountForm() {
+        return accountForm;
+    }
+
+    public void setAccountForm(AccountForm accountForm) {
+        this.accountForm = accountForm;
+    }
+
     public String getCode() {
         return code;
     }

@@ -2,6 +2,7 @@ package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.future.common.enums.OutTypeEnum;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
@@ -41,6 +42,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +72,8 @@ public class DepotShopService {
     private TownClient townClient;
     @Autowired
     private ShopDepositRepository shopDepositRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Page<DepotShopDto> findPage(Pageable pageable, DepotShopQuery depotShopQuery) {
         depotShopQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
@@ -146,6 +150,9 @@ public class DepotShopService {
     public Depot saveDepot(DepotForm depotForm) {
         Depot depot;
         depotForm.setNamePinyin(StringUtils.getFirstSpell(depotForm.getName()));
+        if(StringUtils.isNotBlank(depotForm.getOfficeId())){
+            depotForm.setAreaId(OfficeUtil.findOne(redisTemplate,depotForm.getOfficeId()).getAreaId());
+        }
         if (depotForm.isCreate()) {
             depot = BeanUtil.map(depotForm, Depot.class);
             depotManager.save(depot);

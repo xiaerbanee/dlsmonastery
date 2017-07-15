@@ -21,6 +21,7 @@ public class OfficeDto extends DataDto{
     private String parentIds;
     private boolean locked;
     private boolean enabled;
+    private String areaId;
     private String officeRuleId;
     @CacheInput(inputKey = "officeRules",inputInstance = "officeRuleId",outputInstance = "name")
     private String officeRuleName;
@@ -35,6 +36,14 @@ public class OfficeDto extends DataDto{
     private boolean allDataScope;
     private List<String> businessIdList=Lists.newArrayList();
     private List<String> leaderIdList= Lists.newArrayList();
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public boolean getAllDataScope() {
         return allDataScope;

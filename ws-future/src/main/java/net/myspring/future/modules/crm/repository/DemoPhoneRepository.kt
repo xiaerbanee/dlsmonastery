@@ -9,6 +9,7 @@ import net.myspring.future.modules.crm.dto.ExpressOrderDto
 import net.myspring.future.modules.crm.dto.PriceChangeDto
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
@@ -71,17 +72,19 @@ class DemoPhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
     override fun findPage(pageable: Pageable, demoPhoneQuery: DemoPhoneQuery): Page<DemoPhoneDto> {
         val sb = StringBuilder("""
             SELECT
-                t2.ime 'ime',
+                product.ime ime,
+                depot.name shopName,
+                depot.area_id areaId,
                 t1.*
             FROM
-                crm_demo_phone t1,
-                crm_product_ime t2
+                crm_demo_phone t1
+                LEFT JOIN crm_product_ime product ON t1.product_ime_id = product.id
+                LEFT JOIN crm_depot depot ON t1.shop_id = depot.id
             WHERE
-                t1.product_ime_id = t2.id
-            AND t1.enabled = 1
+                t1.enabled = 1
         """)
         if (StringUtils.isNotEmpty(demoPhoneQuery.ime)) {
-            sb.append(""" and t2.ime like CONCAT('%', :ime,'%') """)
+            sb.append(""" and product.ime like CONCAT('%', :ime,'%') """)
         }
         if (StringUtils.isNotEmpty(demoPhoneQuery.shopId)) {
             sb.append("""  and t1.shop_id = :shopId """)
@@ -94,6 +97,12 @@ class DemoPhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         if (demoPhoneQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd """)
+        }
+        if (CollectionUtil.isNotEmpty(demoPhoneQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(demoPhoneQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList)  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

@@ -3,6 +3,8 @@ package net.myspring.future.modules.crm.service;
 import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.DemoPhone;
 import net.myspring.future.modules.crm.dto.DemoPhoneDto;
 import net.myspring.future.modules.crm.repository.DemoPhoneRepository;
@@ -36,9 +38,10 @@ public class DemoPhoneService {
 
     @Autowired
     private DemoPhoneRepository demoPhoneRepository;
-
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public DemoPhoneDto findOne(DemoPhoneDto demoPhoneDto) {
         if(!demoPhoneDto.isCreate()){
@@ -51,6 +54,7 @@ public class DemoPhoneService {
 
 
     public Page<DemoPhoneDto> findPage(Pageable pageable, DemoPhoneQuery demoPhoneQuery) {
+        demoPhoneQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<DemoPhoneDto> page = demoPhoneRepository.findPage(pageable, demoPhoneQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
@@ -78,6 +82,7 @@ public class DemoPhoneService {
 
         List<SimpleExcelColumn> simpleExcelColumnList = Lists.newArrayList();
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "createdDate", "申请日期"));
+        simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "areaName", "办事处"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "shopName", "门店"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "employeeName", "使用人姓名"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "demoPhoneType", "演示机型"));

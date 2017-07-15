@@ -2,7 +2,9 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.dto.DepotShopDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.web.query.DepotShopQuery;
 import net.myspring.future.modules.crm.dto.AfterSaleProductAllotDto;
 import net.myspring.future.modules.crm.dto.AfterSaleStoreAllotDto;
@@ -36,8 +38,11 @@ public class AfterSaleStoreAllotService {
     private CacheUtils cacheUtils;
     @Autowired
     private AfterSaleStoreAllotRepository afterSaleStoreAllotRepository;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<AfterSaleStoreAllotDto> findPage(Pageable pageable, AfterSaleStoreAllotQuery afterSaleStoreAllotQuery){
+        afterSaleStoreAllotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<AfterSaleStoreAllotDto> afterSaleStoreAllotDtoPage=afterSaleStoreAllotRepository.findPage(pageable,afterSaleStoreAllotQuery);
         cacheUtils.initCacheInput(afterSaleStoreAllotDtoPage.getContent());
         return afterSaleStoreAllotDtoPage;

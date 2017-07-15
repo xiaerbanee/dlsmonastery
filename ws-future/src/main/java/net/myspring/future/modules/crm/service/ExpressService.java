@@ -8,7 +8,9 @@ import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ExpressOrderTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.Express;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
@@ -55,9 +57,12 @@ public class ExpressService {
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private DepotManager depotManager;
 
 
     public Page<ExpressDto> findPage(Pageable pageable, ExpressQuery expressQuery) {
+        expressQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ExpressDto> page = expressRepository.findPage(pageable, expressQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

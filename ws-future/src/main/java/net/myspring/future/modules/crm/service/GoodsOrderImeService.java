@@ -40,9 +40,7 @@ public class GoodsOrderImeService {
     private CacheUtils cacheUtils;
 
     public Page<GoodsOrderImeDto> findPage(Pageable pageable, GoodsOrderImeQuery goodsOrderImeQuery) {
-
         goodsOrderImeQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
-
         Page<GoodsOrderImeDto> page = goodsOrderImeRepository.findPage(pageable, goodsOrderImeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

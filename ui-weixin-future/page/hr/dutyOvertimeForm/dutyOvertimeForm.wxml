@@ -8,7 +8,7 @@
           <view class="weui-label">加班日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="dutyDate" value="{{formData.dutyDate}}" bindchange="bindDutyDate">
+          <picker mode="date" name="dutyDate" value="{{formData.dutyDate?formData.dutyDate:''}}" bindchange="bindDutyDate">
             <view class="weui-input">{{formData.dutyDate}}</view>
           </picker>
         </view>

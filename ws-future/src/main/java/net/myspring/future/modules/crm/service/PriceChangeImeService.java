@@ -4,17 +4,20 @@ import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.common.enums.PriceChangeStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
+import net.myspring.future.modules.basic.dto.ProductDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.crm.domain.*;
-import net.myspring.future.modules.crm.dto.ProductImeDto;
-import net.myspring.future.modules.crm.repository.*;
+import net.myspring.future.modules.crm.domain.PriceChange;
+import net.myspring.future.modules.crm.domain.PriceChangeIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
+import net.myspring.future.modules.crm.dto.ProductImeDto;
+import net.myspring.future.modules.crm.repository.PriceChangeImeRepository;
+import net.myspring.future.modules.crm.repository.PriceChangeRepository;
+import net.myspring.future.modules.crm.repository.ProductImeRepository;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeUploadForm;
 import net.myspring.future.modules.crm.web.query.PriceChangeImeQuery;
@@ -38,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +96,7 @@ public class PriceChangeImeService {
 
     @Transactional
     public void delete(String id){
-        priceChangeImeRepository.logicDelete(id);
+        priceChangeImeRepository.delete(id);
     }
 
     @Transactional
@@ -117,6 +121,22 @@ public class PriceChangeImeService {
             priceChangeIme.setAuditBy(RequestUtils.getAccountId());
             priceChangeImeRepository.save(priceChangeIme);
         }
+    }
+
+    @Transactional
+    public void batchAudit(String[] ids){
+        if(ids ==null){
+            throw new ServiceException("未选中任何记录");
+        }
+        List<String> idList = Arrays.asList(ids);
+        List<PriceChangeIme> pricechangeimes = priceChangeImeRepository.findAll(idList);
+        for(PriceChangeIme priceChangeIme:pricechangeimes){
+            priceChangeIme.setStatus(AuditStatusEnum.已通过.name());
+            priceChangeIme.setAuditRemarks("批量审核通过");
+            priceChangeIme.setAuditDate(LocalDateTime.now());
+            priceChangeIme.setAuditBy(RequestUtils.getAccountId());
+        }
+        priceChangeImeRepository.save(pricechangeimes);
     }
 
     @Transactional
@@ -173,6 +193,7 @@ public class PriceChangeImeService {
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
+            Map<String,ProductImeDto> productDtoMap = CollectionUtil.extractToMap(productImeDtos,"ime");
             List<String> needSaveProductTypeIds = CollectionUtil.extractToList(productImeDtos,"productTypeId");
             List<String> needSaveProductImeIds = CollectionUtil.extractToList(productImeDtos,"id");
             if(productImeDtos == null){
@@ -183,7 +204,7 @@ public class PriceChangeImeService {
                     throw new ServiceException("输入的串码中含有不是调价项目中的产品型号,保存失败");
                 }
             }
-            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId);
             List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
             for(String productImeId:needSaveProductImeIds){
                 if(existProductImeIds.contains(productImeId)){
@@ -194,10 +215,10 @@ public class PriceChangeImeService {
             for(Integer i = 0;i<imeList.size();i++){
                 PriceChangeIme priceChangeIme = new PriceChangeIme();
                 priceChangeIme.setPriceChangeId(priceChangeId);
-                priceChangeIme.setProductImeId(productImeDtos.get(i).getId());
+                priceChangeIme.setProductImeId(productDtoMap.get(imeList.get(i)).getId());
                 priceChangeIme.setShopId(depotMap.get(shopNameList.get(i)).getId());
-                priceChangeIme.setSaleDate(productImeDtos.get(i).getProductImeSaleCreatedDate());
-                priceChangeIme.setUploadDate(productImeDtos.get(i).getProductImeUploadCreatedDate());
+                priceChangeIme.setSaleDate(productDtoMap.get(imeList.get(i)).getProductImeSaleCreatedDate());
+                priceChangeIme.setUploadDate(productDtoMap.get(imeList.get(i)).getProductImeUploadCreatedDate());
                 priceChangeIme.setStatus(AuditStatusEnum.申请中.name());
                 priceChangeIme.setRemarks(remarksList.get(i));
                 priceChangeIme.setIsCheck(false);

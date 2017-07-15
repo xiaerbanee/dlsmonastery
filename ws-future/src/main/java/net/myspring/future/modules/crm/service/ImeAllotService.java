@@ -55,6 +55,7 @@ public class ImeAllotService {
     private ProductImeRepository productImeRepository;
 
     public Page<ImeAllotDto> findPage(Pageable pageable, ImeAllotQuery imeAllotQuery) {
+        imeAllotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ImeAllotDto> page = imeAllotRepository.findPage(pageable,imeAllotQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

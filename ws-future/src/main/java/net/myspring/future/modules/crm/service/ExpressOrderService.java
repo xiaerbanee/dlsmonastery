@@ -5,6 +5,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.domain.ExpressOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.dto.ExpressOrderDto;
@@ -37,13 +38,14 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class ExpressOrderService {
 
-
     @Autowired
     private ExpressOrderRepository expressOrderRepository;
     @Autowired
     private GoodsOrderRepository goodsOrderRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public ExpressOrderDto findDto(String id){
         ExpressOrderDto expressOrderDto = expressOrderRepository.findDto(id);
@@ -52,6 +54,7 @@ public class ExpressOrderService {
     }
 
     public Page<ExpressOrderDto> findPage(Pageable pageable, ExpressOrderQuery expressOrderQuery) {
+        expressOrderQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ExpressOrderDto> page = expressOrderRepository.findPage(pageable, expressOrderQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

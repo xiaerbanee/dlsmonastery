@@ -67,7 +67,9 @@ interface EmployeeRepository : BaseRepository<Employee,String>,EmployeeRepositor
 }
 interface EmployeeRepositoryCustom{
     fun findByNameLike(name: String):MutableList<EmployeeDto>
+
     fun findFilter(employeeQuery: EmployeeQuery):MutableList<EmployeeDto>
+
     fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto>
 }
 class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTemplate, val namedParameterJdbcTemplate: NamedParameterJdbcTemplate): EmployeeRepositoryCustom{
@@ -88,11 +90,13 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
 
     override fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto> {
         var sb = StringBuilder("""
-            SELECT employee.*,account.office_id,account.position_id,account.leader_id
+            SELECT employee.*,account.office_id,account.position_id,account.leader_id,area.name as areaName
             FROM hr_employee employee,
             hr_account account,
-            sys_office office
+            sys_office office,
+            sys_office area
             where  employee.account_id=account.id
+            and  office.area_Id=area.id
             and account.office_id=office.id
             and employee.enabled=1
         """);
@@ -134,6 +138,12 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
             sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.areaId)) {
+            sb.append(" AND area.id=:areaId");
+        }
+        if(employeeQuery.leaveDateMonth!=null) {
+            sb.append(" AND ((employee.entry_date<=:leaveDateMonthEnd  and employee.leave_date is null) or employee.leave_date >=:leaveDateMonthStart)");
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
@@ -144,15 +154,15 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
 
     override fun findFilter(employeeQuery: EmployeeQuery): MutableList<EmployeeDto> {
         var sb = StringBuilder("""
-            SELECT employee.*,account.office_id,account.position_id,account.leader_id,CONCAT(district.province,district.city,district.county) as originName
+            SELECT employee.*,account.office_id,account.position_id,account.leader_id,area.name as areaName
             FROM hr_employee employee,
             hr_account account,
             sys_office office,
-            sys_district district
+            sys_office area
             where  employee.account_id=account.id
+            and  office.area_Id=area.id
             and account.office_id=office.id
             and employee.enabled=1
-            and employee.origin_id = district.id
         """);
         if(StringUtils.isNotBlank(employeeQuery.name)) {
             sb.append(" and employee.name like CONCAT('%',:name,'%')");
@@ -193,7 +203,12 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
             sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
         }
-
+        if(employeeQuery.leaveDateMonth!=null) {
+            sb.append(" AND ((employee.entry_date<=:leaveDateMonthEnd  and employee.leave_date is null) or employee.leave_date >=:leaveDateMonthStart)");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.areaId)) {
+            sb.append(" AND area.id=:areaId");
+        }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(employeeQuery),BeanPropertyRowMapper(EmployeeDto::class.java))
     }
 

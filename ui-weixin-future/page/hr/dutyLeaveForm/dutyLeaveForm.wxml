@@ -8,7 +8,7 @@
           <view class="weui-label">开始日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart}}" data-name="dutyDateStart" bindchange="bindDateChange">
+          <picker mode="date" name="dutyDateStart" value="{{formData.dutyDateStart?formData.dutyDateStart:''}}" data-name="dutyDateStart" bindchange="bindDateChange">
             <view class="weui-input">{{formData.dutyDateStart}}</view>
           </picker>
         </view>
@@ -21,7 +21,7 @@
           <view class="weui-label">结束日期</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd}}" data-name="dutyDateEnd" bindchange="bindDateChange">
+          <picker mode="date" name="dutyDateEnd" value="{{formData.dutyDateEnd?formData.dutyDateEnd:''}}" data-name="dutyDateEnd" bindchange="bindDateChange">
             <view class="weui-input">{{formData.dutyDateEnd}}</view>
           </picker>
         </view>
@@ -34,7 +34,7 @@
           <view class="weui-label">时间类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType}}" data-name="dateType" bindchange="bindTypeChange" disabled="{{leaveDisabled}}">
+          <picker name="dateType" range="{{formProperty.dateList}}" value="{{formData.dateType?formData.dateType:''}}" data-name="dateType" bindchange="bindTypeChange" disabled="{{leaveDisabled}}">
             <view class="weui-input">{{formData.dateType}}</view>
           </picker>
         </view>
@@ -47,7 +47,7 @@
           <view class="weui-label">请假类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="leaveType" range="{{formProperty.leaveList}}" value="{{formData.leaveType}}" data-name="leaveType" bindchange="bindTypeChange">
+          <picker name="leaveType" range="{{formProperty.leaveList}}" value="{{formData.leaveType?formData.leaveType:''}}" data-name="leaveType" bindchange="bindTypeChange">
             <view class="weui-input">{{formData.leaveType}}</view>
           </picker>
         </view>

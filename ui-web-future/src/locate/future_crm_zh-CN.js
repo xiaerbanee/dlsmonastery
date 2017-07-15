@@ -352,6 +352,7 @@ export default {
     demoPhoneList: "演示用机",
     ime: "串码",
     shopName: "门店",
+    areaName:"办事处",
     demoPhoneType: "演示机类型",
     employeeName: "申请人",
     status: "状态",
@@ -698,6 +699,7 @@ export default {
     exportData: "导出",
     goodsOrderImeList: "串码",
     more: "更多",
+    carrierOrderCodes: "商城单号",
   },
   goodsOrderImeList: {
     goodsOrderImeList: "货品订货串码列表",
@@ -1242,6 +1244,7 @@ export default {
     inputLegalValue: "请输入合法的数值",
   },
   priceChangeImeList: {
+    batchPass:"批量审核",
     priceChangeImeList: "调价串码",
     ime: "串码",
     saleDate: "销售日期",

@@ -53,7 +53,11 @@
         <el-table-column prop="fromStoreName" column-key="fromStoreId"  :label="$t('storeAllotList.fromStore')" sortable ></el-table-column>
         <el-table-column prop="toStoreName" column-key="toStoreId" :label="$t('storeAllotList.toStore')" sortable ></el-table-column>
         <el-table-column prop="outCode" :label="$t('storeAllotList.outCode')" sortable></el-table-column>
-        <el-table-column prop="status" :label="$t('storeAllotList.status')" sortable></el-table-column>
+        <el-table-column prop="status" :label="$t('storeAllotList.status')" sortable>
+          <template scope="scope">
+            <el-tag :type="scope.row.status==='已完成' ? 'primary' : 'danger'">{{scope.row.status}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="createdByName" column-key="createdBy"  :label="$t('storeAllotList.createdBy')" sortable></el-table-column>
         <el-table-column prop="createdDate" :label="$t('storeAllotList.createdDate')"  sortable></el-table-column>
         <el-table-column prop="lastModifiedByName" column-key="lastModifiedBy" :label="$t('storeAllotList.lastModifiedBy')"  sortable></el-table-column>

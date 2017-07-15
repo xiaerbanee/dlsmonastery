@@ -13,7 +13,7 @@
               <view class="weui-label">调休类型</view>
             </view>
             <view class="weui-cell__bd">
-              <picker name="type" range="{{formProperty.extra.restList}}" value="{{formData.restType}}" data-name="restType" bindchange="bindRestType">
+              <picker name="type" range="{{formProperty.extra.restList}}" value="{{formData.restType?formData.restType:''}}" data-name="restType" bindchange="bindRestType">
                 <view class="weui-input">{{formData.restType}}</view>
               </picker>
             </view>
@@ -26,7 +26,7 @@
               <view class="weui-label">调休日期</view>
             </view>
             <view class="weui-cell__bd">
-              <picker mode="date" name="dutyDate" value="{{formData.dutyDate}}" data-name="dutyDate" bindchange="bindChange">
+              <picker mode="date" name="dutyDate" value="{{formData.dutyDate?formData.dutyDate:''}}" data-name="dutyDate" bindchange="bindChange">
                 <view class="weui-input">{{formData.dutyDate}}</view>
               </picker>
             </view>
@@ -41,7 +41,7 @@
                 <view class="weui-label ">开始时间</view>
               </view>
               <view class="weui-cell__bd">
-                <picker mode="time" name="timeStart" value="{{formData.timeStart}}" data-name="timeStart" bindchange="bindChange">
+                <picker mode="time" name="timeStart" value="{{formData.timeStart?formData.timeStart:''}}" data-name="timeStart" bindchange="bindChange">
                   <view class="weui-input">{{formData.timeStart}}</view>
                 </picker>
               </view>
@@ -54,7 +54,7 @@
                 <view class="weui-label">结束时间</view>
               </view>
               <view class="weui-cell__bd">
-                <picker mode="time" name="timeEnd" value="{{formData.timeEnd}}" data-name="timeEnd" bindchange="bindChange">
+                <picker mode="time" name="timeEnd" value="{{formData.timeEnd?formData.timeEnd:''}}" data-name="timeEnd" bindchange="bindChange">
                   <view class="weui-input">{{formData.timeEnd}}</view>
                 </picker>
               </view>
@@ -70,7 +70,7 @@
                 <view class="weui-label">时间类型</view>
               </view>
               <view class="weui-cell__bd">
-                <picker name="dateType" range="{{formProperty.extra.dateList}}" value="{{formData.dateType}}" data-name="dateType" bindchange="bindRestType">
+                <picker name="dateType" range="{{formProperty.extra.dateList}}" value="{{formData.dateType?formData.dateType:''}}" data-name="dateType" bindchange="bindRestType">
                   <view class="weui-input">{{formData.dateType}}</view>
                 </picker>
               </view>

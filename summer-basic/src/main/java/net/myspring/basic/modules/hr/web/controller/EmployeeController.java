@@ -3,13 +3,16 @@ package net.myspring.basic.modules.hr.web.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.myspring.basic.common.enums.EmployeeStatusEnum;
+import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.basic.modules.hr.dto.EmployeeDto;
 import net.myspring.basic.modules.hr.service.AccountService;
 import net.myspring.basic.modules.hr.service.EmployeeService;
 import net.myspring.basic.modules.hr.service.PositionService;
+import net.myspring.basic.modules.hr.web.form.AccountForm;
 import net.myspring.basic.modules.hr.web.form.EmployeeForm;
 import net.myspring.basic.modules.hr.web.query.EmployeeQuery;
 import net.myspring.basic.modules.sys.service.DictEnumService;
+import net.myspring.basic.modules.sys.service.OfficeService;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.DictEnumCategoryEnum;
 import net.myspring.common.response.ResponseCodeEnum;
@@ -41,6 +44,8 @@ public class EmployeeController {
     private DictEnumService dictEnumService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private OfficeService officeService;
 
     @RequestMapping(value = "delete")
     @PreAuthorize("hasPermission(null,'hr:employee:delete')")
@@ -54,7 +59,10 @@ public class EmployeeController {
     @PreAuthorize("hasPermission(null,'hr:employee:edit')")
     public RestResponse save(EmployeeForm employeeForm) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
-        restResponse.getExtra().put("employeeId", employeeService.save(employeeForm).getId());
+        Employee employee=employeeService.save(employeeForm);
+        AccountForm accountForm=employeeForm.getAccountForm();
+        accountForm.setEmployeeId(employee.getId());
+        accountService.save(accountForm);
         return restResponse;
     }
 
@@ -97,6 +105,7 @@ public class EmployeeController {
     public EmployeeQuery getQuery(EmployeeQuery employeeQuery) {
         employeeQuery.getExtra().put("positionList", positionService.findAll());
         employeeQuery.getExtra().put("statusList", EmployeeStatusEnum.getList());
+        employeeQuery.getExtra().put("areaList",officeService.findByOfficeRuleName("办事处"));
         return employeeQuery;
     }
 

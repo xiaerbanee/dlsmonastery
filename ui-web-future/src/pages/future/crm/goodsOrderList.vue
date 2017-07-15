@@ -119,6 +119,7 @@
         <el-table-column prop="storeName" :label="$t('goodsOrderList.store')" ></el-table-column>
         <el-table-column prop="remarks" :label="$t('goodsOrderList.remarks')" ></el-table-column>
         <el-table-column prop="expressOrderExpressCodes" :label="$t('goodsOrderList.expressCodes')" ></el-table-column>
+        <el-table-column prop="carrierOrderCodes" :label="$t('goodsOrderList.carrierOrderCodes')" ></el-table-column>
         <el-table-column prop="pullStatus" :label="$t('goodsOrderList.pullStatus')" ></el-table-column>
         <el-table-column :label="$t('goodsOrderList.operate')" width="160">
           <template scope="scope">

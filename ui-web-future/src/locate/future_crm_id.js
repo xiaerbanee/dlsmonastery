@@ -389,6 +389,7 @@ export default {
     demoPhoneList: "demo mesin",
     ime: "string kode",
     shopName: "nama toko",
+    areaName:"办事处",
     demoPhoneType: "demo mesin",
     employeeName: "nama karyawan",
     status: "status",
@@ -918,7 +919,7 @@ export default {
     goodsOrderImeList: "串码",
     batchAdd: "批量订货",
     more: "更多",
-
+    carrierOrderCodes: "商城单号",
   },
   goodsOrderImeList: {
     goodsOrderImeList: "货品订货串码列表",
@@ -1295,6 +1296,7 @@ export default {
     inputLegalValue: "silahkan masukkan angka yang valid"
   },
   priceChangeImeList: {
+    batchPass:"批量审核",
     priceChangeImeList: "alokasi string kode",
     ime: "string kdoe",
     saleDate: "tanggal",

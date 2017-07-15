@@ -21,12 +21,32 @@ util.pickerDateOption = {
       picker.$emit('pick', [start, end]);
     }
   }, {
+    text: '本周',
+    onClick(picker) {
+      const now = new Date();
+      const end = new Date();
+      const start=new Date(now.getFullYear(), now.getMonth(), now.getDate()+1-   now.getDay());
+      end.getDay();
+      picker.$emit('pick', [start, end]);
+    }
+  }, {
+    text: '本月',
+    onClick(picker) {
+      const now=new Date();
+      const day  = new Date(now.getFullYear(),now.getMonth()+1,0);
+      const start = new Date();
+      const end = new Date();
+      start.setDate(1);
+      end.setDate(day.getDate());
+      picker.$emit('pick', [start, end]);
+    }
+  }, {
     text: '最近一周',
     onClick(picker) {
       const end = new Date();
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
-      end.setTime(end.getTime() );
+      end.setTime(end.getTime());
       picker.$emit('pick', [start, end]);
     }
   }, {
@@ -35,7 +55,7 @@ util.pickerDateOption = {
       const end = new Date();
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
-      end.setTime(end.getTime() );
+      end.setTime(end.getTime());
       picker.$emit('pick', [start, end]);
     }
   }]
