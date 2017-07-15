@@ -13,7 +13,7 @@
         <view class="weui-cell__bd">
           <textarea name="imeStr" class="weui-textarea" value="{{formData.imeStr}}" style="min-height:220rpx" bindblur="imeStrChange" auto-height/>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.imeStr}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.imeStr}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>
@@ -22,13 +22,13 @@
           <view class="weui-label">调拨后</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="toDepotId" value="{{formData.shop.id}}" bindtap="bindToDepot" disabled>
-            <view class="weui-input">{{formData.shop.name}}
+          <picker name="toDepotId" value="{{formData.shopId}}" bindtap="bindToDepot" disabled>
+            <view class="weui-input">{{formData.shopName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>
           </picker>
         </view>
-        <view class="weui-cell__ft" wx:if="{{response.data.errors.toDepotId}}">
+        <view class="weui-cell__ft" wx:if="{{response.data.toDepotId}}">
           <icon type="warn" class="warn"></icon>
         </view>
       </view>

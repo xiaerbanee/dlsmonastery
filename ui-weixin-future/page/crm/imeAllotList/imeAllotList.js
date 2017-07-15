@@ -3,7 +3,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     page: {},
-    formData: { },
+    formData: {},
     formProperty:{},
     response:{},
     searchHidden: true,
@@ -12,12 +12,13 @@ Page({
   onLoad: function (options) {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/imeAllot/getQuery"),
+      url: $util.getUrl("ws/future/crm/imeAllot/getQuery"),
       data: {},
       method: 'GET',
       header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        that.setData({'formProperty.crossAreaList':res.data.crossArea,'formProperty.statusList':res.data.status})
+        console.log(res.data)
+        that.setData({formData:res.data,formProperty:res.data.extra})
       }
     })
   },
@@ -39,10 +40,11 @@ Page({
       duration: 10000,
       success: function () {
         wx.request({
-          url: $util.getUrl("crm/imeAllot"),
+          url: $util.getUrl("ws/future/crm/imeAllot"),
           header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
-          data: that.data.formData,
+          data:$util.deleteExtra(that.data.formData),
           success: function (res) {
+            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
