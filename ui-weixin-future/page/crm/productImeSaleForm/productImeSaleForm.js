@@ -68,6 +68,7 @@ Page({
           Cookie: "JSESSIONID=" + app.globalData.sessionId
         },
         success: function (res) {
+          console.log(res.data)
           that.setData({ shops: res.data[0].accessChainDepotList })
           that.setData({ productImeSearchResult: res.data });
         }
