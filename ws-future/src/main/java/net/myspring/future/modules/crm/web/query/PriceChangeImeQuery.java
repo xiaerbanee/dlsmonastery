@@ -16,8 +16,17 @@ public class PriceChangeImeQuery extends BaseQuery {
     private String officeId;
     private String priceChangeName;
     private String productId;
+    private String createdBy;
 
     private List<String> statusList;
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public List<String> getStatusList() {
         return statusList;

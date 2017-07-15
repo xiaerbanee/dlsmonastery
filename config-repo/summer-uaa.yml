@@ -1,0 +1,36 @@
+  profiles:
+    active: prod
+  session:
+    store-type: redis
+    timeout: 5
+management:
+  security:
+    enabled: false
+server:
+  port: 1100
+  # Use different context-path to avoid session cookie overlapping
+  context-path: /uaa
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1000/eureka/
+
+feign:
+  hystrix:
+    enabled: false
+  httpclient:
+    enabled: true
+
+weixin:
+  appid: wx9306888de0cb1c04
+  appsecret: e7822bbf9d836b0b909342662fb4e0ee
+  audit-menuId: 14,15,16,17,34,130,131,170
+  app-name: mktsp
+
+setting:
+    adminIdList:  1
+
+logging:
+  file: summer-uaa.log

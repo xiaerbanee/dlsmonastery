@@ -4,14 +4,13 @@
     <view class="weui-cells weui-cells_after-title form_bd">
       <input type="hidden" name="page" value="{{formData.page}}" class="hidden" />
       <input type="hidden" name="size" value="{{formData.size}}" class="hidden" />
+      <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
           <view class="weui-label">是否跨区域</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="crossArea" range="{{formProperty.crossAreaList}}" range-key="name" value="{{formData.crossArea.value}}" bindchange="changeCrossArea">
-            <view class="weui-input">{{formData.crossArea.name}}</view>
-          </picker>
+          <switch name="crossArea" checked="{{formData.crossArea}}" class="weui-input" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -20,7 +19,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="status" range="{{formProperty.statusList}}" value="{{formData.status}}" bindchange="changeStatus">
-            <view class="weui-input">{{formData.status}}</view>
+            <view class="weui-input">{{formData.status?formData.status:''}}</view>
           </picker>
         </view>
       </view>
@@ -29,7 +28,7 @@
           <view class="weui-label">调拨前</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="fromShopName" class="weui-input" placeholder="模糊搜索" value="{{fromData.fromShopName}}" />
+          <input name="fromShopName" class="weui-input" placeholder="模糊搜索" value="{{formData.fromShopName}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -37,7 +36,7 @@
           <view class="weui-label">调拨后</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="toShopName" class="weui-input" placeholder="模糊搜索" value="{{fromData.toShopName}}" />
+          <input name="toShopName" class="weui-input" placeholder="模糊搜索" value="{{formData.toShopName}}" />
         </view>
       </view>
     </view>
@@ -50,11 +49,11 @@
       <template is="header" />
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" data-status="{{item.status}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
-          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.productIme.ime}}</view>
-          <view class="weui-media-box__desc item_style">产品名称:{{item.productIme.product.name}}</view>
-          <view class="weui-media-box__desc item_style">调拨人:{{item.created.fullName}}</view>
-          <view class="weui-media-box__desc item_style">调拨前:{{item.fromDepot.name}}</view>
-          <view class="weui-media-box__desc item_style">调拨后:{{item.toDepot.name}}</view>
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.productImeIme}}</view>
+          <view class="weui-media-box__desc item_style">产品名称:{{item.productImeProductName}}</view>
+          <view class="weui-media-box__desc item_style">调拨人:{{item.createdByName}}</view>
+          <view class="weui-media-box__desc item_style">调拨前:{{item.fromDepotName}}</view>
+          <view class="weui-media-box__desc item_style">调拨后:{{item.toDepotName}}</view>
           <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">创建时间:{{item.createdDate}}</view>

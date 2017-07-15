@@ -34,13 +34,11 @@ Page({
             that.setData({ productImeList: {} })
         } else {
             wx.request({
-                url: $util.getUrl("crm/productIme/search"),
+                url: $util.getUrl("ws/future/crm/productIme/search"),
                 data: {
                     imeStr: that.data.formData.imeStr
                 },
-                header: {
-                    Cookie: "JSESSIONID=" + app.globalData.sessionId
-                },
+                header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
                 success: function (res) {
                     that.setData({ productImeList: res.data.productImeList, productImeSearchResult: res.data });
                 }
@@ -61,28 +59,29 @@ Page({
         var that = this;
         that.setData({ submitDisabled: true })
         wx.request({
-            url: $util.getUrl( "crm/imeAllot/save"),
+            url: $util.getUrl( "ws/future/crm/imeAllot/save"),
             data: e.detail.value,
             header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
             success: function (res) {
                 if (res.data.success) {
                     wx.navigateBack();
                 } else {
-                    that.setData({ 'response.data': res.data, submitDisabled: false });
+                    that.setData({ 'response.data': res.data.extra.errors});
                 }
+                that.setData({ submitDisabled: false})
             }
         })
     },
     showError: function (e) {
-        var that = this;
-        var key = e.currentTarget.dataset.key;
-        var responseData = that.data.response.data;
-        if (responseData && responseData.errors && responseData.errors[key] != null) {
-            that.setData({ "response.error": responseData.errors[key].message });
-            delete responseData.errors[key];
-            that.setData({ "response.data": responseData })
-        } else {
-            that.setData({ "response.error": '' })
-        }
+      var that = this;
+      var key = e.currentTarget.dataset.key;
+      var responseData = that.data.response.data;
+      if (responseData && responseData[key] != null) {
+        that.setData({ "response.error": responseData[key].message });
+        delete responseData[key];
+        that.setData({ "response.data": responseData })
+      } else {
+        that.setData({ "response.error": '' })
+      }
     }
 })

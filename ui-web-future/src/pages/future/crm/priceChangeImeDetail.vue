@@ -29,7 +29,7 @@
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action !=='upload'">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview" :file-list="fileList" list-type="picture">
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
               </el-upload>
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.pass')" prop="pass" v-if="action=='audit'">
@@ -58,6 +58,7 @@
             submitDisabled:false,
             formProperty:{},
             fileList:[],
+            fileList1:[],
             url:'',
             inputForm:{
               pass:'',
@@ -107,6 +108,8 @@
         },
         handlePreview(file) {
           window.open(file.url);
+        },handlePreview1(file) {
+          window.open(file.url);
         },handleChange(file, fileList) {
           this.fileList = fileList;
         },handleRemove(file, fileList) {
@@ -116,7 +119,7 @@
             this.inputForm = response.data;
             if(this.inputForm.image != null) {
               axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.image}}).then((response)=>{
-                this.fileList= response.data;
+                this.fileList1= response.data;
               });
             }
           })

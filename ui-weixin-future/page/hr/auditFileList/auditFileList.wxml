@@ -46,8 +46,9 @@
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
           <view class="weui-media-box__title weui-media-box__title_in-text">{{item.createdByName}}~{{item.createdDate}}</view>
-          <view class="weui-media-box__desc item_style">类型:{{item.processType.name}}</view>
           <view class="weui-media-box__desc item_style">标题:{{item.title}}</view>
+          <view class="weui-media-box__desc item_style">申请部门:{{item.officeName}}</view>
+          <view class="weui-media-box__desc item_style">所在办事处:{{item.areaName}}</view>
           <view class="weui-media-box__desc item_style">审核状态:{{item.processStatus}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">最后修改人</view>
