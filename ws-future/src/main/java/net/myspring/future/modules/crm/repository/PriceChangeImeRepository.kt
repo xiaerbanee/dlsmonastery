@@ -127,6 +127,9 @@ class PriceChangeImeRepositoryImpl @Autowired constructor(val namedParameterJdbc
         if (CollectionUtil.isNotEmpty(priceChangeImeQuery.officeIdList)) {
             sb.append("""  and depot.office_id in (:officeIdList) """)
         }
+        if(StringUtils.isNotBlank(priceChangeImeQuery.createdBy)){
+            sb.append("""  and t1.created_by=:createdBy  """)
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(priceChangeImeQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(PriceChangeImeDto::class.java))
