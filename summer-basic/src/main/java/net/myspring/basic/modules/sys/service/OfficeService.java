@@ -212,6 +212,8 @@ public class OfficeService {
         if(StringUtils.isNotBlank(officeForm.getParentId())&&OfficeTypeEnum.业务部门.name().equals(officeForm.getType())){
             OfficeRule officeRule=officeRuleRepository.findTopOfficeRule(new PageRequest(0,1)).getContent().get(0);
             officeForm.setAreaId(officeManager.getOfficeIdByOfficeRule(officeForm.getParentId(),officeRule.getId()));
+        }else if(OfficeTypeEnum.职能部门.name().equals(officeForm.getType())&&StringUtils.isNotBlank(officeForm.getParentId())){
+            officeForm.setAreaId(officeForm.getParentId());
         }
         if (officeForm.isCreate()) {
             office = BeanUtil.map(officeForm, Office.class);

@@ -434,7 +434,7 @@ export default {
     loading: "memuat",
     billType: "jenis nota",
     billNo: "nomor nota",
-    date: "tanggal",
+    date: "单据日期",
     materialName: "nama",
     qty: "jumlah",
     price: "harga",

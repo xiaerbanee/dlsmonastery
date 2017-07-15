@@ -58,10 +58,10 @@ public class ShopPromotionController {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         shopPromotionValidator.validate(shopPromotionForm,bindingResult);
         if(bindingResult.hasErrors()){
-            return  new RestResponse(bindingResult,"保存失败", ResponseCodeEnum.saved.name());
+            return  new RestResponse(bindingResult,"保存失败", null);
         }
         shopPromotionService.save(shopPromotionForm);
-        return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        return restResponse;
     }
 
     @RequestMapping(value="delete")
