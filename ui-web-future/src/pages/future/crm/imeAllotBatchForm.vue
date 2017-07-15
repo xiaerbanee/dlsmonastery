@@ -1,7 +1,7 @@
 <template>
   <div>
     <head-tab active="imeAllotBatchForm"></head-tab>
-    <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
+    <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('imeAllotBatchForm.filter')" v-model="searchFormVisible" size="small" class="search-form" z-index="1500">
       <el-form >
         <el-row :gutter="4">
           <el-col :span="12">

@@ -168,11 +168,15 @@ util.confirmBefore = function(vueObj){
 util.getLatestGoodsOrderBillDate = function () {
   return store.state.global.latestGoodsOrderBillDate;
 };
-
+util.getLatestShipStatus = function () {
+  return store.state.global.latestShipStatus;
+};
 util.setLatestGoodsOrderBillDate = function (latestGoodsOrderBillDate) {
   store.dispatch("setLatestGoodsOrderBillDate", latestGoodsOrderBillDate);
 };
-
+util.setLatestShipStatus = function (latestShipStatus) {
+  store.dispatch("setLatestShipStatus", latestShipStatus);
+};
 util.getQuery = function (routerName) {
   var query = {};
   if (routerName != "home") {

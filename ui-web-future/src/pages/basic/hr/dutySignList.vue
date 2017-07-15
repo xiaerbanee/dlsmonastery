@@ -6,7 +6,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search">{{$t('dutySignList.filterOrExport')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" size="medium" :title="$t('dutySignList.filter')" v-model="formVisible" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" size="medium" :title="$t('dutySignList.filter')" v-model="formVisible" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData"  :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
