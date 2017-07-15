@@ -6,7 +6,7 @@
       <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:afterSale:view'">{{$t('afterSaleAreaEdit.filter')}}</el-button>
       <span v-html="searchText"></span>
     </el-row>
-    <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleAreaEdit.filter')" v-model="formVisible"  size="tiny" class="search-form">
+    <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleAreaEdit.filter')" v-model="formVisible"  size="tiny" class="search-form">
       <el-form :model="formData" :label-width="formLabelWidth">
         <el-form-item :label="$t('afterSaleAreaEdit.badProductName')">
           <product-type-select v-model="formData.productTypeId" ></product-type-select>

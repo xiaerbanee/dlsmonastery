@@ -140,6 +140,7 @@
           }
         });
       }, doSubmit(){
+        util.setLatestShipStatus(this.continueShip);
         axios.post('/api/ws/future/crm/goodsOrderShip/ship', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
           this.$message(response.data.message);
           this.submitDisabled = false;
@@ -207,6 +208,10 @@
             this.inputForm.boxImeStr  = null;
             this.inputForm.imeStr  = null;
             this.inputForm.shipRemarks  = null;
+            this.continueShip = util.getLatestShipStatus();
+            if(this.continueShip !== false){
+              this.continueShip = true;
+            }
             if(util.isNotBlank(this.goodsOrder.id)){
               this.focusOnImeStrTextArea();
             }else{
@@ -247,9 +252,15 @@
   }
   .alert{
     font-size: 16px !important;
+    color:#fff !important;
+  }
+  .alert-warning{
+    background: #ff5622 !important;
+    color:#fff !important;
   }
   .alert-danger{
-    background-color:#c48888 !important;
-    color:#613030 !important;
+    background-color:#f54236 !important;
+    color:#f54236 !important;
+    color:#fff !important;
   }
 </style>

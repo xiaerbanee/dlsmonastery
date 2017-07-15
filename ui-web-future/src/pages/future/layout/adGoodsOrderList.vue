@@ -9,7 +9,7 @@
         <el-button type="primary" @click="exportData"  v-permit="'crm:adGoodsOrder:view'">{{$t('adGoodsOrderList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false"
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false"
          :title="$t('adGoodsOrderList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="12">

@@ -195,14 +195,15 @@ public class DepotShopService {
         return simpleExcelBook;
     }
 
-    public List<DepotReportDto> setReportData(ReportQuery reportQuery) {
+    public Map<String,Object> setReportData(ReportQuery reportQuery) {
+        Map<String,Object> map=Maps.newHashMap();
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         DepotQuery depotQuery = BeanUtil.map(reportQuery, DepotQuery.class);
         List<Depot> depotList = depotRepository.findByFilter(depotQuery);
         List<DepotReportDto> depotReportList = getProductImeReportList(reportQuery);
-        Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
+        Map<String,DepotReportDto> depotReportMap= CollectionUtil.extractToMap(depotReportList,"depotId");
         for(Depot depot:depotList){
-            if(!map.containsKey(depot.getId())){
+            if(!depotReportMap.containsKey(depot.getId())){
                 DepotReportDto depotReport = new DepotReportDto();
                 depotReport.setDepotId(depot.getId());
                 depotReport.setQty(0);
@@ -210,8 +211,9 @@ public class DepotShopService {
                 depotReportList.add(depotReport);
             }
         }
-        setPercentage(depotReportList);
-        return depotReportList;
+        map.put("list",depotReportList);
+        map.put("sum",setPercentage(depotReportList));
+        return map;
     }
 
     public List<String> findAccountIdsByDepotId(String depotId){
@@ -230,6 +232,7 @@ public class DepotShopService {
     public DepotReportDetailDto getReportDataDetail(ReportQuery reportQuery) {
         DepotReportDetailDto depotReportDetail = new DepotReportDetailDto();
         List<DepotReportDto> depotReportList = getProductImeReportList(reportQuery);
+        depotReportDetail.setSum(depotReportList.size());
         depotReportDetail.setDepotReportList(depotReportList);
         Map<String, Integer> map = Maps.newHashMap();
         for (DepotReportDto depotReportDto : depotReportList) {
@@ -262,7 +265,7 @@ public class DepotShopService {
         return depotReportList;
     }
 
-    private void setPercentage(List<DepotReportDto> depotReportList) {
+    private Integer setPercentage(List<DepotReportDto> depotReportList) {
         Integer sum = 0;
         for (DepotReportDto depotReport : depotReportList) {
             sum = sum + depotReport.getQty();
@@ -270,5 +273,6 @@ public class DepotShopService {
         for (DepotReportDto depotReport : depotReportList) {
             depotReport.setPercent(StringUtils.division(sum, depotReport.getQty()));
         }
+        return sum;
     }
 }

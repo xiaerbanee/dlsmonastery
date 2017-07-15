@@ -7,10 +7,20 @@
       <input type="hidden" name="sort" value="{{formData.sort}}" class="hidden" />
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">调价项目名称</view>
+          <view class="weui-label">调价项目</view>
         </view>
         <view class="weui-cell__bd">
           <input name="priceChangeName" class="weui-input" placeholder="模糊搜索" value="{{formData.priceChangeName}}" />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">状态</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="status" range="{{formProperty.statusList}}" value="{{formData.status}}" bindchange="bindStatus">
+            <view class="weui-input">{{formData.status?formData.status:""}}</view>
+          </picker>
         </view>
       </view>
     </view>
@@ -26,6 +36,7 @@
           <view class="weui-media-box__title weui-media-box__title_in-text">串码:{{item.ime}}</view>
           <view class="weui-media-box__desc item_style">调价项目名称：{{item.priceChangeName}}</view>
           <view class="weui-media-box__desc item_style">产品名称：{{item.productName}}</view>
+          <view class="weui-media-box__desc item_style">状态：{{item.status}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">最后更新</view>
             <view class="weui-media-box__info__meta">{{item.lastModifiedDate}}</view>

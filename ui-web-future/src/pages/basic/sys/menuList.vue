@@ -7,7 +7,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'sys:menu:view'">{{$t('menuList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('menuList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
               <el-form-item :label="$t('menuList.category')" >
                 <el-select v-model="formData.menuCategoryId" filterable clearable :placeholder="$t('menuList.inputKey')">

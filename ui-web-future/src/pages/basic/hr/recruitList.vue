@@ -8,7 +8,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:recruit:view'">{{$t('recruitList.filter')}}</el-button>
         <search-tag  :submitData="submitData" :formLabel="formLabel"></search-tag>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('recruitList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">
