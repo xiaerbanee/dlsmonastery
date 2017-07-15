@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.enums.DepotChangeEnum;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Pricesystem;
 import net.myspring.future.modules.basic.dto.PricesystemDto;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.PricesystemRepository;
 import net.myspring.future.modules.crm.dto.DepotChangeDto;
@@ -45,8 +47,11 @@ public class DepotChangeService {
     private PricesystemRepository pricesystemRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<DepotChangeDto> findPage(Pageable pageable, DepotChangeQuery depotChangeQuery){
+        depotChangeQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<DepotChangeDto> page = depotChangeRepository.findPage(pageable,depotChangeQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;

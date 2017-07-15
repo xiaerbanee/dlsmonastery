@@ -45,9 +45,12 @@ public class AccountWeixinService {
                     accountWeixinDtoRepository.save(accountWeixin);
                     return new RestResponse("账号绑定成功",null);
                 }else {
-                    if (accountWeixin.getOpenId().equals(weixinSessionDto.getOpenid())) {
+                    if(StringUtils.isBlank(accountWeixin.getOpenId())){
+                        accountWeixin.setOpenId(accountWeixin.getOpenId());
                         return new RestResponse("账号绑定成功",null);
-                    } else {
+                    }else if(StringUtils.isNotBlank(accountWeixin.getOpenId())&&accountWeixin.getOpenId().equals(weixinSessionDto.getOpenid())){
+                        return new RestResponse("账号绑定成功",null);
+                    }else {
                         return new RestResponse("绑定失败，已绑定其他微信号", null,false);
                     }
                 }
