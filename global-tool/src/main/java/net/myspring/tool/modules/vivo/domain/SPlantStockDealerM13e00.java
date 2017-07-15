@@ -1,89 +1,65 @@
 package net.myspring.tool.modules.vivo.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 //经销商库存表
-@Entity
 public class SPlantStockDealerM13e00 {
-    @Id
-    private String id;
-    private String companyid;
-    private String dealerid;
-    private String productid;
-    private String createdtime;
-    private Integer sumstock;
-    private Integer useablestock;
+
+    private String companyId;
+    private String dealerId;
+    private String productId;
+    private String createdTime;
+    private Integer sumStock;
+    private Integer useAbleStock;
     private Integer bad;
-    private String accountdate;
+    private String accountDate;
 
-
-    public String getId() {
-        return id;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
-    @Column(name = "CompanyID")
-    public String getCompanyid() {
-        return companyid;
+    public String getDealerId() {
+        return dealerId;
     }
 
-    public void setCompanyid(String companyid) {
-        this.companyid = companyid;
+    public void setDealerId(String dealerId) {
+        this.dealerId = dealerId;
     }
 
-    @Column(name = "DealerID")
-    public String getDealerid() {
-        return dealerid;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setDealerid(String dealerid) {
-        this.dealerid = dealerid;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
-    @Column(name = "ProductID")
-    public String getProductid() {
-        return productid;
+    public String getCreatedTime() {
+        return createdTime;
     }
 
-    public void setProductid(String productid) {
-        this.productid = productid;
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 
-    @Column(name = "CreatedTime")
-    public String getCreatedtime() {
-        return createdtime;
+    public Integer getSumStock() {
+        return sumStock;
     }
 
-    public void setCreatedtime(String createdtime) {
-        this.createdtime = createdtime;
+    public void setSumStock(Integer sumStock) {
+        this.sumStock = sumStock;
     }
 
-    @Column(name = "sumstock")
-    public Integer getSumstock() {
-        return sumstock;
+    public Integer getUseAbleStock() {
+        return useAbleStock;
     }
 
-    public void setSumstock(Integer sumstock) {
-        this.sumstock = sumstock;
+    public void setUseAbleStock(Integer useAbleStock) {
+        this.useAbleStock = useAbleStock;
     }
 
-    @Column(name = "useablestock")
-    public Integer getUseablestock() {
-        return useablestock;
-    }
-
-    public void setUseablestock(Integer useablestock) {
-        this.useablestock = useablestock;
-    }
-
-    @Column(name = "bad")
     public Integer getBad() {
         return bad;
     }
@@ -92,12 +68,11 @@ public class SPlantStockDealerM13e00 {
         this.bad = bad;
     }
 
-    @Column(name = "AccountDate")
-    public String getAccountdate() {
-        return accountdate;
+    public String getAccountDate() {
+        return accountDate;
     }
 
-    public void setAccountdate(String accountdate) {
-        this.accountdate = accountdate;
+    public void setAccountDate(String accountDate) {
+        this.accountDate = accountDate;
     }
 }
