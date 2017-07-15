@@ -665,7 +665,7 @@ private void doAndSaveProcessInfo(AdGoodsOrder adGoodsOrder, boolean pass, Strin
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderEmployeeMobilePhone", "业务电话"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderBillRemarks", "开单备注"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "adGoodsOrderProcessStatus", "当前状态"));
-        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressOrderExpressCompanyName", "货运部"));
+        adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "expressCompanyOPPO", "货运部"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productCode", "货品编码"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "productName", "货品"));
         adGoodsOrderDetailColumnList.add(new SimpleExcelColumn(workbook, "confirmQty", "订货数"));
