@@ -119,10 +119,10 @@ class AfterSaleStoreAllotRepositoryImpl @Autowired constructor(val namedParamete
             sb.append(" AND t2.name LIKE CONCAT('%',:productName,'%')")
         }
         if (CollectionUtil.isNotEmpty(afterSaleStoreAllotQuery.officeIdList)) {
-            sb.append("""  and t3.office_id in (:officeIdList)  or t4.office_id in (:officeIdList) """)
+            sb.append("""  and ( t3.office_id in (:officeIdList)  or t4.office_id in (:officeIdList) ) """)
         }
         if (CollectionUtil.isNotEmpty(afterSaleStoreAllotQuery.depotIdList)) {
-            sb.append("""  and t3.id in (:depotIdList)  or t4.id in (:depotIdList) """)
+            sb.append("""  and ( t3.id in (:depotIdList)  or t4.id in (:depotIdList) ) """)
         }
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
         var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());

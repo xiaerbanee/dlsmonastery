@@ -87,10 +87,10 @@ class ImeAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
             sb.append("""  AND t1.created_date < :createdDateEnd """)
         }
         if (CollectionUtil.isNotEmpty(imeAllotQuery.officeIdList)) {
-            sb.append("""  and t2.office_id in (:officeIdList)  or t3.office_id in (:officeIdList) """)
+            sb.append("""  and ( t2.office_id in (:officeIdList)  or t3.office_id in (:officeIdList) ) """)
         }
         if (CollectionUtil.isNotEmpty(imeAllotQuery.depotIdList)) {
-            sb.append("""  and t2.id in (:depotIdList)  or t3.id in (:depotIdList)""")
+            sb.append("""  and ( t2.id in (:depotIdList)  or t3.id in (:depotIdList) ) """)
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(imeAllotQuery)
