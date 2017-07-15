@@ -18,9 +18,9 @@ Page({
   initPage: function () {
     var that = this;
     var options = that.data.options;
-    if (options.action == "uploadImage") {
+    if (options.action == "detail") {
       wx.request({
-        url: $util.getUrl("crm/priceChangeIme/detail"),
+        url: $util.getUrl("ws/future/crm/priceChangeIme/findOne"),
         data: { id: options.id },
         method: 'GET',
         header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },

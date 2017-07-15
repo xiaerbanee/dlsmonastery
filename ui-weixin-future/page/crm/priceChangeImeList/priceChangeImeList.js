@@ -91,7 +91,7 @@ Page({
         if (!res.cancel) {
           if (itemList[res.tapIndex] == "详细") {
             wx.navigateTo({
-              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=uploadImage&id=' + id
+              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=detail&id=' + id
             })
           }
           else if (itemList[res.tapIndex] == "删除") {
