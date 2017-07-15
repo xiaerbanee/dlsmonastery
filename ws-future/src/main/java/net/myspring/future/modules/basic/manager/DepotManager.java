@@ -100,7 +100,7 @@ public class DepotManager {
 
     public Map<String, CustomerReceiveDto> getLatestCustomerReceiveMap(List<String> clientOutIdList) {
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(1));
+        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(30));
         customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
         customerReceiveQuery.setCustomerIdList(clientOutIdList);
 
@@ -115,7 +115,7 @@ public class DepotManager {
 
     public CustomerReceiveDto getLatestCustomerReceive(String clientOutId) {
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(1));
+        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(30));
         customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
         customerReceiveQuery.setCustomerIdList(Lists.newArrayList(clientOutId));
         List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
