@@ -1,10 +1,6 @@
 package net.myspring.future.modules.third.dto;
 
-import net.myspring.future.common.domain.IdEntity;
-
-import javax.persistence.Entity;
-
-public class OppoPlantProductSel extends IdEntity<OppoPlantProductSel> {
+public class OppoPlantProductSel {
     private String colorId;
     private String brandId;
     private String brandName;
