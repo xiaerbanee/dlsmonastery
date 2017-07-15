@@ -58,7 +58,7 @@ public class ProductImeSaleService {
     private CacheUtils cacheUtils;
 
     public Page<ProductImeSaleDto> findPage(Pageable pageable, ProductImeSaleQuery productImeSaleQuery) {
-
+        productImeSaleQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<ProductImeSaleDto> page = productImeSaleRepository.findPage(pageable, productImeSaleQuery);
         cacheUtils.initCacheInput(page.getContent());
 

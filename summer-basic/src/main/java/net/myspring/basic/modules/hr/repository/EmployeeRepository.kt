@@ -139,6 +139,9 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         if(StringUtils.isNotBlank(employeeQuery.leaderName)) {
             sb.append(" AND employee.account_id in(select t1.id from hr_account t1,hr_account t2 where t1.leader_id=t2.id and t2.login_name=:leaderName and t1.enabled=1)");
         }
+        if(StringUtils.isNotBlank(employeeQuery.areaId)) {
+            sb.append(" AND area.id=:areaId");
+        }
         if(employeeQuery.leaveDateMonth!=null) {
             sb.append(" AND ((employee.entry_date<=:leaveDateMonthEnd  and employee.leave_date is null) or employee.leave_date >=:leaveDateMonthStart)");
         }
@@ -202,6 +205,9 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
         }
         if(employeeQuery.leaveDateMonth!=null) {
             sb.append(" AND ((employee.entry_date<=:leaveDateMonthEnd  and employee.leave_date is null) or employee.leave_date >=:leaveDateMonthStart)");
+        }
+        if(StringUtils.isNotBlank(employeeQuery.areaId)) {
+            sb.append(" AND area.id=:areaId");
         }
         return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(employeeQuery),BeanPropertyRowMapper(EmployeeDto::class.java))
     }

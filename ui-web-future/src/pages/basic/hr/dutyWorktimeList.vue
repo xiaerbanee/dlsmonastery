@@ -89,9 +89,10 @@
       },exportData(){
         this.exportVisible = false;
         this.formData.formatMonth = util.formatLocalMonth(this.month);
-        axios.get('/api/basic/hr/dutyWorktime/export?month='+this.formData.formatMonth).then((response)=> {
-          window.location.href="/api/general/sys/folderFile/download?id="+response.data;
-        });
+        util.confirmBeforeExportData(this).then(() => {
+          window.location.href="/api/basic/hr/dutyWorktime/export?month="+this.formData.formatMonth;
+          this.pageRequest();
+        }).catch(()=>{});
 			}
     },created () {
       this.pageHeight = 0.75*window.innerHeight;

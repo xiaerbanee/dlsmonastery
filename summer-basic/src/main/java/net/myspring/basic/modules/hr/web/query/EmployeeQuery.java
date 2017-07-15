@@ -30,6 +30,15 @@ public class EmployeeQuery extends BaseQuery {
     private String dutyDateStart;
     private String dutyDateEnd;
     private String leaveDateMonth;
+    private String areaId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getLeaveDateMonth() {
         return leaveDateMonth;
