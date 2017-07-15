@@ -3,19 +3,17 @@ server:
 
 eureka:
   instance:
-    hostname: registry
     prefer-ip-address: true
-    metadata-map:
-      user.name: ${security.user.name}
-      user.password: ${security.user.password}
   client:
-    service-url:
-      defaultZone: http://user:${REGISTRY_SERVER_PASSWORD:password}@registry:8761/eureka/
+    serviceUrl:
+      defaultZone: http://localhost:1000/eureka/
 
 spring:
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/okjesse/spring-boot-cloud
+          uri: http://ncoppo.com:66/liuj/summer.git
           search-paths: config-repo
+          username: config
+          password: configconfig
