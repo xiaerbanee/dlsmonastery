@@ -193,7 +193,7 @@ public class PriceChangeImeService {
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
-            Map<String,ProductImeDto> productDtoMap = CollectionUtil.extractToMap(productImeDtos,"ime");
+            Map<String,ProductImeDto> productImeDtoMap = CollectionUtil.extractToMap(productImeDtos,"ime");
             List<String> needSaveProductTypeIds = CollectionUtil.extractToList(productImeDtos,"productTypeId");
             List<String> needSaveProductImeIds = CollectionUtil.extractToList(productImeDtos,"id");
             if(productImeDtos == null){
@@ -215,16 +215,21 @@ public class PriceChangeImeService {
             for(Integer i = 0;i<imeList.size();i++){
                 PriceChangeIme priceChangeIme = new PriceChangeIme();
                 priceChangeIme.setPriceChangeId(priceChangeId);
-                priceChangeIme.setProductImeId(productDtoMap.get(imeList.get(i)).getId());
+                priceChangeIme.setProductImeId(productImeDtoMap.get(imeList.get(i)).getId());
                 priceChangeIme.setShopId(depotMap.get(shopNameList.get(i)).getId());
-                priceChangeIme.setSaleDate(productDtoMap.get(imeList.get(i)).getProductImeSaleCreatedDate());
-                priceChangeIme.setUploadDate(productDtoMap.get(imeList.get(i)).getProductImeUploadCreatedDate());
+                priceChangeIme.setSaleDate(productImeDtoMap.get(imeList.get(i)).getProductImeSaleCreatedDate());
+                priceChangeIme.setUploadDate(productImeDtoMap.get(imeList.get(i)).getProductImeUploadCreatedDate());
                 priceChangeIme.setStatus(AuditStatusEnum.申请中.name());
                 priceChangeIme.setRemarks(remarksList.get(i));
                 priceChangeIme.setIsCheck(false);
                 priceChangeImes.add(priceChangeIme);
             }
-            priceChangeImeRepository.save(priceChangeImes);
+            try {
+                priceChangeImeRepository.save(priceChangeImes);
+            }catch (Exception e){
+                throw new ServiceException("上传的调价串码中在该调价项目下存在已上报的串码");
+            }
+
         }
 
     }

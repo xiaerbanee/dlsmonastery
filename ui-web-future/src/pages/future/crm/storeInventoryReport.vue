@@ -29,7 +29,7 @@
         <el-table-column column-key="areaId" prop="areaName" label="办事处" sortable></el-table-column>
         <el-table-column column-key="t1.officeId" prop="officeName" label="业务单元" sortable></el-table-column>
         <el-table-column column-key="t1.name" prop="depotName" label="仓库" sortable></el-table-column>
-        <el-table-column prop="qty" label="数量" sortable></el-table-column>
+        <el-table-column prop="qty" :label="'数量'+sum" sortable></el-table-column>
         <el-table-column prop="percentage" label="占比(%)"></el-table-column>
       </el-table>
     </div>
@@ -58,6 +58,7 @@
         formData:{
           extra:{},
         },
+        sum:"",
         formLabelWidth: '120px',
         formVisible: false,
         detailVisible:false,
@@ -77,14 +78,14 @@
         var submitData = util.deleteExtra(this.formData);
         util.setQuery("storeInventoryReport",submitData);
         axios.get('/api/ws/future/basic/depotStore/storeReport?'+qs.stringify(submitData)).then((response) => {
-          this.depotStoreList = response.data;
+          this.depotStoreList = response.data.list;
+          this.sum=response.data.sum;
           this.pageLoading = false;
         })
       },search() {
         this.formVisible = false;
         this.initPage();
       },storeDetail(row, event, column){
-        this.detailVisible=true;
         this.formData.isDetail=true;
         this.formData.depotId=row.depotId;
         axios.post('/api/ws/future/basic/depotStore/storeReportDetail',qs.stringify(util.deleteExtra(this.formData))).then((response) => {
@@ -96,6 +97,7 @@
             }
             this.productDetail=productDetail;
           }
+          this.detailVisible=true;
         })
       },exportData(command) {
       }

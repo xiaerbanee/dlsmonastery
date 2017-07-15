@@ -44,7 +44,7 @@ class VivoRepository @Autowired constructor(val jdbcTemplate: JdbcTemplate,val n
       """,paramMap,BeanPropertyRowMapper(VivoPlantSendimei::class.java));
    }
 
-   fun plantElectronicsn(dateStart: LocalDate, dateEnd: LocalDate): MutableList<VivoPlantElectronicsn>{
+   fun plantElectronicsn(dateStart: String, dateEnd: String): MutableList<VivoPlantElectronicsn>{
       var paramMap=Maps.newHashMap<String,Any>();
       paramMap.put("dateStart",dateStart);
       paramMap.put("dateEnd",dateEnd);
