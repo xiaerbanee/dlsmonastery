@@ -3,14 +3,14 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     formData: {},
-    formProperty:{},
-    response:{},
+    formProperty: { images: [] },
+    response: {},
     submitDisabled: false,
-    options:null
+    options: null
   },
   onLoad: function (options) {
     var that = this;
-    that.data.options = options
+    that.setData({options:options});
     app.autoLogin(function () {
       that.initPage()
     })
@@ -18,46 +18,32 @@ Page({
   initPage: function () {
     var that = this;
     var options = that.data.options;
-    if (options.action == "detail") {
-      wx.request({
-        url: $util.getUrl("ws/future/crm/priceChangeIme/findOne"),
-        data: { id: options.id },
-        method: 'GET',
-        header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
-        success: function (res) {
-          that.setData({ formData: res.data })
-        },
-      })
-    }
+    that.detail()
   },
   addImage: function (e) {
     var that = this;
     var images = that.data.formProperty.images;
-    if (!images) {
-      images = new Array();
-    }
     wx.chooseImage({
       count: 9,
-      sizeType: ['compressed','original'],
-      sourceType: ['camera','album'],
+      sizeType: ['compressed', 'original'],
+      sourceType: ['camera', 'album'],
       success: function (res) {
         var tempFilePaths = res.tempFilePaths
-        wx.uploadFile({
-          url: $util.getUrl('sys/folderFile/upload'),
-          header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
-          filePath: tempFilePaths[0],
-          name: 'file',
-          formData: { uploadPath: 'priceChangeIme' },
-          success: function (res) {
-            var folderFile = JSON.parse(res.data)[0];
-            images.push({
-              id: folderFile.id,
-              preview: $util.getUrl('sys/folderFile/preview?x-auth-token=' + app.globalData.sessionId +  '&id=' + folderFile.id),
-              view: $util.getUrl('sys/folderFile/view?x-auth-token=' + app.globalData.sessionId + '&id=' + folderFile.id)
-            })
-            that.setData({ 'formProperty.images': images })
-          }
-        })
+        for (let i in tempFilePaths) {
+          wx.uploadFile({
+            url: $util.getUrl('general/sys/folderFile/upload'),
+            header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+            filePath: tempFilePaths[i],
+            name: 'file',
+            formData: { uploadPath: 'priceChangeIme' },
+            success: function (res) {
+              var folderFile = JSON.parse(res.data)[0];
+              $util.downloadFile(images, folderFile.id, app.globalData.sessionId, 9, function () {
+                that.setData({ "formProperty.images": images });
+              });
+            }
+          })
+        }
       }
     })
   },
@@ -85,31 +71,63 @@ Page({
   formSubmit: function (e) {
     var that = this;
     that.setData({ submitDisabled: true });
+    let action = e.detail.target.dataset.action;
     e.detail.value.image = $util.getImageStr(that.data.formProperty.images);
-    wx.request({
-      url: $util.getUrl("crm/priceChangeIme/imageUpload"),
-      data: e.detail.value,
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId  },
-      success: function (res) {
-        console.log(res.data)
-        if (res.data.success) {
-          wx.navigateBack();
-        } else {
-          that.setData({ 'response.data': res.data, submitDisabled: false });
+    if (action=="audit"){
+      wx.request({
+        url: $util.getUrl("ws/future/crm/priceChangeIme/audit"),
+        data: e.detail.value,
+        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+        success: function (res) {
+          if (res.data.success) {
+            wx.navigateBack();
+          } else {
+            that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
+          }
         }
-      }
-    })
+      })
+    } else if (action =="upload"){
+      wx.request({
+        url: $util.getUrl("ws/future/crm/priceChangeIme/imageUpload"),
+        data: e.detail.value,
+        header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+        success: function (res) {
+          if (res.data.success) {
+            wx.navigateBack();
+          } else {
+            that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
+          }
+        }
+      })
+    }
   },
   showError: function (e) {
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if(responseData && responseData.errors && responseData.errors[key] != null) {
-      that.setData({ "response.error": responseData.errors[key].message });
-      delete responseData.errors[key];
+    if (responseData && responseData[key] != null) {
+      that.setData({ "response.error": responseData[key].message });
+      delete responseData[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })
     }
   },
+  detail(){
+    var that=this;
+    let options=that.data.options;
+    wx.request({
+      url: $util.getUrl("ws/future/crm/priceChangeIme/findOne"),
+      data: { id: options.id },
+      method: 'GET',
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      success: function (res) {
+        var images = new Array();
+        that.setData({ formData: res.data })
+        $util.downloadFile(images, res.data.image, app.globalData.sessionId, 9, function () {
+          that.setData({ "formProperty.images": images });
+        });
+      }
+    })
+  }
 })

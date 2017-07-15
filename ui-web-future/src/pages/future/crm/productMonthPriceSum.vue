@@ -8,7 +8,7 @@
         <span v-html="searchText"></span>
       </el-row>
 
-     <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('productMonthPriceSum.filter')"  v-model="formVisible" size="tiny" class="search-form">
+     <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('productMonthPriceSum.filter')"  v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData" method="get" >
           <el-row :gutter="4">
             <el-col :span="24">

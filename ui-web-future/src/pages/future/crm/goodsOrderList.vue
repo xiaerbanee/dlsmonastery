@@ -34,7 +34,7 @@
           <el-button type="primary" @click="formSubmit()">确定</el-button>
         </div>
       </el-dialog>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false"  :title="$t('goodsOrderList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="80px">
           <el-row :gutter="2">
             <el-col :span="8">

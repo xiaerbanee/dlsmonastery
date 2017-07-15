@@ -32,8 +32,10 @@ import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +44,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -171,7 +176,7 @@ public class DepotService {
 
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billType", "业务类型"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billNo", "单据编号"));
-            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billDate", "记账日期"));
+            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billDate", "单据日期"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "materialName", "名称"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "price", "单价"));
@@ -189,9 +194,40 @@ public class DepotService {
     }
 
     public SimpleExcelBook depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
-        //TODO 写确认书需要增强excel的打印能力
+        try {
+            InputStream is = DepotService.class.getClassLoader().getResourceAsStream("qrs.xlsx");
+            Workbook workbook = new XSSFWorkbook(new BufferedInputStream(is));
+            List<SimpleExcelSheet> sheets = new ArrayList<>();
 
-        return null;
+            List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery, false).getContent();
+            for(int i=0;i<depotAccountList.size();i++){
+                List<List<SimpleExcelColumn>> excelColumnList=Lists.newArrayList();
+                DepotAccountDto depotAccountDto = depotAccountList.get(i);
+
+                workbook.cloneSheet(0);
+                workbook.setSheetName(i+1, StringUtils.getSheetName(depotAccountDto.getName()) + "确认书");
+                Sheet sheet = workbook.getSheetAt(i+1);
+                sheet.getRow(1).getCell(2).setCellValue(depotAccountDto.getName());
+                sheet.getRow(3).getCell(0).setCellValue("截止" +  LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(), "yyyy年MM月dd日") + "甲乙双方往来数据如下：");
+                String endShouldGet =  (depotAccountDto.getQmys() == null ? "" : depotAccountDto.getQmys().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                sheet.getRow(5).getCell(0).setCellValue("1、乙方欠甲方货款（金额）：" + endShouldGet );
+                sheet.getRow(6).getCell(0).setCellValue("（大写）：" + StringUtils.getChineseMoney(depotAccountDto.getQmys()));
+                String earnestDeposit = (depotAccountDto.getScbzj() == null ? "" : depotAccountDto.getScbzj() .setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                String imageDeposit = (depotAccountDto.getXxbzj() == null ? "" : depotAccountDto.getXxbzj().setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                sheet.getRow(7).getCell(0).setCellValue("2、甲方收取乙方市场保证金（金额）：" + earnestDeposit);
+                sheet.getRow(8).getCell(0).setCellValue("（大写）： " + StringUtils.getChineseMoney(depotAccountDto.getScbzj()));
+                sheet.getRow(9).getCell(0).setCellValue("3、甲方收取乙方形象押金（金额）：" + imageDeposit);
+                sheet.getRow(10).getCell(0).setCellValue("（大写）： " + StringUtils.getChineseMoney(depotAccountDto.getXxbzj()));
+
+                SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("确认书",excelColumnList);
+                sheets.add(simpleExcelSheet);
+            }
+            workbook.removeSheetAt(0);
+
+            return new SimpleExcelBook(workbook,"确认书"+LocalDateUtils.format(LocalDate.now()) +".xlsx" ,sheets);
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
     }
 
     public SimpleExcelBook depotAccountExportAllDepots(DepotAccountQuery depotAccountQuery) {
@@ -281,8 +317,7 @@ public class DepotService {
     }
 
     public List<CustomerDto>  findOppoCustomers(){
-        List<CustomerDto> customerDtos=depotRepository.findOppoCustomers();
-        return customerDtos;
+        return depotRepository.findOppoCustomers();
     }
 
     public List<DepotDto> findByClientId(String clientId){

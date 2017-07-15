@@ -229,8 +229,8 @@ public class OppoService {
 
     @LocalDataSource
     public  List<OppoPlantProductItemelectronSel>  synProductItemelectronSel(String date,String agentCode) {
-        String dateStart =LocalDateUtils.format(LocalDateUtils.parse(date).minusDays(1));
-        String dateEnd =date;
+        String dateStart =date;
+        String dateEnd =LocalDateUtils.format(LocalDateUtils.parse(date).plusDays(1));
         List<String>  mainCodes= StringUtils.getSplitList(agentCode, CharConstant.COMMA);
         List<OppoPlantProductItemelectronSel> oppoPlantProductItemelectronSels = oppoPlantProductItemelectronSelRepository.findSynList(dateStart, dateEnd, mainCodes);
         return oppoPlantProductItemelectronSels;

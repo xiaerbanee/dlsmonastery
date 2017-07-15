@@ -209,7 +209,8 @@ public class ProductImeService {
         return productImeDtoList;
     }
 
-    public List<ProductImeReportDto> productImeReport(ReportQuery reportQuery) {
+    public Map<String,Object> productImeReport(ReportQuery reportQuery) {
+        Map<String,Object> map=Maps.newHashMap();
         reportQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Map<String, List<String>> lastRuleMap = Maps.newHashMap();
         if (StringUtils.isNotBlank(reportQuery.getOfficeId())) {
@@ -217,34 +218,37 @@ public class ProductImeService {
             lastRuleMap = officeClient.getLastRuleMapByOfficeId(reportQuery.getOfficeId());
         }
         List<ProductImeReportDto> productImeSaleReportList = getProductImeReportList(reportQuery);
+        Integer sum=0;
         if (StringUtils.isNotBlank(reportQuery.getOfficeId()) && SumTypeEnum.区域.name().equals(reportQuery.getSumType())) {
-            Map<String, ProductImeReportDto> map = Maps.newHashMap();
+            Map<String, ProductImeReportDto> ProductImeReportMap = Maps.newHashMap();
             for (ProductImeReportDto productImeSaleReportDto : productImeSaleReportList) {
                 String key = getOfficeKey(lastRuleMap, productImeSaleReportDto.getOfficeId());
                 if (StringUtils.isNotBlank(key)) {
-                    if (map.containsKey(key)) {
-                        map.get(key).addQty(1);
+                    if (ProductImeReportMap.containsKey(key)) {
+                        ProductImeReportMap.get(key).addQty(1);
                     } else {
                         ProductImeReportDto productImeSaleReport = new ProductImeReportDto(key, 1);
-                        map.put(key, productImeSaleReport);
+                        ProductImeReportMap.put(key, productImeSaleReport);
                     }
                 }
             }
             List<String> filterOfficeIdList=RequestUtils.getOfficeIdList();
             for (String officeId : lastRuleMap.keySet()) {
-                if (!map.containsKey(officeId)&&filterOfficeIdList.contains(officeId)) {
-                    map.put(officeId, new ProductImeReportDto(officeId, 0));
+                if (!ProductImeReportMap.containsKey(officeId)&&filterOfficeIdList.contains(officeId)) {
+                    ProductImeReportMap.put(officeId, new ProductImeReportDto(officeId, 0));
                 }
             }
-            List<ProductImeReportDto> list = Lists.newArrayList(map.values());
-            setPercentage(list);
+            List<ProductImeReportDto> list = Lists.newArrayList(ProductImeReportMap.values());
+            sum=setPercentage(list);
             cacheUtils.initCacheInput(list);
-            return list;
+            map.put("list",list);
         } else {
-            setPercentage(productImeSaleReportList);
+            sum=setPercentage(productImeSaleReportList);
             cacheUtils.initCacheInput(productImeSaleReportList);
-            return productImeSaleReportList;
+            map.put("list",productImeSaleReportList);
         }
+        map.put("sum",sum);
+        return map;
     }
 
     private String getOfficeKey(Map<String, List<String>> officeMap, String officeId) {
@@ -276,7 +280,7 @@ public class ProductImeService {
         return productImeReportList;
     }
 
-    private void setPercentage(List<ProductImeReportDto> productImeReportList) {
+    private Integer setPercentage(List<ProductImeReportDto> productImeReportList) {
         Integer sum = 0;
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
             sum = sum + productImeReportDto.getQty();
@@ -284,6 +288,7 @@ public class ProductImeService {
         for (ProductImeReportDto productImeReportDto : productImeReportList) {
             productImeReportDto.setPercent(StringUtils.division(sum, productImeReportDto.getQty()));
         }
+        return sum;
     }
 
     public SimpleExcelBook getFolderFileId(List<DepotReportDto> depotReportList, ReportQuery reportQuery) {

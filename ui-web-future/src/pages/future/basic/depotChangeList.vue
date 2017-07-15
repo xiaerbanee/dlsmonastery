@@ -7,7 +7,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:depotChange:view'">{{$t('depotChangeList.filterOrExport')}}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('depotChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('depotChangeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" method="get">
           <el-row :gutter="4">
             <el-col :span="24">

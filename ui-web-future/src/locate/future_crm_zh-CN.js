@@ -2190,7 +2190,7 @@ export default {
     loading: "拼命加载中",
     billType: "业务类型",
     billNo: "单据号",
-    date: "记账日期",
+    date: "单据日期",
     materialName: "名称",
     qty: "数量",
     price: "单价",

@@ -8,7 +8,7 @@
         <el-button type="primary" @click="exportVisible = true" icon="upload" v-permit="'hr:dutyWorktime:edit'">{{$t('dutyWorktimeList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('dutyWorktimeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('dutyWorktimeList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
               <el-form-item :label="$t('dutyWorktimeList.dutyDate')">
                 <date-range-picker v-model="formData.dutyDate" ></date-range-picker>
@@ -18,7 +18,7 @@
           <el-button type="primary" @click="search()">{{$t('dutyWorktimeList.sure')}}</el-button>
         </div>
       </search-dialog>
-      <search-dialog :show="exportVisible" @hide="exportVisible=false" :title="$t('dutyWorktimeList.export')" v-model="exportVisible" size="tiny" class="search-form" z-index="1500" ref="exportDialog">
+      <search-dialog @enter="search()" :show="exportVisible" @hide="exportVisible=false" :title="$t('dutyWorktimeList.export')" v-model="exportVisible" size="tiny" class="search-form" z-index="1500" ref="exportDialog">
         <el-form :model="formData"  :label-width="formLabelWidth">
               <el-form-item :label="$t('dutyWorktimeList.yearMonth')">
                 <el-date-picker v-model="month" type="month" :placeholder="$t('dutyWorktimeList.selectMonth')"></el-date-picker>

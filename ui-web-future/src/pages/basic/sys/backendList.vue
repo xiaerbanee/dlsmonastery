@@ -7,7 +7,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search" >{{$t('backendList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('backendList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('backendList.filter')" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
               <el-form-item :label="$t('backendModuleList.name')">
                 <el-input v-model="formData.name" auto-complete="off" placeholder="输入关键字搜索"></el-input>
