@@ -93,7 +93,7 @@ public class PriceChangeImeService {
 
     @Transactional
     public void delete(String id){
-        priceChangeImeRepository.logicDelete(id);
+        priceChangeImeRepository.delete(id);
     }
 
     @Transactional
@@ -200,7 +200,7 @@ public class PriceChangeImeService {
                     throw new ServiceException("输入的串码中含有不是调价项目中的产品型号,保存失败");
                 }
             }
-            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId);
             List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
             for(String productImeId:needSaveProductImeIds){
                 if(existProductImeIds.contains(productImeId)){
