@@ -53,7 +53,7 @@ public class ShopAdController {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
         shopAdValidator.validate(shopAdForm,bindingResult);
         if(bindingResult.hasErrors()){
-            return  new RestResponse(bindingResult,"保存失败", ResponseCodeEnum.saved.name());
+            return  new RestResponse(bindingResult,"保存失败", null);
         }
         shopAdService.save(shopAdForm);
         return restResponse;

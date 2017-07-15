@@ -16,7 +16,7 @@ public class PriceChangeImeForm extends BaseForm<PriceChangeIme> {
     private String shopId;
 
     private Boolean pass;
-    private String auditRemarks;
+        private String auditRemarks;
 
     private String image;
 
