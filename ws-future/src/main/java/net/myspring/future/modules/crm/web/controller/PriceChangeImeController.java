@@ -3,8 +3,6 @@ package net.myspring.future.modules.crm.web.controller;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.modules.crm.domain.PriceChangeIme;
-
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.service.PriceChangeImeService;
 import net.myspring.future.modules.crm.web.form.PriceChangeImeForm;
@@ -15,15 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "crm/priceChangeIme")
@@ -97,7 +93,7 @@ public class PriceChangeImeController {
 
     @RequestMapping(value = "export",method = RequestMethod.GET)
     @PreAuthorize("hasPermission(null,'crm:priceChangeIme:view')")
-    private ModelAndView export(PriceChangeImeQuery priceChangeImeQuery) throws IOException{
+    public ModelAndView export(PriceChangeImeQuery priceChangeImeQuery) throws IOException{
         return new ModelAndView(new ExcelView(),"simpleExcelBook",priceChangeImeService.export(priceChangeImeQuery));
     }
 }

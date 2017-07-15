@@ -7,6 +7,10 @@ cd global-tool
 call gradle clean build
 
 cd..
+cd global-task
+call gradle clean build
+
+cd..
 cd summer-basic
 call gradle clean build
 
