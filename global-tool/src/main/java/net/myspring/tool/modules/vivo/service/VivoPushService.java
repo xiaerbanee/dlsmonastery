@@ -165,40 +165,40 @@ public class VivoPushService {
             }
             if (customerLevel == 1) {
                 SPlantStockStoresM13e00 sPlantStockStoresM13e00 = new SPlantStockStoresM13e00();
-                sPlantStockStoresM13e00.setCompanyid(mainCode);
-                sPlantStockStoresM13e00.setStoreid(mainCode+"K0000");
-                sPlantStockStoresM13e00.setProductid(colorId);
-                sPlantStockStoresM13e00.setSumstock(0);
-                sPlantStockStoresM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockStoresM13e00.setCompanyId(mainCode);
+                sPlantStockStoresM13e00.setStoreId(mainCode+"K0000");
+                sPlantStockStoresM13e00.setProductId(colorId);
+                sPlantStockStoresM13e00.setSumStock(0);
+                sPlantStockStoresM13e00.setUseAbleStock(sPlantCustomerStockDto.getUseAbleStock());
                 sPlantStockStoresM13e00.setBad(0);
-                sPlantStockStoresM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
-                sPlantStockStoresM13e00.setAccountdate(dateStart);
+                sPlantStockStoresM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockStoresM13e00.setAccountDate(dateStart);
                 sPlantStockStoresM13e00List.add(sPlantStockStoresM13e00);
             }
             if (customerLevel == 2) {
                 String supplyId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"D","00000");
                 SPlantStockSupplyM13e00 sPlantStockSupplyM13e00 = new SPlantStockSupplyM13e00();
-                sPlantStockSupplyM13e00.setCompanyid(mainCode);
-                sPlantStockSupplyM13e00.setSupplyid(supplyId);
-                sPlantStockSupplyM13e00.setProductid(colorId);
-                sPlantStockSupplyM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
-                sPlantStockSupplyM13e00.setSumstock(0);
-                sPlantStockSupplyM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockSupplyM13e00.setCompanyId(mainCode);
+                sPlantStockSupplyM13e00.setSupplyId(supplyId);
+                sPlantStockSupplyM13e00.setProductId(colorId);
+                sPlantStockSupplyM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockSupplyM13e00.setSumStock(0);
+                sPlantStockSupplyM13e00.setUseAbleStock(sPlantCustomerStockDto.getUseAbleStock());
                 sPlantStockSupplyM13e00.setBad(0);
-                sPlantStockSupplyM13e00.setAccountdate(dateStart);
+                sPlantStockSupplyM13e00.setAccountDate(dateStart);
                 sPlantStockSupplyM13e00List.add(sPlantStockSupplyM13e00);
             }
             if (customerLevel == 3) {
                 String dealerId = StringUtils.getFormatId(sPlantCustomerStockDto.getCustomerId(),"C","00000");
                 SPlantStockDealerM13e00 sPlantStockDealerM13e00 = new SPlantStockDealerM13e00();
-                sPlantStockDealerM13e00.setCompanyid(mainCode);
-                sPlantStockDealerM13e00.setDealerid(dealerId);
-                sPlantStockDealerM13e00.setProductid(colorId);
-                sPlantStockDealerM13e00.setSumstock(0);
-                sPlantStockDealerM13e00.setUseablestock(sPlantCustomerStockDto.getUseAbleStock());
+                sPlantStockDealerM13e00.setCompanyId(mainCode);
+                sPlantStockDealerM13e00.setDealerId(dealerId);
+                sPlantStockDealerM13e00.setProductId(colorId);
+                sPlantStockDealerM13e00.setSumStock(0);
+                sPlantStockDealerM13e00.setUseAbleStock(sPlantCustomerStockDto.getUseAbleStock());
                 sPlantStockDealerM13e00.setBad(0);
-                sPlantStockDealerM13e00.setCreatedtime(LocalDateTimeUtils.format(LocalDateTime.now()));
-                sPlantStockDealerM13e00.setAccountdate(dateStart);
+                sPlantStockDealerM13e00.setCreatedTime(LocalDateTimeUtils.format(LocalDateTime.now()));
+                sPlantStockDealerM13e00.setAccountDate(dateStart);
                 sPlantStockDealerM13e00List.add(sPlantStockDealerM13e00);
             }
         }
@@ -298,15 +298,6 @@ public class VivoPushService {
         }
 
         return productColorMap;
-    }
-
-
-
-    //上抛组织机构数据
-    private List<Object> getOffice(){
-
-
-        return null;
     }
 
     private String getZoneId(String mainCode,String id){
