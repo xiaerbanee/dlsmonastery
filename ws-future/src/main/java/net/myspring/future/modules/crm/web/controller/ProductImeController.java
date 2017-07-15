@@ -19,7 +19,6 @@ import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
@@ -30,7 +29,9 @@ import net.myspring.future.modules.crm.web.query.ReportQuery;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.excel.SimpleExcelBook;
+import net.myspring.util.file.TempFileView;
 import net.myspring.util.text.StringUtils;
+import org.apache.poi.util.TempFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -237,11 +240,22 @@ public class ProductImeController {
     }
 
     @RequestMapping(value="batchExport")
-    public ModelAndView batchExport(String allImeStr) throws IOException {
+    public String batchExport(String allImeStr){
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);
         SimpleExcelBook simpleExcelBook = productImeService.export(productImeService.batchQuery(allImeList));
-        ExcelView excelView = new ExcelView();
-        return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
+        File tempFile = TempFile.createTempFile("串码批量查询",".xlsx");
+        try(FileOutputStream os = new FileOutputStream(tempFile)){
+            simpleExcelBook.getWorkbook().write(os);
+            os.flush();
+        }catch(Exception e){
+            throw new ServiceException(e);
+        }
+        return tempFile.getName();
+    }
+
+    @RequestMapping(value="download")
+    public ModelAndView download(String tempFileName){
+        return new ModelAndView(new TempFileView(), "tempFileName", tempFileName);
     }
 
 }

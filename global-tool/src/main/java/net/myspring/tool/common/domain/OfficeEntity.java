@@ -21,6 +21,7 @@ public class OfficeEntity  {
     private String jointLevel;
     private String parentId;
     private String parentIds;
+    private String agentCode;
     private Integer childCount;
 
     public String getId() {
@@ -126,6 +127,14 @@ public class OfficeEntity  {
 
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 
     public Integer getChildCount() {

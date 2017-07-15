@@ -1,5 +1,4 @@
-  profiles:
-    active: prod
+spring:
   session:
     store-type: redis
     timeout: 5
