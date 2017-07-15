@@ -101,7 +101,7 @@
         searchText:"",
         nextIsShop:false,
         formData:{
-          extra:{},
+          extra:{productTypeIdList:[]},
         },
         initPromise:{},
         sum:'',

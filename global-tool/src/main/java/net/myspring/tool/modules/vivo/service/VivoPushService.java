@@ -6,7 +6,6 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.OfficeClient;
-import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
@@ -20,7 +19,6 @@ import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +68,6 @@ public class VivoPushService {
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<OfficeEntity> officeEntityList = officeClient.findAll();
         List<SZonesM13e00> sZonesM13e00List = Lists.newArrayList();
-        Map<String,Integer> map = getOfficeChildCountMap(officeEntityList);
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
             sZonesM13e00.setZoneid(getZoneId(mainCode,officeEntity.getId()));
@@ -91,7 +88,7 @@ public class VivoPushService {
             zonePath.append(getZoneId(mainCode,officeEntity.getId())).append(CharConstant.VERTICAL_LINE);
             sZonesM13e00.setZonepath(zonePath.toString());
             sZonesM13e00.setFatherid(getZoneId(mainCode,officeEntity.getParentId()));
-            sZonesM13e00.setSubcount(map.get(officeEntity.getId()));
+            sZonesM13e00.setSubcount(officeEntity.getChildCount());
             sZonesM13e00.setZonetypes(CharConstant.EMPTY);
             sZonesM13e00List.add(sZonesM13e00);
         }
@@ -285,7 +282,6 @@ public class VivoPushService {
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
-        System.err.println("CompanyName:"+DbContextHolder.get().getCompanyName()+"DataSourceType:"+DbContextHolder.get().getDataSourceType());
         List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
         Map<String, String> productColorMap = Maps.newHashMap();
 
@@ -317,20 +313,6 @@ public class VivoPushService {
         return StringUtils.getFormatId(id,mainCode,"0000");
     }
 
-    private Map<String,Integer> getOfficeChildCountMap(List<OfficeEntity> officeEntityList){
-        Map<String,Integer> childCountMap = Maps.newHashMap();
-        for(OfficeEntity officeEntity : officeEntityList){
-            String id = officeEntity.getId();
-            int subCount = 0 ;
-            for(OfficeEntity officeEntity1:officeEntityList){
-                if (officeEntity1.getParentIds().contains(CharConstant.COMMA+id+CharConstant.COMMA)){
-                    subCount++;
-                }
-            }
-            childCountMap.put(officeEntity.getId(),subCount);
-        }
-        return childCountMap;
-    }
 
 
 }

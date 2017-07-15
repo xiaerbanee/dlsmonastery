@@ -58,6 +58,7 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
+            console.log(res.data)
             let deleted = wx.getStorageSync("authorityList").includes("crm:depot:delete");
             for (let item in res.data.content) {
               let actionList = new Array();
