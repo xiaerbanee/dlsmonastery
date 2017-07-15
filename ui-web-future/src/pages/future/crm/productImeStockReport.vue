@@ -15,7 +15,7 @@
         <el-button type="primary" @click="preLevel()" v-show="officeId !=formData.officeId&&officeIds.length">返回</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" title="过滤" v-model="formVisible" size="tiny" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">

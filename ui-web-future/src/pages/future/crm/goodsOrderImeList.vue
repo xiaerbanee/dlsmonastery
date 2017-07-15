@@ -7,7 +7,7 @@
         <el-button type="primary" @click="exportData">{{ $t('goodsOrderImeList.exportData') }}</el-button>
         <span  v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderImeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderImeList.filter')" v-model="formVisible" size="medium" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" label-width="120px">
           <el-row :gutter="4">
             <el-col :span="12">

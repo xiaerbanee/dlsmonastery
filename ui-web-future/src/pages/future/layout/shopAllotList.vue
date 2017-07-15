@@ -7,7 +7,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search" v-permit="'crm:shopAllot:view'">{{$t('shopAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('shopAllotList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData" :label-width="fromLabelWidth">
           <el-row :gutter="4">
             <el-col :span="24">

@@ -6,7 +6,7 @@
         <el-button type="primary"@click="formVisible = true" icon="search">{{$t('afterSaleImeAllotList.filter')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleImeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('afterSaleImeAllotList.filter')" v-model="formVisible" size="tiny" class="search-form">
         <el-form :model="formData"  :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="12">
