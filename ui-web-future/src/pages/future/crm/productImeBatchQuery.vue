@@ -104,7 +104,9 @@
       },
       exportData(){
         util.confirmBeforeExportData(this).then(() => {
-          window.location.href="/api/ws/future/crm/productIme/batchExport?allImeStr="+this.allImeStr;
+          axios.post('/api/ws/future/crm/productIme/batchExport',qs.stringify({allImeStr: this.allImeStr})).then((response)=>{
+            window.location.href="/api/ws/future/crm/productIme/download?tempFileName="+response.data;
+          });
         }).catch(()=>{});
       },
       reset(){

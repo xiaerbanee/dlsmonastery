@@ -18,7 +18,7 @@ class SPlantStockStoresM13e00Repository @Autowired constructor(val namedParamete
             delete from s_PlantStockStores_m13e00
             where AccountDate >= :dateStart
                 and AccountDate < :dateEnd
-        """);
+        """)
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
@@ -26,7 +26,7 @@ class SPlantStockStoresM13e00Repository @Autowired constructor(val namedParamete
         val sb = StringBuilder()
         sb.append("""
             insert into s_PlantStockStores_m13e00(CompanyID,StoreID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyid,:storeid,:productid,:createdtime,:sumstock,:useablestock,:bad,:accountdate)
+            values(:companyId,:storeId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sPlantStockStoreM13e00List.toTypedArray()))
     }

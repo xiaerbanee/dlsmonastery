@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -204,12 +205,17 @@ public class PriceChangeImeService {
                     throw new ServiceException("输入的串码中含有不是调价项目中的产品型号,保存失败");
                 }
             }
-            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId);
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
             List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
+            String existIme = "";
             for(String productImeId:needSaveProductImeIds){
                 if(existProductImeIds.contains(productImeId)){
-                    throw new ServiceException("输入的串码中有串码已存在所选择的调价项目下,保存失败");
+                    ProductIme productIme = productImeRepository.findOne(productImeId);
+                    existIme += productIme.getIme()+CharConstant.COMMA;
                 }
+            }
+            if(StringUtils.isNotBlank(existIme)){
+                throw new ServiceException("输入的串码:"+existIme+"已存在该调价项目下,保存失败");
             }
             Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
@@ -224,11 +230,8 @@ public class PriceChangeImeService {
                 priceChangeIme.setIsCheck(false);
                 priceChangeImes.add(priceChangeIme);
             }
-            try {
-                priceChangeImeRepository.save(priceChangeImes);
-            }catch (Exception e){
-                throw new ServiceException("上传的调价串码中在该调价项目下存在已上报的串码");
-            }
+            priceChangeImeRepository.save(priceChangeImes);
+
 
         }
 

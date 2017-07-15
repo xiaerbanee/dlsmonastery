@@ -10,6 +10,7 @@ import net.myspring.basic.modules.hr.repository.OfficeLeaderRepository;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
 import net.myspring.basic.modules.sys.domain.OfficeRule;
+import net.myspring.basic.modules.sys.dto.OfficeChildDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.manager.OfficeManager;
@@ -94,6 +95,11 @@ public class OfficeService {
     public List<Office> findAll() {
         return officeRepository.findAll();
     }
+
+    public List<OfficeChildDto> findAllChildCount() {
+        return officeRepository.findAllChildCount();
+    }
+
 
     public List<String> getSameAreaByOfficeId(String officeId){
         List<Office> sameAreaByOfficeId = officeRepository.findSameAreaByOfficeId(officeId);

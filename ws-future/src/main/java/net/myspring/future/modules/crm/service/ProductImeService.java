@@ -47,7 +47,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -184,8 +183,7 @@ public class ProductImeService {
 
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("串码列表", productImeDtoList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook,simpleExcelSheet);
-        SimpleExcelBook simpleExcelBook = new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
-        return simpleExcelBook;
+        return new SimpleExcelBook(workbook, "串码列表" + LocalDateUtils.format(LocalDate.now()) + ".xlsx", simpleExcelSheet);
     }
 
     public SimpleExcelBook export(ProductImeQuery productImeQuery) {
