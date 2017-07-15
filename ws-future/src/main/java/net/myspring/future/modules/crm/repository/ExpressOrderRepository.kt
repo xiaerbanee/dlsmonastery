@@ -139,6 +139,12 @@ class ExpressOrderRepositoryImpl @Autowired constructor( val namedParameterJdbcT
         if(StringUtils.isNotBlank(expressOrderQuery.expressCompanyName)){
             sb.append("""  and expressCompany.name like concat('%',:expressCompanyName,'%')  """)
         }
+        if (CollectionUtil.isNotEmpty(expressOrderQuery.officeIdList)) {
+            sb.append("""  and fromDepot.office_id in (:officeIdList)  or toDepot.office_id in (:officeIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(expressOrderQuery.depotIdList)) {
+            sb.append("""  and fromDepot.id in (:depotIdList)  or toDepot.id in (:depotIdList) """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(expressOrderQuery)

@@ -4,6 +4,7 @@ import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ImeAllot
 import net.myspring.future.modules.crm.dto.ImeAllotDto
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,7 +86,12 @@ class ImeAllotRepositoryImpl @Autowired constructor(val namedParameterJdbcTempla
         if(imeAllotQuery.createdDateEnd != null){
             sb.append("""  AND t1.created_date < :createdDateEnd """)
         }
-
+        if (CollectionUtil.isNotEmpty(imeAllotQuery.officeIdList)) {
+            sb.append("""  and t2.office_id in (:officeIdList)  or t3.office_id in (:officeIdList) """)
+        }
+        if (CollectionUtil.isNotEmpty(imeAllotQuery.depotIdList)) {
+            sb.append("""  and t2.id in (:depotIdList)  or t3.id in (:depotIdList)""")
+        }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val paramMap = BeanPropertySqlParameterSource(imeAllotQuery)
         val list = namedParameterJdbcTemplate.query(pageableSql,paramMap, BeanPropertyRowMapper(ImeAllotDto::class.java))

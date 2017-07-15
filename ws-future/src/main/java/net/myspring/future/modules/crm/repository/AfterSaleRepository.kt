@@ -192,6 +192,12 @@ class AfterSaleRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
             if (CollectionUtil.isNotEmpty(afterSaleQuery.businessIdList)) {
                 sb.append("""  and t1.business_id in (:businessIdList) """)
             }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.officeIdList)) {
+                sb.append("""  and t4.office_id in (:officeIdList) or t7.office_id in (:officeIdList) """)
+            }
+            if (CollectionUtil.isNotEmpty(afterSaleQuery.depotIdList)) {
+                sb.append("""  and t4.id in (:depotIdList) or t7.id in (:depotIdList)  """)
+            }
             var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable);
             var countSql = MySQLDialect.getInstance().getCountSql(sb.toString());
             var list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(afterSaleQuery), BeanPropertyRowMapper(AfterSaleDto::class.java));

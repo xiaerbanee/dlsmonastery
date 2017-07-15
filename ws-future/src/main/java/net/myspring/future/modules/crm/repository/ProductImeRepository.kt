@@ -630,6 +630,12 @@ class ProductImeRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
         if (StringUtils.isNotBlank(productImeQuery.inputType)) {
             sb.append("""  and t1.input_type = :inputType  """)
         }
+        if (CollectionUtil.isNotEmpty(productImeQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(productImeQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList)  """)
+        }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(), pageable)
         val paramMap = BeanPropertySqlParameterSource(productImeQuery)
