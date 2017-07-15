@@ -23,10 +23,13 @@
               {{inputForm.shopName}}
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action === 'upload'">
-              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
+              <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" list-type="picture-card" :on-preview="handlePreview" :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <!--<el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-change="handleChange" :on-remove="handleRemove" :on-preview="handlePreview" :file-list="fileList" list-type="picture" multiple >
                 <el-button size="small" type="primary">{{$t('priceChangeImeDetail.clickUpload')}}</el-button>
                 <div slot="tip" class="el-upload__tip">{{$t('priceChangeImeDetail.uploadImageSizeFor5000KB')}}</div>
-              </el-upload>
+              </el-upload>-->
             </el-form-item>
             <el-form-item :label="$t('priceChangeImeDetail.imagefile')" prop="image" v-if="action !=='upload'">
               <el-upload action="/api/general/sys/folderFile/upload?uploadPath=/调价串码抽检" :on-preview="handlePreview1" :file-list="fileList1" list-type="picture">
