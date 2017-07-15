@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import com.google.common.collect.Maps;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.common.enums.*;
@@ -94,12 +95,14 @@ public class DepotStoreController {
     }
 
     @RequestMapping(value = "storeReport")
-    public List<DepotStoreDto> storeReport(ReportQuery reportQuery){
+    public Map<String,Object> storeReport(ReportQuery reportQuery){
+        Map<String,Object> map=Maps.newHashMap();
         reportQuery.setDepotIdList(depotService.filterDepotIds());
         DepotStoreQuery depotStoreQuery = BeanUtil.map(reportQuery, DepotStoreQuery.class);
         List<DepotStoreDto> list = depotStoreService.findFilter(depotStoreQuery);
-        depotStoreService.setReportData(list,reportQuery);
-        return list;
+        map.put("sum",depotStoreService.setReportData(list,reportQuery));
+        map.put("list",list);
+        return map;
     }
 
     @RequestMapping(value = "storeReportDetail")

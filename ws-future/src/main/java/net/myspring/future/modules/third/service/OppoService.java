@@ -134,9 +134,9 @@ public class OppoService {
                     productIme.setInputType("工厂入库");
                     productIme.setBillId(oppoPlantSendImeiPpsel.getBillId());
                     productIme.setImeReverse(StringUtils.reverse(oppoPlantSendImeiPpsel.getImei()));
-                    productIme.setCreatedBy(RequestUtils.getAccountId());
+                    productIme.setCreatedBy("1");
                     productIme.setCreatedDate(LocalDateTime.now());
-                    productIme.setLastModifiedBy(RequestUtils.getAccountId());
+                    productIme.setLastModifiedBy("1");
                     productIme.setLastModifiedDate(LocalDateTime.now());
                     productIme.setVersion(0);
                     productIme.setLocked(false);
@@ -157,13 +157,14 @@ public class OppoService {
                 productItemelectronSelMap.put(oppoPlantProductItemelectronSel.getProductNo(),oppoPlantProductItemelectronSel);
             }
             List<String> productNoList= CollectionUtil.extractToList(oppoPlantProductItemelectronSels, "productNo");
-            for(List<String> productNos:CollectionUtil.splitList(productNoList,1000)){
-                localProductImeList.addAll(productImeRepository.findByEnabledIsTrueAndImeIn(productNos));
+            for(List<String> imes:CollectionUtil.splitList(productNoList,1000)){
+                localProductImeList.addAll(productImeRepository.findByImeInAndRetailDate(imes));
             }
             for(ProductIme productIme:localProductImeList){
                 productIme.setRetailDate(productItemelectronSelMap.get(productIme.getIme()).getDateTime());
             }
         }
+        logger.info("localProductImeList=="+localProductImeList.toString());
         if(CollectionUtil.isNotEmpty(localProductImeList)){
             productImeRepository.save(localProductImeList);
         }

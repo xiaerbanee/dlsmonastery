@@ -5,6 +5,7 @@
       tabindex="2"
       :class="['vodal',sizeClass, className]"
       @keyup.esc="onEsc"
+      @keyup.enter="onEnter"
     >
       <div class="vodal-mask" v-if="mask" @click="$emit('hide')" />
       <transition >
@@ -71,6 +72,9 @@
     methods: {
       onEsc() {
         this.show && this.$emit('hide');
+      },
+      onEnter(){
+        this.$emit('enter')
       }
     },
     watch: {

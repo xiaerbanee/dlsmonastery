@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class DepotForm extends BaseForm<Depot> {
     private String clientId;
+    private String areaId;
     //寄售对应
     private String delegateDepotId;
     //编码
@@ -64,6 +65,14 @@ public class DepotForm extends BaseForm<Depot> {
     private String companyGroup;
 
     private String parentId;
+
+    public String getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
+    }
 
     public String getParentId() {
         return parentId;

@@ -1,11 +1,8 @@
 package net.myspring.future.modules.third.dto;
 
-import net.myspring.future.common.domain.IdEntity;
-
-import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
-public class OppoPlantSendImeiPpsel  extends IdEntity<OppoPlantSendImeiPpsel> {
+public class OppoPlantSendImeiPpsel  {
     private String id;
     private String billId;
     private String imei;
