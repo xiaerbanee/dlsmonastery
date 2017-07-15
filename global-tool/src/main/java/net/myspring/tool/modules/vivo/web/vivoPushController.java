@@ -4,6 +4,7 @@ import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.modules.vivo.dto.SCustomerDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDetailDto;
 import net.myspring.tool.modules.vivo.dto.SPlantCustomerStockDto;
+import net.myspring.tool.modules.vivo.service.IDvivoPushService;
 import net.myspring.tool.modules.vivo.service.VivoPushService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,8 @@ import java.util.Map;
 public class vivoPushController {
     @Autowired
     private VivoPushService vivoPushService;
+    @Autowired
+    private IDvivoPushService idvivoPushService;
 
     @RequestMapping(value = "pushVivoData")
     public void pushVivoData(String date){
@@ -36,4 +39,16 @@ public class vivoPushController {
         vivoPushService.pushCustomerStockDetailData(sPlantCustomerStockDetailDtoList,productColorMap,date);
 
     }
+
+    @RequestMapping(value = "pushIDvivoData")
+    public void pushIDvivoData(String date){
+        //同步机构数据
+        DbContextHolder.get().setCompanyName("IDVIVO");
+        idvivoPushService.pushIDvivoZonesData();
+
+
+
+
+    }
+
 }
