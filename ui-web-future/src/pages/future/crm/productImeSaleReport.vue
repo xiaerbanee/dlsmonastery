@@ -63,7 +63,7 @@
         <el-table-column  prop="depotName" label="门店" sortable width="300" v-if="nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="officeName" label="区域" sortable width="300" v-if="!nextIsShop&&'区域'==formData.sumType"></el-table-column>
         <el-table-column  prop="productTypeName" label="型号" sortable width="300" v-if="'型号'==formData.sumType"></el-table-column>
-        <el-table-column prop="qty" label="数量"  sortable></el-table-column>
+        <el-table-column prop="qty" :label="'数量'+sum"  sortable></el-table-column>
         <el-table-column prop="percent" label="占比(%)"></el-table-column>
         <el-table-column :label="$t('employeeList.operation')" width="140">
           <template scope="scope">
@@ -109,6 +109,7 @@
         formData:{
           extra:{},
         },
+        sum:100,
         initPromise:{},
         formLabelWidth: '120px',
         formVisible: false,

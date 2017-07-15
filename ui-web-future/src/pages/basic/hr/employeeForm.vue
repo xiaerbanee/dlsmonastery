@@ -161,27 +161,18 @@
             this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
             this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
             this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
-            accountForm.validate((accountValid) => {
-              if (accountValid) {
-                axios.post('/api/basic/hr/employee/save', qs.stringify(util.deleteExtra(this.employeeForm))).then((response)=> {
-                  this.$message("员工"+response.data.message);
-                  this.accountForm.employeeId=response.data.extra.employeeId;
-                  axios.post('/api/basic/hr/account/save', qs.stringify(util.deleteExtra(this.accountForm))).then((response)=> {
-                    this.$message("账户"+response.data.message);
-                  });
-                  if(!this.isCreate){
-                    this.submitDisabled = false;
-                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
-                  } else {
-                    Object.assign(this.$data, this.getData());
-                    this.initPage();
-                  }
-                }).catch( ()=> {
-                  that.submitDisabled = false;
-                });
-              } else {
+            this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
+            axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
+              this.$message("员工"+response.data.message);
+              if(!this.isCreate){
                 this.submitDisabled = false;
+                this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
+              } else {
+                Object.assign(this.$data, this.getData());
+                this.initPage();
               }
+            }).catch( ()=> {
+              that.submitDisabled = false;
             })
           }else{
             this.submitDisabled = false;

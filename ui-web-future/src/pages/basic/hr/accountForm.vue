@@ -17,6 +17,11 @@
             <el-form-item :label="$t('accountForm.confirmPassword')" prop="confirmPassword">
               <el-input v-model="inputForm.confirmPassword" type="password"></el-input>
             </el-form-item>
+            <el-form-item>
+              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('accountForm.save')}}</el-button>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item :label="$t('accountForm.officeName')" prop="officeId">
               <office-select v-model="inputForm.officeId"></office-select>
             </el-form-item>
@@ -28,19 +33,8 @@
                 <el-option v-for="position in inputForm.extra.positionDtoList" :key="position.id" :label="position.name" :value="position.id"></el-option>
               </el-select>
             </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item :label="$t('accountForm.outId')" prop="outId">
-              <el-input v-model="inputForm.outId"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('accountForm.outPassword')" prop="outPassword">
-              <el-input v-model="inputForm.outPassword" type="password"></el-input>
-            </el-form-item>
             <el-form-item :label="$t('accountForm.remarks')" prop="remarks">
               <el-input v-model="inputForm.remarks"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="submitDisabled" @click="formSubmit()">{{$t('accountForm.save')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
