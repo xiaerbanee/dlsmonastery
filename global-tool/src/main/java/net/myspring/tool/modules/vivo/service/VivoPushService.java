@@ -20,7 +20,6 @@ import net.myspring.tool.modules.vivo.repository.*;
 import net.myspring.util.text.StringUtils;
 import net.myspring.util.time.LocalDateTimeUtils;
 import net.myspring.util.time.LocalDateUtils;
-import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -285,7 +284,6 @@ public class VivoPushService {
 
     @LocalDataSource
     public Map<String,String> getProductColorMap(){
-        System.err.println("CompanyName:"+DbContextHolder.get().getCompanyName()+"DataSourceType:"+DbContextHolder.get().getDataSourceType());
         List<VivoPlantProducts> vivoPlantProductList= vivoPlantProductsRepository.findAllByProductId();
         Map<String, String> productColorMap = Maps.newHashMap();
 
