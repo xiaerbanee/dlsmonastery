@@ -1,10 +1,12 @@
 package net.myspring.future.modules.basic.dto;
 
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class DepotAccountDto extends DataDto<Depot> {
 
@@ -31,6 +33,16 @@ public class DepotAccountDto extends DataDto<Depot> {
     private BigDecimal scbzj; //市场保证金
     private BigDecimal xxbzj; //形象保证金
     private BigDecimal ysjyj; //演示机押金
+
+    private List<CustomerReceiveDetailDto> customerReceiveDetailDtoList;
+
+    public List<CustomerReceiveDetailDto> getCustomerReceiveDetailDtoList() {
+        return customerReceiveDetailDtoList;
+    }
+
+    public void setCustomerReceiveDetailDtoList(List<CustomerReceiveDetailDto> customerReceiveDetailDtoList) {
+        this.customerReceiveDetailDtoList = customerReceiveDetailDtoList;
+    }
 
     public String getDelegateDepotId() {
         return delegateDepotId;

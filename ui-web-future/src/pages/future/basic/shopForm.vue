@@ -5,12 +5,12 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px"  class="form input-form">
         <el-row :gutter="20">
           <el-col :span="10">
-        <el-form-item label="选择客户" prop="clientId">
+        <el-form-item label="金蝶客户" prop="clientId">
           <el-select v-model="inputForm.clientId"  filterable remote  :remote-method="remoteClient" :loading="remoteLoading"  :clearable=true>
             <el-option v-for="item in clientList"  :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="门店名称" prop="name">
           <el-input v-model="inputForm.name" />
         </el-form-item>
             <el-form-item label="总店" prop="parentId" >
