@@ -2,7 +2,7 @@ spring:
   application:
     name: summer-uaa
   profiles:
-    active: prod
+    active: dev
   cloud:
     config:
       uri: http://localhost:9900
