@@ -260,8 +260,8 @@ class OfficeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate:
                 of.*,
                 count(*) as childCount
             from
-                hr_office of,
-                hr_office of1
+                sys_office of,
+                sys_office of1
             where
                 of1.parent_ids like concat('%,', of.id, ',%')
             group by
