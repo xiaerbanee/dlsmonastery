@@ -44,8 +44,8 @@ class OppoPlantProductItemelectronSelRepositoryImpl @Autowired constructor(val n
         from
            oppo_plant_product_itemelectron_sel t
         where
-          t.date_time>=:dateStart
-          and t.date_time<=:dateEnd
+          t.created_time>=:dateStart
+          and t.created_time<=:dateEnd
           and t.customer_id in (:agentCodes)
             """,paramMap,BeanPropertyRowMapper(OppoPlantProductItemelectronSel::class.java));
     }

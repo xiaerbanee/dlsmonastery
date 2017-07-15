@@ -1,32 +1,35 @@
 package net.myspring.tool.modules.vivo.domain;
 
+import java.time.LocalDate;
+
 public class SProductItemStocksM13e00 {
-    private String companyID;
-    private String productID;
+    private String companyId;
+    private String productId;
     private String productNo;
-    private String storeID;
-    private String customerID;
-    private String subCustomerID;
+    private String storeId;
+    private String customerId;
+    private String subCustomerId;
     private String status;
     private String statusInfo;
     private Integer isReturnProfit;
     private Integer isLock;
     private String remark;
+    private String updateTime;
 
-    public String getCompanyID() {
-        return companyID;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setCompanyID(String companyID) {
-        this.companyID = companyID;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
-    public String getProductID() {
-        return productID;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProductID(String productID) {
-        this.productID = productID;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getProductNo() {
@@ -37,28 +40,28 @@ public class SProductItemStocksM13e00 {
         this.productNo = productNo;
     }
 
-    public String getStoreID() {
-        return storeID;
+    public String getStoreId() {
+        return storeId;
     }
 
-    public void setStoreID(String storeID) {
-        this.storeID = storeID;
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    public String getSubCustomerID() {
-        return subCustomerID;
+    public String getSubCustomerId() {
+        return subCustomerId;
     }
 
-    public void setSubCustomerID(String subCustomerID) {
-        this.subCustomerID = subCustomerID;
+    public void setSubCustomerId(String subCustomerId) {
+        this.subCustomerId = subCustomerId;
     }
 
     public String getStatus() {
@@ -99,5 +102,13 @@ public class SProductItemStocksM13e00 {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

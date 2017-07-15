@@ -7,7 +7,7 @@
         <el-button v-permit="'crm:goodsOrderShip:ship'" type="primary" @click="itemShip(null)">{{ $t('goodsOrderShipList.ship') }}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('goodsOrderShipList.filter')" v-model="formVisible" size="large" class="search-form" z-index="1500" ref="searchDialog">
         <el-form :model="formData" :label-width="formLabelWidth">
           <el-row :gutter="4">
             <el-col :span="8">

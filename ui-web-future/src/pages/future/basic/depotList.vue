@@ -8,7 +8,7 @@
         <el-button type="primary" @click="synData"  icon="plus" v-permit="'crm:bank:edit'">{{$t('depotList.syn')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible = false" :title="$t('bankList.filter')" v-model="formVisible" size="large" class="search-form">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible = false" :title="$t('bankList.filter')" v-model="formVisible" size="large" class="search-form">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="8">

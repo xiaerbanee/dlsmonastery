@@ -5,6 +5,7 @@ Page({
   data: {
     page: {},
     formData: {},
+    formProperty:{},
     searchHidden: true
   },
   onLoad: function (options) {
@@ -29,7 +30,7 @@ Page({
       },
       success: function (res) {
         console.log("getQuery", res.data)
-        that.setData({ formData: res.data });
+        that.setData({ formData: res.data,formProperty:res.data.extra});
         that.pageRequest();
       }
     });
@@ -46,11 +47,17 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            var deleted = wx.getStorageSync("authorityList").includes("crm:priceChangeIme:delete");
-            for (let item in res.data.content) {
+            console.log(res.data)
+            let audit = wx.getStorageSync("authorityList").includes("crm:priceChangeIme:audit");
+            let edit = wx.getStorageSync("authorityList").includes("crm:priceChangeIme:edit");
+
+            let content = res.data.content;
+            for (let item in content) {
               var actionList = new Array();
               actionList.push("详细");
-              if (deleted) { actionList.push("删除") }
+              if (edit&&content[item].status==='申请中'){ actionList.push("上传"); }
+              if (audit && content[item].status === '申请中' && content[item].image!=null) { actionList.push("审核") }
+              if (edit&&content[item].status === '申请中') { actionList.push("删除") }
               res.data.content[item].actionList = actionList;
             }
             that.setData({ page: res.data });
@@ -65,6 +72,10 @@ Page({
     that.setData({
       searchHidden: !that.data.searchHidden
     })
+  },
+  bindStatus:function(e){
+    var that = this;
+    that.setData({ 'formData.status': that.data.formProperty.statusList[e.detail.value] });
   },
   itemActive: function (e) {
     var that = this;
@@ -89,12 +100,19 @@ Page({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == "详细") {
+          if (itemList[res.tapIndex] == "上传") {
             wx.navigateTo({
-              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=uploadImage&id=' + id
+              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=upload&id=' + id
             })
-          }
-          else if (itemList[res.tapIndex] == "删除") {
+          }else if(itemList[res.tapIndex]=="审核") {
+            wx.navigateTo({
+              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=audit&id=' + id
+            })
+          }else if(itemList[res.tapIndex]=="详细") {
+            wx.navigateTo({
+              url: '/page/crm/priceChangeImeForm/priceChangeImeForm?action=detail&id=' + id
+            })
+          }else if (itemList[res.tapIndex] == "删除") {
             wx.request({
               url: $util.getUrl("ws/future/crm/priceChangeIme/delete"),
               data: { id: id },

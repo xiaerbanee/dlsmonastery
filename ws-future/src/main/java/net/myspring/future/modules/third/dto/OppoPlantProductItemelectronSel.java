@@ -1,11 +1,8 @@
 package net.myspring.future.modules.third.dto;
 
-import net.myspring.future.common.domain.IdEntity;
-
-import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
-public class OppoPlantProductItemelectronSel extends IdEntity<OppoPlantProductItemelectronSel> {
+public class OppoPlantProductItemelectronSel  {
     private LocalDateTime createdTime;
     private String customerId;
     private LocalDateTime dateTime;

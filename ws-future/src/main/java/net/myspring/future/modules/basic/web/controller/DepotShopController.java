@@ -45,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuj on 2017/5/12.
@@ -162,9 +163,8 @@ public class DepotShopController {
     }
 
     @RequestMapping(value = "depotReportDate")
-    public List<DepotReportDto> depotReport(ReportQuery reportQuery){
-        List<DepotReportDto> list=depotShopService.setReportData(reportQuery);
-        return list;
+    public Map<String,Object> depotReport(ReportQuery reportQuery){
+        return depotShopService.setReportData(reportQuery);
     }
 
     @RequestMapping(value = "getReportQuery")

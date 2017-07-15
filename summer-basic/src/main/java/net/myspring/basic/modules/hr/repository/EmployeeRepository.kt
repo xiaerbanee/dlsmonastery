@@ -91,14 +91,11 @@ class EmployeeRepositoryImpl @Autowired constructor(val jdbcTemplate: JdbcTempla
     override fun findPage(pageable: Pageable, employeeQuery: EmployeeQuery): Page<EmployeeDto> {
         var sb = StringBuilder("""
             SELECT employee.*,account.office_id,account.position_id,account.leader_id,area.name as areaName
-            FROM hr_employee employee,
-            hr_account account,
-            sys_office office,
-            sys_office area
-            where  employee.account_id=account.id
-            and  office.area_Id=area.id
-            and account.office_id=office.id
-            and employee.enabled=1
+            FROM hr_employee employee left join hr_account account on  employee.account_id=account.id
+            left join sys_office office on  account.office_id=office.id
+            left join sys_office area on  office.area_id=area.id
+            where
+             employee.enabled=1
         """);
         if(StringUtils.isNotBlank(employeeQuery.name)) {
             sb.append(" and employee.name like CONCAT('%',:name,'%')");

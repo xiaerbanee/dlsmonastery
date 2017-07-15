@@ -13,7 +13,7 @@
         <el-button type="primary" @click="exportData" icon="upload" v-permit="'crm:adApply:view'">{{$t('adApplyList.export')}}</el-button>
         <span v-html="searchText"></span>
       </el-row>
-      <search-dialog :show="formVisible" @hide="formVisible=false" :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
+      <search-dialog @enter="search()" :show="formVisible" @hide="formVisible=false" :title="$t('adApplyList.filter')" v-model="formVisible" size="tiny" class="search-form" ref="searchDialog"  z-index="1500">
         <el-form :model="formData">
           <el-row :gutter="4">
             <el-col :span="24">

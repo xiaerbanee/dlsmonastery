@@ -8,8 +8,17 @@ import java.util.Map;
 
 public class DepotReportDetailDto {
 
+    private Integer sum;
     private List<DepotReportDto> depotReportList= Lists.newArrayList();
     private Map<String,Integer> productQtyMap= Maps.newHashMap();
+
+    public Integer getSum() {
+        return sum;
+    }
+
+    public void setSum(Integer sum) {
+        this.sum = sum;
+    }
 
     public List<DepotReportDto> getDepotReportList() {
         return depotReportList;
