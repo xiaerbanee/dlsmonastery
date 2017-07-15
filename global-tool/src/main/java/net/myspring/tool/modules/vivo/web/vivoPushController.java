@@ -45,11 +45,7 @@ public class vivoPushController {
     public void pushIDvivoData(String date){
         //同步机构数据
         DbContextHolder.get().setCompanyName("IDVIVO");
-        idvivoPushService.pushIDvivoZonesData();
-
-
-
-
+//        idvivoPushService.pushIDvivoZonesData();
     }
 
 }
