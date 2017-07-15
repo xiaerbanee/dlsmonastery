@@ -190,7 +190,7 @@ public class DepotService {
             ExcelUtils.doWrite(workbook, tmpSheet);
             sheets.add(tmpSheet);
         }
-        return  new SimpleExcelBook(workbook,"客户应收" + LocalDateUtils.format(depotAccountQuery.getDutyDateStart(), "yyyyMMdd") + "~" + LocalDateUtils.format(depotAccountQuery.getDutyDateEnd(), "yyyyMMdd")+".xlsx", sheets);
+        return  new SimpleExcelBook(workbook,"客户应收" + LocalDateUtils.format(depotAccountQuery.getDutyDateStart(), "yyyyMMdd") + "~" + LocalDateUtils.format(depotAccountQuery.getDutyDateEnd().minusDays(1), "yyyyMMdd")+".xlsx", sheets);
     }
 
     public SimpleExcelBook depotAccountExportConfirmation(DepotAccountQuery depotAccountQuery) {
