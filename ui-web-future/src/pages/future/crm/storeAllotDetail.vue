@@ -36,8 +36,8 @@
         <div style="width:100%;height:50px;text-align:center;margin-top:25px;font-size:20px">{{$t('storeAllotDetail.billDetail')}}</div>
         <el-table :data="storeAllotDetailList"  v-loading="storeAllotDetailLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
           <el-table-column  prop="productName" :label="$t('storeAllotDetail.productName')" ></el-table-column>
-          <el-table-column prop="billQty" :label="$t('storeAllotDetail.billQty')" ></el-table-column>
-          <el-table-column prop="shippedQty" :label="$t('storeAllotDetail.shippedQty')" ></el-table-column>
+          <el-table-column prop="billQty" :label="$t('storeAllotDetail.billQty')" :render-header="count"></el-table-column>
+          <el-table-column prop="shippedQty" :label="$t('storeAllotDetail.shippedQty')" :render-header="count"></el-table-column>
         </el-table>
         <div style="width:100%;height:50px;text-align:center;margin-top:25px;font-size:20px">{{$t('storeAllotDetail.shipDetail')}}</div>
         <el-table :data="storeAllotImeList" v-loading="storeAllotImeLoading" :element-loading-text="$t('storeAllotDetail.loading')" stripe border >
@@ -61,6 +61,30 @@
         storeAllotDetailList:[],
         storeAllotImeList:[],
       }
+    },
+    methods:{
+      count(createElement,cols){
+        return createElement('label',{
+          domProps: {
+            innerHTML: `${cols.column.label} (合计:${this.countByProp(cols)})`,
+          }
+        })
+      },
+      countByProp(columns){
+        const prop = columns.column.property;
+        const data = columns.store.states.data;
+        let sum = 0;
+        if(prop === 'billQty'){
+          data.forEach((col) => {
+            sum += col.billQty;
+          })
+        }else if(prop === 'shippedQty'){
+          data.forEach((col) => {
+            sum += col.shippedQty;
+          })
+        }
+        return sum;
+      },
     },created(){
       axios.get('/api/ws/future/crm/storeAllot/findForView',{params:{id:this.$route.query.id}} ).then((response)=>{
         this.storeAllot=response.data;
