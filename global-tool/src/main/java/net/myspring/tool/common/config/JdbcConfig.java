@@ -31,6 +31,7 @@ public class JdbcConfig {
         targetDataSources.put("FACTORY_JXOPPO",getDataSouce("spring.datasource.factory.JXOPPO"));
         targetDataSources.put("FACTORY_JXVIVO",getDataSouce("spring.datasource.factory.JXVIVO"));
         targetDataSources.put("FUTURE_JXOPPO",getDataSouce("spring.datasource.future.JXOPPO"));
+        targetDataSources.put("FUTURE_JXVIVO",getDataSouce("spring.datasource.future.JXVIVO"));
         targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSouce("spring.datasource.local"));
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);

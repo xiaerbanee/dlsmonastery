@@ -27,7 +27,7 @@ class SPlantStockSupplyM13e00Repository @Autowired constructor(val namedParamete
         val sb = StringBuilder()
         sb.append("""
             insert into s_PlantStockSupply_m13e00(CompanyID,SupplyID,ProductID,CreatedTime,sumstock,useablestock,bad,AccountDate)
-            values(:companyid,:supplyid,:productid,:createdtime,:sumstock,:useablestock,:bad,:accountdate)
+            values(:companyId,:supplyId,:productId,:createdTime,:sumStock,:useAbleStock,:bad,:accountDate)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sPlantStockSupplyM13e00List.toTypedArray()))
     }

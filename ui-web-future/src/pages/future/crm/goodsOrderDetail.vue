@@ -62,10 +62,10 @@
       <div style="width:100%;height:50px;text-align:center;font-size:20px">{{$t('goodsOrderDetail.billDetail')}}</div>
       <el-table :data="goodsOrderDetailList" style="margin-top:5px;" stripe border>
         <el-table-column prop="productName" :label="$t('goodsOrderDetail.productName')" width="200"></el-table-column>
-        <el-table-column prop="qty" :label="$t('goodsOrderDetail.qty')"></el-table-column>
-        <el-table-column prop="realBillQty" :label="$t('goodsOrderDetail.billQty')"></el-table-column>
-        <el-table-column prop="shippedQty" :label="$t('goodsOrderDetail.shippedQty')"></el-table-column>
-        <el-table-column prop="price" :label="$t('goodsOrderDetail.price')"></el-table-column>
+        <el-table-column prop="qty" :label="$t('goodsOrderDetail.qty')" :render-header="count"></el-table-column>
+        <el-table-column prop="realBillQty" :label="$t('goodsOrderDetail.billQty')" :render-header="count"></el-table-column>
+        <el-table-column prop="shippedQty" :label="$t('goodsOrderDetail.shippedQty')" :render-header="count"></el-table-column>
+        <el-table-column prop="price" :label="$t('goodsOrderDetail.price')" ></el-table-column>
         <el-table-column :label="$t('goodsOrderDetail.operate')">
           <template scope="scope">
             <el-button size="small" class="clipBtn" type="success" :data-clipboard-text="imeMap.has(scope.row.productId) ? imeMap.get(scope.row.productId) : ' '">{{$t('goodsOrderDetail.ime')}}</el-button>
@@ -94,6 +94,32 @@
       return this.getData();
     },
     methods: {
+      count(createElement,cols){
+        return createElement('label',{
+          domProps: {
+            innerHTML: `${cols.column.label} (合计:${this.countByProp(cols)})`,
+          }
+        })
+      },
+      countByProp(columns){
+        const prop = columns.column.property;
+        const data = columns.store.states.data;
+        let sum = 0;
+        if(prop === 'qty'){
+          data.forEach((col) => {
+            sum += col.qty;
+          })
+        }else if(prop === 'realBillQty'){
+          data.forEach((col) => {
+            sum += col.realBillQty;
+          })
+        }else if(prop === 'shippedQty'){
+          data.forEach((col) => {
+            sum += col.shippedQty;
+          })
+        }
+        return sum;
+      },
       getData(){
         return {
           carrierEdit: this.$route.query.carrierEdit,
