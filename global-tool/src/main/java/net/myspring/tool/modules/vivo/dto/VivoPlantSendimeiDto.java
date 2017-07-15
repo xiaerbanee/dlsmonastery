@@ -1,16 +1,13 @@
-package net.myspring.tool.modules.vivo.domain;
+package net.myspring.tool.modules.vivo.dto;
 
 
 import net.myspring.tool.common.domain.IdEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="vivo_plant_sendimei")
-public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
+public class VivoPlantSendimeiDto  {
     private String companyId;
     private String billId;
     private String productId;
@@ -24,6 +21,9 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
     private String model;
     private String meid;
     private String imei2;
+    private String colorId;
+    private String defaultProductId;
+    private String lxProductId;
 
 
     public String getCompanyId() {
@@ -130,4 +130,27 @@ public class VivoPlantSendimei extends IdEntity<VivoPlantSendimei> {
         this.productId = productId;
     }
 
+    public String getColorId() {
+        return colorId;
+    }
+
+    public void setColorId(String colorId) {
+        this.colorId = colorId;
+    }
+
+    public String getLxProductId() {
+        return lxProductId;
+    }
+
+    public void setLxProductId(String lxProductId) {
+        this.lxProductId = lxProductId;
+    }
+
+    public String getDefaultProductId() {
+        return defaultProductId;
+    }
+
+    public void setDefaultProductId(String defaultProductId) {
+        this.defaultProductId = defaultProductId;
+    }
 }
