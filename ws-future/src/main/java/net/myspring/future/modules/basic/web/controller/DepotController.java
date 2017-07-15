@@ -113,8 +113,9 @@ public class DepotController {
     @RequestMapping(value = "getDepotAccountQuery")
     public DepotAccountQuery getDepotAccountQuery(DepotAccountQuery depotAccountQuery) {
         LocalDate now = LocalDate.now();
-        LocalDate dutyDateStart = now.minusDays(30);
-        depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(now));
+        LocalDate dutyDateStart = LocalDateUtils.getFirstDayOfThisMonth(now);
+        LocalDate dutyDateEnd = now.plusDays(30);
+        depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(dutyDateEnd));
         depotAccountQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));
 
         return depotAccountQuery;
@@ -132,7 +133,7 @@ public class DepotController {
         if(StringUtils.isNotBlank(dateRange)){
             String[] tempParamValues = dateRange.split(" - ");
             customerReceiveDetailQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
-            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
+            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]).plusDays(1));
         }
 
         return cloudClient.getCustomerReceiveDetailList(customerReceiveDetailQuery);

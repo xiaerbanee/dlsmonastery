@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-date-picker  v-model="innerDate" :disabled="disabled"  align="left"  @change="onChange" format="yyyy-MM-dd"></el-date-picker>
+    <el-date-picker  v-model="innerDate" :editable=false  :disabled="disabled"  align="left"  @change="onChange" format="yyyy-MM-dd"></el-date-picker>
   </div>
 </template>
 <script>

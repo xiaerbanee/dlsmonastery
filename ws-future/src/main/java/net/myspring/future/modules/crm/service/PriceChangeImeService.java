@@ -12,6 +12,7 @@ import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.crm.domain.PriceChange;
 import net.myspring.future.modules.crm.domain.PriceChangeIme;
+import net.myspring.future.modules.crm.domain.ProductIme;
 import net.myspring.future.modules.crm.dto.PriceChangeDto;
 import net.myspring.future.modules.crm.dto.PriceChangeImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
@@ -193,7 +194,7 @@ public class PriceChangeImeService {
         }else{
             List<PriceChangeIme> priceChangeImes = new ArrayList<>();
             List<ProductImeDto> productImeDtos = productImeRepository.findDtoListByImeList(existImes);
-            Map<String,ProductImeDto> productDtoMap = CollectionUtil.extractToMap(productImeDtos,"ime");
+            Map<String,ProductImeDto> productImeDtoMap = CollectionUtil.extractToMap(productImeDtos,"ime");
             List<String> needSaveProductTypeIds = CollectionUtil.extractToList(productImeDtos,"productTypeId");
             List<String> needSaveProductImeIds = CollectionUtil.extractToList(productImeDtos,"id");
             if(productImeDtos == null){
@@ -204,27 +205,30 @@ public class PriceChangeImeService {
                     throw new ServiceException("输入的串码中含有不是调价项目中的产品型号,保存失败");
                 }
             }
-            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeIdAndUploadDateIsNotNullAndEnabledIsTrue(priceChangeId);
+            List<PriceChangeIme> existPriceChangeIme = priceChangeImeRepository.findByPriceChangeId(priceChangeId);
             List<String> existProductImeIds = CollectionUtil.extractToList(existPriceChangeIme,"productImeId");
             for(String productImeId:needSaveProductImeIds){
                 if(existProductImeIds.contains(productImeId)){
-                    throw new ServiceException("输入的串码中有串码已存在所选择的调价项目下,保存失败");
+                    ProductIme productIme = productImeRepository.findOne(productImeId);
+                    throw new ServiceException("输入的串码:"+productIme.getIme()+"已存在所选择的调价项目下,保存失败");
                 }
             }
             Map<String,Depot> depotMap = CollectionUtil.extractToMap(depotRepository.findByNameList(shopNameList),"name");
             for(Integer i = 0;i<imeList.size();i++){
                 PriceChangeIme priceChangeIme = new PriceChangeIme();
                 priceChangeIme.setPriceChangeId(priceChangeId);
-                priceChangeIme.setProductImeId(productDtoMap.get(imeList.get(i)).getId());
+                priceChangeIme.setProductImeId(productImeDtoMap.get(imeList.get(i)).getId());
                 priceChangeIme.setShopId(depotMap.get(shopNameList.get(i)).getId());
-                priceChangeIme.setSaleDate(productDtoMap.get(imeList.get(i)).getProductImeSaleCreatedDate());
-                priceChangeIme.setUploadDate(productDtoMap.get(imeList.get(i)).getProductImeUploadCreatedDate());
+                priceChangeIme.setSaleDate(productImeDtoMap.get(imeList.get(i)).getProductImeSaleCreatedDate());
+                priceChangeIme.setUploadDate(productImeDtoMap.get(imeList.get(i)).getProductImeUploadCreatedDate());
                 priceChangeIme.setStatus(AuditStatusEnum.申请中.name());
                 priceChangeIme.setRemarks(remarksList.get(i));
                 priceChangeIme.setIsCheck(false);
                 priceChangeImes.add(priceChangeIme);
             }
             priceChangeImeRepository.save(priceChangeImes);
+
+
         }
 
     }

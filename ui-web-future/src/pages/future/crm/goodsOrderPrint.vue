@@ -41,7 +41,7 @@
       <div class="span1">记账：</div>
       <div class="span2">收款：</div>
       <div class="span2">仓管员：</div>
-      <div class="span2">制单：{{account.createdByName}}</div>
+      <div class="span2">制单：{{account.loginName}}</div>
       <div class="span2">提货人：</div>
     </div>
   </div>
