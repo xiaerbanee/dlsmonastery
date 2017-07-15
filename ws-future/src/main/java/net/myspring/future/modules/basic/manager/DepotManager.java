@@ -1,9 +1,11 @@
 package net.myspring.future.modules.basic.manager;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.kingdee.domain.StkInventory;
+import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
+import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.client.OfficeClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.repository.DepotRepository;
@@ -14,14 +16,12 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by liuj on 2017/5/15.
- */
 @Component
 public class DepotManager {
 
@@ -29,8 +29,6 @@ public class DepotManager {
     private DepotRepository depotRepository;
     @Autowired
     private DepotStoreRepository depotStoreRepository;
-    @Autowired
-    private OfficeClient officeClient;
     @Autowired
     private CloudClient cloudClient;
 
@@ -98,5 +96,29 @@ public class DepotManager {
         }
 
         return result;
+    }
+
+    public Map<String, CustomerReceiveDto> getLatestCustomerReceiveMap(List<String> clientOutIdList) {
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(1));
+        customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+        customerReceiveQuery.setCustomerIdList(clientOutIdList);
+
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        Map<String, CustomerReceiveDto> customerReceiveDtoMap = new HashMap<>();
+        if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
+            customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
+        }
+        return customerReceiveDtoMap;
+    }
+
+
+    public CustomerReceiveDto getLatestCustomerReceive(String clientOutId) {
+        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setDateStart(LocalDate.now().plusDays(1));
+        customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
+        customerReceiveQuery.setCustomerIdList(Lists.newArrayList(clientOutId));
+        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
+        return CollectionUtil.isNotEmpty(customerReceiveDtoList) ? customerReceiveDtoList.get(0) : null;
     }
 }

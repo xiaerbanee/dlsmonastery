@@ -7,7 +7,6 @@ import net.myspring.basic.common.util.OfficeUtil;
 import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
-import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
@@ -22,7 +21,6 @@ import net.myspring.future.common.utils.ExpressUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.api.domain.CarrierOrder;
 import net.myspring.future.modules.api.repository.CarrierOrderRepository;
-import net.myspring.future.modules.basic.client.CloudClient;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.PricesystemDetail;
@@ -102,8 +100,6 @@ public class GoodsOrderService {
     @Autowired
     private DepotManager depotManager;
     @Autowired
-    private CloudClient cloudClient;
-    @Autowired
     private CarrierOrderRepository carrierOrderRepository;
     @Autowired
     private ExpressOrderManager expressOrderManager;
@@ -128,16 +124,8 @@ public class GoodsOrderService {
         if (CollectionUtil.isNotEmpty(page.getContent())) {
             Map<String, String> carrierOrderCodesMap = getCarrierOrderCodesMap(page);
 
-            CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-            customerReceiveQuery.setDateStart(LocalDate.now());
-            customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
             List<String> clientOutIdList = CollectionUtil.extractToList(page.getContent(), "clientOutId");
-            customerReceiveQuery.setCustomerIdList(clientOutIdList);
-            List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-            Map<String, CustomerReceiveDto> customerReceiveDtoMap = new HashMap<>();
-            if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
-                customerReceiveDtoMap = CollectionUtil.extractToMap(customerReceiveDtoList, "customerId");
-            }
+            Map<String, CustomerReceiveDto> customerReceiveDtoMap = depotManager.getLatestCustomerReceiveMap(clientOutIdList);
 
             for (GoodsOrderDto goodsOrderDto : page.getContent()) {
 
@@ -636,18 +624,11 @@ public class GoodsOrderService {
         DepotAccountDto result = depotRepository.findDepotAccount(goodsOrder.getShopId());
         cacheUtils.initCacheInput(result);
 
-        CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
-        customerReceiveQuery.setDateStart(LocalDate.now());
-        customerReceiveQuery.setDateEnd(customerReceiveQuery.getDateStart());
-        customerReceiveQuery.setCustomerIdList(Lists.newArrayList(result.getClientOutId()));
-        List<CustomerReceiveDto> customerReceiveDtoList = cloudClient.getCustomerReceiveList(customerReceiveQuery);
-        if(CollectionUtil.isNotEmpty(customerReceiveDtoList)){
-            result.setQcys(customerReceiveDtoList.get(0).getBeginShouldGet());
-            result.setQmys(customerReceiveDtoList.get(0).getEndShouldGet());
-        }else {
-            result.setQcys(BigDecimal.ZERO);
-            result.setQmys(BigDecimal.ZERO);
-        }
+        CustomerReceiveDto latestCustomerReceiveDto = depotManager.getLatestCustomerReceive(result.getClientOutId());
+
+        result.setQcys(latestCustomerReceiveDto==null ? BigDecimal.ZERO : latestCustomerReceiveDto.getBeginShouldGet());
+        result.setQmys(latestCustomerReceiveDto==null ? BigDecimal.ZERO : latestCustomerReceiveDto.getEndShouldGet());
+
         return result;
     }
 
