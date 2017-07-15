@@ -133,7 +133,7 @@ public class DepotController {
         if(StringUtils.isNotBlank(dateRange)){
             String[] tempParamValues = dateRange.split(" - ");
             customerReceiveDetailQuery.setDateStart(LocalDate.parse(tempParamValues[0]));
-            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]));
+            customerReceiveDetailQuery.setDateEnd(LocalDate.parse(tempParamValues[1]).plusDays(1));
         }
 
         return cloudClient.getCustomerReceiveDetailList(customerReceiveDetailQuery);
