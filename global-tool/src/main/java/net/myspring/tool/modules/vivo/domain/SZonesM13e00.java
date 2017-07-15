@@ -14,6 +14,7 @@ public class SZonesM13e00 {
     private String fatherid;
     private Integer subcount;
     private String zonetypes;
+    private String tableName;
 
     @Column(name = "ZoneID")
     public String getZoneid() {
@@ -84,5 +85,14 @@ public class SZonesM13e00 {
 
     public void setZonetypes(String zonetypes) {
         this.zonetypes = zonetypes;
+    }
+
+    @Transient
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

@@ -23,6 +23,7 @@ public class OfficeChildDto  {
     private String jointLevel;
     private String parentId;
     private String parentIds;
+    private String agentCode;
     private String childCount;
 
     public String getId() {
@@ -127,6 +128,14 @@ public class OfficeChildDto  {
 
     public void setParentIds(String parentIds) {
         this.parentIds = parentIds;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 
     public String getChildCount() {
