@@ -24,7 +24,6 @@ public class vivoPushController {
     public void pushVivoData(String date){
         DbContextHolder.get().setCompanyName("JXVIVO");
         //机构数据
-        DbContextHolder.get().setDataSourceType(DataSourceTypeEnum.FACTORY.name());
         vivoPushService.pushVivoZonesData();
         //客户数据
         List<SCustomerDto> futureCustomerDtoList = vivoPushService.getVivoCustomersData(date);
