@@ -40,6 +40,9 @@
               <el-form-item :label="$t('priceChangeImeList.priceChangeName')" >
                 <el-input v-model="formData.priceChangeName" auto-complete="off" :placeholder="$t('priceChangeImeList.likeSearch')"></el-input>
               </el-form-item>
+              <el-form-item :label="$t('priceChangeImeList.createdBy')">
+                <account-select v-model="formData.createdBy" @afterInit="setSearchText"></account-select>
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form>
@@ -85,12 +88,13 @@
 </template>
 <script>
   import officeSelect from 'components/basic/office-select';
+  import accountSelect from 'components/basic/account-select';
   import productSelect from 'components/future/product-select';
   import depotSelect from 'components/future/depot-select';
   import boolSelect from 'components/common/bool-select';
   export default {
     components:{
-      officeSelect,productSelect,depotSelect,boolSelect
+      officeSelect,accountSelect,productSelect,depotSelect,boolSelect
     },
     data() {
       return {

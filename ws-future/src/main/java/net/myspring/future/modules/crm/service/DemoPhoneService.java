@@ -1,6 +1,7 @@
 package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -66,15 +67,14 @@ public class DemoPhoneService {
     }
 
     @Transactional
-    public String save(DemoPhoneForm demoPhoneForm) {
+    public void save(DemoPhoneForm demoPhoneForm) {
         Map<String,DemoPhone> demoPhoneMap = CollectionUtil.extractToMap(demoPhoneRepository.findAll(),"productImeId");
         if(demoPhoneMap.get(demoPhoneForm.getProductImeId())!=null){
-            return "此串码已在演示用机中存在";
+            throw new ServiceException("此串码已在演示用机中存在");
         }
         DemoPhone demoPhone = BeanUtil.map(demoPhoneForm,DemoPhone.class);
         demoPhone.setStatus(AuditStatusEnum.已通过.name());
         demoPhoneRepository.save(demoPhone);
-        return null;
     }
 
     public SimpleExcelBook export(DemoPhoneQuery demoPhoneQuery) {
