@@ -9,6 +9,7 @@ import net.myspring.future.modules.crm.dto.ExpressOrderDto
 import net.myspring.future.modules.crm.dto.PriceChangeDto
 import net.myspring.future.modules.crm.web.query.DemoPhoneQuery
 import net.myspring.future.modules.crm.web.query.PriceChangeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.data.repository.query.Param
@@ -96,6 +97,12 @@ class DemoPhoneRepositoryImpl @Autowired constructor(val namedParameterJdbcTempl
         }
         if (demoPhoneQuery.createdDateEnd != null) {
             sb.append("""  and t1.created_date  < :createdDateEnd """)
+        }
+        if (CollectionUtil.isNotEmpty(demoPhoneQuery.officeIdList)) {
+            sb.append("""  and depot.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(demoPhoneQuery.depotIdList)) {
+            sb.append("""  and depot.id in (:depotIdList)  """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)

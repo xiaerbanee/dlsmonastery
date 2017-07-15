@@ -5,6 +5,7 @@ import net.myspring.future.modules.crm.domain.*
 import net.myspring.future.modules.crm.dto.DepotChangeDto
 
 import net.myspring.future.modules.crm.web.query.DepotChangeQuery
+import net.myspring.util.collection.CollectionUtil
 import net.myspring.util.repository.MySQLDialect
 import net.myspring.util.text.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
@@ -59,9 +60,11 @@ class DepotChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
          SELECT
             t1.*
         FROM
-            crm_depot_change t1
+            crm_depot_change t1,
+            crm_depot t2
         WHERE
             t1.enabled = 1
+            and t1.depot_id = t2.id
         """)
         if(StringUtils.isNotBlank(depotChangeQuery.depotId)){
             sb.append("""  and t1.depot_id=:depotId  """)
@@ -74,6 +77,12 @@ class DepotChangeRepositoryImpl @Autowired constructor(val namedParameterJdbcTem
         }
         if(depotChangeQuery.createdDateEnd != null){
             sb.append("""  and t1.expiry_date < :createdDateEnd  """)
+        }
+        if (CollectionUtil.isNotEmpty(depotChangeQuery.officeIdList)) {
+            sb.append("""  and t2.office_id in (:officeIdList)  """)
+        }
+        if (CollectionUtil.isNotEmpty(depotChangeQuery.depotIdList)) {
+            sb.append("""  and t2.id in (:depotIdList)  """)
         }
 
         var pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
