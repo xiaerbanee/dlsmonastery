@@ -42,7 +42,7 @@ public class ReportQuery extends BaseQuery{
     //库存报表分页门店数据
     private List<String> depotIds=Lists.newArrayList();
     private String exportType;
-    private List<String> productTypeIdList;
+    private List<String> productTypeIdList=Lists.newArrayList();
 
     public List<String> getDepotIds() {
         return depotIds;

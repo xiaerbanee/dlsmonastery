@@ -100,7 +100,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value = "productImeReport")
-    public List<ProductImeReportDto> productImeReport(ReportQuery productImeSaleReportQuery){
+    public Map<String,Object> productImeReport(ReportQuery productImeSaleReportQuery){
         return productImeService.productImeReport(productImeSaleReportQuery);
     }
 

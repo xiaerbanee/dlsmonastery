@@ -23,6 +23,7 @@ public class OfficeUtil {
             officeDto.setParentId((String) map.get("parentId"));
             officeDto.setParentIds((String) map.get("parentIds"));
             officeDto.setType((String) map.get("type"));
+            officeDto.setAreaId((String) map.get("areaId"));
             if(map.get("point")!=null){
                 officeDto.setPoint(new BigDecimal((double)((List) map.get("point")).get(1)));
             }else {

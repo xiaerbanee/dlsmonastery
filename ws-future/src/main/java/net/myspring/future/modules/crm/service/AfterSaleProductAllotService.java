@@ -1,6 +1,8 @@
 package net.myspring.future.modules.crm.service;
 
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.dto.AfterSaleDto;
 import net.myspring.future.modules.crm.dto.AfterSaleProductAllotDto;
 import net.myspring.future.modules.crm.repository.AfterSaleProductAllotRepository;
@@ -24,8 +26,11 @@ public class AfterSaleProductAllotService {
     private CacheUtils cacheUtils;
     @Autowired
     private AfterSaleProductAllotRepository afterSaleProductAllotRepository;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<AfterSaleProductAllotDto> findPage(Pageable pageable, AfterSaleProductAllotQuery afterSaleProductAllotQuery){
+        afterSaleProductAllotQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<AfterSaleProductAllotDto> afterSaleProductAllotDtoPage=afterSaleProductAllotRepository.findPage(pageable,afterSaleProductAllotQuery);
         cacheUtils.initCacheInput(afterSaleProductAllotDtoPage.getContent());
         return afterSaleProductAllotDtoPage;

@@ -12,7 +12,6 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.Bank;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.CustomerDto;
@@ -107,7 +106,7 @@ public class DepotService {
         return depotDto;
     }
 
-    public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery) {
+    public Page<DepotAccountDto> findDepotAccountList(Pageable pageable, DepotAccountQuery depotAccountQuery, boolean queryDetail) {
 
         if(depotAccountQuery.getDutyDateRange() == null || depotAccountQuery.getDutyDateStart()==null || LocalDate.now().minusDays(70).isAfter(depotAccountQuery.getDutyDateStart()) ){
             throw new ServiceException("查询条件请选择为70天以内");
@@ -118,6 +117,7 @@ public class DepotService {
         cacheUtils.initCacheInput(page.getContent());
 
         CustomerReceiveQuery customerReceiveQuery = new CustomerReceiveQuery();
+        customerReceiveQuery.setQueryDetail(queryDetail);
         customerReceiveQuery.setDateStart(depotAccountQuery.getDutyDateStart());
         customerReceiveQuery.setDateEnd(depotAccountQuery.getDutyDateEnd());
         customerReceiveQuery.setCustomerIdList(CollectionUtil.extractToList(page.getContent(), "clientOutId"));
@@ -127,9 +127,11 @@ public class DepotService {
         for(DepotAccountDto depotAccountDto : page.getContent()){
             CustomerReceiveDto customerReceiveDto = customerReceiveDtoMap.get(depotAccountDto.getClientOutId());
             if (customerReceiveDto != null){
+                depotAccountDto.setCustomerReceiveDetailDtoList(customerReceiveDto.getCustomerReceiveDetailDtoList());
                 depotAccountDto.setQcys(customerReceiveDto.getBeginShouldGet());
                 depotAccountDto.setQmys(customerReceiveDto.getEndShouldGet());
             }else {
+                depotAccountDto.setCustomerReceiveDetailDtoList(null);
                 depotAccountDto.setQcys(BigDecimal.ZERO);
                 depotAccountDto.setQmys(BigDecimal.ZERO);
             }
@@ -152,7 +154,7 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "scbzj", "市场保证金"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "xxbzj", "形象押金"));
 
-        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery).getContent();
+        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery, true).getContent();
         SimpleExcelSheet sheet = new SimpleExcelSheet("应收报表", depotAccountList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, sheet);
         sheets.add(sheet);
@@ -169,20 +171,17 @@ public class DepotService {
 
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billType", "业务类型"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billNo", "单据编号"));
-            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "date", "记账日期"));
+            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "billDate", "记账日期"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "materialName", "名称"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "qty", "数量"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "price", "单价"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "totalAmount", "金额"));
-            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "receiveAmount", "预收"));
+            depotAccountColumnList.add(new SimpleExcelColumn(workbook, "realGet", "预收"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "shouldGet", "应收"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "endShouldGet", "期末"));
             depotAccountColumnList.add(new SimpleExcelColumn(workbook, "remarks", "备注"));
 
-            //TODO 获取明细
-            List<String> customerAccounts = new ArrayList<>();// k3cloudService.findCustomerAccount(AccountUtils.getCompany().getOutDbname(),depot.getOutId(), depot.getName(), dateStart, dateEnd);
-
-            SimpleExcelSheet tmpSheet = new SimpleExcelSheet(depotAccountDto.getName(), customerAccounts, depotAccountColumnList);
+            SimpleExcelSheet tmpSheet = new SimpleExcelSheet(depotAccountDto.getName(), depotAccountDto.getCustomerReceiveDetailDtoList(), depotAccountColumnList);
             ExcelUtils.doWrite(workbook, tmpSheet);
             sheets.add(tmpSheet);
         }
@@ -206,7 +205,7 @@ public class DepotService {
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qcys", "期初应收"));
         simpleExcelColumnList.add(new SimpleExcelColumn(workbook, "qmys", "期末应收"));
 
-        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery).getContent();
+        List<DepotAccountDto> depotAccountList = findDepotAccountList(new PageRequest(0,10000),  depotAccountQuery, false).getContent();
         SimpleExcelSheet simpleExcelSheet = new SimpleExcelSheet("应收列表", depotAccountList, simpleExcelColumnList);
         ExcelUtils.doWrite(workbook, simpleExcelSheet);
         return  new SimpleExcelBook(workbook,"应收列表"+LocalDateUtils.format(LocalDate.now()) +".xlsx" ,simpleExcelSheet);
