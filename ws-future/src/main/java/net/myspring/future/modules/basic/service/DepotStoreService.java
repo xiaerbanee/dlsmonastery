@@ -91,18 +91,17 @@ public class DepotStoreService {
         return depotStore;
     }
 
-    public List<DepotStoreDto> setReportData(List<DepotStoreDto> depotStoreList,ReportQuery reportQuery) {
+    public Integer setReportData(List<DepotStoreDto> depotStoreList,ReportQuery reportQuery) {
         reportQuery.setDepotIds(CollectionUtil.extractToList(depotStoreList,"depotId"));
         List<DepotReportDto> depotReportList = depotStoreRepository.findStoreReport(reportQuery);
-        Map<String,DepotReportDto> map= CollectionUtil.extractToMap(depotReportList,"depotId");
+        Map<String,DepotReportDto> depotReportMap= CollectionUtil.extractToMap(depotReportList,"depotId");
         for(DepotStoreDto depotStore:depotStoreList){
-            DepotReportDto depotReportDto=map.get(depotStore.getDepotId());
+            DepotReportDto depotReportDto=depotReportMap.get(depotStore.getDepotId());
             if(depotReportDto!=null){
                 depotStore.setQty(depotReportDto.getQty());
             }
         }
-        setPercentage(depotStoreList);
-        return depotStoreList;
+        return setPercentage(depotStoreList);
     }
 
     public Map<String,Integer> getReportDetail(ReportQuery reportQuery) {
@@ -120,7 +119,7 @@ public class DepotStoreService {
         return map;
     }
 
-    private void setPercentage(List<DepotStoreDto> depotStoreList) {
+    private Integer setPercentage(List<DepotStoreDto> depotStoreList) {
         Integer sum = 0;
         for (DepotStoreDto depotStore : depotStoreList) {
             sum +=  depotStore.getQty();
@@ -128,6 +127,7 @@ public class DepotStoreService {
         for (DepotStoreDto depotStore : depotStoreList) {
             depotStore.setPercentage(StringUtils.division(sum, depotStore.getQty()));
         }
+        return sum;
     }
 
     @Transactional
