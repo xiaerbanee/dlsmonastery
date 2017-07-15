@@ -6,10 +6,18 @@
     <view class="weui-cells weui-cells_after-title form_bd">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <view class="weui-label">类型</view>
+          <view class="weui-label">创建人</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="processTypeName" value="{{formData.processTypeName}}" class="weui-input" disabled />
+          <input name="createdByName" value="{{formData.createdByName}}" class="weui-input" disabled />
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">创建时间</view>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="createdDate" value="{{formData.createdDate}}" class="weui-input" disabled />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -22,15 +30,23 @@
       </view>
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__hd">
-          <image src="{{formData.content}}" mode="widthFix" bindtap="showImageActionSheet"></image>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input" >
-        <view class="weui-cell__hd">
           <view class="weui-label">状态</view>
         </view>
         <view class="weui-cell__bd">
           <input name="title" value="{{formData.processStatus}}" class="weui-input" disabled/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">正文</view>
+        </view>
+        <view class="weui-cell__bd">
+          <textarea name="content" maxlength="-1" value="{{formData.content}}" class="weui-textarea" style="min-height:280rpx" auto-height/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_input" wx:if="formData.contentImage!=null">
+        <view class="weui-cell__hd">
+          <image src="{{formData.contentImage}}" mode="widthFix" bindtap="showImageActionSheet"></image>
         </view>
       </view>
       <view>
