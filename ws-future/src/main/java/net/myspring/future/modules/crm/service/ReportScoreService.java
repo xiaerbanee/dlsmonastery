@@ -129,6 +129,7 @@ public class ReportScoreService {
                 if (!reportScoreOfficeMap.containsKey(officeId)) {
                     ReportScoreOffice reportScoreOffice = new ReportScoreOffice();
                     reportScoreOffice.setOfficeId(officeId);
+                    reportScoreOffice.setAreaId(areaId);
                     reportScoreOffice.setScoreDate(date);
                     reportScoreOffice.setReportScoreAreaId(areaId);
                     reportScoreOfficeMap.put(officeId, reportScoreOffice);
