@@ -1,5 +1,6 @@
 package net.myspring.future.modules.crm.repository
 
+import com.google.common.collect.Maps
 import net.myspring.future.common.repository.BaseRepository
 import net.myspring.future.modules.crm.domain.ProductIme
 import net.myspring.future.modules.crm.dto.ProductImeDto
@@ -52,6 +53,9 @@ interface ProductImeRepository : BaseRepository<ProductIme, String>, ProductImeR
 
 
     fun findTop20ByImeReverseStartingWithAndEnabledIsTrue(ime: String): MutableList<ProductIme>
+
+    @Query("select t1 from  #{#entityName} t1 where t1.ime in ?1 and t1.retailDate is null")
+    fun findByImeInAndRetailDate(imes:MutableList<String>) : MutableList<ProductIme>
 
 }
 
