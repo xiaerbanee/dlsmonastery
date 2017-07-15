@@ -2,6 +2,7 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.dto.IdDto;
+import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -71,6 +72,15 @@ public class AdGoodsOrderDetailExportDto extends IdDto<AdGoodsOrderDetail> {
     private Integer confirmQty;
     private Integer billQty;
     private Integer shippedQty;
+    private String expressCompanyOPPO = CompanyNameEnum.JXOPPO.name();
+
+    public String getExpressCompanyOPPO() {
+        return expressCompanyOPPO;
+    }
+
+    public void setExpressCompanyOPPO(String expressCompanyOPPO) {
+        this.expressCompanyOPPO = expressCompanyOPPO;
+    }
 
     public String getAdGoodsOrderFormatId(){
         if(StringUtils.isBlank(adGoodsOrderParentId) || adGoodsOrderParentId.equals(adGoodsOrderId)){
