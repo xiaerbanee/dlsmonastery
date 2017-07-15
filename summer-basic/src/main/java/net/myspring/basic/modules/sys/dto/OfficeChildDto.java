@@ -1,13 +1,15 @@
-package net.myspring.tool.common.domain;
+package net.myspring.basic.modules.sys.dto;
 
+import net.myspring.basic.modules.sys.domain.OfficeRule;
+import net.myspring.common.dto.TreeDto;
+import net.myspring.util.cahe.annotation.CacheInput;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-public class OfficeEntity  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+/**
+ * Created by wangzm on 2017/4/22.
+ */
+public class OfficeChildDto  {
     protected String id;
     private String name;
     private BigDecimal point;
@@ -21,7 +23,7 @@ public class OfficeEntity  {
     private String jointLevel;
     private String parentId;
     private String parentIds;
-    private Integer childCount;
+    private String childCount;
 
     public String getId() {
         return id;
@@ -38,7 +40,6 @@ public class OfficeEntity  {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public BigDecimal getPoint() {
         return point;
@@ -128,11 +129,11 @@ public class OfficeEntity  {
         this.parentIds = parentIds;
     }
 
-    public Integer getChildCount() {
+    public String getChildCount() {
         return childCount;
     }
 
-    public void setChildCount(Integer childCount) {
+    public void setChildCount(String childCount) {
         this.childCount = childCount;
     }
 }

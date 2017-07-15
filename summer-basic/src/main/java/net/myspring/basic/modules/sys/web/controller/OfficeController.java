@@ -7,6 +7,7 @@ import net.myspring.basic.common.enums.OfficeTypeEnum;
 import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.basic.modules.sys.domain.Office;
 import net.myspring.basic.modules.sys.domain.OfficeBusiness;
+import net.myspring.basic.modules.sys.dto.OfficeChildDto;
 import net.myspring.basic.modules.sys.dto.OfficeDto;
 import net.myspring.basic.modules.sys.dto.OfficeRuleDto;
 import net.myspring.basic.modules.sys.service.OfficeRuleService;
@@ -190,6 +191,12 @@ public class OfficeController {
     @RequestMapping(value = "findAll")
     public List<Office> findAll(){
         List<Office> officeList = officeService.findAll();
+        return officeList;
+    }
+
+    @RequestMapping(value = "findAllChildCount")
+    public List<OfficeChildDto> findAllChildCount(){
+        List<OfficeChildDto> officeList = officeService.findAllChildCount();
         return officeList;
     }
 
