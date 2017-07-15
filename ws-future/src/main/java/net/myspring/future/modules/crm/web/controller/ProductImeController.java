@@ -19,7 +19,6 @@ import net.myspring.future.modules.basic.service.ProductService;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
 import net.myspring.future.modules.crm.dto.ProductImeDto;
 import net.myspring.future.modules.crm.dto.ProductImeHistoryDto;
-import net.myspring.future.modules.crm.dto.ProductImeReportDto;
 import net.myspring.future.modules.crm.service.ProductImeService;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchChangeForm;
 import net.myspring.future.modules.crm.web.form.ProductImeBatchCreateForm;
@@ -241,7 +240,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value="batchExport")
-    public String batchExport(String allImeStr) throws IOException {
+    public String batchExport(String allImeStr){
         List<String> allImeList = StringUtils.getSplitList(allImeStr, CharConstant.ENTER);
         SimpleExcelBook simpleExcelBook = productImeService.export(productImeService.batchQuery(allImeList));
         File tempFile = TempFile.createTempFile("串码批量查询",".xlsx");
@@ -255,8 +254,7 @@ public class ProductImeController {
     }
 
     @RequestMapping(value="download")
-    public ModelAndView download(String tempFileName) throws IOException {
-
+    public ModelAndView download(String tempFileName){
         return new ModelAndView(new TempFileView(), "tempFileName", tempFileName);
     }
 
