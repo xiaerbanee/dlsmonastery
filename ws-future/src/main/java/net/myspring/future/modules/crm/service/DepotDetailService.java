@@ -2,6 +2,8 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.future.common.utils.CacheUtils;
+import net.myspring.future.common.utils.RequestUtils;
+import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.crm.dto.DepotDetailDto;
 import net.myspring.future.modules.crm.repository.DepotDetailRepository;
 import net.myspring.future.modules.crm.web.query.DepotDetailQuery;
@@ -31,9 +33,11 @@ public class DepotDetailService {
     private DepotDetailRepository depotDetailRepository;
     @Autowired
     private CacheUtils cacheUtils;
+    @Autowired
+    private DepotManager depotManager;
 
     public Page<DepotDetailDto> findPage(Pageable pageable, DepotDetailQuery depotDetailQuery){
-
+        depotDetailQuery.setDepotIdList(depotManager.filterDepotIds(RequestUtils.getAccountId()));
         Page<DepotDetailDto> page= depotDetailRepository.findPage(pageable,depotDetailQuery);
         cacheUtils.initCacheInput(page.getContent());
         return page;
