@@ -1,8 +1,4 @@
 spring:
-  application:
-    name: summer-gateway
-  profiles:
-    active: dev
   http:
     multipart:
       maxFileSize:  100Mb # Max file size.
@@ -26,13 +22,6 @@ logging:
     org.springframework.cloud: DEBUG
     org.springframework.security: DEBUG
     net.myspring: DEBUG
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
 zuul:
   routes:
     webapp:

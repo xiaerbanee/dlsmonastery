@@ -32,7 +32,7 @@ public class JdbcConfig {
     @Bean
     public DynamicDataSource dynamicDataSource() {
         Map<Object, Object> targetDataSources = Maps.newHashMap();
-        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSource("spring.datasource.local"));
+        targetDataSources.put(DataSourceTypeEnum.LOCAL.name(),getDataSource("spring.datasource.global-cloud"));
         targetDataSources.put("KINGDEE_JXOPPO",getDataSource("spring.datasource.kingdee.JXOPPO"));
         DynamicDataSource dataSource = new DynamicDataSource();
         dataSource.setTargetDataSources(targetDataSources);

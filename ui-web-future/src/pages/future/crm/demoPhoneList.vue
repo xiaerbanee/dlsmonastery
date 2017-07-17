@@ -68,10 +68,8 @@
 <script>
   import depotSelect from 'components/future/depot-select'
   import demoPhoneType from 'components/future/demo-phone-type-select'
-  import ElTag from "../../../../node_modules/element-ui/packages/tag/src/tag.vue";
   export default {
     components:{
-      ElTag,
       depotSelect,demoPhoneType},
     data() {
       return {

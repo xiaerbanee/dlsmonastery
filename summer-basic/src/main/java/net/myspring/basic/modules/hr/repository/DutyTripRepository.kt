@@ -49,8 +49,8 @@ interface DutyTripRepository : BaseRepository<DutyTrip, String>,DutyTripReposito
         FROM #{#entityName} t1
         WHERE
         t1.enabled=1
-        AND t1.dateStart >= :dateStart
-        and t1.dateEnd <= :dateEnd
+        AND (
+         (t1.dateStart<=:dateEnd and (t1.dateStart <= :dateStart  or t1.dateStart>=:dateStart)) and (t1.dateEnd>=:dateStart and ( t1.dateEnd<=:dateEnd or t1.dateEnd >= :dateEnd)))
         and t1.status in :statusList
     """)
     fun findByDateAndStatusList(@Param("dateStart") dateStart: LocalDate, @Param("dateEnd") dateEnd: LocalDate, @Param("statusList") statusList: MutableList<String>): MutableList<DutyTrip>

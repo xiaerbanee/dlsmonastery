@@ -1,31 +1,24 @@
 spring:
-  application:
-    name: ws-future
-  profiles:
-    active: dev
+  http:
+    multipart:
+      maxFileSize:  100Mb # Max file size.
+      maxRequestSize: 100Mb # Max re
 
-  jpa:
-    show-sql: true
 server:
-  port: 3000
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
-
+  port: 1300
 feign:
   hystrix:
     enabled: false
-  httpclient:
-    enabled: true
+
+ribbon:
+  ReadTimeout: 180000
+  ConnectTimeout: 180000
 
 security:
   oauth2:
     local:
-      clientId: ws-future-service
-      clientSecret: ws-future-password
+      clientId: general-service
+      clientSecret: general-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token
       userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
       grant-type: client_credentials
@@ -33,16 +26,12 @@ security:
     resource:
       user-info-uri: http://localhost:1100/uaa/user
 
-app:
-  print:
-    version: 1.2
-
-ribbon:
-  ReadTimeout: 180000
-  ConnectTimeout: 180000
+upload:
+  root-path: D:\\upload\\
+  preview-size: 290
 
 logging:
-  file: ws-future.log
+  file: summer-general.log
   level:
     org.springframework.cloud: DEBUG
     org.springframework.security: DEBUG

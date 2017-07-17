@@ -90,6 +90,7 @@
           fileList2:[],
           fileList3:[],
           fixtureContent:'',
+          processStatus:'',
           inputForm: {
             extra:{}
           },
@@ -114,6 +115,13 @@
         this.inputForm.scenePhoto = util.getFolderFileIdStr(this.fileList1);
         this.inputForm.shopAgreement = util.getFolderFileIdStr(this.fileList2);
         this.inputForm.confirmPhoto = util.getFolderFileIdStr(this.fileList3);
+        if(this.processStatus === "产品经理待确认"){
+            if(util.isBlank(this.inputForm.confirmPhoto)){
+                this.$alert("请上传装修后照片");
+                this.submitDisabled = false;
+                return;
+            }
+        }
         form.validate((valid) => {
           if (valid) {
             axios.post('/api/ws/future/layout/shopBuild/save', qs.stringify(util.deleteExtra(this.inputForm))).then((response)=> {
@@ -179,6 +187,7 @@
           this.inputForm = response.data;
           if(!this.isCreate) {
             axios.get('/api/ws/future/layout/shopBuild/findOne', {params: {id: this.$route.query.id}}).then((response) => {
+                this.processStatus = response.data.processStatus;
               util.copyValue(response.data, this.inputForm);
               this.shopDisabled = true;
               this.refreshRecentMonthSaleAmount();
