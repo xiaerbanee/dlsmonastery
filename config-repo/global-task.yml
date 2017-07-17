@@ -3,7 +3,7 @@ server:
 
 security:
   oauth2:
-    local:
+    client:
       clientId: task-service
       clientSecret: task-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token
