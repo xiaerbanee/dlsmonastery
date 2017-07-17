@@ -1,5 +1,6 @@
 package net.myspring.general.modules.sys.repository
 
+import com.google.common.collect.Maps
 import net.myspring.general.common.repository.BaseRepository
 import net.myspring.general.modules.sys.domain.FolderFile
 import net.myspring.general.modules.sys.domain.ProcessType
@@ -23,9 +24,6 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String>,ProcessTyp
 
     fun findByName(name: String): ProcessType
 
-    fun findByCreatePositionIdsLike(positionId:String):MutableList<ProcessType>
-
-    fun findByViewPositionIdsLike(positionId:String):MutableList<ProcessType>
 
     @Query("select t from #{#entityName} t where t.auditFileType=1 and t.enabled=1")
     fun findEnabledAuditFileType(): MutableList<ProcessType>
@@ -35,9 +33,46 @@ interface ProcessTypeRepository : BaseRepository<ProcessType, String>,ProcessTyp
 
 interface ProcessTypeRepositoryCustom {
     fun findPage(pageable: Pageable, processTypeQuery: ProcessTypeQuery): Page<ProcessTypeDto>;
+
+    fun findByCreatePositionIdsLike(positionId:String):MutableList<ProcessType>
+
+    fun findByViewPositionIdsLike(positionId:String):MutableList<ProcessType>
+
 }
 
 class ProcessTypeRepositoryImpl@Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ProcessTypeRepositoryCustom {
+    override fun findByCreatePositionIdsLike(positionId: String): MutableList<ProcessType> {
+        var sb = StringBuilder()
+        sb.append("""
+                SELECT
+                t1.*
+            FROM
+            sys_process_type t1
+                WHERE
+            t1.enabled=1
+            and t1.create_position_ids like concat('%,',':position',',%')
+        """)
+        var paramMap= Maps.newHashMap<String,Any>();
+        paramMap.put("positionId",positionId);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(ProcessType::class.java));
+    }
+
+    override fun findByViewPositionIdsLike(positionId: String): MutableList<ProcessType> {
+        var sb = StringBuilder()
+        sb.append("""
+                SELECT
+                t1.*
+            FROM
+            sys_process_type t1
+                WHERE
+            t1.enabled=1
+            and t1.view_position_ids like concat('%,',':position',',%')
+        """)
+        var paramMap= Maps.newHashMap<String,Any>();
+        paramMap.put("positionId",positionId);
+        return namedParameterJdbcTemplate.query(sb.toString(), paramMap, BeanPropertyRowMapper(ProcessType::class.java));
+    }
+
     override fun findPage(pageable: Pageable, processTypeQuery: ProcessTypeQuery): Page<ProcessTypeDto> {
 
         var sb = StringBuilder()
