@@ -94,7 +94,7 @@ public class ClientService {
     }
 
     public String getClientName(String depotId) {
-        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        Client clientDto = clientRepository.findByDepotId(depotId);
         if(clientDto == null) {
             return null;
         }

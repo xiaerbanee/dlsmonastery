@@ -9,12 +9,6 @@ server:
   port: 1100
   # Use different context-path to avoid session cookie overlapping
   context-path: /uaa
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
 
 feign:
   hystrix:

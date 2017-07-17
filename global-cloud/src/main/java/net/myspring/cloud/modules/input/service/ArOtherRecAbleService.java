@@ -69,6 +69,35 @@ private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook king
     }
 
     @Transactional
+    public KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
+        }else{
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
+        }
+        return kingdeeSynDto;
+    }
+
+    @Transactional
+    public List<KingdeeSynDto> save(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            if (CollectionUtil.isNotEmpty(arOtherRecAbleDtoList)) {
+                for (ArOtherRecAbleDto arOtherRecAbleDto : arOtherRecAbleDtoList) {
+                    KingdeeSynDto kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
+                    kingdeeSynDtoList.add(kingdeeSynDto);
+                }
+            }
+        }else{
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
+        }
+        return kingdeeSynDtoList;
+    }
+
+    @Transactional
     public List<KingdeeSynDto> save(ArOtherRecAbleForm arOtherRecAbleForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = arOtherRecAbleForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(arOtherRecAbleForm.getJson());
@@ -145,35 +174,6 @@ private KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook king
         }
         List<ArOtherRecAbleDto> billList = Lists.newArrayList(arOtherRecAbleDtoMap.values());
         List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
-        return kingdeeSynDtoList;
-    }
-
-    @Transactional
-    public KingdeeSynDto save(ArOtherRecAbleDto arOtherRecAbleDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
-        }
-        return kingdeeSynDto;
-    }
-
-    @Transactional
-    public List<KingdeeSynDto> save(List<ArOtherRecAbleDto> arOtherRecAbleDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            if (CollectionUtil.isNotEmpty(arOtherRecAbleDtoList)) {
-                for (ArOtherRecAbleDto arOtherRecAbleDto : arOtherRecAbleDtoList) {
-                    KingdeeSynDto kingdeeSynDto = save(arOtherRecAbleDto,kingdeeBook);
-                    kingdeeSynDtoList.add(kingdeeSynDto);
-                }
-            }
-        }else{
-            kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
-        }
         return kingdeeSynDtoList;
     }
 

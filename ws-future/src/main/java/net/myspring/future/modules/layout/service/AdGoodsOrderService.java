@@ -15,10 +15,7 @@ import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.ActivitiClient;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.AdPricesystem;
-import net.myspring.future.modules.basic.domain.AdPricesystemDetail;
-import net.myspring.future.modules.basic.domain.Depot;
-import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.domain.*;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.manager.DepotManager;
 import net.myspring.future.modules.basic.manager.SalOutStockManager;
@@ -111,7 +108,7 @@ public class AdGoodsOrderService {
     public void save(AdGoodsOrderForm adGoodsOrderForm) {
 
         Depot outShop = depotRepository.findOne(adGoodsOrderForm.getOutShopId());
-        ClientDto clientDto = clientRepository.findByDepotId(outShop.getId());
+        Client clientDto = clientRepository.findByDepotId(outShop.getId());
         if (clientDto == null || StringUtils.isBlank(clientDto.getOutId())) {
             throw new ServiceException(outShop.getName() + " 没有关联财务账号，不能申请");
         }
