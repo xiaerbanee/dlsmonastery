@@ -133,7 +133,6 @@ public class VivoPushService {
         logger.info("开始上抛客户数据"+LocalDateTime.now());
         sCustomersM13e00Repository.deleteAll();
         sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
-//        sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }
 
