@@ -109,13 +109,13 @@ class GoodsOrderRepositoryImpl @Autowired constructor(val namedParameterJdbcTemp
             sb.append(")");
         }
         if(StringUtils.isNotBlank(b2b2Query.status)){
-            sb.append(" and (t1.status =:status or t1.status is null)");
+            sb.append(" and (t1.status =:status or t1.status is null)")
         }
         if(b2b2Query.shipDateStart!=null){
-            sb.append(" AND t2.ship_date >=:shipDateStart");
+            sb.append(" AND t2.ship_date >=:shipDateStart")
         }
         if(b2b2Query.shipDateEnd!=null){
-            sb.append(" AND t2.ship_date <=:shipDateEnd");
+            sb.append(" AND t2.ship_date <=:shipDateEnd")
         }
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
         val list = namedParameterJdbcTemplate.query(pageableSql, BeanPropertySqlParameterSource(b2b2Query), BeanPropertyRowMapper(GoodsOrder::class.java))

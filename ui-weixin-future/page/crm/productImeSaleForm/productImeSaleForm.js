@@ -108,7 +108,6 @@ Page({
             wx.navigateBack();
           } else if (res.data.message) {
             that.setData({ "response.error": res.data.message })
-            that.setData({ "response.data": res.data.extra.errors, submitDisabled: false });
           } else {
             that.setData({ "response.error": res.data });
           }

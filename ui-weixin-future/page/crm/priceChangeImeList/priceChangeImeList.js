@@ -29,7 +29,6 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log("getQuery", res.data)
         that.setData({ formData: res.data,formProperty:res.data.extra});
         that.pageRequest();
       }
@@ -47,7 +46,6 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             let audit = wx.getStorageSync("authorityList").includes("crm:priceChangeIme:audit");
             let edit = wx.getStorageSync("authorityList").includes("crm:priceChangeIme:edit");
 

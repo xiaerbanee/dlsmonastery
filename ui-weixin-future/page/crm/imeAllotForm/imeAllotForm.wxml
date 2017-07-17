@@ -22,7 +22,7 @@
           <view class="weui-label">调拨后</view>
         </view>
         <view class="weui-cell__bd" style="overflow:hidden">
-          <picker name="toDepotId" value="{{formData.shopId}}" bindtap="bindToDepot" disabled>
+          <picker name="toDepotId" value="{{formData.shopId?formData.shopId:''}}" bindtap="bindToDepot" disabled>
             <view class="weui-input">{{formData.shopName}}
               <image class="right_icon" src="/image/icons/right.png" />
             </view>

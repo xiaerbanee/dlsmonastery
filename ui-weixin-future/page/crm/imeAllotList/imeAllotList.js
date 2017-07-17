@@ -9,28 +9,35 @@ Page({
     searchHidden: true,
     activeItem: null
   },
-  onLoad: function (options) {
+  onLoad: function (options) {},
+  onShow: function () {
+    var that = this;
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
+  },
+  initPage:function() {
+    var that = this;
     var that = this;
     wx.request({
       url: $util.getUrl("ws/future/crm/imeAllot/getQuery"),
       data: {},
       method: 'GET',
-      header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      header: {
+        Cookie: "JSESSIONID=" + app.globalData.sessionId
+      },
       success: function (res) {
-        console.log(res.data)
-        that.setData({formData:res.data,formProperty:res.data.extra})
+        that.setData({ formData: res.data,formProperty:res.data.extra });
+        that.pageRequest();
       }
     })
-  },
-  onShow: function () {
-    var that = this;
-    app.autoLogin(function(){
-      that.initPage()
-    });
-  },
-  initPage:function() {
-    var that = this;
-    that.pageRequest();
   },
   pageRequest: function (cb) {
     var that = this
@@ -44,7 +51,6 @@ Page({
           header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId},
           data:$util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             that.setData({ page: res.data });
             wx.hideToast();
           }
@@ -98,16 +104,16 @@ Page({
       itemList: itemList,
       success: function (res) {
         if (!res.cancel) {
-          if (itemList[res.tapIndex] == '删除') {
-            wx.request({
-              url: $util.getUrl("crm/imeAllot/delete"),
-              data: { id: id },
-              header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
-              success: function (res) {
-                that.pageRequest();
-              }
-            })
-          }
+          // if (itemList[res.tapIndex] == '删除') {
+          //   wx.request({
+          //     url: $util.getUrl("crm/imeAllot/delete"),
+          //     data: { id: id },
+          //     header: {  Cookie: "JSESSIONID=" + app.globalData.sessionId },
+          //     success: function (res) {
+          //       that.pageRequest();
+          //     }
+          //   })
+          // }
         }
       }
     });
