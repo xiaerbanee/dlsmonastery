@@ -231,6 +231,10 @@ public class ReportScoreService {
             reportScoreOffice.setMonthRank(rank);
             rank = rank + 1;
         }
+        ReportScore score=reportScoreRepository.findByScoreDate(date);
+        if(score!=null){
+            delete(BeanUtil.map(score,ReportScoreForm.class));
+        }
         reportScoreRepository.save(reportScore);
         for (ReportScoreArea reportScoreArea : reportScoreAreas) {
             reportScoreArea.setReportScoreId(reportScore.getId());
