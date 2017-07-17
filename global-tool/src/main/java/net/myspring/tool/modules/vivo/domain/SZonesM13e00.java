@@ -1,39 +1,33 @@
 package net.myspring.tool.modules.vivo.domain;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "S_ZONEs_M13E00")
 public class SZonesM13e00 {
-    @Id
-    private String zoneid;
-    private String zonename;
+
+    private String zoneId;
+    private String zoneName;
     private String shortcut;
-    private Integer zonedepth;
-    private String zonepath;
-    private String fatherid;
-    private Integer subcount;
-    private String zonetypes;
+    private Integer zoneDepth;
+    private String zonePath;
+    private String fatherId;
+    private Integer subCount;
+    private String zoneTypes;
     private String tableName;
 
-    @Column(name = "ZoneID")
-    public String getZoneid() {
-        return zoneid;
-    }
-    public void setZoneid(String zoneid) {
-        this.zoneid = zoneid;
+    public String getZoneId() {
+        return zoneId;
     }
 
-    @Column(name = "ZoneName")
-    public String getZonename() {
-        return zonename;
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
     }
 
-    public void setZonename(String zonename) {
-        this.zonename = zonename;
+    public String getZoneName() {
+        return zoneName;
     }
 
-    @Column(name = "ShortCut")
+    public void setZoneName(String zoneName) {
+        this.zoneName = zoneName;
+    }
+
     public String getShortcut() {
         return shortcut;
     }
@@ -42,52 +36,46 @@ public class SZonesM13e00 {
         this.shortcut = shortcut;
     }
 
-    @Column(name = "ZoneDepth")
-    public Integer getZonedepth() {
-        return zonedepth;
+    public Integer getZoneDepth() {
+        return zoneDepth;
     }
 
-    public void setZonedepth(Integer zonedepth) {
-        this.zonedepth = zonedepth;
+    public void setZoneDepth(Integer zoneDepth) {
+        this.zoneDepth = zoneDepth;
     }
 
-    @Column(name = "ZonePath")
-    public String getZonepath() {
-        return zonepath;
+    public String getZonePath() {
+        return zonePath;
     }
 
-    public void setZonepath(String zonepath) {
-        this.zonepath = zonepath;
+    public void setZonePath(String zonePath) {
+        this.zonePath = zonePath;
     }
 
-    @Column(name = "FatherID")
-    public String getFatherid() {
-        return fatherid;
+    public String getFatherId() {
+        return fatherId;
     }
 
-    public void setFatherid(String fatherid) {
-        this.fatherid = fatherid;
+    public void setFatherId(String fatherId) {
+        this.fatherId = fatherId;
     }
 
-    @Column(name = "SubCount")
-    public Integer getSubcount() {
-        return subcount;
+    public Integer getSubCount() {
+        return subCount;
     }
 
-    public void setSubcount(Integer subcount) {
-        this.subcount = subcount;
+    public void setSubCount(Integer subCount) {
+        this.subCount = subCount;
     }
 
-    @Column(name = "ZoneTypes")
-    public String getZonetypes() {
-        return zonetypes;
+    public String getZoneTypes() {
+        return zoneTypes;
     }
 
-    public void setZonetypes(String zonetypes) {
-        this.zonetypes = zonetypes;
+    public void setZoneTypes(String zoneTypes) {
+        this.zoneTypes = zoneTypes;
     }
 
-    @Transient
     public String getTableName() {
         return tableName;
     }

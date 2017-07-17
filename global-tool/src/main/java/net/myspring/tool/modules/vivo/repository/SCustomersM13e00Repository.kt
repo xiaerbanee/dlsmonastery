@@ -1,28 +1,24 @@
 package net.myspring.tool.modules.vivo.repository
 
 import com.google.common.collect.Maps
-import net.myspring.tool.common.repository.BaseRepository
 import net.myspring.tool.modules.vivo.domain.SCustomersM13e00
 import net.myspring.tool.modules.vivo.dto.SCustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils
+import org.springframework.stereotype.Component
 import java.time.LocalDate
 
-interface SCustomersM13e00Repository :BaseRepository<SCustomersM13e00,String>,SCustomersM13e00RepositoryCustom{
+@Component
+class SCustomersM13e00Repository @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate){
 
-}
+    fun deleteAll():Int{
+        val map = Maps.newHashMap<String,Any>()
+        return namedParameterJdbcTemplate.update("DELETE FROM S_Customers_M13E00 WHERE 1=1",map)
+    }
 
-interface SCustomersM13e00RepositoryCustom{
-    fun findVivoCustomers(date: LocalDate):MutableList<SCustomerDto>
-    fun batchSave(sCustomersM13e00List: MutableList<SCustomersM13e00>):IntArray?
-}
-
-class SCustomersM13e00RepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :SCustomersM13e00RepositoryCustom{
-
-
-    override fun findVivoCustomers(date: LocalDate): MutableList<SCustomerDto> {
+    fun findVivoCustomers(date: LocalDate): MutableList<SCustomerDto> {
         val map = Maps.newHashMap<String, Any>()
         map.put("date",date)
         return namedParameterJdbcTemplate.query("""
@@ -70,7 +66,7 @@ class SCustomersM13e00RepositoryImpl @Autowired constructor(val namedParameterJd
     }
 
 
-    override fun batchSave(sCustomersM13e00List: MutableList<SCustomersM13e00>): IntArray? {
+    fun batchSave(sCustomersM13e00List: MutableList<SCustomersM13e00>): IntArray? {
         val sb = StringBuffer()
         sb.append("""
            insert into S_Customers_M13E00
@@ -83,18 +79,18 @@ class SCustomersM13e00RepositoryImpl @Autowired constructor(val namedParameterJd
                 CustomerLevel,
                 Customerstr1,
                 Customerstr4,
-                Customerstr10,
+                Customerstr10
             )
             values(
-                :customerid,
-                :customername,
-                :zoneid,
-                :companyid,
-                :recorddate,
-                :customerlevel,
-                :customerstr1,
-                :customerstr4,
-                :customerstr10
+                :customerId,
+                :customerName,
+                :zoneId,
+                :companyId,
+                :recordDate,
+                :customerLevel,
+                :customerStr1,
+                :customerStr4,
+                :customerStr10
             )""")
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(), SqlParameterSourceUtils.createBatch(sCustomersM13e00List.toTypedArray()))
     }

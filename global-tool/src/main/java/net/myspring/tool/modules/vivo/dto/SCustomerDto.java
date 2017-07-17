@@ -10,7 +10,7 @@ public class SCustomerDto {
     @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "name")
     private String areaName;
     private String zoneId;
-    private LocalDate recordDate;
+    private String recordDate;
     private Integer customerLevel;
     private String customerStr1;
     private String customerStr4;
@@ -39,11 +39,11 @@ public class SCustomerDto {
         this.zoneId = zoneId;
     }
 
-    public LocalDate getRecordDate() {
+    public String getRecordDate() {
         return recordDate;
     }
 
-    public void setRecordDate(LocalDate recordDate) {
+    public void setRecordDate(String recordDate) {
         this.recordDate = recordDate;
     }
 

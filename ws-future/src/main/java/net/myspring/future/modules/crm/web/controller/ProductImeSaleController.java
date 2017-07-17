@@ -54,11 +54,7 @@ public class ProductImeSaleController {
 
     @RequestMapping(value = "checkForSale")
     public String checkForSale(String imeStr) {
-        List<String> imeList = StringUtils.getSplitList(imeStr, CharConstant.ENTER);
-        if(imeList.size() == 0){
-            return null;
-        }
-        return productImeSaleService.checkForSale(imeList);
+        return null;
     }
 
     @RequestMapping(value = "checkForSaleBack")
@@ -81,10 +77,7 @@ public class ProductImeSaleController {
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");
         }
-        String errMsg = productImeSaleService.checkForSale(imeList);
-        if(StringUtils.isNotBlank(errMsg)){
-            throw new ServiceException(errMsg);
-        }
+
         productImeSaleService.sale(productImeSaleForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
     }
