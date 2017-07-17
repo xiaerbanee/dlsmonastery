@@ -5,12 +5,19 @@ import net.myspring.future.modules.layout.domain.ShopAllotDetail
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto
 import net.myspring.future.modules.layout.dto.ShopAllotDetailSimpleDto
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BeanPropertyRowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.util.*
 
 
 interface ShopAllotDetailRepository : BaseRepository<ShopAllotDetail,String>, ShopAllotDetailRepositoryCustom{
+    @Query("""
+        SELECT t
+        FROM  #{#entityName} t
+        where t.shopAllotId = :shopAllotId
+     """)
+    fun findByShopAllotId(shopAllotId: String):MutableList<ShopAllotDetail>?
 }
 
 interface ShopAllotDetailRepositoryCustom{

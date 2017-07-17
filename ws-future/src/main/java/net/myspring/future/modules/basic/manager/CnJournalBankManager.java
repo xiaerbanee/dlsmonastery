@@ -49,8 +49,11 @@ public class CnJournalBankManager {
         List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
 
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-        entityForBankDto.setDebitAmount(shopDeposit.getAmount());
-        entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
+        if (shopDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
+            entityForBankDto.setDebitAmount(shopDeposit.getAmount());
+        }else{
+            entityForBankDto.setCreditAmount(shopDeposit.getAmount().multiply(new BigDecimal(-1)));
+        }
         if (departmentNumber != null){
             entityForBankDto.setDepartmentNumber(departmentNumber);
         }else{
@@ -95,8 +98,11 @@ public class CnJournalBankManager {
             cnJournalForBankDto.setDate(LocalDate.now());
             List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
             CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-            entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
-            entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
+            if (employeePhoneDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
+                entityForBankDto.setDebitAmount(employeePhoneDeposit.getAmount());
+            }else{
+                entityForBankDto.setCreditAmount(employeePhoneDeposit.getAmount().multiply(new BigDecimal(-1)));
+            }
             if (employeePhoneDeposit.getDepartment() != null){
                 entityForBankDto.setDepartmentNumber(employeePhoneDeposit.getDepartment());
             }else{
@@ -133,8 +139,11 @@ public class CnJournalBankManager {
         List<CnJournalEntityForBankDto> cnJournalEntityForBankDtoList = Lists.newArrayList();
 
         CnJournalEntityForBankDto entityForBankDto = new CnJournalEntityForBankDto();
-        entityForBankDto.setDebitAmount(shopGoodsDeposit.getAmount());
-        entityForBankDto.setCreditAmount(shopGoodsDeposit.getAmount().multiply(new BigDecimal(-1)));
+        if (shopGoodsDeposit.getAmount().compareTo(BigDecimal.ZERO) == 1) {
+            entityForBankDto.setDebitAmount(shopGoodsDeposit.getAmount());
+        }else{
+            entityForBankDto.setCreditAmount(shopGoodsDeposit.getAmount().multiply(new BigDecimal(-1)));
+        }
         if (departmentNumber != null){
             entityForBankDto.setDepartmentNumber(departmentNumber);
         }else{

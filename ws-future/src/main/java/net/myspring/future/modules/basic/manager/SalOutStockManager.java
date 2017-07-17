@@ -23,9 +23,11 @@ import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.layout.domain.AdGoodsOrder;
 import net.myspring.future.modules.layout.domain.AdGoodsOrderDetail;
+import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
 import net.myspring.future.modules.layout.repository.AdGoodsOrderDetailRepository;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,8 @@ public class SalOutStockManager {
     private DepotStoreRepository depotStoreRepository;
     @Autowired
     private DepotRepository depotRepository;
+    @Autowired
+    private ShopAllotDetailRepository shopAllotDetailRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -212,30 +216,41 @@ public class SalOutStockManager {
         return RequestUtils.getCompanyName() + StringUtils.trimToEmpty(adGoodsOrder.getParentId())+ CharConstant.UNDER_LINE + StringUtils.trimToEmpty(adGoodsOrder.getId());
     }
 
-    private List<KingdeeSynReturnDto> synForShopAllot(ShopAllotDto shopAllotDto){
+    public List<KingdeeSynReturnDto> synForShopAllot(ShopAllot shopAllot,String stockNumber){
         List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
+        Client client = clientRepository.findByDepotId(shopAllot.getFromShopId());
         SalOutStockDto salOutStockDto = new SalOutStockDto();
-        salOutStockDto.setExtendId("");
+        salOutStockDto.setExtendId(shopAllot.getId());
         salOutStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
         salOutStockDto.setDate(LocalDate.now());
-        salOutStockDto.setCustomerNumber("00001");
-        salOutStockDto.setNote("模拟测试");
-
+        if (client!=null && client.getOutCode()!=null) {
+            salOutStockDto.setCustomerNumber(client.getOutCode());
+        }else{
+            throw new ServiceException(client.getName()+",该门店没有编码，不能开单");
+        }
+        salOutStockDto.setNote(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
+        List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.findByShopAllotId(shopAllot.getId());
+        List<String> productIdList = shopAllotDetailList.stream().map(ShopAllotDetail::getProductId).collect(Collectors.toList());
+        Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
-        List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();//开单关联的详细
         for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
             if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
                 SalOutStockFEntityDto entityDto = new SalOutStockFEntityDto();
-                entityDto.setStockNumber("G00201");
-                entityDto.setMaterialNumber("05YF");//其他收入费用类的物料
-                entityDto.setQty(null);
-                entityDto.setPrice(null);
-                entityDto.setEntryNote("");
+                entityDto.setStockNumber(stockNumber);
+                Product product = productIdToOutCodeMap.get(shopAllotDetail.getProductId());
+                if (product.getCode() != null) {
+                    entityDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
+                entityDto.setQty(shopAllotDetail.getQty());
+                entityDto.setPrice(shopAllotDetail.getSalePrice());
+                entityDto.setEntryNote(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
                 entityDtoList.add(entityDto);
-                salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
-                salOutStockDtoList.add(salOutStockDto);
             }
         }
+        salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
+        salOutStockDtoList.add(salOutStockDto);
         return cloudClient.synSalOutStock(salOutStockDtoList);
 
     }

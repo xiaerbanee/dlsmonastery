@@ -89,7 +89,7 @@ public class SalReturnStockManager {
         return cloudClient.synSalReturnStock(salReturnStockDtoList);
     }
 
-    private List<KingdeeSynReturnDto> synForShopAllot(ShopAllot shopAllot){
+    public List<KingdeeSynReturnDto> synForShopAllot(ShopAllot shopAllot,String stockNumber){
         List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
         Client client = clientRepository.findByDepotId(shopAllot.getFromShopId());
         SalReturnStockDto returnStockDto = new SalReturnStockDto();
@@ -102,15 +102,26 @@ public class SalReturnStockManager {
             throw new ServiceException(client.getName()+",该门店没有编码，不能开单");
         }
         returnStockDto.setNote(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
-//        List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.find
+        List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.findByShopAllotId(shopAllot.getId());
+        List<String> productIdList = shopAllotDetailList.stream().map(ShopAllotDetail::getProductId).collect(Collectors.toList());
+        Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
-        SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
-        entityDto.setMaterialNumber("");// shopAllotDetail.getProduct().getCode()
-        entityDto.setQty(1);//shopAllotDetail.getQty()
-        entityDto.setPrice(null);//shopAllotDetail.getReturnPrice()
-        entityDto.setEntryNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
-        entityDto.setStockNumber("");//getToShop().getDelegateDepot()==null?getStore().getRealCode():getToShop().getDelegateDepot().getRealCode()
-        entityDtoList.add(entityDto);
+        for (ShopAllotDetail detail : shopAllotDetailList) {
+            if (detail.getQty() != null && detail.getQty() > 0) {
+                SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
+                Product product = productIdToOutCodeMap.get(detail.getProductId());
+                if (product.getCode() != null) {
+                    entityDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
+                entityDto.setQty(detail.getQty());
+                entityDto.setPrice(detail.getReturnPrice());
+                entityDto.setEntryNote(shopAllot.getBusinessId() + "申：" + shopAllot.getRemarks() + "审:" + shopAllot.getAuditRemarks());
+                entityDto.setStockNumber(stockNumber);//getToShop().getDelegateDepot()==null?getStore().getRealCode():getToShop().getDelegateDepot().getRealCode()
+                entityDtoList.add(entityDto);
+            }
+        }
         returnStockDto.setSalReturnStockFEntityDtoList(entityDtoList);
         salReturnStockDtoList.add(returnStockDto);
         return cloudClient.synSalReturnStock(salReturnStockDtoList);
