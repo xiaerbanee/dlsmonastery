@@ -28,7 +28,7 @@
           <view class="weui-label">调拨前</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="fromShopName" class="weui-input" placeholder="模糊搜索" value="{{formData.fromShopName}}" />
+          <input name="fromDepotName" class="weui-input" placeholder="模糊搜索" value="{{formData.fromDepotName}}" />
         </view>
       </view>
       <view class="weui-cell weui-cell_input">
@@ -36,7 +36,7 @@
           <view class="weui-label">调拨后</view>
         </view>
         <view class="weui-cell__bd">
-          <input name="toShopName" class="weui-input" placeholder="模糊搜索" value="{{formData.toShopName}}" />
+          <input name="toDepotName" class="weui-input" placeholder="模糊搜索" value="{{formData.toDepotName}}" />
         </view>
       </view>
     </view>

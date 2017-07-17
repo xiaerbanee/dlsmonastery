@@ -67,7 +67,7 @@
           <view class="weui-label">发货类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="shipType" range="{{formProperty.shipList}}" value="{{formData.shipType}}" bindchange="bindShipType">
+          <picker name="shipType" range="{{formProperty.shipTypeList}}" value="{{formData.shipType}}" bindchange="bindShipType">
             <view class="weui-input">{{formData.shipType?formData.shipType:""}}</view>
           </picker>
         </view>
@@ -77,7 +77,7 @@
           <view class="weui-label">网络类型</view>
         </view>
         <view class="weui-cell__bd">
-          <picker name="netType" range="{{formProperty.netList}}" value="{{formData.netType}}" bindchange="bindNetType">
+          <picker name="netType" range="{{formProperty.netTypeList}}" value="{{formData.netType}}" bindchange="bindNetType">
             <view class="weui-input">{{formData.netType?formData.netType:""}}</view>
           </picker>
         </view>
@@ -92,12 +92,12 @@
       <template is="searchHeader" />
       <view class="weui-panel__bd panel_bd">
         <view class="weui-media-box weui-media-box_text" wx:for="{{page.content}}" wx:key="id" data-id="{{item.id}}" bindlongtap="showActionSheet" bindtouchstart="itemActive">
-          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.businessId}}-{{item.shopName}}</view>
-          <view class="weui-media-box__desc item_style">仓库:{{item.storeName}}</view>
-          <view class="weui-media-box__desc item_style">门店类型:{{item.shopDepotShopAreaType}}</view>
-          <view class="weui-media-box__desc item_style">发货类型:{{item.shipType}}</view>
-          <view class="weui-media-box__desc item_style">状态:{{item.status}}</view>
-          <view class="weui-media-box__desc item_style">快递单号:{{item.expressOrderExpressCodes}}</view>
+          <view class="weui-media-box__title weui-media-box__title_in-text">{{item.businessId?item.businessId:''}}-{{item.shopName}}</view>
+          <view class="weui-media-box__desc item_style">仓库:{{item.storeName?item.storeName:''}}</view>
+          <view class="weui-media-box__desc item_style">开单日期:{{item.billDate?item.billDate:''}}</view>
+          <view class="weui-media-box__desc item_style">发货类型:{{item.shipType?item.shipType:''}}</view>
+          <view class="weui-media-box__desc item_style">状态:{{item.status?item.status:''}}</view>
+          <view class="weui-media-box__desc item_style">快递单号:{{item.expressOrderExpressCodes?item.expressOrderExpressCodes:''}}</view>
           <view class="weui-media-box__info">
             <view class="weui-media-box__info__meta">{{item.lastModifiedDate}}</view>
             <image wx:if="{{item.active}}" src="/image/icons/action.png" class="pageable_list_item_active"></image>

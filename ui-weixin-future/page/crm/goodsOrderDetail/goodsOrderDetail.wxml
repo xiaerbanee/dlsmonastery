@@ -1,20 +1,20 @@
 <view class="page">
   <view class="page__bd">
     <view class="weui-panel">
-      <view class="weui-panel__hd">{{goodsOrder.businessId}}</view>
+      <view class="weui-panel__hd">{{goodsOrder.businessId?goodsOrder.businessId:''}}</view>
       <view class="weui-panel__bd">
         <view class="weui-media-box weui-media-box_text">
-          <view class="weui-media-box__desc"><span>发货仓库：</span>  {{goodsOrder.storeName}}</view>
+          <view class="weui-media-box__desc"><span>发货仓库：</span>  {{goodsOrder.storeName?goodsOrder.storeName:''}}</view>
           <view class="weui-media-box__desc"><span>门店：</span>  {{goodsOrder.shopName}}</view>
-          <view class="weui-media-box__desc"><span>开单日期：</span>  {{goodsOrder.billDate}}</view>
-          <view class="weui-media-box__desc"><span>外部单号：</span>  {{goodsOrder.outCode}}</view>
+          <view class="weui-media-box__desc"><span>开单日期：</span>  {{goodsOrder.billDate?goodsOrder.billDate:''}}</view>
+          <view class="weui-media-box__desc"><span>外部单号：</span>  {{goodsOrder.outCode?goodsOrder.outCode:''}}</view>
           <view class="weui-media-box__desc"><span>创建人：</span>  {{goodsOrder.createdByName}}</view>
           <view class="weui-media-box__desc"><span>创建时间：</span>  {{goodsOrder.createdDate}}</view>
           <view class="weui-media-box__desc"><span>使用电子券：</span> 
             <span wx:if="{{goodsOrder.isUseTicket}}">是</span> 
             <span wx:else>否</span> 
           </view>
-          <view class="weui-media-box__desc"><span>快递单号：</span>  {{goodsOrder.expressOrderExpressCodes}}</view>
+          <view class="weui-media-box__desc"><span>快递单号：</span>  {{goodsOrder.expressOrderExpressCodes?goodsOrder.expressOrderExpressCodes:''}}</view>
           <view class="weui-media-box__desc"><span>发货类型：</span>  {{goodsOrder.shipType}}</view>
         </view>
       </view>
@@ -24,10 +24,25 @@
       <view class="weui-panel__bd">
         <block wx:for="{{goodsOrder.goodsOrderDetailDtoList}}" wx:key="id" data-id="{{item.id}}">
           <view class="weui-media-box weui-media-box_text">
-            <view class="weui-media-box__title weui-media-box__title_in-text">{{item.product.name}}</view>
+            <view class="weui-media-box__title weui-media-box__title_in-text">货品名称：{{item.productName}}</view>
             <view class="weui-media-box__desc"><span>订货数：</span>  {{item.qty}}</view>
             <view class="weui-media-box__desc"><span>实际开单数：</span>  {{item.realBillQty}}</view>
             <view class="weui-media-box__desc"><span>已发货数：</span>  {{item.shippedQty}}</view>
+            <view class="weui-media-box__desc"><span>单价</span>  {{item.price}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__hd">发货详情</view>
+      <view class="weui-panel__bd">
+        <block wx:for="{{goodsOrder.goodsOrderImeDtoList}}" wx:key="id" data-id="{{item.id}}">
+          <view class="weui-media-box weui-media-box_text">
+            <view class="weui-media-box__title weui-media-box__title_in-text">货品名称：{{item.productName}}</view>
+            <view class="weui-media-box__desc"><span>串码：</span>  {{item.productImeIme}}</view>
+            <view class="weui-media-box__desc"><span>meid：</span>  {{item.productImeMeid}}</view>
+            <view class="weui-media-box__desc"><span>发货人：</span>  {{item.createdByName}}</view>
+            <view class="weui-media-box__desc"><span>发货日期：</span>  {{item.createdDate}}</view>
           </view>
         </block>
       </view>
