@@ -310,26 +310,26 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
     override fun findDepotAccountList(pageable: Pageable,depotAccountQuery: DepotAccountQuery):Page<DepotAccountDto>{
         val sb = StringBuffer()
         sb.append("""
-        select
-        t1.id,
-        t1.name,
-        t1.office_id,
-        t1.area_id,
-        t1.client_id,
-        t1.delegate_depot_id,
-        scbzjDeposit.left_amount scbzj,
-        xxbzjDeposit.left_amount xxbzj,
-        ysjyjDeposit.left_amount ysjyj
-        from
-        crm_depot t1
-        LEFT JOIN crm_depot_shop t2 ON t1.depot_shop_id = t2.id
-        LEFT JOIN crm_shop_deposit scbzjDeposit ON scbzjDeposit.shop_id = t1.id AND scbzjDeposit.type='市场保证金' AND scbzjDeposit.locked = 0 AND scbzjDeposit.enabled = 1
-        LEFT JOIN crm_shop_deposit xxbzjDeposit ON xxbzjDeposit.shop_id = t1.id AND xxbzjDeposit.type='形象保证金' AND xxbzjDeposit.locked = 0 AND xxbzjDeposit.enabled = 1
-        LEFT JOIN crm_shop_deposit ysjyjDeposit ON ysjyjDeposit.shop_id = t1.id AND ysjyjDeposit.type='演示机押金' AND ysjyjDeposit.locked = 0 AND ysjyjDeposit.enabled = 1
-        where
-        t1.enabled =1
-        and t1.is_hidden=0
-        and t1.client_id IS NOT NULL
+        SELECT
+            t1.id,
+            t1.name,
+            t1.office_id,
+            t1.area_id,
+            t1.client_id,
+            t1.delegate_depot_id,
+            scbzjDeposit.left_amount scbzj,
+            xxbzjDeposit.left_amount xxbzj,
+            ysjyjDeposit.left_amount ysjyj
+        FROM
+            crm_depot t1
+            LEFT JOIN crm_depot_shop t2 ON t1.depot_shop_id = t2.id
+            LEFT JOIN crm_shop_deposit scbzjDeposit ON scbzjDeposit.shop_id = t1.id AND scbzjDeposit.type='市场保证金' AND scbzjDeposit.locked = 0 AND scbzjDeposit.enabled = 1
+            LEFT JOIN crm_shop_deposit xxbzjDeposit ON xxbzjDeposit.shop_id = t1.id AND xxbzjDeposit.type='形象保证金' AND xxbzjDeposit.locked = 0 AND xxbzjDeposit.enabled = 1
+            LEFT JOIN crm_shop_deposit ysjyjDeposit ON ysjyjDeposit.shop_id = t1.id AND ysjyjDeposit.type='演示机押金' AND ysjyjDeposit.locked = 0 AND ysjyjDeposit.enabled = 1
+        WHERE
+            t1.enabled =1
+            and t1.is_hidden=0
+            and t1.client_id IS NOT NULL
         """)
         if(depotAccountQuery.specialityStore != null && depotAccountQuery.specialityStore ){
             sb.append("""   and t2.speciality_store_type in ("总公司自营", "总公司经销商联营", "综合卖场") """)
@@ -351,6 +351,9 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         }
         if(CollectionUtil.isNotEmpty(depotAccountQuery.depotIdList)){
             sb.append("""  and t1.id in (:depotIdList) """)
+        }
+        if(CollectionUtil.isNotEmpty(depotAccountQuery.officeIdList)){
+            sb.append("""  and t1.office_id in (:officeIdList) """)
         }
 
         val pageableSql = MySQLDialect.getInstance().getPageableSql(sb.toString(),pageable)
