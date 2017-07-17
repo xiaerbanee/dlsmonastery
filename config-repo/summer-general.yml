@@ -1,0 +1,38 @@
+spring:
+  http:
+    multipart:
+      maxFileSize:  100Mb # Max file size.
+      maxRequestSize: 100Mb # Max re
+
+server:
+  port: 1300
+feign:
+  hystrix:
+    enabled: false
+
+ribbon:
+  ReadTimeout: 180000
+  ConnectTimeout: 180000
+
+security:
+  oauth2:
+    local:
+      clientId: general-service
+      clientSecret: general-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+    resource:
+      user-info-uri: http://localhost:1100/uaa/user
+
+upload:
+  root-path: D:\\upload\\
+  preview-size: 290
+
+logging:
+  file: summer-general.log
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG

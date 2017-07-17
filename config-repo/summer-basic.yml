@@ -1,0 +1,47 @@
+server:
+  port: 1400
+  tomcat:
+        max:
+          http:
+            header:
+              size:10000KB
+
+feign:
+  hystrix:
+    enabled: false
+  httpclient:
+    enabled: true
+
+ribbon:
+  ReadTimeout: 180000
+  ConnectTimeout: 180000
+
+security:
+  oauth2:
+    local:
+      clientId: basic-service
+      clientSecret: basic-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+    resource:
+      user-info-uri: http://localhost:1100/uaa/user
+
+weixin:
+  appid: wx9306888de0cb1c04
+  appsecret: e7822bbf9d836b0b909342662fb4e0ee
+  app:
+    name: mktsp
+  audit:
+    menuId: 14,15,16,17,34,130,131,170
+map:
+  key: 6186e993a28a8cba1d5d9e4b8b34efe3
+amap:
+  key: 6186e993a28a8cba1d5d9e4b8b34efe3
+logging:
+  file: summer-basic.log
+  level:
+    org.springframework.cloud: DEBUG
+    org.springframework.security: DEBUG
+    net.myspring: DEBUG

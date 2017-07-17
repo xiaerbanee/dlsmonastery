@@ -1,29 +1,5 @@
-spring:
-  application:
-    name: global-tool
-  profiles:
-    active: dev
-
 server:
-  port: 2100
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
-
-security:
-  oauth2:
-    local:
-      clientId: tool-service
-      clientSecret: tool-password
-      accessTokenUri: http://localhost:1100/uaa/oauth/token
-      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
-      grant-type: client_credentials
-      scope: server
-    resource:
-      user-info-uri: http://localhost:1100/uaa/user
+  port: 3000
 
 feign:
   hystrix:
@@ -31,12 +7,28 @@ feign:
   httpclient:
     enabled: true
 
+security:
+  oauth2:
+    local:
+      clientId: ws-future-service
+      clientSecret: ws-future-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+    resource:
+      user-info-uri: http://localhost:1100/uaa/user
+
+app:
+  print:
+    version: 1.2
+
 ribbon:
   ReadTimeout: 180000
   ConnectTimeout: 180000
 
 logging:
-  file: global-tool.log
+  file: ws-future.log
   level:
     org.springframework.cloud: DEBUG
     org.springframework.security: DEBUG
