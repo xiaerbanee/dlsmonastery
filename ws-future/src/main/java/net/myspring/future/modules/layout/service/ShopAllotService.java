@@ -151,10 +151,6 @@ private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetail
 
     @Transactional
     public void audit(ShopAllotAuditForm shopAllotAuditForm) {
-//        Account account = AccountUtils.getAccount();
-//        if(account.getOutId()==null){
-//            return new Message("message_shop_allot_no_finance_message_account",Message.Type.danger);
-//        }
 
         ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotAuditForm.getId());
         shopAllot.setStatus(shopAllotAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());

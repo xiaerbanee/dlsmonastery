@@ -82,7 +82,8 @@ public class ShopDepositService {
         shopDepositRepository.logicDelete(id);
     }
 
-private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
+    @Transactional
+    private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
         ShopDeposit shopDeposit  = new ShopDeposit();
         shopDeposit.setShopId(shopDepositForm.getShopId());
         shopDeposit.setBankId(shopDepositForm.getBankId());
