@@ -14,7 +14,6 @@ import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
@@ -63,7 +62,7 @@ public class SalOutStockManager {
         if (StringUtils.isNotBlank(goodsOrder.getId())){
             List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
             DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
-            ClientDto clientDto = clientRepository.findByDepotId(goodsOrder.getShopId());
+            Client client = clientRepository.findByDepotId(goodsOrder.getShopId());
             List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
             Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId,Product->Product));
             List<SalOutStockDto> salOutStockDtoList = Lists.newArrayList();
@@ -71,10 +70,10 @@ public class SalOutStockManager {
             salOutStockDto.setExtendId(goodsOrder.getId());
             salOutStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
             salOutStockDto.setDate(goodsOrder.getBillDate());
-            if(clientDto.getOutCode() != null){
-                salOutStockDto.setCustomerNumber(clientDto.getOutCode());
+            if(client.getOutCode() != null){
+                salOutStockDto.setCustomerNumber(client.getOutCode());
             }else{
-                throw new ServiceException(clientDto.getName()+",该客户没有编码，不能开单");
+                throw new ServiceException(client.getName()+",该客户没有编码，不能开单");
             }
             salOutStockDto.setNote(goodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
