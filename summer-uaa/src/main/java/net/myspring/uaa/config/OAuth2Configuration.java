@@ -65,6 +65,13 @@ public class OAuth2Configuration extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(3600) // 1 hour
                 .refreshTokenValiditySeconds(2592000) // 30 days
                 .and()
+                .withClient("task-service")
+                .secret("task-password")
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server","read")
+                .accessTokenValiditySeconds(3600) // 1 hour
+                .refreshTokenValiditySeconds(2592000) // 30 days
+                .and()
                 .withClient("ws-future-service")
                 .secret("ws-future-password")
                 .authorizedGrantTypes("client_credentials", "refresh_token")
