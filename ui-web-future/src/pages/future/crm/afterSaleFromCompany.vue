@@ -81,7 +81,7 @@
                 strict:true,
                 width:150
               },{
-                data:"toAreaProductName",
+                data:"fromCompanyProductName",
                 type: "autocomplete",
                 allowEmpty: false,
                 strict: true,
