@@ -92,7 +92,7 @@
         <el-table-column prop="productName" column-key="productId" :label="$t('productImeList.productType')" sortable></el-table-column>
         <el-table-column prop="inputType" :label="$t('productImeList.inputType')"></el-table-column>
         <el-table-column prop="createdTime" :label="$t('productImeList.createdTime')" sortable></el-table-column>
-        <el-table-column fixed="right" :label="$t('productImeList.operation')" >
+        <el-table-column :label="$t('productImeList.operation')" >
           <template scope="scope">
             <div class="action" v-permit="'crm:productIme:view'"><el-button size="small"  @click.native="itemAction(scope.row.id, 'detail')">{{$t('productImeList.detail')}}</el-button></div>
           </template>
