@@ -5,8 +5,8 @@
       <el-form :model="inputForm" ref="inputForm" :rules="rules" label-width="120px" class="form input-form">
         <el-row :gutter="20">
           <el-col :span="10">
-            <el-form-item :label="$t('accountForm.mainAccount')" prop="employeeId">
-              <employee-select v-model="inputForm.employeeId"></employee-select>
+            <el-form-item label="员工名称" prop="employeeId">
+              <employee-select v-model="inputForm.employeeId" :disabled="!isCreate"></employee-select>
             </el-form-item>
             <el-form-item :label="$t('accountForm.loginName')" prop="loginName">
               <el-input v-model="inputForm.loginName"></el-input>
