@@ -144,8 +144,11 @@ public class CnJournalForBankDto {
             detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", entityForBankDto.getAccountNumber()));
             detail.put("FCOMMENT", entityForBankDto.getComment());
             entity.add(detail);
-            debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
-            creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
+            if (entityForBankDto.getDebitAmount() != null){
+                debitAmounts = debitAmounts.add(entityForBankDto.getDebitAmount());
+            }else if (entityForBankDto.getCreditAmount() != null){
+                creditAmounts = creditAmounts.add(entityForBankDto.getCreditAmount());
+            }
         }
         //贷方（负）
         model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
