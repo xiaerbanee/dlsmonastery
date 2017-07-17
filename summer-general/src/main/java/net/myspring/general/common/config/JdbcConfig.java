@@ -17,7 +17,7 @@ public class JdbcConfig {
 
     @Bean
     public DataSource dataSource() {
-        return getDataSource("spring.datasource.JXOPPO");
+        return getDataSource("spring.datasource.summer-general.JXOPPO");
     }
 
     @Bean

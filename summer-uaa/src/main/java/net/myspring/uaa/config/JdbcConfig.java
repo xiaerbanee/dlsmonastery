@@ -18,7 +18,7 @@ public class JdbcConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        return getDataSource("spring.datasource.uaa");
+        return getDataSource("spring.datasource.summer-uaa");
     }
 
     @Bean
