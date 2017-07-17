@@ -1,7 +1,6 @@
-package net.myspring.tool.common.config;
+package net.myspring.task.common.config;
 
 import feign.RequestInterceptor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.security.oauth2.client.feign.OAuth2FeignRequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +21,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean
-    @ConfigurationProperties("security.oauth2.local")
-    public ClientCredentialsResourceDetails resource() {
-        return new ClientCredentialsResourceDetails();
+    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oauth2ClientContext, ClientCredentialsResourceDetails resource) {
+        return new OAuth2FeignRequestInterceptor(oauth2ClientContext, resource);
     }
 
-    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext) {
-        return new OAuth2FeignRequestInterceptor(oAuth2ClientContext,resource());
-    }
 }

@@ -32,8 +32,4 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public RequestInterceptor oauth2FeignRequestInterceptor(OAuth2ClientContext oAuth2ClientContext) {
         return new OAuth2FeignRequestInterceptor(oAuth2ClientContext,resource());
     }
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/sys/folderFile/download").permitAll().anyRequest().authenticated();
-    }
 }
