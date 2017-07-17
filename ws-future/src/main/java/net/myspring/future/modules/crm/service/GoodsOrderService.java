@@ -185,7 +185,7 @@ public class GoodsOrderService {
             goodsOrder.setShipType(goodsOrderForm.getShipType());
             goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
             goodsOrder.setUseTicket(false);
-            goodsOrder.setStoreId(getDefaultStoreId(goodsOrder.getShipType(), goodsOrder.getNetType(), shop));
+            goodsOrder.setStoreId(getDefaultStoreId(goodsOrder.getShipType(), goodsOrder.getNetType(), shop, StringUtils.isNotBlank(goodsOrderForm.getDetailJson())));
         }
         goodsOrder.setLxMallOrder(NetTypeEnum.联信.name().equals(goodsOrderForm.getNetType()) ? goodsOrderForm.getLxMallOrder() : null );
         goodsOrder.setRemarks(goodsOrderForm.getRemarks());
@@ -387,26 +387,27 @@ public class GoodsOrderService {
         expressOrderRepository.save(expressOrder);
     }
 
-    private String getDefaultStoreId(String shipType, String netType, Depot shop) {
+    private String getDefaultStoreId(String shipType, String netType, Depot shop, boolean isCarrierOrder) {
 
         if(!ShipTypeEnum.总部发货.name().equals(shipType) && !ShipTypeEnum.总部自提.name().equals(shipType) ){
             return null;
         }
 
-        String defaultStoreId;
-        if(NetTypeEnum.联信.name().equals(netType)){
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
-        }else {
-            defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
-        }
-        String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
-        if(StringUtils.isNotBlank(carrierLockOfficeIds)){
-            List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
-            if(officeIdList.contains(shop.getOfficeId())) {
-                defaultStoreId = CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+        if(isCarrierOrder && StringUtils.isNotBlank(shop.getAreaType()) && !AreaTypeEnum.乡镇.name().equals(shop.getAreaType())){
+            String carrierLockOfficeIds = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.CARRIER_LOCK_OFFICE.name()).getValue();
+            if(StringUtils.isNotBlank(carrierLockOfficeIds)){
+                List<String> officeIdList = StringUtils.getSplitList(carrierLockOfficeIds, CharConstant.COMMA);
+                if(officeIdList.contains(shop.getOfficeId()) || officeIdList.contains(shop.getAreaId())) {
+                   return CompanyConfigUtil.findByCode(redisTemplate,CompanyConfigCodeEnum.DEFALULT_CARRIAR_STORE_ID.name()).getValue();
+                }
             }
         }
-        return defaultStoreId;
+
+        if(NetTypeEnum.联信.name().equals(netType)){
+            return CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.LX_DEFAULT_STORE_ID.name()).getValue();
+        }else {
+            return CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name()).getValue();
+        }
     }
 
     public GoodsOrderDto findOne(String id) {
