@@ -2,6 +2,7 @@ package net.myspring.future.modules.crm.service;
 
 import com.google.common.collect.Lists;
 import net.myspring.common.constant.CharConstant;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.domain.Depot;
@@ -71,53 +72,43 @@ public class ProductImeSaleService {
         return productImeSaleDto;
     }
 
-    public String checkForSale(List<String> imeList) {
-        StringBuilder sb = new StringBuilder();
-        List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn( imeList);
-        Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
-        for(String ime:imeList){
-            ProductIme productIme = imeMap.get(ime);
-            if(productIme == null) {
-                sb.append("串码：").append(ime).append("在系统中不存在；");
-            } else {
-                Depot depot = depotRepository.findOne(productIme.getDepotId());
-                if(depot.getIsHidden() != null && depot.getIsHidden()){
-                    sb.append("串码：").append(ime).append("的所属地点：").append(depot.getName()).append(" 被隐藏，请联系文员开通门店；");
-                }
-                if(productIme.getProductImeSaleId()!=null) {
-                    sb.append("串码：").append(ime).append("已核销；");
-                } else if(StringUtils.isNotBlank(depot.getDepotStoreId())) {
-                    sb.append("串码：").append(ime).append("的所属地点为：").append(depot.getName()).append("，不是门店，无法核销；");
-                } else if(!depotManager.isAccess(depot.getId(), true,RequestUtils.getAccountId(),RequestUtils.getOfficeId())) {
-                    sb.append("您没有串码：").append(ime).append("所在门店：").append(depot.getName()).append("的核销权限，请先将串码调拨至您管辖的门店；");
-                }else if(productIme.getProductImeUploadId() != null) {
-                    sb.append("串码：").append(ime).append("已上报,不能核销；");
-                }
-            }
-        }
-
-        return sb.toString();
-    }
-
     @Transactional
     public void sale(ProductImeSaleForm productImeSaleForm) {
         List<String> imeList = productImeSaleForm.getImeList();
 
         String employeeId = RequestUtils.getEmployeeId();
-        ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
-        Integer leftCredit =0;
-        if(latestProductImeSale!=null){
-            leftCredit=latestProductImeSale.getLeftCredit();
-        }
+        Integer leftCredit = getLeftCredit(employeeId);
 
         Map<String, ProductImeSaleDetailForm> detailFormMap = CollectionUtil.extractToMap(productImeSaleForm.getProductImeSaleDetailList(), "productImeId");
         List<ProductIme> productImeList = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
-        for (ProductIme productIme : productImeList) {
-
+        Map<String, ProductIme> imeMap = CollectionUtil.extractToMap(productImeList, "ime");
+        for(String ime : imeList){
+            ProductIme productIme = imeMap.get(ime);
+            if(productIme == null) {
+                throw new ServiceException("串码：" + ime + "在系统中不存在；");
+            }
             String saleShopId = productIme.getDepotId();
             if(detailFormMap.get(productIme.getId())!=null &&StringUtils.isNotBlank(detailFormMap.get(productIme.getId()).getSaleShopId())){
                 saleShopId = detailFormMap.get(productIme.getId()).getSaleShopId();
             }
+
+            Depot saleShop = depotRepository.findOne(saleShopId);
+            if(saleShop.getIsHidden() != null && saleShop.getIsHidden()){
+                throw new ServiceException("串码：" + ime + "的所属地点："+saleShop.getName()+"被隐藏，请联系文员开通门店；");
+            }
+            if(productIme.getProductImeSaleId()!=null) {
+                throw new ServiceException("串码：" + ime + "已核销；");
+            }
+            if(StringUtils.isNotBlank(saleShop.getDepotStoreId())) {
+                throw new ServiceException("串码：" + ime + "的所属地点为："+saleShop.getName()+"，不是门店，无法核销；");
+            }
+            if(!depotManager.isAccess(saleShop.getId(), true, RequestUtils.getAccountId(), RequestUtils.getOfficeId())) {
+                throw new ServiceException("您没有串码：" + ime + "所在门店："+saleShop.getName()+"的核销权限，请先将串码调拨至您管辖的门店；");
+            }
+            if(productIme.getProductImeUploadId() != null) {
+                throw new ServiceException("串码：" + ime + "已上报,不能核销；");
+            }
+
             ProductImeSale productImeSale = new ProductImeSale();
             productImeSale.setEmployeeId(employeeId);
             productImeSale.setProductImeId(productIme.getId());
@@ -148,6 +139,15 @@ public class ProductImeSaleService {
         }
     }
 
+    private Integer getLeftCredit(String employeeId) {
+        ProductImeSale latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
+        Integer leftCredit =0;
+        if(latestProductImeSale!=null){
+            leftCredit=latestProductImeSale.getLeftCredit();
+        }
+        return leftCredit;
+    }
+
     public String checkForSaleBack(List<String> imeList) {
 
         StringBuilder sb = new StringBuilder();
@@ -170,9 +170,7 @@ public class ProductImeSaleService {
                 }
             }
         }
-
         return sb.toString();
-
     }
 
     @Transactional
@@ -181,11 +179,7 @@ public class ProductImeSaleService {
         String employeeId = RequestUtils.getEmployeeId();
 
         List<ProductIme> productImes = productImeRepository.findByEnabledIsTrueAndImeIn(imeList);
-        ProductImeSale  latestProductImeSale= productImeSaleRepository.findTopByEnabledIsTrueAndEmployeeIdOrderByCreatedDateDesc(employeeId);
-        Integer leftCredit =0;
-        if(latestProductImeSale!=null){
-            leftCredit=latestProductImeSale.getLeftCredit();
-        }
+        Integer leftCredit = getLeftCredit(employeeId);
 
         for(ProductIme productIme : productImes) {
             ProductImeSale productImeSale = productImeSaleRepository.findOne(productIme.getProductImeSaleId());
@@ -208,8 +202,6 @@ public class ProductImeSaleService {
             productIme.setProductImeSaleId(null);
             productImeRepository.save(productIme);
         }
-
-
     }
 
     public SimpleExcelBook export(ProductImeSaleQuery productImeSaleQuery) {

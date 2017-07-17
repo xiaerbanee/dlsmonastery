@@ -473,11 +473,20 @@ public class GoodsOrderShipService {
             return getShip(goodsOrderList.get(0).getId());
         }
 
-        goodsOrderList =  goodsOrderRepository.findByEnabledIsTrueAndStatusAndBusinessIdIn(GoodsOrderStatusEnum.待发货.name(), Collections.singletonList( LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + businessId));
+        goodsOrderList =  goodsOrderRepository.findByEnabledIsTrueAndStatusAndBusinessIdIn(GoodsOrderStatusEnum.待发货.name(), Collections.singletonList(getPrefixedBusinessId(businessId)));
         if(CollectionUtil.isNotEmpty(goodsOrderList)){
             return getShip(goodsOrderList.get(0).getId());
         }
 
         return new GoodsOrderDto();
+    }
+
+    private String getPrefixedBusinessId(String businessId) {
+        if(businessId.length()<6){
+            String tmpStr =  "000000"+businessId;
+            return LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + tmpStr.substring(tmpStr.length()-6);
+        }else{
+            return LocalDateUtils.formatLocalDate(LocalDate.now(),"yyMMdd") + businessId;
+        }
     }
 }
