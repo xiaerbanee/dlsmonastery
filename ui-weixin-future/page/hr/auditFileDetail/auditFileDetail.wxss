@@ -1,1 +1,2 @@
 /* page/hr/auditFileDetail/auditFileDetail.wxss */
+@import "../../../util/wxParse/wxParse.wxss";

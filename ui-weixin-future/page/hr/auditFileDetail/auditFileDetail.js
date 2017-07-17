@@ -1,5 +1,6 @@
 var app = getApp();
 var $util = require("../../../util/util.js");
+var WxParse = require('../../../util/wxParse/wxParse.js');
 Page({
   data: {
     formData: {},
@@ -25,9 +26,10 @@ Page({
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
         console.log(res.data)
-        that.setData({ formData: res.data })
-        var contentImage = $util.getUrl("basic/hr/auditFile/view?id=" + options.id);
-        that.setData({ "formData.contentImage": contentImage })
+        that.setData({ formData: res.data });
+        if(res.data.content!=null){
+          WxParse.wxParse('content', 'html', res.data.content, that, 5);
+        }
       }
     })
     if (options.action == "detail") {

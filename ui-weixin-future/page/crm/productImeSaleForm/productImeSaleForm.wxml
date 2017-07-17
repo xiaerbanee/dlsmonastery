@@ -114,7 +114,7 @@
           <view class="weui-media-box__desc item_style">核销门店：{{item.productImeSaleShopName?item.productImeSaleShopName:""}}</view>
           <view class="weui-media-box__desc item_style">工厂注册时间：{{item.retailDate?item.retailDate:""}}</view>
           <view class="weui-media-box__desc item_style">核销人：{{item.productImeSaleEmployeeName?item.productImeSaleEmployeeName:""}}</view>
-          <view class="weui-media-box__desc item_style">核销时间：{{item.createdDate}}</view>
+          <view class="weui-media-box__desc item_style">核销时间：{{item.productImeSaleCreatedDate}}</view>
         </navigator>
       </block>
     </view>
