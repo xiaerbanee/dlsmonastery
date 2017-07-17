@@ -6,6 +6,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.tool.common.client.CompanyConfigClient;
 import net.myspring.tool.common.client.OfficeClient;
+import net.myspring.tool.common.dataSource.DbContextHolder;
 import net.myspring.tool.common.dataSource.annotation.FactoryDataSource;
 import net.myspring.tool.common.dataSource.annotation.FutureDataSource;
 import net.myspring.tool.common.dataSource.annotation.LocalDataSource;
@@ -65,36 +66,35 @@ public class VivoPushService {
     @FactoryDataSource
     @Transactional
     public  List<SZonesM13e00> pushVivoZonesData(){
+        logger.info(DbContextHolder.get().getCompanyName()+DbContextHolder.get().getDataSourceType());
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<OfficeEntity> officeEntityList = officeClient.findAll();
         List<SZonesM13e00> sZonesM13e00List = Lists.newArrayList();
         for(OfficeEntity officeEntity:officeEntityList){
             SZonesM13e00 sZonesM13e00 = new SZonesM13e00();
-            sZonesM13e00.setZoneid(getZoneId(mainCode,officeEntity.getId()));
-            //setZoneName 报数据超过数据库字段zoneName设置的长度的错误，正在与工厂联系，尚未回复。
-            //sZonesM13e00.setZonename(officeEntity.getName());
-            if (officeEntity.getName().toString().length() > 10){
-                sZonesM13e00.setZonename("数据长度超出范围");
-            }else {
-                sZonesM13e00.setZonename(officeEntity.getName());
+            sZonesM13e00.setZoneId(getZoneId(mainCode,officeEntity.getId()));
+            if (officeEntity.getName().length() > 10){
+                sZonesM13e00.setZoneName(officeEntity.getName().substring(0,10));
+            } else {
+                sZonesM13e00.setZoneName(officeEntity.getName());
             }
             sZonesM13e00.setShortcut(mainCode);
             String[] parentIds = officeEntity.getParentIds().split(CharConstant.COMMA);
-            sZonesM13e00.setZonedepth(parentIds.length);
+            sZonesM13e00.setZoneDepth(parentIds.length);
             StringBuilder zonePath = new StringBuilder(CharConstant.VERTICAL_LINE);
             for(String parentId:parentIds){
                 zonePath.append(getZoneId(mainCode,parentId)).append(CharConstant.VERTICAL_LINE);
             }
             zonePath.append(getZoneId(mainCode,officeEntity.getId())).append(CharConstant.VERTICAL_LINE);
-            sZonesM13e00.setZonepath(zonePath.toString());
-            sZonesM13e00.setFatherid(getZoneId(mainCode,officeEntity.getParentId()));
-            sZonesM13e00.setSubcount(officeEntity.getChildCount());
-            sZonesM13e00.setZonetypes(CharConstant.EMPTY);
+            sZonesM13e00.setZonePath(zonePath.toString());
+            sZonesM13e00.setFatherId(getZoneId(mainCode,officeEntity.getParentId()));
+            sZonesM13e00.setSubCount(officeEntity.getChildCount());
+            sZonesM13e00.setZoneTypes(CharConstant.EMPTY);
             sZonesM13e00List.add(sZonesM13e00);
         }
         logger.info("开始上抛机构数据"+ LocalDateTime.now());
         sZonesM13e00Repository.deleteAll();
-        sZonesM13e00Repository.save(sZonesM13e00List);
+        sZonesM13e00Repository.batchSave(sZonesM13e00List);
         logger.info("上抛机构数据完成"+LocalDateTime.now());
         return sZonesM13e00List;
     }
@@ -114,25 +114,25 @@ public class VivoPushService {
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
             SCustomersM13e00 sCustomersM13e00 = new SCustomersM13e00();
             String customerId = futureCustomerDto.getCustomerId();
-            sCustomersM13e00.setCustomerlevel(futureCustomerDto.getCustomerLevel());
+            sCustomersM13e00.setCustomerLevel(futureCustomerDto.getCustomerLevel());
             if(futureCustomerDto.getCustomerLevel() == 1){
-                sCustomersM13e00.setCustomerid(StringUtils.getFormatId(customerId,mainCode+"D","00000"));
-                sCustomersM13e00.setCustomername(futureCustomerDto.getAreaName());
+                sCustomersM13e00.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"D","00000"));
+                sCustomersM13e00.setCustomerName(futureCustomerDto.getAreaName());
             }else {
-                sCustomersM13e00.setCustomerid(StringUtils.getFormatId(customerId,mainCode+"C","00000"));
-                sCustomersM13e00.setCustomername(futureCustomerDto.getCustomerName());
-                sCustomersM13e00.setCustomerstr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),mainCode+"D","00000"));
+                sCustomersM13e00.setCustomerId(StringUtils.getFormatId(customerId,mainCode+"C","00000"));
+                sCustomersM13e00.setCustomerName(futureCustomerDto.getCustomerName());
+                sCustomersM13e00.setCustomerStr4(StringUtils.getFormatId(futureCustomerDto.getCustomerStr4(),mainCode+"D","00000"));
             }
-            sCustomersM13e00.setZoneid(getZoneId(mainCode,futureCustomerDto.getZoneId()));
-            sCustomersM13e00.setCompanyid(mainCode);
-            sCustomersM13e00.setRecorddate(futureCustomerDto.getRecordDate());
-            sCustomersM13e00.setCustomerstr1(futureCustomerDto.getCustomerStr1());
-            sCustomersM13e00.setCustomerstr10(mainCode);
+            sCustomersM13e00.setZoneId(getZoneId(mainCode,futureCustomerDto.getZoneId()));
+            sCustomersM13e00.setCompanyId(mainCode);
+            sCustomersM13e00.setRecordDate(futureCustomerDto.getRecordDate());
+            sCustomersM13e00.setCustomerStr1(futureCustomerDto.getCustomerStr1());
+            sCustomersM13e00.setCustomerStr10(mainCode);
             sCustomersM13e00List.add(sCustomersM13e00);
         }
         logger.info("开始上抛客户数据"+LocalDateTime.now());
         sCustomersM13e00Repository.deleteAll();
-        sCustomersM13e00Repository.save(sCustomersM13e00List);
+        sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
 //        sCustomersM13e00Repository.batchSave(sCustomersM13e00List);
         logger.info("上抛客户数据完成"+LocalDateTime.now());
     }

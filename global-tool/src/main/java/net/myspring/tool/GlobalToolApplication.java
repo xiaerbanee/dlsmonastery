@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer
 @EnableDiscoveryClient
 @EnableFeignClients
-@EntityScan(basePackageClasses = {GlobalToolApplication.class, Jsr310JpaConverters.class})
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 @EnableOAuth2Client
 public class GlobalToolApplication {

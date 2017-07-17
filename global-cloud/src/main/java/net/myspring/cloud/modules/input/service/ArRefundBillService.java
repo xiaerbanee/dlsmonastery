@@ -75,6 +75,23 @@ private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeB
     }
 
     @Transactional
+    public List<KingdeeSynDto> save(List<ArRefundBillDto> arRefundBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            if (CollectionUtil.isNotEmpty(arRefundBillDtoList)) {
+                for (ArRefundBillDto arRefundBillDto : arRefundBillDtoList) {
+                    KingdeeSynDto kingdeeSynDto = save(arRefundBillDto,kingdeeBook);
+                    kingdeeSynDtoList.add(kingdeeSynDto);
+                }
+            }
+        }else{
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
+        }
+        return kingdeeSynDtoList;
+    }
+
+    @Transactional
     public List<KingdeeSynDto> save(ArRefundBillForm arRefundBillForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String json = HtmlUtils.htmlUnescape(arRefundBillForm.getJson());
         List<List<Object>> data = ObjectMapperUtils.readValue(json, ArrayList.class);
@@ -168,22 +185,7 @@ private KingdeeSynDto save(ArRefundBillDto arRefundBillDto, KingdeeBook kingdeeB
         return kingdeeSynDtoList;
     }
 
-    @Transactional
-    public List<KingdeeSynDto> save(List<ArRefundBillDto> arRefundBillDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        List<KingdeeSynDto> kingdeeSynDtoList = Lists.newArrayList();
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            if (CollectionUtil.isNotEmpty(arRefundBillDtoList)) {
-                for (ArRefundBillDto arRefundBillDto : arRefundBillDtoList) {
-                    KingdeeSynDto kingdeeSynDto = save(arRefundBillDto,kingdeeBook);
-                    kingdeeSynDtoList.add(kingdeeSynDto);
-                }
-            }
-        }else{
-            kingdeeSynDtoList.add(new KingdeeSynDto(false,"未登入金蝶系统"));
-        }
-        return kingdeeSynDtoList;
-    }
+
 
     public ArRefundBillForm getForm(){
         Map<String,Object> map = Maps.newHashMap();

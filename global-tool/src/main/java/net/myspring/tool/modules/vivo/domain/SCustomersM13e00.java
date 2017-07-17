@@ -1,64 +1,57 @@
 package net.myspring.tool.modules.vivo.domain;
 
-
-import javax.persistence.*;
 import java.time.LocalDate;
 
 //代理商表
-@Entity
-@Table(name = "S_Customers_M13E00")
 public class SCustomersM13e00 {
-    @Id
-    private String customerid;
-    private String customername;
+
+    private String customerId;
+    private String customerName;
     private String shortcut;
-    private String customertype;
-    private String customersort;
-    private String customerkasort;
+    private String customerType;
+    private String customerSort;
+    private String customerKASort;
     private String address;
     private String postcode;
     private String telephone;
     private String fax;
-    private String linkman;
-    private String linktel;
+    private String linkMan;
+    private String linkTel;
     private String remark;
-    private String inuse;
-    private String zoneid;
-    private String companyid;
-    private LocalDate recorddate;
-    private Integer customerlevel;
+    private String inUse;
+    private String zoneId;
+    private String companyId;
+    private String recordDate;
+    private Integer customerLevel;
     private String manager;
-    private String customerstr1;
-    private String customerstr2;
-    private String customerstr3;
-    private String customerstr4;
-    private String customerstr5;
-    private String customerstr6;
-    private String customerstr7;
-    private String customerstr8;
-    private String customerstr9;
-    private String customerstr10;
-    private String latentcustomers;
+    private String customerStr1;
+    private String customerStr2;
+    private String customerStr3;
+    private String customerStr4;
+    private String customerStr5;
+    private String customerStr6;
+    private String customerStr7;
+    private String customerStr8;
+    private String customerStr9;
+    private String customerStr10;
+    private String latentCustomers;
 
-    @Column(name = "CustomerID")
-    public String getCustomerid() {
-        return customerid;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerid(String customerid) {
-        this.customerid = customerid;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    @Column(name = "CustomerName")
-    public String getCustomername() {
-        return customername;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCustomername(String customername) {
-        this.customername = customername;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    @Column(name = "ShortCut")
     public String getShortcut() {
         return shortcut;
     }
@@ -67,34 +60,30 @@ public class SCustomersM13e00 {
         this.shortcut = shortcut;
     }
 
-    @Column(name = "CustomerType")
-    public String getCustomertype() {
-        return customertype;
+    public String getCustomerType() {
+        return customerType;
     }
 
-    public void setCustomertype(String customertype) {
-        this.customertype = customertype;
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
-    @Column(name = "CustomerSort")
-    public String getCustomersort() {
-        return customersort;
+    public String getCustomerSort() {
+        return customerSort;
     }
 
-    public void setCustomersort(String customersort) {
-        this.customersort = customersort;
+    public void setCustomerSort(String customerSort) {
+        this.customerSort = customerSort;
     }
 
-    @Column(name = "CustomerKASort")
-    public String getCustomerkasort() {
-        return customerkasort;
+    public String getCustomerKASort() {
+        return customerKASort;
     }
 
-    public void setCustomerkasort(String customerkasort) {
-        this.customerkasort = customerkasort;
+    public void setCustomerKASort(String customerKASort) {
+        this.customerKASort = customerKASort;
     }
 
-    @Column(name = "Address")
     public String getAddress() {
         return address;
     }
@@ -103,7 +92,6 @@ public class SCustomersM13e00 {
         this.address = address;
     }
 
-    @Column(name = "Postcode")
     public String getPostcode() {
         return postcode;
     }
@@ -112,7 +100,6 @@ public class SCustomersM13e00 {
         this.postcode = postcode;
     }
 
-    @Column(name = "Telephone")
     public String getTelephone() {
         return telephone;
     }
@@ -121,7 +108,6 @@ public class SCustomersM13e00 {
         this.telephone = telephone;
     }
 
-    @Column(name = "Fax")
     public String getFax() {
         return fax;
     }
@@ -130,25 +116,22 @@ public class SCustomersM13e00 {
         this.fax = fax;
     }
 
-    @Column(name = "LinkMan")
-    public String getLinkman() {
-        return linkman;
+    public String getLinkMan() {
+        return linkMan;
     }
 
-    public void setLinkman(String linkman) {
-        this.linkman = linkman;
+    public void setLinkMan(String linkMan) {
+        this.linkMan = linkMan;
     }
 
-    @Column(name = "LinkTel")
-    public String getLinktel() {
-        return linktel;
+    public String getLinkTel() {
+        return linkTel;
     }
 
-    public void setLinktel(String linktel) {
-        this.linktel = linktel;
+    public void setLinkTel(String linkTel) {
+        this.linkTel = linkTel;
     }
 
-    @Column(name = "Remark")
     public String getRemark() {
         return remark;
     }
@@ -157,52 +140,46 @@ public class SCustomersM13e00 {
         this.remark = remark;
     }
 
-    @Column(name = "InUse")
-    public String getInuse() {
-        return inuse;
+    public String getInUse() {
+        return inUse;
     }
 
-    public void setInuse(String inuse) {
-        this.inuse = inuse;
+    public void setInUse(String inUse) {
+        this.inUse = inUse;
     }
 
-    @Column(name = "ZoneID")
-    public String getZoneid() {
-        return zoneid;
+    public String getZoneId() {
+        return zoneId;
     }
 
-    public void setZoneid(String zoneid) {
-        this.zoneid = zoneid;
+    public void setZoneId(String zoneId) {
+        this.zoneId = zoneId;
     }
 
-    @Column(name = "CompanyID")
-    public String getCompanyid() {
-        return companyid;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setCompanyid(String companyid) {
-        this.companyid = companyid;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
-    @Column(name = "RecordDate")
-    public LocalDate getRecorddate() {
-        return recorddate;
+    public String getRecordDate() {
+        return recordDate;
     }
 
-    public void setRecorddate(LocalDate recorddate) {
-        this.recorddate = recorddate;
+    public void setRecordDate(String recordDate) {
+        this.recordDate = recordDate;
     }
 
-    @Column(name = "CustomerLevel")
-    public Integer getCustomerlevel() {
-        return customerlevel;
+    public Integer getCustomerLevel() {
+        return customerLevel;
     }
 
-    public void setCustomerlevel(Integer customerlevel) {
-        this.customerlevel = customerlevel;
+    public void setCustomerLevel(Integer customerLevel) {
+        this.customerLevel = customerLevel;
     }
 
-    @Column(name = "manager")
     public String getManager() {
         return manager;
     }
@@ -211,102 +188,91 @@ public class SCustomersM13e00 {
         this.manager = manager;
     }
 
-    @Column(name = "Customerstr1")
-    public String getCustomerstr1() {
-        return customerstr1;
+    public String getCustomerStr1() {
+        return customerStr1;
     }
 
-    public void setCustomerstr1(String customerstr1) {
-        this.customerstr1 = customerstr1;
+    public void setCustomerStr1(String customerStr1) {
+        this.customerStr1 = customerStr1;
     }
 
-    @Column(name = "Customerstr2")
-    public String getCustomerstr2() {
-        return customerstr2;
+    public String getCustomerStr2() {
+        return customerStr2;
     }
 
-    public void setCustomerstr2(String customerstr2) {
-        this.customerstr2 = customerstr2;
+    public void setCustomerStr2(String customerStr2) {
+        this.customerStr2 = customerStr2;
     }
 
-    @Column(name = "Customerstr3")
-    public String getCustomerstr3() {
-        return customerstr3;
+    public String getCustomerStr3() {
+        return customerStr3;
     }
 
-    public void setCustomerstr3(String customerstr3) {
-        this.customerstr3 = customerstr3;
+    public void setCustomerStr3(String customerStr3) {
+        this.customerStr3 = customerStr3;
     }
 
-    @Column(name = "Customerstr4")
-    public String getCustomerstr4() {
-        return customerstr4;
+    public String getCustomerStr4() {
+        return customerStr4;
     }
 
-    public void setCustomerstr4(String customerstr4) {
-        this.customerstr4 = customerstr4;
+    public void setCustomerStr4(String customerStr4) {
+        this.customerStr4 = customerStr4;
     }
 
-    @Column(name = "Customerstr5")
-    public String getCustomerstr5() {
-        return customerstr5;
+    public String getCustomerStr5() {
+        return customerStr5;
     }
 
-    public void setCustomerstr5(String customerstr5) {
-        this.customerstr5 = customerstr5;
+    public void setCustomerStr5(String customerStr5) {
+        this.customerStr5 = customerStr5;
     }
 
-    @Column(name = "Customerstr6")
-    public String getCustomerstr6() {
-        return customerstr6;
+    public String getCustomerStr6() {
+        return customerStr6;
     }
 
-    public void setCustomerstr6(String customerstr6) {
-        this.customerstr6 = customerstr6;
+    public void setCustomerStr6(String customerStr6) {
+        this.customerStr6 = customerStr6;
     }
 
-    @Column(name = "Customerstr7")
-    public String getCustomerstr7() {
-        return customerstr7;
+    public String getCustomerStr7() {
+        return customerStr7;
     }
 
-    public void setCustomerstr7(String customerstr7) {
-        this.customerstr7 = customerstr7;
+    public void setCustomerStr7(String customerStr7) {
+        this.customerStr7 = customerStr7;
     }
 
-    @Column(name = "Customerstr8")
-    public String getCustomerstr8() {
-        return customerstr8;
+    public String getCustomerStr8() {
+        return customerStr8;
     }
 
-    public void setCustomerstr8(String customerstr8) {
-        this.customerstr8 = customerstr8;
+    public void setCustomerStr8(String customerStr8) {
+        this.customerStr8 = customerStr8;
     }
 
-    @Column(name = "Customerstr9")
-    public String getCustomerstr9() {
-        return customerstr9;
+    public String getCustomerStr9() {
+        return customerStr9;
     }
 
-    public void setCustomerstr9(String customerstr9) {
-        this.customerstr9 = customerstr9;
+    public void setCustomerStr9(String customerStr9) {
+        this.customerStr9 = customerStr9;
     }
 
-    @Column(name = "Customerstr10")
-    public String getCustomerstr10() {
-        return customerstr10;
+    public String getCustomerStr10() {
+        return customerStr10;
     }
 
-    public void setCustomerstr10(String customerstr10) {
-        this.customerstr10 = customerstr10;
+    public void setCustomerStr10(String customerStr10) {
+        this.customerStr10 = customerStr10;
     }
 
-    @Column(name = "LatentCustomers")
-    public String getLatentcustomers() {
-        return latentcustomers;
+    public String getLatentCustomers() {
+        return latentCustomers;
     }
 
-    public void setLatentcustomers(String latentcustomers) {
-        this.latentcustomers = latentcustomers;
+    public void setLatentCustomers(String latentCustomers) {
+        this.latentCustomers = latentCustomers;
     }
 }
