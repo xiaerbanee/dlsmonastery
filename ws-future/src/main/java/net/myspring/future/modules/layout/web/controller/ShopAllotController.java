@@ -4,7 +4,6 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.AuditStatusEnum;
-import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDetailSimpleDto;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;

@@ -1,16 +1,20 @@
 package net.myspring.cloud.modules.input.web.controller;
 
 import net.myspring.cloud.common.utils.RequestUtils;
+import net.myspring.cloud.modules.input.dto.KingdeeSynExtendDto;
 import net.myspring.cloud.modules.input.dto.SalOutStockDto;
 import net.myspring.cloud.modules.input.service.SalOutStockService;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +37,8 @@ public class SalOutStockController {
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
+    private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(value = "form")
     public SalStockForm form () {
@@ -46,8 +52,9 @@ public class SalOutStockController {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
-            List<KingdeeSynReturnDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
-            for (KingdeeSynReturnDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
+            List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = salOutStockService.save(salStockForm, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
+            for (KingdeeSynExtendDto kingdeeSynExtendDto : kingdeeSynExtendDtoList) {
                 if (kingdeeSynExtendDto.getSuccess()) {
                     restResponse = new RestResponse("入库开单成功：" + kingdeeSynExtendDto.getNextBillNo(), null, true);
                 }
@@ -62,12 +69,13 @@ public class SalOutStockController {
     public List<KingdeeSynReturnDto> saveForXSCKD(@RequestBody List<SalOutStockDto> salOutStockDtoList) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynReturnDto> kingdeeSynExtendDtoList;
+        List<KingdeeSynExtendDto> kingdeeSynExtendDtoList;
         if (accountKingdeeBook != null) {
              kingdeeSynExtendDtoList = salOutStockService.saveForXSCKD(salOutStockDtoList, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynExtendDtoList, KingdeeSyn.class));
         }else{
             throw new ServiceException("您没有金蝶账号，不能开单");
         }
-        return kingdeeSynExtendDtoList;
+        return BeanUtil.map(kingdeeSynExtendDtoList,KingdeeSynReturnDto.class) ;
     }
 }

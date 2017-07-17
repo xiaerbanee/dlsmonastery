@@ -1,23 +1,27 @@
 package net.myspring.cloud.common.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
+import net.myspring.cloud.GlobalCloudApplication;
 import net.myspring.cloud.common.dataSource.DynamicDataSource;
 import net.myspring.cloud.common.enums.DataSourceTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.util.ClassUtils;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 public class JdbcConfig {
@@ -48,10 +52,27 @@ public class JdbcConfig {
         return dataSource;
     }
 
+    @Bean
+    @Primary
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean() {
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        localContainerEntityManagerFactoryBean.setDataSource(dynamicDataSource());
+        localContainerEntityManagerFactoryBean.setPackagesToScan(ClassUtils.getPackageName(GlobalCloudApplication.class), ClassUtils.getPackageName(Jsr310JpaConverters.class));
+        localContainerEntityManagerFactoryBean.getJpaPropertyMap().put("hibernate.implicit_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
+        localContainerEntityManagerFactoryBean.getJpaPropertyMap().put("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
+        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        return localContainerEntityManagerFactoryBean;
+    }
+
+    @Bean
+    public EntityManagerFactory entityManagerFactory() {
+        return localContainerEntityManagerFactoryBean().getNativeEntityManagerFactory();
+    }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dynamicDataSource());
+        return new JpaTransactionManager(entityManagerFactory());
     }
 
     @Bean

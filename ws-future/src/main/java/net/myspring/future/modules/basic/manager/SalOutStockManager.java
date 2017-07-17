@@ -125,7 +125,7 @@ public class SalOutStockManager {
                 salOutStockDto.setCustomerNumber(client.getOutCode());
             }
             salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
-                    +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
+                    +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
             List<AdGoodsOrderDetail> adGoodsOrderDetailLists = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
             for(AdGoodsOrderDetail adGoodsOrderDetail:adGoodsOrderDetailLists){
@@ -149,7 +149,7 @@ public class SalOutStockManager {
                     entityDto.setPrice(BigDecimal.ZERO);
                 }
                 entityDto.setEntryNote(getFormatId(adGoodsOrder)+CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()
-                        +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
+                        +CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
                 entityDtoList.add(entityDto);
             }
             salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
@@ -174,7 +174,7 @@ public class SalOutStockManager {
         }else{
             salOutStockDto.setCustomerNumber(client.getOutCode());
         }
-        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
+        salOutStockDto.setNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
         List<SalOutStockFEntityDto> entityDtoList = Lists.newArrayList();
         List<AdGoodsOrderDetail> detailList = adGoodsOrderDetailRepository.findByAdGoodsOrderId(adGoodsOrder.getId());
         for(AdGoodsOrderDetail adGoodsOrderDetail:detailList){
@@ -197,7 +197,7 @@ public class SalOutStockManager {
             }else{
                 entityDto.setPrice(BigDecimal.ZERO);
             }
-            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+shop.getAddress()+CharConstant.COMMA+shop.getRemarks());
+            entityDto.setEntryNote(getFormatId(adGoodsOrder)+ CharConstant.COMMA+shop.getName()+CharConstant.COMMA+shop.getContator()+CharConstant.COMMA+shop.getMobilePhone()+CharConstant.COMMA+adGoodsOrder.getBillAddress()+CharConstant.COMMA+adGoodsOrder.getRemarks());
             entityDtoList.add(entityDto);
         }
         salOutStockDto.setSalOutStockFEntityDtoList(entityDtoList);
