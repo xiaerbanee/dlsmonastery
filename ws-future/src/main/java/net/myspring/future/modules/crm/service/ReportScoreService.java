@@ -129,6 +129,7 @@ public class ReportScoreService {
                 if (!reportScoreOfficeMap.containsKey(officeId)) {
                     ReportScoreOffice reportScoreOffice = new ReportScoreOffice();
                     reportScoreOffice.setOfficeId(officeId);
+                    reportScoreOffice.setAreaId(areaId);
                     reportScoreOffice.setScoreDate(date);
                     reportScoreOffice.setReportScoreAreaId(areaId);
                     reportScoreOfficeMap.put(officeId, reportScoreOffice);
@@ -229,6 +230,10 @@ public class ReportScoreService {
             ReportScoreOffice reportScoreOffice = reportScoreOffices.get(i);
             reportScoreOffice.setMonthRank(rank);
             rank = rank + 1;
+        }
+        ReportScore score=reportScoreRepository.findByScoreDate(date);
+        if(score!=null){
+            delete(BeanUtil.map(score,ReportScoreForm.class));
         }
         reportScoreRepository.save(reportScore);
         for (ReportScoreArea reportScoreArea : reportScoreAreas) {

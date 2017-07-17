@@ -3,6 +3,11 @@ spring:
     name: summer-gateway
   profiles:
     active: dev
+  http:
+    multipart:
+      maxFileSize:  100Mb # Max file size.
+      maxRequestSize: 100Mb # Max request size.
+
 management:
   security:
     enabled: false

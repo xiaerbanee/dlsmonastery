@@ -71,10 +71,6 @@ public class ShopDepositService {
         if(shopDepositForm.isMarketAmountValid()){
             saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.市场保证金, shopDepositForm.getMarketAmount());
         }
-        if(shopDepositForm.isDemoPhoneAmountValid()){
-            saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount());
-        }
-
     }
 
     @Transactional
@@ -82,7 +78,8 @@ public class ShopDepositService {
         shopDepositRepository.logicDelete(id);
     }
 
-private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
+    @Transactional
+    private void saveShopDeposit(ShopDepositForm shopDepositForm, ShopDepositTypeEnum type, BigDecimal amount) {
         ShopDeposit shopDeposit  = new ShopDeposit();
         shopDeposit.setShopId(shopDepositForm.getShopId());
         shopDeposit.setBankId(shopDepositForm.getBankId());

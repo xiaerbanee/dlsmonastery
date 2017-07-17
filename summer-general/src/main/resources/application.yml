@@ -3,6 +3,10 @@ spring:
     name: summer-general
   profiles:
     active: dev
+  http:
+    multipart:
+      maxFileSize:  100Mb # Max file size.
+      maxRequestSize: 100Mb # Max re
 
 server:
   port: 1300
