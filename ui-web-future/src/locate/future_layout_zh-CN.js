@@ -522,6 +522,7 @@ export default {
     returnPrice: "退货单价",
     salePrice: "开单单价",
     shouldGet:"应收：",
+    prerequisiteMessage:"必填字段",
   },
   shopAllotForm: {
     shopAllotForm: "门店调拨添加",

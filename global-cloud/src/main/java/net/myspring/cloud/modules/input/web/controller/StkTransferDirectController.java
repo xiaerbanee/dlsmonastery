@@ -6,9 +6,11 @@ import net.myspring.cloud.modules.input.dto.StkTransferDirectDto;
 import net.myspring.cloud.modules.input.service.StkTransferDirectService;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class StkTransferDirectController {
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
+    private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(value = "saveForWS",method= RequestMethod.POST)
     public KingdeeSynReturnDto saveForWS(@RequestBody StkTransferDirectDto stkTransferDirectDto) {
@@ -37,6 +41,7 @@ public class StkTransferDirectController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null){
             KingdeeSynDto kingdeeSynDto = stkTransferDirectService.saveForWS(stkTransferDirectDto,kingdeeBook,accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
             return BeanUtil.map(kingdeeSynDto,KingdeeSynReturnDto.class);
         }else{
             throw new ServiceException("您没有金蝶账号，不能开单");

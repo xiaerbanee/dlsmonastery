@@ -6,9 +6,11 @@ import net.myspring.cloud.modules.input.dto.KingdeeSynDto;
 import net.myspring.cloud.modules.input.service.ArReceiveBillService;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.mapper.BeanUtil;
@@ -37,6 +39,8 @@ public class ArReceiveBillController {
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
+    private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
     public List<KingdeeSynReturnDto> saveForShopDeposit(@RequestBody List<ArReceiveBillDto> arReceiveBillDtoList) {
@@ -44,7 +48,8 @@ public class ArReceiveBillController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         List<KingdeeSynDto> kingdeeSynDtoList;
         if(accountKingdeeBook != null) {
-             kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
+            kingdeeSynDtoList = arReceiveBillService.saveForWS(arReceiveBillDtoList, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
         }else {
             logger.info("您没有金蝶账号，不能开单：用户ID为" + RequestUtils.getAccountId() );
             throw new ServiceException("您没有金蝶账号，不能开单：用户ID为:[" + RequestUtils.getAccountId() + "]" );

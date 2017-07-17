@@ -9,6 +9,7 @@ import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.ShopDepositTypeEnum;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
@@ -37,7 +38,7 @@ public class ArOtherRecAbleManager {
 
     public KingdeeSynReturnDto synForShopGoodsDeposit(ShopGoodsDeposit shopGoodsDeposit){
         Depot depot = depotRepository.findOne(shopGoodsDeposit.getId());
-        ClientDto client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
+        Client client = clientRepository.findByDepotId(shopGoodsDeposit.getShopId());
         ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
         otherRecAbleDto.setExtendType(ExtendTypeEnum.定金收款.name());
         otherRecAbleDto.setExtendId(shopGoodsDeposit.getId());
@@ -70,7 +71,7 @@ public class ArOtherRecAbleManager {
     public KingdeeSynReturnDto synForShopDeposit(ShopDeposit shopDeposit,ShopDepositTypeEnum type){
         if (shopDeposit.getId()!=null && type !=null){
             Depot depot = depotRepository.findOne(shopDeposit.getId());
-            ClientDto client = clientRepository.findByDepotId(shopDeposit.getShopId());
+            Client client = clientRepository.findByDepotId(shopDeposit.getShopId());
             ArOtherRecAbleDto otherRecAbleDto = new ArOtherRecAbleDto();
             otherRecAbleDto.setDate(shopDeposit.getBillDate());
             if(client.getOutCode() != null){

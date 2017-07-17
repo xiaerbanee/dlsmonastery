@@ -61,19 +61,19 @@ interface ClientRepository :BaseRepository<Client,String>,ClientRepositoryCustom
 interface ClientRepositoryCustom{
     fun findPage(pageable: Pageable, clientQuery: ClientQuery): Page<ClientDto>
 
-    fun findByDepotId(depotId: String): ClientDto?
+    fun findByDepotId(depotId: String): Client?
 
 }
 
 class ClientRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate):ClientRepositoryCustom{
-    override fun findByDepotId(depotId: String): ClientDto? {
+    override fun findByDepotId(depotId: String): Client? {
         val resultList = namedParameterJdbcTemplate.query("""
         select t1.*
         from crm_client t1, crm_depot t2
         where
         t1.id = t2.client_id
         and t2.id = :depotId
-        """, Collections.singletonMap("depotId",depotId),BeanPropertyRowMapper(ClientDto::class.java))
+        """, Collections.singletonMap("depotId",depotId),BeanPropertyRowMapper(Client::class.java))
 
         if(resultList.size>0){
             return resultList[0]

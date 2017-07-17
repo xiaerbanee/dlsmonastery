@@ -40,7 +40,7 @@
             minSpareRows: 100,
             startRows: 100,
             startCols: 6,
-            colHeaders: [ '门店', '开单类型', '银行',  '部门','开单时间','市场保证金','形象保证金','演示机押金','备注'],
+            colHeaders: [ '门店', '开单类型', '银行',  '部门','开单时间','市场保证金','形象保证金','备注'],
             columns: [{
               data:"shopName",
               type: 'autocomplete',
@@ -132,11 +132,6 @@
               type:'text',
               allowEmpty:false,
               width:120
-            }, {
-              data:'demoPhoneAmount',
-              type:'text',
-              allowEmpty:false,
-              width:120
             },{
               data:"remarks",
               type:"text",
@@ -163,8 +158,7 @@
                 shopDepositBatchDetailForm.billDate = row[4];
                 shopDepositBatchDetailForm.marketAmount = row[5];
                 shopDepositBatchDetailForm.imageAmount = row[6];
-                shopDepositBatchDetailForm.demoPhoneAmount = row[7];
-                shopDepositBatchDetailForm.remarks = row[8];
+                shopDepositBatchDetailForm.remarks = row[7];
                 tableData.push(shopDepositBatchDetailForm);
               }
             }

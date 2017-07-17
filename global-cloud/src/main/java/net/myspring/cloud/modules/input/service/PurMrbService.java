@@ -59,6 +59,18 @@ private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
     }
 
     @Transactional
+    public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = save(purMrbDto, kingdeeBook);
+        }else{
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
+        }
+        return kingdeeSynDto;
+    }
+
+    @Transactional
     public KingdeeSynDto save(PurMrbForm purMrbForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = purMrbForm.getBillDate();
         String stockNumber = purMrbForm.getStockNumber();
@@ -92,18 +104,6 @@ private KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook) {
             purMrbDto.getEntityDtoList().add(purMrbFEntityDto);
         }
         return save(purMrbDto,kingdeeBook,accountKingdeeBook);
-    }
-
-    @Transactional
-    public KingdeeSynDto save(PurMrbDto purMrbDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = save(purMrbDto, kingdeeBook);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
-        }
-        return kingdeeSynDto;
     }
 
     public PurMrbForm getForm(){

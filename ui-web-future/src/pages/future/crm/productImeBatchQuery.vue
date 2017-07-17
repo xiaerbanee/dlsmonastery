@@ -2,7 +2,7 @@
   <div>
     <head-tab active="productImeBatchQuery"></head-tab>
     <div>
-      <el-form ref="inputForm"   label-width="120px" class="form input-form">
+      <el-form ref="inputForm"   label-width="80px" class="form input-form">
         <el-row >
           <el-col :span="21">
             <el-form-item>
@@ -19,9 +19,7 @@
               <el-button  type="primary" @click.native="onAllImeStrChange">{{$t('productImeBatchQuery.search')}}</el-button>
               <el-button  type="primary" @click.native="exportData">{{$t('productImeBatchQuery.export')}}</el-button>
               <el-button  type="primary" @click.native="reset">{{$t('productImeBatchQuery.reset')}}</el-button>
-
             </el-form-item>
-
           </el-col>
           <el-col :span="18" v-if="searched">
             <template>
@@ -56,6 +54,12 @@
 </template>
 <style>
   .el-table { margin-bottom: 50px;}
+  @media screen and (max-width: 1410px){
+    .el-button+.el-button{
+      margin-left: 0;
+      margin-top: 5px;
+    }
+  }
 </style>
 <script>
 

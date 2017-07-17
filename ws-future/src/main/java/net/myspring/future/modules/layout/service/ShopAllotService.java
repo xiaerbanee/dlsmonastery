@@ -1,8 +1,11 @@
 package net.myspring.future.modules.layout.service;
 
 import com.google.common.collect.Lists;
+import net.myspring.basic.common.util.CompanyConfigUtil;
+import net.myspring.basic.modules.sys.dto.CompanyConfigCacheDto;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveQuery;
+import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.AuditStatusEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
@@ -29,6 +32,7 @@ import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +63,8 @@ public class ShopAllotService {
     private PricesystemDetailRepository pricesystemDetailRepository;
     @Autowired
     private RedisIdManager redisIdManager;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public Page<ShopAllotDto> findPage(Pageable pageable, ShopAllotQuery shopAllotQuery) {
         Page<ShopAllotDto> page = shopAllotRepository.findPage(pageable, shopAllotQuery);
@@ -151,10 +157,6 @@ private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetail
 
     @Transactional
     public void audit(ShopAllotAuditForm shopAllotAuditForm) {
-//        Account account = AccountUtils.getAccount();
-//        if(account.getOutId()==null){
-//            return new Message("message_shop_allot_no_finance_message_account",Message.Type.danger);
-//        }
 
         ShopAllot shopAllot = shopAllotRepository.findOne(shopAllotAuditForm.getId());
         shopAllot.setStatus(shopAllotAuditForm.getPass() ? AuditStatusEnum.已通过.name() : AuditStatusEnum.未通过.name());
@@ -177,45 +179,47 @@ private void batchSaveShopAllotDetails(List<ShopAllotDetailForm> shopAllotDetail
         }
 
         if(shopAllotAuditForm.getSyn()) {
-//                Long defaultStoreId = Long.valueOf(Global.getCompanyConfig(shopAllot.getCompany().getId(), CompanyConfigCode.DEFAULT_STORE_ID.getCode()));
-//                shopAllot.setStore(depotDao.findOne(defaultStoreId));
+//            CompanyConfigCacheDto companyConfig = CompanyConfigUtil.findByCode(redisTemplate, CompanyConfigCodeEnum.DEFAULT_STORE_ID.name());
+//            if (companyConfig != null && StringUtils.isNotBlank(companyConfig.getValue())) {
+//                shopAllot.sets(depotDao.findOne(companyConfig.getValue()));
 //                //都不是寄售门店  一出一退
-//                if(shopAllot.getFromShop().getDelegateDepot()==null && shopAllot.getToShop().getDelegateDepot()==null){
+//                if (shopAllot.getFromShop().getDelegateDepot() == null && shopAllot.getToShop().getDelegateDepot() == null) {
 //
-//                    K3CloudSynEntity outReturnEntity =new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_RETURNSTOCK.name(),K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getReturnStock(),shopAllot.getId(),shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//                    K3CloudSynEntity outReturnEntity = new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_RETURNSTOCK.name(), K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getReturnStock(), shopAllot.getId(), shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //                    k3cloudSynDao.save(outReturnEntity);
 //                    shopAllot.setReturnCloudEntity(outReturnEntity);
 //                    //销售开单
-//                    K3CloudSynEntity outSaleEntity =new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_OUTSTOCK.name(),K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getSaleOutstock(),shopAllot.getId(),shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//                    K3CloudSynEntity outSaleEntity = new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_OUTSTOCK.name(), K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getSaleOutstock(), shopAllot.getId(), shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //                    k3cloudSynDao.save(outSaleEntity);
 //                    shopAllot.setSaleCloudEntity(outSaleEntity);
-//                }else{
+//                } else {
 //                    //都是寄售(直接调拨单)
-//                    if(shopAllot.getFromShop().getDelegateDepot()!=null && shopAllot.getToShop().getDelegateDepot() !=null){
-//                        K3CloudSynEntity outReturnEntity=new K3CloudSynEntity(K3CloudSave.K3CloudFormId.STK_TransferDirect.name(),shopAllot.getTransferDirect(),shopAllot.getId(),shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//                    if (shopAllot.getFromShop().getDelegateDepot() != null && shopAllot.getToShop().getDelegateDepot() != null) {
+//                        K3CloudSynEntity outReturnEntity = new K3CloudSynEntity(K3CloudSave.K3CloudFormId.STK_TransferDirect.name(), shopAllot.getTransferDirect(), shopAllot.getId(), shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //                        k3cloudSynDao.save(outReturnEntity);
 //                        shopAllot.setReturnCloudEntity(outReturnEntity);
-//                    }else{
+//                    } else {
 //                        //调前为寄售 出库单
-//                        if(shopAllot.getFromShop().getDelegateDepot()!=null){
-//                            K3CloudSynEntity outSaleEntity =new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_OUTSTOCK.name(),K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getSaleOutstock(),shopAllot.getId(),shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//                        if (shopAllot.getFromShop().getDelegateDepot() != null) {
+//                            K3CloudSynEntity outSaleEntity = new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_OUTSTOCK.name(), K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getSaleOutstock(), shopAllot.getId(), shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //                            k3cloudSynDao.save(outSaleEntity);
 //                            shopAllot.setSaleCloudEntity(outSaleEntity);
-//                        }else{
+//                        } else {
 //                            //调后为寄售  退货单
-//                            K3CloudSynEntity outReturnEntity =new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_RETURNSTOCK.name(),K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getReturnStock(),shopAllot.getId(),shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//                            K3CloudSynEntity outReturnEntity = new K3CloudSynEntity(K3CloudSaveExtend.K3CloudFormId.SAL_RETURNSTOCK.name(), K3CloudSave.K3CloudFormId.AR_receivable.name(), shopAllot.getReturnStock(), shopAllot.getId(), shopAllot.getFormatId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //                            k3cloudSynDao.save(outReturnEntity);
 //                            shopAllot.setReturnCloudEntity(outReturnEntity);
 //                        }
 //                    }
 //                }
 //                shopAllotDao.save(shopAllot);
-
-//            shopAllotDao.save(shopAllot);
-        }
-
+//
+//                shopAllotDao.save(shopAllot);
+//            }
+    }
+//
 // if(shopAllotAuditForm.getSyn()){
-////            k3cloudSynService.syn(shopAllot.getId(), K3CloudSynEntity.ExtendType.门店调拨.name());
+//            k3cloudSynService.syn(shopAllot.getId(), K3CloudSynEntity.ExtendType.门店调拨.name());
 //    }
 
     }

@@ -11,16 +11,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 interface VivoPlantProductsRepository : BaseRepository<VivoPlantProducts, String>, VivoPlantProductsRepositoryCustom {
 
 }
+
 interface VivoPlantProductsRepositoryCustom{
     fun findPlantProducts() :MutableList<VivoPlantProducts>
     fun findItemNumbers(itemNumbers: MutableList<String>): MutableList<VivoPlantProducts>
     fun findAllByProductId():MutableList<VivoPlantProducts>
-
 }
+
 class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) :VivoPlantProductsRepositoryCustom {
     override fun findPlantProducts(): MutableList<VivoPlantProducts>{
         return namedParameterJdbcTemplate.query("""
-       select *  from VR_PlantProducts
+            select * from VR_PlantProducts
         """,  BeanPropertyRowMapper(VivoPlantProducts::class.java));
     }
 
@@ -28,7 +29,7 @@ class VivoPlantProductsRepositoryImpl @Autowired constructor(val namedParameterJ
         var paramMap= Maps.newHashMap<String,Any>();
         paramMap.put("itemNumbers",itemNumbers);
         return namedParameterJdbcTemplate.query("""
-                select * from vivo_plant_products  t where t.item_number in(:itemNumbers)
+              select * from vivo_plant_products  t where t.item_number in(:itemNumbers)
         """,  paramMap,BeanPropertyRowMapper(VivoPlantProducts::class.java));
     }
 

@@ -2,7 +2,7 @@
   <div>
     <head-tab active="shopAllotDetail"></head-tab>
     <div>
-      <el-form :model="shopAllot" ref="inputForm"  label-width="120px" class="form input-form">
+      <el-form :model="inputForm" ref="inputForm" :rules="rules"  label-width="120px" class="form input-form">
         <el-row :gutter="4">
           <el-col :span="12">
             <el-form-item :label="$t('shopAllotDetail.billCode')">
@@ -41,35 +41,35 @@
 
             </el-form-item>
 
-            <div v-if="action == 'audit'">
-              <el-form-item :label="$t('shopAllotDetail.syn')">
-                <bool-radio-group v-model="syn"></bool-radio-group>
+            <div v-if="action === 'audit'">
+              <el-form-item :label="$t('shopAllotDetail.syn')" prop="syn">
+                <bool-radio-group v-model="inputForm.syn"></bool-radio-group>
               </el-form-item>
 
-              <el-form-item :label="$t('shopAllotDetail.pass')">
-                <bool-radio-group v-model="audit.pass"></bool-radio-group>
+              <el-form-item :label="$t('shopAllotDetail.pass')" prop="pass">
+                <bool-radio-group v-model="inputForm.pass"></bool-radio-group>
               </el-form-item>
               <el-form-item :label="$t('shopAllotDetail.auditRemarks')">
-                <el-input type="textarea" v-model="audit.auditRemarks"></el-input>
+                <el-input type="textarea" v-model="inputForm.auditRemarks"></el-input>
               </el-form-item>
               <el-form-item >
-                <el-button type="primary" @click.native="auditSubmit">{{$t('shopAllotDetail.save')}}</el-button>
+                <el-button type="primary" @click.native="formSubmit">{{$t('shopAllotDetail.save')}}</el-button>
               </el-form-item>
             </div>
           </el-col>
         </el-row>
-        <el-table :data="shopAllotDetailList"  style="margin-top:5px;"   stripe border >
+        <el-table :data="inputForm.shopAllotDetailList"  style="margin-top:5px;"   stripe border >
           <el-table-column prop="productName" :label="$t('shopAllotDetail.productName')"></el-table-column>
           <el-table-column prop="qty" :label="$t('shopAllotDetail.qty')"></el-table-column>
           <el-table-column prop="returnPrice" :label="$t('shopAllotDetail.returnPrice')">
             <template   scope="scope">
-              <div v-if="isView">{{scope.row.returnPrice}}</div>
+              <div v-if="action === 'view'">{{scope.row.returnPrice}}</div>
               <div v-else><el-input v-model.number="scope.row.returnPrice"></el-input></div>
             </template>
           </el-table-column>
           <el-table-column prop="salePrice" :label="$t('shopAllotDetail.salePrice')">
             <template  scope="scope">
-              <div v-if="isView">{{scope.row.salePrice}}</div>
+              <div v-if="action === 'view'">{{scope.row.salePrice}}</div>
               <div v-else><el-input v-model.number="scope.row.salePrice"></el-input></div>
             </template>
           </el-table-column>
@@ -89,32 +89,28 @@
     data(){
       return {
         shopAllot: {},
-        syn:true,
-        audit:{
-          pass:false,
-          auditRemarks:'',
-        },
-        shopAllotDetailList:[],
-        submitData:{
-          id:'',
-          syn:'',
-          pass:'',
+        inputForm:{
+          id:null,
+          syn:true,
+          pass:null,
           auditRemarks:'',
           shopAllotDetailList:[],
         },
-        isView:(this.$route.query.action === 'view'),
         shopAllotDetailLoading:false,
         submitDisabled:false,
         action:this.$route.query.action,
+        rules: {
+          syn: {required: true, message: this.$t('shopAllotDetail.prerequisiteMessage')},
+          pass: {required: true, message: this.$t('shopAllotDetail.prerequisiteMessage')},
+        },
       }
     }, methods:{
-      auditSubmit(){
+      formSubmit(){
         let form = this.$refs["inputForm"];
         form.validate((valid) => {
           if (valid) {
             this.submitDisabled = true;
-            this.initSubmitDataBeforeSubmit();
-            axios.post('/api/ws/future/crm/shopAllot/audit', qs.stringify(this.submitData, {allowDots:true})).then((response)=> {
+            axios.post('/api/ws/future/crm/shopAllot/audit', qs.stringify(this.inputForm, {allowDots:true})).then((response)=> {
               this.$message(response.data.message);
               this.submitDisabled = false;
               if(response.data.success) {
@@ -125,26 +121,19 @@
             });
           }
         });
-      }, initSubmitDataBeforeSubmit(){
-        this.submitData.id = this.$route.query.id;
-        this.submitData.syn = this.syn;
-        this.submitData.pass = this.audit.pass;
-        this.submitData.auditRemarks = this.audit.auditRemarks;
-        this.submitData.shopAllotDetailList = this.shopAllotDetailList;
-
       }
     },created(){
 
+      this.inputForm.id = this.$route.query.id;
       axios.get('/api/ws/future/crm/shopAllot/findDtoForViewOrAudit', {params: {id: this.$route.query.id}}).then((response) => {
         this.shopAllot = response.data;
       });
 
       this.shopAllotDetailLoading=true;
       axios.get('/api/ws/future/crm/shopAllot/findDetailListForViewOrAudit',{params:{id:this.$route.query.id}} ).then((response)=>{
-        this.shopAllotDetailList=response.data;
+        this.inputForm.shopAllotDetailList=response.data;
         this.shopAllotDetailLoading=false;
       });
-
     }
   }
 </script>

@@ -31,7 +31,6 @@ import java.util.*;
  */
 @Service
 @LocalDataSource
-@Transactional(readOnly = false)
 public class OppoPushSerivce {
 
     @Autowired
@@ -75,7 +74,7 @@ public class OppoPushSerivce {
 
     //上抛oppo门店数据,只上抛二代和渠道门店
     @LocalDataSource
-    @Transactional(readOnly=false)
+    @Transactional(readOnly = false)
     public List<OppoCustomer> getOppoCustomers(String date) {
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
         List<OppoCustomer> oppoCustomers = Lists.newArrayList();
@@ -162,7 +161,7 @@ public class OppoPushSerivce {
 
     //上抛运营商属性
     @LocalDataSource
-    @Transactional(readOnly=false)
+    @Transactional(readOnly = false)
     public List<OppoCustomerOperatortype> getOppoCustomerOperatortype(String date) {
         List<OppoCustomerOperatortype> oppoCustomerOperatortypeList = Lists.newArrayList();
         initAreaDepotMap();
@@ -208,6 +207,7 @@ public class OppoPushSerivce {
 
     //发货退货调拨数据上抛
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerAllot>  getOppoCustomerAllot(List<OppoCustomerAllot> oppoCustomerAllots,String date){
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
@@ -245,6 +245,7 @@ public class OppoPushSerivce {
 
     //上抛一代二代库存数据,不包括门店数据
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerStock> getOppoCustomerStock(List<OppoCustomerStock> oppoCustomerStocks,String date) {
         initAreaDepotMap();
         Map<String, OppoCustomerStock> oppoCustomerStockHashMap = Maps.newHashMap();
@@ -279,6 +280,7 @@ public class OppoPushSerivce {
 
     //获取渠道串码收货数据
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerImeiStock> getOppoCustomerImeiStock(List<OppoCustomerImeiStock> oppoCustomerImeiStockList,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
@@ -301,6 +303,7 @@ public class OppoPushSerivce {
 
     //获取店核销总数据
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerSale> getOppoCustomerSales(List<OppoCustomerSale> oppoCustomerSales,String date) {
         initAreaDepotMap();
         for(OppoCustomerSale oppoCustomerSale:oppoCustomerSales){
@@ -317,6 +320,7 @@ public class OppoPushSerivce {
 
     //	门店销售明细数据
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerSaleImei> getOppoCustomerSaleImes(List<OppoCustomerSaleImei> oppoCustomerSaleImes,String date) {
         initAreaDepotMap();
         List<DistrictEntity>  districtList=districtClient.findDistrictList();
@@ -368,6 +372,7 @@ public class OppoPushSerivce {
 
     //门店销售数据汇总
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerSaleCount> getOppoCustomerSaleCounts(List<OppoCustomerSaleCount> oppoCustomerSaleCounts,String date) {
         initAreaDepotMap();
         String agentCode=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).replace("\"","").split(CharConstant.COMMA)[0];
@@ -391,6 +396,7 @@ public class OppoPushSerivce {
 
     //门店售后退货汇总
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerAfterSaleImei> getOppoCustomerAfterSaleImeis(List<OppoCustomerAfterSaleImei>  oppoCustomerAfterSaleImeis,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
@@ -410,6 +416,7 @@ public class OppoPushSerivce {
 
     //门店演示机汇总数据
     @LocalDataSource
+    @Transactional(readOnly = false)
     public List<OppoCustomerDemoPhone> getOppoCustomerDemoPhone(List<OppoCustomerDemoPhone> oppoCustomerDemoPhones,String date) {
         initAreaDepotMap();
         Map<String, String> productColorMap = getProductColorMap();
@@ -519,6 +526,7 @@ public class OppoPushSerivce {
 
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerAllot> getFutureOppoCustomerAllot(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -532,6 +540,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerStock> getFutureOppoCustomerStock(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -545,6 +554,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerImeiStock>  getFutureOppoCustomerImeiStock(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -558,6 +568,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerSale> getFutureOppoCustomerSale(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -571,6 +582,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerSaleImei> getFutureOppoCustomerSaleImeis(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -584,6 +596,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerSaleCount> getFutureOppoCustomerSaleCounts(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -597,6 +610,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public List<OppoCustomerAfterSaleImei> getFutureOppoCustomerAfterSaleImeis(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);
@@ -610,6 +624,7 @@ public class OppoPushSerivce {
     }
 
     @FutureDataSource
+    @Transactional(readOnly = true)
     public  List<OppoCustomerDemoPhone> getFutureOppoCustomerDemoPhone(String date){
         String companyName=companyConfigClient.getValueByCode(CompanyConfigCodeEnum.COMPANY_NAME.name()).replace("\"","");
         DbContextHolder.get().setCompanyName(companyName);

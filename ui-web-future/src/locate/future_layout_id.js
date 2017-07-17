@@ -518,6 +518,7 @@ export default {
     returnPrice: "harga returan",
     salePrice: "harga",
     shouldGet:"应收：",
+    prerequisiteMessage:"必填字段",
   },
   shopAllotForm: {
     shopAllotForm: "tambah alokasi toko",
