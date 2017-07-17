@@ -90,7 +90,7 @@
             <div class="action" v-if="scope.row.auditable&&scope.row.processStatus.indexOf('签收')>0" v-permit="'crm:adGoodsOrder:sign'"><el-button size="small" @click.native="itemAction(scope.row.id,'sign')">{{$t('adGoodsOrderList.sign')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable||(scope.row.editable&&!scope.row.locked)" v-permit="'crm:adGoodsOrder:edit'"><el-button size="small" @click.native="itemAction(scope.row.id,'edit')">{{$t('adGoodsOrderList.edit')}}</el-button></div>
             <div class="action" v-if="scope.row.auditable||(scope.row.editable&&!scope.row.locked)" v-permit="'crm:adGoodsOrder:delete'"><el-button size="small" @click.native="itemAction(scope.row.id,'delete')">{{$t('adGoodsOrderList.delete')}}</el-button></div>
-            <div class="action" v-permit="'crm:adGoodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
+            <div class="action" v-if="scope.row.processStatus === '待发货'||scope.row.processStatus === '待签收' || scope.row.processStatus ==='已通过'" v-permit="'crm:adGoodsOrder:print'"><el-button :style="scope.row.print ? '' : 'color:#ff0000;' " size="small" @click.native="itemAction(scope.row.id,'print')">{{$t('adGoodsOrderList.print')}}</el-button></div>
           </template>
         </el-table-column>
       </el-table>

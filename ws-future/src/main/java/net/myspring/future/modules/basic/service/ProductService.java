@@ -1,37 +1,29 @@
 package net.myspring.future.modules.basic.service;
 
 import com.google.common.collect.Lists;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.myspring.basic.common.util.CompanyConfigUtil;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
 import net.myspring.common.constant.CharConstant;
-import net.myspring.common.enums.BoolEnum;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.enums.BillTypeEnum;
 import net.myspring.common.enums.CompanyConfigCodeEnum;
 import net.myspring.future.common.enums.NetTypeEnum;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.modules.basic.dto.ProductAdApplyDto;
-import net.myspring.future.modules.basic.repository.DepotRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.ProductBatchForm;
 import net.myspring.util.text.IdUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
-import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.domain.ProductType;
 import net.myspring.future.modules.basic.dto.ProductDto;
-import net.myspring.future.modules.basic.repository.DepotRepository;
-import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.basic.web.form.ProductForm;
 import net.myspring.future.modules.basic.web.query.ProductQuery;
-import net.myspring.future.modules.layout.web.form.AdApplyForm;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.json.ObjectMapperUtils;
 import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.reflect.ReflectionUtil;
 import net.myspring.util.text.StringUtils;
-import net.myspring.util.time.LocalDateTimeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -268,8 +260,16 @@ public class ProductService {
     }
 
     @Transactional
-    public void delete(ProductDto productDto) {
-        productRepository.logicDelete(productDto.getId());
+    public void delete(String id) {
+        if(StringUtils.isNotBlank(id)){
+            Product product = productRepository.findOne(id);
+            product.setName(product.getName()+"(废弃"+LocalDateTime.now()+")");
+            product.setEnabled(false);
+            productRepository.save(product);
+        }else {
+            throw new ServiceException("未选中任何货品");
+        }
+
     }
 
     public List<ProductDto> findIntersectionOfBothPricesystem(String pricesystemId1, String pricesystemId2) {

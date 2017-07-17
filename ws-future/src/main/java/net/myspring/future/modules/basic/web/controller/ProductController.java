@@ -110,8 +110,8 @@ public class ProductController {
     }
 
     @RequestMapping(value = "delete")
-    public RestResponse delete(ProductDto productDto) {
-        productService.delete(productDto);
+    public RestResponse delete(String id) {
+        productService.delete(id);
         return new RestResponse("删除成功", ResponseCodeEnum.removed.name());
     }
 

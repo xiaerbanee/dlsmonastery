@@ -166,6 +166,10 @@
               this.fileList2= response.data;
             });
           }
+          if(this.$route.query.action === "audit"&&this.inputForm.processStatus === "产品经理待确认" && this.inputForm.confirmPhoto === null){
+              this.$alert("审核前请先前往修改界面上传装修后图片");
+              this.submitDisabled = true;
+          }
           if(this.inputForm.shopAgreement !=null) {
             axios.get('/api/general/sys/folderFile/findByIds',{params: {ids:this.inputForm.shopAgreement}}).then((response)=>{
               this.fileList3= response.data;
