@@ -113,7 +113,7 @@ public class DepotController {
     @RequestMapping(value = "getDepotAccountQuery")
     public DepotAccountQuery getDepotAccountQuery(DepotAccountQuery depotAccountQuery) {
         LocalDate now = LocalDate.now();
-        LocalDate dutyDateStart = LocalDateUtils.getFirstDayOfThisMonth(now);
+        LocalDate dutyDateStart = now.minusDays(30);
         LocalDate dutyDateEnd = now.plusDays(30);
         depotAccountQuery.setDutyDateRange(LocalDateUtils.format(dutyDateStart) + " - "+LocalDateUtils.format(dutyDateEnd));
         depotAccountQuery.getExtra().put("areaList", officeClient.findByOfficeRuleName(OfficeRuleEnum.办事处.name()));

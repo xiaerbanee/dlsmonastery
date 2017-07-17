@@ -1,6 +1,6 @@
 spring:
   application:
-    name: task
+    name: global-task
   cloud:
     config:
       uri: http://localhost:9900

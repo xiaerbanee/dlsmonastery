@@ -4,9 +4,7 @@ var $util = require("../../../util/util.js");
 Page({
   data: {
     formData: {
-      imeStr: '',
-      boxImeStr: '',
-      expressCodes: ''
+
     },
     response: {},
     submitDisabled: false,
@@ -19,15 +17,14 @@ Page({
     });
   },
   initPage: function () {
-    var that = this;
   },
   numberScan: function (e) {
     var that = this;
     var name = e.currentTarget.dataset.name;
-    if (name == "formatId") {
+    if (name == "businessId") {
       wx.scanCode({
         success: function (res) {
-          that.setData({ 'formData.formatId': res.result });
+          that.setData({ 'formData.businessId': res.result });
           that.numberSearch();
         }
       })
@@ -63,14 +60,11 @@ Page({
   numberSearch: function () {
     var that = this;
     wx.request({
-      url: $util.getUrl("crm/goodsOrder/findByFormatId"),
-      data: { formatId: that.data.formData.formatId },
+      url: $util.getUrl("ws/future/crm/goodsOrderShip/getShipByBusinessId"),
+      data: { businessId: that.data.formData.businessId },
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        that.setData({
-          'formData.store': res.data.store, 'formData.shop': res.data.shop, 'formData.store': res.data.store,
-          'formData.shipRemarks': res.data.shipRemarks, 'formData.remarks': res.data.remarks
-        });
+        that.setData({ formData: res.data, 'formData.imeStr': '', 'formData.boxImeStr': '', 'formData.expressCodes': '' });
       }
     })
   },
@@ -78,14 +72,16 @@ Page({
     var that = this;
     that.setData({ submitDisabled: true })
     wx.request({
-      url: $util.getUrl( "crm/goodsOrder/ship"),
+      url: $util.getUrl("ws/future/crm/goodsOrderShip/ship"),
       data: e.detail.value,
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
         if (res.data.success) {
           wx.navigateBack();
+        } else if (res.data.hasOwnProperty("extra")) {
+          that.setData({ 'response.data': res.data.extra.errors, submitDisabled: false });
         } else {
-          that.setData({ 'response.data': res.data,submitDisabled: false });
+          that.setData({ "response.error": res.data, submitDisabled: false })
         }
       }
     })
@@ -94,9 +90,9 @@ Page({
     var that = this;
     var key = e.currentTarget.dataset.key;
     var responseData = that.data.response.data;
-    if (responseData && responseData.errors && responseData.errors[key] != null) {
-      that.setData({ "response.error": responseData.errors[key].message });
-      delete responseData.errors[key];
+    if (responseData && responseData[key] != null) {
+      that.setData({ "response.error": responseData[key].message });
+      delete responseData[key];
       that.setData({ "response.data": responseData })
     } else {
       that.setData({ "response.error": '' })

@@ -1,10 +1,12 @@
 var app = getApp();
 var $util = require("../../../util/util.js");
+var WxParse = require('../../../util/wxParse/wxParse.js');
 Page({
   data: {
     formData: {},
     submitHidden: false,
     submitDisabled: false,
+    response:'',
     options: null
   },
   onLoad: function (options) {
@@ -25,9 +27,10 @@ Page({
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId},
       success: function (res) {
         console.log(res.data)
-        that.setData({ formData: res.data })
-        var contentImage = $util.getUrl("basic/hr/auditFile/view?id=" + options.id);
-        that.setData({ "formData.contentImage": contentImage })
+        that.setData({ formData: res.data });
+        if(res.data.content!=null){
+          WxParse.wxParse('content', 'html', res.data.content, that, 5);
+        }
       }
     })
     if (options.action == "detail") {
@@ -64,10 +67,11 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
        },
       success: function (res) {
+        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ restResponse: res.data, submitDisabled: false });
+          that.setData({ 'response.error': res.data, submitDisabled: false });
         }
       }
     })

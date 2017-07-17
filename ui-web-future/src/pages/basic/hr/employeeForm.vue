@@ -70,7 +70,7 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item :label="$t('employeeForm.loginName')" prop="loginName">
-              <el-input v-model="accountForm.loginName"></el-input>
+              <el-input v-model="accountForm.loginName" :readonly="!isCreate"></el-input>
             </el-form-item>
             <el-form-item :label="$t('employeeForm.office')" prop="officeId">
               <office-select v-model="accountForm.officeId"></office-select>
@@ -156,23 +156,27 @@
         var accountForm = this.$refs["accountForm"];
         employeeForm.validate((valid) => {
           if (valid) {
-            this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
-            this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
-            this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
-            this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
-            this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
-            this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
-            axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
-              this.$message("员工"+response.data.message);
-              if(!this.isCreate){
-                this.submitDisabled = false;
-                this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
-              } else {
-                Object.assign(this.$data, this.getData());
-                this.initPage();
+            accountForm.validate((accountValid) => {
+              if (accountValid) {
+                this.employeeForm.birthday=util.formatLocalDate(this.employeeForm.birthday)
+                this.employeeForm.entryDate=util.formatLocalDate(this.employeeForm.entryDate)
+                this.employeeForm.regularDate=util.formatLocalDate(this.employeeForm.regularDate)
+                this.employeeForm.leaveDate=util.formatLocalDate(this.employeeForm.leaveDate)
+                this.employeeForm.sex=this.employeeForm.sex==1?"男":"女"
+                this.employeeForm.accountForm=util.deleteExtra(this.accountForm)
+                axios.post('/api/basic/hr/employee/save', qs.stringify(this.employeeForm, {allowDots: true})).then((response)=> {
+                  this.$message("员工"+response.data.message);
+                  if(!this.isCreate){
+                    this.submitDisabled = false;
+                    this.$router.push({name:'employeeList',query:util.getQuery("employeeList"), params:{_closeFrom:true}})
+                  } else {
+                    Object.assign(this.$data, this.getData());
+                    this.initPage();
+                  }
+                }).catch( ()=> {
+                  that.submitDisabled = false;
+                })
               }
-            }).catch( ()=> {
-              that.submitDisabled = false;
             })
           }else{
             this.submitDisabled = false;

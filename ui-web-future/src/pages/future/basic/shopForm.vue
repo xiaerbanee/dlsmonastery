@@ -63,14 +63,14 @@
         <el-form-item label="是否让利" prop="rebate">
           <bool-radio-group v-model="inputForm.rebate"></bool-radio-group>
         </el-form-item>
-        <el-form-item label="税务名称" prop="taxName">
-          <el-input v-model="inputForm.taxName" />
-        </el-form-item>
-        <el-form-item label="是否是广告门店" prop="adShop">
+          <el-form-item label="是否隐藏" prop="isHidden">
+            <bool-radio-group v-model="inputForm.isHidden"></bool-radio-group>
+          </el-form-item>
+        <el-form-item label="是否是广告门店" prop="adShop" v-permit="'crm:depotShop:adShop'" >
           <bool-radio-group v-model="inputForm.adShop"></bool-radio-group>
         </el-form-item>
-        <el-form-item label="是否隐藏" prop="isHidden">
-          <bool-radio-group v-model="inputForm.isHidden"></bool-radio-group>
+        <el-form-item label="税务名称" prop="taxName">
+          <el-input v-model="inputForm.taxName" />
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
           <el-input v-model="inputForm.remarks"></el-input>
@@ -112,6 +112,7 @@
           contator: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           mobilePhone: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
           address: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
+          isHidden: [{ required: true, message: this.$t('dictMapForm.prerequisiteMessage')}],
         }
       }
     },

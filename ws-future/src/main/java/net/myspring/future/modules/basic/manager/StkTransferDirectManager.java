@@ -9,8 +9,10 @@ import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.constant.CharConstant;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
+import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.*;
@@ -18,8 +20,10 @@ import net.myspring.future.modules.crm.dto.StoreAllotDto;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
 import net.myspring.future.modules.crm.web.form.AfterSaleStoreAllotForm;
 import net.myspring.future.modules.crm.web.form.GoodsOrderForm;
+import net.myspring.future.modules.layout.domain.ShopAllot;
 import net.myspring.future.modules.layout.domain.ShopAllotDetail;
 import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.text.StringUtils;
 import org.elasticsearch.xpack.monitoring.collector.Collector;
@@ -45,6 +49,8 @@ public class StkTransferDirectManager {
     private DepotStoreRepository depotStoreRepository;
     @Autowired
     private CloudClient cloudClient;
+    @Autowired
+    private ShopAllotDetailRepository shopAllotDetailRepository;
 
     public KingdeeSynReturnDto synForGoodsOrder(GoodsOrder goodsOrder, String allotFormStockCode,String allotToStokeCode){
         if (StringUtils.isNotBlank(goodsOrder.getId())) {
@@ -184,21 +190,38 @@ public class StkTransferDirectManager {
         return cloudClient.synStkTransferDirect(transferDirectDto);
     }
 
-    public KingdeeSynReturnDto synForShopAllot(ShopAllotDto shopAllotDto){
+    public KingdeeSynReturnDto synForShopAllot(ShopAllot shopAllot){
         StkTransferDirectDto transferDirectDto = new StkTransferDirectDto();
-        transferDirectDto.setExtendId(shopAllotDto.getId());
+        transferDirectDto.setExtendId(shopAllot.getId());
         transferDirectDto.setExtendType(ExtendTypeEnum.门店调拨.name());
-        transferDirectDto.setNote("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+        transferDirectDto.setNote(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
         transferDirectDto.setDate(LocalDate.now());
-        List<ShopAllotDetail> shopAllotDetailList = Lists.newArrayList();//开单关联的详细
+        List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.findByShopAllotId(shopAllot.getId());
+        List<String> productIdList = shopAllotDetailList.stream().map(ShopAllotDetail::getProductId).collect(Collectors.toList());
+        Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
+        DepotStore fromDepotStore = depotStoreRepository.findById(shopAllot.getFromShopId());
+        DepotStore toDepotStore = depotStoreRepository.findById(shopAllot.getToShopId());
         for (ShopAllotDetail shopAllotDetail : shopAllotDetailList) {
             if (shopAllotDetail.getQty() != null && shopAllotDetail.getQty() > 0) {
                 StkTransferDirectFBillEntryDto entryDto = new StkTransferDirectFBillEntryDto();
+                Product product = productIdToOutCodeMap.get(shopAllotDetail.getProductId());
+                if (product.getCode() != null) {
+                    entryDto.setMaterialNumber(product.getCode());
+                } else {
+                    throw new ServiceException(product.getName() + " 该货品没有编码，不能开单");
+                }
                 entryDto.setQty(shopAllotDetail.getQty());
-                entryDto.setMaterialNumber("");
-                entryDto.setSrcStockNumber(""); //调出仓库
-                entryDto.setDestStockNumber("");//调入仓库
-                entryDto.setNoteEntry("");//getBusinessId()+"申："+getRemarks()+"审:"+getAuditRemarks()
+                if (fromDepotStore.getOutCode() != null) {
+                    entryDto.setSrcStockNumber(fromDepotStore.getOutCode());//调出仓库
+                } else {
+                    throw new ServiceException(fromDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                }
+                if (toDepotStore.getOutCode() != null) {
+                    entryDto.setDestStockNumber(toDepotStore.getOutCode());//调入仓库
+                } else {
+                    throw new ServiceException(toDepotStore.getId() + " 该仓库（ID）没有编码，不能开单");
+                }
+                entryDto.setNoteEntry(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
                 transferDirectDto.getStkTransferDirectFBillEntryDtoList().add(entryDto);
             }
         }
