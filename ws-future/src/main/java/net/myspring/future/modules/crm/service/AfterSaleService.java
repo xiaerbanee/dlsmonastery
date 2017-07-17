@@ -318,8 +318,10 @@ public class AfterSaleService {
         List<String> badImes = Lists.newArrayList();
         List<String> productNames = Lists.newArrayList();
         for (List<String> row : datas) {
-            listAddTrim(badImes,row.get(3));
-            listAddTrim(productNames,row.get(1));
+            if(StringUtils.isNotBlank(row.get(1))){
+                listAddTrim(badImes,row.get(3));
+                listAddTrim(productNames,row.get(1));
+            }
         }
         List<Product> productList = productRepository.findByNameIn(productNames);
         Map<String, Product> productMap = CollectionUtil.extractToMap(productList, "name");

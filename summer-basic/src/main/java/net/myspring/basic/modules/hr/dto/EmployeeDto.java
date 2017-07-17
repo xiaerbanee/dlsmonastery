@@ -1,5 +1,6 @@
 package net.myspring.basic.modules.hr.dto;
 
+import net.myspring.basic.common.utils.RequestUtils;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Employee;
 import net.myspring.util.cahe.annotation.CacheInput;
@@ -46,6 +47,11 @@ public class EmployeeDto extends DataDto<Employee> {
     private String leaderName;
     @CacheInput(inputKey = "positions",inputInstance = "positionId",outputInstance = "name")
     private String positionName;
+    private boolean editable;
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     public String getAreaName() {
         return areaName;
@@ -285,5 +291,13 @@ public class EmployeeDto extends DataDto<Employee> {
 
     public void setOriginName(String originName) {
         this.originName = originName;
+    }
+
+    public boolean getEditable(){
+        if(RequestUtils.getAdmin()){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

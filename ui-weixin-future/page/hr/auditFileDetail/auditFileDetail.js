@@ -6,6 +6,7 @@ Page({
     formData: {},
     submitHidden: false,
     submitDisabled: false,
+    response:'',
     options: null
   },
   onLoad: function (options) {
@@ -66,10 +67,11 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
        },
       success: function (res) {
+        console.log(res)
         if (res.data.success) {
           wx.navigateBack();
         } else {
-          that.setData({ restResponse: res.data, submitDisabled: false });
+          that.setData({ 'response.error': res.data, submitDisabled: false });
         }
       }
     })

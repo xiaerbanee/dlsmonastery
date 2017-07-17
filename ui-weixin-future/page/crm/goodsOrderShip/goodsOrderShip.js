@@ -64,7 +64,6 @@ Page({
       data: { businessId: that.data.formData.businessId },
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res.data)
         that.setData({ formData: res.data, 'formData.imeStr': '', 'formData.boxImeStr': '', 'formData.expressCodes': '' });
       }
     })
@@ -77,7 +76,6 @@ Page({
       data: e.detail.value,
       header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
       success: function (res) {
-        console.log(res.data)
         if (res.data.success) {
           wx.navigateBack();
         } else if (res.data.hasOwnProperty("extra")) {

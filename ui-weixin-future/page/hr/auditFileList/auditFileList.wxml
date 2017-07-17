@@ -31,7 +31,7 @@
         </view>
         <view class="weui-cell__bd">
           <picker name="needAuditByMe" range="{{auditList}}" value="{{formData.auditType}}" bindchange="bindAuditType">
-            <view class="weui-input">{{formData.auditType}}</view>
+            <view class="weui-input">{{formData.auditType?formData.auditType:''}}</view>
           </picker>
         </view>
       </view>

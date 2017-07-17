@@ -59,6 +59,9 @@ public class EmployeeController {
     @PreAuthorize("hasPermission(null,'hr:employee:edit')")
     public RestResponse save(EmployeeForm employeeForm) {
         RestResponse restResponse = new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+        if(!employeeForm.isCreate()&&StringUtils.isBlank(employeeForm.getAccountForm().getId())){
+            return new RestResponse("保存失败", ResponseCodeEnum.saved.name());
+        }
         Employee employee=employeeService.save(employeeForm);
         AccountForm accountForm=employeeForm.getAccountForm();
         accountForm.setEmployeeId(employee.getId());
