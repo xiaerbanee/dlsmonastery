@@ -1,2 +1,14 @@
 server:
   port: 9999
+
+security:
+  oauth2:
+    local:
+      clientId: task-service
+      clientSecret: task-password
+      accessTokenUri: http://localhost:1100/uaa/oauth/token
+      userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
+      grant-type: client_credentials
+      scope: server
+    resource:
+      user-info-uri: http://localhost:1100/uaa/user
