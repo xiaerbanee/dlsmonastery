@@ -12,6 +12,7 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.future.common.utils.CacheUtils;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.dto.CustomerDto;
@@ -285,7 +286,7 @@ public class DepotService {
     }
 
     public BdDepartment getDefaultDepartment(String depotId) {
-        ClientDto clientDto = clientRepository.findByDepotId(depotId);
+        Client clientDto = clientRepository.findByDepotId(depotId);
         if(clientDto == null || StringUtils.isBlank(clientDto.getOutId())){
             return null;
         }
