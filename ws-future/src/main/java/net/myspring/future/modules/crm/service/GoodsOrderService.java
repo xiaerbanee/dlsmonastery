@@ -185,8 +185,8 @@ public class GoodsOrderService {
             goodsOrder.setShipType(goodsOrderForm.getShipType());
             goodsOrder.setStatus(GoodsOrderStatusEnum.待开单.name());
             goodsOrder.setUseTicket(false);
-            goodsOrder.setStoreId(getDefaultStoreId(goodsOrder.getShipType(), goodsOrder.getNetType(), shop, StringUtils.isNotBlank(goodsOrderForm.getDetailJson())));
         }
+        goodsOrder.setStoreId(getDefaultStoreId(goodsOrder.getShipType(), goodsOrder.getNetType(), shop, StringUtils.isNotBlank(goodsOrderForm.getDetailJson())));
         goodsOrder.setLxMallOrder(NetTypeEnum.联信.name().equals(goodsOrderForm.getNetType()) ? goodsOrderForm.getLxMallOrder() : null );
         goodsOrder.setRemarks(goodsOrderForm.getRemarks());
         goodsOrderRepository.save(goodsOrder);
