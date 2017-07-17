@@ -1,11 +1,3 @@
-spring:
-  application:
-    name: summer-basic
-  profiles:
-    active: dev
-  jpa:
-    show-sql: true
-
 server:
   port: 1400
   tomcat:
@@ -14,12 +6,6 @@ server:
             header:
               size:10000KB
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
 feign:
   hystrix:
     enabled: false

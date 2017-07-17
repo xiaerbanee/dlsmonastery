@@ -1,3 +1,20 @@
 spring:
   application:
     name: config
+  cloud:
+    config:
+      server:
+        git:
+          uri: http://ncoppo.com:66/liuj/summer.git
+          search-paths: config-repo
+          username: config
+          password: configconfig
+server:
+  port: 9900
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1000/eureka/

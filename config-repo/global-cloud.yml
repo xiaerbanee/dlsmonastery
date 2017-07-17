@@ -1,30 +1,17 @@
-spring:
-  application:
-    name: global-tool
-  profiles:
-    active: dev
-
 server:
-  port: 2100
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:1000/eureka/
+  port: 2000
 
 security:
   oauth2:
     local:
-      clientId: tool-service
-      clientSecret: tool-password
+      clientId: cloud-service
+      clientSecret: cloud-password
       accessTokenUri: http://localhost:1100/uaa/oauth/token
       userAuthorizationUri: http://localhost:1100/uaa/oauth/authorize
       grant-type: client_credentials
       scope: server
     resource:
       user-info-uri: http://localhost:1100/uaa/user
-
 feign:
   hystrix:
     enabled: false
@@ -34,9 +21,8 @@ feign:
 ribbon:
   ReadTimeout: 180000
   ConnectTimeout: 180000
-
 logging:
-  file: global-tool.log
+  file: global-cloud.log
   level:
     org.springframework.cloud: DEBUG
     org.springframework.security: DEBUG
