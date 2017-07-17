@@ -33,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class KingdeeManager {
     @Autowired
-    private KingdeeSynRepository kingdeeSynRepository;
-    @Autowired
     private ArReceivableRepository arReceivableRepository;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -111,8 +109,6 @@ public class KingdeeManager {
             kingdeeSynDto.setLocked(false);
         }
         kingdeeSynDto.setResult(ObjectMapperUtils.writeValueAsString(resultMap));
-        KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynDto,KingdeeSyn.class);
-        kingdeeSynRepository.save(kingdeeSyn);
         return kingdeeSynDto;
     }
 
@@ -155,8 +151,6 @@ public class KingdeeManager {
             kingdeeSynExtendDto.setLocked(false);
         }
         kingdeeSynExtendDto.setResult(ObjectMapperUtils.writeValueAsString(result));
-        KingdeeSyn kingdeeSyn = BeanUtil.map(kingdeeSynExtendDto,KingdeeSyn.class);
-        kingdeeSynRepository.save(kingdeeSyn);
         return kingdeeSynExtendDto;
     }
 

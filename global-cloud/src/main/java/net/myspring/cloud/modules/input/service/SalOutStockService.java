@@ -72,7 +72,7 @@ public class SalOutStockService {
     }
 
     @Transactional
-    public List<KingdeeSynReturnDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynExtendDto> save (List<SalOutStockDto> salOutStockDtoList, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<KingdeeSynExtendDto> kingdeeSynExtendDtoList = Lists.newArrayList();
         //财务出库开单
         if (CollectionUtil.isNotEmpty(salOutStockDtoList)) {
@@ -91,11 +91,11 @@ public class SalOutStockService {
                 throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
             }
         }
-        return BeanUtil.map(kingdeeSynExtendDtoList,KingdeeSynReturnDto.class);
+        return kingdeeSynExtendDtoList;
     }
 
     @Transactional
-    public List<KingdeeSynReturnDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
+    public List<KingdeeSynExtendDto> save (SalStockForm salStockForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         String stockNumber = salStockForm.getStockNumber();
         LocalDate date = salStockForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(salStockForm.getJson());
@@ -151,7 +151,7 @@ public class SalOutStockService {
     }
 
     @Transactional
-    public List<KingdeeSynReturnDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList,KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+    public List<KingdeeSynExtendDto> saveForXSCKD (List<SalOutStockDto> salOutStockDtoList,KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
         List<String> customerNumberList = Lists.newArrayList();
         for (SalOutStockDto salOutStockDto  : salOutStockDtoList){
             customerNumberList.add(salOutStockDto.getCustomerNumber());

@@ -7,9 +7,11 @@ import net.myspring.cloud.modules.input.service.StkMisDeliveryService;
 import net.myspring.cloud.modules.input.web.form.StkMisDeliveryForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
@@ -33,6 +35,8 @@ public class StkMisDeliveryController {
     private KingdeeBookService kingdeeBookService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
+    private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(value = "form")
     public StkMisDeliveryForm form () {
@@ -46,6 +50,7 @@ public class StkMisDeliveryController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
             List<KingdeeSynDto> kingdeeSynDtoList = stkMisDeliveryService.save(stkMisDeliveryForm, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
             for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                 if (kingdeeSynDto.getSuccess()) {
                     restResponse = new RestResponse("其他出库单开单成功：" + kingdeeSynDto.getBillNo(), null, true);
@@ -64,6 +69,7 @@ public class StkMisDeliveryController {
         KingdeeSynDto kingdeeSynDto;
         if (accountKingdeeBook != null) {
             kingdeeSynDto = stkMisDeliveryService.saveForWS(stkMisDeliveryDto, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDto, KingdeeSyn.class));
         }else {
             throw new ServiceException("您没有金蝶账号，不能开单");
         }

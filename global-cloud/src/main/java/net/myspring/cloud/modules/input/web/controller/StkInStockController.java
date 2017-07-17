@@ -7,12 +7,15 @@ import net.myspring.cloud.modules.input.service.StkInStockService;
 import net.myspring.cloud.modules.input.web.form.StkInStockForm;
 import net.myspring.cloud.modules.sys.domain.AccountKingdeeBook;
 import net.myspring.cloud.modules.sys.domain.KingdeeBook;
+import net.myspring.cloud.modules.sys.domain.KingdeeSyn;
 import net.myspring.cloud.modules.sys.dto.ProductDto;
 import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
+import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.cloud.modules.sys.service.ProductService;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
+import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +39,8 @@ public class StkInStockController {
     private ProductService productService;
     @Autowired
     private AccountKingdeeBookService accountKingdeeBookService;
+    @Autowired
+    private KingdeeSynService kingdeeSynService;
 
     @RequestMapping(value = "form")
     public StkInStockForm form (StkInStockForm stkInStockForm) {
@@ -57,6 +62,7 @@ public class StkInStockController {
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         if (accountKingdeeBook != null) {
             List<KingdeeSynDto> kingdeeSynDtoList = stkInStockService.save(stkInStockForm, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
             for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
                 if (kingdeeSynDto.getSuccess()) {
                     restResponse = new RestResponse("采购入库成功：" + kingdeeSynDto.getBillNo(), null, true);

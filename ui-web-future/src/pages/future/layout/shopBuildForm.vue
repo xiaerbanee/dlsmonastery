@@ -104,7 +104,6 @@
             applyAccountId: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             scenePhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
             shopAgreement: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
-            confirmPhoto: [{required: true, message: this.$t('shopBuildForm.prerequisiteMessage')}],
           },
           remoteLoading:false,
         }
