@@ -12,12 +12,14 @@ import net.myspring.future.modules.crm.web.form.ImeAllotBatchForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotForm;
 import net.myspring.future.modules.crm.web.form.ImeAllotSimpleForm;
 import net.myspring.future.modules.crm.web.query.ImeAllotQuery;
+import net.myspring.future.modules.crm.web.validator.ImeAllotValidator;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.excel.ExcelView;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,6 +34,8 @@ public class ImeAllotController {
 
     @Autowired
     private ImeAllotService imeAllotService;
+    @Autowired
+    private ImeAllotValidator imeAllotValidator;
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<ImeAllotDto> list(Pageable pageable, ImeAllotQuery imeAllotQuery) {
@@ -59,8 +63,11 @@ public class ImeAllotController {
     }
 
     @RequestMapping(value = "save")
-    public RestResponse save(ImeAllotForm imeAllotForm) {
-
+    public RestResponse save(ImeAllotForm imeAllotForm, BindingResult bindingResult) {
+        imeAllotValidator.validate(imeAllotForm,bindingResult);
+        if(bindingResult.hasErrors()){
+            return  new RestResponse(bindingResult,"保存失败", null);
+        }
         List<String> imeList = imeAllotForm.getImeList();
         if(CollectionUtil.isEmpty(imeList)){
             throw new ServiceException("没有输入任何有效的串码");

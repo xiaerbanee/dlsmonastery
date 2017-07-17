@@ -2,7 +2,7 @@
   <view>
     <view class="weui-flex" style="margin-top:20rpx;">
       <view class="weui-flex__item">
-        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="formatId">订单扫描</button>
+        <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="businessId">订单扫描</button>
       </view>
       <view class="weui-flex__item">
         <button size="mini" type="primary" class="pageable_footer_item" bindtap="numberScan" data-name="imeStr">串码扫描</button>
@@ -28,11 +28,11 @@
             <view class="weui-label">仓库</view>
           </view>
           <view class="weui-cell__bd" style="overflow:hidden">
-            <picker name="storeId" value="{{formData.store.id}}" disabled>
-              <view class="weui-input">{{formData.store.name}}</view>
+            <picker name="storeId" value="{{formData.storeId}}" disabled>
+              <view class="weui-input">{{formData.storeName}}</view>
             </picker>
           </view>
-          <view class="weui-cell__ft" wx:if="{{response.data.errors.storeId}}">
+          <view class="weui-cell__ft" wx:if="{{response.data.storeId}}">
             <icon type="warn" class="warn"></icon>
           </view>
         </view>
@@ -41,11 +41,11 @@
             <view class="weui-label">门店</view>
           </view>
           <view class="weui-cell__bd" style="overflow:hidden">
-            <picker name="shopId" value="{{formData.shop.id}}" disabled>
-              <view class="weui-input">{{formData.shop.name}}</view>
+            <picker name="shopId" value="{{formData.shopId}}" disabled>
+              <view class="weui-input">{{formData.shopName}}</view>
             </picker>
           </view>
-          <view class="weui-cell__ft" wx:if="{{response.data.errors.shopId}}">
+          <view class="weui-cell__ft" wx:if="{{response.data.shopId}}">
             <icon type="warn" class="warn"></icon>
           </view>
         </view>
@@ -54,9 +54,9 @@
             <view class="weui-label">订单号</view>
           </view>
           <view class="weui-cell__bd">
-            <input name="formatId" class="weui-input" value="{{formData.formatId}}" />
+            <input name="businessId" class="weui-input" value="{{formData.businessId}}" />
           </view>
-          <view class="weui-cell__ft" wx:if="{{response.data.errors.formatId}}">
+          <view class="weui-cell__ft" wx:if="{{response.data.businessId}}">
             <icon type="warn" class="warn"></icon>
           </view>
         </view>
@@ -105,18 +105,17 @@
         <button disabled="{{submitDisabled}}" formType="submit" class="weui-btn" type="primary">确定</button>
       </view>
     </form>
-    <view class="{{formData.goodsOrderDetail!=null?'':'hidden'}}">
-      <view class="page__bd">
-        <view class="weui-panel">
-          <view class="weui-panel__bd panel_bd">
-            <view class="weui-media-box weui-media-box_text" wx:for="{{formData.goodsOrderDetail}}" wx:key="id" data-id="{{item.id}}">
-              <view class="weui-media-box__title weui-media-box__title_in-text">货品名称:{{item.product.name}}</view>
-              <view class="weui-media-box__desc item_style">包含串码:{{item.product.hasIme?'是':'否'}}</view>
-              <view class="weui-media-box__desc item_style">开单数:{{item.billQty}}</view>
-              <view class="weui-media-box__desc item_style">已发货数:{{item.shippedQty}}</view>
-              <view class="weui-media-box__desc item_style">待发货数:{{item.billQty-item.shippedQty}}</view>
-            </view>
-          </view>
+    <view>
+      <view class="weui-panel weui-panel_access">
+        <view class="weui-media-box weui-media-box_text" wx:for="{{formData.goodsOrderDetailDtoList}}" wx:key="id" data-id="{{item.id}}">
+          <view class="weui-media-box__title weui-media-box__title_in-text">货品名称:{{item.productName}}</view>
+          <view class="weui-media-box__desc item_style">包含串码:{{item.hasIme?'是':'否'}}</view>
+          <view class="weui-media-box__desc item_style">开单数:{{item.billQty}}</view>
+          <view class="weui-media-box__desc item_style">退货数:{{item.returnQty}}</view>
+          <view class="weui-media-box__desc item_style">已发货数:{{item.shippedQty}}</view>
+          <view class="weui-media-box__desc item_style">发货数:{{item.shipQty}}</view>
+          <view class="weui-media-box__desc item_style">待发货数:{{item.leftQty}}</view>
+          <view class="weui-media-box__desc item_style">发送完成:{{item.leftQty==0?'是':'否'}}</view>
         </view>
       </view>
     </view>
