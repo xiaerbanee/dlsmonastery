@@ -53,6 +53,14 @@ interface DepotStoreRepository : BaseRepository<DepotStore,String>,DepotStoreRep
     """, nativeQuery = true)
     fun findByIds(ids: MutableList<String>): MutableList<DepotStore>
 
+    @Query("""
+        SELECT t1.*
+        FROM crm_depot_store t1
+        where t1.enabled=1
+        and t1.id = ?1
+    """, nativeQuery = true)
+    fun findById(id: String): DepotStore
+
     fun findByOutIdIn(outList:MutableList<String>):MutableList<DepotStore>
 
     fun findByEnabledIsTrueAndDepotId(depotId :String): DepotStore?
