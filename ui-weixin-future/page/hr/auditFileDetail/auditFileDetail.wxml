@@ -1,6 +1,7 @@
 <import src="../../../util/wxParse/wxParse.wxml" />
 <view class="page">
   <form catchsubmit="formSubmit">
+    <view class="weui-toptips weui-toptips_warn" wx:if="{{response.error && response.error != ''}}">{{response.error}}</view>
     <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
     <input type="hidden" name="processFlowId" value="{{formData.processFlowId}}" class="hidden" />
     <input type="hidden" name="processTypeId" value="{{formData.processTypeId}}" class="hidden" />

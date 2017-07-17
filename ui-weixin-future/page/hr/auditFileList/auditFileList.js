@@ -8,23 +8,19 @@ Page({
     searchHidden: true,
     activeItem: null,
     auditList: ['待批(需要我审核)', '全部'],
+    ifReload:false,
+    auditType:'待批(需要我审核)'
   },
   onLoad: function (option) {
     var that = this;
+    that.loadPage();
     that.setData({ height: $util.getWindowHeight() })
   },
   onShow: function () {
     var that = this;
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading',
-      duration: 10000,
-      success: function (res) {
-        app.autoLogin(function () {
-          that.initPage()
-        });
-      }
-    })
+    if(that.data.ifReload){
+      that.loadPage();
+    }
   },
   initPage: function () {
     var that = this;
@@ -36,10 +32,9 @@ Page({
         Cookie: "JSESSIONID=" + app.globalData.sessionId
       },
       success: function (res) {
-        console.log(res.data)
         that.setData({ formData: res.data });
         that.setData({
-          "formData.auditType": that.data.auditList[0],
+          "formData.auditType": that.data.auditType ? that.data.auditType : that.data.auditList[0],
           "formData.createdDateStart": $util.formatLocalDate($util.getFirstDayOfMonth(new Date())),
           "formData.createdDateEnd": $util.formatLocalDate(new Date),
         })
@@ -59,7 +54,6 @@ Page({
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: $util.deleteExtra(that.data.formData),
           success: function (res) {
-            console.log(res.data)
             let deleted = wx.getStorageSync("authorityList").includes("hr:auditFile:delete");
             let content=res.data.content;
             for (let item in content) {
@@ -77,6 +71,7 @@ Page({
     })
   },
   add: function () {
+    this.setData({ifReload:true,auditType:this.data.formData.auditType})
     wx.navigateTo({
       url: '/page/hr/auditFileForm/auditFileForm'
     })
@@ -89,8 +84,7 @@ Page({
   },
   bindAuditType: function (e) {
     var that = this;
-    console.log(e.detail.value);
-    that.setData({ 'formData.auditType': that.data.auditList[e.detail.value] })
+    that.setData({ 'formData.auditType': that.data.auditList[e.detail.value]})
   },
   itemActive: function (e) {
     var that = this;
@@ -99,8 +93,6 @@ Page({
       var item = that.data.page.content[index];
       if (item.id == id) {
         that.data.activeItem = item;
-      }
-      if (item.id == id && item.hasOwnProperty('actionList')) {
         item.active = true;
       } else {
         item.active = false;
@@ -120,6 +112,7 @@ Page({
       success: function (res) {
         if (!res.cancel) {
           if (itemList[res.tapIndex] == "审核") {
+            that.setData({ ifReload: true, auditType: that.data.formData.auditType })
             wx.navigateTo({
               url: '/page/hr/auditFileDetail/auditFileDetail?action=audit&id=' + id
             })
@@ -160,6 +153,19 @@ Page({
     var that = this;
     that.setData({ searchHidden: !that.data.searchHidden, formData: that.data.formData, "formData.page": 0 });
     that.pageRequest();
+  },
+  loadPage(){
+    var that=this;
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading',
+      duration: 10000,
+      success: function (res) {
+        app.autoLogin(function () {
+          that.initPage()
+        });
+      }
+    })
   },
   toFirstPage: function () {
     var that = this;

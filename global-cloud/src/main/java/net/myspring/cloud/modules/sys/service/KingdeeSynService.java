@@ -13,6 +13,7 @@ import net.myspring.cloud.modules.sys.repository.AccountKingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeBookRepository;
 import net.myspring.cloud.modules.sys.repository.KingdeeSynRepository;
 import net.myspring.cloud.modules.sys.web.query.KingdeeSynQuery;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.util.collection.CollectionUtil;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,14 +65,24 @@ public class KingdeeSynService {
     @Transactional
     public void save(KingdeeSyn kingdeeSyn) {
         if(kingdeeSyn != null) {
-            kingdeeSynRepository.save(kingdeeSyn);
+            if(kingdeeSyn.getSuccess()){
+                kingdeeSynRepository.save(kingdeeSyn);
+            }else {
+                throw new ServiceException(kingdeeSyn.getResult());
+            }
         }
     }
 
     @Transactional
     public void save(List<KingdeeSyn> kingdeeSynList) {
         if(CollectionUtil.isNotEmpty(kingdeeSynList)) {
-            kingdeeSynRepository.save(kingdeeSynList);
+           for (KingdeeSyn kingdeeSyn :kingdeeSynList){
+               if(kingdeeSyn.getSuccess()){
+                   kingdeeSynRepository.save(kingdeeSyn);
+               }else {
+                   throw new ServiceException(kingdeeSyn.getResult());
+               }
+           }
         }
     }
 
