@@ -7,20 +7,21 @@ import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.sys.dto.KingdeeSynReturnDto;
 import net.myspring.common.exception.ServiceException;
 import net.myspring.future.modules.basic.client.CloudClient;
+import net.myspring.future.modules.basic.domain.Client;
 import net.myspring.future.modules.basic.domain.DepotStore;
 import net.myspring.future.modules.basic.domain.Product;
-import net.myspring.future.modules.basic.dto.ClientDto;
 import net.myspring.future.modules.basic.repository.ClientRepository;
 import net.myspring.future.modules.basic.repository.DepotStoreRepository;
 import net.myspring.future.modules.basic.repository.ProductRepository;
 import net.myspring.future.modules.crm.domain.GoodsOrder;
 import net.myspring.future.modules.crm.domain.GoodsOrderDetail;
 import net.myspring.future.modules.crm.repository.GoodsOrderDetailRepository;
-import net.myspring.future.modules.layout.dto.ShopAllotDto;
+import net.myspring.future.modules.layout.domain.ShopAllot;
+import net.myspring.future.modules.layout.domain.ShopAllotDetail;
+import net.myspring.future.modules.layout.repository.ShopAllotDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +42,14 @@ public class SalReturnStockManager {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private ShopAllotDetailRepository shopAllotDetailRepository;
+    @Autowired
     private CloudClient cloudClient;
 
     public List<KingdeeSynReturnDto> synForGoodsOrderShip(GoodsOrder goodsOrder){
         List<GoodsOrderDetail> goodsOrderDetailList = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrder.getId());
         DepotStore depotStore = depotStoreRepository.findByEnabledIsTrueAndDepotId(goodsOrder.getStoreId());
-        ClientDto clientDto = clientRepository.findByDepotId(goodsOrder.getShopId());
+        Client client = clientRepository.findByDepotId(goodsOrder.getShopId());
         List<String> productIdList = goodsOrderDetailList.stream().map(GoodsOrderDetail::getProductId).collect(Collectors.toList());
         Map<String,Product> productIdToOutCodeMap = productRepository.findByEnabledIsTrueAndIdIn(productIdList).stream().collect(Collectors.toMap(Product::getId, Product->Product));
         List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
@@ -54,10 +57,10 @@ public class SalReturnStockManager {
         returnStockDto.setExtendId(goodsOrder.getId());
         returnStockDto.setExtendType(ExtendTypeEnum.货品订货.name());
         returnStockDto.setDate(goodsOrder.getBillDate());
-        if(clientDto.getOutCode() != null){
-            returnStockDto.setCustomerNumber(clientDto.getOutCode());
+        if(client.getOutCode() != null){
+            returnStockDto.setCustomerNumber(client.getOutCode());
         }else{
-            throw new ServiceException(clientDto.getName()+",该客户没有编码，不能开单");
+            throw new ServiceException(client.getName()+",该客户没有编码，不能开单");
         }
         returnStockDto.setNote(goodsOrder.getRemarks());
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
@@ -86,14 +89,20 @@ public class SalReturnStockManager {
         return cloudClient.synSalReturnStock(salReturnStockDtoList);
     }
 
-    private List<KingdeeSynReturnDto> synForShopAllot(ShopAllotDto shopAllotDto){
+    private List<KingdeeSynReturnDto> synForShopAllot(ShopAllot shopAllot){
         List<SalReturnStockDto> salReturnStockDtoList = Lists.newArrayList();
+        Client client = clientRepository.findByDepotId(shopAllot.getFromShopId());
         SalReturnStockDto returnStockDto = new SalReturnStockDto();
-        returnStockDto.setExtendId(shopAllotDto.getId());
+        returnStockDto.setExtendId(shopAllot.getId());
         returnStockDto.setExtendType(ExtendTypeEnum.门店调拨.name());
         returnStockDto.setDate(LocalDate.now());
-        returnStockDto.setCustomerNumber("");//shopAllotDto.getFromShop().getRealCode()
-        returnStockDto.setNote("");//shopAllotDto.getBusinessId()+"申："+shopAllotDto.getRemarks()+"审:"+shopAllotDto.getAuditRemarks()
+        if (client!=null && client.getOutCode()!=null) {
+            returnStockDto.setCustomerNumber(client.getOutCode());
+        }else{
+            throw new ServiceException(client.getName()+",该门店没有编码，不能开单");
+        }
+        returnStockDto.setNote(shopAllot.getBusinessId()+"申："+shopAllot.getRemarks()+"审:"+shopAllot.getAuditRemarks());
+//        List<ShopAllotDetail> shopAllotDetailList = shopAllotDetailRepository.find
         List<SalReturnStockFEntityDto> entityDtoList = Lists.newArrayList();
         SalReturnStockFEntityDto entityDto = new SalReturnStockFEntityDto();
         entityDto.setMaterialNumber("");// shopAllotDetail.getProduct().getCode()
