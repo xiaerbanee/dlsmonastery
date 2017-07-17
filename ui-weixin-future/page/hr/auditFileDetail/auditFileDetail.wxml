@@ -1,3 +1,4 @@
+<import src="../../../util/wxParse/wxParse.wxml" />
 <view class="page">
   <form catchsubmit="formSubmit">
     <input type="hidden" name="id" value="{{formData.id}}" class="hidden" />
@@ -41,12 +42,7 @@
           <view class="weui-label">正文</view>
         </view>
         <view class="weui-cell__bd">
-          <textarea name="content" maxlength="-1" value="{{formData.content}}" class="weui-textarea" style="min-height:280rpx" auto-height/>
-        </view>
-      </view>
-      <view class="weui-cell weui-cell_input" wx:if="formData.contentImage!=null">
-        <view class="weui-cell__hd">
-          <image src="{{formData.contentImage}}" mode="widthFix" bindtap="showImageActionSheet"></image>
+          <template is="wxParse" data="{{wxParseData:content.nodes}}" />
         </view>
       </view>
       <view>

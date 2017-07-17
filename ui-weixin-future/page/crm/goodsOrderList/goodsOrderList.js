@@ -12,26 +12,6 @@ Page({
   },
   onLoad: function (option) {
     let that = this;
-      wx.request({
-          url: $util.getUrl("ws/future/crm/goodsOrder/getQuery"),
-          data: {},
-          method: 'GET',
-          header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
-          success: function (res) {
-              that.setData({
-                  'formProperty.storeList': res.data.extra.stores, 
-                  'formProperty.statusList': res.data.extra.statusList,
-                  'formProperty.shipList': res.data.extra.shipTypeList,
-                  'formProperty.netList': res.data.extra.netTypeList, 
-                  'formProperty.areaList': res.data.extra.areaList,
-                  formData:res.data
-              })
-          }
-      })
-    this.setData({ height: $util.getWindowHeight() })
-  },
-  onShow: function () {
-    let that = this;
     wx.showToast({
       title: '加载中',
       icon: 'loading',
@@ -42,9 +22,27 @@ Page({
         });
       }
     })
+    that.setData({ height: $util.getWindowHeight() })
+  },
+  onShow: function () {
+
   },
   initPage: function () {
-    this.pageRequest();
+    var that = this
+    wx.request({
+      url: $util.getUrl("ws/future/crm/goodsOrder/getQuery"),
+      data: {},
+      method: 'GET',
+      header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
+      success: function (res) {
+        console.log(res.data)
+        that.setData({
+          formProperty: res.data.extra,
+          formData: res.data,
+        })
+        that.pageRequest()
+      }
+    })
   },
   pageRequest: function () {
     var that = this
@@ -52,7 +50,8 @@ Page({
           url: $util.getUrl("ws/future/crm/goodsOrder"),
           header: { Cookie: "JSESSIONID=" + app.globalData.sessionId },
           data: $util.deleteExtra(that.data.formData),
-          success: function (res) {    
+          success: function (res) {
+            console.log(res.data)  
             for(var item in res.data.content){
               let actionList = new Array();
               actionList.push("详细");
@@ -80,24 +79,17 @@ Page({
       'formData.areaName': that.data.formProperty.areaList[e.detail.value].name
     })
   },
-  bindStore: function (e) {
-    var that = this;
-    that.setData({
-      'formData.storeId': that.data.formProperty.storeList[e.detail.value].id,
-      'formData.storeName': that.data.formProperty.storeList[e.detail.value].name
-    })
-  },
   bindStatus: function (e) {
     var that = this;
     that.setData({ 'formData.status': that.data.formProperty.statusList[e.detail.value] })
   },
   bindShipType: function (e) {
     var that = this;
-    that.setData({ 'formData.shipType': that.data.formProperty.shipList[e.detail.value] })
+    that.setData({ 'formData.shipType': that.data.formProperty.shipTypeList[e.detail.value] })
   },
   bindNetType: function (e) {
     var that = this;
-    that.setData({ 'formData.netType': that.data.formProperty.netList[e.detail.value] })
+    that.setData({ 'formData.netType': that.data.formProperty.netTypeList[e.detail.value] })
   },
   bindDateChange: function (e) {
     var that = this;
