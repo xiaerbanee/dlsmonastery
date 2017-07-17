@@ -2,10 +2,12 @@ package net.myspring.future.modules.layout.dto;
 
 import net.myspring.common.dto.DataDto;
 import net.myspring.future.common.constant.FormatterConstant;
+import net.myspring.future.common.enums.CompanyNameEnum;
 import net.myspring.future.common.utils.RequestUtils;
 import net.myspring.future.modules.layout.domain.ShopBuild;
 import net.myspring.util.cahe.annotation.CacheInput;
 import net.myspring.util.text.IdUtils;
+import net.myspring.util.text.StringUtils;
 
 /**
  * Created by zhangyf on 2017/5/6.
@@ -281,6 +283,18 @@ public class ShopBuildDto extends DataDto<ShopBuild>{
             return true;
         }else {
             return false;
+        }
+    }
+
+    public String getExportAreaName(){
+        if(StringUtils.isNotBlank(this.areaName)){
+            if(this.areaName.contains("办事处")){
+                return this.areaName.replaceAll("办事处", CompanyNameEnum.JXOPPO.name());
+            }else{
+                return this.areaName;
+            }
+        }else{
+            return null;
         }
     }
 }

@@ -21,6 +21,7 @@ public class Office extends TreeEntity<Office> {
     private String type;
     private String areaId;
     private String jointLevel;
+    private String agentCode;
     //是否拥有所有数据权限
     private Boolean allDataScope;
 
@@ -109,6 +110,14 @@ public class Office extends TreeEntity<Office> {
 
     public void setOfficeRuleId(String officeRuleId) {
         this.officeRuleId = officeRuleId;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 
     public Boolean getAllDataScope() {
