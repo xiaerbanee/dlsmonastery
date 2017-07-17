@@ -134,10 +134,8 @@
       },print(id, action){
         if(action==="returnPrint") {
           window.open('/#/future/layout/shopAllotShipPrint?printType=returnPrint&id=' + id, '', '');
-          this.pageRequest();
         } else if(action==="salePrint") {
           window.open('/#/future/layout/shopAllotShipPrint?printType=salePrint&id=' + id, '', '');
-          this.pageRequest();
         }
       },itemAction:function(id, action){
         if(action==="edit") {

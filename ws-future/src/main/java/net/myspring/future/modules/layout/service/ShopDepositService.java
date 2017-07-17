@@ -71,10 +71,6 @@ public class ShopDepositService {
         if(shopDepositForm.isMarketAmountValid()){
             saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.市场保证金, shopDepositForm.getMarketAmount());
         }
-        if(shopDepositForm.isDemoPhoneAmountValid()){
-            saveShopDeposit(shopDepositForm, ShopDepositTypeEnum.演示机押金, shopDepositForm.getDemoPhoneAmount());
-        }
-
     }
 
     @Transactional

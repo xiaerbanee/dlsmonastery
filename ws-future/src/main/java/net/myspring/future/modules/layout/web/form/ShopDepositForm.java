@@ -5,12 +5,10 @@ import net.myspring.future.modules.layout.domain.ShopDeposit;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     private BigDecimal imageAmount;
-    private BigDecimal demoPhoneAmount ;
     private BigDecimal marketAmount;
     private LocalDate billDate;
     private String bankId;
@@ -40,14 +38,6 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     public void setImageAmount(BigDecimal imageAmount) {
         this.imageAmount = imageAmount;
-    }
-
-    public BigDecimal getDemoPhoneAmount() {
-        return demoPhoneAmount;
-    }
-
-    public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
-        this.demoPhoneAmount = demoPhoneAmount;
     }
 
     public String getDepartMent() {
@@ -84,14 +74,6 @@ public class ShopDepositForm extends BaseForm<ShopDeposit> {
 
     public boolean isImageAmountValid() {
         if (imageAmount != null && ! imageAmount.equals(BigDecimal.ZERO) ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isDemoPhoneAmountValid() {
-        if (demoPhoneAmount != null && ! demoPhoneAmount.equals(BigDecimal.ZERO)) {
             return true;
         } else {
             return false;

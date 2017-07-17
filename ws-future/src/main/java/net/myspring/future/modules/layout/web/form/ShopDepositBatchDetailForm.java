@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public class ShopDepositBatchDetailForm extends BaseForm<ShopDeposit> {
 
     private BigDecimal imageAmount;
-    private BigDecimal demoPhoneAmount ;
     private BigDecimal marketAmount;
     private LocalDate billDate;
     private String bankName;
@@ -23,14 +22,6 @@ public class ShopDepositBatchDetailForm extends BaseForm<ShopDeposit> {
 
     public void setImageAmount(BigDecimal imageAmount) {
         this.imageAmount = imageAmount;
-    }
-
-    public BigDecimal getDemoPhoneAmount() {
-        return demoPhoneAmount;
-    }
-
-    public void setDemoPhoneAmount(BigDecimal demoPhoneAmount) {
-        this.demoPhoneAmount = demoPhoneAmount;
     }
 
     public BigDecimal getMarketAmount() {
@@ -80,30 +71,5 @@ public class ShopDepositBatchDetailForm extends BaseForm<ShopDeposit> {
     public void setShopName(String shopName) {
         this.shopName = shopName;
     }
-
-    public boolean isImageAmountValid() {
-        if (imageAmount != null && ! imageAmount.equals(BigDecimal.ZERO) ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isDemoPhoneAmountValid() {
-        if (demoPhoneAmount != null && ! demoPhoneAmount.equals(BigDecimal.ZERO)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean isMarketAmountValid() {
-        if (marketAmount != null && ! marketAmount.equals(BigDecimal.ZERO)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
 }
