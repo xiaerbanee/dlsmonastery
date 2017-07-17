@@ -66,6 +66,18 @@ private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook k
     }
 
     @Transactional
+    public KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
+        KingdeeSynDto kingdeeSynDto;
+        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
+        if(isLogin) {
+            kingdeeSynDto = save(cnJournalForCashDto, kingdeeBook);
+        }else{
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
+        }
+        return kingdeeSynDto;
+    }
+
+    @Transactional
     public KingdeeSynDto save(CnJournalForCashForm cnJournalForCashForm, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook) {
         LocalDate billDate = cnJournalForCashForm.getBillDate();
         String json = HtmlUtils.htmlUnescape(cnJournalForCashForm.getJson());
@@ -132,18 +144,6 @@ private KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto,KingdeeBook k
             cnJournalForCashDto.getEntityForCashDtoList().add(cnJournalEntityForCashDto);
         }
         return save(cnJournalForCashDto,kingdeeBook,accountKingdeeBook);
-    }
-
-    @Transactional
-    public KingdeeSynDto save(CnJournalForCashDto cnJournalForCashDto, KingdeeBook kingdeeBook, AccountKingdeeBook accountKingdeeBook){
-        KingdeeSynDto kingdeeSynDto;
-        Boolean isLogin = kingdeeManager.login(kingdeeBook.getKingdeePostUrl(),kingdeeBook.getKingdeeDbid(),accountKingdeeBook.getUsername(),accountKingdeeBook.getPassword());
-        if(isLogin) {
-            kingdeeSynDto = save(cnJournalForCashDto, kingdeeBook);
-        }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
-        }
-        return kingdeeSynDto;
     }
 
     public CnJournalForCashForm getForm(KingdeeBook kingdeeBook){

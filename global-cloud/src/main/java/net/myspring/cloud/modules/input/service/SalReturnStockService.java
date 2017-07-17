@@ -12,11 +12,9 @@ import net.myspring.cloud.modules.input.dto.SalReturnStockDto;
 import net.myspring.cloud.modules.input.dto.SalReturnStockFEntityDto;
 import net.myspring.cloud.modules.input.manager.KingdeeManager;
 import net.myspring.cloud.modules.input.web.form.SalStockForm;
-import net.myspring.cloud.modules.kingdee.domain.ArReceivable;
 import net.myspring.cloud.modules.kingdee.domain.BdCustomer;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.kingdee.domain.BdMaterial;
-import net.myspring.cloud.modules.kingdee.repository.ArReceivableRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdCustomerRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdDepartmentRepository;
 import net.myspring.cloud.modules.kingdee.repository.BdMaterialRepository;
@@ -51,8 +49,6 @@ import java.util.stream.Collectors;
 public class SalReturnStockService {
     @Autowired
     private KingdeeManager kingdeeManager;
-    @Autowired
-    private ArReceivableRepository arReceivableRepository;
     @Autowired
     private BdCustomerRepository bdCustomerRepository;
     @Autowired
@@ -91,6 +87,8 @@ private KingdeeSynExtendDto save(SalReturnStockDto salReturnStockDto, KingdeeBoo
                     KingdeeSynExtendDto kingdeeSynExtendDto = save(salReturnStockDto, kingdeeBook);
                     kingdeeSynExtendDtoList.add(kingdeeSynExtendDto);
                 }
+            }else {
+                throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
             }
         }
         return BeanUtil.map(kingdeeSynExtendDtoList,KingdeeSynReturnDto.class);

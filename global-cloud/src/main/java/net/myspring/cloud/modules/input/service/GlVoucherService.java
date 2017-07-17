@@ -71,7 +71,7 @@ private KingdeeSynDto save(GlVoucherDto glVoucherDto, KingdeeBook kingdeeBook){
         if(isLogin) {
             kingdeeSynDto = save(glVoucherDto, kingdeeBook);
         }else{
-            kingdeeSynDto = new KingdeeSynDto(false,"未登入金蝶系统");
+            throw new ServiceException("登入金蝶系统失败，请检查您的账户密码是否正确");
         }
         return kingdeeSynDto;
     }
