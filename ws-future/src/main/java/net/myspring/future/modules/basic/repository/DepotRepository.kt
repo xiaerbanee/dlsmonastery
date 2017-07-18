@@ -171,7 +171,7 @@ class DepotRepositoryImpl @Autowired constructor(val namedParameterJdbcTemplate:
         if(CollectionUtil.isNotEmpty(depotQuery.officeIdList)){
             sb.append("""  and depot.office_id in (:officeIdList) """)
         }
-        return namedParameterJdbcTemplate.query(sb.toString(),BeanPropertySqlParameterSource(depotQuery), BeanPropertyRowMapper(String::class.java))
+        return namedParameterJdbcTemplate.queryForList(sb.toString(),BeanPropertySqlParameterSource(depotQuery), String::class.java)
     }
 
     override fun findAdStoreDtoList( outGroupId: String): List<DepotDto> {
