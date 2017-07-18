@@ -21,10 +21,32 @@ class SProductItem000M13e00Repository @Autowired constructor(val namedParameterJ
         return namedParameterJdbcTemplate.update(sb.toString(),map)
     }
 
+    fun deleteIDvivoByUpdateTime(dateStart:String,dateEnd:String,agentCode:String):Int{
+        val map = Maps.newHashMap<String,String>()
+        map.put("dateStart",dateStart)
+        map.put("dateEnd",dateEnd)
+        map.put("agentCode",agentCode);
+        val sb = StringBuilder()
+        sb.append("""
+            DELETE FROM S_ProductItem000_:agentCode
+            WHERE UpdateTime >= :dateStart AND UpdateTime < :dateEnd
+        """)
+        return namedParameterJdbcTemplate.update(sb.toString(),map)
+    }
+
     fun batchSave(sProductItem000M13e00List:MutableList<SProductItem000M13e00>):IntArray{
         val sb = StringBuilder()
         sb.append("""
             INSERT INTO S_ProductItem000_M13E00(CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime)
+            VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime)
+        """)
+        return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItem000M13e00List.toTypedArray()))
+    }
+
+    fun batchIDvivoSave(sProductItem000M13e00List:MutableList<SProductItem000M13e00>):IntArray{
+        val sb = StringBuilder()
+        sb.append("""
+            INSERT INTO S_ProductItem000_:agentCode (CompanyID,ProductID,ProductNo,StoreID,CustomerID,SubCustomerID,Status,StatusInfo,IsReturnProfit,IsLock,Remark,UpdateTime)
             VALUES (:companyId,:productId,:productNo,:storeId,:customerId,:subCustomerId,:status,:statusInfo,:isReturnProfit,:isLock,:remark,:updateTime)
         """)
         return namedParameterJdbcTemplate.batchUpdate(sb.toString(),SqlParameterSourceUtils.createBatch(sProductItem000M13e00List.toTypedArray()))
