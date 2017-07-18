@@ -31,7 +31,7 @@ public class StkTransferDirectService {
                 KingdeeFormIdEnum.STK_TransferDirect.name(),
                 stkTransferDirectDto.getJson(),
                 kingdeeBook);
-        kingdeeManager.save(kingdeeSynDto);
+        kingdeeSynDto = kingdeeManager.save(kingdeeSynDto);
         if (!kingdeeSynDto.getSuccess()){
             throw new ServiceException("直接调拨单失败："+kingdeeSynDto.getResult());
         }
