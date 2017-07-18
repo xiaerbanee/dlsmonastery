@@ -135,10 +135,8 @@ public class ArReceiveBillService {
                     ArReceiveBillDto arRefundBill = new ArReceiveBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款单_k3.name());
                     arRefundBill.setCreator(accountKingdeeBook.getUsername());
-//                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
-//                    arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArReceiveBillEntryDto arRefundBillEntityDto = new ArReceiveBillEntryDto();
                     arRefundBillEntityDto.setAmount(amount);
@@ -146,7 +144,6 @@ public class ArReceiveBillService {
                     if (StringUtils.isNotBlank(bankAcntName)){
                         arRefundBillEntityDto.setBankAcntNumber(bankAcntNameMap.get(bankAcntName));
                     }
-//                    arRefundBillEntityDto.setNote(remarks);
                     arRefundBill.setArReceiveBillEntryDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForBankMap.put(billKey, arRefundBill);
                 }
@@ -156,21 +153,16 @@ public class ArReceiveBillService {
                     ArReceiveBillDto arRefundBill = new ArReceiveBillDto();
                     arRefundBill.setExtendType(ExtendTypeEnum.收款单_k3.name());
                     arRefundBill.setCreator(accountKingdeeBook.getUsername());
-//                    arRefundBill.setKingdeeName(kingdeeBook.getName());
                     arRefundBill.setCustomerNumber(customerNameMap.get(customerName));
                     arRefundBill.setDate(billDate);
-//                    arRefundBill.setAmount(amount);
                     arRefundBill.setDepartmentNumber(customerNameToDepartmentNumberMap.get(customerName));
                     ArReceiveBillEntryDto arRefundBillEntityDto = new ArReceiveBillEntryDto();
                     arRefundBillEntityDto.setAmount(amount);
-//                    arRefundBillEntityDto.setNote(remarks);
                     arRefundBillEntityDto.setFSettleTypeIdNumber("JSFS01_SYS");//现金
-//                    arRefundBillEntityDto.setAccountNumber("1001");//库存现金
                     arRefundBill.setArReceiveBillEntryDtoList(Lists.newArrayList(arRefundBillEntityDto));
                     refundBillForCashMap.put(billKey, arRefundBill);
                 }
             }
-
         }
         List<ArReceiveBillDto> billList = Lists.newArrayList(refundBillForBankMap.values());
         List<KingdeeSynDto> kingdeeSynDtoList = save(billList,kingdeeBook,accountKingdeeBook);
