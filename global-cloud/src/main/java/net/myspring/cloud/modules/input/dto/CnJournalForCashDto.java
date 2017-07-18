@@ -123,8 +123,12 @@ public class CnJournalForCashDto {
             detail.put("FOPPOSITEACCOUNTID", CollectionUtil.getMap("FNumber", entityForCashDto.getAccountNumber()));
             detail.put("FCOMMENT", entityForCashDto.getRemarks());
             entity.add(detail);
-            debitAmounts = debitAmounts.add(entityForCashDto.getDebitAmount());
-            creditAmounts = creditAmounts.add(entityForCashDto.getCreditAmount());
+            if (entityForCashDto.getDebitAmount() != null){
+                debitAmounts = debitAmounts.add(entityForCashDto.getDebitAmount());
+            }
+            if (entityForCashDto.getCreditAmount() != null){
+                creditAmounts = creditAmounts.add(entityForCashDto.getCreditAmount());
+            }
 
         }
         model.put("FCREDITSUMAMOUNTLOC", creditAmounts);
