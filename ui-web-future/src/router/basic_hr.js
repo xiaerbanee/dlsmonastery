@@ -31,6 +31,10 @@ const auditFileDetail= r => require.ensure([], () => r(require('pages/basic/hr/a
 const accountTaskList= r => require.ensure([], () => r(require('pages/basic/hr/accountTaskList.vue')));
 const accountAuthorityForm= r => require.ensure([], () => r(require('pages/basic/hr/accountAuthorityForm.vue')));
 
+const unitsOfficeForm= r => require.ensure([], () => r(require('pages/basic/hr/unitsOfficeForm.vue')));
+const batchUnitsForm= r => require.ensure([], () => r(require('pages/basic/hr/batchUnitsForm.vue')));
+
+
 
 let routes = [
   {path:'/basic/hr/dutyLeaveList',component:dutyLeaveList,name:'dutyLeaveList'},
@@ -64,6 +68,11 @@ let routes = [
   {path:'/basic/hr/recruitForm',component:recruitForm,name:'recruitForm',meta: {menu:"recruitList",keepAlive:true}},
   {path:'/basic/hr/recruitBatchForm',component:recruitBatchForm,name:'recruitBatchForm',meta: {menu:"recruitList",keepAlive:true}},
   {path:'/basic/hr/accountAuthorityForm',component:accountAuthorityForm,name:'accountAuthorityForm',meta: {menu:"accountList",keepAlive:true}},
+
+  {path:'/basic/hr/unitsOfficeForm',component:unitsOfficeForm,name:'unitsOfficeForm'},
+  {path:'/basic/hr/batchUnitsForm',component:batchUnitsForm,name:'batchUnitsForm'},
+
+
 ];
 
 export default routes;

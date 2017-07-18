@@ -119,8 +119,13 @@ public class StkMisDeliveryDto {
             Map<String, Object> detail = Maps.newLinkedHashMap();
             detail.put("FMaterialId", CollectionUtil.getMap("FNumber", entityDto.getMaterialNumber()));
             detail.put("FStockId", CollectionUtil.getMap("FNumber", entityDto.getStockNumber()));
+            //单位--Pcs
             detail.put("FUnitID", CollectionUtil.getMap("FNumber", "Pcs"));
             detail.put("FBaseUnitId", CollectionUtil.getMap("FNumber", "Pcs"));
+            //库存状态--可用
+            detail.put("FStockStatusId", CollectionUtil.getMap("FNumber", "KCZT01_SYS"));
+            //货主--
+            detail.put("FOwnerId", CollectionUtil.getMap("FNumber", ""));
             detail.put("FQty", entityDto.getQty());
             detail.put("FEntryNote", entityDto.getFEntryNote());
             entity.add(detail);

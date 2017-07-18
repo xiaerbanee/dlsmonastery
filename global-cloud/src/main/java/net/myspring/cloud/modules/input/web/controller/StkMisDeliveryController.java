@@ -16,7 +16,9 @@ import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.mapper.BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -62,8 +64,8 @@ public class StkMisDeliveryController {
         return restResponse;
     }
 
-    @RequestMapping(value = "saveForWS")
-    public KingdeeSynReturnDto saveForWS(StkMisDeliveryDto stkMisDeliveryDto) {
+    @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
+    public KingdeeSynReturnDto saveForWS(@RequestBody StkMisDeliveryDto stkMisDeliveryDto) {
         KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
         KingdeeSynDto kingdeeSynDto;
