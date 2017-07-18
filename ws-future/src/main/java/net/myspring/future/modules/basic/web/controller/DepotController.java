@@ -1,5 +1,6 @@
 package net.myspring.future.modules.basic.web.controller;
 
+import com.google.common.collect.Lists;
 import net.myspring.cloud.modules.kingdee.domain.BdDepartment;
 import net.myspring.cloud.modules.report.dto.CustomerReceiveDetailDto;
 import net.myspring.cloud.modules.report.web.query.CustomerReceiveDetailQuery;
@@ -12,6 +13,7 @@ import net.myspring.future.modules.basic.domain.Depot;
 import net.myspring.future.modules.basic.dto.CustomerDto;
 import net.myspring.future.modules.basic.dto.DepotAccountDto;
 import net.myspring.future.modules.basic.dto.DepotDto;
+import net.myspring.future.modules.basic.dto.DepotShopDto;
 import net.myspring.future.modules.basic.service.DepotService;
 import net.myspring.future.modules.basic.web.query.DepotAccountQuery;
 import net.myspring.future.modules.basic.web.query.DepotQuery;
@@ -160,6 +162,15 @@ public class DepotController {
             return new DepotDto();
         }
         return depotService.findDto(id);
+    }
+
+    @RequestMapping(value = "findByOfficeId")
+    public List<DepotDto> findByOfficeId(String officeId){
+        List<DepotDto> depotDtos= Lists.newArrayList();
+        if (StringUtils.isNotBlank(officeId)){
+            depotDtos=depotService.findByOfficeId(officeId);
+        }
+        return depotDtos;
     }
 
     @RequestMapping(value = "findByDepotShopId")

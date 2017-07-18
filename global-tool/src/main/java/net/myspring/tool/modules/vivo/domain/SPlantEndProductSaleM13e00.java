@@ -9,10 +9,10 @@ public class SPlantEndProductSaleM13e00 {
     private String productID;
     private Integer saleCount;
     private String imei;
-    private LocalDateTime billDate;
+    private String billDate;
     private String dealerID;
     private BigDecimal salePrice;
-    private LocalDateTime createdTime;
+    private String createdTime;
 
     public String getCompanyID() {
         return companyID;
@@ -54,11 +54,11 @@ public class SPlantEndProductSaleM13e00 {
         this.imei = imei;
     }
 
-    public LocalDateTime getBillDate() {
+    public String getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(LocalDateTime billDate) {
+    public void setBillDate(String billDate) {
         this.billDate = billDate;
     }
 
@@ -78,11 +78,11 @@ public class SPlantEndProductSaleM13e00 {
         this.salePrice = salePrice;
     }
 
-    public LocalDateTime getCreatedTime() {
+    public String getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
+    public void setCreatedTime(String createdTime) {
         this.createdTime = createdTime;
     }
 }

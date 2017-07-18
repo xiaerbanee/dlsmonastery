@@ -1,12 +1,13 @@
 package net.myspring.basic.modules.hr.dto;
 
+import net.myspring.basic.modules.hr.domain.AccountWeixin;
 import net.myspring.common.dto.DataDto;
 import net.myspring.basic.modules.hr.domain.Account;
 
 /**
  * Created by liuj on 2017/3/19.
  */
-public class AccountWeixinDto extends DataDto<Account> {
+public class AccountWeixinDto extends DataDto<AccountWeixin> {
     private String accountId;
     private String openId;
 
