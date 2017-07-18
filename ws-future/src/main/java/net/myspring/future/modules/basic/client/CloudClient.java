@@ -98,5 +98,7 @@ public interface CloudClient {
     //
     @RequestMapping(method = RequestMethod.GET, value = "/sys/kingdeeSyn/findByExtendIdAndExtendType")
     List<KingdeeSynReturnDto> findByExtendIdAndExtendType(@RequestParam(value = "extendId")String extendId, @RequestParam(value = "extendType")String extendType);
-
+    //验证是否有做单权限
+    @RequestMapping(method = RequestMethod.GET, value = "/sys/accountKingdeeBook/validateByAccountId")
+    Boolean validateByAccountId(@RequestParam(value = "accountId") String accountId);
 }
