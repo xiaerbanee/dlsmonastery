@@ -196,11 +196,4 @@ public class DepotShopController {
         return new ModelAndView(excelView,"simpleExcelBook",simpleExcelBook);
     }
 
-    public List<DepotShopDto> findByOfficeId(String officeId){
-        List<DepotShopDto> depotShopDtoList=Lists.newArrayList();
-        if (StringUtils.isNotBlank(officeId)){
-            depotShopDtoList=depotShopService.findByOfficeId(officeId);
-        }
-        return depotShopDtoList;
-    }
 }

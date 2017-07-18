@@ -26,7 +26,7 @@ import java.util.*
  * Created by zhangyf on 2017/5/24.
  */
 interface DepotShopRepository : BaseRepository<DepotShop,String>,DepotShopRepositoryCustom {
-    fun findByOfficeIdIn(officeIdList:MutableList<String>):MutableList<DepotShop>
+
 }
 
 

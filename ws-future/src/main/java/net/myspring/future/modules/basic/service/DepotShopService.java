@@ -106,13 +106,6 @@ public class DepotShopService {
         return depotShopForm;
     }
 
-    public List<DepotShopDto> findByOfficeId(String officeId){
-        List<String> officeIdList=officeClient.getSameAreaByOfficeId(officeId);
-        List<DepotShop> depotShopList=depotShopRepository.findByOfficeIdIn(officeIdList);
-        List<DepotShopDto> depotShopDtoList=BeanUtil.map(depotShopList,DepotShopDto.class);
-        return depotShopDtoList;
-    }
-
     public DepotShopDto findOne(String id){
         DepotShopDto depotShopDto;
         if (StringUtils.isBlank(id)){
