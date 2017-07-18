@@ -64,7 +64,7 @@ public class SalOutStockService {
                 salOutStockDto.getJson(),
                 kingdeeBook,
                 KingdeeFormIdEnum.AR_receivable.name());
-        kingdeeManager.save(kingdeeSynExtendDto);
+        kingdeeSynExtendDto = kingdeeManager.save(kingdeeSynExtendDto);
         if (!kingdeeSynExtendDto.getSuccess()){
             throw new ServiceException("销售入库单："+kingdeeSynExtendDto.getResult());
         }
