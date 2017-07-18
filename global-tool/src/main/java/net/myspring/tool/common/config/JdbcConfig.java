@@ -1,11 +1,11 @@
 package net.myspring.tool.common.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.common.collect.Maps;
 import net.myspring.tool.GlobalToolApplication;
 import net.myspring.tool.common.dataSource.DynamicDataSource;
 import net.myspring.tool.common.enums.DataSourceTypeEnum;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,7 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -25,7 +24,6 @@ import org.springframework.util.ClassUtils;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 public class JdbcConfig {
@@ -79,7 +77,8 @@ public class JdbcConfig {
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager(entityManagerFactory());
+        SessionFactory sessionFactory = entityManagerFactory().unwrap(SessionFactory.class);
+        return new HibernateTransactionManager(sessionFactory);
     }
 
     @Bean
