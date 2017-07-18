@@ -56,6 +56,6 @@ class SPlantCustomerStockRepository @Autowired constructor(val namedParameterJdb
                 and de.id not in (select depot_id from crm_depot_store)
             GROUP BY de.id,im.product_id
         """)
-        return namedParameterJdbcTemplate.query(sb.toString(),map,BeanPropertyRowMapper(SPlantCustomerStockDto::class.java));
+        return namedParameterJdbcTemplate.query(sb.toString(),map,BeanPropertyRowMapper(SPlantCustomerStockDto::class.java))
     }
 }

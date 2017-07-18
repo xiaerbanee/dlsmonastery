@@ -3,7 +3,7 @@ package net.myspring.tool.modules.vivo.dto;
 import net.myspring.util.cahe.annotation.CacheInput;
 
 public class SPlantCustomerStockDto {
-    private String CustomerId;
+    private String customerId;
     private String productId;
     private Integer useAbleStock;
     @CacheInput(inputKey = "offices",inputInstance = "customerId" ,outputInstance = "agentCode")
@@ -11,11 +11,11 @@ public class SPlantCustomerStockDto {
     private Integer customerLevel;
 
     public String getCustomerId() {
-        return CustomerId;
+        return customerId;
     }
 
     public void setCustomerId(String customerId) {
-        CustomerId = customerId;
+        this.customerId = customerId;
     }
 
     public String getProductId() {
