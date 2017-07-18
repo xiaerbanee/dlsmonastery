@@ -13,6 +13,7 @@ import net.myspring.cloud.modules.sys.service.AccountKingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeBookService;
 import net.myspring.cloud.modules.sys.service.KingdeeSynService;
 import net.myspring.common.exception.ServiceException;
+import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.util.cahe.CacheReadUtils;
 import net.myspring.util.mapper.BeanUtil;
@@ -44,23 +45,32 @@ public class ArReceiveBillController {
     @Autowired
     private KingdeeSynService kingdeeSynService;
 
+    @RequestMapping(value = "form")
+    public ArReceiveBillForm form () {
+        return arReceiveBillService.getForm();
+    }
+
     @RequestMapping(value = "save")
     public RestResponse save(ArReceiveBillForm arReceiveBillForm) {
-        RestResponse restResponse = new RestResponse("开单失败",null);
-        KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
-        List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillForm,kingdeeBook,accountKingdeeBook);
-        kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
-        if (accountKingdeeBook != null) {
-            for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
-                if (kingdeeSynDto.getSuccess()) {
-                    restResponse = new RestResponse("收款单成功：" + kingdeeSynDto.getBillNo(), null, true);
+        RestResponse restResponse = new RestResponse("开单失败", null);
+        try {
+            KingdeeBook kingdeeBook = kingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            AccountKingdeeBook accountKingdeeBook = accountKingdeeBookService.findByAccountId(RequestUtils.getAccountId());
+            List<KingdeeSynDto> kingdeeSynDtoList = arReceiveBillService.save(arReceiveBillForm, kingdeeBook, accountKingdeeBook);
+            kingdeeSynService.save(BeanUtil.map(kingdeeSynDtoList, KingdeeSyn.class));
+            if (accountKingdeeBook != null) {
+                for (KingdeeSynDto kingdeeSynDto : kingdeeSynDtoList) {
+                    if (kingdeeSynDto.getSuccess()) {
+                        restResponse = new RestResponse("收款单成功：" + kingdeeSynDto.getBillNo(), null, true);
+                    }
                 }
+            } else {
+                restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
             }
-        }else {
-            restResponse = new RestResponse("您没有金蝶账号，不能开单", null, false);
+            return restResponse;
+        }catch (Exception e){
+           return new RestResponse(e.getMessage(), ResponseCodeEnum.invalid.name(), false);
         }
-        return restResponse;
     }
 
     @RequestMapping(value = "saveForWS",method = RequestMethod.POST)
