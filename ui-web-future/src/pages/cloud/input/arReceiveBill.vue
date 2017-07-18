@@ -1,6 +1,6 @@
 <template>
   <div>
-    <head-tab active="arRefundBill"></head-tab>
+    <head-tab active="arReceiveBill"></head-tab>
     <div>
       <el-form :model="formData" method="get" ref="inputForm" :rules="rules" :inline="true">
         <el-button type="primary" :disabled="submitDisabled" @click="formSubmit" icon="check">保存</el-button>
@@ -25,7 +25,7 @@
           stretchH: 'all',
           height: 650,
           minSpareRows: 1,
-          colHeaders: ["往来单位", "我方银行账号", "业务日期", "退款金额", "结算方式", "备注"],
+          colHeaders: ["往来单位", "我方银行账号", "业务日期", "收款金额", "结算方式", "备注"],
           columns: [
             {type: "autocomplete", strict: true, allowEmpty: false, customerName:[],source: this.customerName},
             {type: "autocomplete", strict: true, allowEmpty: false, bankAcntName:[],source: this.bankAcntName},
@@ -43,7 +43,7 @@
       };
     },
     mounted() {
-      axios.get('/api/global/cloud/input/arRefundBill/form').then((response)=>{
+      axios.get('/api/global/cloud/input/arReceiveBill/form').then((response)=>{
         let extra = response.data.extra;
         this.settings.columns[0].source = extra.customerNameList;
         this.settings.columns[1].source = extra.banAcntNameList;
@@ -65,7 +65,7 @@
               }
             }
             this.formData.json = JSON.stringify(this.formData.json);
-            axios.post('/api/global/cloud/input/arRefundBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
+            axios.post('/api/global/cloud/input/arReceiveBill/save', qs.stringify(this.formData,{allowDots:true})).then((response)=> {
               this.$message(response.data.message);
             }).catch(function () {
               this.submitDisabled = false;

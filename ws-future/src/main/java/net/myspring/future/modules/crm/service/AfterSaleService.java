@@ -485,6 +485,7 @@ public class AfterSaleService {
                 }
                 toAllotMap.get(toKey).setToQty(toAllotMap.get(toKey).getToQty()+1);
             }
+            //同步到金蝶
             KingdeeSynReturnDto fromK3CloudSyn = stkMisDeliveryManager.synCKForAfterSale(Lists.newArrayList(fromAllotMap.values()));
             KingdeeSynReturnDto toK3CloudSyn = stkMisDeliveryManager.synTHForAfterSale(Lists.newArrayList(toAllotMap.values()));
             String toOutCode = toK3CloudSyn.getBillNo();
