@@ -220,6 +220,7 @@ public class VoucherController {
                 if (kingdeeSynDto.getSuccess()) {
                     String outCode = "凭证编号：" + kingdeeSynDto.getBillNo() + "  凭证号：" + glVoucherService.findByBillNo(kingdeeSynDto.getBillNo()).getFVoucherGroupNo();
                     voucher.setOutCode(outCode);
+                    voucher.setCreatedName(accountKingdeeBook.getUsername());
                     voucherService.save(voucher);
                     return new RestResponse("凭证同步成功", null, true);
                 } else {
