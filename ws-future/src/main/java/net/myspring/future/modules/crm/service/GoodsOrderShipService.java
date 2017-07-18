@@ -381,9 +381,7 @@ public class GoodsOrderShipService {
                     goodsOrderRepository.save(goodsOrder);
                 }
             }
-
         }
-
     }
 
     @Transactional
@@ -398,28 +396,44 @@ public class GoodsOrderShipService {
     @Transactional
     public void shipBack(String goodsOrderId) {
         GoodsOrder goodsOrder = goodsOrderRepository.findOne(goodsOrderId);
-        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndGoodsOrderId(goodsOrderId);
-        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
-        Map<String,ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
-        //串码调拨
-        if (CollectionUtil.isNotEmpty(goodsOrderImeList)) {
+        goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
+        goodsOrder.setShipDate(null);
+        goodsOrderRepository.save(goodsOrder);
 
-            for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
-                ProductIme productIme = productImeMap.get(goodsOrderIme.getProductImeId());
-                productIme.setDepotId(goodsOrder.getStoreId());
-                productIme.setRetailShopId(goodsOrder.getStoreId());
-                productImeRepository.save(productIme);
-            }
+        resetProductImeWhenShipBack(goodsOrder);
+        goodsOrderImeRepository.deleteByGoodsOrderId(goodsOrderId);
+        resetGoodsOrderDetailInfoWhenShipBack(goodsOrderId);
+        if(StringUtils.isNotBlank(goodsOrder.getExpressOrderId())){
+            expressRepository.deleteByExpressOrderId(goodsOrder.getExpressOrderId());
+            ExpressOrder expressOrder = expressOrderRepository.findOne(goodsOrder.getExpressOrderId());
+            expressOrder.setExpressCodes(null);
+            expressOrderRepository.save(expressOrder);
         }
-        goodsOrderImeRepository.delete(goodsOrderImeList);
+    }
+
+    @Transactional
+    private void resetGoodsOrderDetailInfoWhenShipBack(String goodsOrderId) {
+        List<GoodsOrderDetail> goodsOrderDetailList  = goodsOrderDetailRepository.findByGoodsOrderId(goodsOrderId);
         for (GoodsOrderDetail goodsOrderDetail : goodsOrderDetailList) {
             goodsOrderDetail.setShippedQty(0);
         }
-        goodsOrder.setStatus(GoodsOrderStatusEnum.待发货.name());
-        goodsOrder.setShipDate(null);
-        //删除快递单
-        expressRepository.deleteByExpressOrderId(goodsOrder.getExpressOrderId());
-        goodsOrderRepository.save(goodsOrder);
+        goodsOrderDetailRepository.save(goodsOrderDetailList);
+    }
+
+    @Transactional
+    private void resetProductImeWhenShipBack(GoodsOrder goodsOrder) {
+        List<GoodsOrderIme> goodsOrderImeList = goodsOrderImeRepository.findByEnabledIsTrueAndGoodsOrderId(goodsOrder.getId());
+
+        if (CollectionUtil.isEmpty(goodsOrderImeList)) {
+            return;
+        }
+        Map<String, ProductIme> productImeMap = productImeRepository.findMap(CollectionUtil.extractToList(goodsOrderImeList,"productImeId"));
+        for (GoodsOrderIme goodsOrderIme : goodsOrderImeList) {
+            ProductIme productIme = productImeMap.get(goodsOrderIme.getProductImeId());
+            productIme.setDepotId(goodsOrder.getStoreId());
+            productIme.setRetailShopId(goodsOrder.getStoreId());
+        }
+        productImeRepository.save(productImeMap.values());
     }
 
     public GoodsOrderDto getShip(String id) {

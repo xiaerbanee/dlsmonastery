@@ -113,7 +113,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushVivoPushSCustomersDate(List<SCustomerDto> futureCustomerDtoList,String date){
+    public void pushVivoPushSCustomersData(List<SCustomerDto> futureCustomerDtoList,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<SCustomersM13e00> sCustomersM13e00List = Lists.newArrayList();
         for(SCustomerDto futureCustomerDto :futureCustomerDtoList){
@@ -286,7 +286,7 @@ public class VivoPushService {
     }
 
     @FutureDataSource
-    public List<SProductItemLendM13e00> findDemoPhonesDate(String date){
+    public List<SProductItemLendM13e00> getDemoPhonesData(String date){
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -297,7 +297,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushDemoPhonesDate(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
+    public void pushDemoPhonesData(List<SProductItemLendM13e00> sProductItemLendM13e00List,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -326,7 +326,7 @@ public class VivoPushService {
     }
 
     @FutureDataSource
-    public List<VivoCustomerSaleImeiDto> findProductImeSaleDate(String date){
+    public List<VivoCustomerSaleImeiDto> getProductImeSaleData(String date){
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
         }
@@ -337,7 +337,7 @@ public class VivoPushService {
 
     @FactoryDataSource
     @Transactional
-    public void pushProductImeSaleDate(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
+    public void pushProductImeSaleData(List<VivoCustomerSaleImeiDto> vivoCustomerSaleImeiDtoList,Map<String,String> productColorMap,String date){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         if (StringUtils.isBlank(date)){
             date = LocalDateUtils.format(LocalDate.now());
@@ -367,7 +367,7 @@ public class VivoPushService {
     }
 
     @FactoryDataSource
-    public void pushSStoreDate(){
+    public void pushSStoreData(){
         String mainCode = companyConfigClient.getValueByCode(CompanyConfigCodeEnum.FACTORY_AGENT_CODES.name()).split(CharConstant.COMMA)[0].replace("\"","");
         List<SStoresM13e00> sStoresM13e00List = Lists.newArrayList();
         SStoresM13e00 sStoresM13e00 = new SStoresM13e00();

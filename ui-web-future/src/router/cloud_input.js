@@ -8,6 +8,8 @@ const stkInStock  = r => require.ensure([], () => r(require('pages/cloud/input/s
 const arOtherRecAble  = r => require.ensure([], () => r(require('pages/cloud/input/arOtherRecAble.vue')));
 const apPayBill  = r => require.ensure([], () => r(require('pages/cloud/input/apPayBill.vue')));
 const arRefundBill  = r => require.ensure([], () => r(require('pages/cloud/input/arRefundBill.vue')));
+const arReceiveBill  = r => require.ensure([], () => r(require('pages/cloud/input/arReceiveBill.vue')));
+
 
 let routes = [
   {path: '/cloud/input/salOutStock',component: salOutStock,name: 'salOutStock'},
@@ -20,6 +22,8 @@ let routes = [
   {path: '/cloud/input/arOtherRecAble',component: arOtherRecAble,name: 'arOtherRecAble'},
   {path: '/cloud/input/apPayBill',component: apPayBill,name: 'apPayBill'},
   {path: '/cloud/input/arRefundBill',component: arRefundBill,name: 'arRefundBill'},
+  {path: '/cloud/input/arReceiveBill',component: arReceiveBill,name: 'arReceiveBill'},
+
 ];
 
 export default routes;

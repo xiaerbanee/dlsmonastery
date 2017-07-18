@@ -1,15 +1,14 @@
 package net.myspring.future.modules.basic.web.controller;
 
 import com.google.common.collect.Lists;
+import net.myspring.common.exception.ServiceException;
 import net.myspring.common.response.ResponseCodeEnum;
 import net.myspring.common.response.RestResponse;
 import net.myspring.future.common.enums.ExpressCompanyTypeEnum;
-import net.myspring.future.modules.basic.domain.ExpressCompany;
 import net.myspring.future.modules.basic.dto.ExpressCompanyDto;
 import net.myspring.future.modules.basic.service.ExpressCompanyService;
 import net.myspring.future.modules.basic.web.form.ExpressCompanyForm;
 import net.myspring.future.modules.basic.web.query.ExpressCompanyQuery;
-import net.myspring.util.mapper.BeanUtil;
 import net.myspring.util.text.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +45,7 @@ public class ExpressCompanyController {
     @RequestMapping(value = "save")
     public RestResponse save(@Valid  ExpressCompanyForm expressCompanyForm, BindingResult result) {
         if(result.hasErrors()){
-            return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
+            throw new ServiceException("所提交的表单信息有错误,保存失败!");
         }
         expressCompanyService.save(expressCompanyForm);
         return new RestResponse("保存成功", ResponseCodeEnum.saved.name());
