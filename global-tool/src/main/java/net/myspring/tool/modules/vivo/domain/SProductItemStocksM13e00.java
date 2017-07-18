@@ -15,6 +15,7 @@ public class SProductItemStocksM13e00 {
     private Integer isLock;
     private String remark;
     private String updateTime;
+    private String agentCode;
 
     public String getCompanyId() {
         return companyId;
@@ -110,5 +111,13 @@ public class SProductItemStocksM13e00 {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getAgentCode() {
+        return agentCode;
+    }
+
+    public void setAgentCode(String agentCode) {
+        this.agentCode = agentCode;
     }
 }
